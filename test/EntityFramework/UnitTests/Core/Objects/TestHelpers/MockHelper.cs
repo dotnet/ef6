@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Objects
                 /*readerOwned*/ false, /*streaming*/ false);
         }
 
-        internal static CoordinatorFactory<T> CreateCoordinatorFactory<T>(Expression<Func<Shaper, T>> element = null)
+        internal static CoordinatorFactory<T> CreateCoordinatorFactory<T>(Expression<Func<Shaper, T>> element = null, Expression<Func<Shaper, bool>> hasData = null)
         {
             if (element == null)
             {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Objects
             return new CoordinatorFactory<T>(
                 depth: 0,
                 stateSlot: 0,
-                hasData: null,
+                hasData: hasData,
                 setKeys: null,
                 checkKeys: null,
                 nestedCoordinators: new CoordinatorFactory[0],

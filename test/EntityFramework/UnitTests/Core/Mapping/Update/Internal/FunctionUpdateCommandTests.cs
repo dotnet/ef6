@@ -300,6 +300,26 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Same(idColumn.Value, generatedValues[0].Key);
                 Assert.Equal(dbValue, generatedValues[0].Value);
             }
+
+            [Fact]
+            public void OperationCanceledException_thrown_if_task_is_cancelled()
+            {
+                var mockTranslator = new Mock<UpdateTranslator>();
+                mockTranslator.Setup(t => t.InterceptionContext).Returns(new DbInterceptionContext());
+
+                var stateEntry = new ExtractedStateEntry((EntityState)(-1), null, null, null);
+
+                var functionUpdateCommand = 
+                    new Mock<FunctionUpdateCommand>(mockTranslator.Object, new List<IEntityStateEntry>().AsReadOnly(), 
+                        stateEntry, new Mock<DbCommand>().Object)
+                {
+                    CallBase = true
+                }.Object;
+
+                Assert.Throws<OperationCanceledException>(
+                    () => functionUpdateCommand.ExecuteAsync(null, null, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
 #endif

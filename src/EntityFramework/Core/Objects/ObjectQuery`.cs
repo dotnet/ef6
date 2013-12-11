@@ -742,6 +742,8 @@ namespace System.Data.Entity.Core.Objects
 
         private Task<ObjectResult<T>> GetResultsAsync(MergeOption? forMergeOption, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
 
             var executionStrategy = ExecutionStrategy

@@ -619,6 +619,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> A task that represents the asynchronous operation. </returns>
         public override async Task OpenAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_storeConnection == null)
             {
                 throw Error.EntityClient_ConnectionStringNeededBeforeOperation();

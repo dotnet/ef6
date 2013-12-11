@@ -1697,6 +1697,36 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             return await task;
         }
+
+        [Fact]
+        public void NonQueryAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () =>
+                    new DbCommandDispatcher().NonQueryAsync(
+                        new Mock<DbCommand>().Object, new DbCommandInterceptionContext(),
+                        new CancellationToken(canceled: true)).GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ScalarAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () =>
+                    new DbCommandDispatcher().ScalarAsync(
+                        new Mock<DbCommand>().Object, new DbCommandInterceptionContext(),
+                        new CancellationToken(canceled: true)).GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ReaderAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () =>
+                    new DbCommandDispatcher().ReaderAsync(
+                        new Mock<DbCommand>().Object, new DbCommandInterceptionContext(),
+                        new CancellationToken(canceled: true)).GetAwaiter().GetResult());
+        }
 #endif
     }
 }

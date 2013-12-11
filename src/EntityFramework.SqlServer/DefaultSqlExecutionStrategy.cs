@@ -59,6 +59,8 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotNull(operation, "operation");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             return ExecuteAsyncImplementation(
                 async () =>
                           {
@@ -70,6 +72,8 @@ namespace System.Data.Entity.SqlServer
         public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
             Check.NotNull(operation, "operation");
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             return ExecuteAsyncImplementation(operation);
         }

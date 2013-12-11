@@ -2,14 +2,13 @@
 
 namespace System.Data.Entity.Internal
 {
+    using Moq;
+    using Moq.Protected;
     using System.Data.Common;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
     using System.Threading;
     using System.Threading.Tasks;
-    using Moq;
-    using Moq.Protected;
     using Xunit;
 
     public class InterceptableDbCommandTests
@@ -343,6 +342,24 @@ namespace System.Data.Entity.Internal
                     mockCommand.Object,
                     It.Is<DbCommandInterceptionContext<DbDataReader>>(
                         c => c.IsAsync && c.CommandBehavior == CommandBehavior.SingleRow && c.Result == result.Result)), Times.Once());
+        }
+
+        [Fact]
+        public void ExecuteNonQueryAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new InterceptableDbCommand(new Mock<DbCommand>().Object, new DbInterceptionContext())
+                        .ExecuteNonQueryAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ExecuteScalarAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new InterceptableDbCommand(new Mock<DbCommand>().Object, new DbInterceptionContext())
+                        .ExecuteScalarAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
         }
 #endif
     }

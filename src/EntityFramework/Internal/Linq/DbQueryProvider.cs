@@ -3,10 +3,8 @@
 namespace System.Data.Entity.Internal.Linq
 {
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -117,6 +115,8 @@ namespace System.Data.Entity.Internal.Linq
         {
             Check.NotNull(expression, "expression");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             _internalContext.Initialize();
 
             return ((IDbAsyncQueryProvider)_internalQuery.ObjectQueryProvider).ExecuteAsync<TResult>(expression, cancellationToken);
@@ -128,6 +128,8 @@ namespace System.Data.Entity.Internal.Linq
         Task<object> IDbAsyncQueryProvider.ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
             Check.NotNull(expression, "expression");
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             _internalContext.Initialize();
 

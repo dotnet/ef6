@@ -1920,6 +1920,25 @@ namespace System.Data.Entity.Core.Objects
 
                 executionStrategyMock.Verify(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Once());
             }
+
+            [Fact]
+            public void OperationCanceledException_thrown_before_saving_changes_if_task_is_cancelled()
+            {
+                var objectContext = new Mock<ObjectContextForMock>(new Mock<EntityConnection>().Object, /*entityAdapter*/ null)
+                {
+                    CallBase = true
+                }.Object;
+
+                objectContext.AsyncMonitor.Enter();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => objectContext.SaveChangesAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => objectContext.SaveChangesAsync(SaveOptions.None, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
         public class RefreshAsync : TestBase
@@ -2066,6 +2085,25 @@ namespace System.Data.Entity.Core.Objects
                 executionStrategyMock.Verify(
                     m => m.ExecuteAsync(It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<CancellationToken>()), Times.Once());
             }
+
+            [Fact]
+            public void OperationCanceledException_thrown_before_executing_if_task_is_cancelled()
+            {
+                var objectContext = new Mock<ObjectContextForMock>(new Mock<EntityConnection>().Object, /*entityAdapter*/ null)
+                {
+                    CallBase = true
+                }.Object;
+
+                objectContext.AsyncMonitor.Enter();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => objectContext.RefreshAsync(RefreshMode.StoreWins, new object[0], new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => objectContext.RefreshAsync(RefreshMode.StoreWins, new object(), new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
         public class EnsureConnectionAsync
@@ -2111,6 +2149,22 @@ namespace System.Data.Entity.Core.Objects
                 objectContextMock.Object.EnsureConnectionAsync(CancellationToken.None).Wait();
 
                 entityConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
+            }
+
+            [Fact]
+            public void OperationCanceledException_thrown_before_touching_connection_if_task_is_cancelled()
+            {
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.Setup(c => c.State).Throws(new InvalidOperationException("Not expected to be invoked - task has been cancelled."));
+
+                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object, /*entityAdapter*/ null)
+                {
+                    CallBase = true
+                };
+
+                Assert.Throws<OperationCanceledException>(
+                    () => objectContextMock.Object.EnsureConnectionAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
             }
         }
 
@@ -2415,6 +2469,30 @@ namespace System.Data.Entity.Core.Objects
                 // Finally verify that ExecutionStrategy.ExecuteAsync was called
                 executionStrategyMock.Verify(
                     m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Once());
+            }
+
+            [Fact]
+            public void OperationCanceledException_thrown_before_executing_store_command_if_task_is_cancelled()
+            {
+                var objectContext = new Mock<ObjectContextForMock>(new Mock<EntityConnection>().Object, /*entityAdapter*/ null)
+                {
+                    CallBase = true
+                }.Object;
+
+                objectContext.AsyncMonitor.Enter();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => objectContext.ExecuteStoreCommandAsync(
+                        "SELECT CORRECT DATA FROM STORE",
+                        new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => objectContext.ExecuteStoreCommandAsync(
+                        TransactionalBehavior.EnsureTransaction,
+                        "SELECT CORRECT DATA FROM STORE",
+                        new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
             }
         }
 

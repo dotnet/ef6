@@ -156,6 +156,22 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+        [Fact]
+        public void NextResultAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new EntityDataReader().NextResultAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ReadResultAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new EntityDataReader().ReadAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
 #endif
     }
 }

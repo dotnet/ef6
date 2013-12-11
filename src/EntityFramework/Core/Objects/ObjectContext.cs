@@ -1679,6 +1679,8 @@ namespace System.Data.Entity.Core.Objects
         // </exception>
         internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (Connection.State == ConnectionState.Broken)
             {
                 Connection.Close();
@@ -2338,6 +2340,8 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(collection, "collection");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             AsyncMonitor.EnsureNotEntered();
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             EntityUtil.CheckArgumentRefreshMode(refreshMode);
@@ -2387,6 +2391,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.ArgumentException"> entity is not attached to the context. </exception>
         public virtual Task RefreshAsync(RefreshMode refreshMode, object entity, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             Check.NotNull(entity, "entity");
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
 
@@ -3005,6 +3011,8 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             AsyncMonitor.EnsureNotEntered();
 
             return SaveChangesInternalAsync(options, cancellationToken);
@@ -4115,6 +4123,8 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<int> ExecuteStoreCommandAsync(
             TransactionalBehavior transactionalBehavior, string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             AsyncMonitor.EnsureNotEntered();
             return ExecuteStoreCommandInternalAsync(transactionalBehavior, commandText, cancellationToken, parameters);
         }

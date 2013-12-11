@@ -392,8 +392,26 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 Assert.Throws<ArgumentNullException>(
                     () => MockHelper.CreateMockEntityCollection<object>(null).Object.Remove(null));
             }
-        }
 
+            [Fact]
+            public void OperationCanceledException_thrown_before_loading_results_if_task_is_cancelled()
+            {
+                var entityCollection = new EntityCollection<object>();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityCollection.LoadAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityCollection.LoadAsync(
+                        new List<IEntityWrapper>(), MergeOption.NoTracking, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityCollection.LoadAsync(MergeOption.NoTracking, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+        }
 #endif
     }
 }

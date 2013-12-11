@@ -87,6 +87,29 @@ namespace System.Data.Entity.Internal
                             () =>
                             mockInternalEntityEntry.Object.GetDatabaseValuesAsync(CancellationToken.None).Result)).Message);
             }
+
+            [Fact]
+            public void GetDatabaseValuesAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var internalEntityEntry = new Mock<InternalEntityEntryForMock<object>> { CallBase = true }.Object;
+
+                Assert.Throws<OperationCanceledException>(
+                    () => internalEntityEntry.GetDatabaseValuesAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+        }
+
+        public class ReloadAsync
+        {
+            [Fact]
+            public void ReloadAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var internalEntityEntry = new Mock<InternalEntityEntryForMock<object>> { CallBase = true }.Object;
+
+                Assert.Throws<OperationCanceledException>(
+                    () => internalEntityEntry.ReloadAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
         public new class GetHashCode

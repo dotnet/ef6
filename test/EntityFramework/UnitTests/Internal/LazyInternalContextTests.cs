@@ -11,6 +11,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using Xunit;
+    using System.Threading;
 
     public class LazyInternalContextTests
     {
@@ -97,5 +98,23 @@ namespace System.Data.Entity.Internal
                 // do nothing - just placeholder object
             }
         }
+
+#if !NET40
+        [Fact]
+        public void SaveChangesAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var lazyInternalContext = new Mock<LazyInternalContext>(
+                new Mock<DbContext>().Object, new Mock<IInternalConnection>().Object, null, null, null, null, null)
+            {
+                CallBase = true
+            }.Object;
+
+            Assert.Throws<OperationCanceledException>(
+                () => lazyInternalContext.SaveChangesAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+#endif
+
     }
 }

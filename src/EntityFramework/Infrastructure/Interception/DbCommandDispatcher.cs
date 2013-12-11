@@ -141,6 +141,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var clonedInterceptionContext = new DbCommandInterceptionContext<int>(interceptionContext);
 
             if (!clonedInterceptionContext.IsAsync)
@@ -176,6 +178,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var clonedInterceptionContext = new DbCommandInterceptionContext<object>(interceptionContext);
 
             if (!clonedInterceptionContext.IsAsync)
@@ -210,7 +214,9 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
-
+            
+            cancellationToken.ThrowIfCancellationRequested();
+            
             var clonedInterceptionContext = new DbCommandInterceptionContext<DbDataReader>(interceptionContext);
 
             if (!clonedInterceptionContext.IsAsync)

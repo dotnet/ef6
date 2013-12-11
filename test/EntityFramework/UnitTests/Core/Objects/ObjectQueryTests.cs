@@ -308,5 +308,35 @@ namespace System.Data.Entity.Core.Objects
                 executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<ObjectResult<object>>>()), Times.Once());
             }
         }
+
+#if !NET40
+
+        [Fact]
+        public void Non_generic_ObjectQuery_ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var objectQuery = new Mock<ObjectQuery>{ CallBase = true }.Object;
+
+            Assert.Throws<OperationCanceledException>(
+                () => objectQuery.ExecuteAsync(0, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void Generic_ObjectQuery_ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new ObjectQuery<int>().ExecuteAsync(MergeOption.NoTracking, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void Generic_ObjectQuery_ExecuteInternalAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new ObjectQuery<int>().ExecuteInternalAsync(MergeOption.NoTracking, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+#endif
     }
 }

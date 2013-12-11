@@ -16,7 +16,7 @@ namespace System.Data.Entity
     public class IDbAsyncEnumerableExtensionsTests
     {
         [Fact]
-        public void ForEachAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
+        public void Non_generic_ForEachAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
         {
             var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable>();
             mockAsyncEnumerable
@@ -30,7 +30,7 @@ namespace System.Data.Entity
         }
 
         [Fact]
-        public void ForEachAsync_checks_cancellation_token_when_enumerating_results()
+        public void Non_generic_ForEachAsync_checks_cancellation_token_when_enumerating_results()
         {
             var tokenSource = new CancellationTokenSource();
             var taskCancelled = false;
@@ -59,7 +59,7 @@ namespace System.Data.Entity
         }
 
         [Fact]
-        public void ForEachAsync_T_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
+        public void Generic_ForEachAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
         {
             var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<int>>();
             mockAsyncEnumerator
@@ -78,14 +78,14 @@ namespace System.Data.Entity
         }
 
         [Fact]
-        public void ForEachAsync_T_checks_cancellation_token_when_enumerating_results()
+        public void Generic_ForEachAsync_checks_cancellation_token_when_enumerating_results()
         {
             AsyncMethod_checks_for_cancellation_when_enumerating_results<int>(
                 (source, cancellationToken) => source.ForEachAsync(o => { }, cancellationToken));
         }
 
         [Fact]
-        public void ToListAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
+        public void Non_generic_ToListAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
         {
             var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable>();
             mockAsyncEnumerable
@@ -99,7 +99,7 @@ namespace System.Data.Entity
         }
 
         [Fact]
-        public void ToListAsync_T_throws_TaskCanceledException_before_enumerating_if_task_is_cancelled()
+        public void Generic_ToListAsync_throws_TaskCanceledException_before_enumerating_if_task_is_cancelled()
         {
             var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<int>>();
             mockAsyncEnumerator

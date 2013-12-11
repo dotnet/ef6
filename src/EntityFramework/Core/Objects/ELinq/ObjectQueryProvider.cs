@@ -176,6 +176,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             Check.NotNull(expression, "expression");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var query = CreateQuery<TResult>(expression);
 
             return ExecuteSingleAsync(query, expression, cancellationToken);
@@ -184,6 +186,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         Task<object> IDbAsyncQueryProvider.ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
             Check.NotNull(expression, "expression");
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             var query = CreateQuery(expression, expression.Type);
             var objQuery = ((IDbAsyncEnumerable)query).Cast<object>();

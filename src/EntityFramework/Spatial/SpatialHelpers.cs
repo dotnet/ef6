@@ -34,6 +34,9 @@ namespace System.Data.Entity.Spatial
             TypeUsage columnType, int columnOrdinal, CancellationToken cancellationToken)
         {
             Debug.Assert(Helper.IsSpatialType(columnType));
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             var spatialReader = CreateSpatialDataReader(workspace, reader);
             if (Helper.IsGeographicType((PrimitiveType)columnType.EdmType))
             {

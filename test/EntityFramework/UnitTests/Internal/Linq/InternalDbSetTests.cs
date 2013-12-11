@@ -61,6 +61,21 @@ namespace System.Data.Entity.Internal.Linq
             Assert.Equal(sql, query.InternalQuery.Sql);
         }
 
+#if !NET40
+
+        [Fact]
+        public void FindAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var internalSet = new InternalSet<object>(new Mock<InternalContext>().Object);
+            var dbSet = new InternalDbSet<object>(internalSet);
+
+            Assert.Throws<OperationCanceledException>(
+                () => dbSet.FindAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+#endif
+
         #region Helpers
 
         internal void VerifyGetter<T, TProperty>(

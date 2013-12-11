@@ -133,6 +133,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             ObjectContext context, ObjectParameterCollection parameterValues,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             DbDataReader storeReader = null;
             BufferedDataReader bufferedReader = null;
             try

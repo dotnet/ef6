@@ -119,33 +119,6 @@ namespace System.Data.Entity.Interception
             _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[2], new AnyValueParameter(), exception.Message, "");
         }
 
-        [ExtendedFact(SkipForSqlAzure = true, Justification = "Fails on Azure due to issue #1148")]
-        public void Async_commands_that_are_canceled_are_still_logged()
-        {
-            var log = new StringWriter();
-            using (var context = new BlogContextNoInit())
-            {
-                context.Database.Log = log.Write;
-
-                context.Database.Connection.Open();
-
-                var cancellation = new CancellationTokenSource();
-                cancellation.Cancel();
-                var command = context.Database.ExecuteSqlCommandAsync("update Blogs set Title = 'No' where Id = -1", cancellation.Token);
-
-                Assert.Throws<AggregateException>(() => command.Wait());
-                Assert.True(command.IsCanceled);
-
-                context.Database.Connection.Close();
-            }
-
-            var logLines = log.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-
-            Assert.Equal(5, logLines.Length);
-            Assert.Equal("update Blogs set Title = 'No' where Id = -1", logLines[0]);
-            _resourceVerifier.VerifyMatch("CommandLogAsync", logLines[1], new AnyValueParameter(), "");
-            _resourceVerifier.VerifyMatch("CommandLogCanceled", logLines[2], new AnyValueParameter(), "");
-        }
 #endif
 
         [Fact]

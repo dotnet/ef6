@@ -617,5 +617,20 @@ namespace System.Data.Entity.Internal
                 return mockEntityEntry.Object;
             }
         }
+
+#if !NET40
+        public class SaveChangesAsync
+        {
+            [Fact]
+            public void OperationCanceledException_thrown_before_saving_changes_if_task_is_cancelled()
+            {
+                var internalContext = new Mock<InternalContext> { CallBase = true }.Object;
+
+                Assert.Throws<OperationCanceledException>(
+                    () => internalContext.SaveChangesAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+        }
+#endif
     }
 }

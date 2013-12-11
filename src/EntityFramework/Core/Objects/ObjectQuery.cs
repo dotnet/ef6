@@ -306,6 +306,9 @@ namespace System.Data.Entity.Core.Objects
         public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             return ExecuteInternalAsync(mergeOption, cancellationToken);
         }
 

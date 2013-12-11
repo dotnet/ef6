@@ -343,11 +343,15 @@ namespace System.Data.Entity.SqlServer.Utilities
 
         public virtual Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return _sqlDataReader.NextResultAsync(cancellationToken);
         }
 
         public virtual Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return _sqlDataReader.ReadAsync(cancellationToken);
         }
 

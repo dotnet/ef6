@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         public static Mock<EntityCollection<TEntity>> CreateMockEntityCollection<TEntity>(TEntity refreshedValue)
             where TEntity : class
         {
-            var entityReferenceMock = new Mock<EntityCollection<TEntity>>
+            var entityCollectionMock = new Mock<EntityCollection<TEntity>>
                                           {
                                               CallBase = true
                                           };
@@ -19,10 +19,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var objectQueryMock = Objects.MockHelper.CreateMockObjectQuery(refreshedValue);
 
             var hasResults = refreshedValue != null;
-            entityReferenceMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
+            entityCollectionMock.Setup(m => m.ValidateLoad<TEntity>(It.IsAny<MergeOption>(), It.IsAny<string>(), out hasResults))
                 .Returns(() => objectQueryMock.Object);
 
-            return entityReferenceMock;
+            return entityCollectionMock;
         }
 
         public static Mock<EntityReference<TEntity>> CreateMockEntityReference<TEntity>(TEntity refreshedValue)

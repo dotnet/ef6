@@ -650,6 +650,8 @@ namespace System.Data.Entity
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             return _internalContext.ExecuteSqlCommandAsync(transactionalBehavior, sql, cancellationToken, parameters);
         }
 

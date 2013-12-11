@@ -11,6 +11,7 @@ namespace System.Data.Entity
     using Moq;
     using Xunit;
     using MockHelper = System.Data.Entity.Core.Objects.MockHelper;
+    using System.Threading;
 
     /// <summary>
     /// Unit tests for <see cref="DbSet" /> and <see cref="DbSet{T}" />.
@@ -664,6 +665,22 @@ namespace System.Data.Entity
                 Assert.Null(query.InternalQuery.Streaming);
             }
         }
+
+#if !NET40
+        public class FindAsync
+        {
+            [Fact]
+            public void OperationCanceledException_is_thrown_if_task_is_cancelled()
+            {
+                var internalSet = new InternalSet<FakeEntity>(new Mock<InternalContext>().Object);
+                var dbSet = new DbSet<FakeEntity>(internalSet);
+
+                Assert.Throws<OperationCanceledException>(
+                    () => dbSet.FindAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+        }
+#endif
 
         internal class InternalSetForTests
             : InternalSet<FakeEntity>

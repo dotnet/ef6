@@ -378,6 +378,46 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             Assert.False(nextResultCalled);
         }
 
+        [Fact]
+        public void CloseImplicitlyAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var bridgeDataReader = CreateNestedBridgeDataReader();
+
+            Assert.Throws<OperationCanceledException>(
+                () => bridgeDataReader.CloseImplicitlyAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void NextResultAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var bridgeDataReader = CreateNestedBridgeDataReader();
+
+            Assert.Throws<OperationCanceledException>(
+                () => bridgeDataReader.NextResultAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ReadAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var bridgeDataReader = CreateNestedBridgeDataReader();
+
+            Assert.Throws<OperationCanceledException>(
+                () => bridgeDataReader.ReadAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void GetFieldValueAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var bridgeDataReader = CreateNestedBridgeDataReader();
+
+            Assert.Throws<OperationCanceledException>(
+                () => bridgeDataReader.GetFieldValueAsync<int>(0, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
 #endif
     }
 }

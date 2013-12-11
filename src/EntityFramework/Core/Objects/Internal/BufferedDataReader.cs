@@ -179,6 +179,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             string providerManifestToken, DbProviderServices providerSerivces, Type[] columnTypes, bool[] nullableColumns,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var reader = _underlyingReader;
             if (reader == null)
             {
@@ -431,6 +433,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public override Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return Task.FromResult(NextResult());
         }
 
@@ -446,6 +450,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             AssertReaderIsOpen();
             return _currentResultSet.ReadAsync(cancellationToken);
         }

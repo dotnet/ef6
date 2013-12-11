@@ -244,6 +244,26 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Equal(dbValue, generatedValues[0].Value);
                 Assert.Equal(0, generatedValues[0].Key.GetSimpleValue());
             }
+
+            [Fact]
+            public void OperationCanceledException_thrown_if_task_is_cancelled()
+            {
+                var dynamicUpdateCommand = new Mock<DynamicUpdateCommand>(
+                    new Mock<TableChangeProcessor>().Object,
+                    new Mock<UpdateTranslator>().Object,
+                    ModificationOperator.Delete,
+                    /* originalValues */ null,
+                    /* currentValues */ null,
+                    new Mock<DbModificationCommandTree>().Object, 
+                    /*outputIdentifiers*/ null)
+                {
+                    CallBase = true
+                }.Object;
+
+                Assert.Throws<OperationCanceledException>(
+                    () => dynamicUpdateCommand.ExecuteAsync(null, null, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
 #endif

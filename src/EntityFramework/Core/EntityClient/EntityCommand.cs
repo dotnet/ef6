@@ -582,6 +582,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </exception>
         public new virtual async Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             // prepare the query first
             Prepare();
             var dbDataReader =

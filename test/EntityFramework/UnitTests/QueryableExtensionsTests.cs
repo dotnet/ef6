@@ -1815,6 +1815,211 @@ namespace System.Data.Entity
             testExpression.Compile()(queryableMock.Object);
         }
 
+        [Fact]
+        public void Async_extension_methods_throw_OperatationCanceledException_if_task_is_cancelled()
+        {
+            var source = CreateThrowingMockQueryable<int>();
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.FirstAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.FirstAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.FirstOrDefaultAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.FirstOrDefaultAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.SingleAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.SingleAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.SingleOrDefaultAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.SingleOrDefaultAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.ContainsAsync(42, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.AnyAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.AnyAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.AllAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.CountAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.CountAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.LongCountAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.LongCountAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.MinAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.MinAsync(n => true, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.MaxAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => source.MaxAsync(n => true, new CancellationToken(canceled: true)).Wait());
+        }
+
+        [Fact]
+        public void SumAsync_extension_methods_throw_OperatationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int?>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long?>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float?>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double?>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal?>().SumAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int>().SumAsync(f => 42, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int?>().SumAsync(f => (int?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long>().SumAsync(f => 42L, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long?>().SumAsync(f => (long?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float>().SumAsync(f => 42.0F, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float?>().SumAsync(f => (float?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double>().SumAsync(f => 42.0D, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double?>().SumAsync(f => (double?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal>().SumAsync(f => 42.0M, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal?>().SumAsync(f => (decimal?)null, new CancellationToken(canceled: true)).Wait());
+        }
+
+        [Fact]
+        public void AverageAsync_extension_methods_throw_OperatationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int?>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long?>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float?>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double?>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal?>().AverageAsync(new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int>().AverageAsync(f => 42, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<int?>().AverageAsync(f => (int?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long>().AverageAsync(f => 42L, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<long?>().AverageAsync(f => (long?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float>().AverageAsync(f => 42.0F, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<float?>().AverageAsync(f => (float?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double>().AverageAsync(f => 42.0D, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<double?>().AverageAsync(f => (double?)null, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal>().AverageAsync(f => 42.0M, new CancellationToken(canceled: true)).Wait());
+
+            Assert.Throws<OperationCanceledException>(
+                () => CreateThrowingMockQueryable<decimal?>().AverageAsync(f => (decimal?)null, new CancellationToken(canceled: true)).Wait());
+        }
+
+
+        private static IQueryable<T> CreateThrowingMockQueryable<T>()
+        {
+            var mockSource = new Mock<IQueryable<T>>();
+            mockSource
+                .Setup(s => s.Provider)
+                .Throws(new InvalidOperationException("Not expected to be invoked - task has been cancelled."));
+
+            return mockSource.Object;
+        }
+
 #endif
 
         #endregion

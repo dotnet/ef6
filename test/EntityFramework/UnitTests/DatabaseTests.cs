@@ -212,6 +212,20 @@ namespace System.Data.Entity
                 internalContextMock.Verify(
                     m => m.ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, "query", cancellationToken, parameters), Times.Once());
             }
+
+            [Fact]
+            public void ExecuteSqlCommandAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                Assert.Throws<OperationCanceledException>(
+                    () => new Database(new Mock<InternalContextForMock>().Object)
+                        .ExecuteSqlCommandAsync("SELECT DATA", new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => new Database(new Mock<InternalContextForMock>().Object)
+                        .ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, "SELECT DATA", new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
 #endif

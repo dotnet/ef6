@@ -4,7 +4,6 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections;
     using System.Data.Common;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -136,6 +135,8 @@ namespace System.Data.Entity.Internal
 #if !NET40
         public override Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return new Task<int>(() => 1);
@@ -146,6 +147,8 @@ namespace System.Data.Entity.Internal
 
         public override Task<object> ExecuteScalarAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return new Task<object>(() => null);
@@ -156,6 +159,8 @@ namespace System.Data.Entity.Internal
 
         protected override Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return new Task<DbDataReader>(() => new NullDataReader());

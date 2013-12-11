@@ -122,6 +122,8 @@ namespace System.Data.Entity.Internal.Linq
         // <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         public Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             InternalContext.ObjectContext.AsyncMonitor.EnsureNotEntered();
 
             return FindInternalAsync(cancellationToken, keyValues);

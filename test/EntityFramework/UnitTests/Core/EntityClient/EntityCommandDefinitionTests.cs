@@ -344,6 +344,15 @@ namespace System.Data.Entity.Core.EntityClient
                 dbCommandMock.Protected().Verify(
                     "ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.Default, ItExpr.IsAny<CancellationToken>());
             }
+
+            [Fact]
+            public void ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                Assert.Throws<OperationCanceledException>(
+                    () => new EntityCommandDefinition()
+                        .ExecuteAsync(null, CommandBehavior.SequentialAccess, new CancellationToken(canceled: true))
+                            .GetAwaiter().GetResult());
+            }
         }
 
 #endif
@@ -532,6 +541,15 @@ namespace System.Data.Entity.Core.EntityClient
                     Strings.EntityClient_CommandDefinitionExecutionFailed,
                     () =>
                     entityCommandDefinition.ExecuteStoreCommandsAsync(entityCommand, CommandBehavior.Default, CancellationToken.None).Wait());
+            }
+
+            [Fact]
+            public void ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                Assert.Throws<OperationCanceledException>(
+                    () => new EntityCommandDefinition()
+                        .ExecuteStoreCommandsAsync(null, CommandBehavior.Default, new CancellationToken(canceled: true))
+                            .GetAwaiter().GetResult());
             }
         }
 

@@ -362,6 +362,16 @@ namespace System.Data.Entity.Core.Objects.Internal
                 m => m.GetFieldValueAsync<object>(It.IsAny<int>(), It.IsAny<CancellationToken>()), streaming ? Times.Never() : Times.Once());
         }
 
+        [Fact]
+        public void ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var executionPlan = new ObjectQueryExecutionPlan(null, null, null, MergeOption.AppendOnly, false, null, null);
+
+            Assert.Throws<OperationCanceledException>(
+                () => executionPlan.ExecuteAsync<object>(null, null, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
 #endif
     }
 }

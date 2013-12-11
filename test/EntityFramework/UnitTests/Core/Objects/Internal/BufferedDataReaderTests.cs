@@ -532,5 +532,39 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Strings.ADP_NoData,
                 Assert.Throws<InvalidOperationException>(() => method(bufferedReader)).Message);
         }
+
+#if !NET40
+        [Fact]
+        public void InitializeAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var reader = new BufferedDataReader(new Mock<DbDataReader>().Object);
+
+            Assert.Throws<OperationCanceledException>(
+                () => reader.InitializeAsync("manifestToken", new Mock<DbProviderServices>().Object,
+                    new Type[0], new bool[0], new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void NextResultAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var reader = new BufferedDataReader(new Mock<DbDataReader>().Object);
+
+            Assert.Throws<OperationCanceledException>(
+                () => reader.NextResultAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ReadAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var reader = new BufferedDataReader(new Mock<DbDataReader>().Object);
+
+            Assert.Throws<OperationCanceledException>(
+                () => reader.ReadAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+#endif
     }
 }

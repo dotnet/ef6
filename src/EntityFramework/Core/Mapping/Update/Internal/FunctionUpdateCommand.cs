@@ -339,6 +339,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var connection = Translator.Connection;
             // configure command to use the connection and transaction for this session
             _dbCommand.Transaction = ((null == connection.CurrentTransaction)

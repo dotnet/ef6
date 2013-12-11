@@ -65,6 +65,42 @@ namespace System.Data.Entity.Infrastructure
 #endif
         }
 
+#if !NET40
+
+        [Fact]
+        public void GetDatabaseValuesAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var mockInternalEntityEntry = FakeWithProps.CreateMockInternalEntityEntry();
+
+            Assert.Throws<OperationCanceledException>(
+                () => new DbEntityEntry(mockInternalEntityEntry.Object)
+                    .GetDatabaseValuesAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+
+            Assert.Throws<OperationCanceledException>(
+                () => new DbEntityEntry<FakeWithProps>(mockInternalEntityEntry.Object)
+                    .GetDatabaseValuesAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ReloadAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var mockInternalEntityEntry = FakeWithProps.CreateMockInternalEntityEntry();
+
+            Assert.Throws<OperationCanceledException>(
+                () => new DbEntityEntry(mockInternalEntityEntry.Object)
+                    .ReloadAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+
+            Assert.Throws<OperationCanceledException>(
+                () => new DbEntityEntry<FakeWithProps>(mockInternalEntityEntry.Object)
+                    .ReloadAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+#endif
+        
         public class Reference
         {
             [Fact]

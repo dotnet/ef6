@@ -32,6 +32,7 @@ namespace ProductivityApiUnitTests
     using Moq.Protected;
     using Xunit;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Threading;
 
     #region Context types for testing database name generation
 
@@ -869,6 +870,22 @@ END");
  	            throw new NotImplementedException();
             }
         }
+
+#if !NET40
+
+        [Fact]
+        public void SaveChangesAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            using (var dbContext = new DbContext("fakeConnString"))
+            {
+                Assert.Throws<OperationCanceledException>(
+                    () => dbContext.SaveChangesAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+        }
+
+#endif
+
         #endregion
     }
 }

@@ -70,6 +70,8 @@ namespace System.Data.Entity.Internal
 
         public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var enumerator = await GetEnumeratorAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             return await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }

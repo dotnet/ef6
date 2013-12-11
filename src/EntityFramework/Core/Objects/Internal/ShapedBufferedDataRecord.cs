@@ -78,6 +78,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             string providerManifestToken, DbProviderServices providerServices, DbDataReader reader, Type[] columnTypes,
             bool[] nullableColumns, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var record = new ShapedBufferedDataRecord();
             record.ReadMetadata(providerManifestToken, providerServices, reader);
 
@@ -336,6 +338,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             while (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 _currentRowNumber++;
 
                 if (_rowCapacity == _currentRowNumber)

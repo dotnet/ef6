@@ -431,6 +431,8 @@ namespace System.Data.Entity.Internal
 
         public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (ValidateOnSaveEnabled)
             {
                 var validationResults = Owner.GetValidationErrors();

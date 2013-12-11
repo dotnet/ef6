@@ -119,6 +119,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         // </summary>
         protected virtual Task EnsureInitializedAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return Interlocked.CompareExchange(ref _initialized, 1, 0) == 0
                        ? _initializeAsync(cancellationToken)
                        : Task.FromResult<object>(null);

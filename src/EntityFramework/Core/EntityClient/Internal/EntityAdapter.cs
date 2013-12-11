@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 

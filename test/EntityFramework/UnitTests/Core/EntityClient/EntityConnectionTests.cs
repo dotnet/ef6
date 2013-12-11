@@ -1113,6 +1113,15 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.Equal(ConnectionState.Open, connection.State);
             }
+
+            public void OperationCanceledException_thrown_before_opening_connection_if_task_is_cancelled()
+            {
+                var entityConnection = new EntityConnection();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityConnection.OpenAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
 #endif

@@ -75,6 +75,22 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(1, executionCount);
         }
 
+        [Fact]
+        public void Non_generic_ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new DefaultExecutionStrategy().ExecuteAsync(() => null, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void Generic_ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new DefaultExecutionStrategy().ExecuteAsync<object>(() => null, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
 #endif
     }
 }

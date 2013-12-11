@@ -9,6 +9,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using Moq;
     using Xunit;
 
@@ -662,6 +663,218 @@ namespace System.Data.Entity.Infrastructure
                 {
                     return value.GetHashCode();
                 }
+            }
+
+            [Fact]
+            public void Non_generic_ForEachAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query", false, 1, 2));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ForEachAsync(o => { }, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void Non_generic_ToListAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query", false, 1, 2));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ToListAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void Generic_ForEachAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ForEachAsync(e => { }, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void Generic_ToListAsync_throws_TaskCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<TaskCanceledException>(
+                    () => query.ToListAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void ToArrayAsync_throws_TaskCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<TaskCanceledException>(
+                    () => query.ToArrayAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void ToDictionaryAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ToDictionaryAsync(n => n, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ToDictionaryAsync(n => n, n => n, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                var equalityComparer = new Mock<IEqualityComparer<FakeEntity>>().Object;
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ToDictionaryAsync(n => n, equalityComparer, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ToDictionaryAsync(n => n, n => n, equalityComparer, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void FirstAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.FirstAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.FirstAsync(e => true, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void FirstOrDefaultAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.FirstOrDefaultAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.FirstOrDefaultAsync(e => true, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void SingleAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.SingleAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.SingleAsync(e => true, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void SingleOrDefaultAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.SingleOrDefaultAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.SingleOrDefaultAsync(e => true, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void ContainsAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.ContainsAsync(null, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void AnyAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.AnyAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.AnyAsync(e => false, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void AllAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.AllAsync(e => false, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void CountAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.CountAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.CountAsync(e => false, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void LongCountAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.LongCountAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.LongCountAsync(e => false, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void MinAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.MinAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void MaxAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlNonSetQuery("select * from products"));
+
+                Assert.Throws<OperationCanceledException>(
+                    () => query.MaxAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
             }
         }
 

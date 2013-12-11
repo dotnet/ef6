@@ -117,6 +117,31 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Assert.Same(expectedResult, result);
         }
 
+        [Fact]
+        public void ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            var createObjectQueryProviderMock = CreateObjectQueryProviderMock();
+
+            Assert.Throws<OperationCanceledException>(
+                () => ((IDbAsyncQueryProvider)createObjectQueryProviderMock.Object)
+                    .ExecuteAsync<object>(new Mock<Expression>().Object, new CancellationToken(canceled: true)).Result);
+
+            Assert.Throws<OperationCanceledException>(
+                () => ((IDbAsyncQueryProvider)createObjectQueryProviderMock.Object)
+                    .ExecuteAsync(new Mock<Expression>().Object, new CancellationToken(canceled: true)).Result);
+        }
+
+        [Fact]
+        public void ExecuteSingleAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => ObjectQueryProvider.ExecuteSingleAsync<object>(
+                    new Mock<IDbAsyncEnumerable<object>>().Object, 
+                    new Mock<Expression>().Object, 
+                    new CancellationToken(canceled: true)).GetAwaiter().GetResult());
+        }
+
+
 #endif
 
         private Mock<ObjectQueryProvider> CreateObjectQueryProviderMock()

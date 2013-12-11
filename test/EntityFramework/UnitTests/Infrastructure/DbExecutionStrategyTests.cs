@@ -752,6 +752,26 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.Equal(3, executionCount);
             }
+
+            [Fact]
+            public void Non_generic_ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var mockExecutionStrategy = new Mock<DbExecutionStrategy> { CallBase = true };
+
+                Assert.Throws<OperationCanceledException>(
+                    () => mockExecutionStrategy.Object.ExecuteAsync(() => null, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void Generic_ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var mockExecutionStrategy = new Mock<DbExecutionStrategy> { CallBase = true };
+
+                Assert.Throws<OperationCanceledException>(
+                    () => mockExecutionStrategy.Object.ExecuteAsync<object>(() => null, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
 #endif

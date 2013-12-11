@@ -328,6 +328,21 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             () =>
                             entityReferenceMock.Object.LoadAsync(MergeOption.NoTracking, CancellationToken.None).Wait())).Message);
             }
+
+
+            [Fact]
+            public void OperationCanceledException_thrown_before_loading_results_if_task_is_cancelled()
+            {
+                var entityReference = new EntityReference<object>();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityReference.LoadAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityReference.LoadAsync(MergeOption.NoTracking, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
         }
 
 #endif

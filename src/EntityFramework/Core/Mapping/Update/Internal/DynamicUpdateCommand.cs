@@ -188,6 +188,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Compile command
             using (var command = CreateCommand(identifierValues))
             {

@@ -279,6 +279,34 @@ namespace System.Data.Entity.Infrastructure
             }
         }
 
+#if !NET40
+
+        public class LoadAsync
+        {
+            [Fact]
+            public void Generic_DbCollectionEntry_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var entityEntry = new DbEntityEntry<FakeWithProps>(FakeWithProps.CreateMockInternalEntityEntry().Object);
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityEntry.Reference(e => e.Reference).LoadAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void Non_generic_DbCollectionEntry_throws_OperationCanceledException_if_task_is_cancelled()
+            {
+                var entityEntry = new DbEntityEntry<FakeWithProps>(FakeWithProps.CreateMockInternalEntityEntry().Object);
+
+                Assert.Throws<OperationCanceledException>(
+                    () => ((DbReferenceEntry)entityEntry.Reference(e => e.Reference))
+                        .LoadAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+        }
+
+#endif
+
         #region Helpers
 
         internal class DbReferenceEntryVerifier : DbMemberEntryVerifier<DbReferenceEntry, InternalReferenceEntry>

@@ -266,6 +266,7 @@
     <Compile Include="Core\Objects\Internal\ObjectQueryStateTests.cs" />
     <Compile Include="Core\Objects\Internal\PocoPropertyAccessorStrategyTests.cs" />
     <Compile Include="Core\Objects\Internal\SerializableImplementorTests.cs" />
+    <Compile Include="Core\Objects\Internal\ShapedBufferedDataRecordTests.cs" />
     <Compile Include="Core\Objects\Internal\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntityClient\EntityConnectionStringBuilderTests.cs" />
     <Compile Include="Core\Objects\ELinq\ObjectQueryProviderTests.cs" />
@@ -375,6 +376,7 @@
     <Compile Include="Internal\InternalSqlSetQueryTests.cs" />
     <Compile Include="Internal\LazyAsyncEnumeratorTests.cs" />
     <Compile Include="Internal\LazyInternalContextTests.cs" />
+    <Compile Include="Internal\Linq\DbQueryPorivderTests.cs" />
     <Compile Include="Internal\Linq\InternalDbQueryTests.cs" />
     <Compile Include="Internal\Linq\InternalDbSetTests.cs" />
     <Compile Include="Internal\Linq\InternalSetTests.cs" />
@@ -444,6 +446,7 @@
     <Compile Include="ModelConfiguration\Edm\Services\StructuralTypeMappingGeneratorTests.cs" />
     <Compile Include="QueryableExtensionsTests.cs" />
     <Compile Include="Spatial\DefaultServicesTests.cs" />
+    <Compile Include="Spatial\SpatialHelpersTests.cs" />
     <Compile Include="SqlServerCompact\SqlCeProviderServicesTests.cs" />
     <Compile Include="SqlServerCompact\SqlGen\DmlSqlGeneratorTests.cs" />
     <Compile Include="SqlServerCompact\SqlGen\SqlGeneratorTests.cs" />
@@ -533,6 +536,7 @@
     <Compile Include="Utilities\MemberInfoExtensionsTests.cs" />
     <Compile Include="Utilities\PartialTrustAssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ProviderRowFinderTests.cs" />
+    <Compile Include="Utilities\SqlDataReaderWrapperTests.cs" />
     <Compile Include="Utilities\StringExtensionsTests.cs" />
     <Compile Include="Utilities\TaskHelperTests.cs" />
     <Compile Include="Utilities\TypeFinderTests.cs" />

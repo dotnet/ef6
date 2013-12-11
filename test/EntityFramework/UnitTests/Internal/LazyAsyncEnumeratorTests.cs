@@ -91,6 +91,14 @@ namespace System.Data.Entity.Internal
                 .GetAwaiter()
                 .GetResult();
         }
+
+        [Fact]
+        public void MoveNextAsync_throws_OperationCanceledException_if_task_is_cancelled()
+        {
+            Assert.Throws<OperationCanceledException>(
+                () => new LazyAsyncEnumerator<int>(t => null).MoveNextAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
     }
 }
 

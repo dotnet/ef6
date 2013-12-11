@@ -40,6 +40,46 @@ namespace System.Data.Entity.Core.Common.Utils
             Assert.Equal(expectedNumberOfResults, currentResult - 1);
         }
 
+        [Fact]
+        public void ConsumeReaderAsync_throws_OperationCanceledException_before_executing_command_if_task_is_cancelled()
+        {
+            var mockDbDataReader = new Mock<DbDataReader>();
+            mockDbDataReader
+                .Setup(m => m.IsClosed)
+                .Throws(new InvalidOperationException("Not expected to be invoked - task has been cancelled."));
+
+            mockDbDataReader
+                .Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>()))
+                .Throws(new InvalidOperationException("Not expected to be invoked - task has been cancelled."));
+
+            Assert.Throws<OperationCanceledException>(
+                () => CommandHelper.ConsumeReaderAsync(mockDbDataReader.Object, new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+        }
+
+        [Fact]
+        public void ConsumeReaderAsync_checks_cancellation_token_when_enumerating_results()
+        {
+            var tokenSource = new CancellationTokenSource();
+            var taskCancelled = false;
+
+            var mockDbDataReader = new Mock<DbDataReader>();
+            mockDbDataReader
+                .Setup(e => e.NextResultAsync(It.IsAny<CancellationToken>()))
+                .Returns(
+                    (CancellationToken token) =>
+                    {
+                        Assert.False(taskCancelled);
+                        tokenSource.Cancel();
+                        taskCancelled = true;
+                        return Task.FromResult(true);
+                    });
+
+            Assert.Throws<OperationCanceledException>(
+                () => CommandHelper.ConsumeReaderAsync(mockDbDataReader.Object, tokenSource.Token)
+                    .GetAwaiter().GetResult());
+        }
+
 #endif
     }
 }

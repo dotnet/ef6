@@ -476,6 +476,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </returns>
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             try
             {
                 return await _storeDataReader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -509,6 +511,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </returns>
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return _storeDataReader.ReadAsync(cancellationToken);
         }
 

@@ -333,6 +333,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (!_shaper._isActive)
                 {
                     return false;
@@ -617,6 +619,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // See the documentation for enum State to understand the behaviors and requirements
                 // for each state.
                 switch (_state)
@@ -873,6 +877,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (!_readerConsumed)
                 {
                     while (true)

@@ -198,6 +198,8 @@ namespace System.Data.Entity.Internal
         {
             ValidateStateToGetValues("GetDatabaseValuesAsync", EntityState.Added);
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var dataRecord =
                 await GetDatabaseValuesQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 

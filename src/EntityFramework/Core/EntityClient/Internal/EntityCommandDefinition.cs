@@ -482,6 +482,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             var storeDataReader =
                 await ExecuteStoreCommandsAsync(entityCommand, behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             DbDataReader result = null;
@@ -568,6 +570,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         internal virtual async Task<DbDataReader> ExecuteStoreCommandsAsync(
             EntityCommand entityCommand, CommandBehavior behavior, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var storeProviderCommand = PrepareEntityCommandBeforeExecution(entityCommand);
 
             DbDataReader reader = null;

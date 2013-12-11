@@ -181,6 +181,9 @@ namespace System.Data.Entity.Infrastructure
         public Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
         {
             Check.NotNull(operation, "operation");
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             EnsurePreexecutionState();
 
             return ProtectedExecuteAsync(
@@ -216,6 +219,9 @@ namespace System.Data.Entity.Infrastructure
         public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
             Check.NotNull(operation, "operation");
+
+            cancellationToken.ThrowIfCancellationRequested();
+
             EnsurePreexecutionState();
 
             return ProtectedExecuteAsync(operation, cancellationToken);

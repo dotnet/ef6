@@ -234,6 +234,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <inheritdoc />
         public override Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             CheckOwnerNull();
 
             //Pass in null to indicate the CreateSourceQuery method should be used.
@@ -335,6 +337,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         internal virtual async Task LoadAsync(List<IEntityWrapper> collection, MergeOption mergeOption, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Validate that the Load is possible
             bool hasResults;
             var sourceQuery = ValidateLoad<TEntity>(mergeOption, "EntityCollection", out hasResults);

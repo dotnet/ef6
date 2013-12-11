@@ -552,6 +552,55 @@ namespace System.Data.Entity.Core.EntityClient
                     new EntityCommand("That's Number One!", new EntityConnection(), new Mock<IDbDependencyResolver>().Object)
                         .InterceptionContext);
             }
+
+#if !NET40
+
+            [Fact]
+            public void ExecuteReaderAsync_throws_OperationCanceledException_before_executing_command_if_task_is_cancelled()
+            {
+                var entityCommand = new EntityCommand();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityCommand
+                    .ExecuteReaderAsync(new CancellationToken(canceled: true))
+                    .GetAwaiter().GetResult());
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityCommand
+                        .ExecuteReaderAsync(CommandBehavior.Default, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void ExecuteDbDataReaderAsync_throws_OperationCanceledException_before_executing_command_if_task_is_cancelled()
+            {
+                var entityCommandInvoker = new EntityCommandInvoker();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityCommandInvoker
+                        .InvokeExecuteDbDataReaderAsync(CommandBehavior.Default, new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void ExecuteNonQueryAsync_throws_OperationCanceledException_before_executing_command_if_task_is_cancelled()
+            {
+                var entityCommand = new EntityCommand();
+
+                Assert.Throws<OperationCanceledException>(
+                    () => entityCommand
+                        .ExecuteNonQueryAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+
+            private class EntityCommandInvoker : EntityCommand
+            {
+                public Task<DbDataReader> InvokeExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+                {
+                    return ExecuteDbDataReaderAsync(behavior, cancellationToken);
+                }
+            }
+#endif
         }
     }
 }

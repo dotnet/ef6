@@ -60,6 +60,8 @@ namespace System.Data.Entity.Infrastructure
         /// </returns>
         public Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return operation();
         }
 
@@ -79,6 +81,8 @@ namespace System.Data.Entity.Infrastructure
         /// </returns>
         public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return operation();
         }
 

@@ -154,59 +154,6 @@ namespace System.Data.Entity.Interception
             Assert.True(executedLog.TaskStatus.HasFlag(TaskStatus.Faulted));
         }
 
-        [ExtendedFact(SkipForSqlAzure = true, Justification = "Fails on Azure due to issue #1148")]
-        public void Async_commands_that_are_canceled_are_still_intercepted()
-        {
-            var logger = new CommandLogger();
-            DbInterception.Add(logger);
-
-            var cancellation = new CancellationTokenSource();
-            var cancellationToken = cancellation.Token;
-
-            try
-            {
-                using (var context = new BlogContextNoInit())
-                {
-                    context.Database.Connection.Open();
-
-                    cancellation.Cancel();
-
-                    var command = context.Database.ExecuteSqlCommandAsync("update Blogs set Title = 'No' where Id = -1", cancellationToken);
-
-                    try
-                    {
-                        command.Wait();
-                    }
-                    catch (AggregateException)
-                    {
-                        // Ignore
-                    }
-
-                    Assert.True(command.IsCanceled);
-
-                    context.Database.Connection.Close();
-                }
-            }
-            finally
-            {
-                DbInterception.Remove(logger);
-            }
-
-            Assert.Equal(2, logger.Log.Count);
-
-            var executingLog = logger.Log[0];
-            Assert.Equal(CommandMethod.NonQueryExecuting, executingLog.Method);
-            Assert.True(executingLog.IsAsync);
-            Assert.Null(executingLog.Result);
-            Assert.Null(executingLog.Exception);
-
-            var executedLog = logger.Log[1];
-            Assert.Equal(CommandMethod.NonQueryExecuted, executedLog.Method);
-            Assert.True(executedLog.IsAsync);
-            Assert.Equal(0, executedLog.Result);
-            Assert.Null(executedLog.Exception);
-            Assert.True(executedLog.TaskStatus.HasFlag(TaskStatus.Canceled));
-        }
 #endif
 
         [Fact]
