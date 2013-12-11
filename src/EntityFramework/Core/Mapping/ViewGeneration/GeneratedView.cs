@@ -264,11 +264,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 Debug.Assert(!String.IsNullOrEmpty(eSQL), "eSQL query is not specified");
                 commandTree = (DbQueryCommandTree)ExternalCalls.CompileView(eSQL, mappingItemCollection, compilationMode);
 
-                // For non user-specified views, perform simplification.
-                if (!isUserSpecified)
-                {
-                    commandTree = ViewSimplifier.SimplifyView(extent, commandTree);
-                }
+                commandTree = ViewSimplifier.SimplifyView(extent, commandTree);
 
                 // See if the view matches the "discriminated" pattern (allows simplification of generated store commands)
                 if (extent.BuiltInTypeKind
