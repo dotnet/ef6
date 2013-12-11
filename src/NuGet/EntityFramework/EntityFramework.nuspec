@@ -7,8 +7,8 @@
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <tags>Microsoft EF Database Data O/RM ADO.NET</tags>
-    <projectUrl>http://go.microsoft.com/fwlink/?LinkId=335912</projectUrl>
-    <licenseUrl>http://go.microsoft.com/fwlink/?LinkId=335913</licenseUrl>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=320540</projectUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=320539</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Entity Framework is Microsoft's recommended data access technology for new applications.</description>
     <summary>Entity Framework is Microsoft's recommended data access technology for new applications.</summary>
