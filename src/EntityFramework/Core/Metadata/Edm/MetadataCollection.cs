@@ -149,9 +149,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             set
             {
                 ThrowIfReadOnly();
-                Debug.Assert(_collectionData.IdentityDictionary == null);
 
                 _collectionData.OrderedList[index] = value;
+
+                InvalidateCache();
             }
         }
 

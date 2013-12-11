@@ -68,12 +68,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // Gets an item from the collection with the given index
+        // Gets or sets an item from the collection with the given index
         // </summary>
         // <param name="index"> The index to search for </param>
         // <returns> An item from the collection </returns>
         // <exception cref="System.ArgumentOutOfRangeException">Thrown if the index is out of the range for the Collection</exception>
-        // <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
         public override EdmMember this[int index]
         {
             get
@@ -87,7 +86,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 return base[relativeIndex];
             }
-            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
+            set
+            {
+                var relativeIndex = GetRelativeIndex(index);
+                if (relativeIndex < 0)
+                {
+                    // This means baseTypeMemberCount must be non-zero, so we can safely cast the base type to StructuralType
+                    ((StructuralType)_declaringType.BaseType).Members.Source[index] = value;
+                }
+                else
+                {
+                    base[relativeIndex] = value;    
+                }                
+            }
         }
 
         // <summary>

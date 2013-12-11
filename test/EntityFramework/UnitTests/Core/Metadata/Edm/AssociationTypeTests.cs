@@ -194,5 +194,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Same(metadataProperty, associationType.MetadataProperties.SingleOrDefault(p => p.Name == "MetadataProperty"));
             Assert.True(associationType.IsReadOnly);
         }
+
+        [Fact]
+        public void Members_are_updated_when_KeyMembers_are_set()
+        {
+            var source = new EntityType("S", "N", DataSpace.CSpace);
+            var target = new EntityType("T", "N", DataSpace.CSpace);
+            var sourceEnd1 = new AssociationEndMember("SE1", source);
+            var sourceEnd2 = new AssociationEndMember("SE2", source);
+            var targetEnd1 = new AssociationEndMember("TE1", target);
+            var targetEnd2 = new AssociationEndMember("TE2", target);
+
+            var associationType = new AssociationType("AT", "N", true, DataSpace.CSpace);
+            associationType.SourceEnd = sourceEnd1;
+            associationType.TargetEnd = targetEnd1;
+
+            Assert.True(associationType.Members.Contains(sourceEnd1));
+            Assert.True(associationType.Members.Contains(targetEnd1));
+            Assert.False(associationType.Members.Contains(sourceEnd2));
+            Assert.False(associationType.Members.Contains(targetEnd2));
+
+            associationType.SourceEnd = sourceEnd2;
+            associationType.TargetEnd = targetEnd2;
+
+            Assert.False(associationType.Members.Contains(sourceEnd1));
+            Assert.False(associationType.Members.Contains(targetEnd1));
+            Assert.True(associationType.Members.Contains(sourceEnd2));
+            Assert.True(associationType.Members.Contains(targetEnd2));
+        }
     }
 }

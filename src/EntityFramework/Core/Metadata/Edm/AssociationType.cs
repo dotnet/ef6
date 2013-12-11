@@ -122,7 +122,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
-                    KeyMembers.Source[0] = value;
+                    SetKeyMember(0, value);
                 }
             }
         }
@@ -142,9 +142,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
-                    KeyMembers.Source[1] = value;
+                    SetKeyMember(1, value);
                 }
             }
+        }
+
+        private void SetKeyMember(int index, AssociationEndMember member)
+        {
+            Debug.Assert(index < KeyMembers.Count);
+            DebugCheck.NotNull(member);
+            Debug.Assert(!IsReadOnly);
+
+            var keyMember = KeyMembers.Source[index];
+            var memberIndex = Members.IndexOf(keyMember);
+
+            if (memberIndex >= 0)
+            {
+                Members.Source[memberIndex] = member;
+            }
+            else
+            {
+                Debug.Fail("KeyMembers and Members are out of sync.");
+            }
+
+            KeyMembers.Source[index] = member;
         }
 
         /// <summary>
