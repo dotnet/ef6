@@ -8,8 +8,8 @@
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <tags>Microsoft EF SQL Compact CE 3.5 Legacy</tags>
-    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=263480</projectUrl>
-    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=262998</licenseUrl>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=$ProjectUrlFwLinkID$</projectUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=$LicenseUrlFwLinkID$</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Allows SQL Server Compact 3.5 to be used with Entity Framework. Requires the SQL Server Compact 3.5 SP2 runtime to be installed.</description>
     <summary>Allows SQL Server Compact 3.5 to be used with Entity Framework.</summary>
