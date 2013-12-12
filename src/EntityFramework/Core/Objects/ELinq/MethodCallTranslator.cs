@@ -220,6 +220,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         new TrimStartTranslator(),
                         new TrimEndTranslator(),
                         new SpatialMethodCallTranslator(),
+                        new HasFlagTranslator(),
                     };
             }
 
@@ -967,6 +968,83 @@ namespace System.Data.Entity.Core.Objects.ELinq
 #pragma warning restore 612,618
                 }
             }
+            #region System.Enum method translators
+            internal sealed class HasFlagTranslator : CallTranslator
+            {
+                private static readonly MethodInfo hasFlagMethod = typeof(Enum).GetMethod("HasFlag");
+
+                internal HasFlagTranslator()
+                    : base(hasFlagMethod)
+                {
+                }
+
+                private static Expression TranslateHasFlag(ExpressionConverter parent,
+                     Expression sourceExpression, Expression valueExpression)
+                {
+                    var enumType = sourceExpression.Type;
+                    var enumIntegralType = enumType.GetEnumUnderlyingType();
+
+                    //Handle constant values.    where x.EnumProp.HasFlag(Enum.Value)
+                    if (valueExpression.NodeType == ExpressionType.Constant)
+                    {
+                        ConstantExpression constantValueExpression = valueExpression as ConstantExpression;
+                        var value = constantValueExpression.Value;
+                        if (value == null)
+                            throw new NotSupportedException("Value cannot be null.");
+
+                        var typedValueConstant = Expression.Constant(value);
+                        return ConvertToBitwiseUsingIntegralValues(sourceExpression, typedValueConstant, enumIntegralType);
+                    }
+                    //handle property values.     where x.EnumProp.HasFlag(otherEntity.EnumProp)
+                    else if (valueExpression.NodeType == ExpressionType.Convert)
+                    {
+                        UnaryExpression unaryExpression = valueExpression as UnaryExpression;
+                        var enumExpression = unaryExpression.Operand;
+                        return ConvertToBitwiseUsingIntegralValues(sourceExpression, enumExpression, enumIntegralType);
+                    }
+
+                    throw new NotSupportedException("Not supported use of Enum.HasFlag expression");
+                }
+
+                private static Expression ConvertToBitwiseUsingIntegralValues(Expression left, Expression right, Type enumIntegralType)
+                {
+                    if (left.Type != right.Type)
+                    {
+                        if (right.Type.IsNullable())
+                        {
+                            Type type;
+                            if (right.Type.TryUnwrapNullableType(out type))
+                            {
+                                if (left.Type != type)
+                                {
+                                    throw new NotSupportedException("The argument type, '" + type.FullName + "', is not the same as the enum type '" + left.Type.FullName + "'.");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            throw new NotSupportedException("The argument type, '" + right.Type.FullName + "', is not the same as the enum type '" + left.Type.FullName + "'.");
+                        }
+                    }
+
+                    //cast left and right to the underlying integral type of the enum
+                    var leftCastToInt = Expression.Convert(left, enumIntegralType);
+                    var rightCastToInt = Expression.Convert(right, enumIntegralType);
+                    //create the  ((l & r) == r) translation
+                    var andExpression = Expression.And(leftCastToInt, rightCastToInt);
+                    var equalsExpression = Expression.Equal(andExpression, rightCastToInt);
+
+                    return equalsExpression;
+                }
+
+                internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
+                {
+                    var translated = HasFlagTranslator.TranslateHasFlag(parent, call.Object, call.Arguments[0]);
+                    //Translate the new expression to a DbExpression
+                    return parent.TranslateExpression(translated);
+                }
+            }
+            #endregion
 
             #region System.Math method translators
 
