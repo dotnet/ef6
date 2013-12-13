@@ -41,6 +41,21 @@ namespace System.Data.Entity.Query.LinqToEntities
 
         public class BloggingInitializer : DropCreateDatabaseAlways<BloggingContext>
         {
+            protected override void Seed(BloggingContext context)
+            {
+                base.Seed(context);
+                ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
+
+                for (int i = -1; i < 20; i++)
+                {
+                    var blog = new Blog{
+                        BlogType = (BlogType)i,
+                        Name = "Blog " + i,
+                        NullableBlogType = null,
+                    };
+                    context.Blogs.Add(blog);
+                }
+            } 
         }
 
 
@@ -53,27 +68,37 @@ namespace System.Data.Entity.Query.LinqToEntities
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var context = new BloggingContext())
             {
-                ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
                 var query = from blog in context.Blogs
                             where blog.BlogType.HasFlag(BlogType.Favorite)
                             select blog;
 
+                AssertCorrectData(context, query, blog => blog.BlogType.HasFlag(BlogType.Favorite));
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
+        private static void AssertCorrectData(BloggingContext context, IQueryable<Blog> query,Func<Blog,bool> predicate)
+        {
+            var blogs = query.ToArray();
+            foreach (var blog in blogs)
+            {
+                Assert.True(predicate(blog));
+            }
+            var rest = context.Blogs.Except(query).ToArray();
+            foreach (var blog in rest)
+            {
+                Assert.False(predicate(blog));
             }
         }
 
         [Fact]
         public void HasFlag_with_flag_enum_property_is_translated_to_expected_sql()
         {
-
             const string expectedSql =
                 @"SELECT[Extent1].[BlogId]AS[BlogId],[Extent1].[Name]AS[Name],[Extent1].[BlogType]AS[BlogType],[Extent1].[NullableBlogType]AS[NullableBlogType]FROM[dbo].[Blogs]AS[Extent1]WHERE((CAST([Extent1].[BlogType]ASint))&(CAST([Extent1].[BlogType]ASint)))=CAST([Extent1].[BlogType]ASint)";
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var context = new BloggingContext())
             {
-                ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
                 var query = from blog in context.Blogs
                             where blog.BlogType.HasFlag(blog.BlogType)
                             select blog;
@@ -88,7 +113,6 @@ namespace System.Data.Entity.Query.LinqToEntities
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var context = new BloggingContext())
             {
-                ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
                 var query = from blog in context.Blogs
                             where blog.BlogType.HasFlag(OtherEnum.A)
@@ -106,7 +130,6 @@ namespace System.Data.Entity.Query.LinqToEntities
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
                 var blog = new Blog();
                 string resultQuery;
 
@@ -123,7 +146,6 @@ namespace System.Data.Entity.Query.LinqToEntities
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
                 var blog = new Blog();
                 string resultQuery;
 
@@ -135,16 +157,12 @@ namespace System.Data.Entity.Query.LinqToEntities
                 //EF does not allow .First() to be translated, it hints to use FirstOrDefault
                 resultQuery = db.Blogs.Where(b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault().BlogType)).ToString();
 
-                //// invalid cases
-                //db.Blogs.FirstOrDefault(b => b.BlogType.HasFlag(null)).ToString();
-                //nullableBlogType = null;
-                //db.Blogs.Where(b => b.BlogType.HasFlag(nullableBlogType)).ToString();
-                //db.Blogs.FirstOrDefault(b => b.BlogType.HasFlag(OtherEnum.A)).ToString();
-
-                //// ???
+                // ???
                 //resultQuery = db.Blogs.Where(b => b.BlogType.HasFlag(db.Blogs.First(x => x.NullableBlogType == null).NullableBlogType)).ToString();
             }
         }
+
+
 
         [Fact]
         public void HasFlag_can_translate_nullable_constant_values()
@@ -152,14 +170,23 @@ namespace System.Data.Entity.Query.LinqToEntities
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
                 var blog = new Blog();
-                string resultQuery;
+                string actual;
+
+                string expected = @"SELECT 
+    [Extent1].[BlogType] AS [BlogType], 
+    cast(1 as bit) AS [C1]
+    FROM [dbo].[Blogs] AS [Extent1]
+    WHERE (((( CAST( [Extent1].[BlogType] AS int)) & ( CAST( 1 AS int))) =  CAST( 1 AS int)) AND ( NOT ((( CAST( [Extent1].[BlogType] AS int)) & ( CAST( 1 AS int)) IS NULL) OR ( CAST( 1 AS int) IS NULL)))) OR ((( CAST( [Extent1].[BlogType] AS int)) & ( CAST( 1 AS int)) IS NULL) AND ( CAST( 1 AS int) IS NULL))";
+
 
                 // nullable enum type
-                resultQuery = db.Blogs.Where(b => b.BlogType.HasFlag((BlogType?)1)).ToString();
+                actual = db.Blogs.Where(b => b.BlogType.HasFlag((BlogType?)1)).Select(b => new { }).ToString();
+                Assert.Equal(expected, actual);
+
                 BlogType? nullableBlogType = BlogType.Favorite;
-                resultQuery = db.Blogs.Where(b => b.BlogType.HasFlag(nullableBlogType)).ToString();
+                actual = db.Blogs.Where(b => b.BlogType.HasFlag(nullableBlogType)).Select(b => new { }).ToString();
+                Assert.Equal(expected, actual);
             }
         }
 
@@ -169,7 +196,6 @@ namespace System.Data.Entity.Query.LinqToEntities
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
                 var blog = new Blog();
                 string resultQuery;
 
@@ -183,7 +209,6 @@ namespace System.Data.Entity.Query.LinqToEntities
             Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
                 var blog = new Blog();
 
                 BlogType? nullableBlogType = null;
