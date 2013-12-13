@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 // find the navigation property with this end
                 var navigationProperty
-                    = model.GetConceptualModel().EntityTypes
+                    = model.ConceptualModel.EntityTypes
                            .SelectMany(et => et.DeclaredNavigationProperties)
                            .SingleOrDefault(np => np.ResultEnd == principalEnd);
 

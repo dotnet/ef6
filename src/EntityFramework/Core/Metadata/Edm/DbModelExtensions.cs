@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// Extension methods for <see cref="DbModel"/>.
     /// </summary>
+    [Obsolete("ConceptualModel and StoreModel are now available as properties directly on DbModel.")]
     public static class DbModelExtensions
     {
         /// <summary>
@@ -15,6 +16,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="model">An instance of a class that implements IEdmModelAdapter (ex. DbModel).</param>
         /// <returns>An instance of EdmModel that represents the conceptual model.</returns>
+        [Obsolete("ConceptualModel is now available as a property directly on DbModel.")]
         public static EdmModel GetConceptualModel(this IEdmModelAdapter model)
         {
             Check.NotNull(model, "model");
@@ -27,6 +29,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="model">An instance of a class that implements IEdmModelAdapter (ex. DbModel).</param>
         /// <returns>An instance of EdmModel that represents the store model.</returns>
+        [Obsolete("StoreModel is now available as a property directly on DbModel.")]
         public static EdmModel GetStoreModel(this IEdmModelAdapter model)
         {
             Check.NotNull(model, "model");

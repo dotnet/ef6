@@ -28,10 +28,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             if (item.GetTableName() == null)
             {
-                var entitySet = model.GetStoreModel().GetEntitySet(item);
+                var entitySet = model.StoreModel.GetEntitySet(item);
 
                 entitySet.Table
-                    = model.GetStoreModel().GetEntitySets()
+                    = model.StoreModel.GetEntitySets()
                         .Where(es => es.Schema == entitySet.Schema)
                         .Except(new[] { entitySet })
                         .Select(n => n.Table)

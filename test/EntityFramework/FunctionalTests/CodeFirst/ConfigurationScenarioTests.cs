@@ -38,7 +38,7 @@ namespace System.Data.Entity.CodeFirst
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            var storeModel = ((IEdmModelAdapter)model).StoreModel;
+            var storeModel = model.StoreModel;
             var entityType = storeModel.EntityTypes.ElementAt(0);
 
             Assert.Equal(18, (byte)entityType.DeclaredProperties["P1"].TypeUsage.Facets["Precision"].Value);

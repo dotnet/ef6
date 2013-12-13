@@ -385,26 +385,24 @@ namespace System.Data.Entity
                     Database = EdmModel.CreateStoreModel(providerInfo, providerManifest, schemaVersion)
                 },
                 modelBuilderClone);
-            var modelAdapter = (IEdmModelAdapter)model;
 
-            modelAdapter.ConceptualModel.Container.AddAnnotation(XmlConstants.UseClrTypesAnnotation, "true");
+            model.ConceptualModel.Container.AddAnnotation(XmlConstants.UseClrTypesAnnotation, "true");
 
             _conventionsConfiguration.ApplyModelConfiguration(_modelConfiguration);
 
             _modelConfiguration.NormalizeConfigurations();
 
-            MapTypes(modelAdapter.ConceptualModel);
+            MapTypes(model.ConceptualModel);
 
-            _modelConfiguration.Configure(modelAdapter.ConceptualModel);
+            _modelConfiguration.Configure(model.ConceptualModel);
 
             _conventionsConfiguration.ApplyConceptualModel(model);
 
-            modelAdapter.ConceptualModel.Validate();
+            model.ConceptualModel.Validate();
 
             model = new DbModel(
-                modelAdapter.ConceptualModel.GenerateDatabaseMapping(providerInfo, providerManifest),
+                model.ConceptualModel.GenerateDatabaseMapping(providerInfo, providerManifest),
                 modelBuilderClone);
-            modelAdapter = (IEdmModelAdapter)model;
 
             // Run the PluralizingTableNameConvention first so that the new table name is available for configuration
             _conventionsConfiguration.ApplyPluralizingTableNameConvention(model);
@@ -415,7 +413,7 @@ namespace System.Data.Entity
 
             _conventionsConfiguration.ApplyMapping(model.DatabaseMapping);
 
-            modelAdapter.StoreModel.Validate();
+            model.StoreModel.Validate();
 
             return model;
         }

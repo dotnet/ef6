@@ -32,8 +32,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 VisitEdmModel(
                     _dataSpace == DataSpace.CSpace 
-                        ? _model.GetConceptualModel()
-                        : _model.GetStoreModel());
+                        ? _model.ConceptualModel
+                        : _model.StoreModel);
             }
 
             private void Dispatch<T>(T item)

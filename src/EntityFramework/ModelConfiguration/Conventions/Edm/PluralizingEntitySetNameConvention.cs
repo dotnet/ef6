@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             if (item.GetConfiguration() == null)
             {
                 item.Name
-                    = model.GetConceptualModel().GetEntitySets()
+                    = model.ConceptualModel.GetEntitySets()
                            .Except(new[] { item })
                            .UniquifyName(_pluralizationService.Pluralize(item.Name));
             }

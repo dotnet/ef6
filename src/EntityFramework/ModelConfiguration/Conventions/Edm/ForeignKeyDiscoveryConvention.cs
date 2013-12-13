@@ -75,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             if (!SupportsMultipleAssociations
-                && model.GetConceptualModel().GetAssociationTypesBetween(principalEnd.GetEntityType(), dependentEnd.GetEntityType()).Count() > 1)
+                && model.ConceptualModel.GetAssociationTypesBetween(principalEnd.GetEntityType(), dependentEnd.GetEntityType()).Count() > 1)
             {
                 return;
             }

@@ -309,6 +309,7 @@
     <Compile Include="Infrastructure\Interception\DbConnectionDispatcherTests.cs" />
     <Compile Include="Infrastructure\Interception\DbInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbLocalViewTests.cs" />
+    <Compile Include="Infrastructure\DbModelTests.cs" />
     <Compile Include="Infrastructure\DbProviderInfoTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />

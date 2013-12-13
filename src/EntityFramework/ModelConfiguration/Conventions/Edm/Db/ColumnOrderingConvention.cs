@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            ValidateColumns(item, model.GetStoreModel().GetEntitySet(item).Table);
+            ValidateColumns(item, model.StoreModel.GetEntitySet(item).Table);
 
             OrderColumns(item.Properties)
                 .Each(

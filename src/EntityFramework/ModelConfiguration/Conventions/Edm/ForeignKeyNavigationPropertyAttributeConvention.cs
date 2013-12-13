@@ -50,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                          .Select(p => p.Trim());
 
                 var declaringEntityType
-                    = model.GetConceptualModel().EntityTypes
+                    = model.ConceptualModel.EntityTypes
                            .Single(e => e.DeclaredNavigationProperties.Contains(item));
 
                 var dependentProperties

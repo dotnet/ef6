@@ -808,9 +808,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = CreateDbModel();
             var mockConvention1 = new Mock<IConceptualModelConvention<EdmModel>>();
             var mockConvention2 = new Mock<IConceptualModelConvention<EdmModel>>();
-            mockConvention1.Setup(c => c.Apply(model.GetConceptualModel(), model))
+            mockConvention1.Setup(c => c.Apply(model.ConceptualModel, model))
                 .Callback(
-                    () => mockConvention2.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Never()));
+                    () => mockConvention2.Verify(c => c.Apply(model.ConceptualModel, model), Times.Never()));
 
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
@@ -821,8 +821,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyConceptualModel(model);
 
-            mockConvention1.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Once());
-            mockConvention2.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Once());
+            mockConvention1.Verify(c => c.Apply(model.ConceptualModel, model), Times.Once());
+            mockConvention2.Verify(c => c.Apply(model.ConceptualModel, model), Times.Once());
         }
 
         [Fact]
@@ -854,9 +854,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = CreateDbModel();
             var mockConvention1 = new Mock<IStoreModelConvention<EdmModel>>();
             var mockConvention2 = new Mock<IStoreModelConvention<EdmModel>>();
-            mockConvention1.Setup(c => c.Apply(model.GetStoreModel(), model))
+            mockConvention1.Setup(c => c.Apply(model.StoreModel, model))
                 .Callback(
-                    () => mockConvention2.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Never()));
+                    () => mockConvention2.Verify(c => c.Apply(model.StoreModel, model), Times.Never()));
 
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
@@ -867,15 +867,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyStoreModel(model);
 
-            mockConvention1.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Once());
-            mockConvention2.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Once());
+            mockConvention1.Verify(c => c.Apply(model.StoreModel, model), Times.Once());
+            mockConvention2.Verify(c => c.Apply(model.StoreModel, model), Times.Once());
         }
 
         [Fact]
         public void ApplyConceptualModel_should_run_targeted_model_conventions()
         {
             var model = CreateDbModel();
-            var entityType = model.GetConceptualModel().AddEntityType("E");
+            var entityType = model.ConceptualModel.AddEntityType("E");
             var mockConvention = new Mock<IConceptualModelConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
@@ -896,7 +896,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void ApplyStoreModel_should_run_targeted_model_conventions()
         {
             var model = CreateDbModel();
-            var table = model.GetStoreModel().AddTable("T");
+            var table = model.StoreModel.AddTable("T");
             var mockConvention = new Mock<IStoreModelConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
@@ -1037,7 +1037,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void ApplyPluralizingTableNameConvention_should_run_PluralizingTableName_conventions_in_order()
         {
             var model = CreateDbModel();
-            model.GetStoreModel().AddItem(new EntityType("foo", "bar", DataSpace.SSpace));
+            model.StoreModel.AddItem(new EntityType("foo", "bar", DataSpace.SSpace));
             var mockConvention1 = new Mock<PluralizingTableNameConvention>();
             var mockConvention2 = new Mock<PluralizingTableNameConvention>();
             mockConvention1.Setup(c => c.Apply(It.IsAny<EntityType>(), model))

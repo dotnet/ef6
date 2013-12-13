@@ -8,16 +8,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     /// An interface to get the underlying store and conceptual model for a <see cref="DbModel"/>.
     /// </summary>
+    [Obsolete("ConceptualModel and StoreModel are now available as properties directly on DbModel.")]
     public interface IEdmModelAdapter
     {
         /// <summary>
         /// Gets the conceptual model.
         /// </summary>
+        [Obsolete("ConceptualModel is now available as a property directly on DbModel.")]
         EdmModel ConceptualModel { get; }
 
         /// <summary>
         /// Gets the store model.
         /// </summary>
+        [Obsolete("StoreModel is now available as a property directly on DbModel.")]
         EdmModel StoreModel { get; }
     }
 }
