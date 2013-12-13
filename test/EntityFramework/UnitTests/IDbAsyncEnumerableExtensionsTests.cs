@@ -12,6 +12,7 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
+    using System.Data.Entity.Resources;
 
     public class IDbAsyncEnumerableExtensionsTests
     {
@@ -237,6 +238,36 @@ namespace System.Data.Entity
         }
 
         [Fact]
+        public void SingleAsync_checks_for_empty_sequence_before_checking_cancellation()
+        {
+            var tokenSource = new CancellationTokenSource();
+            var taskCancelled = false;
+
+            var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<object>>();
+            mockAsyncEnumerator
+                .Setup(e => e.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .Returns(
+                    (CancellationToken token) =>
+                    {
+                        Assert.False(taskCancelled);
+                        tokenSource.Cancel();
+                        taskCancelled = true;
+                        return Task.FromResult(false);
+                    });
+
+            var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable<object>>();
+            mockAsyncEnumerable
+                .Setup(e => e.GetAsyncEnumerator())
+                .Returns(mockAsyncEnumerator.Object);
+
+            Assert.Equal(
+                Strings.EmptySequence,
+                Assert.Throws<InvalidOperationException>(
+                    () => mockAsyncEnumerable.Object.SingleAsync(tokenSource.Token)
+                        .GetAwaiter().GetResult()).Message);
+        }
+
+        [Fact]
         public void SingleOrDefaultAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
         {
             var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable<int>>();
@@ -287,6 +318,34 @@ namespace System.Data.Entity
         }
 
         [Fact]
+        public void ContainsAsync_returns_result_if_found_before_cancellation_request()
+        {
+            var tokenSource = new CancellationTokenSource();
+            var taskCancelled = false;
+
+            var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<int>>();
+            mockAsyncEnumerator
+                .Setup(e => e.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .Returns(
+                    (CancellationToken token) =>
+                    {
+                        Assert.False(taskCancelled);
+                        tokenSource.Cancel();
+                        taskCancelled = true;
+                        return Task.FromResult(true);
+                    });
+
+            mockAsyncEnumerator.Setup(e => e.Current).Returns(42);
+
+            var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable<int>>();
+            mockAsyncEnumerable
+                .Setup(e => e.GetAsyncEnumerator())
+                .Returns(mockAsyncEnumerator.Object);
+
+            Assert.True(mockAsyncEnumerable.Object.ContainsAsync(42, tokenSource.Token).GetAwaiter().GetResult());
+        }
+
+        [Fact]
         public void AnyAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
         {
             var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable<int>>();
@@ -313,6 +372,33 @@ namespace System.Data.Entity
         }
 
         [Fact]
+        public void AnyAsync_returns_result_if_found_before_cancellation_request()
+        {
+            var tokenSource = new CancellationTokenSource();
+            var taskCancelled = false;
+
+            var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<int>>();
+            mockAsyncEnumerator
+                .Setup(e => e.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .Returns(
+                    (CancellationToken token) =>
+                    {
+                        Assert.False(taskCancelled);
+                        tokenSource.Cancel();
+                        taskCancelled = true;
+                        return Task.FromResult(true);
+                    });
+
+            var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable<int>>();
+            mockAsyncEnumerable
+                .Setup(e => e.GetAsyncEnumerator())
+                .Returns(mockAsyncEnumerator.Object);
+
+            Assert.True(mockAsyncEnumerable.Object.AnyAsync(a => true, tokenSource.Token).GetAwaiter().GetResult());
+        }
+
+
+        [Fact]
         public void AllAsync_throws_OperationCanceledException_before_enumerating_if_task_is_cancelled()
         {
             var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable<int>>();
@@ -331,7 +417,33 @@ namespace System.Data.Entity
         public void AllAsync_checks_cancellation_token_when_enumerating_results()
         {
             AsyncMethod_checks_for_cancellation_when_enumerating_results<int>(
-                (source, cancellationToken) => source.AllAsync(n => false, cancellationToken));
+                (source, cancellationToken) => source.AllAsync(n => true, cancellationToken));
+        }
+
+        [Fact]
+        public void AllAsync_returns_result_if_found_before_cancellation_request()
+        {
+            var tokenSource = new CancellationTokenSource();
+            var taskCancelled = false;
+
+            var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<int>>();
+            mockAsyncEnumerator
+                .Setup(e => e.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .Returns(
+                    (CancellationToken token) =>
+                    {
+                        Assert.False(taskCancelled);
+                        tokenSource.Cancel();
+                        taskCancelled = true;
+                        return Task.FromResult(true);
+                    });
+
+            var mockAsyncEnumerable = new Mock<IDbAsyncEnumerable<int>>();
+            mockAsyncEnumerable
+                .Setup(e => e.GetAsyncEnumerator())
+                .Returns(mockAsyncEnumerator.Object);
+
+            Assert.False(mockAsyncEnumerable.Object.AllAsync(a => false, tokenSource.Token).GetAwaiter().GetResult());
         }
 
         [Fact]

@@ -234,9 +234,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <inheritdoc />
         public override Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             CheckOwnerNull();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             //Pass in null to indicate the CreateSourceQuery method should be used.
             return LoadAsync(null, mergeOption, cancellationToken);

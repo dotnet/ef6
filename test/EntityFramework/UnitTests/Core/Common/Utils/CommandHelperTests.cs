@@ -41,12 +41,23 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         [Fact]
+        public void ConsumeReaderAsync_does_not_throw_OperationCanceledException_if_reader_null_or_closed_even_if_task_is_cancelled()
+        {
+            Assert.False(CommandHelper.ConsumeReaderAsync(null, new CancellationToken(canceled: true)).IsCanceled);
+
+            var mockReader = new Mock<DbDataReader>();
+            mockReader.Setup(r => r.IsClosed).Returns(true);
+
+            Assert.False(CommandHelper.ConsumeReaderAsync(mockReader.Object, new CancellationToken(canceled: true)).IsCanceled);
+        }
+
+        [Fact]
         public void ConsumeReaderAsync_throws_OperationCanceledException_before_executing_command_if_task_is_cancelled()
         {
             var mockDbDataReader = new Mock<DbDataReader>();
             mockDbDataReader
                 .Setup(m => m.IsClosed)
-                .Throws(new InvalidOperationException("Not expected to be invoked - task has been cancelled."));
+                .Returns(false);
 
             mockDbDataReader
                 .Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>()))

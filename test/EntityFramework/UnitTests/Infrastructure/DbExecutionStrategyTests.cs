@@ -764,6 +764,20 @@ namespace System.Data.Entity.Infrastructure
             }
 
             [Fact]
+            public void Non_generic_ExecuteAsync_checks_transactions_before_checking_cancellation()
+            {
+                using (new TransactionScope())
+                {
+                    var mockExecutionStrategy = new Mock<DbExecutionStrategy> { CallBase = true };
+
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_ExistingTransaction("DbExecutionStrategyProxy"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => mockExecutionStrategy.Object.ExecuteAsync(() => null, new CancellationToken(canceled: true))).Message);
+                }
+            }
+
+            [Fact]
             public void Generic_ExecuteAsync_throws_OperationCanceledException_if_task_is_cancelled()
             {
                 var mockExecutionStrategy = new Mock<DbExecutionStrategy> { CallBase = true };
@@ -771,6 +785,20 @@ namespace System.Data.Entity.Infrastructure
                 Assert.Throws<OperationCanceledException>(
                     () => mockExecutionStrategy.Object.ExecuteAsync<object>(() => null, new CancellationToken(canceled: true))
                         .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void Generic_ExecuteAsync_checks_transactions_before_checking_cancellation()
+            {
+                using (new TransactionScope())
+                {
+                    var mockExecutionStrategy = new Mock<DbExecutionStrategy> { CallBase = true };
+
+                    Assert.Equal(
+                        Strings.ExecutionStrategy_ExistingTransaction("DbExecutionStrategyProxy"),
+                        Assert.Throws<InvalidOperationException>(
+                            () => mockExecutionStrategy.Object.ExecuteAsync<object>(() => null, new CancellationToken(canceled: true))).Message);
+                }
             }
         }
 

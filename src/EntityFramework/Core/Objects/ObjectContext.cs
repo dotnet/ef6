@@ -2391,10 +2391,10 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.ArgumentException"> entity is not attached to the context. </exception>
         public virtual Task RefreshAsync(RefreshMode refreshMode, object entity, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             Check.NotNull(entity, "entity");
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             AsyncMonitor.EnsureNotEntered();
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();

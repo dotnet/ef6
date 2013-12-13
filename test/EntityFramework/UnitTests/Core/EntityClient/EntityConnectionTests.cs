@@ -1114,9 +1114,35 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(ConnectionState.Open, connection.State);
             }
 
+            [Fact]
+            public void OpenAsync_checks_connection_before_checking_for_cancellation()
+            {
+                // InvalidOperationException(Strings.EntityClient_ConnectionStringNeededBeforeOperation);
+
+                Assert.Equal(
+                    Strings.EntityClient_ConnectionStringNeededBeforeOperation,
+                    Assert.Throws<InvalidOperationException>(
+                        () => new EntityConnection().OpenAsync(new CancellationToken(canceled: true))
+                            .GetAwaiter().GetResult()).Message);
+
+                var mockDbConnection = new Mock<DbConnection>();
+                mockDbConnection.Setup(c => c.State).Returns(ConnectionState.Broken);
+
+                var entityConnection = 
+                    new EntityConnection(/* metadataWorkspace */ null, mockDbConnection.Object, /* skipInitialization */ true, false, null);
+
+                Assert.Equal(
+                    Strings.EntityClient_CannotOpenBrokenConnection,
+                    Assert.Throws<InvalidOperationException>(
+                        () => entityConnection.OpenAsync(new CancellationToken(canceled: true))
+                            .GetAwaiter().GetResult()).Message);
+            }
+
+            [Fact]
             public void OperationCanceledException_thrown_before_opening_connection_if_task_is_cancelled()
             {
-                var entityConnection = new EntityConnection();
+                var entityConnection =
+                    new EntityConnection(/* metadataWorkspace */ null, new Mock<DbConnection>().Object, /* skipInitialization */ true, false, null);
 
                 Assert.Throws<OperationCanceledException>(
                     () => entityConnection.OpenAsync(new CancellationToken(canceled: true))

@@ -630,6 +630,33 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         [Fact]
+        public void SimpleEnumerator_MoveNextAsync_does_not_throw_if_shaper_is_not_active_even_if_task_is_being_cancelled()
+        {
+            var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory(s => s.Reader.GetValue(0));
+
+            var shaper = new Shaper<object>(
+                new Mock<DbDataReader>().Object,
+                /*context*/ null,
+                /*workspace*/ null,
+                MergeOption.AppendOnly,
+                /*stateCount*/ 1,
+                coordinatorFactory,
+                /*readerOwned*/ false,
+                /*streaming*/ false);
+
+            using (var enumerator = shaper.GetEnumerator())
+            {
+                Assert.Contains("SimpleEnumerator", enumerator.GetType().FullName);
+
+                enumerator.MoveNext();
+
+                Assert.False(enumerator.MoveNextAsync(new CancellationToken(canceled: true))
+                        .GetAwaiter().GetResult());
+            }
+        }
+
+
+        [Fact]
         public void ObjectQueryNestedEnumerator_MoveNextAsync_throws_OperationCanceledException_if_task_is_cancelled()
         {
             var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory(s => s.Reader.GetValue(0), s => true);
@@ -677,6 +704,30 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 Assert.Throws<OperationCanceledException>(
                     () => enumerator.MoveNextAsync(new CancellationToken(canceled: true))
                         .GetAwaiter().GetResult());
+            }
+        }
+
+        [Fact]
+        public void RecordStateEnumerator_MoveNextAsync_returns_reader_consumed_even_if_task_is_being_cancelled()
+        {
+            var coordinatorFactory = Objects.MockHelper.CreateCoordinatorFactory(s => (RecordState)null, s => true);
+
+            var shaper = new Shaper<RecordState>(
+                new Mock<DbDataReader>().Object,
+                /*context*/ null,
+                /*workspace*/ null,
+                MergeOption.AppendOnly,
+                /*stateCount*/ 1,
+                coordinatorFactory,
+                /*readerOwned*/ false,
+                /*streaming*/ false);
+
+
+            using (var enumerator = shaper.GetEnumerator())
+            {
+                Assert.Contains("RecordStateEnumerator", enumerator.GetType().FullName);
+                enumerator.MoveNext();
+                Assert.False(enumerator.MoveNextAsync(new CancellationToken(canceled: true)).GetAwaiter().GetResult());
             }
         }
 

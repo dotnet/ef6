@@ -577,14 +577,12 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                bool sequenceEmpty = !await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-
-                cancellationToken.ThrowIfCancellationRequested();
-
-                if (sequenceEmpty)
+                if (!await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     throw Error.EmptySequence();
                 }
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 var result = e.Current;
 
@@ -742,12 +740,12 @@ namespace System.Data.Entity.Infrastructure
             {
                 while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
                     if (EqualityComparer<TSource>.Default.Equals(e.Current, value))
                     {
                         return true;
                     }
+
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
             }
 
@@ -799,12 +797,12 @@ namespace System.Data.Entity.Infrastructure
             {
                 while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
                     if (predicate(e.Current))
                     {
                         return true;
                     }
+
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
             }
 
@@ -832,12 +830,12 @@ namespace System.Data.Entity.Infrastructure
             {
                 while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
                     if (!predicate(e.Current))
                     {
                         return false;
                     }
+
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
             }
 

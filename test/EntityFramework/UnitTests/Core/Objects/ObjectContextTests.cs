@@ -27,6 +27,7 @@ namespace System.Data.Entity.Core.Objects
     using Moq;
     using Moq.Protected;
     using Xunit;
+    using System.Collections;
 
     public class ObjectContextTests
     {
@@ -2084,6 +2085,29 @@ namespace System.Data.Entity.Core.Objects
                 // Finally verify that ExecutionStrategy.Execute was called
                 executionStrategyMock.Verify(
                     m => m.ExecuteAsync(It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<CancellationToken>()), Times.Once());
+            }
+
+            [Fact]
+            public void Parameters_checked_before_checking_for_cancellation()
+            {
+                var objectContext = new Mock<ObjectContextForMock>(new Mock<EntityConnection>().Object, /*entityAdapter*/ null)
+                {
+                    CallBase = true
+                }.Object;
+
+                objectContext.AsyncMonitor.Enter();
+
+                Assert.Equal(
+                    "collection",
+                    Assert.Throws<ArgumentNullException>(
+                        () => objectContext.RefreshAsync(RefreshMode.StoreWins, (IEnumerable)null, new CancellationToken(canceled: true))
+                            .GetAwaiter().GetResult()).ParamName);
+
+                Assert.Equal(
+                    "entity",
+                    Assert.Throws<ArgumentNullException>(
+                        () => objectContext.RefreshAsync(RefreshMode.StoreWins, (object)null, new CancellationToken(canceled: true))
+                            .GetAwaiter().GetResult()).ParamName);
             }
 
             [Fact]

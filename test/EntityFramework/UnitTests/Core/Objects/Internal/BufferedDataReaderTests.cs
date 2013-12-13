@@ -534,6 +534,18 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #if !NET40
+
+        [Fact]
+        public void InitializeAsync_does_not_throw_OperationCanceledException_if_reader_is_null_even_if_task_is_cancelled()
+        {
+            var reader = new BufferedDataReader(new Mock<DbDataReader>().Object);
+
+            reader.Close();
+
+            Assert.False(reader.InitializeAsync("manifestToken", new Mock<DbProviderServices>().Object,
+                    new Type[0], new bool[0], new CancellationToken(canceled: true)).IsCanceled);
+        }
+
         [Fact]
         public void InitializeAsync_throws_OperationCanceledException_if_task_is_cancelled()
         {

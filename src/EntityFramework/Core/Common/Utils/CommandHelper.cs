@@ -44,11 +44,11 @@ namespace System.Data.Entity.Core.Common.Utils
         // </summary>
         internal static async Task ConsumeReaderAsync(DbDataReader reader, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             if (null != reader
                 && !reader.IsClosed)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     cancellationToken.ThrowIfCancellationRequested();

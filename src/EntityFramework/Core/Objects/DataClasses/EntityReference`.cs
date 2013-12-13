@@ -219,9 +219,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <inheritdoc />
         public override async Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
             CheckOwnerNull();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             // Validate that the Load is possible
             bool hasResults;

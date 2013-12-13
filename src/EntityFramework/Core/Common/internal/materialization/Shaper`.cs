@@ -333,12 +333,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
                 if (!_shaper._isActive)
                 {
                     return false;
                 }
+
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (await _shaper.StoreReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     try
@@ -877,10 +878,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
                 if (!_readerConsumed)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     while (true)
                     {
                         // keep on cycling until we find a result

@@ -182,9 +182,9 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(operation, "operation");
 
-            cancellationToken.ThrowIfCancellationRequested();
-
             EnsurePreexecutionState();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             return ProtectedExecuteAsync(
                 async () =>
@@ -220,9 +220,9 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(operation, "operation");
 
-            cancellationToken.ThrowIfCancellationRequested();
-
             EnsurePreexecutionState();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             return ProtectedExecuteAsync(operation, cancellationToken);
         }

@@ -179,13 +179,14 @@ namespace System.Data.Entity.Core.Objects.Internal
             string providerManifestToken, DbProviderServices providerSerivces, Type[] columnTypes, bool[] nullableColumns,
             CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var reader = _underlyingReader;
-            if (reader == null)
+            if (_underlyingReader == null)
             {
                 return;
             }
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var reader = _underlyingReader;
             _underlyingReader = null;
 
             try

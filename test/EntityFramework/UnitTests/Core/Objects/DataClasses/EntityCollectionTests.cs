@@ -396,7 +396,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             [Fact]
             public void OperationCanceledException_thrown_before_loading_results_if_task_is_cancelled()
             {
-                var entityCollection = new EntityCollection<object>();
+                var mockEntityWrapper = new Mock<IEntityWrapper>();
+                mockEntityWrapper
+                    .Setup(w => w.Entity)
+                    .Returns(new object());
+
+                var entityCollection = 
+                    new EntityCollection<object>(
+                        mockEntityWrapper.Object, 
+                        new RelationshipNavigation("Going", "fromA", "toB", null, null), 
+                        new Mock<IRelationshipFixer>().Object);
 
                 Assert.Throws<OperationCanceledException>(
                     () => entityCollection.LoadAsync(new CancellationToken(canceled: true))
@@ -410,6 +419,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 Assert.Throws<OperationCanceledException>(
                     () => entityCollection.LoadAsync(MergeOption.NoTracking, new CancellationToken(canceled: true))
                         .GetAwaiter().GetResult());
+            }
+
+            [Fact]
+            public void Wrapped_entity_validated_even_if_task_is_being_canceled()
+            {
+                var entityCollection = new EntityCollection<object>();
+
+                Assert.Equal(
+                    Strings.RelatedEnd_OwnerIsNull,
+                    Assert.Throws<InvalidOperationException>(
+                        () => entityCollection.LoadAsync(new CancellationToken(canceled: true))
+                            .GetAwaiter().GetResult()).Message);
             }
         }
 #endif
