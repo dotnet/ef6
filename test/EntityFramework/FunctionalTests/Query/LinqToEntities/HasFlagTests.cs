@@ -162,7 +162,9 @@ namespace System.Data.Entity.Query.LinqToEntities
                 //Expect EF to return data when querying HasFlag using nullable reference that has a value
                 AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType != null).NullableBlogType));
 
+                //This throws in normal code / Linq to Objects
                 //Expect EF to return no data when querying HasFlag using nullable reference that is null
+                //Is this the expected behavior? (there isn't much else that can be done..)
                 var query = db.Blogs.Where(b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType == null).NullableBlogType));
                 var matching = query.ToArray();
                 Assert.True(matching.Count() == 0, "Querying HasFlag with null expression should not match any data");
@@ -193,7 +195,6 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
-
                 var blog = db.Blogs
                     .Where(b => 
                         b.BlogType.HasFlag(BlogType.Important) && 
@@ -207,7 +208,6 @@ namespace System.Data.Entity.Query.LinqToEntities
 
                 Assert.True(blog.hasFlagTrue);
                 Assert.False(blog.hasFlagFalse);
-
             }
         }
     }

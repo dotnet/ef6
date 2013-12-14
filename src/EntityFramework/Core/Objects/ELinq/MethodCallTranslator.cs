@@ -978,11 +978,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                 }
 
-                private static Expression TranslateHasFlag(ExpressionConverter parent,
-                     Expression sourceExpression, Expression valueExpression)
+                private static CqtExpression TranslateHasFlag(ExpressionConverter parent,
+                     LinqExpression sourceExpression, LinqExpression valueExpression)
                 {
                     var enumType = sourceExpression.Type;
                     var enumIntegralType = enumType.GetEnumUnderlyingType();
+
+                    
 
                     //ValueExpression is always typed as System.Enum due to the
                     //signature of HasFlag(System.Enum)
@@ -1008,7 +1010,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             throw new NotSupportedException("Value cannot be null.");
 
                         var typedValueConstant = Expression.Constant(value);
-                        return ConvertToBitwiseUsingIntegralValues(sourceExpression, typedValueConstant, enumIntegralType);
+                        return ConvertToBitwiseUsingIntegralValues(parent, sourceExpression, typedValueConstant, enumIntegralType);
                     }
 
                     //Unwrap System.Enum conversion
@@ -1016,30 +1018,29 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     {
                         UnaryExpression unaryExpression = valueExpression as UnaryExpression;
                         var enumExpression = unaryExpression.Operand;
-                        return ConvertToBitwiseUsingIntegralValues(sourceExpression, enumExpression, enumIntegralType);
+                        return ConvertToBitwiseUsingIntegralValues(parent, sourceExpression, enumExpression, enumIntegralType);
                     }
 
                     throw new NotSupportedException("Not supported use of Enum.HasFlag expression");
                 }
 
-                private static Expression ConvertToBitwiseUsingIntegralValues(Expression sourceExpression, Expression valueExpression, Type enumIntegralType)
+                private static CqtExpression ConvertToBitwiseUsingIntegralValues(ExpressionConverter parent, LinqExpression sourceExpression, LinqExpression valueExpression, Type enumIntegralType)
                 {
                     EnsureCompatibleEnumTypes(sourceExpression.Type, valueExpression.Type);
 
-                    //cast left and right to the underlying integral type of the enum
-                    var sourceCastToIntegral = Expression.Convert(sourceExpression, enumIntegralType);
-                    var valueCastToIntegral = Expression.Convert(valueExpression, enumIntegralType);
-                    //create the  ((l & r) == r) translation
-                    var andExpression = Expression.And(sourceCastToIntegral, valueCastToIntegral);
-                    var equalExpression = Expression.Equal(andExpression, valueCastToIntegral);
-
-                    return equalExpression;
+                    //build the check bit ((l & r) == r) expression
+                    var dbIntegralType = parent.GetValueLayerType(enumIntegralType);
+                    var dbSourceExp = parent.TranslateExpression(sourceExpression).CastTo(dbIntegralType);
+                    var dbValueExp = parent.TranslateExpression(valueExpression).CastTo(dbIntegralType);
+                    var dbBitwiseExp = dbSourceExp.BitwiseAnd(dbValueExp);
+                    var dbEqualExp = dbBitwiseExp.Equal(dbValueExp);
+                    return dbEqualExp;
                 }
 
                 private static void EnsureCompatibleEnumTypes(Type sourceExpressionType, Type valueExpressionType)
                 {
                     var unwrappedValueExpressionType = valueExpressionType;
-                    //extract nullable type if needed
+                    //unwrap nullable type if needed
                     if (valueExpressionType.IsNullable())
                         valueExpressionType.TryUnwrapNullableType(out unwrappedValueExpressionType);                          
 
@@ -1051,7 +1052,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     var translated = HasFlagTranslator.TranslateHasFlag(parent, call.Object, call.Arguments[0]);
                     //Translate the new expression to a DbExpression
-                    return parent.TranslateExpression(translated);
+                    return translated;
                 }
             }
             #endregion
