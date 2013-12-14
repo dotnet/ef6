@@ -184,5 +184,31 @@ namespace System.Data.Entity.Query.LinqToEntities
                 Assert.Throws<NotSupportedException>(() => db.Blogs.Where(b => b.BlogType.HasFlag(nullableBlogType)).ToString());
             }
         }
+
+        [Fact]
+        public void HasFlag_projects_boolean_values_in_select()
+        {
+            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
+            using (var db = new BloggingContext())
+            {
+                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
+
+
+                var blog = db.Blogs
+                    .Where(b => 
+                        b.BlogType.HasFlag(BlogType.Important) && 
+                        !b.BlogType.HasFlag(BlogType.Online))
+                    .Select(b => new
+                    {
+                        hasFlagTrue = b.BlogType.HasFlag(BlogType.Important),
+                        hasFlagFalse = b.BlogType.HasFlag(BlogType.Online),
+                    })
+                    .First();
+
+                Assert.True(blog.hasFlagTrue);
+                Assert.False(blog.hasFlagFalse);
+
+            }
+        }
     }
 }

@@ -1000,6 +1000,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     {
                         ConstantExpression constantValueExpression = valueExpression as ConstantExpression;
                         var value = constantValueExpression.Value;
+
+                        //should we throw here?
+                        //it makes the implementation consistent with System.Enum.HasFlag
+                        //but less consistent with how HasFlag behaves here if passed a nullable enum property
                         if (value == null)
                             throw new NotSupportedException("Value cannot be null.");
 
