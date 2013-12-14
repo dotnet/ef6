@@ -585,6 +585,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return null;
             }
 
+            //ignore System.Enum
+            if (fromClrType != null
+                && toClrType == typeof(System.Enum)
+                && (fromClrType.IsEnum
+                    || fromClrType.IsGenericType() 
+                        && fromClrType.GetGenericTypeDefinition() == typeof(Nullable<>)
+                        && fromClrType.GetGenericArguments()[0].IsEnum))
+                return null;
+
             // If the types are the same or the fromType is assignable to toType, return null
             // (indicating no cast is required)
             TypeUsage toType;

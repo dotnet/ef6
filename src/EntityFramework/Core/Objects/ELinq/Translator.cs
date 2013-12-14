@@ -118,7 +118,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // "length" in compatibility checks)
                 TypeUsage type;
                 var typeSupported = false;
-                if (parent.TryGetValueLayerType(linq.Type, out type))
+                var linqType = linq.Type;
+
+                //unwrap System.Enum
+                if (linq.Type == typeof(System.Enum))
+                    linqType = linq.Value.GetType();
+
+                if (parent.TryGetValueLayerType(linqType, out type))
                 {
                     // For constant values, support only primitive and enum type (this is all that is supported by CQTs)
                     // For null types, also allow EntityType. Although other types claim to be supported, they
@@ -157,7 +163,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var value = linq.Value;
                     if (Helper.IsPrimitiveType(type.EdmType))
                     {
-                        var nonNullableLinqType = TypeSystem.GetNonNullableType(linq.Type);
+                        var nonNullableLinqType = TypeSystem.GetNonNullableType(linqType);
                         if (nonNullableLinqType.IsEnum())
                         {
                             value = System.Convert.ChangeType(

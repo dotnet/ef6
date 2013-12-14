@@ -66,27 +66,28 @@ namespace System.Data.Entity.Query.LinqToEntities
             } 
         }
 
-        private void AssertConsistentWithLinqToObjects(BloggingContext db, Expression<Func<Blog, bool>> predicate)
+        private void AssertConsistency(BloggingContext db, Expression<Func<Blog, bool>> predicate)
         {
-            var query = db.Blogs.Where(predicate);
+            var matching = db.Blogs.Where(predicate).ToArray();
             var compiledPredicate = predicate.Compile();
-            var matching = query.ToArray();
+
             foreach (var blog in matching)
             {
+                //if anything fails here, the generated SQL is incorrect
                 Assert.True(compiledPredicate(blog));
             }
 
             // Take all blogs from the db, except the ones found by the query
             // We do this in mem (AsEnum) to ensure we don't get an incorrect set because of the feature we are testing
-            var nonMatching = db.Blogs.AsEnumerable().Except(query).ToArray();
+            var nonMatching = db.Blogs.AsEnumerable().Except(matching).ToArray();
             Assert.False(nonMatching.Count() == 0, "No non matching entries was found, query is too greedy");
-            
+                        
             foreach (var blog in nonMatching)
             {
+                //if anything fails here, the generated SQL is incorrect
                 Assert.False(compiledPredicate(blog));
             }
         }
-
 
         [Fact]
         public void HasFlag_with_incorrect_type_throws_NotSupportedException()
@@ -97,9 +98,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
                 var query = db.Blogs.Where(b => b.BlogType.HasFlag(OtherEnum.A));
-                var actualMessage = Assert.Throws<NotSupportedException>(() => query.ToArray()).Message;
-                var expectedMessage = Assert.Throws<ArgumentException>(() => BlogType.Favorite.HasFlag(OtherEnum.A)).Message;
-                Assert.Equal(expectedMessage, actualMessage);
+                Assert.Throws<NotSupportedException>(() => query.ToArray());              
             }
         }
 
@@ -111,9 +110,9 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(BlogType.Favorite));
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(BlogType.Favorite | BlogType.Online));
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag((BlogType)(-1)));
+                AssertConsistency(db, b => b.BlogType.HasFlag(BlogType.Favorite));
+                AssertConsistency(db, b => b.BlogType.HasFlag(BlogType.Favorite | BlogType.Online));
+                AssertConsistency(db, b => b.BlogType.HasFlag((BlogType)(-1)));
             }
         }
 
@@ -126,12 +125,12 @@ namespace System.Data.Entity.Query.LinqToEntities
                 ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
                 
                 var blogType = BlogType.Favorite;
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(blogType));
+                AssertConsistency(db, b => b.BlogType.HasFlag(blogType));
                 var blog = new Blog();
                 blog.BlogType = BlogType.Online | BlogType.Important;
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(blog.BlogType));
+                AssertConsistency(db, b => b.BlogType.HasFlag(blog.BlogType));
                 //EF does not allow .First() to be translated, it hints to use FirstOrDefault
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.BlogType == BlogType.Favorite).BlogType));
+                AssertConsistency(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.BlogType == BlogType.Favorite).BlogType));
             }
         }
 
@@ -145,9 +144,9 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag((BlogType?)1));
+                AssertConsistency(db, b => b.BlogType.HasFlag((BlogType?)1));
                 BlogType? nullableBlogType = BlogType.Favorite;
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(nullableBlogType));
+                AssertConsistency(db, b => b.BlogType.HasFlag(nullableBlogType));
             }
         }
 
@@ -160,7 +159,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
                 //Expect EF to return data when querying HasFlag using nullable reference that has a value
-                AssertConsistentWithLinqToObjects(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType != null).NullableBlogType));
+                AssertConsistency(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType != null).NullableBlogType));
 
                 //This throws in normal code / Linq to Objects
                 //Expect EF to return no data when querying HasFlag using nullable reference that is null
