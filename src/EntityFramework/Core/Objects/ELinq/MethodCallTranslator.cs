@@ -984,7 +984,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var enumType = sourceExpression.Type;
                     var enumIntegralType = enumType.GetEnumUnderlyingType();
 
-                    //Handle constant values.    where x.EnumProp.HasFlag(Enum.Value)
+                    //ValueExpression is always typed as System.Enum due to the
+                    //signature of HasFlag(System.Enum)
+                    //
+                    //We need to unwrap that to the real enum type
+                    //so we can make type checks and/or cast to integral values
+                    //
+                    //Should this unwrapping go here, or in ExpressionConverter ?
+                    //System.Enum does not mean enum support, it means support for enum base type
+                    //System.Enum is not valid in any context in EF anywhere AFAIK
+                    //it just needs to be dealt with due to the HasFlag signature
+
+                    //Unwrap System.Enum constant
                     if (valueExpression.NodeType == ExpressionType.Constant)
                     {
                         ConstantExpression constantValueExpression = valueExpression as ConstantExpression;
@@ -995,7 +1006,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         var typedValueConstant = Expression.Constant(value);
                         return ConvertToBitwiseUsingIntegralValues(sourceExpression, typedValueConstant, enumIntegralType);
                     }
-                    //handle property values.     where x.EnumProp.HasFlag(otherEntity.EnumProp)
+
+                    //Unwrap System.Enum conversion
                     else if (valueExpression.NodeType == ExpressionType.Convert)
                     {
                         UnaryExpression unaryExpression = valueExpression as UnaryExpression;
@@ -1006,35 +1018,29 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     throw new NotSupportedException("Not supported use of Enum.HasFlag expression");
                 }
 
-                private static Expression ConvertToBitwiseUsingIntegralValues(Expression left, Expression right, Type enumIntegralType)
+                private static Expression ConvertToBitwiseUsingIntegralValues(Expression sourceExpression, Expression valueExpression, Type enumIntegralType)
                 {
-                    if (left.Type != right.Type)
-                    {
-                        if (right.Type.IsNullable())
-                        {
-                            Type type;
-                            if (right.Type.TryUnwrapNullableType(out type))
-                            {
-                                if (left.Type != type)
-                                {
-                                    throw new NotSupportedException("The argument type, '" + type.FullName + "', is not the same as the enum type '" + left.Type.FullName + "'.");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            throw new NotSupportedException("The argument type, '" + right.Type.FullName + "', is not the same as the enum type '" + left.Type.FullName + "'.");
-                        }
-                    }
+                    EnsureCompatibleEnumTypes(sourceExpression.Type, valueExpression.Type);
 
                     //cast left and right to the underlying integral type of the enum
-                    var leftCastToInt = Expression.Convert(left, enumIntegralType);
-                    var rightCastToInt = Expression.Convert(right, enumIntegralType);
+                    var sourceCastToIntegral = Expression.Convert(sourceExpression, enumIntegralType);
+                    var valueCastToIntegral = Expression.Convert(valueExpression, enumIntegralType);
                     //create the  ((l & r) == r) translation
-                    var andExpression = Expression.And(leftCastToInt, rightCastToInt);
-                    var equalsExpression = Expression.Equal(andExpression, rightCastToInt);
+                    var andExpression = Expression.And(sourceCastToIntegral, valueCastToIntegral);
+                    var equalExpression = Expression.Equal(andExpression, valueCastToIntegral);
 
-                    return equalsExpression;
+                    return equalExpression;
+                }
+
+                private static void EnsureCompatibleEnumTypes(Type sourceExpressionType, Type valueExpressionType)
+                {
+                    var unwrappedValueExpressionType = valueExpressionType;
+                    //extract nullable type if needed
+                    if (valueExpressionType.IsNullable())
+                        valueExpressionType.TryUnwrapNullableType(out unwrappedValueExpressionType);                          
+
+                    if (sourceExpressionType != unwrappedValueExpressionType)
+                        throw new NotSupportedException("The argument type, '" + unwrappedValueExpressionType.FullName + "', is not the same as the enum type '" + sourceExpressionType.FullName + "'.");
                 }
 
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
