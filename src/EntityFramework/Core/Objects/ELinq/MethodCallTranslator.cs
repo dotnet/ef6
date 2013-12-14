@@ -221,6 +221,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         new TrimEndTranslator(),
                         new SpatialMethodCallTranslator(),
                         new HasFlagTranslator(),
+                        new ToStringTranslator(),
                     };
             }
 
@@ -1452,6 +1453,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         typeof(String).GetDeclaredMethod("Concat", typeof(string), typeof(string), typeof(string));
                     yield return
                         typeof(String).GetDeclaredMethod("Concat", typeof(string), typeof(string), typeof(string), typeof(string));
+                    yield return
+                        typeof(String).GetDeclaredMethod("Concat", typeof(object), typeof(object));
+                    yield return
+                        typeof(String).GetDeclaredMethod("Concat", typeof(object), typeof(object), typeof(object));
+                    yield return
+                        typeof(String).GetDeclaredMethod("Concat", typeof(object), typeof(object), typeof(object), typeof(object));
+                    yield return
+                        typeof(String).GetDeclaredMethod("Concat", typeof(object[]));
                 }
 
                 // Translation:
@@ -1460,20 +1469,46 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 //      Concat (arg1, arg2, arg3, arg4)     -> Concat(Concat(Concat(arg1, arg2), arg3), arg4)
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
-                    Debug.Assert(
-                        call.Arguments.Count >= 2 && call.Arguments.Count <= 4, "Expecting between 2 and 4 arguments for String.Concat");
-
-                    var result = parent.TranslateExpression(call.Arguments[0]);
-                    for (var argIndex = 1; argIndex < call.Arguments.Count; argIndex++)
+                    if (call.Arguments.Count == 1 && call.Arguments.First().Type == typeof(object[]))
                     {
-                        // result = Concat(result, arg[argIndex])
-                        result = parent.CreateCanonicalFunction(
-                            Concat, call,
-                            result,
-                            parent.TranslateExpression(call.Arguments[argIndex]));
+                        var args = ((NewArrayExpression)call.Arguments[0]).Expressions.ToArray();
+                        return StringTranslatorUtil.ConcatArgs(parent, call, args );
                     }
-                    return result;
+                    else
+                    {
+                        return StringTranslatorUtil.ConcatArgs(parent, call, call.Arguments.ToArray());
+                    }
                 }
+            }
+
+            internal sealed class ToStringTranslator : CallTranslator
+            {
+                private static readonly MethodInfo[] methods = new[]{
+                        typeof(string).GetDeclaredMethod("ToString"),
+                        typeof(byte).GetDeclaredMethod("ToString"),
+                        typeof(sbyte).GetDeclaredMethod("ToString"),
+                        typeof(short).GetDeclaredMethod("ToString"),
+                        typeof(int).GetDeclaredMethod("ToString"),
+                        typeof(long).GetDeclaredMethod("ToString"),
+                        typeof(double).GetDeclaredMethod("ToString"),
+                        typeof(float).GetDeclaredMethod("ToString"),
+                        typeof(Guid).GetDeclaredMethod("ToString"),
+                        typeof(DateTime).GetDeclaredMethod("ToString"),
+                        typeof(DateTimeOffset).GetDeclaredMethod("ToString"),
+                        typeof(decimal).GetDeclaredMethod("ToString"),
+                        typeof(bool).GetDeclaredMethod("ToString"),
+                        typeof(object).GetDeclaredMethod("ToString"),
+                };
+
+                internal ToStringTranslator()
+                    : base(methods)
+                {
+                }
+
+                internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
+                {
+                    return StringTranslatorUtil.ConvertToString(parent, call.Object);
+                }                                
             }
 
             internal abstract class TrimBaseTranslator : CallTranslator

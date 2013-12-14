@@ -195,5 +195,31 @@ namespace System.Data.Entity.Utilities
 
             return expression;
         }
+
+        public static bool IsNullConstant(this Expression expression)
+        {
+            // convert statements introduced by compiler should not affect nullness
+            expression = expression.RemoveConvert();
+
+            // check if the unwrapped expression is a null constant
+            if (ExpressionType.Constant
+                != expression.NodeType)
+            {
+                return false;
+            }
+            var constant = (ConstantExpression)expression;
+            return null == constant.Value;
+        }
+
+        public static bool IsStringAddExpression(this Expression expression)
+        {
+            var linq = expression as BinaryExpression;
+            if (null == linq)
+                return false;
+            if (null == linq.Method && linq.NodeType == ExpressionType.Add)
+                return false;
+
+            return linq.Method.DeclaringType == typeof(string) && linq.Method.Name == "Concat";
+        }
     }
 }
