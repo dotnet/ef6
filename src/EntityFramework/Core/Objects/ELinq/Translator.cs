@@ -122,7 +122,19 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 //unwrap System.Enum
                 if (linq.Type == typeof(System.Enum))
-                    linqType = linq.Value.GetType();
+                {
+                    if (linq.Value != null)
+                        linqType = linq.Value.GetType();
+                    else
+                    {
+						//Is this safe? null argument carries no type info
+						//thus, we can't resolve null to the correct integral type
+						//or should we catch null constant at LinqExp level?
+						//in that case, the translator will break if passed (Enum)null
+                        var nullValue = DbExpression.FromInt64(null);
+                        return nullValue;
+                    }
+                }
 
                 if (parent.TryGetValueLayerType(linqType, out type))
                 {

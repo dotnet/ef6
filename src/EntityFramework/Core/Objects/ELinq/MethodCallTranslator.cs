@@ -984,18 +984,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var enumType = sourceExpression.Type;
                     var enumIntegralType = enumType.GetEnumUnderlyingType();                  
                    
-                    //throw if null value
-                    if (valueExpression.NodeType == ExpressionType.Constant)
-                    {
-                        ConstantExpression constantValueExpression = valueExpression as ConstantExpression;
-                        var value = constantValueExpression.Value;
-                        if (value == null)
-                            throw new NotSupportedException("Value cannot be null.");                        
-                    }
+                    var dbValueExp = parent.TranslateExpression(valueExpression);                    
+                    //throw if argument is null constant
+                    if (dbValueExp is DbNullExpression)
+                        throw new NotSupportedException("Value cannot be null in Enum.HasFlag");
 
-                    var dbSourceExp = parent.TranslateExpression(sourceExpression);
-                    var dbValueExp = parent.TranslateExpression(valueExpression);
-
+                    var dbSourceExp = parent.TranslateExpression(sourceExpression);   
+                 
+                    //throw if source and value types mismatch
                     if (dbSourceExp.ResultType.EdmType != dbValueExp.ResultType.EdmType)
                         throw new NotSupportedException("The argument type, '" + dbValueExp.ResultType.EdmType.Name + "', is not the same as the enum type '" + dbSourceExp.ResultType.EdmType.Name + "'.");
 
