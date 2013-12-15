@@ -4,6 +4,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
+    using System.Globalization;
     using System.Linq;
     using System.ServiceProcess;
 
@@ -74,7 +75,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             foreach (var subKey in key.GetSubKeyNames())
             {
                 decimal decimalVersion;
-                if (Decimal.TryParse(subKey, out decimalVersion))
+                if (Decimal.TryParse(subKey, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimalVersion))
                 {
                     orderableVersions.Add(Tuple.Create(decimalVersion, subKey));
                 }
