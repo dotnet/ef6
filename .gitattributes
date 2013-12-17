@@ -1,5 +1,1 @@
 * text=auto
-
-*.sln    merge=union
-*.csproj merge=union
-*.vbproj merge=union
