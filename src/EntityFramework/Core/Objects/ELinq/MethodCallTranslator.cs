@@ -1001,17 +1001,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     }
 
                     var enumUnderlyingType = TypeHelpers.CreateEnumUnderlyingTypeUsage(dbSourceExp.ResultType);
-
-                    // creating a seperate instance to avoid situation where translating the 
-                    // arguments of BitwiseAnd expression affects the expression on the right 
-                    // side of Equal.
-                    var valueExpresionCastLeft = dbValueExp.CastTo(enumUnderlyingType);
-                    var valueExpresionCastRight = parent.TranslateExpression(valueExpression).CastTo(enumUnderlyingType);
+                    var valueExpresionCast = dbValueExp.CastTo(enumUnderlyingType);
 
                     return
                         dbSourceExp.CastTo(enumUnderlyingType)
-                            .BitwiseAnd(valueExpresionCastLeft)
-                            .Equal(valueExpresionCastRight);
+                            .BitwiseAnd(valueExpresionCast)
+                            .Equal(valueExpresionCast);
                 }
 
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
