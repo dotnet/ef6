@@ -1436,6 +1436,9 @@
   <data name="ELinq_DbFunctionDirectCall" xml:space="preserve">
     <value>This function can only be invoked from LINQ to Entities.</value>
   </data>
+  <data name="ELinq_HasFlagArgumentAndSourceTypeMismatch" xml:space="preserve">
+    <value>The argument type, '{0}', is not the same as the enum type '{1}'."</value>
+  </data>
   <data name="CompiledELinq_UnsupportedParameterTypes" xml:space="preserve">
     <value>The specified parameter type '{0}' is not valid. Only scalar parameters (such as Int32, Decimal, and Guid) are supported.</value>
   </data>

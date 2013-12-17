@@ -971,44 +971,52 @@ namespace System.Data.Entity.Core.Objects.ELinq
             #region System.Enum method translators
             internal sealed class HasFlagTranslator : CallTranslator
             {
-                private static readonly MethodInfo hasFlagMethod = typeof(Enum).GetMethod("HasFlag");
+                private static readonly MethodInfo _hasFlagMethod =
+                    typeof(Enum).GetDeclaredMethod("HasFlag", typeof(Enum));
 
                 internal HasFlagTranslator()
-                    : base(hasFlagMethod)
+                    : base(_hasFlagMethod)
                 {
                 }
 
+                [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly", Scope = "member", 
+                    Justification = "The argument name passed to ArgumentNullException matches the name of the argument of the HasFlag method being translated.")]
                 private static CqtExpression TranslateHasFlag(ExpressionConverter parent,
                      LinqExpression sourceExpression, LinqExpression valueExpression)
                 {
-                    var enumType = sourceExpression.Type;
-                    var enumIntegralType = enumType.GetEnumUnderlyingType();                  
+                    if (valueExpression.NodeType == ExpressionType.Constant && 
+                        ((ConstantExpression)valueExpression).Value == null)
+                    {
+                        throw new ArgumentNullException("flag");
+                    }
                    
                     var dbValueExp = parent.TranslateExpression(valueExpression);                    
-                    //throw if argument is null constant
-                    if (dbValueExp is DbNullExpression)
-                        throw new NotSupportedException("Value cannot be null in Enum.HasFlag");
-
                     var dbSourceExp = parent.TranslateExpression(sourceExpression);   
                  
-                    //throw if source and value types mismatch
                     if (dbSourceExp.ResultType.EdmType != dbValueExp.ResultType.EdmType)
-                        throw new NotSupportedException("The argument type, '" + dbValueExp.ResultType.EdmType.Name + "', is not the same as the enum type '" + dbSourceExp.ResultType.EdmType.Name + "'.");
+                    {
+                        throw new NotSupportedException(
+                            Strings.ELinq_HasFlagArgumentAndSourceTypeMismatch(
+                                dbValueExp.ResultType.EdmType.Name, dbSourceExp.ResultType.EdmType.Name));
+                    }
 
-                    //build the check bit ((l & r) == r) expression
-                    var dbIntegralType = parent.GetValueLayerType(enumIntegralType);
-                    var dbSourceExpInt = dbSourceExp.CastTo(dbIntegralType);
-                    var dbValueExpInt = dbValueExp.CastTo(dbIntegralType);
-                    var dbBitwiseExp = dbSourceExpInt.BitwiseAnd(dbValueExpInt);
-                    var dbEqualExp = dbBitwiseExp.Equal(dbValueExpInt);
-                    return dbEqualExp;
+                    var enumUnderlyingType = TypeHelpers.CreateEnumUnderlyingTypeUsage(dbSourceExp.ResultType);
+
+                    // creating a seperate instance to avoid situation where translating the 
+                    // arguments of BitwiseAnd expression affects the expression on the right 
+                    // side of Equal.
+                    var valueExpresionCastLeft = dbValueExp.CastTo(enumUnderlyingType);
+                    var valueExpresionCastRight = parent.TranslateExpression(valueExpression).CastTo(enumUnderlyingType);
+
+                    return
+                        dbSourceExp.CastTo(enumUnderlyingType)
+                            .BitwiseAnd(valueExpresionCastLeft)
+                            .Equal(valueExpresionCastRight);
                 }
 
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
-                    var translated = HasFlagTranslator.TranslateHasFlag(parent, call.Object, call.Arguments[0]);
-                    //Translate the new expression to a DbExpression
-                    return translated;
+                    return TranslateHasFlag(parent, call.Object, call.Arguments[0]);
                 }
             }
             #endregion
@@ -1066,7 +1074,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     : base(new[]
                         {
                             typeof(Guid).GetDeclaredMethod("NewGuid")
-                            ,
                         })
                 {
                 }

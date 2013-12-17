@@ -587,12 +587,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             //ignore System.Enum
             if (fromClrType != null
-                && toClrType == typeof(System.Enum)
-                && (fromClrType.IsEnum
-                    || fromClrType.IsGenericType() 
-                        && fromClrType.GetGenericTypeDefinition() == typeof(Nullable<>)
-                        && fromClrType.GetGenericArguments()[0].IsEnum))
+                && TypeSystem.GetNonNullableType(fromClrType).IsEnum
+                && toClrType == typeof(Enum))
+            {
                 return null;
+            }
 
             // If the types are the same or the fromType is assignable to toType, return null
             // (indicating no cast is required)

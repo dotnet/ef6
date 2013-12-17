@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
@@ -37,6 +36,11 @@ namespace System.Data.Entity.Query.LinqToEntities
 
         public class BloggingContext : DbContext
         {
+            static BloggingContext()
+            {
+                Database.SetInitializer(new BloggingInitializer());
+            }
+
             public DbSet<Blog> Blogs { get; set; }
         }
 
@@ -44,29 +48,30 @@ namespace System.Data.Entity.Query.LinqToEntities
         {
             protected override void Seed(BloggingContext db)
             {
-                base.Seed(db);
+                db.Configuration.UseDatabaseNullSemantics = false;
 
-                for (int i = -1; i < 20; i++)
+                for (var i = -1; i < 20; i++)
                 {
-                    var blog = new Blog{
-                        BlogType = (BlogType)i,
-                        Name = "Blog with null prop" + i,
-                        NullableBlogType = null,
-                    };
-                    db.Blogs.Add(blog);
+                    db.Blogs.Add(
+                        new Blog
+                        {
+                            BlogType = (BlogType)i,
+                            Name = "Blog with null prop" + i,
+                            NullableBlogType = null
+                        });
 
-                    blog = new Blog
-                    {
-                        BlogType = (BlogType)i,
-                        Name = "Blog w/o null prop" + i,
-                        NullableBlogType = BlogType.Important,
-                    };
-                    db.Blogs.Add(blog);
+                    db.Blogs.Add(
+                        new Blog
+                        {
+                            BlogType = (BlogType)i,
+                            Name = "Blog w/o null prop" + i,
+                            NullableBlogType = BlogType.Important,
+                        });
                 }
             } 
         }
 
-        private void AssertConsistency(BloggingContext db, Expression<Func<Blog, bool>> predicate)
+        private static void AssertConsistency(BloggingContext db, Expression<Func<Blog, bool>> predicate)
         {
             var matching = db.Blogs.Where(predicate).ToArray();
             var compiledPredicate = predicate.Compile();
@@ -80,7 +85,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             // Take all blogs from the db, except the ones found by the query
             // We do this in mem (AsEnum) to ensure we don't get an incorrect set because of the feature we are testing
             var nonMatching = db.Blogs.AsEnumerable().Except(matching).ToArray();
-            Assert.False(nonMatching.Count() == 0, "No non matching entries was found, query is too greedy");
+            Assert.NotEmpty(nonMatching);
                         
             foreach (var blog in nonMatching)
             {
@@ -92,24 +97,18 @@ namespace System.Data.Entity.Query.LinqToEntities
         [Fact]
         public void HasFlag_with_incorrect_type_throws_NotSupportedException()
         {
-            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
                 var query = db.Blogs.Where(b => b.BlogType.HasFlag(OtherEnum.A));
-                Assert.Throws<NotSupportedException>(() => query.ToArray());              
+                Assert.Throws<NotSupportedException>(() => query.ToString());              
             }
         }
 
         [Fact]
         public void HasFlag_with_constants_values()
         {
-            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
                 AssertConsistency(db, b => b.BlogType.HasFlag(BlogType.Favorite));
                 AssertConsistency(db, b => b.BlogType.HasFlag(BlogType.Favorite | BlogType.Online));
                 AssertConsistency(db, b => b.BlogType.HasFlag((BlogType)(-1)));
@@ -119,7 +118,6 @@ namespace System.Data.Entity.Query.LinqToEntities
         [Fact]
         public void HasFlag_with_reference_values()
         {
-            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
                 ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
@@ -134,16 +132,11 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-
-
         [Fact]
         public void HasFlag_with_nullable_constant_values()
         {
-            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
                 AssertConsistency(db, b => b.BlogType.HasFlag((BlogType?)1));
                 BlogType? nullableBlogType = BlogType.Favorite;
                 AssertConsistency(db, b => b.BlogType.HasFlag(nullableBlogType));
@@ -153,47 +146,50 @@ namespace System.Data.Entity.Query.LinqToEntities
         [Fact]
         public void HasFlag_with_nullable_reference_values()
         {
-            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
                 //Expect EF to return data when querying HasFlag using nullable reference that has a value
                 AssertConsistency(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType != null).NullableBlogType));
 
                 //This throws in normal code / Linq to Objects
                 //Expect EF to return no data when querying HasFlag using nullable reference that is null
-                //Is this the expected behavior? (there isn't much else that can be done..)
                 var query = db.Blogs.Where(b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType == null).NullableBlogType));
                 var matching = query.ToArray();
-                Assert.True(matching.Count() == 0, "Querying HasFlag with null expression should not match any data");
+
+                // "Querying HasFlag with null expression should not match any data"
+                Assert.Empty(matching);
             }
         }
 
         [Fact]
         public void HasFlag_throws_when_translating_null_constant()
         {
-            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
-            {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
-                var blog = new Blog();
+            {             
+                Assert.Equal(
+                    "flag", 
+                    Assert.Throws<ArgumentNullException>(
+                        () => db.Blogs.FirstOrDefault(b => b.BlogType.HasFlag(null))).ParamName);
 
                 BlogType? nullableBlogType = null;
-                Assert.Throws<NotSupportedException>(() => db.Blogs.FirstOrDefault(b => b.BlogType.HasFlag(null)));
-                Assert.Throws<NotSupportedException>(() => db.Blogs.Where(b => b.BlogType.HasFlag(nullableBlogType)).ToString());
+                Assert.Equal(
+                    "flag",
+                    Assert.Throws<ArgumentNullException>(
+                        () => db.Blogs.FirstOrDefault(b => b.BlogType.HasFlag(nullableBlogType))).ParamName);
+
+                var blog = new Blog();
+                Assert.Equal(
+                    "flag",
+                    Assert.Throws<ArgumentNullException>(
+                        () => db.Blogs.FirstOrDefault(b => b.BlogType.HasFlag(blog.NullableBlogType))).ParamName);
             }
         }
 
         [Fact]
         public void HasFlag_projects_boolean_values_in_select()
         {
-            Database.SetInitializer<BloggingContext>(new BloggingInitializer());
             using (var db = new BloggingContext())
             {
-                ((IObjectContextAdapter)db).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
-
                 var blog = db.Blogs
                     .Where(b => 
                         b.BlogType.HasFlag(BlogType.Important) && 

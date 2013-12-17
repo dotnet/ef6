@@ -121,12 +121,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var linqType = linq.Type;
 
                 //unwrap System.Enum
-                if (linqType == typeof(System.Enum))
+                if (linqType == typeof(Enum))
                 {
-                    if (linq.Value != null)
-                        linqType = linq.Value.GetType();
-                    else
-                        linqType = typeof(Int64); //isNullValue is true here, is this safe for enums?
+                    Debug.Assert(linq.Value != null, "null enum constants should have alredy been taken care of");
+
+                    linqType = linq.Value.GetType();
                 }
 
                 if (parent.TryGetValueLayerType(linqType, out type))
@@ -135,8 +134,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     // For null types, also allow EntityType. Although other types claim to be supported, they
                     // don't work (e.g. complex type, see SQL BU 543956)
                     if (Helper.IsScalarType(type.EdmType)
-                        ||
-                        (isNullValue && Helper.IsEntityType(type.EdmType)))
+                        || (isNullValue && Helper.IsEntityType(type.EdmType)))
                     {
                         typeSupported = true;
                     }

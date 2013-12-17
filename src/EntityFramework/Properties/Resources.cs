@@ -3135,6 +3135,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "The argument type, '{0}', is not the same as the enum type '{1}'.""
+        // </summary>
+        internal static string ELinq_HasFlagArgumentAndSourceTypeMismatch(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ELinq_HasFlagArgumentAndSourceTypeMismatch, p0, p1);
+        }
+
+        // <summary>
         // A string like "The specified parameter type '{0}' is not valid. Only scalar parameters (such as Int32, Decimal, and Guid) are supported."
         // </summary>
         internal static string CompiledELinq_UnsupportedParameterTypes(object p0)
@@ -16012,6 +16020,7 @@ namespace System.Data.Entity.Resources
         internal const string ELinq_CycleDetected = "ELinq_CycleDetected";
         internal const string ELinq_DbFunctionAttributedFunctionWithWrongReturnType = "ELinq_DbFunctionAttributedFunctionWithWrongReturnType";
         internal const string ELinq_DbFunctionDirectCall = "ELinq_DbFunctionDirectCall";
+        internal const string ELinq_HasFlagArgumentAndSourceTypeMismatch = "ELinq_HasFlagArgumentAndSourceTypeMismatch";
         internal const string CompiledELinq_UnsupportedParameterTypes = "CompiledELinq_UnsupportedParameterTypes";
         internal const string CompiledELinq_UnsupportedNamedParameterType = "CompiledELinq_UnsupportedNamedParameterType";
         internal const string CompiledELinq_UnsupportedNamedParameterUseAsType = "CompiledELinq_UnsupportedNamedParameterUseAsType";
