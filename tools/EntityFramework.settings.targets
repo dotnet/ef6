@@ -22,7 +22,7 @@ Project global pre-settings.
 
   <PropertyGroup>
     <BuildingToolingProject Condition="'$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EFToolsPublicKey.snk))' != '' Or '$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), VsIdeHostAdapter.sln))' != ''">true</BuildingToolingProject>
-    <BuildingRuntimeProject Condition="'$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EcmaPublicKey.snk))' != ''">true</BuildingRuntimeProject>
+    <BuildingRuntimeProject Condition="'$(BuildingRuntimeProject)' == '' AND '$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EcmaPublicKey.snk))' != ''">true</BuildingRuntimeProject>
   </PropertyGroup>
 
   <PropertyGroup>
