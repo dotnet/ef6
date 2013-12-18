@@ -30,7 +30,7 @@ FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Ext
 	)  AS [Extent1]
 	WHERE [Extent1].[row_number] > 5
 )  AS [Skip1]
-WHERE (0 = ([Skip1].[Id] % 2)) AND ([Skip1].[Id] % 2 IS NOT NULL)
+WHERE 0 = ([Skip1].[Id] % 2)
 ORDER BY [Skip1].[FirstName] DESC, [Skip1].[Id] ASC";
 
                 var query = context.Owners.OrderByDescending(p => p.FirstName).ThenBy(p => p.Id).Skip(5).Where(p => p.Id % 2 == 0);

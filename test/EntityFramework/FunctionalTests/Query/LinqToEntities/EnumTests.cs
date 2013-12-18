@@ -252,10 +252,12 @@ WHERE ( CAST(  CAST( ( CAST( [Extent1].[c34_byteenum] AS int)) & (1) AS tinyint)
         }
 
         [Fact]
-        public void HasFlag_with_enum_constant()
+        public void HasFlag_with_enum_constant_and_database_null_semantics_true()
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseDatabaseNullSemantics = true;
+
                 const string expectedSql = @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum] 
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
@@ -277,21 +279,50 @@ WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS
         }
 
         [Fact]
-        public void HasFlag_with_enum_returned_by_correlated_query()
+        public void HasFlag_with_enum_constant_and_database_null_semantics_false()
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseDatabaseNullSemantics = false;
+
+                const string expectedSql = @"SELECT 
+[Extent1].[c33_enum] AS [c33_enum]
+FROM [dbo].[ArubaAllTypes] AS [Extent1]
+WHERE ((( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS int)) OR ((( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int)) IS NULL) AND ( CAST( 3 AS int) IS NULL))";
+
+                var query = context.AllTypes
+                    .Where(e => e.c33_enum.HasFlag((ArubaEnum)3))
+                    .Select(e => e.c33_enum);
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                // verify that correct enums are filtered out
+                var results = query.ToList();
+                foreach (var result in results)
+                {
+                    Assert.Equal((ArubaEnum)3, result);
+                }
+            }
+        }
+
+        [Fact]
+        public void HasFlag_with_enum_returned_by_correlated_query_and_database_null_semantics_true()
+        {
+            using (var context = new ArubaContext())
+            {
+                context.Configuration.UseDatabaseNullSemantics = true;
+
                 const string expectedSql = @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum]
 FROM   [dbo].[ArubaAllTypes] AS [Extent1]
 LEFT OUTER JOIN  (SELECT TOP (1) 
     [Extent2].[c33_enum] AS [c33_enum]
     FROM [dbo].[ArubaAllTypes] AS [Extent2]
-    WHERE (1 =  CAST( [Extent2].[c33_enum] AS int)) AND ( CAST( [Extent2].[c33_enum] AS int) IS NOT NULL) ) AS [Element1] ON 1 = 1
+    WHERE 1 =  CAST( [Extent2].[c33_enum] AS int) ) AS [Element1] ON 1 = 1
 LEFT OUTER JOIN  (SELECT TOP (1) 
     [Extent3].[c33_enum] AS [c33_enum]
     FROM [dbo].[ArubaAllTypes] AS [Extent3]
-    WHERE (1 =  CAST( [Extent3].[c33_enum] AS int)) AND ( CAST( [Extent3].[c33_enum] AS int) IS NOT NULL) ) AS [Element2] ON 1 = 1
+    WHERE 1 =  CAST( [Extent3].[c33_enum] AS int) ) AS [Element2] ON 1 = 1
 WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( [Element1].[c33_enum] AS int))) =  CAST( [Element2].[c33_enum] AS int)";
 
                 var query = 

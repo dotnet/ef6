@@ -1323,7 +1323,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
             else
             {
-                return ImplementEquality(left, right, pattern);
+                return
+                    _funcletizer.RootContext.ContextOptions.UseCSharpNullComparisonBehavior
+                        ? ImplementEquality(left, right, EqualsPattern.Store)
+                        : ImplementEquality(left, right, pattern);
             }
         }
 

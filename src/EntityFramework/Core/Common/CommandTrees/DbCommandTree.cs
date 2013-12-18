@@ -41,6 +41,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _dataSpace = dataSpace;
         }
 
+        internal bool UseDatabaseNullSemantics { get; set; }
+
         /// <summary>
         /// Gets the name and corresponding type of each parameter that can be referenced within this
         /// <see

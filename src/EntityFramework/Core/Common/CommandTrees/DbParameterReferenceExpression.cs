@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         internal DbParameterReferenceExpression(TypeUsage type, string name)
-            : base(DbExpressionKind.ParameterReference, type)
+            : base(DbExpressionKind.ParameterReference, type, false)
         {
             Debug.Assert(DbCommandTree.IsValidParameterName(name), "DbParameterReferenceExpression name should be valid");
 

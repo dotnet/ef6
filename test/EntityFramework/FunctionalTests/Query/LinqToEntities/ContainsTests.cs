@@ -242,7 +242,7 @@ WHERE ([Extent1].[Title] IN (N'Title1', N'Title2'))
 [Extent1].[Id] AS [Id]
 FROM [dbo].[Books] AS [Extent1]
 WHERE (([Extent1].[Title] IN (N'Title1', N'Title2')) AND ([Extent1].[Title] IS NOT NULL))
-    OR (([Extent1].[Title] = @p__linq__0) AND (NOT ([Extent1].[Title] IS NULL OR @p__linq__0 IS NULL))) 
+    OR ([Extent1].[Title] = @p__linq__0) 
     OR (([Extent1].[Title] IS NULL) AND (@p__linq__0 IS NULL)) 
     OR ([Extent1].[Title] IS NULL)";
 

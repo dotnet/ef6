@@ -67,6 +67,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompilerPhase.PreProcessor,
                 PlanCompilerPhase.Transformations,
                 PlanCompilerPhase.JoinElimination,
+                PlanCompilerPhase.NullSemantics,
                 PlanCompilerPhase.ProjectionPruning,
                 PlanCompilerPhase.CodeGen,
                 PlanCompilerPhase.PostCodeGen);
@@ -297,6 +298,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompilerPhase.NestPullup,
                 PlanCompilerPhase.Transformations,
                 PlanCompilerPhase.JoinElimination,
+                PlanCompilerPhase.NullSemantics,
                 PlanCompilerPhase.CodeGen,
                 PlanCompilerPhase.PostCodeGen
             };

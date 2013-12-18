@@ -53,6 +53,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly HashSet<Rule> RulesRequiringNullabilityRulesToBeReapplied =
             InitializeRulesRequiringNullabilityRulesToBeReapplied();
 
+        internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> NullSemanticsRulesTable =
+            BuildLookupTableForRules(ScalarOpRules.Rules);
+
         #region private state maintenance
 
         private static List<Rule> allRules;
@@ -201,6 +204,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     break;
                 case TransformationRulesGroup.Project:
                     rulesTable = ProjectRulesTable;
+                    break;
+                case TransformationRulesGroup.NullSemantics:
+                    rulesTable = NullSemanticsRulesTable;
                     break;
             }
 

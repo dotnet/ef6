@@ -134,7 +134,7 @@ namespace System.Data.Entity.Query
                 .Where(c => c.Property("MessageType").Equal(c.Property("MessageType").ResultType.Null()));
 
             var expectedSql =
-                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[MessageType] = (CAST(NULL AS int))";
+                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE 1 = 0";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }

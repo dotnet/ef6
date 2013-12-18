@@ -199,6 +199,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private static readonly Dictionary<DbExpressionKind, OpType> _opMap = InitializeExpressionKindToOpTypeMap();
 
+        private readonly bool _useDatabaseNullSemantics;
         private readonly Command _iqtCommand;
         private readonly Stack<CqtVariableScope> _varScopes = new Stack<CqtVariableScope>();
         private readonly Dictionary<Node, Var> _varMap = new Dictionary<Node, Var>();
@@ -271,6 +272,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private ITreeGenerator(DbQueryCommandTree ctree, DiscriminatorMap discriminatorMap)
         {
+            _useDatabaseNullSemantics = ctree.UseDatabaseNullSemantics;
+
             //
             // Create a new IQT Command instance that uses the same metadata workspace as the incoming command tree
             //
@@ -2921,18 +2924,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     // Create the predicate for a single key
                     // keyVar = copyOfKeyVar or keyVar is null and copyOfKeyVar is null
                     // 
-                    var predicate = _iqtCommand.CreateNode(
-                        _iqtCommand.CreateConditionalOp(OpType.Or),
-                        _iqtCommand.CreateNode(
-                            _iqtCommand.CreateComparisonOp(OpType.EQ), keyNode, copyKeyNode),
-                        _iqtCommand.CreateNode(
-                            _iqtCommand.CreateConditionalOp(OpType.And),
+                    Node predicate;
+                    if (_useDatabaseNullSemantics)
+                    {
+                        predicate = _iqtCommand.CreateNode(
+                            _iqtCommand.CreateConditionalOp(OpType.Or),
                             _iqtCommand.CreateNode(
-                                _iqtCommand.CreateConditionalOp(OpType.IsNull),
-                                OpCopier.Copy(_iqtCommand, keyNode)),
+                                _iqtCommand.CreateComparisonOp(OpType.EQ), keyNode, copyKeyNode),
                             _iqtCommand.CreateNode(
-                                _iqtCommand.CreateConditionalOp(OpType.IsNull),
-                                OpCopier.Copy(_iqtCommand, copyKeyNode))));
+                                _iqtCommand.CreateConditionalOp(OpType.And),
+                                _iqtCommand.CreateNode(
+                                    _iqtCommand.CreateConditionalOp(OpType.IsNull),
+                                    OpCopier.Copy(_iqtCommand, keyNode)),
+                                _iqtCommand.CreateNode(
+                                    _iqtCommand.CreateConditionalOp(OpType.IsNull),
+                                    OpCopier.Copy(_iqtCommand, copyKeyNode))));
+                    }
+                    else
+                    {
+                        // EQ will be expanded later in the NullSemantics phase.
+                        predicate = _iqtCommand.CreateNode(
+                            _iqtCommand.CreateComparisonOp(OpType.EQ), keyNode, copyKeyNode);
+                    }
 
                     if (filterPredicateNode == null)
                     {

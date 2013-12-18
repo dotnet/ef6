@@ -47,19 +47,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         JoinElimination = 7,
 
+        NullSemantics = 8,
+
         // <summary>
         // Entering the codegen phase
         // </summary>
-        CodeGen = 8,
+        CodeGen = 9,
 
         // <summary>
         // We're almost done
         // </summary>
-        PostCodeGen = 9,
+        PostCodeGen = 10,
 
         // <summary>
         // Marker
         // </summary>
-        MaxMarker = 10
+        MaxMarker = 11
     }
 }

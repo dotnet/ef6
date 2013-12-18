@@ -49,7 +49,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)";
+    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
             using (var context = new ArubaContext())
             {
@@ -86,7 +86,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+    WHERE N'Diego' = [Extent1].[FirstName]
     ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
             using (var context = new ArubaContext())
@@ -126,7 +126,7 @@ namespace PlanCompilerTests
     FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
         FROM  [dbo].[ArubaOwners] AS [Extent1]
         LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+        WHERE N'Diego' = [Extent1].[FirstName]
     )  AS [Filter1]
     WHERE [Filter1].[row_number] > 2
     ORDER BY [Filter1].[LastName] ASC";
@@ -167,7 +167,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)";
+    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
             using (var context = new ArubaContext())
             {
@@ -204,7 +204,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+    WHERE N'Diego' = [Extent1].[FirstName]
     ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
             using (var context = new ArubaContext())
@@ -244,7 +244,7 @@ namespace PlanCompilerTests
     FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
         FROM  [dbo].[ArubaOwners] AS [Extent1]
         LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+        WHERE N'Diego' = [Extent1].[FirstName]
     )  AS [Filter1]
     WHERE [Filter1].[row_number] > 2
     ORDER BY [Filter1].[LastName] ASC";
@@ -285,7 +285,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)";
+    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
             using (var context = new ArubaContext())
             {
@@ -322,7 +322,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+    WHERE N'Diego' = [Extent1].[FirstName]
     ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
             using (var context = new ArubaContext())
@@ -362,7 +362,7 @@ namespace PlanCompilerTests
     FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
         FROM  [dbo].[ArubaOwners] AS [Extent1]
         LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+        WHERE N'Diego' = [Extent1].[FirstName]
     )  AS [Filter1]
     WHERE [Filter1].[row_number] > 2
     ORDER BY [Filter1].[LastName] ASC";
@@ -403,7 +403,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)";
+    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
             using (var context = new ArubaContext())
             {
@@ -440,7 +440,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+    WHERE N'Diego' = [Extent1].[FirstName]
     ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
             using (var context = new ArubaContext())
@@ -480,7 +480,7 @@ namespace PlanCompilerTests
     FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
         FROM  [dbo].[ArubaOwners] AS [Extent1]
         LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+        WHERE N'Diego' = [Extent1].[FirstName]
     )  AS [Filter1]
     WHERE [Filter1].[row_number] > 2
     ORDER BY [Filter1].[LastName] ASC";
@@ -521,7 +521,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)";
+    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
             using (var context = new ArubaContext())
             {
@@ -558,7 +558,7 @@ namespace PlanCompilerTests
     [Extent2].[Geometry] AS [Geometry]
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+    WHERE N'Diego' = [Extent1].[FirstName]
     ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
             using (var context = new ArubaContext())
@@ -598,7 +598,7 @@ namespace PlanCompilerTests
     FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
         FROM  [dbo].[ArubaOwners] AS [Extent1]
         LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE (N'Diego' = [Extent1].[FirstName]) AND ([Extent1].[FirstName] IS NOT NULL)
+        WHERE N'Diego' = [Extent1].[FirstName]
     )  AS [Filter1]
     WHERE [Filter1].[row_number] > 2
     ORDER BY [Filter1].[LastName] ASC";
@@ -662,7 +662,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
             var log = new StringWriter();
             using (var context = new AdvancedPatternsMasterContext())
@@ -719,7 +719,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
             var log = new StringWriter();
@@ -779,7 +779,7 @@ namespace PlanCompilerTests
             [Extent2].[BuildingId] AS [BuildingId1]
             FROM  [dbo].[Buildings] AS [Extent1]
             LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-            WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+            WHERE N'Building One' = [Extent1].[Name]
         )  AS [Project1]
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
@@ -840,7 +840,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
             var log = new StringWriter();
             using (var context = new AdvancedPatternsMasterContext())
@@ -897,7 +897,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
             var log = new StringWriter();
@@ -957,7 +957,7 @@ namespace PlanCompilerTests
             [Extent2].[BuildingId] AS [BuildingId1]
             FROM  [dbo].[Buildings] AS [Extent1]
             LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-            WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+            WHERE N'Building One' = [Extent1].[Name]
         )  AS [Project1]
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
@@ -1018,7 +1018,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
             var log = new StringWriter();
             using (var context = new AdvancedPatternsMasterContext())
@@ -1075,7 +1075,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
             var log = new StringWriter();
@@ -1135,7 +1135,7 @@ namespace PlanCompilerTests
             [Extent2].[BuildingId] AS [BuildingId1]
             FROM  [dbo].[Buildings] AS [Extent1]
             LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-            WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+            WHERE N'Building One' = [Extent1].[Name]
         )  AS [Project1]
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
@@ -1196,7 +1196,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
             var log = new StringWriter();
             using (var context = new AdvancedPatternsMasterContext())
@@ -1253,7 +1253,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
             var log = new StringWriter();
@@ -1313,7 +1313,7 @@ namespace PlanCompilerTests
             [Extent2].[BuildingId] AS [BuildingId1]
             FROM  [dbo].[Buildings] AS [Extent1]
             LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-            WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+            WHERE N'Building One' = [Extent1].[Name]
         )  AS [Project1]
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
@@ -1374,7 +1374,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
             var log = new StringWriter();
             using (var context = new AdvancedPatternsMasterContext())
@@ -1431,7 +1431,7 @@ namespace PlanCompilerTests
         [Extent2].[BuildingId] AS [BuildingId1]
         FROM  [dbo].[Buildings] AS [Extent1]
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-        WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+        WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
             var log = new StringWriter();
@@ -1491,7 +1491,7 @@ namespace PlanCompilerTests
             [Extent2].[BuildingId] AS [BuildingId1]
             FROM  [dbo].[Buildings] AS [Extent1]
             LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
-            WHERE (N'Building One' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)
+            WHERE N'Building One' = [Extent1].[Name]
         )  AS [Project1]
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2

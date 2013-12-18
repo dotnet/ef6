@@ -742,7 +742,7 @@ FROM ( SELECT
 	[Extent2].[Discontinued] AS [Discontinued1], 
 	CASE WHEN ([Extent2].[ProductID] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]
 	FROM  [dbo].[Products] AS [Extent1]
-	LEFT OUTER JOIN [dbo].[Products] AS [Extent2] ON ([Extent2].[Discontinued] IN (0,1)) AND (([Extent1].[ProductID] = [Extent2].[ProductID]) OR (([Extent1].[Discontinued] IS NULL) AND ([Extent2].[Discontinued] IS NULL)))
+	LEFT OUTER JOIN [dbo].[Products] AS [Extent2] ON ([Extent2].[Discontinued] IN (0,1)) AND ([Extent1].[ProductID] = [Extent2].[ProductID])
 	WHERE [Extent1].[Discontinued] IN (0,1)
 )  AS [Project1]
 ORDER BY [Project1].[Discontinued] ASC, [Project1].[ProductID] ASC, [Project1].[ProductName] ASC, [Project1].[ReorderLevel] ASC, [Project1].[C1] ASC";

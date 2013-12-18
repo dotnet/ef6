@@ -133,19 +133,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // True, if it is listed as such on any on the node infos on any of the
         // current relop ancestors.
         // </summary>
-        internal bool IsNonNullable(Var var)
+        internal bool IsNonNullable(Var variable)
         {
+            if (variable.VarType == VarType.Parameter
+                && !TypeSemantics.IsNullable(variable.Type))
+            {
+                return true;
+            }
+
             foreach (var relOpAncestor in m_relOpAncestors)
             {
                 // Rules applied to the children of the relOpAncestor may have caused it change. 
                 // Thus, if the node is used, it has to have its node info recomputed
                 Command.RecomputeNodeInfo(relOpAncestor);
                 var nodeInfo = Command.GetExtendedNodeInfo(relOpAncestor);
-                if (nodeInfo.NonNullableVisibleDefinitions.IsSet(var))
+                if (nodeInfo.NonNullableVisibleDefinitions.IsSet(variable))
                 {
                     return true;
                 }
-                else if (nodeInfo.LocalDefinitions.IsSet(var))
+                else if (nodeInfo.LocalDefinitions.IsSet(variable))
                 {
                     //The var is defined on this ancestor but is not non-nullable,
                     // therefore there is no need to further check other ancestors

@@ -144,10 +144,12 @@ namespace System.Data.Entity.Query.LinqToEntities
         }
 
         [Fact]
-        public void HasFlag_with_nullable_reference_values()
+        public void HasFlag_with_nullable_reference_values_and_database_null_semantics_true()
         {
             using (var db = new BloggingContext())
             {
+                db.Configuration.UseDatabaseNullSemantics = true;
+
                 //Expect EF to return data when querying HasFlag using nullable reference that has a value
                 AssertConsistency(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType != null).NullableBlogType));
 
@@ -156,8 +158,28 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var query = db.Blogs.Where(b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType == null).NullableBlogType));
                 var matching = query.ToArray();
 
-                // "Querying HasFlag with null expression should not match any data"
+                // Querying HasFlag with null expression should not match any data.
                 Assert.Empty(matching);
+            }
+        }
+
+        [Fact]
+        public void HasFlag_with_nullable_reference_values_and_database_null_semantics_false()
+        {
+            using (var db = new BloggingContext())
+            {
+                db.Configuration.UseDatabaseNullSemantics = false;
+
+                //Expect EF to return data when querying HasFlag using nullable reference that has a value
+                AssertConsistency(db, b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType != null).NullableBlogType));
+
+                //This throws in normal code / Linq to Objects
+                //Expect EF to return no data when querying HasFlag using nullable reference that is null
+                var query = db.Blogs.Where(b => b.BlogType.HasFlag(db.Blogs.FirstOrDefault(b2 => b2.NullableBlogType == null).NullableBlogType));
+                var matching = query.ToArray();
+
+                // Querying HasFlag with null expression should match all data.
+                Assert.Equal(42, matching.Length);
             }
         }
 

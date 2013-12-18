@@ -143,6 +143,8 @@
     <Compile Include="Core\Objects\Internal\BufferedDataRecord.cs" />
     <Compile Include="Core\Objects\Internal\ShapedBufferedDataRecord.cs" />
     <Compile Include="Core\Objects\StateManagerValue.cs" />
+    <Compile Include="Core\Query\PlanCompiler\NullSemantics.cs" />
+    <Compile Include="Core\Query\PlanCompiler\TransformationRulesGroup.cs" />
     <Compile Include="DataAnnotations\Schema\CompatibilityResult.cs" />
     <Compile Include="DataAnnotations\Schema\IndexAttribute.cs" />
     <Compile Include="DbConfiguration.cs" />
@@ -1400,7 +1402,6 @@
     <Compile Include="Core\Query\PlanCompiler\SubqueryTrackingVisitor.cs" />
     <Compile Include="Core\Query\PlanCompiler\TransformationRules.cs" />
     <Compile Include="Core\Query\PlanCompiler\TransformationRulesContext.cs" />
-    <Compile Include="Core\Query\PlanCompiler\TransformationRulesGroup.cs" />
     <Compile Include="Core\Query\PlanCompiler\TypeIdKind.cs" />
     <Compile Include="Core\Query\PlanCompiler\TypeIdPropertyRef.cs" />
     <Compile Include="Core\Query\PlanCompiler\TypeInfo.cs" />

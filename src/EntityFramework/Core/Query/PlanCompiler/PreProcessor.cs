@@ -2343,6 +2343,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return base.Visit(op, n);
         }
 
+        public override Node Visit(ComparisonOp op, Node n)
+        {
+            if (op.OpType == OpType.EQ)
+            {
+                m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.NullSemantics);
+            }
+
+            return base.Visit(op, n);
+        }
+
         #endregion
 
         #endregion

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -263,6 +264,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var beforeTransformationRules3 = String.Empty;
             var beforeJoinElimination2 = String.Empty;
             var beforeTransformationRules4 = String.Empty;
+            var beforeNullSemantics = String.Empty;
+            var beforeTransformationRules5 = String.Empty;
             var beforeCodeGen = String.Empty;
 
             //
@@ -279,6 +282,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // (1 << (int)PlanCompilerPhase.NestPullup) |
                              (1 << (int)PlanCompilerPhase.Transformations) |
                 // (1 << (int)PlanCompilerPhase.JoinElimination) |
+                // (1 << (int)PlanCompilerPhase.NullSemantics) |
                              (1 << (int)PlanCompilerPhase.CodeGen);
 
             // Perform any necessary preprocessing
@@ -356,6 +360,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
+            if (IsPhaseNeeded(PlanCompilerPhase.NullSemantics)
+                && !m_ctree.UseDatabaseNullSemantics)
+            {
+                beforeNullSemantics = SwitchToPhase(PlanCompilerPhase.NullSemantics);
+
+                if (NullSemantics.Process(Command))
+                {
+                    ApplyTransformations(ref beforeTransformationRules5, TransformationRulesGroup.NullSemantics);
+                }
+            }
+
             // Code generation
             beforeCodeGen = SwitchToPhase(PlanCompilerPhase.CodeGen);
             CodeGen.Process(this, out providerCommands, out resultColumnMap, out columnCount);
@@ -376,10 +391,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             size = beforeTransformationRules3.Length;
             size = beforeJoinElimination2.Length;
             size = beforeTransformationRules4.Length;
+            size = beforeNullSemantics.Length;
+            size = beforeTransformationRules5.Length;
             size = beforeCodeGen.Length;
 #endif
-            // All done
-            return;
         }
 
         // <summary>

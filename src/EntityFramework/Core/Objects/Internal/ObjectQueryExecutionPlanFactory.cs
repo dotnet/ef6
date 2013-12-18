@@ -94,6 +94,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbCommandDefinition definition;
             try
             {
+                tree.UseDatabaseNullSemantics = !context.ContextOptions.UseCSharpNullComparisonBehavior;
                 definition = services.CreateCommandDefinition(tree, context.InterceptionContext);
             }
             catch (EntityCommandCompilationException)

@@ -21,13 +21,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
-        internal DbExpression(DbExpressionKind kind, TypeUsage type)
+        internal DbExpression(DbExpressionKind kind, TypeUsage type, bool forceNullable = true)
         {
             CheckExpressionKind(kind);
             _kind = kind;
 
             DebugCheck.NotNull(type);
-            if (!TypeSemantics.IsNullable(type))
+            if (forceNullable && !TypeSemantics.IsNullable(type))
             {
                 type = type.ShallowCopy(
                     new FacetValues

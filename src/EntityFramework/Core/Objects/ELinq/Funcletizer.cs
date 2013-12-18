@@ -310,6 +310,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 &&
                 (TypeSemantics.IsScalarType(typeUsage)))
             {
+                if (type.IsValueType
+                    && Nullable.GetUnderlyingType(type) == null
+                    && TypeSemantics.IsNullable(typeUsage))
+                {
+                    typeUsage = typeUsage.ShallowCopy(
+                        new FacetValues
+                        {
+                            Nullable = false
+                        });
+                }
+
                 return true;
             }
 
