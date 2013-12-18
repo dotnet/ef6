@@ -466,12 +466,15 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
+                var expectedState = DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString)
+                    ? ConnectionState.Closed
+                    : ConnectionState.Open;
                 var products = context.Products.SqlQuery("select * from Products");
                 using (var enumerator = products.GetEnumerator())
                 {
                     enumerator.MoveNext();
 
-                    Assert.Equal(ConnectionState.Open, context.Database.Connection.State);
+                    Assert.Equal(expectedState, context.Database.Connection.State);
                 }
             }
         }
@@ -863,12 +866,15 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
+                var expectedState = DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString)
+                    ? ConnectionState.Closed
+                    : ConnectionState.Open;
                 var products = context.Database.SqlQuery<int>("select Id from Products");
                 using (var enumerator = products.GetEnumerator())
                 {
                     enumerator.MoveNext();
 
-                    Assert.Equal(ConnectionState.Open, context.Database.Connection.State);
+                    Assert.Equal(expectedState, context.Database.Connection.State);
                 }
             }
         }
@@ -907,11 +913,14 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
+                var expectedState = DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString)
+                    ? ConnectionState.Closed
+                    : ConnectionState.Open;
                 var products = context.Database.SqlQuery(typeof(int), "select Id from Products");
                 var enumerator = products.GetEnumerator();
                 enumerator.MoveNext();
 
-                Assert.Equal(ConnectionState.Open, context.Database.Connection.State);
+                Assert.Equal(expectedState, context.Database.Connection.State);
             }
         }
 
