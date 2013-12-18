@@ -153,28 +153,27 @@ namespace System.Data.Entity.Internal
                     command.CommandText = @"
 SELECT Count(*)
 FROM INFORMATION_SCHEMA.TABLES AS t
-WHERE t.TABLE_TYPE = 'BASE TABLE'
-    AND (t.TABLE_SCHEMA + '.' + t.TABLE_NAME IN (" + modelTablesListBuilder + @")
-        OR t.TABLE_NAME = '" + edmMetadataContextTableName + "')";
+WHERE t.TABLE_SCHEMA + '.' + t.TABLE_NAME IN (" + modelTablesListBuilder + @")
+    OR t.TABLE_NAME = '" + edmMetadataContextTableName + "'";
 
                     var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
                     try
                     {
                         return executionStrategy.Execute(
                             () =>
+                            {
+                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
                                 {
-                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
-                                    {
-                                        DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
-                                    }
+                                    DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
+                                }
 
-                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
-                                    {
-                                        DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
-                                    }
+                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
+                                {
+                                    DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
+                                }
 
-                                    return (int)command.ExecuteScalar() > 0;
-                                });
+                                return (int)command.ExecuteScalar() > 0;
+                            });
                     }
                     finally
                     {
@@ -210,27 +209,26 @@ WHERE t.TABLE_TYPE = 'BASE TABLE'
                     command.CommandText = @"
 SELECT Count(*)
 FROM INFORMATION_SCHEMA.TABLES AS t
-WHERE t.TABLE_TYPE = 'TABLE'
-    AND t.TABLE_NAME IN (" + modelTablesListBuilder + @")";
+WHERE t.TABLE_NAME IN (" + modelTablesListBuilder + @")";
 
                     var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
                     try
                     {
                         return executionStrategy.Execute(
                             () =>
+                            {
+                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
                                 {
-                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
-                                    {
-                                        DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
-                                    }
+                                    DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
+                                }
 
-                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
-                                    {
-                                        DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
-                                    }
+                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
+                                {
+                                    DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
+                                }
 
-                                    return (int)command.ExecuteScalar() > 0;
-                                });
+                                return (int)command.ExecuteScalar() > 0;
+                            });
                     }
                     finally
                     {

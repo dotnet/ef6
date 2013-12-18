@@ -38,7 +38,7 @@ namespace System.Data.Entity.Migrations
             return info;
         }
 
-        protected void ExecuteNonQuery(string commandText, string connectionString = null)
+        public void ExecuteNonQuery(string commandText, string connectionString = null)
         {
             Execute(commandText, c => c.ExecuteNonQuery(), connectionString);
         }

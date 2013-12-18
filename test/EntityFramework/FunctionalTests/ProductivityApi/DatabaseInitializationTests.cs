@@ -250,6 +250,23 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exist_with_only_views()
+        {
+            Database.Delete(SimpleConnection<SimpleContextForCreateDatabaseIfNotExists>());
+            Database.SetInitializer(new SimpleCreateDatabaseIfNotExists());
+
+            var database = new SqlTestDatabase(
+                ModelHelpers.DefaultDbName<SimpleContextForCreateDatabaseIfNotExists>());
+            database.EnsureDatabase();
+            database.ExecuteNonQuery("CREATE VIEW Categories AS SELECT 'Watchers' Id, NULL DetailedDescription");
+
+            using (var context = new SimpleContextForCreateDatabaseIfNotExists())
+            {
+                Initializer_does_nothing_if_database_exists_and_model_matches(context, skipAdd: true);
+            }
+        }
+
+        [Fact]
         public void CreateDatabaseIfNotExists_in_transaction_does_nothing_if_database_exists_and_model_matches()
         {
             Database.Delete(SimpleConnection<SimpleContextForCreateDatabaseIfNotExists>());
@@ -309,7 +326,8 @@ namespace ProductivityApiTests
         private void Initializer_does_nothing_if_database_exists_and_model_matches(
             SimpleModelContext context,
             bool useTransaction = false,
-            bool useLocal = false)
+            bool useLocal = false,
+            bool skipAdd = false)
         {
             context.Database.Initialize(force: true);
 
@@ -317,8 +335,11 @@ namespace ProductivityApiTests
             Assert.Equal("Watchers", context.Categories.Single().Id);
 
             // Now add some more data
-            context.Categories.Add(new Category("Slayers"));
-            context.SaveChanges();
+            if (!skipAdd)
+            {
+                context.Categories.Add(new Category("Slayers"));
+                context.SaveChanges();
+            }
 
             DbTransaction localTransaction = null;
 
@@ -352,9 +373,9 @@ namespace ProductivityApiTests
             }
 
             var categoriesInDatabase = context.Categories.AsNoTracking();
-            Assert.Equal(2, categoriesInDatabase.Count());
+            Assert.Equal(skipAdd ? 1 : 2, categoriesInDatabase.Count());
             Assert.True(categoriesInDatabase.Any(c => c.Id == "Watchers"));
-            Assert.True(categoriesInDatabase.Any(c => c.Id == "Slayers"));
+            Assert.True(skipAdd || categoriesInDatabase.Any(c => c.Id == "Slayers"));
 
             if (localTransaction != null)
             {
@@ -1854,7 +1875,7 @@ namespace ProductivityApiTests
             }
 
             Database.SetInitializer(new DropCreateDatabaseAlways<DropCreateContext>());
-            
+
             var counter = new DdlCounter();
             DbInterception.Add(counter);
             try
@@ -1864,7 +1885,7 @@ namespace ProductivityApiTests
                     var _ = ((IObjectContextAdapter)context).ObjectContext;
 
                     Assert.Equal(1, context.BuildCount);
-                    
+
                     Assert.Equal(1, counter.ExistsCount);
                     Assert.Equal(0, counter.MigrationsDiscoveryCount);
 
