@@ -117,7 +117,7 @@
       <LocalPackageNames Include="EntityFramework.SqlServerCompact" />
     </ItemGroup>
     <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
-             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=%(LocalPackageNames.Identity);LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true" />
+             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=%(LocalPackageNames.Identity);LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
   </Target>
 
   <Target Name="ReplaceEFToolsStrings">
