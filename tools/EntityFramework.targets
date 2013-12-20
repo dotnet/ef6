@@ -46,7 +46,9 @@ Project global post-settings and targets.
       <AssemblyVersion Condition="'$(BuildingRuntimeProject)' == 'true'">$(VersionMajor).$(RuntimeAssemblyVersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
-      <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>
+      <!-- TODO: update version.targets and allow NuGetPackageVersion to be overridden as before -->
+      <!-- Always override the definition of NuGetPackageVersion because version.targets sets based on VersionMajor/VersionMinor even if those values are from the tooling -->
+      <NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>
       <EF6NuGetPackageVersion>$(NuGetPackageVersion)</EF6NuGetPackageVersion>
       <EFPackageVersion>$(EF6NuGetPackageVersion)</EFPackageVersion>
       <EF6NuGetPackageWixId>$(NuGetPackageVersion)</EF6NuGetPackageWixId>
