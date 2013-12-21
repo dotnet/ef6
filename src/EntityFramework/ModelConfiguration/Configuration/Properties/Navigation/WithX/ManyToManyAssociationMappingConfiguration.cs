@@ -168,7 +168,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var annotation in _annotations)
             {
-                table.AddAnnotation(XmlConstants.CustomAnnotationNamespace + ":" + annotation.Key, annotation.Value);
+                table.AddAnnotation(XmlConstants.CustomAnnotationPrefix + annotation.Key, annotation.Value);
             }
         }
 

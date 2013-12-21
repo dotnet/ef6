@@ -358,7 +358,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             foreach (var annotation in _annotations)
             {
-                column.AddAnnotation(XmlConstants.CustomAnnotationNamespace + ":" + annotation.Key, annotation.Value);
+                column.AddAnnotation(XmlConstants.CustomAnnotationPrefix + annotation.Key, annotation.Value);
             }
         }
 

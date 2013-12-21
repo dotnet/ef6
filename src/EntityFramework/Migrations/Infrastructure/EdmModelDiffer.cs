@@ -138,6 +138,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var movedTables = FindMovedTables(tablePairs).ToList();
             var addedTables = FindAddedTables(tablePairs).ToList();
             var droppedTables = FindDroppedTables(tablePairs).ToList();
+            var alteredTables = FindAlteredTables(tablePairs).ToList();
 
             var alteredPrimaryKeys
                 = FindAlteredPrimaryKeys(tablePairs, renamedColumns, alteredColumns)
@@ -176,6 +177,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(HandleTransitiveRenameDependencies(renamedColumns))
                 .Concat(alteredPrimaryKeys.OfType<DropPrimaryKeyOperation>())
                 .Concat(addedTables)
+                .Concat(alteredTables)
                 .Concat(addedColumns)
                 .Concat(alteredColumns)
                 .Concat(alteredPrimaryKeys.OfType<AddPrimaryKeyOperation>())
@@ -1351,7 +1353,37 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Select(
                         es => new DropTableOperation(
                             GetSchemaQualifiedName(es),
+                            es.ElementType.SerializableAnnotations,
+                            es.ElementType.Properties.Where(p => p.SerializableAnnotations.Count > 0)
+                                .ToDictionary(p => p.Name, p => (IDictionary<string, object>)p.SerializableAnnotations),
                             BuildCreateTableOperation(es, _source))));
+        }
+
+        private IEnumerable<AlterTableAnnotationsOperation> FindAlteredTables(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
+        {
+            DebugCheck.NotNull(tablePairs);
+
+            return tablePairs
+                .Where(p => !p.Item1.ElementType.SerializableAnnotations.SequenceEqual(p.Item2.ElementType.SerializableAnnotations))
+                .Select(p => BuildAlterTableAnnotationsOperation(p.Item1, p.Item2));
+        }
+
+        private AlterTableAnnotationsOperation BuildAlterTableAnnotationsOperation(EntitySet sourceTable, EntitySet destinationTable)
+        {
+            var operation = new AlterTableAnnotationsOperation(
+                GetSchemaQualifiedName(destinationTable),
+                BuildAnnotationPairs(
+                    sourceTable.ElementType.SerializableAnnotations,
+                    destinationTable.ElementType.SerializableAnnotations));
+
+            destinationTable.ElementType.Properties
+                .Each(
+                    p =>
+                        operation.Columns.Add(
+                            BuildColumnModel(
+                                p, _target,
+                                p.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(a.Value, a.Value)))));
+            return operation;
         }
 
         private IEnumerable<MigrationOperation> FindAlteredPrimaryKeys(
@@ -1559,7 +1591,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Any(
                         cr => cr.Table.EqualsIgnoreCase(t)
                               && cr.NewName.EqualsIgnoreCase(c.Name))
-                select new AddColumnOperation(t, BuildColumnModel(c, _target));
+                select new AddColumnOperation(
+                    t,
+                    BuildColumnModel(
+                        c, _target, c.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value))));
         }
 
         private IEnumerable<DropColumnOperation> FindDroppedColumns(
@@ -1583,7 +1618,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select new DropColumnOperation(
                     t,
                     c.Name,
-                    new AddColumnOperation(t, BuildColumnModel(c, _source)));
+                    c.SerializableAnnotations,
+                    new AddColumnOperation(
+                        t,
+                        BuildColumnModel(
+                            c, _source, c.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
         }
 
         private IEnumerable<DropColumnOperation> FindOrphanedColumns(
@@ -1609,7 +1648,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select new DropColumnOperation(
                     t,
                     c.Name,
-                    new AddColumnOperation(t, BuildColumnModel(c, _source)));
+                    c.SerializableAnnotations,
+                    new AddColumnOperation(
+                        t,
+                        BuildColumnModel(
+                            c, _source, c.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
         }
 
         private IEnumerable<AlterColumnOperation> FindAlteredColumns(
@@ -1655,6 +1698,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 return false;
             }
 
+            if (!column1.SerializableAnnotations.OrderBy(a => a.Key)
+                .SequenceEqual(column2.SerializableAnnotations.OrderBy(a => a.Key)))
+            {
+                return false;
+            }
+
             if (_source.ProviderInfo.Equals(_target.ProviderInfo))
             {
                 return column1.TypeName.EqualsIgnoreCase(column2.TypeName)
@@ -1681,11 +1730,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(sourceProperty);
             DebugCheck.NotNull(sourceModelMetadata);
 
-            var targetModel 
-                = BuildColumnModel(targetProperty, targetModelMetadata);
+            var targetAnnotations = BuildAnnotationPairs(
+                sourceProperty.SerializableAnnotations, targetProperty.SerializableAnnotations);
+            
+            var sourceAnnotations = targetAnnotations
+                .ToDictionary(a => a.Key, a => new AnnotationPair(a.Value.NewValue, a.Value.OldValue));
 
-            var sourceModel 
-                = BuildColumnModel(sourceProperty, sourceModelMetadata);
+            var targetModel
+                = BuildColumnModel(targetProperty, targetModelMetadata, targetAnnotations);
+
+            var sourceModel
+                = BuildColumnModel(sourceProperty, sourceModelMetadata, sourceAnnotations);
 
             // In-case the column is also being renamed.
             sourceModel.Name = targetModel.Name;
@@ -1698,6 +1753,32 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     table,
                     sourceModel,
                     isDestructiveChange: sourceModel.IsNarrowerThan(targetModel, _target.ProviderManifest)));
+        }
+
+        private static IDictionary<string, AnnotationPair> BuildAnnotationPairs(
+            IDictionary<string, object> rawSourceAnnotations,
+            IDictionary<string, object> rawTargetAnnotations)
+        {
+            var pairs = new Dictionary<string, AnnotationPair>();
+
+            var allKeys = rawTargetAnnotations.Keys.Concat(rawSourceAnnotations.Keys).Distinct();
+            foreach (var key in allKeys)
+            {
+                if (!rawSourceAnnotations.ContainsKey(key))
+                {
+                    pairs[key] = new AnnotationPair(null, rawTargetAnnotations[key]);
+                }
+                else if (!rawTargetAnnotations.ContainsKey(key))
+                {
+                    pairs[key] = new AnnotationPair(rawSourceAnnotations[key], null);
+                }
+                else if (!Equals(rawSourceAnnotations[key], rawTargetAnnotations[key]))
+                {
+                    pairs[key] = new AnnotationPair(rawSourceAnnotations[key], rawTargetAnnotations[key]);
+                }
+            }
+
+            return pairs;
         }
 
         private IEnumerable<RenameColumnOperation> FindRenamedColumns(
@@ -1800,10 +1881,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(modelMetadata);
 
             var createTableOperation
-                = new CreateTableOperation(GetSchemaQualifiedName(entitySet));
+                = new CreateTableOperation(GetSchemaQualifiedName(entitySet), entitySet.ElementType.SerializableAnnotations);
 
             entitySet.ElementType.Properties
-                .Each(p => createTableOperation.Columns.Add(BuildColumnModel(p, modelMetadata)));
+                .Each(
+                    p =>
+                        createTableOperation.Columns.Add(
+                            BuildColumnModel(
+                                p, modelMetadata,
+                                p.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation();
 
@@ -1815,7 +1901,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return createTableOperation;
         }
 
-        private static ColumnModel BuildColumnModel(EdmProperty property, ModelMetadata modelMetadata)
+        private static ColumnModel BuildColumnModel(
+            EdmProperty property, ModelMetadata modelMetadata, IDictionary<string, AnnotationPair> annotations)
         {
             DebugCheck.NotNull(property);
             DebugCheck.NotNull(modelMetadata);
@@ -1847,7 +1934,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     IsUnicode
                         = property.IsUnicode == false ? false : (bool?)null,
                     IsFixedLength
-                        = property.IsFixedLength == true ? true : (bool?)null
+                        = property.IsFixedLength == true ? true : (bool?)null,
+                    Annotations 
+                        = annotations
                 };
 
             Facet facet;

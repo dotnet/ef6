@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlServerCe;
     using System.Linq;
     using Xunit;
@@ -340,6 +341,360 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(migrationOperations.First() is DropPrimaryKeyOperation);
             Assert.True(migrationOperations.Last() is AddPrimaryKeyOperation);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_CreateTableWithAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_CreateTableWithAnnotations.V1, AutoAndGenerateScenarios_CreateTableWithAnnotations.V2>
+    {
+        public AutoAndGenerateScenarios_CreateTableWithAnnotations()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<CreateTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(3, operation.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"),  operation.Annotations["Collation"]);
+            Assert.Equal("V1", operation.Annotations["A1"]);
+            Assert.Equal("V2", operation.Annotations["A2"]);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<DropTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(3, operation.RemovedAnnotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), operation.RemovedAnnotations["Collation"]);
+            Assert.Equal("V1", operation.RemovedAnnotations["A1"]);
+            Assert.Equal("V2", operation.RemovedAnnotations["A2"]);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_CreateTableWithColumnAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_CreateTableWithColumnAnnotations.V1, AutoAndGenerateScenarios_CreateTableWithColumnAnnotations.V2>
+    {
+        public AutoAndGenerateScenarios_CreateTableWithColumnAnnotations()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Address.City)
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A3", "V3");
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Name)
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<CreateTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(4, operation.Columns.Sum(o => o.Annotations.Count));
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Name").Annotations["Collation"].OldValue);
+            Assert.Equal(
+                new CollationAttribute("Icelandic_CS_AS"),
+                operation.Columns.Single(c => c.Name == "Name").Annotations["Collation"].NewValue);
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Address_City").Annotations["A1"].OldValue);
+            Assert.Equal("V1", operation.Columns.Single(c => c.Name == "Address_City").Annotations["A1"].NewValue);
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Address_City").Annotations["A2"].OldValue);
+            Assert.Equal("V2", operation.Columns.Single(c => c.Name == "Address_City").Annotations["A2"].NewValue);
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Address_City").Annotations["A3"].OldValue);
+            Assert.Equal("V3", operation.Columns.Single(c => c.Name == "Address_City").Annotations["A3"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<DropTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(4, operation.RemovedColumnAnnotations.Sum(o => o.Value.Count));
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), operation.RemovedColumnAnnotations["Name"]["Collation"]);
+
+            Assert.Equal("V1", operation.RemovedColumnAnnotations["Address_City"]["A1"]);
+            Assert.Equal("V2", operation.RemovedColumnAnnotations["Address_City"]["A2"]);
+            Assert.Equal("V3", operation.RemovedColumnAnnotations["Address_City"]["A3"]);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_DropTableWithColumnAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropTableWithColumnAnnotations.V1, AutoAndGenerateScenarios_DropTableWithColumnAnnotations.V2>
+    {
+        public AutoAndGenerateScenarios_DropTableWithColumnAnnotations()
+        {
+            UpDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Address.City)
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Name)
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A3", "V3");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<DropTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(4, operation.RemovedColumnAnnotations.Sum(o => o.Value.Count));
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), operation.RemovedColumnAnnotations["Address_City"]["Collation"]);
+
+            Assert.Equal("V1", operation.RemovedColumnAnnotations["Name"]["A1"]);
+            Assert.Equal("V2", operation.RemovedColumnAnnotations["Name"]["A2"]);
+            Assert.Equal("V3", operation.RemovedColumnAnnotations["Name"]["A3"]);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<CreateTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(4, operation.Columns.Sum(o => o.Annotations.Count));
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Address_City").Annotations["Collation"].OldValue);
+            Assert.Equal(
+                new CollationAttribute("Icelandic_CS_AS"),
+                operation.Columns.Single(c => c.Name == "Address_City").Annotations["Collation"].NewValue);
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Name").Annotations["A1"].OldValue);
+            Assert.Equal("V1", operation.Columns.Single(c => c.Name == "Name").Annotations["A1"].NewValue);
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Name").Annotations["A2"].OldValue);
+            Assert.Equal("V2", operation.Columns.Single(c => c.Name == "Name").Annotations["A2"].NewValue);
+
+            Assert.Null(operation.Columns.Single(c => c.Name == "Name").Annotations["A3"].OldValue);
+            Assert.Equal("V3", operation.Columns.Single(c => c.Name == "Name").Annotations["A3"].NewValue);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_DropTableWithAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropTableWithAnnotations.V1, AutoAndGenerateScenarios_DropTableWithAnnotations.V2>
+    {
+        public AutoAndGenerateScenarios_DropTableWithAnnotations()
+        {
+            UpDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<DropTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(3, operation.RemovedAnnotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), operation.RemovedAnnotations["Collation"]);
+            Assert.Equal("V1", operation.RemovedAnnotations["A1"]);
+            Assert.Equal("V2", operation.RemovedAnnotations["A2"]);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<CreateTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(3, operation.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), operation.Annotations["Collation"]);
+            Assert.Equal("V1", operation.Annotations["A1"]);
+            Assert.Equal("V2", operation.Annotations["A2"]);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterTableAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterTableAnnotations.V1, AutoAndGenerateScenarios_AlterTableAnnotations.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .HasAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"))
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A3", "V3");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<AlterTableAnnotationsOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(3, operation.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), operation.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Finnish_Swedish_CS_AS"), operation.Annotations["Collation"].NewValue);
+
+            Assert.Equal("V2", operation.Annotations["A2"].OldValue);
+            Assert.Null(operation.Annotations["A2"].NewValue);
+
+            Assert.Null(operation.Annotations["A3"].OldValue);
+            Assert.Equal("V3", operation.Annotations["A3"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+            var operation = migrationOperations.OfType<AlterTableAnnotationsOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+
+            Assert.Equal(3, operation.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Finnish_Swedish_CS_AS"), operation.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), operation.Annotations["Collation"].NewValue);
+
+            Assert.Null(operation.Annotations["A2"].OldValue);
+            Assert.Equal("V2", operation.Annotations["A2"].NewValue);
+
+            Assert.Equal("V3", operation.Annotations["A3"].OldValue);
+            Assert.Null(operation.Annotations["A3"].NewValue);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_RenameTableWithAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_RenameTableWithAnnotations.V1, AutoAndGenerateScenarios_RenameTableWithAnnotations.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1")
+                    .ToTable("EekyBear", "dbo");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .HasAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"))
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A3", "V3")
+                    .ToTable("MrsPandy", "dbo");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var renameOperation = (RenameTableOperation)migrationOperations.First();
+            Assert.Equal("dbo.EekyBear", renameOperation.Name);
+
+            var alterOperation = (AlterTableAnnotationsOperation)migrationOperations.Skip(1).First();
+            Assert.Equal("dbo.MrsPandy", alterOperation.Name);
+
+            Assert.Equal(3, alterOperation.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), alterOperation.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Finnish_Swedish_CS_AS"), alterOperation.Annotations["Collation"].NewValue);
+
+            Assert.Equal("V2", alterOperation.Annotations["A2"].OldValue);
+            Assert.Null(alterOperation.Annotations["A2"].NewValue);
+
+            Assert.Null(alterOperation.Annotations["A3"].OldValue);
+            Assert.Equal("V3", alterOperation.Annotations["A3"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var alterOperation = migrationOperations.OfType<AlterTableAnnotationsOperation>().Single();
+
+            Assert.Equal(3, alterOperation.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Finnish_Swedish_CS_AS"), alterOperation.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), alterOperation.Annotations["Collation"].NewValue);
+
+            Assert.Null(alterOperation.Annotations["A2"].OldValue);
+            Assert.Equal("V2", alterOperation.Annotations["A2"].NewValue);
+
+            Assert.Equal("V3", alterOperation.Annotations["A3"].OldValue);
+            Assert.Null(alterOperation.Annotations["A3"].NewValue);
         }
     }
 
@@ -2036,6 +2391,544 @@ namespace System.Data.Entity.Migrations
             Assert.NotNull(alterColumnOperation);
 
             Assert.Null(alterColumnOperation.Column.IsUnicode);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterColumnChangedAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnChangedAnnotations.V1, AutoAndGenerateScenarios_AlterColumnChangedAnnotations.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Price)
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2A")
+                    .HasAnnotation("A3", "V3")
+                    .HasAnnotation("A4", "V4A");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Price)
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2B")
+                    .HasAnnotation("A3", "V3")
+                    .HasAnnotation("A4", "V4B");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(2, alterColumnOperation.Column.Annotations.Count);
+            Assert.Equal("V2A", alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Equal("V2B", alterColumnOperation.Column.Annotations["A2"].NewValue);
+            Assert.Equal("V4A", alterColumnOperation.Column.Annotations["A4"].OldValue);
+            Assert.Equal("V4B", alterColumnOperation.Column.Annotations["A4"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(2, alterColumnOperation.Column.Annotations.Count);
+
+            Assert.Equal("V2B", alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Equal("V2A", alterColumnOperation.Column.Annotations["A2"].NewValue);
+
+            Assert.Equal("V4B", alterColumnOperation.Column.Annotations["A4"].OldValue);
+            Assert.Equal("V4A", alterColumnOperation.Column.Annotations["A4"].NewValue);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterColumnAddedAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnAddedAnnotations.V1, AutoAndGenerateScenarios_AlterColumnAddedAnnotations.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>();
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku)
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A3", "V3");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Sku");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(3, alterColumnOperation.Column.Annotations.Count);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A2"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A3"].OldValue);
+            Assert.Equal("V3", alterColumnOperation.Column.Annotations["A3"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Sku");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(3, alterColumnOperation.Column.Annotations.Count);
+
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A2"].NewValue);
+
+            Assert.Equal("V3", alterColumnOperation.Column.Annotations["A3"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A3"].NewValue);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterColumnRemovedAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnRemovedAnnotations.V1, AutoAndGenerateScenarios_AlterColumnRemovedAnnotations.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku)
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A3", "V3");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>();
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Sku");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(3, alterColumnOperation.Column.Annotations.Count);
+
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A2"].NewValue);
+
+            Assert.Equal("V3", alterColumnOperation.Column.Annotations["A3"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A3"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Sku");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(3, alterColumnOperation.Column.Annotations.Count);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A2"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A3"].OldValue);
+            Assert.Equal("V3", alterColumnOperation.Column.Annotations["A3"].NewValue);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterColumnEverythingAnnotations :
+    AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnEverythingAnnotations.V1, AutoAndGenerateScenarios_AlterColumnEverythingAnnotations.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Price)
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A3", "V3A")
+                    .HasAnnotation("A4", "V4A");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Price)
+                    .HasAnnotation("A3", "V3B")
+                    .HasAnnotation("A4", "V4B")
+                    .HasAnnotation("A5", "V5")
+                    .HasAnnotation("A6", "V6");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(6, alterColumnOperation.Column.Annotations.Count);
+
+            Assert.Equal("V3A", alterColumnOperation.Column.Annotations["A3"].OldValue);
+            Assert.Equal("V3B", alterColumnOperation.Column.Annotations["A3"].NewValue);
+
+            Assert.Equal("V4A", alterColumnOperation.Column.Annotations["A4"].OldValue);
+            Assert.Equal("V4B", alterColumnOperation.Column.Annotations["A4"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A5"].OldValue);
+            Assert.Equal("V5", alterColumnOperation.Column.Annotations["A5"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A6"].OldValue);
+            Assert.Equal("V6", alterColumnOperation.Column.Annotations["A6"].NewValue);
+
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A2"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.OrderLines" && o.Column.Name == "Price");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(6, alterColumnOperation.Column.Annotations.Count);
+
+            Assert.Equal("V3B", alterColumnOperation.Column.Annotations["A3"].OldValue);
+            Assert.Equal("V3A", alterColumnOperation.Column.Annotations["A3"].NewValue);
+
+            Assert.Equal("V4B", alterColumnOperation.Column.Annotations["A4"].OldValue);
+            Assert.Equal("V4A", alterColumnOperation.Column.Annotations["A4"].NewValue);
+
+            Assert.Equal("V5", alterColumnOperation.Column.Annotations["A5"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A5"].NewValue);
+
+            Assert.Equal("V6", alterColumnOperation.Column.Annotations["A6"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A6"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A2"].OldValue);
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A2"].NewValue);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterColumnCustomAnnotation :
+    AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnCustomAnnotation.V1, AutoAndGenerateScenarios_AlterColumnCustomAnnotation.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(ol => ol.Address.City)
+                    .HasAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"));
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(ol => ol.Address.City)
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(ol => ol.Name)
+                    .HasAnnotation("Collation", new CollationAttribute("Danish_Norwegian_CS_AS"));
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var cityOperation =
+                migrationOperations.OfType<AlterColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Address_City");
+
+            Assert.Equal(1, cityOperation.Column.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Finnish_Swedish_CS_AS"), cityOperation.Column.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), cityOperation.Column.Annotations["Collation"].NewValue);
+
+            var nameOperation =
+                migrationOperations.OfType<AlterColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+
+            Assert.Equal(1, nameOperation.Column.Annotations.Count);
+
+            Assert.Null(nameOperation.Column.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Danish_Norwegian_CS_AS"), nameOperation.Column.Annotations["Collation"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var cityOperation =
+                migrationOperations.OfType<AlterColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Address_City");
+
+            Assert.Equal(1, cityOperation.Column.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), cityOperation.Column.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Finnish_Swedish_CS_AS"), cityOperation.Column.Annotations["Collation"].NewValue);
+
+            var nameOperation =
+                migrationOperations.OfType<AlterColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+
+            Assert.Equal(1, nameOperation.Column.Annotations.Count);
+
+            Assert.Equal(new CollationAttribute("Danish_Norwegian_CS_AS"), nameOperation.Column.Annotations["Collation"].OldValue);
+            Assert.Null(nameOperation.Column.Annotations["Collation"].NewValue);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AddColumnWithAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnWithAnnotations.V1, AutoAndGenerateScenarios_AddColumnWithAnnotations.V2>
+    {
+        public AutoAndGenerateScenarios_AddColumnWithAnnotations()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Ignore(e => e.Address);
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Ignore(e => e.Name);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Address.City)
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Name)
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A3", "V3");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var cityOperation =
+                migrationOperations.OfType<AddColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Address_City");
+
+            Assert.Equal(1, cityOperation.Column.Annotations.Count);
+
+            Assert.Null(cityOperation.Column.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), cityOperation.Column.Annotations["Collation"].NewValue);
+
+            var nameOperation =
+                migrationOperations.OfType<AddColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+
+            Assert.Equal(3, nameOperation.Column.Annotations.Count);
+
+            Assert.Null(nameOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V1", nameOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Null(nameOperation.Column.Annotations["A2"].OldValue);
+            Assert.Equal("V2", nameOperation.Column.Annotations["A2"].NewValue);
+
+            Assert.Null(nameOperation.Column.Annotations["A3"].OldValue);
+            Assert.Equal("V3", nameOperation.Column.Annotations["A3"].NewValue);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var cityOperation =
+                migrationOperations.OfType<DropColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Address_City");
+
+            Assert.Equal(1, cityOperation.RemovedAnnotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), cityOperation.RemovedAnnotations["Collation"]);
+            
+            var nameOperation =
+                migrationOperations.OfType<DropColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
+
+            Assert.Equal(3, nameOperation.RemovedAnnotations.Count);
+
+            Assert.Equal("V1", nameOperation.RemovedAnnotations["A1"]);
+            Assert.Equal("V2", nameOperation.RemovedAnnotations["A2"]);
+            Assert.Equal("V3", nameOperation.RemovedAnnotations["A3"]);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_DropColumnWithAnnotations :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropColumnWithAnnotations.V1, AutoAndGenerateScenarios_DropColumnWithAnnotations.V2>
+    {
+        public AutoAndGenerateScenarios_DropColumnWithAnnotations()
+        {
+            UpDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Address.City)
+                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(e => e.Name)
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A3", "V3");
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>()
+                    .Ignore(e => e.Address);
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Ignore(e => e.Name);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var cityOperation =
+                migrationOperations.OfType<DropColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Address_City");
+
+            Assert.Equal(1, cityOperation.RemovedAnnotations.Count);
+
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), cityOperation.RemovedAnnotations["Collation"]);
+
+            var nameOperation =
+                migrationOperations.OfType<DropColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
+
+            Assert.Equal(3, nameOperation.RemovedAnnotations.Count);
+
+            Assert.Equal("V1", nameOperation.RemovedAnnotations["A1"]);
+            Assert.Equal("V2", nameOperation.RemovedAnnotations["A2"]);
+            Assert.Equal("V3", nameOperation.RemovedAnnotations["A3"]);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var cityOperation =
+                migrationOperations.OfType<AddColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Address_City");
+
+            Assert.Equal(1, cityOperation.Column.Annotations.Count);
+
+            Assert.Null(cityOperation.Column.Annotations["Collation"].OldValue);
+            Assert.Equal(new CollationAttribute("Icelandic_CS_AS"), cityOperation.Column.Annotations["Collation"].NewValue);
+
+            var nameOperation =
+                migrationOperations.OfType<AddColumnOperation>().Single(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+
+            Assert.Equal(3, nameOperation.Column.Annotations.Count);
+
+            Assert.Null(nameOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V1", nameOperation.Column.Annotations["A1"].NewValue);
+
+            Assert.Null(nameOperation.Column.Annotations["A2"].OldValue);
+            Assert.Equal("V2", nameOperation.Column.Annotations["A2"].NewValue);
+
+            Assert.Null(nameOperation.Column.Annotations["A3"].OldValue);
+            Assert.Equal("V3", nameOperation.Column.Annotations["A3"].NewValue);
         }
     }
 

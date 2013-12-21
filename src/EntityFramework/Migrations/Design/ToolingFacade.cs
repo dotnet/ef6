@@ -542,7 +542,7 @@ namespace System.Data.Entity.Migrations.Design
             {
                 base.OverrideConfiguration(configuration);
 
-                // If the user hasn't set their own generator and their using a VB project then switch in the default VB one
+                // If the user hasn't set their own generator and he/she is using a VB project then switch in the default VB one
                 if (Language == "vb"
                     && configuration.CodeGenerator is CSharpMigrationCodeGenerator)
                 {

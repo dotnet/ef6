@@ -703,5 +703,15 @@ WHERE (([MigrationId] = N'House Lannister') AND ([ContextKey] = N'The pointy end
 
             Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [int] NOT NULL DEFAULT 0", sql);
         }
+
+        [Fact]
+        public void Generate_for_AlterTableAnnotationsOperation_checks_its_arguments()
+        {
+            var generator = new SqlCeMigrationSqlGenerator();
+
+            Assert.Equal(
+                "alterTableAnnotationsOperation",
+                Assert.Throws<ArgumentNullException>(() => generator.Generate((AlterTableAnnotationsOperation)null)).ParamName);
+        }
     }
 }

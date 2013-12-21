@@ -11,10 +11,12 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using Moq;
@@ -1435,6 +1437,53 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
     DROP INDEX [IX_na'me] ON [sch'ema].[Ta'ble]";
 
             Assert.Equal(expectedSql, sql);
+        }
+
+        [Fact]
+        public void Generate_for_AlterTableAnnotationsOperation_checks_its_arguments()
+        {
+            var generator = new SqlServerMigrationSqlGenerator();
+
+            Assert.Equal(
+                "alterTableAnnotationsOperation",
+                Assert.Throws<ArgumentNullException>(() => generator.Generate((AlterTableAnnotationsOperation)null)).ParamName);
+        }
+
+        [Fact]
+        public void DropDefaultConstraint_checks_its_arguments()
+        {
+            var generator = new SqlServerMigrationSqlGenerator();
+            var writer = new IndentedTextWriter(new Mock<TextWriter>().Object);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("table"),
+                Assert.Throws<ArgumentException>(
+                    () => generator.DropDefaultConstraint(null, "Spektor", writer)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("column"),
+                Assert.Throws<ArgumentException>(
+                    () => generator.DropDefaultConstraint("Regina", null, writer)).Message);
+
+            Assert.Equal(
+                "writer",
+                Assert.Throws<ArgumentNullException>(() => generator.DropDefaultConstraint("Regina", "Spektor", null)).ParamName);
+        }
+
+        [Fact]
+        public void Generate_for_ColumnModel_checks_its_arguments()
+        {
+            var generator = new SqlServerMigrationSqlGenerator();
+            var writer = new IndentedTextWriter(new Mock<TextWriter>().Object);
+            var columnModel = new ColumnModel(PrimitiveTypeKind.Int32);
+
+            Assert.Equal(
+                "column",
+                Assert.Throws<ArgumentNullException>(() => generator.Generate(null, writer)).ParamName);
+
+            Assert.Equal(
+                "writer",
+                Assert.Throws<ArgumentNullException>(() => generator.Generate(columnModel, null)).ParamName);
         }
     }
 }

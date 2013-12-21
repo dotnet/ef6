@@ -613,19 +613,18 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         internal static MetadataProperty CreateMetadataPropertyFromXmlElement(
-            string xmlNamespaceUri, string artifactName, XElement value)
+            string xmlNamespaceUri, string elementName, XElement value)
         {
-            return MetadataProperty.CreateAnnotation(xmlNamespaceUri + ":" + artifactName, value);
+            return MetadataProperty.CreateAnnotation(xmlNamespaceUri + ":" + elementName, value);
         }
 
         internal MetadataProperty CreateMetadataPropertyFromXmlAttribute(
-            string xmlNamespaceUri, string artifactName, string value)
+            string xmlNamespaceUri, string attributeName, string value)
         {
-            var name = xmlNamespaceUri + ":" + artifactName;
-            var serializer = _resolver.GetService<IMetadataAnnotationSerializer>(name);
-            var parsedValue = serializer == null ? value : serializer.DeserializeValue(name, value);
+            var serializer = _resolver.GetService<Func<IMetadataAnnotationSerializer>>(attributeName);
+            var parsedValue = serializer == null ? value : serializer().DeserializeValue(attributeName, value);
 
-            return MetadataProperty.CreateAnnotation(name, parsedValue);
+            return MetadataProperty.CreateAnnotation(xmlNamespaceUri + ":" + attributeName, parsedValue);
         }
 
         // <summary>

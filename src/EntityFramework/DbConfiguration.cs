@@ -12,6 +12,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -529,25 +530,51 @@ namespace System.Data.Entity
 
         /// <summary>
         /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        /// an implementation of <see cref="IMetadataAnnotationSerializer" /> which allows custom annotations
+        /// a factory for implementations of <see cref="IMetadataAnnotationSerializer" /> which allows custom annotations
         /// represented by <see cref="MetadataProperty"/> instances to be serialized to and from the EDMX XML.
         /// </summary>
         /// <remarks>
-        /// Note that an <see cref="IMetadataAnnotationSerializer" /> is not needed if the annotation uses a simple string value.
+        /// Note that an <see cref="Func{IMetadataAnnotationSerializer}" /> is not needed if the annotation uses a simple string value.
         /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         /// Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         /// <see cref="IMetadataAnnotationSerializer" />. This means that, if desired, the same functionality can be achieved using
         /// a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="annotationName"> The name of custom annotation that will be handled by this serializer. </param>
-        /// <param name="serializer"> The serializer. </param>
-        protected internal void SetMetadataAnnotationSerializer(string annotationName, IMetadataAnnotationSerializer serializer)
+        /// <param name="serializerFactory"> A delegate that will be used to create serializer instances. </param>
+        protected internal void SetMetadataAnnotationSerializer(
+            string annotationName, Func<IMetadataAnnotationSerializer> serializerFactory)
         {
             Check.NotEmpty(annotationName, "annotationName");
-            Check.NotNull(serializer, "serializer");
+            Check.NotNull(serializerFactory, "serializerFactory");
 
             _internalConfiguration.CheckNotLocked("SetMetadataAnnotationSerializer");
-            _internalConfiguration.RegisterSingleton(serializer, annotationName);
+            _internalConfiguration.RegisterSingleton(serializerFactory, annotationName);
+        }
+
+        /// <summary>
+        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        /// a factory for implementations of <see cref="AnnotationCodeGenerator" /> which allows for code generation
+        /// of custom annotations as part of scaffolding Migrations.
+        /// </summary>
+        /// <remarks>
+        /// Note that an <see cref="AnnotationCodeGenerator" /> is not needed if the annotation uses a simple string value,
+        /// or if calling ToString on the annotation object is sufficient for use in the scaffolded Migration.
+        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        /// Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        /// <see cref="Func{AnnotationCodeGenerator}" />. This means that, if desired, the same functionality can be achieved using
+        /// a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="annotationName"> The name of custom annotation that will be handled by this code generator. </param>
+        /// <param name="codeGeneratorFactory"> A delegate that will be used to create code generator instances. </param>
+        protected internal void SetAnnotationCodeGenerator(
+            string annotationName, Func<AnnotationCodeGenerator> codeGeneratorFactory)
+        {
+            Check.NotEmpty(annotationName, "annotationName");
+            Check.NotNull(codeGeneratorFactory, "codeGeneratorFactory");
+
+            _internalConfiguration.CheckNotLocked("SetAnnotationCodeGenerator");
+            _internalConfiguration.RegisterSingleton(codeGeneratorFactory, annotationName);
         }
 
         /// <summary>

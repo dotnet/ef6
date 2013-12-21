@@ -69,6 +69,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetMetadataProperties().Where(p => p.IsAnnotation); }
         }
 
+        internal virtual Dictionary<string, object> SerializableAnnotations
+        {
+            get
+            {
+                return Annotations.Where(
+                    a => a.Name.StartsWith(XmlConstants.CustomAnnotationPrefix, StringComparison.Ordinal))
+                    .ToDictionary(a => a.Name.Substring(XmlConstants.CustomAnnotationPrefix.Length), a => a.Value);
+            }
+        }
+
         /// <summary>Gets the built-in type kind for this type.</summary>
         /// <returns>
         /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this type.

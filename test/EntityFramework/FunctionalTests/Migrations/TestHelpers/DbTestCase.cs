@@ -121,22 +121,29 @@ namespace System.Data.Entity.Migrations
             return new DbMigrator(migrationsConfiguration);
         }
 
-        public DbMigrator CreateMigrator<TContext>(DbMigration migration)
+        public DbMigrator CreateMigrator<TContext>(
+            DbMigration migration, 
+            IEnumerable<Tuple<string, MigrationSqlGenerator>> sqlGenerators = null)
             where TContext : DbContext
         {
             using (var context = CreateContext<TContext>())
             {
+                var operations = migration.GetOperations();
+                CodeGenerator.RegisterAnnotationGenerators(operations);
+                
                 var generatedMigration
                     = CodeGenerator
                         .Generate(
                             GenerateUniqueMigrationName(migration.GetType().Name),
-                            migration.GetOperations(),
+                            operations,
                             Convert.ToBase64String(CompressModel(GetModel(context))),
                             Convert.ToBase64String(CompressModel(GetModel(context))),
                             "System.Data.Entity.Migrations",
                             migration.GetType().Name);
 
-                return new DbMigrator(CreateMigrationsConfiguration<TContext>(scaffoldedMigrations: generatedMigration));
+                return new DbMigrator(CreateMigrationsConfiguration<TContext>(
+                    scaffoldedMigrations: generatedMigration,
+                    sqlGenerators: sqlGenerators));
             }
         }
 
@@ -146,6 +153,7 @@ namespace System.Data.Entity.Migrations
             string targetDatabase = null,
             string contextKey = null,
             Func<DbConnection, string, HistoryContext> historyContextFactory = null,
+            IEnumerable<Tuple<string, MigrationSqlGenerator>> sqlGenerators = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
@@ -156,6 +164,7 @@ namespace System.Data.Entity.Migrations
                     targetDatabase,
                     contextKey,
                     historyContextFactory,
+                    sqlGenerators,
                     scaffoldedMigrations));
         }
 
@@ -165,6 +174,7 @@ namespace System.Data.Entity.Migrations
             string targetDatabase = null,
             string contextKey = null,
             Func<DbConnection, string, HistoryContext> historyContextFactory = null,
+            IEnumerable<Tuple<string, MigrationSqlGenerator>> sqlGenerators = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
@@ -204,6 +214,14 @@ namespace System.Data.Entity.Migrations
             migrationsConfiguration.TargetDatabase = new DbConnectionInfo(TestDatabase.ConnectionString, TestDatabase.ProviderName);
 
             migrationsConfiguration.CodeGenerator = CodeGenerator;
+
+            if (sqlGenerators != null)
+            {
+                foreach (var sqlGenerator in sqlGenerators)
+                {
+                    migrationsConfiguration.SetSqlGenerator(sqlGenerator.Item1, sqlGenerator.Item2);
+                }
+            }
 
             return migrationsConfiguration;
         }

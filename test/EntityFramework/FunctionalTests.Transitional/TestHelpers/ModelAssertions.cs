@@ -20,14 +20,14 @@ namespace System.Data.Entity
                     .OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
-                            a => a.Name == XmlConstants.ClrTypeAnnotation
+                            a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                                  && (Type)a.Value == typeof(TStructuralType)));
 
             var property
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                     .Where(
                         i => i.Annotations.Any(
-                            a => a.Name == XmlConstants.ClrTypeAnnotation
+                            a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                                  && ((Type)a.Value).IsAssignableFrom(typeof(TStructuralType))))
                     .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
                         i => i.Annotations.Any(
@@ -51,7 +51,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == XmlConstants.ClrTypeAnnotation
+                        a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var table
@@ -72,7 +72,7 @@ namespace System.Data.Entity
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
-                            a => a.Name == XmlConstants.ClrTypeAnnotation
+                            a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                                  && (Type)a.Value == typeof(TStructuralType)));
 
             var table
@@ -106,7 +106,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == XmlConstants.ClrTypeAnnotation
+                        a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var fragments
@@ -131,7 +131,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == XmlConstants.ClrTypeAnnotation
+                        a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var fragment
@@ -149,7 +149,7 @@ namespace System.Data.Entity
             var entityType
                 = databaseMapping.Model.EntityTypes.Single(
                     i => i.Annotations.Any(
-                        a => a.Name == XmlConstants.ClrTypeAnnotation
+                        a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                              && (Type)a.Value == typeof(TStructuralType)));
 
             databaseMapping
@@ -168,7 +168,7 @@ namespace System.Data.Entity
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                                  .Where(
                                      i => i.Annotations.Any(
-                                         a => a.Name == XmlConstants.ClrTypeAnnotation
+                                         a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                                               && ((Type)a.Value).IsAssignableFrom(typeof(TStructuralType))))
                                  .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
                                      i => i.Annotations.Any(
@@ -218,7 +218,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == XmlConstants.ClrTypeAnnotation
+                        a => a.Name == XmlConstants.ClrTypeAnnotationWithPrefix
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var fragments
@@ -260,7 +260,7 @@ namespace System.Data.Entity
 
             public ColumnAssertions HasAnnotation(string name, object value, IEqualityComparer<object> comparer = null)
             {
-                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+                var qualifiedName = XmlConstants.CustomAnnotationPrefix + name;
 
                 Xunit.Assert.Equal(1, _column.Annotations.Count(a => a.Name == qualifiedName));
                 
@@ -279,7 +279,7 @@ namespace System.Data.Entity
 
             public ColumnAssertions HasNoAnnotation(string name)
             {
-                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+                var qualifiedName = XmlConstants.CustomAnnotationPrefix + name;
 
                 Xunit.Assert.Equal(0, _column.Annotations.Count(a => a.Name == qualifiedName));
 
@@ -489,7 +489,7 @@ namespace System.Data.Entity
 
             public TypeAssertions HasAnnotation(string name, object value)
             {
-                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+                var qualifiedName = XmlConstants.CustomAnnotationPrefix + name;
 
                 Xunit.Assert.Equal(1, _table.Annotations.Count(a => a.Name == qualifiedName));
                 Xunit.Assert.Equal(value, _table.Annotations.Single(a => a.Name == qualifiedName).Value);
@@ -499,7 +499,7 @@ namespace System.Data.Entity
 
             public TypeAssertions HasNoAnnotation(string name)
             {
-                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+                var qualifiedName = XmlConstants.CustomAnnotationPrefix + name;
 
                 Xunit.Assert.Equal(0, _table.Annotations.Count(a => a.Name == qualifiedName));
 

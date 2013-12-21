@@ -201,6 +201,18 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
+        /// Override this method to generate SQL when annotations on tables are changed. The default
+        /// implementation of this method does nothing.
+        /// </summary>
+        /// <param name="alterTableAnnotationsOperation"> The operation describing changes to table annotations. </param>
+        protected internal virtual void Generate(AlterTableAnnotationsOperation alterTableAnnotationsOperation)
+        {
+            Check.NotNull(alterTableAnnotationsOperation, "alterTableAnnotationsOperation");
+
+            // Nothing to do since there is no inherent semantics associated with annotations
+        }
+        
+        /// <summary>
         /// Generates SQL to mark a table as a system table.
         /// Generated SQL should be added using the Statement method.
         /// </summary>

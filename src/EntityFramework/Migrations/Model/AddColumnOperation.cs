@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Represents a column being added to a table.
@@ -59,7 +60,11 @@ namespace System.Data.Entity.Migrations.Model
         /// </summary>
         public override MigrationOperation Inverse
         {
-            get { return new DropColumnOperation(Table, Column.Name); }
+            get
+            {
+                return new DropColumnOperation(
+                    Table, Column.Name, Column.Annotations.ToDictionary(a => a.Key, a => a.Value.NewValue));
+            }
         }
 
         /// <inheritdoc />

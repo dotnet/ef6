@@ -76,6 +76,9 @@ namespace System.Data.Entity.TestHelpers
 
             SetContextFactory(() => new CodeFirstScaffoldingContext("Foo"));
             SetContextFactory(() => new CodeFirstScaffoldingContextWithConnection("Bar"));
+
+            SetMetadataAnnotationSerializer(CollationAttribute.AnnotationName, () => new CollationSerializer());
+            SetAnnotationCodeGenerator(CollationAttribute.AnnotationName, () => new CollationCSharpCodeGenerator());
         }
 
         public static bool SuspendExecutionStrategy { get; set; }

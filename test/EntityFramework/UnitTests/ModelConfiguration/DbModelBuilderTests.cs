@@ -1041,7 +1041,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.Equal(
                 1,
                 databaseMapping.Model.Container.Annotations.Count(
-                    a => a.Name == XmlConstants.UseClrTypesAnnotation && a.Value.Equals("true")));
+                    a => a.Name == XmlConstants.UseClrTypesAnnotationWithPrefix && a.Value.Equals("true")));
         }
     }
 }

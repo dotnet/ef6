@@ -863,11 +863,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     DebugCheck.NotNull(extendedProperty.Value);
 
-                    var serializer = _resolver.GetService<IMetadataAnnotationSerializer>(extendedProperty.Name);
+                    var serializer = _resolver.GetService<Func<IMetadataAnnotationSerializer>>(attributeName);
 
                     var value = serializer == null 
-                        ? extendedProperty.Value.ToString() 
-                        : serializer.SerializeValue(extendedProperty.Name, extendedProperty.Value);
+                        ? extendedProperty.Value.ToString()
+                        : serializer().SerializeValue(attributeName, extendedProperty.Value);
 
                     _xmlWriter.WriteAttributeString(attributeName, xmlNamespaceUri, value);
                 }

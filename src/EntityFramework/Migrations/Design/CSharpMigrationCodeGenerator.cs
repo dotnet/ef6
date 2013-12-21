@@ -9,6 +9,7 @@ namespace System.Data.Entity.Migrations.Design
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
@@ -322,6 +323,18 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write(Quote(dropColumnOperation.Table));
             writer.Write(", ");
             writer.Write(Quote(dropColumnOperation.Name));
+
+            if (dropColumnOperation.RemovedAnnotations.Any())
+            {
+                writer.Indent++;
+
+                writer.WriteLine(",");
+                writer.Write("removedAnnotations: ");
+                GenerateAnnotations(dropColumnOperation.RemovedAnnotations, writer);
+
+                writer.Indent--;
+            }
+
             writer.WriteLine(");");
         }
 
@@ -342,6 +355,103 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write(", c =>");
             Generate(alterColumnOperation.Column, writer);
             writer.WriteLine(");");
+        }
+
+        /// <summary>
+        /// Generates code for to re-create the given dictionary of annotations for use when passing
+        /// these annotations as a parameter of a <see cref="DbMigration"/>. call.
+        /// </summary>
+        /// <param name="annotations">The annotations to generate.</param>
+        /// <param name="writer">The writer to which generated code should be written.</param>
+        protected internal virtual void GenerateAnnotations(IDictionary<string, object> annotations, IndentedTextWriter writer)
+        {
+            Check.NotNull(annotations, "annotations");
+            Check.NotNull(writer, "writer");
+
+            writer.WriteLine("new Dictionary<string, object>");
+            writer.WriteLine("{");
+            writer.Indent++;
+
+            foreach (var name in annotations.Keys.OrderBy(k => k))
+            {
+                writer.Write("{ ");
+                writer.Write(Quote(name) + ", ");
+                GenerateAnnotation(name, annotations[name], writer);
+                writer.WriteLine(" },");
+            }
+
+            writer.Indent--;
+            writer.Write("}");
+        }
+
+        /// <summary>
+        /// Generates code for to re-create the given dictionary of annotations for use when passing
+        /// these annotations as a parameter of a <see cref="DbMigration"/>. call.
+        /// </summary>
+        /// <param name="annotations">The annotations to generate.</param>
+        /// <param name="writer">The writer to which generated code should be written.</param>
+        protected internal virtual void GenerateAnnotations(IDictionary<string, AnnotationPair> annotations, IndentedTextWriter writer)
+        {
+            Check.NotNull(annotations, "annotations");
+            Check.NotNull(writer, "writer");
+
+            writer.WriteLine("new Dictionary<string, AnnotationPair>");
+            writer.WriteLine("{");
+            writer.Indent++;
+
+            if (annotations != null)
+            {
+                foreach (var name in annotations.Keys.OrderBy(k => k))
+                {
+                    writer.WriteLine("{ ");
+                    writer.Indent++;
+                    writer.WriteLine(Quote(name) + ",");
+                    writer.Write("new AnnotationPair(oldValue: ");
+                    GenerateAnnotation(name, annotations[name].OldValue, writer);
+                    writer.Write(", newValue: ");
+                    GenerateAnnotation(name, annotations[name].NewValue, writer);
+                    writer.WriteLine(")");
+                    writer.Indent--;
+                    writer.WriteLine("},");
+                }
+            }
+
+            writer.Indent--;
+            writer.Write("}");
+        }
+
+        /// <summary>
+        /// Generates code for the given annotation value, which may be null. The default behavior is to use an
+        /// <see cref="AnnotationCodeGenerator"/> if one is registered, otherwise call ToString on the annotation value.
+        /// </summary>
+        /// <remarks>
+        /// Note that a <see cref="AnnotationCodeGenerator"/> can be registered to generate code for custom annotations
+        /// without the need to override the entire code generator.
+        /// </remarks>
+        /// <param name="name">The name of the annotation for which code is needed.</param>
+        /// <param name="annotation">The annotation value to generate.</param>
+        /// <param name="writer">The writer to which generated code should be written.</param>
+        protected internal virtual void GenerateAnnotation(string name, object annotation, IndentedTextWriter writer)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(writer, "writer");
+
+            if (annotation == null)
+            {
+                writer.Write("null");
+                return;
+            }
+
+            Debug.Assert(AnnotationGenerators.ContainsKey(name));
+            var annotationGenerator = AnnotationGenerators[name];
+            if (annotationGenerator != null)
+            {
+                annotationGenerator().Generate(name, annotation, writer);
+            }
+            else
+            {
+                writer.Write(Quote(annotation.ToString()));
+            }
         }
 
         /// <summary>Generates code to perform a <see cref="T:System.Data.Entity.Migrations.Model.CreateProcedureOperation" />.</summary>
@@ -547,6 +657,14 @@ namespace System.Data.Entity.Migrations.Design
             writer.Indent--;
             writer.Write("}");
             writer.Indent--;
+
+            if (createTableOperation.Annotations.Any())
+            {
+                writer.WriteLine(",");
+                writer.Write("annotations: ");
+                GenerateAnnotations(createTableOperation.Annotations, writer);
+            }
+
             writer.Write(")");
 
             GenerateInline(createTableOperation.PrimaryKey, writer);
@@ -558,6 +676,54 @@ namespace System.Data.Entity.Migrations.Design
             _newTableIndexes
                 .Where(t => t.Item1 == createTableOperation)
                 .Each(t => GenerateInline(t.Item2, writer));
+
+            writer.WriteLine(";");
+            writer.Indent--;
+            writer.WriteLine();
+        }
+
+        /// <summary>
+        /// Generates code for an <see cref="AlterTableAnnotationsOperation"/>.
+        /// </summary>
+        /// <param name="alterTableAnnotationsOperation">The operation for which code should be generated.</param>
+        /// <param name="writer">The writer to which generated code should be written.</param>
+        protected internal virtual void Generate(AlterTableAnnotationsOperation alterTableAnnotationsOperation, IndentedTextWriter writer)
+        {
+            Check.NotNull(alterTableAnnotationsOperation, "alterTableAnnotationsOperation");
+            Check.NotNull(writer, "writer");
+
+            writer.WriteLine("AlterTableAnnotations(");
+            writer.Indent++;
+            writer.Write(Quote(alterTableAnnotationsOperation.Name));
+            writer.WriteLine(",");
+            writer.WriteLine("c => new");
+            writer.Indent++;
+            writer.WriteLine("{");
+            writer.Indent++;
+
+            alterTableAnnotationsOperation.Columns.Each(
+                c =>
+                {
+                    var scrubbedName = ScrubName(c.Name);
+
+                    writer.Write(scrubbedName);
+                    writer.Write(" =");
+                    Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
+                    writer.WriteLine(",");
+                });
+
+            writer.Indent--;
+            writer.Write("}");
+            writer.Indent--;
+
+            if (alterTableAnnotationsOperation.Annotations.Any())
+            {
+                writer.WriteLine(",");
+                writer.Write("annotations: ");
+                GenerateAnnotations(alterTableAnnotationsOperation.Annotations, writer);
+            }
+
+            writer.Write(")");
 
             writer.WriteLine(";");
             writer.Indent--;
@@ -962,6 +1128,18 @@ namespace System.Data.Entity.Migrations.Design
             }
 
             writer.Write(args.Join());
+
+            if (column.Annotations.Any())
+            {
+                writer.Indent++;
+
+                writer.WriteLine(args.Any() ? "," : "");
+                writer.Write("annotations: ");
+                GenerateAnnotations(column.Annotations, writer);
+
+                writer.Indent--;
+            }
+
             writer.Write(")");
         }
 
@@ -1100,6 +1278,45 @@ namespace System.Data.Entity.Migrations.Design
 
             writer.Write("DropTable(");
             writer.Write(Quote(dropTableOperation.Name));
+
+            if (dropTableOperation.RemovedAnnotations.Any())
+            {
+                writer.Indent++;
+
+                writer.WriteLine(",");
+                writer.Write("removedAnnotations: ");
+                GenerateAnnotations(dropTableOperation.RemovedAnnotations, writer);
+                writer.Indent--;
+            }
+
+            var columns = dropTableOperation.RemovedColumnAnnotations;
+            if (columns.Any())
+            {
+                writer.Indent++;
+
+                writer.WriteLine(",");
+                writer.Write("removedColumnAnnotations: ");
+
+                writer.WriteLine("new Dictionary<string, IDictionary<string, object>>");
+                writer.WriteLine("{");
+                writer.Indent++;
+
+                foreach (var columnName in columns.Keys.OrderBy(k => k))
+                {
+                    writer.WriteLine("{");
+                    writer.Indent++;
+                    writer.WriteLine(Quote(columnName) + ",");
+                    GenerateAnnotations(columns[columnName], writer);
+                    writer.WriteLine();
+                    writer.Indent--;
+                    writer.WriteLine("},");
+                }
+
+                writer.Indent--;
+                writer.Write("}");
+                writer.Indent--;
+            }
+
             writer.WriteLine(");");
         }
 

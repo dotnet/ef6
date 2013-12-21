@@ -64,10 +64,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 #else
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryResolver>(new DefaultDbProviderFactoryResolver()));
 #endif
-            _resolvers.Add(new SingletonDependencyResolver<IMetadataAnnotationSerializer>(
-                new ClrTypeAnnotationSerializer(), XmlConstants.ClrTypeAnnotation));
-            _resolvers.Add(new SingletonDependencyResolver<IMetadataAnnotationSerializer>(
-                new IndexAnnotationSerializer(), XmlConstants.IndexAnnotation));
+            _resolvers.Add(new SingletonDependencyResolver<Func<IMetadataAnnotationSerializer>>(
+                () => new ClrTypeAnnotationSerializer(), XmlConstants.ClrTypeAnnotation));
+            _resolvers.Add(new SingletonDependencyResolver<Func<IMetadataAnnotationSerializer>>(
+                () => new IndexAnnotationSerializer(), IndexAnnotation.AnnotationName));
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

@@ -178,7 +178,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 if (containers.Any()
                     && containers.All(
                         c => c.Annotations.Any(
-                            a => a.Name == XmlConstants.UseClrTypesAnnotation
+                            a => a.Name == XmlConstants.UseClrTypesAnnotationWithPrefix
                                  && ((string)a.Value).ToUpperInvariant() == "TRUE")))
                 {
                     lock (LoadAssemblyLock)

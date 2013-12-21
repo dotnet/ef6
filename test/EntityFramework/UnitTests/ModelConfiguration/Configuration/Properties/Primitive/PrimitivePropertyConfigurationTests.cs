@@ -308,13 +308,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.Equal(
                 "V4",
-                edmPropertyMapping.ColumnProperty.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A1").Value);
+                edmPropertyMapping.ColumnProperty.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationPrefix + "A1").Value);
 
             Assert.Equal(
                 "V2",
-                edmPropertyMapping.ColumnProperty.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A2").Value);
+                edmPropertyMapping.ColumnProperty.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationPrefix + "A2").Value);
 
-            Assert.False(edmPropertyMapping.ColumnProperty.Annotations.Any(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A3"));
+            Assert.False(edmPropertyMapping.ColumnProperty.Annotations.Any(a => a.Name == XmlConstants.CustomAnnotationPrefix + "A3"));
         }
 
         [Fact]

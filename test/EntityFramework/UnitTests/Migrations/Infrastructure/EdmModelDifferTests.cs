@@ -850,22 +850,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public void Can_detect_added_tables()
         {
             var modelBuilder = new DbModelBuilder();
-
             var model1 = modelBuilder.Build(ProviderInfo);
 
-            modelBuilder.Entity<OrderLine>().ToTable("[foo.[]]].bar");
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<OrderLine>()
+                .HasAnnotation("AT1", "VT1")
+                .ToTable("[foo.[]]].bar")
+                .Property(e => e.OrderId)
+                .HasAnnotation("AP1", "VP1");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
-                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
 
-            var createTableOperation 
-                = operations.OfType<CreateTableOperation>().Single();
+            var createTableOperation = operations.OfType<CreateTableOperation>().Single();
 
             Assert.Equal("[foo.[]]].bar", createTableOperation.Name);
+            Assert.Equal("VT1", createTableOperation.Annotations["AT1"]);
+
+            var column = createTableOperation.Columns.Single(c => c.Name == "OrderId");
+            Assert.Null(column.Annotations["AP1"].OldValue);
+            Assert.Equal("VP1", column.Annotations["AP1"].NewValue);
         }
 
         [MigrationsTheory]
@@ -1015,28 +1022,106 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         #endregion
 
+        #region Added table annotations
+
+        [MigrationsTheory]
+        public void Can_detect_altered_table_annotations()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<OrderLine>()
+                .HasAnnotation("AT1", "VT1")
+                .Property(e => e.OrderId)
+                .HasAnnotation("AP1", "VP1");
+            
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<OrderLine>()
+                .HasAnnotation("AT1", "VT2")
+                .Property(e => e.OrderId)
+                .HasAnnotation("AP1", "VP1");
+            
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(1, operations.Count());
+
+            var operation = operations.OfType<AlterTableAnnotationsOperation>().Single();
+
+            Assert.Equal("VT1", operation.Annotations["AT1"].OldValue);
+            Assert.Equal("VT2", operation.Annotations["AT1"].NewValue);
+
+            var column = operation.Columns.Single(c => c.Name == "OrderId");
+            Assert.Equal("VP1", column.Annotations["AP1"].OldValue);
+            Assert.Equal("VP1", column.Annotations["AP1"].NewValue);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_altered_table_and_column_annotations()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<OrderLine>()
+                .HasAnnotation("AT1", "VT1")
+                .Property(e => e.OrderId)
+                .HasAnnotation("AP1", "VP1");
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<OrderLine>()
+                .HasAnnotation("AT1", "VT2")
+                .Property(e => e.OrderId)
+                .HasAnnotation("AP1", "VP2");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(2, operations.Count());
+
+            var alterColumnOperation = operations.OfType<AlterColumnOperation>().Single();
+
+            Assert.Equal("VP1", alterColumnOperation.Column.Annotations["AP1"].OldValue);
+            Assert.Equal("VP2", alterColumnOperation.Column.Annotations["AP1"].NewValue);
+
+            var alterTableAnnotationsOperation = operations.OfType<AlterTableAnnotationsOperation>().Single();
+
+            Assert.Equal("VT1", alterTableAnnotationsOperation.Annotations["AT1"].OldValue);
+            Assert.Equal("VT2", alterTableAnnotationsOperation.Annotations["AT1"].NewValue);
+
+            var column = alterTableAnnotationsOperation.Columns.Single(c => c.Name == "OrderId");
+            Assert.Equal("VP2", column.Annotations["AP1"].OldValue);
+            Assert.Equal("VP2", column.Annotations["AP1"].NewValue);
+        }
+
+        #endregion
+
         #region Removed Tables
 
         [MigrationsTheory]
         public void Can_detect_removed_tables()
         {
             var modelBuilder = new DbModelBuilder();
-
-            modelBuilder.Entity<OrderLine>();
+            modelBuilder.Entity<OrderLine>()
+                .HasAnnotation("AT1", "VT1")
+                .Property(e => e.OrderId)
+                .HasAnnotation("AP1", "VP1");
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
-
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations
-                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
-            
-            var inverse = (CreateTableOperation)operations.OfType<DropTableOperation>().Single().Inverse;
 
+            var dropTableOperation = operations.OfType<DropTableOperation>().Single();
+            Assert.Equal("VT1", dropTableOperation.RemovedAnnotations["AT1"]);
+            Assert.Equal("VP1", dropTableOperation.RemovedColumnAnnotations["OrderId"]["AP1"]);
+
+            var inverse = (CreateTableOperation)dropTableOperation.Inverse;
             Assert.NotNull(inverse);
             Assert.Equal("dbo.OrderLines", inverse.Name);
             Assert.Equal(8, inverse.Columns.Count());
@@ -1921,17 +2006,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public void Can_detect_added_columns()
         {
             var modelBuilder = new DbModelBuilder();
-
-            modelBuilder.Entity<OrderLine>();
-
+            modelBuilder.Entity<OrderLine>().Property(e => e.OrderId).HasAnnotation("A1", "V1");
             var model2 = modelBuilder.Build(ProviderInfo);
 
+            modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>().Ignore(ol => ol.OrderId);
-
             var model1 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
-                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             var addColumnOperation = operations.OfType<AddColumnOperation>().Single();
@@ -1940,6 +2022,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("OrderId", addColumnOperation.Column.Name);
             Assert.Equal(PrimitiveTypeKind.Int32, addColumnOperation.Column.Type);
             Assert.Equal(false, addColumnOperation.Column.IsNullable);
+            Assert.Null(addColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V1", addColumnOperation.Column.Annotations["A1"].NewValue);
         }
 
         [MigrationsTheory]
@@ -2054,19 +2138,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public void Can_detect_dropped_columns()
         {
             var modelBuilder = new DbModelBuilder();
-
-            modelBuilder.Entity<Migrations.Order>();
-
+            modelBuilder.Entity<Migrations.Order>().Property(e => e.Version).HasAnnotation("A1", "V1");
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
-
             modelBuilder.Entity<Migrations.Order>().Ignore(o => o.Version);
-
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
-                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var dropColumnOperation = (DropColumnOperation)operations.Single();
 
@@ -2078,6 +2157,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.NotNull(inverse);
             Assert.Equal("ordering.Orders", inverse.Table);
             Assert.Equal("Version", inverse.Column.Name);
+            Assert.Equal("V1", dropColumnOperation.RemovedAnnotations["A1"]);
         }
 
         #endregion
@@ -2125,6 +2205,79 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 inverseAlterColumnOperation.Column.MaxLength);
 
             Assert.Null(inverseAlterColumnOperation.Column.IsUnicode);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_changed_column_annotations()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.FullName)
+                .HasAnnotation("A1", "V1");
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.FullName)
+                .HasAnnotation("A1", "V2");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            var alterColumnOperation = (AlterColumnOperation)operations.Single();
+
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A1"].NewValue);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_added_column_annotations()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.FullName);
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.FullName)
+                .HasAnnotation("A1", "V2");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            var alterColumnOperation = (AlterColumnOperation)operations.Single();
+
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Equal("V2", alterColumnOperation.Column.Annotations["A1"].NewValue);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_removed_column_annotations()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.FullName)
+                .HasAnnotation("A1", "V1");
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.FullName);
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            var alterColumnOperation = (AlterColumnOperation)operations.Single();
+
+            Assert.Equal("V1", alterColumnOperation.Column.Annotations["A1"].OldValue);
+            Assert.Null(alterColumnOperation.Column.Annotations["A1"].NewValue);
         }
 
         [MigrationsTheory]

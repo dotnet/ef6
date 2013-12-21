@@ -200,7 +200,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
 
                 propertyMappings[index].Column.AddAnnotation(
-                    XmlConstants.CustomAnnotationNamespace + ":" + annotation.Key.Item2,
+                    XmlConstants.CustomAnnotationPrefix + annotation.Key.Item2,
                     annotation.Value);
             }
         }

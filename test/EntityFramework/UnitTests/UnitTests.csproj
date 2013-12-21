@@ -389,12 +389,15 @@
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
     <Compile Include="Internal\ThrowingMonitorTests.cs" />
     <Compile Include="Migrations\AddMigrationCommandTests.cs" />
+    <Compile Include="Migrations\AnnotationPairTests.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilderTests.cs" />
+    <Compile Include="Migrations\Design\AnnotationCodeGeneratorTests.cs" />
     <Compile Include="Migrations\Infrastructure\MigratorLoggingDecoratorTests.cs" />
     <Compile Include="Migrations\Infrastructure\DynamicToFunctionModificationCommandConverterTests.cs" />
     <Compile Include="Migrations\Infrastructure\FunctionsModel.cs" />
     <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGeneratorTests.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperationTests.cs" />
+    <Compile Include="Migrations\Model\AlterTableAnnotationsOperationTests.cs" />
     <Compile Include="Migrations\Model\UpdateDatabaseOperationTests.cs" />
     <Compile Include="Migrations\Model\MoveProcedureOperationTests.cs" />
     <Compile Include="Migrations\Model\RenameProcedureOperationTests.cs" />

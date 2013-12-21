@@ -358,7 +358,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void WriteEntityTypeElementHeader_writes_annotations()
         {
-            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotationWithPrefix, typeof(Random));
 
             var mockEntityType = new Mock<EntityType>("E", "ns", DataSpace.CSpace);
             mockEntityType.Setup(m => m.Name).Returns("E");
@@ -376,7 +376,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void WriteComplexTypeElementHeader_writes_annotations()
         {
-            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotationWithPrefix, typeof(Random));
 
             var mockComplexType = new Mock<ComplexType>("C", "ns", DataSpace.CSpace);
             mockComplexType.Setup(m => m.Name).Returns("C");
@@ -394,7 +394,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void WriteEnumTypeElementHeader_writes_annotations()
         {
-            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotationWithPrefix, typeof(Random));
 
             var mockEnumType = new Mock<EnumType>();
             mockEnumType.Setup(m => m.Name).Returns("E");
@@ -412,7 +412,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void WriteExtendedProperties_writes_annotations_using_serializer_to_serialize_if_available()
         {
-            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotationWithPrefix, typeof(Random));
 
             var mockEntityType = new Mock<EntityType>("E", "ns", DataSpace.CSpace);
             mockEntityType.Setup(m => m.MetadataProperties).Returns(
@@ -430,7 +430,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void WriteExtendedProperties_writes_annotations_using_ToString_if_serializer_not_available()
         {
-            var property = MetadataProperty.CreateAnnotation(XmlConstants.UseClrTypesAnnotation, "true");
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.UseClrTypesAnnotationWithPrefix, "true");
 
             var mockEntityType = new Mock<EntityType>("E", "ns", DataSpace.CSpace);
             mockEntityType.Setup(m => m.MetadataProperties).Returns(
@@ -462,7 +462,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void WriteExtendedProperties_writes_annotations_on_properties()
         {
-            var annotation = MetadataProperty.CreateAnnotation(XmlConstants.CustomAnnotationNamespace + ":Foo", "Goo");
+            var annotation = MetadataProperty.CreateAnnotation(XmlConstants.CustomAnnotationPrefix + "Foo", "Goo");
 
             var mockProperty = new Mock<MetadataProperty>();
             mockProperty.Setup(m => m.MetadataProperties).Returns(

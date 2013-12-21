@@ -196,10 +196,12 @@ namespace System.Data.Entity.Migrations
             {
                 column.Property(c => c.NumericPrecision).HasColumnType("smallint");
                 column.Property(c => c.DateTimePrecision).HasColumnType("int");
+                column.Ignore(c => c.Collation);
             }
             else
             {
                 column.Property(c => c.Scale).HasColumnType("int");
+                column.Property(c => c.Collation).HasColumnName("COLLATION_NAME");
             }
         }
 
@@ -266,6 +268,7 @@ namespace System.Data.Entity.Migrations
         public byte? NumericPrecision { get; set; }
         public short? Scale { get; set; }
         public short? DateTimePrecision { get; set; }
+        public string Collation { get; set; }
 
         public virtual ICollection<KeyColumnUsageInfo> KeyColumnUsages { get; protected set; }
     }

@@ -409,7 +409,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             foreach (var annotation in annotations)
             {
-                var name = XmlConstants.CustomAnnotationNamespace + ":" + annotation.Key;
+                var name = XmlConstants.CustomAnnotationPrefix + annotation.Key;
                 var existingAnnotation = toTable.Annotations.FirstOrDefault(
                     a => a.Name == name && !Equals(a.Value, annotation.Value));
                 if (existingAnnotation != null)

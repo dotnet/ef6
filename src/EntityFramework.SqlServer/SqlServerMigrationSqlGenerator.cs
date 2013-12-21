@@ -437,6 +437,18 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
+        /// Override this method to generate SQL when annotations on tables are changed. The default
+        /// implementation of this method does nothing.
+        /// </summary>
+        /// <param name="alterTableAnnotationsOperation"> The operation describing changes to table annotations. </param>
+        protected internal virtual void Generate(AlterTableAnnotationsOperation alterTableAnnotationsOperation)
+        {
+            Check.NotNull(alterTableAnnotationsOperation, "alterTableAnnotationsOperation");
+
+            // Nothing to do since there is no inherent semantics associated with annotations
+        }
+
+        /// <summary>
         /// Generates SQL to mark a table as a system table.
         /// Generated SQL should be added using the Statement method.
         /// </summary>
@@ -781,11 +793,19 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private void DropDefaultConstraint(string table, string column, IndentedTextWriter writer)
+        /// <summary>
+        /// Call this method to generate SQL that will attempt to drop the default constraint created
+        /// when a column is created. This method is usually called by code that overrides the creation or
+        /// altering of columns.
+        /// </summary>
+        /// <param name="table">The table to which the constraint applies.</param>
+        /// <param name="column">The column to which the constraint applies.</param>
+        /// <param name="writer">The writer to which generated SQL should be written.</param>
+        protected internal virtual void DropDefaultConstraint(string table, string column, IndentedTextWriter writer)
         {
-            DebugCheck.NotEmpty(table);
-            DebugCheck.NotEmpty(column);
-            DebugCheck.NotNull(writer);
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(column, "column");
+            Check.NotNull(writer, "writer");
 
             var variable = "@var" + _variableCounter++;
 
@@ -1031,10 +1051,16 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private void Generate(ColumnModel column, IndentedTextWriter writer)
+        /// <summary>
+        /// Generates SQL for the given column model. This method is called by other methods that
+        /// process columns and can be overridden to change the SQL generated.
+        /// </summary>
+        /// <param name="column">The column for which SQL is being generated.</param>
+        /// <param name="writer">The writer to which generated SQL should be written.</param>
+        protected internal virtual void Generate(ColumnModel column, IndentedTextWriter writer)
         {
-            DebugCheck.NotNull(column);
-            DebugCheck.NotNull(writer);
+            Check.NotNull(column, "column");
+            Check.NotNull(writer, "writer");
 
             writer.Write(Quote(column.Name));
             writer.Write(" ");

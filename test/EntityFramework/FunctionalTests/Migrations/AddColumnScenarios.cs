@@ -2,7 +2,11 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
 
@@ -498,6 +502,50 @@ namespace System.Data.Entity.Migrations
 
             Assert.Equal("nvarchar", column.Type);
             Assert.Equal(64, column.MaxLength);
+        }
+
+        private class AddColumnWithAnnotationMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn(
+                    "MigrationsCustomers",
+                    "new_col", c => c.String(
+                        storeType: "nvarchar",
+                        annotations:
+                            new Dictionary<string, AnnotationPair>
+                            {
+                                {
+                                    CollationAttribute.AnnotationName,
+                                    new AnnotationPair(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
+                                }
+                            }));
+            }
+        }
+
+        [MigrationsTheory]
+        [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)] // No collation on add column in CE
+        public void Can_add_column_with_custom_annotation()
+        {
+            ResetDatabase();
+
+            var sqlGenerators = new[]
+            {
+                Tuple.Create<string, MigrationSqlGenerator>(
+                    SqlProviderServices.ProviderInvariantName,
+                    new SqlServerMigrationSqlGeneratorWtihCollations()),
+            };
+
+            var migrator = CreateMigrator<ShopContext_v1>(sqlGenerators: sqlGenerators);
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new AddColumnWithAnnotationMigration(), sqlGenerators);
+
+            migrator.Update();
+
+            var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
+            Assert.Equal("Finnish_Swedish_CS_AS", column.Collation);
         }
     }
 }

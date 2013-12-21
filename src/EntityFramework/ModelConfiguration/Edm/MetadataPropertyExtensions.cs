@@ -79,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(metadataProperties);
 
-            return (Type)metadataProperties.GetAnnotation(XmlConstants.ClrTypeAnnotation);
+            return (Type)metadataProperties.GetAnnotation(XmlConstants.ClrTypeAnnotationWithPrefix);
         }
 
         // <summary>
@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(metadataProperties);
             DebugCheck.NotNull(type);
 
-            metadataProperties.SetAnnotation(XmlConstants.ClrTypeAnnotation, type);
+            metadataProperties.SetAnnotation(XmlConstants.ClrTypeAnnotationWithPrefix, type);
         }
 
         // <summary>

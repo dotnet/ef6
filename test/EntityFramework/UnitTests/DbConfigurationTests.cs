@@ -9,6 +9,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -848,32 +849,32 @@ namespace System.Data.Entity
             public void SetMetadataAnnotationSerializer_throws_if_given_a_null_serializer_or_bad_name()
             {
                 Assert.Equal(
-                    "serializer",
+                    "serializerFactory",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetMetadataAnnotationSerializer("Karl", null)).ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("annotationName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().SetMetadataAnnotationSerializer(null, new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+                        () => new DbConfiguration().SetMetadataAnnotationSerializer(null, () => null)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("annotationName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().SetMetadataAnnotationSerializer("", new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+                        () => new DbConfiguration().SetMetadataAnnotationSerializer("", () => null)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("annotationName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().SetMetadataAnnotationSerializer(" ", new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+                        () => new DbConfiguration().SetMetadataAnnotationSerializer(" ", () => null)).Message);
             }
 
             [Fact]
             public void SetMetadataAnnotationSerializer_delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
-                var serializer = new Mock<IMetadataAnnotationSerializer>().Object;
+                Func<IMetadataAnnotationSerializer> serializerFactory = () => new Mock<IMetadataAnnotationSerializer>().Object;
 
-                new DbConfiguration(mockInternalConfiguration.Object).SetMetadataAnnotationSerializer("Foo", serializer);
+                new DbConfiguration(mockInternalConfiguration.Object).SetMetadataAnnotationSerializer("Foo", serializerFactory);
 
-                mockInternalConfiguration.Verify(m => m.RegisterSingleton(serializer, "Foo"));
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(serializerFactory, "Foo"));
             }
 
             [Fact]
@@ -884,7 +885,45 @@ namespace System.Data.Entity
                 Assert.Equal(
                     Strings.ConfigurationLocked("SetMetadataAnnotationSerializer"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetMetadataAnnotationSerializer("Karl", new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+                        () => configuration.SetMetadataAnnotationSerializer("Karl", () => null)).Message);
+            }
+        }
+
+        public class SetAnnotationCodeGenerator
+        {
+            [Fact]
+            public void SetAnnotationCodeGenerator_throws_if_given_a_null_serializer_or_bad_name()
+            {
+                Assert.Equal(
+                    "codeGeneratorFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetAnnotationCodeGenerator("Karl", null)).ParamName);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("annotationName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetAnnotationCodeGenerator(null, () => null)).Message);
+            }
+
+            [Fact]
+            public void SetAnnotationCodeGenerator_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                Func<AnnotationCodeGenerator> codeGeneratorFactory = () => new Mock<AnnotationCodeGenerator>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetAnnotationCodeGenerator("Foo", codeGeneratorFactory);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(codeGeneratorFactory, "Foo"));
+            }
+
+            [Fact]
+            public void SetAnnotationCodeGenerator_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetAnnotationCodeGenerator"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetAnnotationCodeGenerator("Karl", () => null)).Message);
             }
         }
 

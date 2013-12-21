@@ -2,6 +2,10 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
 
@@ -119,6 +123,145 @@ namespace System.Data.Entity.Migrations
             var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
             Assert.Equal("NO", column.IsNullable);
             Assert.True(column.Default.Contains("''"));
+        }
+
+        private class AlterColumnWithAddedAnnotationMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AlterColumn(
+                    "MigrationsCustomers",
+                    "Name",
+                    c => c.String(
+                        annotations: new Dictionary<string, AnnotationPair>
+                        {
+                            {
+                                CollationAttribute.AnnotationName,
+                                new AnnotationPair(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
+                            }
+                        }));
+            }
+        }
+
+        [MigrationsTheory]
+        [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)] // No collation on add column in CE
+        public void Can_alter_column_when_custom_annotation_added()
+        {
+            ResetDatabase();
+
+            var sqlGenerators = new[]
+            {
+                Tuple.Create<string, MigrationSqlGenerator>(
+                    SqlProviderServices.ProviderInvariantName,
+                    new SqlServerMigrationSqlGeneratorWtihCollations()),
+            };
+
+            var migrator = CreateMigrator<ShopContext_v1>(sqlGenerators: sqlGenerators);
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new AlterColumnWithAddedAnnotationMigration(), sqlGenerators);
+            migrator.Update();
+
+            var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
+            Assert.Equal("Finnish_Swedish_CS_AS", column.Collation);
+        }
+
+        private class AlterColumnWithRemovedAnnotationMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AlterColumn(
+                    "MigrationsCustomers",
+                    "Name",
+                    c => c.String(
+                        annotations: new Dictionary<string, AnnotationPair>
+                        {
+                            {
+                                CollationAttribute.AnnotationName,
+                                new AnnotationPair(new CollationAttribute("Finnish_Swedish_CS_AS"), null)
+                            }
+                        }));
+            }
+        }
+
+        [MigrationsTheory]
+        [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)] // No collation on add column in CE
+        public void Can_alter_column_when_custom_annotation_removed()
+        {
+            ResetDatabase();
+
+            var sqlGenerators = new[]
+            {
+                Tuple.Create<string, MigrationSqlGenerator>(
+                    SqlProviderServices.ProviderInvariantName,
+                    new SqlServerMigrationSqlGeneratorWtihCollations()),
+            };
+
+            var migrator = CreateMigrator<ShopContext_v1>(sqlGenerators: sqlGenerators);
+            migrator.Update();
+
+            var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
+            var defaultCollation = column.Collation;
+
+            // Make sure the column has non-default collation before we start
+            migrator = CreateMigrator<ShopContext_v1>(new AlterColumnWithAddedAnnotationMigration(), sqlGenerators);
+            migrator.Update();
+
+            column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
+            Assert.Equal("Finnish_Swedish_CS_AS", column.Collation);
+
+            migrator = CreateMigrator<ShopContext_v1>(new AlterColumnWithRemovedAnnotationMigration(), sqlGenerators);
+            migrator.Update();
+
+            column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
+            Assert.Equal(defaultCollation, column.Collation);
+        }
+
+        private class AlterColumnWithChangedAnnotationMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AlterColumn(
+                    "MigrationsCustomers",
+                    "Name",
+                    c => c.String(
+                        annotations: new Dictionary<string, AnnotationPair>
+                        {
+                            {
+                                CollationAttribute.AnnotationName,
+                                new AnnotationPair(
+                                    new CollationAttribute("Finnish_Swedish_CS_AS"), 
+                                    new CollationAttribute("Icelandic_CS_AS"))
+                            }
+                        }));
+            }
+        }
+
+        [MigrationsTheory]
+        [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)] // No collation on add column in CE
+        public void Can_alter_column_when_custom_annotation_changed()
+        {
+            ResetDatabase();
+
+            var sqlGenerators = new[]
+            {
+                Tuple.Create<string, MigrationSqlGenerator>(
+                    SqlProviderServices.ProviderInvariantName,
+                    new SqlServerMigrationSqlGeneratorWtihCollations()),
+            };
+
+            var migrator = CreateMigrator<ShopContext_v1>(sqlGenerators: sqlGenerators);
+            migrator.Update();
+
+            // Make sure the column has non-default collation before we start
+            migrator = CreateMigrator<ShopContext_v1>(new AlterColumnWithAddedAnnotationMigration(), sqlGenerators);
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new AlterColumnWithChangedAnnotationMigration(), sqlGenerators);
+            migrator.Update();
+
+            var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
+            Assert.Equal("Icelandic_CS_AS", column.Collation);
         }
     }
 }

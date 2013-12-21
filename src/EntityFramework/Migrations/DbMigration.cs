@@ -246,12 +246,90 @@ namespace System.Data.Entity.Migrations
             Check.NotEmpty(name, "name");
             Check.NotNull(columnsAction, "columnsAction");
 
-            var createTableOperation = new CreateTableOperation(name, anonymousArguments);
+            return CreateTable(name, columnsAction, null, anonymousArguments);
+        }
+
+        /// <summary>
+        /// Adds an operation to create a new table.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <typeparam name="TColumns">
+        /// The columns in this create table operation. You do not need to specify this type, it will
+        /// be inferred from the columnsAction parameter you supply.
+        /// </typeparam>
+        /// <param name="name"> The name of the table. Schema name is optional, if no schema is specified then dbo is assumed. </param>
+        /// <param name="columnsAction">
+        /// An action that specifies the columns to be included in the table. i.e. t => new { Id =
+        /// t.Int(identity: true), Name = t.String() }
+        /// </param>
+        /// <param name="annotations">Custom annotations that exist on the table to be created. May be null or empty.</param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        /// <returns> An object that allows further configuration of the table creation operation. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected internal TableBuilder<TColumns> CreateTable<TColumns>(
+            string name, 
+            Func<ColumnBuilder, TColumns> columnsAction, 
+            IDictionary<string, object> annotations, 
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(columnsAction, "columnsAction");
+
+            var createTableOperation = new CreateTableOperation(name, annotations, anonymousArguments);
 
             AddOperation(createTableOperation);
 
-            var columns = columnsAction(new ColumnBuilder());
+            AddColumns(columnsAction(new ColumnBuilder()), createTableOperation.Columns);
 
+            return new TableBuilder<TColumns>(createTableOperation, this);
+        }
+
+        /// <summary>
+        /// Adds an operation to handle changes in the annotations defined on tables.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <typeparam name="TColumns">
+        /// The columns in this operation. You do not need to specify this type, it will
+        /// be inferred from the columnsAction parameter you supply.
+        /// </typeparam>
+        /// <param name="name"> The name of the table. Schema name is optional, if no schema is specified then dbo is assumed. </param>
+        /// <param name="columnsAction">
+        /// An action that specifies the columns to be included in the table. i.e. t => new { Id =
+        /// t.Int(identity: true), Name = t.String() }
+        /// </param>
+        /// <param name="annotations">The custom annotations on the table that have changed.</param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected internal void AlterTableAnnotations<TColumns>(
+            string name,
+            Func<ColumnBuilder, TColumns> columnsAction,
+            IDictionary<string, AnnotationPair> annotations,
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(columnsAction, "columnsAction");
+
+            var operation = new AlterTableAnnotationsOperation(name, annotations, anonymousArguments);
+
+            AddColumns(columnsAction(new ColumnBuilder()), operation.Columns);
+
+            AddOperation(operation);
+        }
+
+        private static void AddColumns<TColumns>(TColumns columns, ICollection<ColumnModel> columnModels)
+        {
             columns.GetType().GetNonIndexerProperties()
                 .Each(
                     (p, i) =>
@@ -267,11 +345,9 @@ namespace System.Data.Entity.Migrations
                                 columnModel.Name = p.Name;
                             }
 
-                            createTableOperation.Columns.Add(columnModel);
+                            columnModels.Add(columnModel);
                         }
                     });
-
-            return new TableBuilder<TColumns>(createTableOperation, this);
         }
 
         /// <summary>
@@ -580,7 +656,92 @@ namespace System.Data.Entity.Migrations
         {
             Check.NotEmpty(name, "name");
 
-            AddOperation(new DropTableOperation(name, anonymousArguments));
+            DropTable(name, null, null, anonymousArguments);
+        }
+
+        /// <summary>
+        /// Adds an operation to drop a table.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="name">
+        /// The name of the table to be dropped. Schema name is optional, if no schema is specified then dbo is
+        /// assumed.
+        /// </param>
+        /// <param name="removedColumnAnnotations">Custom annotations that exist on columns of the table that is being dropped. May be null or empty.</param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected internal void DropTable(
+            string name,
+            IDictionary<string, IDictionary<string, object>> removedColumnAnnotations,
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+
+            DropTable(name, null, removedColumnAnnotations, anonymousArguments);
+        }
+
+        /// <summary>
+        /// Adds an operation to drop a table.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="name">
+        /// The name of the table to be dropped. Schema name is optional, if no schema is specified then dbo is
+        /// assumed.
+        /// </param>
+        /// <param name="removedAnnotations">Custom annotations that exist on the table that is being dropped. May be null or empty.</param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected internal void DropTable(
+            string name,
+            IDictionary<string, object> removedAnnotations,
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+
+            DropTable(name, removedAnnotations, null, anonymousArguments);
+        }
+
+        /// <summary>
+        /// Adds an operation to drop a table.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="name">
+        /// The name of the table to be dropped. Schema name is optional, if no schema is specified then dbo is
+        /// assumed.
+        /// </param>
+        /// <param name="removedAnnotations">Custom annotations that exist on the table that is being dropped. May be null or empty.</param>
+        /// <param name="removedColumnAnnotations">Custom annotations that exist on columns of the table that is being dropped. May be null or empty.</param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        protected internal void DropTable(
+            string name,
+            IDictionary<string, object> removedAnnotations,
+            IDictionary<string, IDictionary<string, object>> removedColumnAnnotations, 
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+
+            AddOperation(new DropTableOperation(name, removedAnnotations, removedColumnAnnotations, anonymousArguments));
         }
 
         /// <summary>
@@ -767,13 +928,39 @@ namespace System.Data.Entity.Migrations
         /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        protected internal void DropColumn(
-            string table, string name, object anonymousArguments = null)
+        protected internal void DropColumn(string table, string name, object anonymousArguments = null)
         {
             Check.NotEmpty(table, "table");
             Check.NotEmpty(name, "name");
 
-            AddOperation(new DropColumnOperation(table, name, anonymousArguments));
+            DropColumn(table, name, null, anonymousArguments);
+        }
+
+        /// <summary>
+        /// Adds an operation to drop an existing column.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="table">
+        /// The name of the table to drop the column from. Schema name is optional, if no schema is specified
+        /// then dbo is assumed.
+        /// </param>
+        /// <param name="name"> The name of the column to be dropped. </param>
+        /// <param name="removedAnnotations">Custom annotations that exist on the column that is being dropped. May be null or empty.</param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected internal void DropColumn(
+            string table, string name, IDictionary<string, object> removedAnnotations, object anonymousArguments = null)
+        {
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
+
+            AddOperation(new DropColumnOperation(table, name, removedAnnotations, anonymousArguments));
         }
 
         /// <summary>
@@ -798,7 +985,7 @@ namespace System.Data.Entity.Migrations
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void AlterColumn(
-            string table, string name, Func<ColumnBuilder, ColumnModel> columnAction, object anonymousArguments = null)
+           string table, string name, Func<ColumnBuilder, ColumnModel> columnAction, object anonymousArguments = null)
         {
             Check.NotEmpty(table, "table");
             Check.NotEmpty(name, "name");

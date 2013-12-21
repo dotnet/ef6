@@ -92,8 +92,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var column = dependentTable.Properties.Single(p => p.Name == "K1");
 
-            Assert.Equal("V3", column.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A1").Value);
-            Assert.Equal("V2", column.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A2").Value);
+            Assert.Equal("V3", column.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationPrefix + "A1").Value);
+            Assert.Equal("V2", column.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationPrefix + "A2").Value);
         }
 
         [Fact]

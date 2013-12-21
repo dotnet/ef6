@@ -386,7 +386,7 @@ namespace System.Data.Entity
                 },
                 modelBuilderClone);
 
-            model.ConceptualModel.Container.AddAnnotation(XmlConstants.UseClrTypesAnnotation, "true");
+            model.ConceptualModel.Container.AddAnnotation(XmlConstants.UseClrTypesAnnotationWithPrefix, "true");
 
             _conventionsConfiguration.ApplyModelConfiguration(_modelConfiguration);
 

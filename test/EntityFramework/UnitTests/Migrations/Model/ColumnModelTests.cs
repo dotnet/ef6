@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.SqlClient;
@@ -39,6 +40,23 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal((byte)23, column.Precision);
             Assert.Equal((byte)1, column.Scale);
             Assert.Equal("goobar", column.StoreType);
+        }
+
+        [Fact]
+        public void Can_get_and_set_annotations()
+        {
+            var column = new ColumnModel(PrimitiveTypeKind.Guid);
+
+            Assert.Empty(column.Annotations);
+
+            column.Annotations = new Dictionary<string, AnnotationPair> { { "A1", new AnnotationPair("V1", "V2") } };
+
+            Assert.Equal("V1", column.Annotations["A1"].OldValue);
+            Assert.Equal("V2", column.Annotations["A1"].NewValue);
+
+            column.Annotations = null;
+
+            Assert.Empty(column.Annotations);
         }
 
         [Fact]

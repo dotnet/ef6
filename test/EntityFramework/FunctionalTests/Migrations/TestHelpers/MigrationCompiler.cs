@@ -9,6 +9,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Functionals.Utilities;
+    using System.Data.Entity.TestHelpers;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -41,6 +42,7 @@ namespace System.Data.Entity.Migrations
             options.ReferencedAssemblies.Add(typeof(Component).Assembly().Location);
             options.ReferencedAssemblies.Add(typeof(MigrationCompiler).Assembly().Location);
             options.ReferencedAssemblies.Add(typeof(DbGeography).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(CollationAttribute).Assembly().Location);
 
             var embededResources = GenerateEmbeddedResources(scaffoldedMigrations, @namespace);
             foreach (var resource in embededResources)
@@ -59,7 +61,11 @@ namespace System.Data.Entity.Migrations
 
             if (compilerResults.Errors.Count > 0)
             {
-                Console.WriteLine(scaffoldedMigrations.First().UserCode);
+                foreach (var migration in scaffoldedMigrations)
+                {
+                    Console.WriteLine(migration.UserCode);
+                    Console.WriteLine(migration.DesignerCode);
+                }
 
                 throw new InvalidOperationException(BuildCompileErrorMessage(compilerResults.Errors));
             }

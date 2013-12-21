@@ -215,14 +215,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void The_root_resolver_returns_the_ClrTypeAnnotationSerializer()
             {
                 Assert.IsType<ClrTypeAnnotationSerializer>(
-                    new RootDependencyResolver().GetService<IMetadataAnnotationSerializer>(XmlConstants.ClrTypeAnnotation));
+                    new RootDependencyResolver().GetService<Func<IMetadataAnnotationSerializer>>(XmlConstants.ClrTypeAnnotation)());
             }
 
             [Fact]
             public void The_root_resolver_returns_the_IndexAnnotationSerializer()
             {
                 Assert.IsType<IndexAnnotationSerializer>(
-                    new RootDependencyResolver().GetService<IMetadataAnnotationSerializer>(XmlConstants.IndexAnnotation));
+                    new RootDependencyResolver().GetService<Func<IMetadataAnnotationSerializer>>(IndexAnnotation.AnnotationName)());
             }
 
             [Fact]

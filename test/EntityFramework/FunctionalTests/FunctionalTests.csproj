@@ -215,6 +215,7 @@
     <Compile Include="Metadata\MetadataEnumTests.cs" />
     <Compile Include="Metadata\MetadataFunctionsTests.cs" />
     <Compile Include="Metadata\MetadataSpatialTests.cs" />
+    <Compile Include="Migrations\AlterTableAnnotationsScenarios.cs" />
     <Compile Include="Migrations\BasicMigrationScenarios.cs" />
     <Compile Include="Migrations\CustomHistoryScenarios.cs" />
     <Compile Include="Migrations\LoggingScenarios.cs" />

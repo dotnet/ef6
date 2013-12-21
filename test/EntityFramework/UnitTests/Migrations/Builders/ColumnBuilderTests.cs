@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Migrations.Builders
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Spatial;
     using Xunit;
 
@@ -190,6 +192,67 @@ namespace System.Data.Entity.Migrations.Builders
             var columnModel = column;
 
             Assert.True(columnModel.IsIdentity);
+        }
+
+        [Fact]
+        public void Annotations_are_added_to_model_when_passed_to_any_builder_method()
+        {
+            var builder = new ColumnBuilder();
+
+            var annotations = new Dictionary<string, AnnotationPair>
+            {
+                { "A1", new AnnotationPair("O1", "N1") },
+                { "A2", new AnnotationPair("O2", "N2") }
+            };
+            
+            VerifyAnnotations(builder.Binary(annotations: annotations));
+            VerifyAnnotations(builder.Boolean(annotations: annotations));
+            VerifyAnnotations(builder.Byte(annotations: annotations));
+            VerifyAnnotations(builder.DateTime(annotations: annotations));
+            VerifyAnnotations(builder.DateTimeOffset(annotations: annotations));
+            VerifyAnnotations(builder.Decimal(annotations: annotations));
+            VerifyAnnotations(builder.Double(annotations: annotations));
+            VerifyAnnotations(builder.Geography(annotations: annotations));
+            VerifyAnnotations(builder.Geometry(annotations: annotations));
+            VerifyAnnotations(builder.Guid(annotations: annotations));
+            VerifyAnnotations(builder.Int(annotations: annotations));
+            VerifyAnnotations(builder.Long(annotations: annotations));
+            VerifyAnnotations(builder.Short(annotations: annotations));
+            VerifyAnnotations(builder.Single(annotations: annotations));
+            VerifyAnnotations(builder.String(annotations: annotations));
+            VerifyAnnotations(builder.Time(annotations: annotations));
+        }
+
+        private static void VerifyAnnotations(ColumnModel model)
+        {
+            Assert.Equal(2, model.Annotations.Count);
+            Assert.Equal("O1", model.Annotations["A1"].OldValue);
+            Assert.Equal("N1", model.Annotations["A1"].NewValue);
+            Assert.Equal("O2", model.Annotations["A2"].OldValue);
+            Assert.Equal("N2", model.Annotations["A2"].NewValue);
+        }
+
+        [Fact]
+        public void Annotations_are_empty_but_not_null_in_model_if_not_passed_to_builder()
+        {
+            var builder = new ColumnBuilder();
+
+            Assert.Equal(0, builder.Binary().Annotations.Count);
+            Assert.Equal(0, builder.Boolean().Annotations.Count);
+            Assert.Equal(0, builder.Byte().Annotations.Count);
+            Assert.Equal(0, builder.DateTime().Annotations.Count);
+            Assert.Equal(0, builder.DateTimeOffset().Annotations.Count);
+            Assert.Equal(0, builder.Decimal().Annotations.Count);
+            Assert.Equal(0, builder.Double().Annotations.Count);
+            Assert.Equal(0, builder.Geography().Annotations.Count);
+            Assert.Equal(0, builder.Geometry().Annotations.Count);
+            Assert.Equal(0, builder.Guid().Annotations.Count);
+            Assert.Equal(0, builder.Int().Annotations.Count);
+            Assert.Equal(0, builder.Long().Annotations.Count);
+            Assert.Equal(0, builder.Short().Annotations.Count);
+            Assert.Equal(0, builder.Single().Annotations.Count);
+            Assert.Equal(0, builder.String().Annotations.Count);
+            Assert.Equal(0, builder.Time().Annotations.Count);
         }
     }
 }

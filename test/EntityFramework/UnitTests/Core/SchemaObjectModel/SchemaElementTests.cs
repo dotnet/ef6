@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             var property = new SomeElement().CreateMetadataPropertyFromXmlAttribute(
                 XmlConstants.CustomAnnotationNamespace, "ClrType", typeof(Random).AssemblyQualifiedName);
 
-            Assert.Equal(XmlConstants.ClrTypeAnnotation, property.Name);
+            Assert.Equal(XmlConstants.ClrTypeAnnotationWithPrefix, property.Name);
             Assert.Same(typeof(Random), property.Value);
         }
 
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             var property = new SomeElement().CreateMetadataPropertyFromXmlAttribute(
                 XmlConstants.CustomAnnotationNamespace, "UseClrTypes", "true");
 
-            Assert.Equal(XmlConstants.UseClrTypesAnnotation, property.Name);
+            Assert.Equal(XmlConstants.UseClrTypesAnnotationWithPrefix, property.Name);
             Assert.Equal("true", property.Value);
         }
 
