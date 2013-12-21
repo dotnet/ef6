@@ -150,17 +150,7 @@
         <Exec Command='msiexec /qb /i $(OutputPath)en\EFTools.msi SKIPENVIRONMENTSETUP="$(SkipEnvSetup)" /L*v $(LogsDir)EFTools.msi.log' />
     </Target>
 
-    <Target Name="Test" DependsOnTargets="Install;InstallTestHost">
-        <MSBuild Projects="$(SolutionDir)tools\EFTools.xunit.targets"
-                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
-        <Exec Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
-              WorkingDirectory="$(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\"/>
-        <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
-              WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
-        <Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx'
-              WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
-    </Target>
-
+    <Target Name="Test" DependsOnTargets="Install;InstallTestHost;ReRunXUnitTests;ReRunInProcTests;ReRunE2ETests" />
 
     <Target Name="ReRunXUnitTests">
         <MSBuild Projects="$(SolutionDir)tools\EFTools.xunit.targets"
@@ -168,11 +158,13 @@
     </Target>
 
     <Target Name="ReRunInProcTests">
-        <Exec Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
-              WorkingDirectory="$(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\"/>
+        <MakeDir Directories="$(SolutionDir)TestResults\InProcTests\"/>
+        <Exec Command='"$(VSTest)" $(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\EFDesigner.InProcTests.dll /Settings:$(SolutionDir)test\EFTools\InProcTests\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
+              WorkingDirectory="$(SolutionDir)TestResults\InProcTests\"/>
     </Target>
 
     <Target Name="ReRunE2ETests">
+        <MakeDir Directories="$(SolutionDir)TestResults\E2ETests\"/>
         <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
               WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
         <Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx'

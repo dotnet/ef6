@@ -4,6 +4,7 @@
   <Deployment>
     <DeploymentItem filename="test\EFTools\InProcTests\TestData\" outputDirectory="TestData\" />
   </Deployment>
+  <NamingScheme baseName="Test" useDefault="false" />
   <Execution>
     <!-- VsIdeHostRunConfigData causes warnings and is not used, retaining in case it becomes needed again -->
     <!-- Hosts>
