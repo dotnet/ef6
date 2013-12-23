@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
@@ -101,6 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
                     WriteDesignerPropertyElement("ValidateOnBuild", "False");
                     WriteDesignerPropertyElement("CodeGenerationStrategy", "None");
                     WriteDesignerPropertyElement("ProcessDependentTemplatesOnSave", "False");
+                    WriteDesignerPropertyElement("UseLegacyProvider", "False");
                 }
             }
         }

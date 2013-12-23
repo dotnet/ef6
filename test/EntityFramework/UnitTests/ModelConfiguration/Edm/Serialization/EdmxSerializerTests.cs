@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.Utilities;
-    using System.Reflection;
+    using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Schema;
@@ -25,6 +25,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
             }
 
             edmx.Validate(LoadEdmxSchemaSet(1), (_, e) => { throw e.Exception; });
+
+            Assert.Equal(
+                "False",
+                (string)edmx.Descendants("{http://schemas.microsoft.com/ado/2007/06/edmx}DesignerProperty")
+                    .Single(e => (string)e.Attribute("Name") == "UseLegacyProvider")
+                    .Attribute("Value"));
         }
 
         [Fact]
@@ -39,6 +45,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
             }
 
             edmx.Validate(LoadEdmxSchemaSet(2), (_, e) => { throw e.Exception; });
+
+            Assert.Equal(
+                "False",
+                (string)edmx.Descendants("{http://schemas.microsoft.com/ado/2008/10/edmx}DesignerProperty")
+                    .Single(e => (string)e.Attribute("Name") == "UseLegacyProvider")
+                    .Attribute("Value"));
         }
 
         [Fact]
@@ -53,6 +65,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
             }
 
             edmx.Validate(LoadEdmxSchemaSet(3), (_, e) => { throw e.Exception; });
+
+            Assert.Equal(
+                "False",
+                (string)edmx.Descendants("{http://schemas.microsoft.com/ado/2009/11/edmx}DesignerProperty")
+                    .Single(e => (string)e.Attribute("Name") == "UseLegacyProvider")
+                    .Attribute("Value"));
         }
 
         private static DbDatabaseMapping CreateSimpleModel(double version)
