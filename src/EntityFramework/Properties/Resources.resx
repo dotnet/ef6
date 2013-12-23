@@ -465,6 +465,10 @@
     <value>The entity types '{0}' and '{1}' cannot share table '{2}' because they are not in the same type hierarchy or do not have a valid one to one foreign key relationship with matching primary keys between them.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="EntityMappingConfiguration_TPCWithIAsOnNonLeafType" xml:space="preserve">
+    <value>The association '{0}' between entity types '{1}' and '{2}' is invalid. In a TPC hierarchy independent associations are only allowed on the most derived types.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>  
   <data name="CannotIgnoreMappedBaseProperty" xml:space="preserve">
     <value>You cannot use Ignore method on the property '{0}' on type '{1}' because this type inherits from the type '{2}' where this property is mapped. To exclude this property from your model, use NotMappedAttribute or Ignore method on the base type.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

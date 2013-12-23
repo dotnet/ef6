@@ -775,6 +775,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "The association '{0}' between entity types '{1}' and '{2}' is invalid. In a TPC hierarchy independent associations are only allowed on the most derived types."
+        // </summary>
+        internal static string EntityMappingConfiguration_TPCWithIAsOnNonLeafType(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.EntityMappingConfiguration_TPCWithIAsOnNonLeafType, p0, p1, p2);
+        }
+
+        // <summary>
         // A string like "You cannot use Ignore method on the property '{0}' on type '{1}' because this type inherits from the type '{2}' where this property is mapped. To exclude this property from your model, use NotMappedAttribute or Ignore method on the base type."
         // </summary>
         internal static string CannotIgnoreMappedBaseProperty(object p0, object p1, object p2)
@@ -14494,6 +14502,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // InvalidOperationException with message like "The association '{0}' between entity types '{1}' and '{2}' is invalid. In a TPC hierarchy independent associations are only allowed on the most derived types."
+        // </summary>
+        internal static Exception EntityMappingConfiguration_TPCWithIAsOnNonLeafType(object p0, object p1, object p2)
+        {
+            return new InvalidOperationException(Strings.EntityMappingConfiguration_TPCWithIAsOnNonLeafType(p0, p1, p2));
+        }
+
+        // <summary>
         // InvalidOperationException with message like "You cannot use Ignore method on the property '{0}' on type '{1}' because this type inherits from the type '{2}' where this property is mapped. To exclude this property from your model, use NotMappedAttribute or Ignore method on the base type."
         // </summary>
         internal static Exception CannotIgnoreMappedBaseProperty(object p0, object p1, object p2)
@@ -15725,6 +15741,7 @@ namespace System.Data.Entity.Resources
         internal const string EntityMappingConfiguration_DuplicateMappedProperty = "EntityMappingConfiguration_DuplicateMappedProperty";
         internal const string EntityMappingConfiguration_CannotMapIgnoredProperty = "EntityMappingConfiguration_CannotMapIgnoredProperty";
         internal const string EntityMappingConfiguration_InvalidTableSharing = "EntityMappingConfiguration_InvalidTableSharing";
+        internal const string EntityMappingConfiguration_TPCWithIAsOnNonLeafType = "EntityMappingConfiguration_TPCWithIAsOnNonLeafType";
         internal const string CannotIgnoreMappedBaseProperty = "CannotIgnoreMappedBaseProperty";
         internal const string ModelBuilder_KeyPropertiesMustBePrimitive = "ModelBuilder_KeyPropertiesMustBePrimitive";
         internal const string TableNotFound = "TableNotFound";

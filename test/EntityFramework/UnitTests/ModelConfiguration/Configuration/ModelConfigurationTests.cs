@@ -895,6 +895,47 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.Same(entityType3Mapping.MappingFragments.Single().ColumnMappings.ElementAt(2).ColumnProperty, table3.Properties[2]);
         }
 
+        //            Base (*) --IA-- (1) Related
+        //           /   
+        //    (TPC)Derived     
+        //
+        [Fact]
+        public void TPC_with_IA_on_non_leaf_type_not_allowed()
+        {
+            new Exception("The association 'Related_to_Base' between entity types 'Related' and 'Base' is invalid. In a TPC hierarchy independent associations are only allowed on the most derived types.")
+                .ValidateMessage("EntityMappingConfiguration_TPCWithIAsOnNonLeafType", "Related_to_Base", "Related", "Base");
+
+            var modelBuilder = 
+             new TestModelBuilder()
+                .Entity("Base")
+                .Key("P1")
+                .Property("P2")
+                .Subclass("Derived");
+
+            modelBuilder.Entity("Related");
+            modelBuilder.Association(
+                "Related_To_Base", "Related", RelationshipMultiplicity.One, "BaseEntities", 
+                "Base", RelationshipMultiplicity.Many, "RelatedEntities");
+
+            EdmModel model = modelBuilder;
+            var databaseMapping = 
+                new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest)
+                .Generate(model);
+
+            var modelConfiguration = new ModelConfiguration();
+            modelConfiguration.Entity(model.GetEntityType("Derived").GetClrType())
+                              .AddMappingConfiguration(
+                                  new EntityMappingConfiguration
+                                  {
+                                      MapInheritedProperties = true,
+                                      TableName = new DatabaseName("DerivedEntities")
+                                  });
+
+            Assert.Throws<InvalidOperationException>(
+                () => modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest))
+                .ValidateMessage("EntityMappingConfiguration_TPCWithIAsOnNonLeafType", "Related_To_Base", "Related", "Base");
+        }
+
         //              E1
         //            / 
         //         E2  

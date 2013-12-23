@@ -222,6 +222,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                        && !entityType.DeclaredProperties.Contains(x.First()));
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void Configure(
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest,
@@ -298,6 +299,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 }
                 if (isMappingAnyInheritedProperty)
                 {
+                    var associationMapping = databaseMapping.EntityContainerMappings
+                        .SelectMany(asm => asm.AssociationSetMappings)
+                        .FirstOrDefault(a => a.Table == fromTable);
+
+                    if (associationMapping != null)
+                    {
+                        var associationType = associationMapping.AssociationSet.ElementType;
+
+                        throw Error.EntityMappingConfiguration_TPCWithIAsOnNonLeafType(
+                            associationType.Name,
+                            associationType.SourceEnd.GetEntityType().Name,
+                            associationType.TargetEnd.GetEntityType().Name);
+                    }
+
                     // With TPC, we need to move down FK constraints, even on PKs (except type mapping constraints that are not about associations)
                     ForeignKeyPrimitiveOperations.CopyAllForeignKeyConstraintsForPrimaryKeyColumns(
                         databaseMapping.Database, fromTable, toTable);
