@@ -34,8 +34,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
                 var mockCodeGen = new Mock<CodeGeneratorBase>();
                 var mockCodeGenDriver = new Mock<LegacyCodeGenerationDriver>(
-                    LanguageOption.GenerateVBCode, EntityFrameworkVersion.Version1);
-                mockCodeGenDriver.CallBase = true;
+                    LanguageOption.GenerateVBCode, EntityFrameworkVersion.Version1) { CallBase = true };
 
                 mockCodeGenDriver
                     .Protected()
@@ -54,6 +53,43 @@ namespace Microsoft.Data.Entity.Design.Model
 
                 mockCodeGen.Verify(g => g.AddNamespaceMapping(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
                 mockCodeGen.Verify(g => g.GenerateCode(It.IsAny<XmlReader>(), It.IsAny<TextWriter>()), Times.Once());
+            }
+        }
+
+        [Fact]
+        public void GenerateCode_adds_default_namespace_if_not_null()
+        {
+            var modelManager = new Mock<ModelManager>(null, null).Object;
+
+            var mockArtifact =
+                new Mock<EntityDesignArtifact>(
+                    modelManager, new Uri("http://tempuri"), new Mock<XmlModelProvider>().Object);
+
+            var modelElement = new XElement("{http://schemas.microsoft.com/ado/2009/11/edm}Schema");
+
+            using (var conceptualModel = new Mock<ConceptualEntityModel>(mockArtifact.Object, modelElement).Object)
+            {
+                mockArtifact.Setup(a => a.ConceptualModel).Returns(conceptualModel);
+                mockArtifact.Setup(a => a.Uri).Returns(new Uri("http://tempuri"));
+
+                var mockCodeGen = new Mock<CodeGeneratorBase>();
+                var mockCodeGenDriver = new Mock<LegacyCodeGenerationDriver>(
+                    LanguageOption.GenerateVBCode, EntityFrameworkVersion.Version3) { CallBase = true };
+
+                mockCodeGenDriver
+                    .Protected()
+                    .Setup<CodeGeneratorBase>(
+                        "CreateCodeGenerator", ItExpr.IsAny<LanguageOption>(),
+                        ItExpr.IsAny<Version>())
+                    .Returns(mockCodeGen.Object);
+
+                mockCodeGenDriver.Object.GenerateCode(mockArtifact.Object, null, new StringWriter());
+                mockCodeGen.Verify(g => g.AddNamespaceMapping(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
+
+                mockCodeGenDriver.Object.GenerateCode(mockArtifact.Object, string.Empty, new StringWriter());
+                mockCodeGen.Verify(g => g.AddNamespaceMapping(It.IsAny<string>(), string.Empty), Times.Once());
+
+                conceptualModel.Namespace.Dispose();
             }
         }
     }

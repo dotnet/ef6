@@ -41,8 +41,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
                 Debug.Assert(artifact.ConceptualModel() != null, "Artifact ConceptuaModel is null");
 
-                if (!string.IsNullOrWhiteSpace(defaultNamespace)
-                    && artifact.ConceptualModel() != null)
+                if (defaultNamespace != null && artifact.ConceptualModel() != null)
                 {
                     codeGenerator.AddNamespaceMapping(artifact.ConceptualModel().Namespace.Value, defaultNamespace);
                 }
