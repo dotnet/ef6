@@ -217,8 +217,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         CultureInfo.InvariantCulture,
                         Resources_VersioningFacade.UnsupportedDataType,
                         "invalid-type",
-                        "IntColumn",
-                        "catalog.schema.table"),
+                        "catalog.schema.table",
+                        "IntColumn"),
                     errors.Single().Message);
                 Assert.Equal(6005, errors.Single().ErrorCode);
             }
@@ -243,8 +243,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                             CultureInfo.InvariantCulture,
                             Resources_VersioningFacade.UnsupportedDataTypeForTarget,
                             unsupportedTypeName,
-                            "IntColumn",
-                            "catalog.schema.table"),
+                            "catalog.schema.table",
+                            "IntColumn"),
                         errors.Single().Message);
                     Assert.Equal(6005, errors.Single().ErrorCode);
                 }
@@ -2084,7 +2084,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources_VersioningFacade.UnsupportedDataType,
-                        "foo", "Id", "myDb.dbo.function"),
+                        "foo", "myDb.dbo.function", "Id"),
                     errors[1].Message);
             }
 

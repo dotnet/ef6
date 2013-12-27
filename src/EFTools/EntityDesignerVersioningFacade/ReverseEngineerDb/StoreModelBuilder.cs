@@ -645,8 +645,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                                 ? Resources_VersioningFacade.UnsupportedDataTypeForTarget
                                 : Resources_VersioningFacade.UnsupportedDataType,
                             row.DataType,
-                            row.ColumnName,
-                            row.GetMostQualifiedTableName());
+                            row.GetMostQualifiedTableName(),
+                            row.ColumnName);
                 }
             }
 

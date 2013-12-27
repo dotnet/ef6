@@ -117,7 +117,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             // get file name the user chose 
             string modelName;
             replacementsDictionary.TryGetValue("$rootname$", out modelName);
+
             Debug.Assert(modelName != null, "Unable to get $rootname$ from replacementsDictionary");
+
+            modelName = SanitizeModelName(modelName);
 
             PopluateReplacementDictionary(replacementsDictionary, modelName);
 
@@ -344,15 +347,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     }
 
                     // now open created file in VS using default viewer
-                    try
-                    {
-                        window = _edmxItem.Open(Constants.vsViewKindPrimary);
-                        Debug.Assert(window != null, "Unable to get window for created edmx file");
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        PackageManager.Package.ModelGenErrorCache.RemoveErrors(_edmxItem.get_FileNames(1));
-                    }
+                    window = _edmxItem.Open(Constants.vsViewKindPrimary);
+                    Debug.Assert(window != null, "Unable to get window for created edmx file");
+
                 }
                 finally
                 {
@@ -609,6 +606,22 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             }
 
             return path;
+        }
+
+        private static string SanitizeModelName(string modelName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(modelName), "invalid model name");
+
+            // see https://entityframework.codeplex.com/workitem/1807 for more details
+            const string vsTemplateExtension = ".vstemplate";
+
+            if (modelName.EndsWith(vsTemplateExtension, StringComparison.OrdinalIgnoreCase)
+                && !modelName.Equals(vsTemplateExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                modelName = modelName.Substring(0, modelName.Length - vsTemplateExtension.Length);
+            }
+
+            return modelName;
         }
     }
 }
