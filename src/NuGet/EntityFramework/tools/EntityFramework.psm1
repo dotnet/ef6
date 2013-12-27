@@ -268,6 +268,19 @@ function Initialize-EFConfiguration
     Specifies that the migrations configuration be overwritten when running more
     than once for a given project.
 	
+.PARAMETER ContextAssemblyName
+    Specifies the name of the assembly which contains the DbContext class to use. Use this
+    parameter instead of ContextProjectName when the context is contained in a referenced
+    assembly rather than in a project of the solution.
+
+.PARAMETER AppDomainBaseDirectory
+    Specifies the directory to use for the app-domain that is used for running Migrations
+    code such that the app-domain is able to find all required assemblies. This is an
+    advanced option that should only be needed if the solution contains	several projects 
+    such that the assemblies needed for the context and configuration are not all
+    referenced from either the project containing the context or the project containing
+    the migrations.
+
 .EXAMPLE 
 	Enable-Migrations
 	# Scaffold a migrations configuration in a project with only one context
@@ -303,10 +316,12 @@ function Enable-Migrations
         [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
             Mandatory = $true)]
         [string] $ConnectionProviderName,
-        [switch] $Force
+        [switch] $Force,
+        [string] $ContextAssemblyName,
+		[string] $AppDomainBaseDirectory
     )
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $ContextProjectName $null $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $ContextProjectName $null $ConnectionStringName $ConnectionString $ConnectionProviderName $ContextAssemblyName $AppDomainBaseDirectory
 
     try
     {
@@ -379,6 +394,14 @@ function Enable-Migrations
     This can be used to create an initial, empty migration to enable Migrations for an existing
     database. N.B. Doing this assumes that the target database schema is compatible with the
     current model.
+
+.PARAMETER AppDomainBaseDirectory
+    Specifies the directory to use for the app-domain that is used for running Migrations
+    code such that the app-domain is able to find all required assemblies. This is an
+    advanced option that should only be needed if the solution contains	several projects 
+    such that the assemblies needed for the context and configuration are not all
+    referenced from either the project containing the context or the project containing
+    the migrations.
 	
 .EXAMPLE
 	Add-Migration First
@@ -411,9 +434,10 @@ function Add-Migration
         [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
             Mandatory = $true)]
         [string] $ConnectionProviderName,
-        [switch] $IgnoreChanges)
+        [switch] $IgnoreChanges,
+		[string] $AppDomainBaseDirectory)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
 
     try
     {
@@ -489,6 +513,14 @@ function Add-Migration
 .PARAMETER ConnectionProviderName
     Specifies the provider invariant name of the connection string.
 	
+.PARAMETER AppDomainBaseDirectory
+    Specifies the directory to use for the app-domain that is used for running Migrations
+    code such that the app-domain is able to find all required assemblies. This is an
+    advanced option that should only be needed if the solution contains	several projects 
+    such that the assemblies needed for the context and configuration are not all
+    referenced from either the project containing the context or the project containing
+    the migrations.
+
 .EXAMPLE
 	Update-Database
 	# Update the database to the latest migration
@@ -538,9 +570,10 @@ function Update-Database
         [string] $ConnectionString,
         [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
             Mandatory = $true)]
-        [string] $ConnectionProviderName)
+        [string] $ConnectionProviderName,
+		[string] $AppDomainBaseDirectory)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
 
     try
     {
@@ -599,6 +632,14 @@ function Update-Database
 
 .PARAMETER ConnectionProviderName
     Specifies the provider invariant name of the connection string.
+
+.PARAMETER AppDomainBaseDirectory
+    Specifies the directory to use for the app-domain that is used for running Migrations
+    code such that the app-domain is able to find all required assemblies. This is an
+    advanced option that should only be needed if the solution contains	several projects 
+    such that the assemblies needed for the context and configuration are not all
+    referenced from either the project containing the context or the project containing
+    the migrations.
 #>
 function Get-Migrations
 {
@@ -614,9 +655,10 @@ function Get-Migrations
         [string] $ConnectionString,
         [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
             Mandatory = $true)]
-        [string] $ConnectionProviderName)
+        [string] $ConnectionProviderName,
+		[string] $AppDomainBaseDirectory)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
 
     try
     {
@@ -643,7 +685,7 @@ function Get-Migrations
     }
 }
 
-function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProjectName, $ConfigurationTypeName, $ConnectionStringName, $ConnectionString, $ConnectionProviderName)
+function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProjectName, $ConfigurationTypeName, $ConnectionStringName, $ConnectionString, $ConnectionProviderName, $ContextAssemblyName, $AppDomainBaseDirectory)
 {
     $startUpProject = Get-MigrationsStartUpProject $StartUpProjectName $ProjectName
     Build-Project $startUpProject
@@ -671,6 +713,8 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProject
     $domain.SetData('connectionStringName', $ConnectionStringName)
     $domain.SetData('connectionString', $ConnectionString)
     $domain.SetData('connectionProviderName', $ConnectionProviderName)
+    $domain.SetData('contextAssemblyName', $ContextAssemblyName)
+    $domain.SetData('appDomainBaseDirectory', $AppDomainBaseDirectory)
     
     $dispatcher = New-DomainDispatcher $toolsPath
     $domain.SetData('efDispatcher', $dispatcher)

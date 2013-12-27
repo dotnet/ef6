@@ -1258,9 +1258,9 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         private void Run_Project_test_if_Visual_Studio_is_running(Action<Project, int> test)
         {
             // Note that these tests are setup to work with the latest released version of Visual
-            // Studio used by the EF team in day-to-day development. Currently this is VS 2012 which
-            // is version 11. See CodePlex 1367.
-            const int targetVsVersion = 11;
+            // Studio used by the EF team in day-to-day development. Currently this is VS 2013 which
+            // is version 12. See CodePlex 1367.
+            const int targetVsVersion = 12;
 
             MessageFilter.Register();
 

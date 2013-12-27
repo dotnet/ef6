@@ -36,6 +36,16 @@ namespace System.Data.Entity.Migrations
             get { return (Project)_domain.GetData("contextProject"); }
         }
 
+        public string ContextAssemblyName
+        {
+            get { return (string)_domain.GetData("contextAssemblyName"); }
+        }
+
+        public string AppDomainBaseDirectory
+        {
+            get { return (string)_domain.GetData("appDomainBaseDirectory"); }
+        }
+
         protected AppDomain Domain
         {
             get { return _domain; }
@@ -101,8 +111,14 @@ namespace System.Data.Entity.Migrations
 
             var startUpProject = StartUpProject;
             var assemblyName = Project.GetTargetName();
-            var contextAssemblyName = ContextProject.GetTargetName();
-            var workingDirectory = useContextWorkingDirectory ? ContextProject.GetTargetDir() : Project.GetTargetDir();
+
+            var contextAssemblyName = !string.IsNullOrWhiteSpace(ContextAssemblyName)
+                ? ContextAssemblyName
+                : ContextProject.GetTargetName();
+
+            var workingDirectory = !string.IsNullOrWhiteSpace(AppDomainBaseDirectory)
+                ? AppDomainBaseDirectory
+                : (useContextWorkingDirectory ? ContextProject.GetTargetDir() : Project.GetTargetDir());
 
             string configurationFile;
             string dataDirectory = null;
@@ -127,11 +143,11 @@ namespace System.Data.Entity.Migrations
                 configurationFile,
                 dataDirectory,
                 connectionStringInfo)
-                       {
-                           LogInfoDelegate = WriteLine,
-                           LogWarningDelegate = WriteWarning,
-                           LogVerboseDelegate = WriteVerbose
-                       };
+            {
+                LogInfoDelegate = WriteLine,
+                LogWarningDelegate = WriteWarning,
+                LogVerboseDelegate = WriteVerbose
+            };
         }
 
         public T GetAnonymousArgument<T>(string name)
