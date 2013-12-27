@@ -24,3 +24,4 @@ EntityFramework.SqlServerCompact.xml
 /coverage
 /OpenCoverResults.xml
 /src/EFTools/EntityDesign/VisualStudio/ItemTemplate/VersionedTemplates/
+/src/EFTools/setup/EFToolsMsi/Resources/EFToolsStrings.wxl

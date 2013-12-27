@@ -1162,14 +1162,14 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 #if !NET40
 
         [Fact]
-        public void SqlServerDetector_detects_LocalDB_v11_0_on_dev_machine()
+        public void SqlServerDetector_detects_LocalDB_on_dev_machine()
         {
             using (
                 var detector = new SqlServerDetector(
                     Registry.LocalMachine, new Mock<ServiceControllerProxy>().Object)
                 )
             {
-                Assert.Equal("11.0", detector.TryGetLocalDBVersionInstalled());
+                Assert.NotNull(detector.TryGetLocalDBVersionInstalled());
             }
         }
 
