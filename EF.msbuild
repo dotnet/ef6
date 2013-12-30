@@ -8,6 +8,7 @@
     <BuildProperties Condition="'$(InternalsInvisible)' != ''">$(BuildProperties);InternalsInvisible=$(InternalsInvisible)</BuildProperties>
     <BuildProperties Condition="'$(RunCodeAnalysis)' != ''">$(BuildProperties);RunCodeAnalysis=$(RunCodeAnalysis)</BuildProperties>
     <BuildProperties Condition="'$(StyleCopEnabled)' != ''">$(BuildProperties);StyleCopEnabled=$(StyleCopEnabled)</BuildProperties>
+    <SkipStrongNamesXml>tools\SkipStrongNames.xml</SkipStrongNamesXml>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,33 +16,37 @@
     <ProjectToBuild Include="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
     <ProjectToBuild Include="src\EntityFramework.PowerShell.Utility\EntityFramework.PowerShell.Utility.csproj" />
     <ProjectToBuild Include="src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
-    <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
-      <RestorePackages>true</RestorePackages>
-    </ProjectToBuild>
+    <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
     <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.Legacy.csproj" />
     <ProjectToBuild Include="src\Migrate\Migrate.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests\FunctionalTests.csproj">
-      <RestorePackages>true</RestorePackages>
-    </NonCoreProjectToBuild>
-    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj">
-      <RestorePackages>true</RestorePackages>
-    </NonCoreProjectToBuild>
-    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj">
-      <RestorePackages>true</RestorePackages>
-    </NonCoreProjectToBuild>
-    <NonCoreProjectToBuild Include="test\EntityFramework\UnitTests\UnitTests.csproj">
-      <RestorePackages>true</RestorePackages>
-    </NonCoreProjectToBuild>
-    <NonCoreProjectToBuild Include="test\EntityFramework\VBTests\VBTests.vbproj">
-      <RestorePackages>true</RestorePackages>
-    </NonCoreProjectToBuild>
+    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests\FunctionalTests.csproj" />
+    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj" />
+    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj" />
+    <NonCoreProjectToBuild Include="test\EntityFramework\UnitTests\UnitTests.csproj" />
+    <NonCoreProjectToBuild Include="test\EntityFramework\VBTests\VBTests.vbproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectToBuild Include="@(NonCoreProjectToBuild)" Condition="'$(BuildCoreOnly)' != 'true'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <XunitAssembly Include="test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.dll" />
+    <XunitAssembly Include="test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.dll" />
+    <XunitAssembly Include="test\EntityFramework\FunctionalTests.Transitional\bin\$(Configuration)\EntityFramework.FunctionalTests.Transitional.dll" />
+    <XunitAssembly Condition="'$(Configuration)' == '$(Configuration45)'"
+                   Include="test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProviderAgnosticXunitAssembly Include="test\EntityFramework\FunctionalTests.ProviderAgnostic\bin\$(Configuration)\EntityFramework.FunctionalTests.ProviderAgnostic.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <XunitAssembly Include="@(ProviderAgnosticXunitAssembly)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
@@ -58,25 +63,16 @@
              Condition="'$(Configuration)' == '$(Configuration45)'" />
   </Target>
 
-  <Target Name="RestorePackages">
+  <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
     <PropertyGroup>
       <RequireRestoreConsent>false</RequireRestoreConsent>
     </PropertyGroup>
     <Message Text="Restoring NuGet packages..." Importance="High" />
-    <MSBuild Projects="@(ProjectToBuild->WithMetadataValue('RestorePackages', 'true'))" Targets="RestorePackages" Properties="RequireRestoreConsent=$(RequireRestoreConsent)" />
-  </Target>
-
-  <Target Name="RestoreSolutionPackages" DependsOnTargets="CheckPrerequisites" AfterTargets="RestorePackages">
-    <PropertyGroup>
-      <PackagesConfig>$([System.IO.Path]::Combine($(NuGetToolsPath), "packages.config"))</PackagesConfig>
-      <SolutionRequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</SolutionRequireConsentSwitch>
-      <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(SolutionRequireConsentSwitch) -solutionDir "$(SolutionDir) "</RestoreCommand>
-    </PropertyGroup>
-    <Exec Command="$(RestoreCommand)"
+    <Exec Command="$(NuGetCommand) restore EntityFramework.sln"
           LogStandardErrorAsError="true" />
   </Target>
 
-  <Target Name="Build" DependsOnTargets="RestoreSolutionPackages">
+  <Target Name="Build" DependsOnTargets="RestorePackages">
     <MSBuild Targets="Build"
              Projects="@(ProjectToBuild)"
              Properties="Configuration=%(BuildConfiguration.Identity);$(BuildProperties)"
@@ -84,30 +80,18 @@
   </Target>
 
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+  
+  <Import Project="tools\SkipStrongNames.targets" />
 
-  <Target Name="CheckSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-    <MSBuild Targets="CheckSkipStrongNames"
-             Projects="tools\EF.skipstrongnames.targets" />
-  </Target>
-
-  <Target Name="EnableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-    <MSBuild Targets="EnableSkipStrongNames"
-             Projects="tools\EF.skipstrongnames.targets" />
-  </Target>
-
-  <Target Name="DisableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-    <MSBuild Targets="DisableSkipStrongNames"
-             Projects="tools\EF.skipstrongnames.targets" />
-  </Target>
+  <UsingTask TaskName="Xunit.Runner.MSBuild.xunit"
+             AssemblyFile="packages\xunit.1.9.2\lib\net20\xunit.runner.msbuild.dll" />
 
   <Target Name="Test" DependsOnTargets="CheckSkipStrongNames;Build">
-    <MSBuild Projects="tools\EF.xunit.targets"
-             Properties="Configuration=$(Configuration);$(BuildProperties)" />
+    <xunit Assemblies="@(XunitAssembly)" Xml="$(OutputPath)TestResults.xml" />
   </Target>
 
   <Target Name="ProviderAgnosticTests" DependsOnTargets="CheckSkipStrongNames;Build">
-    <MSBuild Projects="tools\EF.provideragnostictests.targets"
-             Properties="Configuration=$(Configuration);$(BuildProperties)" />
+    <xunit Assemblies="@(ProviderAgnosticXunitAssembly)" />
   </Target>
 
   <Target Name="Package">
@@ -118,10 +102,5 @@
              Projects="src\NuGet\NuGet.proj"
              Properties="Configuration=$(Configuration)"
              Condition="'$(Configuration)' == '$(Configuration45)'" />
-  </Target>
-
-  <Target Name="CodeCoverage" DependsOnTargets="RestoreSolutionPackages;Build">
-    <MSBuild Projects="tools\EF.opencover.targets"
-             Properties="Configuration=$(Configuration);$(BuildProperties)" />
   </Target>
 </Project>

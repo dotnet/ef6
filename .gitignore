@@ -21,7 +21,5 @@ EntityFramework.SqlServerCompact.xml
 *.LOCAL.*
 [Ss]tyle[Cc]op.*
 *.csproj.DotSettings
-/coverage
-/OpenCoverResults.xml
 /src/EFTools/EntityDesign/VisualStudio/ItemTemplate/VersionedTemplates/
 /src/EFTools/setup/EFToolsMsi/Resources/EFToolsStrings.wxl

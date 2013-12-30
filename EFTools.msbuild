@@ -5,12 +5,13 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <BuildProperties>Platform=$(Platform);RestorePackages=false</BuildProperties>
+        <BuildProperties>Platform=$(Platform)</BuildProperties>
         <VSTest>$(VSINSTALLDIR)\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe</VSTest>
         <BuildTargets>Build</BuildTargets>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
         <SkipEnvSetup></SkipEnvSetup>
         <LogsDir>$(SolutionDir)logs\</LogsDir>
+        <SkipStrongNamesXml>tools\EFToolsSkipStrongNames.xml</SkipStrongNamesXml>
     </PropertyGroup>
 
     <ItemGroup>
@@ -44,6 +45,11 @@
         <TestHostProjects Include="$(SolutionDir)tools\VsIdeHostAdapter\Installer\Installer.wixproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <XunitAssembly Include="test\EFTools\UnitTests\bin\$(Configuration)\EFDesigner.UnitTests.dll" />
+        <XunitAssembly Include="test\EFTools\FunctionalTests\bin\$(Configuration)\EFDesigner.FunctionalTests.dll" />
+    </ItemGroup>
+
     <Import Project="$(SolutionDir)\tools\EFTools.common.tasks" />
     <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 
@@ -60,49 +66,22 @@
         <MakeDir Directories="$(LogsDir)"/>
     </Target>
 
-    <Target Name="RestorePackages">
+    <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
         <PropertyGroup>
             <RequireRestoreConsent>false</RequireRestoreConsent>
         </PropertyGroup>
-        <ItemGroup>
-            <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\FunctionalTests\*.csproj" />
-            <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\UnitTests\*.csproj" />
-            <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\E2ETests\*.csproj" />
-        </ItemGroup>
         <Message Text="Restoring NuGet packages..." Importance="High" />
-        <MSBuild Projects="@(RestoreProjFiles)" Targets="RestorePackages" Properties="RequireRestoreConsent=$(RequireRestoreConsent)" />
-    </Target>
-
-    <Target Name="RestoreSolutionPackages" DependsOnTargets="CheckPrerequisites" AfterTargets="RestorePackages">
-        <PropertyGroup>
-            <PackagesConfig>$([System.IO.Path]::Combine($(NuGetToolsPath), "packages.config"))</PackagesConfig>
-            <SolutionRequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</SolutionRequireConsentSwitch>
-            <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(SolutionRequireConsentSwitch) -solutionDir "$(SolutionDir) "</RestoreCommand>
-        </PropertyGroup>
-        <Exec Command="$(RestoreCommand)"
+        <Exec Command="$(NuGetCommand) restore EFTools.sln"
               LogStandardErrorAsError="true" />
     </Target>
 
-    <Target Name="CheckSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-        <MSBuild Targets="CheckSkipStrongNames"
-                 Projects="$(SolutionDir)\tools\EFTools.skipstrongnames.targets" />
-    </Target>
-
-    <Target Name="EnableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-        <MSBuild Targets="EnableSkipStrongNames"
-                 Projects="$(SolutionDir)\tools\EFTools.skipstrongnames.targets" />
-    </Target>
-
-    <Target Name="DisableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-        <MSBuild Targets="DisableSkipStrongNames"
-                 Projects="$(SolutionDir)\tools\EFTools.skipstrongnames.targets" />
-    </Target>
+    <Import Project="tools\SkipStrongNames.targets" />
 
     <Target Name="BuildFrameworkPackages">
       <MSBuild Projects="$(RepositoryRoot)EF.msbuild" Targets="Package" Properties="Configuration=Release" />
     </Target>
 
-    <Target Name="BuildDesigner" DependsOnTargets="CreateDirectories;CheckSkipStrongNames;RestorePackages">
+    <Target Name="BuildDesigner" DependsOnTargets="CreateDirectories;CheckSkipStrongNames">
         <MSBuild Targets="$(BuildTargets)"
                    Projects="@(Projects)"
                    Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
@@ -152,9 +131,11 @@
 
     <Target Name="Test" DependsOnTargets="Install;InstallTestHost;ReRunXUnitTests;ReRunInProcTests;ReRunE2ETests" />
 
+    <UsingTask TaskName="Xunit.Runner.MSBuild.xunit"
+               AssemblyFile="packages\xunit.1.9.2\lib\net20\xunit.runner.msbuild.dll" />
+
     <Target Name="ReRunXUnitTests">
-        <MSBuild Projects="$(SolutionDir)tools\EFTools.xunit.targets"
-                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
+        <xunit Assemblies="@(XunitAssembly)" Xml="$(OutputPath)TestResults.xml" />
     </Target>
 
     <Target Name="ReRunInProcTests">
