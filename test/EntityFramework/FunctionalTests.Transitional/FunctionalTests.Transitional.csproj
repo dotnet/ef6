@@ -186,8 +186,10 @@
     <Compile Include="TestHelpers\LocalizationTestHelpers.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
     <Compile Include="TestHelpers\ExtendedFactAttribute.cs" />
+    <Compile Include="TestHelpers\RegisterMutableResolver.cs" />
     <Compile Include="TestHelpers\SqlServerMigrationSqlGeneratorWtihCollations.cs" />
     <Compile Include="TestHelpers\TestGroup.cs" />
+    <Compile Include="TestHelpers\TestLoadedInterceptor.cs" />
     <Compile Include="TestHelpers\TestSqlAzureExecutionStrategy.cs" />
     <Compile Include="TestModels\ConcurrencyModel\Chassis.cs" />
     <Compile Include="TestModels\ConcurrencyModel\ConcurrencyModelInitializer.cs" />

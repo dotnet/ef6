@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using Moq;
     using Xunit;
 
@@ -28,6 +29,9 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             dispatchers.CancelableEntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             mockInterceptor.Verify(m => m.CallMe(), Times.Exactly(4));
+
+            dispatchers.Configuration.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            mockInterceptor.Verify(m => m.CallMe(), Times.Exactly(5));
         }
 
         [Fact]
@@ -43,12 +47,13 @@ namespace System.Data.Entity.Infrastructure.Interception
             dispatchers.CommandTree.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             dispatchers.CancelableCommand.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             dispatchers.CancelableEntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            dispatchers.Configuration.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
 
             mockInterceptor.Verify(m => m.CallMe(), Times.Never());
         }
 
         internal abstract class FakeInterceptor : IDbCommandInterceptor, IDbCommandTreeInterceptor, ICancelableDbCommandInterceptor,
-                                                  ICancelableEntityConnectionInterceptor
+                                                  ICancelableEntityConnectionInterceptor, IDbConfigurationInterceptor
         {
             public abstract void CallMe();
 
@@ -69,6 +74,9 @@ namespace System.Data.Entity.Infrastructure.Interception
             public abstract bool CommandExecuting(DbCommand command, DbInterceptionContext interceptionContext);
 
             public abstract bool ConnectionOpening(EntityConnection connection, DbInterceptionContext interceptionContext);
+
+            public abstract void Loaded(
+                DbConfigurationLoadedEventArgs loadedEventArgs, DbConfigurationInterceptionContext interceptionContext);
         }
     }
 }

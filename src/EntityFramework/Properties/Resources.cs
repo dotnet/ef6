@@ -13823,27 +13823,19 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "The type '{0}' registered in the application config file as a DbConfiguration.Loaded event handler could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application."
+        // A string like "The type '{0}' registered in the application config file as an IDbInterceptor not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application."
         // </summary>
-        internal static string ConfigEventTypeNotFound(object p0)
+        internal static string InterceptorTypeNotFound(object p0)
         {
-            return EntityRes.GetString(EntityRes.ConfigEventTypeNotFound, p0);
+            return EntityRes.GetString(EntityRes.InterceptorTypeNotFound, p0);
         }
 
         // <summary>
-        // A string like "The method '{0}' of type '{1}' registered in the application config file as a DbConfiguration.Loaded event handler could not be found, is not static, or does not match the EventHandler<DbConfigurationLoadedEventArgs> signature."
+        // A string like "The type '{0}' registered in the application config file as an IDbInterceptor does not implement the IDbInterceptor interface. Interceptors must implement this interface."
         // </summary>
-        internal static string ConfigEventBadMethod(object p0, object p1)
+        internal static string InterceptorTypeNotInterceptor(object p0)
         {
-            return EntityRes.GetString(EntityRes.ConfigEventBadMethod, p0, p1);
-        }
-
-        // <summary>
-        // A string like "The method '{0}' of type '{1}' registered in the application config file could not be used as a DbConfiguration.Loaded event handler. Make sure that the method matches the EventHandler<DbConfigurationLoadedEventArgs> signature. See inner exception for details."
-        // </summary>
-        internal static string ConfigEventCannotBind(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.ConfigEventCannotBind, p0, p1);
+            return EntityRes.GetString(EntityRes.InterceptorTypeNotInterceptor, p0);
         }
 
         // <summary>
@@ -17372,9 +17364,8 @@ namespace System.Data.Entity.Resources
         internal const string LightweightPrimitivePropertyConfiguration_NonLength = "LightweightPrimitivePropertyConfiguration_NonLength";
         internal const string UnableToUpgradeHistoryWhenCustomFactory = "UnableToUpgradeHistoryWhenCustomFactory";
         internal const string CommitFailed = "CommitFailed";
-        internal const string ConfigEventTypeNotFound = "ConfigEventTypeNotFound";
-        internal const string ConfigEventBadMethod = "ConfigEventBadMethod";
-        internal const string ConfigEventCannotBind = "ConfigEventCannotBind";
+        internal const string InterceptorTypeNotFound = "InterceptorTypeNotFound";
+        internal const string InterceptorTypeNotInterceptor = "InterceptorTypeNotInterceptor";
         internal const string ViewGenContainersNotFound = "ViewGenContainersNotFound";
         internal const string HashCalcContainersNotFound = "HashCalcContainersNotFound";
         internal const string ViewGenMultipleContainers = "ViewGenMultipleContainers";

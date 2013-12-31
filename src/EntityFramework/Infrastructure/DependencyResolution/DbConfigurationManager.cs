@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -43,7 +44,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             DebugCheck.NotNull(loader);
             DebugCheck.NotNull(finder);
-
+            
             _loader = loader;
             _finder = finder;
             _configuration = new Lazy<InternalConfiguration>(
@@ -52,11 +53,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         var configuration = _newConfiguration
                                             ?? _newConfigurationType.CreateInstance<DbConfiguration>(
                                                 Strings.CreateInstance_BadDbConfigurationType);
-
-                        foreach (var handler in _loader.GetOnLoadedHandlers(AppConfig.DefaultInstance))
-                        {
-                            configuration.InternalConfiguration.AddOnLoadedHandler(handler);
-                        }
 
                         configuration.InternalConfiguration.Lock();
                         return configuration.InternalConfiguration;
@@ -98,10 +94,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 handler(configuration.Owner, eventArgs);
             }
 
-            foreach (var handlerFromConfigFile in configuration.OnLoadedHandlers)
-            {
-                handlerFromConfigFile(configuration.Owner, eventArgs);
-            }
+            configuration.DispatchLoadedInterceptors(eventArgs);
         }
 
         public virtual InternalConfiguration GetConfiguration()
@@ -245,11 +238,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             configuration.SwitchInRootResolver(_configuration.Value.RootResolver);
             configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config, configuration));
-
-            foreach (var handler in _loader.GetOnLoadedHandlers(config))
-            {
-                configuration.AddOnLoadedHandler(handler);
-            }
 
             lock (_lock)
             {

@@ -44,12 +44,5 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             return !string.IsNullOrWhiteSpace(config.ConfigurationTypeName);
         }
-
-        public virtual IEnumerable<EventHandler<DbConfigurationLoadedEventArgs>> GetOnLoadedHandlers(AppConfig config)
-        {
-            DebugCheck.NotNull(config);
-
-            return config.ConfigLoadedHandlers;
-        }
     }
 }

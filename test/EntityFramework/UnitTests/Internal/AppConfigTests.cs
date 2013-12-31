@@ -9,6 +9,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using Moq;
@@ -270,29 +271,30 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        public class ConfigLoadedHandlers : TestBase
+        public class Interceptors : TestBase
         {
             [Fact]
-            public void ConfigLoadedHandlers_returns_all_registered_config_loaded_event_handlers()
+            public void Interceptors_returns_all_registered_interceptors()
             {
-                EventHandler<DbConfigurationLoadedEventArgs> handler1 = (_, __) => { };
-                EventHandler<DbConfigurationLoadedEventArgs> handler2 = (_, __) => { };
-                var mockLoadedCollection = new Mock<ConfigLoadedCollection>();
-                mockLoadedCollection.Setup(m => m.RegisteredHandlers).Returns(new[] { handler1, handler2 });
+                var interceptor1 = new Mock<IDbConfigurationInterceptor>().Object;
+                var interceptor2 = new Mock<IDbConfigurationInterceptor>().Object;
+
+                var mockCollection = new Mock<InterceptorsCollection>();
+                mockCollection.Setup(m => m.Interceptors).Returns(new[] { interceptor1, interceptor2 });
 
                 var mockEFSection = new Mock<EntityFrameworkSection>();
                 mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
-                mockEFSection.Setup(m => m.ConfigLoadedHandlers).Returns(mockLoadedCollection.Object);
+                mockEFSection.Setup(m => m.Interceptors).Returns(mockCollection.Object);
 
                 Assert.Equal(
-                    new[] { handler1, handler2 },
-                    new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).ConfigLoadedHandlers);
+                    new[] { interceptor1, interceptor2 },
+                    new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).Interceptors);
             }
 
             [Fact]
             public void ConfigLoadedHandlers_returns_empty_if_no_handlers_are_registered()
             {
-                Assert.Empty(new AppConfig(new ConnectionStringSettingsCollection(), null, null).ConfigLoadedHandlers);
+                Assert.Empty(new AppConfig(new ConnectionStringSettingsCollection(), null, null).Interceptors);
             }
         }
     }

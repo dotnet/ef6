@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
     using System.Globalization;
@@ -21,6 +22,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         private readonly ConcurrentDictionary<Tuple<Type, object>, Func<object>> _serviceFactories
             = new ConcurrentDictionary<Tuple<Type, object>, Func<object>>();
+
+        private readonly ConcurrentDictionary<Tuple<Type, object>, IEnumerable<Func<object>>> _servicesFactories
+            = new ConcurrentDictionary<Tuple<Type, object>, IEnumerable<Func<object>>>();
 
         private readonly Dictionary<string, DbProviderServices> _providerFactories
             = new Dictionary<string, DbProviderServices>();
@@ -57,8 +61,19 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         public IEnumerable<object> GetServices(Type type, object key)
         {
-            // Currently only one of any given service/key combination can be registered in app config
-            return this.GetServiceAsServices(type, key);
+            return _servicesFactories.GetOrAdd(
+                Tuple.Create(type, key),
+                t => GetServicesFactory(type, key)).Select(f => f()).Where(s => s != null).ToList();
+        }
+
+        public virtual IEnumerable<Func<object>> GetServicesFactory(Type type, object key)
+        {
+            if (type == typeof(IDbInterceptor))
+            {
+                return _appConfig.Interceptors.Select(i => (Func<object>)(() => i)).ToList();
+            }
+
+            return new List<Func<object>> { GetServiceFactory(type, key as string) };
         }
 
         public virtual Func<object> GetServiceFactory(Type type, string name)

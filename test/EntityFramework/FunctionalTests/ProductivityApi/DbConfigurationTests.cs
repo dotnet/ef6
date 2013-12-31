@@ -2,19 +2,17 @@
 
 namespace ProductivityApiTests
 {
-    using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.TestHelpers;
+    using System.Globalization;
     using SimpleModel;
     using Xunit;
 
     public class DbConfigurationTests : FunctionalTestBase
     {
-        public static readonly List<string> HooksRun = new List<string>();
-
         [Fact]
         public void DefaultConnectionFactory_set_in_config_file_can_be_overriden_before_config_is_locked()
         {
@@ -31,23 +29,31 @@ namespace ProductivityApiTests
                 context.Database.Initialize(force: false);
             }
 
-            Assert.Equal(new[] { "Hook1", "Hook2", "Hook2" }, HooksRun);
+            Assert.Equal(
+                new[] { "Hook1()", "Hook1(2013, 'December 31')", "Hook2()", "Hook2('January 1', 2014)", "Hook2()", "Hook1(4102, '1 yraunaJ')", "Hook1()" },
+                TestLoadedInterceptor.HooksRun);
         }
 
-        public class InitializationHooks
+        public class TestLoadedInterceptor2 : IDbConfigurationInterceptor
         {
-            private static void Hook2(object sender, DbConfigurationLoadedEventArgs eventArgs)
+            private readonly string _tag;
+
+            public TestLoadedInterceptor2()
             {
-                HooksRun.Add("Hook2");
+                _tag = "Hook2()";
             }
-        }
-    }
 
-    public class InitializationHooks
-    {
-        private static void Hook1(object sender, DbConfigurationLoadedEventArgs eventArgs)
-        {
-            DbConfigurationTests.HooksRun.Add("Hook1");
+            public TestLoadedInterceptor2(string p1, int p2)
+            {
+                _tag = string.Format(CultureInfo.InvariantCulture, "Hook2('{0}', {1})", p1, p2);
+            }
+
+            public void Loaded(
+                DbConfigurationLoadedEventArgs loadedEventArgs, 
+                DbConfigurationInterceptionContext interceptionContext)
+            {
+                TestLoadedInterceptor.HooksRun.Add(_tag);
+            }
         }
     }
 }

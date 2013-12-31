@@ -171,17 +171,19 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         public class Lock
         {
             [Fact]
-            public void All_interceptors_registered_in_DbConfiguration_are_added_when_the_config_is_locked()
+            public void All_interceptors_are_added_and_Loaded_interceptors_are_called_when_config_is_locked()
             {
                 var mockAppConfigChain = new Mock<ResolverChain>();
                 var mockNormalChain = new Mock<ResolverChain>();
                 var interceptor1 = new Mock<IDbInterceptor>().Object;
-                var interceptor2 = new Mock<IDbInterceptor>().Object;
+                var interceptor2 = new Mock<IDbConfigurationInterceptor>().Object;
                 mockNormalChain
                     .Setup(m => m.GetServices(typeof(IDbInterceptor), null))
                     .Returns(new[] { interceptor1, interceptor2 });
 
                 var mockDispatchers = new Mock<DbDispatchers>();
+                var mockDispatcher = new Mock<DbConfigurationDispatcher>();
+                mockDispatchers.Setup(m => m.Configuration).Returns(mockDispatcher.Object);
 
                 var config = new InternalConfiguration(
                     mockAppConfigChain.Object, mockNormalChain.Object,
@@ -194,6 +196,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 mockNormalChain.Verify(m => m.GetServices(typeof(IDbInterceptor), null));
                 mockDispatchers.Verify(m => m.AddInterceptor(interceptor1));
                 mockDispatchers.Verify(m => m.AddInterceptor(interceptor2));
+             
+                mockDispatcher.Verify(
+                    m => m.Loaded(It.IsAny<DbConfigurationLoadedEventArgs>(), It.IsAny<DbInterceptionContext>()));
             }
         }
 

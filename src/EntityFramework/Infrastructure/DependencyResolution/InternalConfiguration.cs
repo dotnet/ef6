@@ -19,8 +19,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         private CompositeResolver<ResolverChain, ResolverChain> _resolvers;
         private RootDependencyResolver _rootResolver;
         private readonly Func<DbDispatchers> _dispatchers;
-        private readonly List<EventHandler<DbConfigurationLoadedEventArgs>> _loadedHandlers
-            = new List<EventHandler<DbConfigurationLoadedEventArgs>>();
 
         // This does not need to be volatile since it only protects against inappropriate use not
         // thread-unsafe use.
@@ -59,10 +57,15 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         public virtual void Lock()
         {
+            DependencyResolver.GetServices<IDbInterceptor>().Each(_dispatchers().AddInterceptor);
+
             DbConfigurationManager.Instance.OnLoaded(this);
             _isLocked = true;
+        }
 
-            DependencyResolver.GetServices<IDbInterceptor>().Each(_dispatchers().AddInterceptor);
+        public void DispatchLoadedInterceptors(DbConfigurationLoadedEventArgs loadedEventArgs)
+        {
+            _dispatchers().Configuration.Loaded(loadedEventArgs, new DbInterceptionContext());
         }
 
         public virtual void AddAppConfigResolver(IDbDependencyResolver resolver)
@@ -173,16 +176,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 throw new InvalidOperationException(Strings.ConfigurationLocked(memberName));
             }
-        }
-
-        public virtual void AddOnLoadedHandler(EventHandler<DbConfigurationLoadedEventArgs> handler)
-        {
-            _loadedHandlers.Add(handler);
-        }
-
-        public virtual IEnumerable<EventHandler<DbConfigurationLoadedEventArgs>> OnLoadedHandlers
-        {
-            get { return _loadedHandlers; }
         }
     }
 }

@@ -82,16 +82,5 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             Assert.True(new DbConfigurationLoader().AppConfigContainsDbConfigurationType(mockConfig.Object));
         }
-
-        [Fact]
-        public void GetOnLoadedHandlers_returns_event_handlers_from_config()
-        {
-            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
-            mockConfig.Setup(m => m.ConfigurationTypeName).Returns(typeof(FunctionalTestsConfiguration).AssemblyQualifiedName);
-            var handlers = new EventHandler<DbConfigurationLoadedEventArgs>[0];
-            mockConfig.Setup(m => m.ConfigLoadedHandlers).Returns(handlers);
-
-            Assert.Same(handlers, new DbConfigurationLoader().GetOnLoadedHandlers(mockConfig.Object));
-        }
     }
 }

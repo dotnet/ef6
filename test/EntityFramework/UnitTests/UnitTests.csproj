@@ -306,6 +306,8 @@
     <Compile Include="Infrastructure\Interception\DbCommandTreeDispatcherTests.cs" />
     <Compile Include="Infrastructure\Interception\DbCommandTreeInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbCompiledModelTests.cs" />
+    <Compile Include="Infrastructure\Interception\DbConfigurationDispatcherTests.cs" />
+    <Compile Include="Infrastructure\Interception\DbConfigurationInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\Interception\DbConnectionDispatcherTests.cs" />
     <Compile Include="Infrastructure\Interception\DbInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbLocalViewTests.cs" />
@@ -364,8 +366,8 @@
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyKeyTests.cs" />
     <Compile Include="Internal\CommandTracerTests.cs" />
-    <Compile Include="Internal\ConfigFile\ConfigLoadedCollectionTests.cs" />
-    <Compile Include="Internal\ConfigFile\ConfigLoadedHandlerElementTests.cs" />
+    <Compile Include="Internal\ConfigFile\InterceptorsCollectionTests.cs" />
+    <Compile Include="Internal\ConfigFile\InterceptorElementTests.cs" />
     <Compile Include="Internal\ConfigFile\ProviderCollectionTests.cs" />
     <Compile Include="Internal\DatabaseTableCheckerTests.cs" />
     <Compile Include="Internal\DbHelpersTests.cs" />

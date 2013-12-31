@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.TestHelpers;
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void GetConfiguration_returns_the_previously_set_configuration_and_gets_loaded_event_handlers()
+            public void GetConfiguration_returns_the_previously_set_configuration()
             {
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 var manager = CreateManager(mockLoader);
@@ -66,11 +67,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 manager.SetConfiguration(mockInternalConfiguration.Object);
 
                 Assert.Same(mockInternalConfiguration.Object, manager.GetConfiguration());
-                mockLoader.Verify(m => m.GetOnLoadedHandlers(AppConfig.DefaultInstance));
             }
 
             [Fact]
-            public void GetConfiguration_sets_and_returns_a_new_configuration_if_none_was_previously_set_and_gets_loaded_event_handlers()
+            public void GetConfiguration_sets_and_returns_a_new_configuration_if_none_was_previously_set()
             {
                 var mockLoader = new Mock<DbConfigurationLoader>();
                 var manager = CreateManager(mockLoader);
@@ -79,7 +79,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 Assert.NotNull(configuration);
                 Assert.Same(configuration, manager.GetConfiguration());
-                mockLoader.Verify(m => m.GetOnLoadedHandlers(AppConfig.DefaultInstance));
             }
 
             /// <summary>
@@ -543,7 +542,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 manager.PushConfiguration(AppConfig.DefaultInstance, typeof(DbContext));
 
                 mockLoader.Verify(m => m.TryLoadFromConfig(It.IsAny<AppConfig>()), Times.Never());
-                mockLoader.Verify(m => m.GetOnLoadedHandlers(It.IsAny<AppConfig>()), Times.Never());
                 mockFinder.Verify(m => m.TryFindConfigurationType(typeof(DbContext), It.IsAny<IEnumerable<Type>>()), Times.Never());
             }
 
@@ -563,7 +561,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.IsType<FakeConfiguration>(manager.GetConfiguration().Owner);
                 AssertIsLocked(manager.GetConfiguration());
                 mockLoader.Verify(m => m.TryLoadFromConfig(appConfig));
-                mockLoader.Verify(m => m.GetOnLoadedHandlers(appConfig));
                 mockFinder.Verify(m => m.TryFindConfigurationType(typeof(DbContext), It.IsAny<IEnumerable<Type>>()), Times.Never());
             }
 
@@ -583,7 +580,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.IsType<FakeConfiguration>(manager.GetConfiguration().Owner);
                 AssertIsLocked(manager.GetConfiguration());
                 mockLoader.Verify(m => m.TryLoadFromConfig(appConfig));
-                mockLoader.Verify(m => m.GetOnLoadedHandlers(appConfig));
                 mockFinder.Verify(m => m.TryFindConfigurationType(typeof(DbContext), It.IsAny<IEnumerable<Type>>()));
             }
 
@@ -602,7 +598,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 Assert.NotSame(defaultConfiguration, manager.GetConfiguration());
                 mockLoader.Verify(m => m.TryLoadFromConfig(appConfig));
-                mockLoader.Verify(m => m.GetOnLoadedHandlers(appConfig));
                 mockFinder.Verify(m => m.TryFindConfigurationType(typeof(DbContext), It.IsAny<IEnumerable<Type>>()));
             }
 
@@ -733,15 +728,29 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         public class OnLoaded
         {
-            private readonly IDbDependencyResolver _snapshot;
             private readonly Mock<InternalConfiguration> _configuration;
+            private readonly LoadedInterceptor _interceptor1;
+            private readonly LoadedInterceptor _interceptor2;
+            private readonly LoadedInterceptor _interceptor3;
 
             public OnLoaded()
             {
-                _snapshot = new Mock<IDbDependencyResolver>().Object;
-                _configuration = CreateMockInternalConfiguration(null, _snapshot);
-                _configuration.Setup(m => m.OnLoadedHandlers)
-                    .Returns(new EventHandler<DbConfigurationLoadedEventArgs>[] { Handler1, Handler2, Handler2 });
+                var dispatchers = new Mock<DbDispatchers>();
+
+                var snapshot = new Mock<IDbDependencyResolver>().Object;
+
+                _configuration = CreateMockInternalConfiguration(null, snapshot, () => dispatchers.Object);
+
+                _interceptor1 = new LoadedInterceptor(_configuration, snapshot);
+                _interceptor2 = new LoadedInterceptor(_configuration, snapshot);
+                _interceptor3 = new LoadedInterceptor(_configuration, snapshot);
+
+                var d2 = new DbConfigurationDispatcher();
+                d2.InternalDispatcher.Add(_interceptor1);
+                d2.InternalDispatcher.Add(_interceptor2);
+                d2.InternalDispatcher.Add(_interceptor2);
+
+                dispatchers.Setup(m => m.Configuration).Returns(d2);
             }
 
             [Fact]
@@ -750,51 +759,55 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var manager = CreateManager();
 
                 manager.OnLoaded(_configuration.Object);
-                Assert.Equal(1, Handler1Called);
-                Assert.Equal(2, Handler2Called);
-                Assert.Equal(0, Handler3Called);
+                Assert.Equal(1, _interceptor1.Called);
+                Assert.Equal(2, _interceptor2.Called);
+                Assert.Equal(0, _interceptor3.Called);
 
-                manager.AddLoadedHandler(Handler1);
-                manager.AddLoadedHandler(Handler2);
-                manager.AddLoadedHandler(Handler3);
-
-                manager.OnLoaded(_configuration.Object);
-                Assert.Equal(3, Handler1Called);
-                Assert.Equal(5, Handler2Called);
-                Assert.Equal(1, Handler3Called);
-
-                manager.RemoveLoadedHandler(Handler2);
+                manager.AddLoadedHandler(_interceptor1.Handler);
+                manager.AddLoadedHandler(_interceptor2.Handler);
+                manager.AddLoadedHandler(_interceptor3.Handler);
 
                 manager.OnLoaded(_configuration.Object);
-                Assert.Equal(5, Handler1Called);
-                Assert.Equal(7, Handler2Called);
-                Assert.Equal(2, Handler3Called);
-            }
-            private int Handler1Called { get; set; }
+                Assert.Equal(3, _interceptor1.Called);
+                Assert.Equal(5, _interceptor2.Called);
+                Assert.Equal(1, _interceptor3.Called);
 
-            private void Handler1(object sender, DbConfigurationLoadedEventArgs args)
-            {
-                Assert.Same(_configuration.Object.Owner, sender);
-                Assert.Same(_snapshot, args.DependencyResolver);
-                Handler1Called++;
-            }
+                manager.RemoveLoadedHandler(_interceptor2.Handler);
 
-            private int Handler2Called { get; set; }
-
-            private void Handler2(object sender, DbConfigurationLoadedEventArgs args)
-            {
-                Assert.Same(_configuration.Object.Owner, sender);
-                Assert.Same(_snapshot, args.DependencyResolver);
-                Handler2Called++;
+                manager.OnLoaded(_configuration.Object);
+                Assert.Equal(5, _interceptor1.Called);
+                Assert.Equal(7, _interceptor2.Called);
+                Assert.Equal(2, _interceptor3.Called);
             }
 
-            private int Handler3Called { get; set; }
-
-            private void Handler3(object sender, DbConfigurationLoadedEventArgs args)
+            internal class LoadedInterceptor : IDbConfigurationInterceptor
             {
-                Assert.Same(_configuration.Object.Owner, sender);
-                Assert.Same(_snapshot, args.DependencyResolver);
-                Handler3Called++;
+                private readonly Mock<InternalConfiguration> _configuration;
+                private readonly IDbDependencyResolver _snapshot;
+
+                public LoadedInterceptor(Mock<InternalConfiguration> configuration, IDbDependencyResolver snapshot)
+                {
+                    _configuration = configuration;
+                    _snapshot = snapshot;
+                }
+
+                public int Called { get; set; }
+
+                public void Loaded(
+                    DbConfigurationLoadedEventArgs loadedEventArgs, 
+                    DbConfigurationInterceptionContext interceptionContext)
+                {
+                    Assert.Same(_snapshot, loadedEventArgs.DependencyResolver);
+                    Assert.NotNull(interceptionContext);
+                    Called++;
+                }
+
+                public void Handler(object sender, DbConfigurationLoadedEventArgs args)
+                {
+                    Assert.Same(_configuration.Object.Owner, sender);
+                    Assert.Same(_snapshot, args.DependencyResolver);
+                    Called++;
+                }
             }
         }
 
@@ -824,9 +837,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         private static Mock<InternalConfiguration> CreateMockInternalConfiguration(
-            DbConfiguration dbConfiguration = null, IDbDependencyResolver snapshot = null)
+            DbConfiguration dbConfiguration = null, IDbDependencyResolver snapshot = null, Func<DbDispatchers> dispatchers = null)
         {
-            var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+            var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, dispatchers);
 
             if (dbConfiguration == null)
             {

@@ -8,6 +8,10 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// An object that implements this interface can be registered with <see cref="DbInterception" /> to
     /// receive notifications when Entity Framework performs operations on a <see cref="DbTransaction"/>.
     /// </summary>
+    /// <remarks>
+    /// Interceptors can also be registered in the config file of the application.
+    /// See http://go.microsoft.com/fwlink/?LinkId=260883 for more information about Entity Framework configuration.
+    /// </remarks>
     public interface IDbConnectionInterceptor : IDbInterceptor
     {
         /// <summary>

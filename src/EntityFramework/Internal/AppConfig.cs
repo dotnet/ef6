@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Configuration;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -172,9 +173,9 @@ namespace System.Data.Entity.Internal
             get { return _providerServices.Value; }
         }
 
-        public virtual IEnumerable<EventHandler<DbConfigurationLoadedEventArgs>> ConfigLoadedHandlers
+        public virtual IEnumerable<IDbInterceptor> Interceptors
         {
-            get { return _entityFrameworkSettings.ConfigLoadedHandlers.RegisteredHandlers; }
+            get { return _entityFrameworkSettings.Interceptors.Interceptors; }
         }
     }
 }

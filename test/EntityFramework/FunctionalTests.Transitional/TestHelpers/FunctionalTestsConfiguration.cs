@@ -50,8 +50,6 @@ namespace System.Data.Entity.TestHelpers
                         , overrideConfigFile: true);
 
                     a.AddDependencyResolver(new FakeProviderServicesResolver(), overrideConfigFile: true);
-
-                    a.AddDependencyResolver(MutableResolver.Instance, overrideConfigFile: true);
                 };
         }
 
@@ -63,7 +61,7 @@ namespace System.Data.Entity.TestHelpers
         public FunctionalTestsConfiguration()
         {
             SetProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
-            SetProviderServices(System.Data.Entity.SqlServerCompact.Legacy.SqlCeProviderServices.ProviderInvariantName, System.Data.Entity.SqlServerCompact.Legacy.SqlCeProviderServices.Instance);
+            SetProviderServices(SqlServerCompact.Legacy.SqlCeProviderServices.ProviderInvariantName, SqlServerCompact.Legacy.SqlCeProviderServices.Instance);
             SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
 
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
@@ -79,6 +77,10 @@ namespace System.Data.Entity.TestHelpers
 
             SetMetadataAnnotationSerializer(CollationAttribute.AnnotationName, () => new CollationSerializer());
             SetAnnotationCodeGenerator(CollationAttribute.AnnotationName, () => new CollationCSharpCodeGenerator());
+
+            AddInterceptor(new TestLoadedInterceptor());
+            AddInterceptor(new TestLoadedInterceptor(4102, "1 yraunaJ"));
+            AddInterceptor(new RegisterMutableResolver());
         }
 
         public static bool SuspendExecutionStrategy { get; set; }

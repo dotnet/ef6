@@ -5,23 +5,22 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Linq;
 
-    internal class ConfigLoadedCollection : ConfigurationElementCollection
+    internal class InterceptorsCollection : ConfigurationElementCollection
     {
-        private const string HandlerKey = "handler";
+        private const string ElementKey = "interceptor";
         private int _nextKey;
 
         protected override ConfigurationElement CreateNewElement()
         {
-            var element = new ConfigLoadedHandlerElement(_nextKey);
-            _nextKey++;
-            return element;
+            return new InterceptorElement(_nextKey++);
         }
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((ConfigLoadedHandlerElement)element).Key;
+            return ((InterceptorElement)element).Key;
         }
 
         public override ConfigurationElementCollectionType CollectionType
@@ -31,17 +30,17 @@ namespace System.Data.Entity.Internal.ConfigFile
 
         protected override string ElementName
         {
-            get { return HandlerKey; }
+            get { return ElementKey; }
         }
 
-        public virtual IEnumerable<EventHandler<DbConfigurationLoadedEventArgs>> RegisteredHandlers
-        {
-            get { return this.OfType<ConfigLoadedHandlerElement>().Select(e => e.CreateHandlerDelegate()).ToList(); }
-        }
-
-        public void AddElement(ConfigLoadedHandlerElement element)
+        public void AddElement(InterceptorElement element)
         {
             base.BaseAdd(element);
+        }
+
+        public virtual IEnumerable<IDbInterceptor> Interceptors
+        {
+            get { return this.OfType<InterceptorElement>().Select(e => e.CreateInterceptor()).ToList(); }
         }
     }
 }
