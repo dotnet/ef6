@@ -90,8 +90,8 @@
 
   <PropertyGroup>
     <!-- If NuGetOutputPath is set search for packages there, otherwise look in the default place they are output by the runtime build -->
-    <PackagesInputDir Condition=" '$(PackagesDir)' == '' AND '$(NuGetOutputPath)' != ''">$(NuGetOutputPath)</PackagesInputDir>
-    <PackagesInputDir Condition=" '$(PackagesDir)' == ''">$(OutputPath)..\Release\NuGet</PackagesInputDir>
+    <PackagesInputDir Condition=" '$(PackagesInputDir)' == '' AND '$(NuGetOutputPath)' != ''">$(NuGetOutputPath)</PackagesInputDir>
+    <PackagesInputDir Condition=" '$(PackagesInputDir)' == ''">$(OutputPath)..\Release\NuGet</PackagesInputDir>
 
     <!-- override output dir for package restore (which will automatically append \packages to path) -->
     <PackageRestoreOutputDir>$(PackagesInputDir)</PackageRestoreOutputDir>
