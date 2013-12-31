@@ -68,6 +68,7 @@
     <Reference Include="Microsoft.VisualStudio.DataTools.Interop" />
     <Reference Include="Microsoft.WizardFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.VisualStudio.DataDesign.Common, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
@@ -129,6 +130,75 @@
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="CodeGeneration\CodeHelper.cs" />
+    <Compile Include="CodeGeneration\Discoverers\NavigationProperty\CascadeDeleteDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\NavigationProperty\ForeignKeyDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\NavigationProperty\JoinTableDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\NavigationProperty\MultiplicityDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\ColumnDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\DatabaseGeneratedDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\PrecisionDateTimeDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\PrecisionDecimalDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\FixedLengthDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\KeyPropertyDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\LengthDiscovererBase.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\MaxLengthDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\RequiredDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\TimestampDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Property\NonUnicodeDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Type\KeyDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\Type\TableDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Configuration\IAttributeConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\IConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\IFluentConfiguration.cs" />
+    <Compile Include="CodeGeneration\Discoverers\INavigationPropertyConfigurationDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\IPropertyConfigurationDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Discoverers\ITypeConfigurationDiscoverer.cs" />
+    <Compile Include="CodeGeneration\Configuration\NavigationProperty\MultiplicityConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\NavigationProperty\CascadeDeleteConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\NavigationProperty\ForeignKeyConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\NavigationProperty\JoinTableConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\ColumnConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\DatabaseGeneratedConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\PrecisionDateTimeConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\PrecisionDecimalConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\FixedLengthConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\KeyPropertyConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\MaxLengthConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\MaxLengthStringConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\RequiredConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\TimestampConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Property\NonUnicodeConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Type\KeyConfiguration.cs" />
+    <Compile Include="CodeGeneration\Configuration\Type\TableConfiguration.cs" />
+    <Compile Include="CodeGeneration\CSharpCodeHelper.cs" />
+    <Compile Include="CodeGeneration\CSharpContextTextTransformation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharpContextTextTransformation.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CodeGeneration\CSharpEntityTextTransformation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharpEntityTextTransformation.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CodeGeneration\EdmHelper.cs" />
+    <Compile Include="CodeGeneration\Extensions\DbModelExtensions.cs" />
+    <Compile Include="CodeGeneration\Extensions\EdmMemberExtensions.cs" />
+    <Compile Include="CodeGeneration\Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="CodeGeneration\Extensions\StoreGeneratedPatternExtensions.cs" />
+    <Compile Include="CodeGeneration\Extensions\StringExtensions.cs" />
+    <Compile Include="CodeGeneration\VBCodeHelper.cs" />
+    <Compile Include="CodeGeneration\VBContextTextTransformation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VBContextTextTransformation.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CodeGeneration\VBEntityTextTransformation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VBEntityTextTransformation.tt</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
@@ -243,6 +313,22 @@
     <Compile Include="VisualStudio\TextTemplating\SsdlToDdlActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateCallback.cs" />
+    <None Include="CodeGeneration\CSharpContextTextTransformation.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CSharpContextTextTransformation.cs</LastGenOutput>
+    </None>
+    <None Include="CodeGeneration\CSharpEntityTextTransformation.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CSharpEntityTextTransformation.cs</LastGenOutput>
+    </None>
+    <None Include="CodeGeneration\VBContextTextTransformation.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>VBContextTextTransformation.cs</LastGenOutput>
+    </None>
+    <None Include="CodeGeneration\VBEntityTextTransformation.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>VBEntityTextTransformation.cs</LastGenOutput>
+    </None>
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DbContext.txt</LastGenOutput>
@@ -835,6 +921,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <CodeAnalysisDictionary Include="..\..\CodeAnalysisDictionary.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="$(RepositoryRoot)src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj">
       <Project>{6f4bb80b-5f74-44d3-a77f-0025dfa48c1a}</Project>
       <Name>EntityFramework.SqlServer</Name>
@@ -874,6 +963,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <BuildDependsOn>

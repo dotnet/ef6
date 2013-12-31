@@ -59,6 +59,7 @@
     <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.XML" />
@@ -79,6 +80,9 @@
     </Reference>
     <Reference Include="Moq">
       <HintPath>$(RepositoryRoot)packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +152,46 @@
     <Compile Include="EntityDesignModel\Validation\EscherAttributeContentValidatorTests.cs" />
     <Compile Include="EntityDesignModel\Validation\RuntimeMetadataValidatorTests.cs" />
     <Compile Include="EntityDesignPackage\CustomCode\MicrosoftDataEntityDesignDocDataTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\CascadeDeleteConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\ForeignKeyConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\JoinTableConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\MultiplicityConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\ColumnConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\DatabaseGeneratedConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\NonUnicodeConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\TimestampConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\RequiredConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\MaxLengthStringConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\MaxLengthConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\KeyPropertyConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\FixedLengthConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\PrecisionDecimalConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Property\PrecisionDateTimeConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Type\KeyConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Configuration\Type\TableConfigurationTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\CSharpCodeHelperTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\NavigationProperty\CascadeDeleteDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\NavigationProperty\ForeignKeyDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\NavigationProperty\JoinTableDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\NavigationProperty\MultiplicityDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\ColumnDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\NonUnicodeDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\TimestampDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\RequiredDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\PrecisionDecimalDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\PrecisionDateTimeDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\MaxLengthDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\KeyPropertyDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\FixedLengthDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\DatabaseGeneratedDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Type\KeyDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Discoverers\Type\TableDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\VBCodeHelperTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Extensions\DbModelExtensionsTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Extensions\EdmMemberExtensionsTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Extensions\IEnumerableExtensionsTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Extensions\StoreGeneratedPatternExtensionsTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Extensions\StringExtensionsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\DesignerErrorListTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\EdmUpdateSolutionEventsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\EdmUtilsTests.cs" />
