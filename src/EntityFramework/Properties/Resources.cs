@@ -1391,7 +1391,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Data binding directly to a store query (DbSet, DbQuery, DbSqlQuery, DbRawSqlQuery) is not supported. Instead populate a DbSet with data, for example by calling Load on the DbSet, and then bind to local data. For WPF bind to DbSet.Local. For WinForms bind to DbSet.Local.ToBindingList()."
+        // A string like "Data binding directly to a store query (DbSet, DbQuery, DbSqlQuery, DbRawSqlQuery) is not supported. Instead populate a DbSet with data, for example by calling Load on the DbSet, and then bind to local data. For WPF bind to DbSet.Local. For WinForms bind to DbSet.Local.ToBindingList(). For ASP.NET WebForms you can bind to the result of calling ToList() on the query or use Model Binding, for more information see http://go.microsoft.com/fwlink/?LinkId=389592."
         // </summary>
         internal static string DbQuery_BindingToDbQueryNotSupported
         {
@@ -15006,7 +15006,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // NotSupportedException with message like "Data binding directly to a store query (DbSet, DbQuery, DbSqlQuery, DbRawSqlQuery) is not supported. Instead populate a DbSet with data, for example by calling Load on the DbSet, and then bind to local data. For WPF bind to DbSet.Local. For WinForms bind to DbSet.Local.ToBindingList()."
+        // NotSupportedException with message like "Data binding directly to a store query (DbSet, DbQuery, DbSqlQuery, DbRawSqlQuery) is not supported. Instead populate a DbSet with data, for example by calling Load on the DbSet, and then bind to local data. For WPF bind to DbSet.Local. For WinForms bind to DbSet.Local.ToBindingList(). For ASP.NET WebForms you can bind to the result of calling ToList() on the query or use Model Binding, for more information see http://go.microsoft.com/fwlink/?LinkId=389592."
         // </summary>
         internal static Exception DbQuery_BindingToDbQueryNotSupported()
         {
