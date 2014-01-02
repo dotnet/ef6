@@ -3,9 +3,12 @@
 namespace System.Data.Entity.Query
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.SqlClient;
     using System.Linq;
     using Xunit;
 
@@ -742,12 +745,64 @@ FROM ( SELECT
 	[Extent2].[Discontinued] AS [Discontinued1], 
 	CASE WHEN ([Extent2].[ProductID] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]
 	FROM  [dbo].[Products] AS [Extent1]
-	LEFT OUTER JOIN [dbo].[Products] AS [Extent2] ON ([Extent2].[Discontinued] IN (0,1)) AND ([Extent1].[ProductID] = [Extent2].[ProductID])
+	LEFT OUTER JOIN [dbo].[Products] AS [Extent2] ON ([Extent2].[Discontinued] IN (0,1)) AND (([Extent1].[ProductID] = [Extent2].[ProductID]) OR (([Extent1].[Discontinued] IS NULL) AND ([Extent2].[Discontinued] IS NULL)))
 	WHERE [Extent1].[Discontinued] IN (0,1)
 )  AS [Project1]
 ORDER BY [Project1].[Discontinued] ASC, [Project1].[ProductID] ASC, [Project1].[ProductName] ASC, [Project1].[ReorderLevel] ASC, [Project1].[C1] ASC";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
+        }
+
+        [Fact]
+        public void GroupBy_on_entity_with_UseDatabaseNullSemantics_false()
+        {
+            var groupBinding = CreateBasicGroupBinding();
+            var keys = new List<KeyValuePair<string, DbExpression>>
+                           {
+                               new KeyValuePair<string, DbExpression>("groupKey", groupBinding.Variable)
+                           };
+            var aggregates = new List<KeyValuePair<string, DbAggregate>>
+                                 {
+                                     new KeyValuePair<string, DbAggregate>("groupPartition", groupBinding.GroupAggregate)
+                                 };
+
+            var query = groupBinding.GroupBy(keys, aggregates);
+            var expectedSql =
+                @"SELECT 
+[Project1].[ProductID] AS [ProductID], 
+[Project1].[Discontinued] AS [Discontinued], 
+[Project1].[ProductName] AS [ProductName], 
+[Project1].[ReorderLevel] AS [ReorderLevel], 
+[Project1].[C1] AS [C1], 
+[Project1].[Discontinued1] AS [Discontinued1], 
+[Project1].[ProductID1] AS [ProductID1], 
+[Project1].[ProductName1] AS [ProductName1], 
+[Project1].[ReorderLevel1] AS [ReorderLevel1]
+FROM ( SELECT 
+	[Extent1].[ProductID] AS [ProductID], 
+	[Extent1].[ProductName] AS [ProductName], 
+	[Extent1].[ReorderLevel] AS [ReorderLevel], 
+	[Extent1].[Discontinued] AS [Discontinued], 
+	[Extent2].[ProductID] AS [ProductID1], 
+	[Extent2].[ProductName] AS [ProductName1], 
+	[Extent2].[ReorderLevel] AS [ReorderLevel1], 
+	[Extent2].[Discontinued] AS [Discontinued1], 
+	CASE WHEN ([Extent2].[ProductID] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]
+	FROM  [dbo].[Products] AS [Extent1]
+	LEFT OUTER JOIN [dbo].[Products] AS [Extent2] ON ([Extent2].[Discontinued] IN (0,1)) AND ([Extent1].[ProductID] = [Extent2].[ProductID])
+	WHERE [Extent1].[Discontinued] IN (0,1)
+)  AS [Project1]
+ORDER BY [Project1].[Discontinued] ASC, [Project1].[ProductID] ASC, [Project1].[ProductName] ASC, [Project1].[ReorderLevel] ASC, [Project1].[C1] ASC";
+
+            var providerServices =
+                (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
+            var connection = new EntityConnection(workspace, new SqlConnection());
+            var commandTree = new DbQueryCommandTree(workspace, DataSpace.CSpace, query, validate: true, useDatabaseNullSemantics: false);
+
+            var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
+            entityCommand.Connection = connection;
+
+            Assert.Equal(QueryTestHelpers.StripFormatting(expectedSql), QueryTestHelpers.StripFormatting(entityCommand.ToTraceString()));
         }
 
         [Fact]

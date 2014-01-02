@@ -34,7 +34,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             SpanIndex spanInfo;
             if (ObjectSpanRewriter.TryRewrite(tree, span, mergeOption, aliasGenerator, out spannedQuery, out spanInfo))
             {
-                tree = DbQueryCommandTree.FromValidExpression(tree.MetadataWorkspace, tree.DataSpace, spannedQuery);
+                tree = DbQueryCommandTree.FromValidExpression(
+                    tree.MetadataWorkspace, tree.DataSpace, spannedQuery, tree.UseDatabaseNullSemantics);
             }
             else
             {
@@ -94,7 +95,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbCommandDefinition definition;
             try
             {
-                tree.UseDatabaseNullSemantics = !context.ContextOptions.UseCSharpNullComparisonBehavior;
                 definition = services.CreateCommandDefinition(tree, context.InterceptionContext);
             }
             catch (EntityCommandCompilationException)

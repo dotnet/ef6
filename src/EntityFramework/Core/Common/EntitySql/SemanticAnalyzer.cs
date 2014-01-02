@@ -21,7 +21,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
     // <summary>
     // Implements Semantic Analysis and Conversion
     // Provides the translation service between an abstract syntax tree to a canonical command tree
-    // For complete documentation of the language syntax and semantics, refer to http://sqlweb/default.asp?specDirId=764
     // The class was designed to be edmType system agnostic by delegating to a given SemanticResolver instance all edmType related services as well as to TypeHelper class, however
     // we rely on the assumption that metadata was pre-loaded and is relevant to the query.
     // </summary>
@@ -254,7 +253,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             return new ParseResult(
                 DbQueryCommandTree.FromValidExpression(
-                    sr.TypeResolver.Perspective.MetadataWorkspace, sr.TypeResolver.Perspective.TargetDataspace, converted),
+                    sr.TypeResolver.Perspective.MetadataWorkspace, sr.TypeResolver.Perspective.TargetDataspace, converted, 
+                    useDatabaseNullSemantics: true),
                 functionDefs);
         }
 

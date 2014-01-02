@@ -2846,7 +2846,8 @@ namespace System.Data.Entity.Core.Objects
             DbExpression refreshQuery = entitySetBinding.Filter(entitySetFilter);
 
             // Initialize the command tree used to issue the refresh query.
-            var tree = DbQueryCommandTree.FromValidExpression(MetadataWorkspace, DataSpace.CSpace, refreshQuery);
+            var tree = DbQueryCommandTree.FromValidExpression(
+                MetadataWorkspace, DataSpace.CSpace, refreshQuery, useDatabaseNullSemantics: true);
 
             // Evaluate the refresh query using ObjectQuery<T> and process the results to update the ObjectStateManager.
             var mergeOption = (RefreshMode.StoreWins == refreshMode

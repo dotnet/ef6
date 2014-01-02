@@ -185,7 +185,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // If execution plan wasn't retrieved from the cache, build a new one and cache it.
                 if (plan == null)
                 {
-                    var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
+                    var tree = DbQueryCommandTree.FromValidExpression(
+                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !_useCSharpNullComparisonBehavior);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
                         ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, null,
                         converter.AliasGenerator);

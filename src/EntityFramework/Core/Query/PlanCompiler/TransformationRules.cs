@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             InitializeRulesRequiringNullabilityRulesToBeReapplied();
 
         internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> NullSemanticsRulesTable =
-            BuildLookupTableForRules(ScalarOpRules.Rules);
+            BuildLookupTableForRules(NullSemanticsRules);
 
         #region private state maintenance
 
@@ -119,6 +119,31 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     nullabilityRules.Add(ScalarOpRules.Rule_NotOverConstantPred);
                 }
                 return nullabilityRules;
+            }
+        }
+
+        private static List<Rule> nullSemanticsRules;
+
+        private static List<Rule> NullSemanticsRules
+        {
+            get
+            {
+                if (nullSemanticsRules == null)
+                {
+                    nullSemanticsRules = new List<Rule>();
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_IsNullOverAnything);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_NullCast);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_EqualsOverConstant);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_AndOverConstantPred1);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_AndOverConstantPred2);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_OrOverConstantPred1);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_OrOverConstantPred2);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_NotOverConstantPred);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_LikeOverConstants);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_SimplifyCase);
+                    nullSemanticsRules.Add(ScalarOpRules.Rule_FlattenCase);
+                }
+                return nullSemanticsRules;
             }
         }
 

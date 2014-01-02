@@ -18,7 +18,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 {
                     var expectedSql =
 @"SELECT 
-    CASE WHEN (([Extent1].[LastName] IS NULL) OR (( CAST(LEN([Extent1].[LastName]) AS int)) = 0)) THEN cast(1 as bit) WHEN ( NOT (([Extent1].[LastName] IS NULL) OR ((( CAST(LEN([Extent1].[LastName]) AS int)) = 0) AND ( CAST(LEN([Extent1].[LastName]) AS int) IS NOT NULL)))) THEN cast(0 as bit) END AS [C1]
+    CASE WHEN (([Extent1].[LastName] IS NULL) OR (( CAST(LEN([Extent1].[LastName]) AS int)) = 0)) THEN cast(1 as bit) WHEN ( NOT (([Extent1].[LastName] IS NULL) OR (( CAST(LEN([Extent1].[LastName]) AS int)) = 0))) THEN cast(0 as bit) END AS [C1]
     FROM [dbo].[ArubaOwners] AS [Extent1]";
 
                     var query = context.Owners.Select(o => string.IsNullOrEmpty(o.LastName));

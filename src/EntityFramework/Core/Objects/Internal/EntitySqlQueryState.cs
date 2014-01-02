@@ -183,7 +183,9 @@ namespace System.Data.Entity.Core.Objects
                 // Either caching is not enabled or the execution plan was not found in the cache
                 var queryExpression = Parse();
                 Debug.Assert(queryExpression != null, "EntitySqlQueryState.Parse returned null expression?");
-                var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
+                var tree = DbQueryCommandTree.FromValidExpression(
+                    ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression,
+                    useDatabaseNullSemantics: true);
                 plan = _objectQueryExecutionPlanFactory.Prepare(
                     ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, Span, null,
                     DbExpressionBuilder.AliasGenerator);

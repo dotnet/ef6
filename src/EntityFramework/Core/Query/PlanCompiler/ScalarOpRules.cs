@@ -3,7 +3,10 @@
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     // <summary>
@@ -572,6 +575,63 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 newNode = isNullNode;
                 return false;
             }
+        }
+
+        #endregion
+
+        #region IsNull over anything
+
+        internal static readonly PatternMatchRule Rule_IsNullOverAnything =
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternIsNull,
+                        new Node(LeafOp.Pattern)),
+                ProcessIsNullOverAnything);
+
+        private static bool ProcessIsNullOverAnything(RuleProcessingContext context, Node isNullNode, out Node newNode)
+        {
+            Debug.Assert(isNullNode.Op.OpType == OpType.IsNull);
+
+            var command = context.Command;
+
+            switch (isNullNode.Child0.Op.OpType)
+            {
+                case OpType.Cast:
+                    newNode = command.CreateNode(
+                        command.CreateConditionalOp(OpType.IsNull),
+                        isNullNode.Child0.Child0);
+                    break;
+                case OpType.Function:
+                    var function = ((FunctionOp)isNullNode.Child0.Op).Function;
+                    newNode = PreservesNulls(function)
+                        ? command.CreateNode(
+                            command.CreateConditionalOp(OpType.IsNull),
+                            isNullNode.Child0.Child0)
+                        : isNullNode;
+                    break;
+                default:
+                    newNode = isNullNode;
+                    break;
+            }
+
+            switch (isNullNode.Child0.Op.OpType)
+            {
+                case OpType.Constant:
+                case OpType.InternalConstant:
+                case OpType.NullSentinel:
+                    return ProcessIsNullOverConstant(context, newNode, out newNode);
+                case OpType.Null:
+                    return ProcessIsNullOverNull(context, newNode, out newNode);
+                case OpType.VarRef:
+                    return ProcessIsNullOverVarRef(context, newNode, out newNode);
+                default:
+                    return !ReferenceEquals(isNullNode, newNode);
+            }
+        }
+
+        private static bool PreservesNulls(EdmFunction function)
+        {
+            return function.FullName == "Edm.Length";
         }
 
         #endregion

@@ -367,7 +367,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             _iqtCommand = itree;
             var queryExpression = VisitNode(toConvert);
-            _queryTree = DbQueryCommandTree.FromValidExpression(itree.MetadataWorkspace, DataSpace.SSpace, queryExpression);
+            // Create the query command tree using database null semantics because this class is only
+            // used during the CodeGen phase which occurs after the NullSemantics phase of plan compiler.
+            _queryTree = DbQueryCommandTree.FromValidExpression(
+                itree.MetadataWorkspace, DataSpace.SSpace, queryExpression, useDatabaseNullSemantics: true);
         }
 
         #endregion

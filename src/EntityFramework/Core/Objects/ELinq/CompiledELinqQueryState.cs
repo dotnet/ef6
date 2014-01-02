@@ -76,7 +76,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var parameters = converter.GetParameters();
 
                     // Prepare the execution plan using the command tree and the computed effective merge option
-                    var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
+                    var tree = DbQueryCommandTree.FromValidExpression(
+                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !useCSharpNullComparisonBehavior);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
                         ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, parameters,
                         converter.AliasGenerator);
@@ -108,7 +109,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var converter = CreateExpressionConverter();
                     var queryExpression = converter.Convert();
                     var parameters = converter.GetParameters();
-                    var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
+                    var tree = DbQueryCommandTree.FromValidExpression(
+                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !useCSharpNullComparisonBehavior);
 
                     // If a cache entry for this compiled query's cache key was not successfully retrieved, then it must be created now.
                     // Note that this is only possible after converting the LINQ expression and discovering the propagated merge option,

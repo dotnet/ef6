@@ -57,7 +57,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             var queryExpression = view.Query;
             queryExpression = simplifier(queryExpression);
 
-            view = DbQueryCommandTree.FromValidExpression(view.MetadataWorkspace, view.DataSpace, queryExpression);
+            view = DbQueryCommandTree.FromValidExpression(
+                view.MetadataWorkspace, view.DataSpace, queryExpression, view.UseDatabaseNullSemantics);
             return view;
         }
 

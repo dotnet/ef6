@@ -106,7 +106,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             Debug.Assert(query != null, "Null CQT generated for query/update view.");
 
             return DbQueryCommandTree.FromValidExpression(
-                m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, query);
+                m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, query,
+                useDatabaseNullSemantics: true);
         }
 
         // <summary>

@@ -288,7 +288,7 @@ WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS
                 const string expectedSql = @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum]
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
-WHERE ((( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS int)) OR ((( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int)) IS NULL) AND ( CAST( 3 AS int) IS NULL))";
+WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS int)";
 
                 var query = context.AllTypes
                     .Where(e => e.c33_enum.HasFlag((ArubaEnum)3))

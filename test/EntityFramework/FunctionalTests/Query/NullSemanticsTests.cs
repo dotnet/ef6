@@ -3,11 +3,17 @@
 namespace System.Data.Entity.Query
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.TestHelpers;
+    using System.Data.SqlClient;
     using System.Linq;
     using SimpleModel;
     using Xunit;
     using Xunit.Extensions;
+    using System.Data.Entity.Core.Common.CommandTrees;
 
     public class NullSemanticsTests : FunctionalTestBase
     {
@@ -372,6 +378,41 @@ namespace System.Data.Entity.Query
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }            
+        }
+
+        [Fact]
+        public void Query_containing_NE_expression_is_expanded_correctly()
+        {
+            var workspace = QueryTestHelpers.CreateMetadataWorkspace(
+                ProductModel.Csdl, ProductModel.Ssdl, ProductModel.Msl);
+
+            var entitySet = workspace
+                .GetEntityContainer("ProductContainer", DataSpace.CSpace)
+                .GetEntitySetByName("Products", false);
+
+            var query = entitySet.Scan().Where(e => e.Property("ProductName").NotEqual("P"));
+
+            var expectedSql =
+@"SELECT 
+    [Extent1].[Discontinued] AS [Discontinued], 
+    [Extent1].[ProductID] AS [ProductID], 
+    [Extent1].[ProductName] AS [ProductName], 
+    [Extent1].[ReorderLevel] AS [ReorderLevel]
+    FROM [dbo].[Products] AS [Extent1]
+    WHERE ([Extent1].[Discontinued] IN (0,1)) AND ([Extent1].[ProductName] <> N'P')";
+
+            var providerServices =
+                (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance)
+                    .GetService(typeof(DbProviderServices));
+            var connection = new EntityConnection(workspace, new SqlConnection());
+            var commandTree = new DbQueryCommandTree(workspace, DataSpace.CSpace, query, true, false);
+
+            var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
+            entityCommand.Connection = connection;
+
+            Assert.Equal(
+                QueryTestHelpers.StripFormatting(expectedSql), 
+                QueryTestHelpers.StripFormatting(entityCommand.ToTraceString()));
         }
     }
 }

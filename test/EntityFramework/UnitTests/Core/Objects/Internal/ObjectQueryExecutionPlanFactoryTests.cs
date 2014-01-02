@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var dbExpression = new DbNullExpression(TypeUsage.Create(fakeSqlProviderManifest.GetStoreTypes().First()));
             var dbQueryCommandTree = new DbQueryCommandTree(
                 metadataWorkspace, DataSpace.CSpace,
-                dbExpression, validate: false);
+                dbExpression, validate: false, useDatabaseNullSemantics: true);
             var parameters = new List<Tuple<ObjectParameter, QueryParameterExpression>>();
 
             var objectQueryExecutionPlan = objectQueryExecutionPlanFactory.Prepare(
