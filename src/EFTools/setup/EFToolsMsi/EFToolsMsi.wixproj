@@ -99,7 +99,8 @@
     <!-- Now align PackagesDir with PackageRestoreOutputDir so that the local framework and the EF5 framework end up in the same directory -->
     <PackagesDir>$(PackagesInputDir)\packages</PackagesDir>
     
-    <BuildDependsOn>RestorePackages;RestoreLocalPackages;ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
+    <!-- Ensure SetComputedProperties comes before RestoreLocalPackages so that EF6NuGetPackageVersion is set -->
+    <BuildDependsOn>RestorePackages;SetComputedProperties;RestoreLocalPackages;ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
 
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
@@ -112,12 +113,13 @@
   </Target>
   
   <Target Name="RestoreLocalPackages">
+    <!-- Loop over all local packages (which can include the localized ones) exploding the packages -->
     <ItemGroup>
-      <LocalPackageNames Include="EntityFramework" />
-      <LocalPackageNames Include="EntityFramework.SqlServerCompact" />
+      <LocalPackages Include="$(PackagesInputDir)\EntityFramework*.nupkg"
+                     Exclude="$(PackagesInputDir)\EntityFramework*.symbols.nupkg" />
     </ItemGroup>
     <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
-             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=%(LocalPackageNames.Identity);LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
+             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
   </Target>
 
   <Target Name="ReplaceEFToolsStrings">
