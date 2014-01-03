@@ -270,6 +270,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void RunFinished()
         {
+            if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
+            {
+                throw new NotImplementedException("Option temporarily not available. Please try again later.");
+            }
+
             if (_edmxItem == null)
             {
                 return;
@@ -552,7 +557,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// </summary>
         public bool ShouldAddProjectItem(string filePath)
         {
-            return true;
+            return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst;
         }
 
         /// <summary>

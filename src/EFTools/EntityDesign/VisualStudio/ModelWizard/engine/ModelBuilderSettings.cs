@@ -22,6 +22,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         GenerateFromDatabase = 0,
         EmptyModel = 1,
         GenerateDatabaseScript = 3,
+        EmptyModelCodeFirst = 4
     }
 
     /// <summary>

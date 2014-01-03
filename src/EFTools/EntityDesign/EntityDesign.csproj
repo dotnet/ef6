@@ -786,6 +786,7 @@
     <Content Include="VisualStudio\ModelWizard\bitmaps\database.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\DbTables.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModel.bmp" />
+    <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModelCodeFirst.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\PageIcon.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\Table.bmp" />
     <Content Include="VisualStudio\ModelWizard\native.rc" />

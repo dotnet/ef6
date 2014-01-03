@@ -35,6 +35,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         internal static readonly int GenerateFromDatabaseIndex = 0;
         internal static readonly int GenerateEmptyModelIndex = 1;
+        internal static readonly int GenerateEmptyModelCodeFirstIndex = 2;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public WizardPageStart(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
@@ -62,6 +63,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             imageList.Images.Add("database.bmp", Resources.Database);
             imageList.Images.Add("EmptyModel.bmp", Resources.EmptyModel);
+            imageList.Images.Add("EmptyModelCodeFirst.bmp", Resources.EmptyModelCodeFirst);
 
 #if VS12
             // scale images as appropriate for screen resolution
@@ -77,7 +79,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 new[]
                 {
                     new ListViewItem(Resources.GenerateFromDatabaseOption, "database.bmp"),
-                    new ListViewItem(Resources.EmptyModelOption, "EmptyModel.bmp")
+                    new ListViewItem(Resources.EmptyModelOption, "EmptyModel.bmp"),
+                    new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.bmp")
                 });
 
             // Always select the first item
@@ -161,9 +164,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     Wizard.ModelBuilderSettings.ReplacementDictionary,
                     Wizard.ModelBuilderSettings.TargetSchemaVersion);
             }
-            else
+            else if (selectedOptionIndex == GenerateFromDatabaseIndex)
             {
-                Debug.Assert(selectedOptionIndex == GenerateFromDatabaseIndex, "Unexpected index.");
                 Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
 
                 Debug.Assert(Wizard.ModelBuilderSettings.VsTemplatePath != null, "Invalid vstemplate path.");
@@ -172,6 +174,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         new LazyInitialModelContentsFactory(
                             GetEdmxTemplateContent(Wizard.ModelBuilderSettings.VsTemplatePath),
                             Wizard.ModelBuilderSettings.ReplacementDictionary));
+            }
+            else
+            {
+                Debug.Assert(selectedOptionIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected index.");
+
+                Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
             }
         }
 
@@ -212,6 +220,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             {
                 listViewModelContents.SelectedIndices.Add(GenerateFromDatabaseIndex);
             }
+            else if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
+            {
+                listViewModelContents.SelectedIndices.Add(GenerateEmptyModelCodeFirstIndex);
+            } 
         }
 
         private void RemoveAllExceptFirstPage()
@@ -231,24 +243,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             if (listViewModelContents.SelectedIndices.Count > 0)
             {
+                RemoveAllExceptFirstPage();
+
                 var nSelectedItemIndex = GetSelectedOptionIndex();
                 if (nSelectedItemIndex == GenerateEmptyModelIndex)
                 {
                     // User selection = "Empty Model"
                     // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelText;
-
-                    // remove all future pages
-                    RemoveAllExceptFirstPage();
                 }
                 else if (nSelectedItemIndex == GenerateFromDatabaseIndex)
                 {
                     // User selection = "Generate from database"
                     // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_GenerateFromDBText;
-
-                    // remove all future pages
-                    RemoveAllExceptFirstPage();
 
                     // add in the WizardPageDbConfig and WizardPageSelectTables pages:
                     // skip first wizard page, since it is still in the collection
@@ -257,6 +265,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     {
                         Wizard.AddPage(page);
                     }
+                }
+                else
+                {
+                    Debug.Assert(nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected Index");
+
+                    // User selection = "Empty Model"
+                    // - update hint textbox
+                    textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelCodeFirstText;
                 }
             }
             Wizard.OnValidationStateChanged(this);
