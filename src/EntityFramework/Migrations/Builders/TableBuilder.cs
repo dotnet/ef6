@@ -86,6 +86,7 @@ namespace System.Data.Entity.Migrations.Builders
         /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="indexExpression"> A lambda expression representing the property to be indexed. C#: t => t.PropertyOne VB.Net: Function(t) t.PropertyOne If multiple properties are to be indexed then specify an anonymous type including the properties. C#: t => new { t.PropertyOne, t.PropertyTwo } VB.Net: Function(t) New With { t.PropertyOne, t.PropertyTwo } </param>
+        /// <param name="name"> The name of the index. </param>
         /// <param name="unique"> A value indicating whether or not this is a unique index. </param>
         /// <param name="clustered"> A value indicating whether or not this is a clustered index. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
@@ -95,6 +96,7 @@ namespace System.Data.Entity.Migrations.Builders
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TableBuilder<TColumns> Index(
             Expression<Func<TColumns, object>> indexExpression,
+            string name = null,
             bool unique = false,
             bool clustered = false,
             object anonymousArguments = null)
@@ -103,11 +105,12 @@ namespace System.Data.Entity.Migrations.Builders
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
-                    {
-                        Table = _createTableOperation.Name,
-                        IsUnique = unique,
-                        IsClustered = clustered
-                    };
+                {
+                    Name = name,
+                    Table = _createTableOperation.Name,
+                    IsUnique = unique,
+                    IsClustered = clustered
+                };
 
             indexExpression
                 .GetSimplePropertyAccessList()

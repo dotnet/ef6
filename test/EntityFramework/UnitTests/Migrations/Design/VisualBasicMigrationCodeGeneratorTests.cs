@@ -542,6 +542,53 @@ End Namespace
         }
 
         [Fact]
+        public void Generate_can_output_add_primary_key_with_non_clustered_index()
+        {
+            var codeGenerator = new VisualBasicMigrationCodeGenerator();
+
+            var addPrimaryKeyOperation
+                = new AddPrimaryKeyOperation
+                {
+                    Table = "T",
+                    Name = "PK",
+                    IsClustered = false
+                };
+
+            addPrimaryKeyOperation.Columns.Add("c1");
+            addPrimaryKeyOperation.Columns.Add("c2");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] { addPrimaryKeyOperation },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            AddPrimaryKey(""T"", New String() { ""c1"", ""c2"" }, name := ""PK"", clustered := False)
+        End Sub
+        
+        Public Overrides Sub Down()
+            DropPrimaryKey(""T"", name := ""PK"")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+        
+        [Fact]
         public void Generate_can_output_simple_add_foreign_key()
         {
             var codeGenerator = new VisualBasicMigrationCodeGenerator();
@@ -846,6 +893,120 @@ End Namespace
             Assert.Equal("Target", generatedMigration.Resources["Target"]);
         }
 
+        [Fact]
+        public void Generate_create_table_operation_with_non_clustered_key_and_fully_configured_index()
+        {
+            var createTableOperation = new CreateTableOperation("Customers");
+
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "I.d" };
+            createTableOperation.Columns.Add(idColumn);
+
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation
+            {
+                Name = "MyPK",
+                IsClustered = false
+            };
+            createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
+
+            var createIndexOperation = new CreateIndexOperation
+            {
+                Table = createTableOperation.Name,
+                Name = "MyIndex",
+                IsClustered = true,
+                IsUnique = true
+            };
+            createIndexOperation.Columns.Add(idColumn.Name);
+
+            var generatedMigration
+                = new VisualBasicMigrationCodeGenerator().Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            createTableOperation,
+                            createIndexOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            CreateTable(
+                ""Customers"",
+                Function(c) New With
+                    {
+                        .Id = c.Int(name := ""I.d"")
+                    }) _
+                .PrimaryKey(Function(t) t.Id, name := ""MyPK"", clustered := False) _
+                .Index(Function(t) t.Id, unique := True, clustered := True, name := ""MyIndex"")
+            
+        End Sub
+        
+        Public Overrides Sub Down()
+            DropIndex(""Customers"", ""MyIndex"")
+            DropTable(""Customers"")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_create_fully_configured_create_index_operation()
+        {
+            var createIndexOperation = new CreateIndexOperation
+            {
+                Table = "MyTable",
+                Name = "MyIndex",
+                IsClustered = true,
+                IsUnique = true
+            };
+            createIndexOperation.Columns.Add("MyColumn");
+
+            var generatedMigration
+                = new VisualBasicMigrationCodeGenerator().Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            createIndexOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            CreateIndex(""MyTable"", ""MyColumn"", unique := True, clustered := True, name := ""MyIndex"")
+        End Sub
+        
+        Public Overrides Sub Down()
+            DropIndex(""MyTable"", ""MyIndex"")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+        
         [Fact]
         public void Generate_can_output_drop_table_statement()
         {

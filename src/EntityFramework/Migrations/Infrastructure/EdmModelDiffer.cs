@@ -127,14 +127,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             associationTypePairs.AddRange(FindStoreOnlyAssociationTypePairs(associationTypePairs, tablePairs));
 
-            var renamedTables = FindRenamedTables(tablePairs).ToList();
+            var renamedTablePairs = FindRenamedTablePairs(tablePairs).ToList();
+            var renamedTables = FindRenamedTables(renamedTablePairs).ToList();
             var renamedColumns = FindRenamedColumns(mappingFragmentPairs, associationTypePairs).ToList();
-            
+
             var addedColumns = FindAddedColumns(tablePairs, renamedColumns).ToList();
             var droppedColumns = FindDroppedColumns(tablePairs, renamedColumns).ToList();
             var alteredColumns = FindAlteredColumns(tablePairs, renamedColumns).ToList();
             var orphanedColumns = FindOrphanedColumns(tablePairs, renamedColumns).ToList();
-            
+
             var movedTables = FindMovedTables(tablePairs).ToList();
             var addedTables = FindAddedTables(tablePairs).ToList();
             var droppedTables = FindDroppedTables(tablePairs).ToList();
@@ -148,12 +149,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = FindAddedForeignKeys(associationTypePairs, renamedColumns)
                     .Concat(alteredPrimaryKeys.OfType<AddForeignKeyOperation>())
                     .ToList();
-            
+
             var droppedForeignKeys
                 = FindDroppedForeignKeys(associationTypePairs, renamedColumns)
                     .Concat(alteredPrimaryKeys.OfType<DropForeignKeyOperation>())
                     .ToList();
-            
+
             var addedModificationFunctions
                 = FindAddedModificationFunctions(modificationCommandTreeGenerator, migrationSqlGenerator)
                     .ToList();
@@ -166,12 +167,19 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var renamedModificationFunctions = FindRenamedModificationFunctions().ToList();
             var movedModificationFunctions = FindMovedModificationFunctions().ToList();
 
+            var sourceIndexes = FindSourceIndexes(renamedTablePairs, renamedColumns).ToList();
+            var targetIndexes = FindTargetIndexes().ToList();
+
+            var droppedIndexes = FindDroppedIndexes(sourceIndexes, targetIndexes).ToList();
+            var addedIndexes = FindAddedIndexes(sourceIndexes, targetIndexes).ToList();
+
             return HandleTransitiveRenameDependencies(renamedTables)
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(droppedForeignKeys.Distinct(_foreignKeyEqualityComparer))
                 .Concat(
                     droppedForeignKeys
                         .Select(fko => fko.CreateDropIndexOperation())
+                        .Concat(droppedIndexes)
                         .Distinct(_indexEqualityComparer))
                 .Concat(orphanedColumns)
                 .Concat(HandleTransitiveRenameDependencies(renamedColumns))
@@ -184,6 +192,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(
                     addedForeignKeys
                         .Select(fko => fko.CreateCreateIndexOperation())
+                        .Concat(addedIndexes)
                         .Distinct(_indexEqualityComparer))
                 .Concat(addedForeignKeys.Distinct(_foreignKeyEqualityComparer))
                 .Concat(droppedColumns)
@@ -1310,13 +1319,20 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         select o);
         }
 
-        private static IEnumerable<RenameTableOperation> FindRenamedTables(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
+        private static IEnumerable<Tuple<string, EntitySet>> FindRenamedTablePairs(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
         {
             DebugCheck.NotNull(tablePairs);
 
             return tablePairs
                 .Where(p => !p.Item1.Table.EqualsIgnoreCase(p.Item2.Table))
-                .Select(p => new RenameTableOperation(GetSchemaQualifiedName(p.Item1), p.Item2.Table));
+                .Select(p => Tuple.Create(GetSchemaQualifiedName(p.Item1), p.Item2));
+        }
+
+        private static IEnumerable<RenameTableOperation> FindRenamedTables(ICollection<Tuple<string, EntitySet>> renamedTablePairs)
+        {
+            DebugCheck.NotNull(renamedTablePairs);
+
+            return renamedTablePairs.Select(p => new RenameTableOperation(p.Item1, p.Item2.Table));
         }
 
         private IEnumerable<CreateTableOperation> FindAddedTables(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
@@ -1353,9 +1369,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Select(
                         es => new DropTableOperation(
                             GetSchemaQualifiedName(es),
-                            es.ElementType.SerializableAnnotations,
-                            es.ElementType.Properties.Where(p => p.SerializableAnnotations.Count > 0)
-                                .ToDictionary(p => p.Name, p => (IDictionary<string, object>)p.SerializableAnnotations),
+                            GetAnnotations(es.ElementType),
+                            es.ElementType.Properties.Where(p => GetAnnotations(p).Count > 0)
+                                .ToDictionary(p => p.Name, p => (IDictionary<string, object>)GetAnnotations(p)),
                             BuildCreateTableOperation(es, _source))));
         }
 
@@ -1364,7 +1380,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(tablePairs);
 
             return tablePairs
-                .Where(p => !p.Item1.ElementType.SerializableAnnotations.SequenceEqual(p.Item2.ElementType.SerializableAnnotations))
+                .Where(p => !GetAnnotations(p.Item1.ElementType).SequenceEqual(GetAnnotations(p.Item2.ElementType)))
                 .Select(p => BuildAlterTableAnnotationsOperation(p.Item1, p.Item2));
         }
 
@@ -1373,8 +1389,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operation = new AlterTableAnnotationsOperation(
                 GetSchemaQualifiedName(destinationTable),
                 BuildAnnotationPairs(
-                    sourceTable.ElementType.SerializableAnnotations,
-                    destinationTable.ElementType.SerializableAnnotations));
+                    GetAnnotations(sourceTable.ElementType),
+                    GetAnnotations(destinationTable.ElementType)));
 
             destinationTable.ElementType.Properties
                 .Each(
@@ -1382,8 +1398,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         operation.Columns.Add(
                             BuildColumnModel(
                                 p, _target,
-                                p.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(a.Value, a.Value)))));
+                                GetAnnotations(p).ToDictionary(a => a.Key, a => new AnnotationPair(a.Value, a.Value)))));
             return operation;
+        }
+
+        internal static Dictionary<string, object> GetAnnotations(MetadataItem item)
+        {
+            // The intention is to return annotations that will be serialized to SSDL and which are
+            // not handled natively by the differ.
+            return item.Annotations.Where(
+                a => a.Name.StartsWith(XmlConstants.CustomAnnotationPrefix, StringComparison.Ordinal)
+                     && !a.Name.EndsWith(IndexAnnotation.AnnotationName, StringComparison.Ordinal))
+                .ToDictionary(a => a.Name.Substring(XmlConstants.CustomAnnotationPrefix.Length), a => a.Value);
         }
 
         private IEnumerable<MigrationOperation> FindAlteredPrimaryKeys(
@@ -1594,7 +1620,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select new AddColumnOperation(
                     t,
                     BuildColumnModel(
-                        c, _target, c.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value))));
+                        c, _target, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value))));
         }
 
         private IEnumerable<DropColumnOperation> FindDroppedColumns(
@@ -1618,11 +1644,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select new DropColumnOperation(
                     t,
                     c.Name,
-                    c.SerializableAnnotations,
+                    GetAnnotations(c),
                     new AddColumnOperation(
                         t,
                         BuildColumnModel(
-                            c, _source, c.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
+                            c, _source, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
         }
 
         private IEnumerable<DropColumnOperation> FindOrphanedColumns(
@@ -1648,11 +1674,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select new DropColumnOperation(
                     t,
                     c.Name,
-                    c.SerializableAnnotations,
+                    GetAnnotations(c),
                     new AddColumnOperation(
                         t,
                         BuildColumnModel(
-                            c, _source, c.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
+                            c, _source, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
         }
 
         private IEnumerable<AlterColumnOperation> FindAlteredColumns(
@@ -1678,6 +1704,59 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select BuildAlterColumnOperation(t, p2, _target, p1, _source);
         }
 
+        private IEnumerable<ConsolidatedIndex> FindSourceIndexes(
+            ICollection<Tuple<string, EntitySet>> renameTablePairs,
+            ICollection<RenameColumnOperation> renamedColumns)
+        {
+            DebugCheck.NotNull(renameTablePairs);
+            DebugCheck.NotNull(renamedColumns);
+
+            return
+                from es in _source.StoreEntityContainer.EntitySets
+                let ot = GetSchemaQualifiedName(es)
+                let t = renameTablePairs.Where(rt => rt.Item1.EqualsIgnoreCase(ot))
+                    .Select(rt => GetSchemaQualifiedName(rt.Item2))
+                    .SingleOrDefault() ?? ot
+                from i in ConsolidatedIndex.BuildIndexes(
+                    t, es.ElementType.Properties.Select(
+                        c => Tuple.Create(
+                            renamedColumns.Where(
+                                rc => rc.Table.EqualsIgnoreCase(t)
+                                      && rc.Name.EqualsIgnoreCase(c.Name))
+                                .Select(rc => rc.NewName)
+                                .SingleOrDefault() ?? c.Name, c)))
+                select i;
+        }
+
+        private IEnumerable<ConsolidatedIndex> FindTargetIndexes()
+        {
+            return
+                from es in _target.StoreEntityContainer.EntitySets
+                from i in ConsolidatedIndex.BuildIndexes(
+                    GetSchemaQualifiedName(es), es.ElementType.Properties.Select(p => Tuple.Create(p.Name, p)))
+                select i;
+        }
+
+        private static IEnumerable<CreateIndexOperation> FindAddedIndexes(
+            ICollection<ConsolidatedIndex> sourceIndexes,
+            ICollection<ConsolidatedIndex> targetIndexes)
+        {
+            DebugCheck.NotNull(sourceIndexes);
+            DebugCheck.NotNull(targetIndexes);
+
+            return targetIndexes.Except(sourceIndexes).Select(i => i.CreateCreateIndexOperation());
+        }
+
+        private static IEnumerable<DropIndexOperation> FindDroppedIndexes(
+            ICollection<ConsolidatedIndex> sourceIndexes,
+            ICollection<ConsolidatedIndex> targetIndexes)
+        {
+            DebugCheck.NotNull(sourceIndexes);
+            DebugCheck.NotNull(targetIndexes);
+
+            return sourceIndexes.Except(targetIndexes).Select(i => i.CreateDropIndexOperation());
+        }
+
         private bool DiffColumns(EdmProperty column1, EdmProperty column2)
         {
             DebugCheck.NotNull(column1);
@@ -1698,8 +1777,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 return false;
             }
 
-            if (!column1.SerializableAnnotations.OrderBy(a => a.Key)
-                .SequenceEqual(column2.SerializableAnnotations.OrderBy(a => a.Key)))
+            if (!GetAnnotations(column1).OrderBy(a => a.Key)
+                .SequenceEqual(GetAnnotations(column2).OrderBy(a => a.Key)))
             {
                 return false;
             }
@@ -1731,7 +1810,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(sourceModelMetadata);
 
             var targetAnnotations = BuildAnnotationPairs(
-                sourceProperty.SerializableAnnotations, targetProperty.SerializableAnnotations);
+                GetAnnotations(sourceProperty), GetAnnotations(targetProperty));
             
             var sourceAnnotations = targetAnnotations
                 .ToDictionary(a => a.Key, a => new AnnotationPair(a.Value.NewValue, a.Value.OldValue));
@@ -1881,7 +1960,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(modelMetadata);
 
             var createTableOperation
-                = new CreateTableOperation(GetSchemaQualifiedName(entitySet), entitySet.ElementType.SerializableAnnotations);
+                = new CreateTableOperation(GetSchemaQualifiedName(entitySet), GetAnnotations(entitySet.ElementType));
 
             entitySet.ElementType.Properties
                 .Each(
@@ -1889,7 +1968,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         createTableOperation.Columns.Add(
                             BuildColumnModel(
                                 p, modelMetadata,
-                                p.SerializableAnnotations.ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
+                                GetAnnotations(p).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation();
 

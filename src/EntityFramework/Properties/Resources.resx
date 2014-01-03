@@ -326,6 +326,12 @@
   <data name="AnnotationSerializeBadFormat" xml:space="preserve">
     <value>The string '{0}' was not in the expected format to be deserialized by the {1}. Serialized values are expected to have the format '{2}'.</value>
   </data>
+  <data name="ConflictWhenConsolidating" xml:space="preserve">
+    <value>The index with name '{0}' on table '{1}' has conflicting configuration for different columns in the index. All configuration for a given index on a given table must be consistent: {2}</value>
+  </data>
+  <data name="OrderConflictWhenConsolidating" xml:space="preserve">
+    <value>The index with name '{0}' on table '{1}' has the same column order of '{2}' specified for columns '{3}' and '{4}'. Make sure a different order value is used for the IndexAttribute on each column of a multi-column index.</value>
+  </data>
   <data name="CodeFirstInvalidComplexType" xml:space="preserve">
     <value>The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

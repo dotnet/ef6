@@ -161,23 +161,33 @@ namespace System.Data.Entity.Migrations.Builders
             var migration = new TestMigration();
             var tableBuilder = new TableBuilder<Columns>(createTableOperation, migration);
 
-            tableBuilder.Index(
-                c => new
-                         {
-                             c.Foo,
-                             c.Bar
-                         }, unique: true);
+            tableBuilder.Index(c => new { c.Foo, c.Bar }, unique: true);
 
             Assert.Equal(1, migration.Operations.Count());
 
-            var createIndexOperation
-                = migration.Operations.Cast<CreateIndexOperation>().Single();
+            var createIndexOperation = migration.Operations.Cast<CreateIndexOperation>().Single();
 
             Assert.Equal("T", createIndexOperation.Table);
             Assert.True(createIndexOperation.IsUnique);
             Assert.Equal("Foo", createIndexOperation.Columns.First());
             Assert.Equal("Bar", createIndexOperation.Columns.Last());
             Assert.False(createIndexOperation.IsClustered);
+            Assert.True(createIndexOperation.HasDefaultName);
+            Assert.Equal(createIndexOperation.DefaultName, createIndexOperation.Name);
+
+            tableBuilder.Index(c => new { c.Foo, c.Bar }, clustered: true, name: "Goo");
+
+            Assert.Equal(2, migration.Operations.Count());
+
+            createIndexOperation = migration.Operations.Cast<CreateIndexOperation>().Last();
+
+            Assert.Equal("T", createIndexOperation.Table);
+            Assert.False(createIndexOperation.IsUnique);
+            Assert.Equal("Foo", createIndexOperation.Columns.First());
+            Assert.Equal("Bar", createIndexOperation.Columns.Last());
+            Assert.True(createIndexOperation.IsClustered);
+            Assert.False(createIndexOperation.HasDefaultName);
+            Assert.Equal("Goo", createIndexOperation.Name);
         }
     }
 }

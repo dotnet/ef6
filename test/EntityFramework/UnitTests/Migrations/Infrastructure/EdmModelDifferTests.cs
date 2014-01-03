@@ -75,6 +75,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("Customer", tableRename.NewName);
         }
 
+        [MigrationsTheory]
+        public void Table_rename_does_not_trigger_index_drop_and_create()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(e => e.Id)
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<MigrationsCustomer>()
+                .ToTable("Customer")
+                .Property(e => e.Id)
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations= new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.IsType<RenameTableOperation>(operations.Single());
+        }
+
         public class Foo
         {
             public int Id { get; set; }
@@ -857,13 +880,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .HasAnnotation("AT1", "VT1")
                 .ToTable("[foo.[]]].bar")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP1");
+                .HasAnnotation("AP1", "VP1")
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(1, operations.Count());
+            Assert.Equal(2, operations.Count());
 
             var createTableOperation = operations.OfType<CreateTableOperation>().Single();
 
@@ -873,6 +897,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var column = createTableOperation.Columns.Single(c => c.Name == "OrderId");
             Assert.Null(column.Annotations["AP1"].OldValue);
             Assert.Equal("VP1", column.Annotations["AP1"].NewValue);
+
+            var createIndexOperation = operations.OfType<CreateIndexOperation>().Single();
+            Assert.Equal("Bella", createIndexOperation.Name);
+            Assert.Equal("[foo.[]]].bar", createIndexOperation.Table);
+            Assert.Equal(new List<string> { "OrderId" }, createIndexOperation.Columns);
         }
 
         [MigrationsTheory]
@@ -1106,7 +1135,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<OrderLine>()
                 .HasAnnotation("AT1", "VT1")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP1");
+                .HasAnnotation("AP1", "VP1")
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -1115,7 +1145,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(1, operations.Count());
+            Assert.Equal(2, operations.Count());
 
             var dropTableOperation = operations.OfType<DropTableOperation>().Single();
             Assert.Equal("VT1", dropTableOperation.RemovedAnnotations["AT1"]);
@@ -1125,6 +1155,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.NotNull(inverse);
             Assert.Equal("dbo.OrderLines", inverse.Name);
             Assert.Equal(8, inverse.Columns.Count());
+
+            var dropIndexOperation = operations.OfType<DropIndexOperation>().Single();
+            Assert.Equal("Bella", dropIndexOperation.Name);
+            Assert.Equal("dbo.OrderLines", dropIndexOperation.Table);
+            Assert.Equal(new List<string> { "OrderId" }, dropIndexOperation.Columns);
         }
 
         #endregion
@@ -1418,6 +1453,30 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("dbo.MigrationsCustomers", alterColumnOperation.Table);
             Assert.Equal("col_Name", alterColumnOperation.Column.Name);
             Assert.Equal(23, alterColumnOperation.Column.MaxLength);
+        }
+
+        [MigrationsTheory]
+        public void Column_rename_does_not_trigger_index_drop_and_create()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(p => p.CustomerNumber)
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder
+                .Entity<MigrationsCustomer>()
+                .Property(p => p.CustomerNumber)
+                .HasColumnName("CusNum")
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.IsType<RenameColumnOperation>(operations.Single());
         }
 
         [MigrationsTheory]
@@ -2006,7 +2065,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public void Can_detect_added_columns()
         {
             var modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<OrderLine>().Property(e => e.OrderId).HasAnnotation("A1", "V1");
+            modelBuilder.Entity<OrderLine>()
+                .Property(e => e.OrderId)
+                .HasAnnotation("A1", "V1")
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+            
             var model2 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
@@ -2015,7 +2078,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(1, operations.Count());
+            Assert.Equal(2, operations.Count());
             var addColumnOperation = operations.OfType<AddColumnOperation>().Single();
 
             Assert.Equal("dbo.OrderLines", addColumnOperation.Table);
@@ -2024,6 +2087,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal(false, addColumnOperation.Column.IsNullable);
             Assert.Null(addColumnOperation.Column.Annotations["A1"].OldValue);
             Assert.Equal("V1", addColumnOperation.Column.Annotations["A1"].NewValue);
+
+            var createIndexOperation = operations.OfType<CreateIndexOperation>().Single();
+            Assert.Equal("Bella", createIndexOperation.Name);
+            Assert.Equal("dbo.OrderLines", createIndexOperation.Table);
+            Assert.Equal(new List<string> { "OrderId" }, createIndexOperation.Columns);
         }
 
         [MigrationsTheory]
@@ -2138,7 +2206,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public void Can_detect_dropped_columns()
         {
             var modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<Migrations.Order>().Property(e => e.Version).HasAnnotation("A1", "V1");
+            modelBuilder.Entity<Migrations.Order>()
+                .Property(e => e.Version)
+                .HasAnnotation("A1", "V1")
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
@@ -2146,8 +2218,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
-
-            var dropColumnOperation = (DropColumnOperation)operations.Single();
+            Assert.Equal(2, operations.Count);
+            
+            var dropColumnOperation = operations.OfType<DropColumnOperation>().Single();
 
             Assert.Equal("ordering.Orders", dropColumnOperation.Table);
             Assert.Equal("Version", dropColumnOperation.Name);
@@ -2158,6 +2231,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("ordering.Orders", inverse.Table);
             Assert.Equal("Version", inverse.Column.Name);
             Assert.Equal("V1", dropColumnOperation.RemovedAnnotations["A1"]);
+
+            var dropIndexOperation = operations.OfType<DropIndexOperation>().Single();
+            Assert.Equal("Bella", dropIndexOperation.Name);
+            Assert.Equal("ordering.Orders", dropIndexOperation.Table);
+            Assert.Equal(new List<string> { "Version" }, dropIndexOperation.Columns);
         }
 
         #endregion
@@ -2280,6 +2358,87 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Null(alterColumnOperation.Column.Annotations["A1"].NewValue);
         }
 
+        [MigrationsTheory]
+        public void Can_detect_changed_index()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.CustomerNumber)
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.CustomerNumber)
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella") { IsUnique = true }));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel()).ToArray();
+
+            Assert.Equal(2, operations.Length);
+
+            var dropIndexOperation = (DropIndexOperation)operations[0];
+            Assert.Equal("Bella", dropIndexOperation.Name);
+            Assert.Equal("dbo.MigrationsCustomers", dropIndexOperation.Table);
+            Assert.Equal(new List<string> { "CustomerNumber" }, dropIndexOperation.Columns);
+
+            var createIndexOperation = (CreateIndexOperation)operations[1];
+            Assert.Equal("Bella", createIndexOperation.Name);
+            Assert.Equal("dbo.MigrationsCustomers", createIndexOperation.Table);
+            Assert.True(createIndexOperation.IsUnique);
+            Assert.Equal(new List<string> { "CustomerNumber" }, createIndexOperation.Columns);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_added_index()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.CustomerNumber);
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.CustomerNumber)
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            var createIndexOperation = (CreateIndexOperation)operations.Single();
+            Assert.Equal("Bella", createIndexOperation.Name);
+            Assert.Equal("dbo.MigrationsCustomers", createIndexOperation.Table);
+            Assert.Equal(new List<string> { "CustomerNumber" }, createIndexOperation.Columns);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_removed_index()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.CustomerNumber)
+                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>()
+                .Property(c => c.CustomerNumber);
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            var dropIndexOperation = (DropIndexOperation)operations.Single();
+            Assert.Equal("Bella", dropIndexOperation.Name);
+            Assert.Equal("dbo.MigrationsCustomers", dropIndexOperation.Table);
+            Assert.Equal(new List<string> { "CustomerNumber" }, dropIndexOperation.Columns);
+        }
+        
         [MigrationsTheory]
         public void Can_detect_changed_columns_when_renamed()
         {
@@ -3083,6 +3242,28 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal(4, operations.OfType<AddForeignKeyOperation>().Count());
         }
 
+        [Fact]
+        public void GetAnnotations_returns_only_annotations_with_annotation_prefix_and_strips_prefix()
+        {
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+
+            Assert.Empty(EdmModelDiffer.GetAnnotations(entityType));
+
+            entityType.AddAnnotation("name", new object());
+
+            Assert.Empty(EdmModelDiffer.GetAnnotations(entityType));
+
+            entityType.AddAnnotation(XmlConstants.CustomAnnotationPrefix + "First", "Amy");
+            entityType.AddAnnotation(XmlConstants.CustomAnnotationPrefix + "Last", "Winehouse");
+
+            Assert.Equal(2, EdmModelDiffer.GetAnnotations(entityType).Count);
+            Assert.Same("Amy", EdmModelDiffer.GetAnnotations(entityType)["First"]);
+            Assert.Same("Winehouse", EdmModelDiffer.GetAnnotations(entityType)["Last"]);
+
+            entityType.AddAnnotation(XmlConstants.IndexAnnotationWithPrefix, new IndexAnnotation(new IndexAttribute()));
+
+            Assert.Equal(2, EdmModelDiffer.GetAnnotations(entityType).Count);
+        }
 
         #endregion
     }

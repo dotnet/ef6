@@ -203,6 +203,12 @@ namespace System.Data.Entity.DataAnnotations.Schema
         }
 
         [Fact]
+        public void IsCompatibleWith_can_ignore_order()
+        {
+            Assert.True(new IndexAttribute { Order = 7 }.IsCompatibleWith(new IndexAttribute { Order = 5 }, ignoreOrder: true));
+        }
+
+        [Fact]
         public void MergeWith_returns_same_instance_if_other_is_same_or_null()
         {
             var attribute = new IndexAttribute();
@@ -250,7 +256,7 @@ namespace System.Data.Entity.DataAnnotations.Schema
             Assert.Equal(false, new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute()).UniqueConfiguration);
             Assert.Equal(false, new IndexAttribute().MergeWith(new IndexAttribute { IsUnique = false }).UniqueConfiguration);
             Assert.Equal(
-                false, 
+                false,
                 new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute { IsUnique = false }).UniqueConfiguration);
 
             var merged = new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false }
@@ -273,6 +279,64 @@ namespace System.Data.Entity.DataAnnotations.Schema
             Assert.Equal(7, merged.Order);
             Assert.Equal(false, merged.ClusteredConfiguration);
             Assert.Equal(true, merged.UniqueConfiguration);
+        }
+
+        [Fact]
+        public void MergeWith_can_ignore_order()
+        {
+            Assert.Equal(-1, new IndexAttribute { Order = 5 }.MergeWith(new IndexAttribute { Order = 7 }, ignoreOrder: true).Order);
+        }
+
+        [Fact]
+        public void Equals_returns_true_when_attributes_match()
+        {
+            Assert.True(new IndexAttribute().Equals(new IndexAttribute()));
+            Assert.True(new IndexAttribute("MrsPandy").Equals(new IndexAttribute("MrsPandy")));
+            Assert.True(new IndexAttribute { Order = 7 }.Equals(new IndexAttribute { Order = 7 }));
+            Assert.True(new IndexAttribute { IsClustered = true }.Equals(new IndexAttribute { IsClustered = true }));
+            Assert.True(new IndexAttribute { IsClustered = false }.Equals(new IndexAttribute { IsClustered = false }));
+            Assert.True(new IndexAttribute { IsUnique = true }.Equals(new IndexAttribute { IsUnique = true }));
+            Assert.True(new IndexAttribute { IsUnique = false }.Equals(new IndexAttribute { IsUnique = false }));
+
+            Assert.True(
+                new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false }
+                    .Equals(new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false }));
+
+            var attribute = new IndexAttribute();
+            Assert.True(attribute.Equals(attribute));
+        }
+
+        [Fact]
+        public void Equals_returns_false_for_different_attributes()
+        {
+            Assert.False(new IndexAttribute().Equals(null));
+            Assert.False(new IndexAttribute().Equals(new object()));
+            Assert.False(new IndexAttribute("MrsPandy").Equals(new IndexAttribute("EekyBear")));
+            Assert.False(new IndexAttribute().Equals(new IndexAttribute("EekyBear")));
+            Assert.False(new IndexAttribute("MrsPandy").Equals(new IndexAttribute()));
+            Assert.False(new IndexAttribute { Order = 7 }.Equals(new IndexAttribute { Order = 8 }));
+            Assert.False(new IndexAttribute { IsClustered = false }.Equals(new IndexAttribute { IsClustered = true }));
+            Assert.False(new IndexAttribute { IsUnique = true }.Equals(new IndexAttribute { IsUnique = false }));
+
+            Assert.False(
+                new IndexAttribute("MrsPandy", 8) { IsClustered = true, IsUnique = false }
+                    .Equals(new IndexAttribute("EekyBear", 7) { IsClustered = false, IsUnique = true }));
+        }
+
+        [Fact]
+        public void GetHashCode_returns_same_value_when_attributes_match()
+        {
+            Assert.Equal(new IndexAttribute().GetHashCode(), new IndexAttribute().GetHashCode());
+            Assert.Equal(new IndexAttribute("MrsPandy").GetHashCode(), new IndexAttribute("MrsPandy").GetHashCode());
+            Assert.Equal(new IndexAttribute { Order = 7 }.GetHashCode(), new IndexAttribute { Order = 7 }.GetHashCode());
+            Assert.Equal(new IndexAttribute { IsClustered = true }.GetHashCode(), new IndexAttribute { IsClustered = true }.GetHashCode());
+            Assert.Equal(new IndexAttribute { IsClustered = false }.GetHashCode(), new IndexAttribute { IsClustered = false }.GetHashCode());
+            Assert.Equal(new IndexAttribute { IsUnique = true }.GetHashCode(), new IndexAttribute { IsUnique = true }.GetHashCode());
+            Assert.Equal(new IndexAttribute { IsUnique = false }.GetHashCode(), new IndexAttribute { IsUnique = false }.GetHashCode());
+
+            Assert.Equal(
+                new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false }.GetHashCode(),
+                new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false }.GetHashCode());
         }
     }
 }

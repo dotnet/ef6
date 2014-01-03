@@ -487,6 +487,22 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "The index with name '{0}' on table '{1}' has conflicting configuration for different columns in the index. All configuration for a given index on a given table must be consistent: {2}"
+        // </summary>
+        internal static string ConflictWhenConsolidating(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.ConflictWhenConsolidating, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "The index with name '{0}' on table '{1}' has the same column order of '{2}' specified for columns '{3}' and '{4}'. Make sure a different order value is used for the IndexAttribute on each column of a multi-column index."
+        // </summary>
+        internal static string OrderConflictWhenConsolidating(object p0, object p1, object p2, object p3, object p4)
+        {
+            return EntityRes.GetString(EntityRes.OrderConflictWhenConsolidating, p0, p1, p2, p3, p4);
+        }
+
+        // <summary>
         // A string like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject."
         // </summary>
         internal static string CodeFirstInvalidComplexType(object p0)
@@ -15705,6 +15721,8 @@ namespace System.Data.Entity.Resources
         internal const string IndexAttributeNonNullableProperty = "IndexAttributeNonNullableProperty";
         internal const string AnnotationSerializeWrongType = "AnnotationSerializeWrongType";
         internal const string AnnotationSerializeBadFormat = "AnnotationSerializeBadFormat";
+        internal const string ConflictWhenConsolidating = "ConflictWhenConsolidating";
+        internal const string OrderConflictWhenConsolidating = "OrderConflictWhenConsolidating";
         internal const string CodeFirstInvalidComplexType = "CodeFirstInvalidComplexType";
         internal const string InvalidEntityType = "InvalidEntityType";
         internal const string SimpleNameCollision = "SimpleNameCollision";

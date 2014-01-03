@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
@@ -2929,6 +2930,680 @@ namespace System.Data.Entity.Migrations
 
             Assert.Null(nameOperation.Column.Annotations["A3"].OldValue);
             Assert.Equal("V3", nameOperation.Column.Annotations["A3"].NewValue);
+        }
+    }
+
+    #endregion
+
+    #region IndexScenarios
+
+    public class AutoAndGenerateScenarios_AddIndex :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddIndex.V1, AutoAndGenerateScenarios_AddIndex.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var operation = migrationOperations.OfType<CreateIndexOperation>().Single();
+
+            Assert.Equal("dbo.OrderLines", operation.Table);
+            Assert.Equal("MyIndex", operation.Name);
+            Assert.False(operation.IsClustered);
+            Assert.True(operation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity" }, operation.Columns);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var operation = migrationOperations.OfType<DropIndexOperation>().Single();
+
+            Assert.Equal("dbo.OrderLines", operation.Table);
+            Assert.Equal("MyIndex", operation.Name);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_ChangeIndex :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_ChangeIndex.V1, AutoAndGenerateScenarios_ChangeIndex.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex")));
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var dropOperation = (DropIndexOperation)migrationOperations.First();
+
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+            Assert.Equal("MyIndex", dropOperation.Name);
+            
+            var createOperation = (CreateIndexOperation)migrationOperations.Skip(1).First();
+
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.Equal("MyIndex", createOperation.Name);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity" }, createOperation.Columns);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count());
+
+            var dropOperation = (DropIndexOperation)migrationOperations.First();
+
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+            Assert.Equal("MyIndex", dropOperation.Name);
+
+            var createOperation = (CreateIndexOperation)migrationOperations.Skip(1).First();
+
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.Equal("MyIndex", createOperation.Name);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity" }, createOperation.Columns);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_DropIndex :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_DropIndex.V1, AutoAndGenerateScenarios_DropIndex.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var operation = migrationOperations.OfType<DropIndexOperation>().Single();
+
+            Assert.Equal("dbo.OrderLines", operation.Table);
+            Assert.Equal("MyIndex", operation.Name);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var operation = migrationOperations.OfType<CreateIndexOperation>().Single();
+
+            Assert.Equal("dbo.OrderLines", operation.Table);
+            Assert.Equal("MyIndex", operation.Name);
+            Assert.False(operation.IsClustered);
+            Assert.True(operation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity" }, operation.Columns);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_LotsOfIndexStuff :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_LotsOfIndexStuff.V1, AutoAndGenerateScenarios_LotsOfIndexStuff.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(
+                        IndexAnnotation.AnnotationName,
+                        new IndexAnnotation(
+                            new[]
+                            {
+                                new IndexAttribute("MyIndex"),
+                                new IndexAttribute("CompositeIndex3") { IsUnique = true, Order = 3 },
+                                new IndexAttribute("CompositeIndex2") { Order = 2 },
+                                new IndexAttribute("CompositeIndex4") { Order = 1 },
+                                new IndexAttribute("CompositeIndex5") { Order = 1 },
+                                new IndexAttribute("CompositeIndex6") { Order = 1 }
+                            }));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku)
+                    .HasAnnotation(
+                        IndexAnnotation.AnnotationName,
+                        new IndexAnnotation(
+                            new[]
+                            {
+                                new IndexAttribute("SkuIndex") { IsUnique = true },
+                                new IndexAttribute("AnotherSkuIndex"),
+                                new IndexAttribute("CompositeIndex3") { Order = 2 },
+                                new IndexAttribute("CompositeIndex2") { IsUnique = true, Order = 1 },
+                                new IndexAttribute("CompositeIndex4") { Order = 2 },
+                                new IndexAttribute("CompositeIndex5") { Order = 2 },
+                                new IndexAttribute("CompositeIndex6") { Order = 2 }
+                            }));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.OrderId)
+                    .HasAnnotation(
+                        IndexAnnotation.AnnotationName,
+                        new IndexAnnotation(
+                            new[]
+                            {
+                                new IndexAttribute("NewFKIndex") { IsUnique = true },
+                                new IndexAttribute("AnotherFKIndex"),
+                                new IndexAttribute("CompositeIndex2") { IsUnique = true, Order = 3 },
+                                new IndexAttribute("CompositeIndex4") { Order = 3 },
+                                new IndexAttribute("CompositeIndex5") { Order = 3 },
+                                new IndexAttribute("CompositeIndex6") { Order = 3 }
+                            }));
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(
+                        IndexAnnotation.AnnotationName,
+                        new IndexAnnotation(
+                            new[]
+                            {
+                                new IndexAttribute("MyIndex"),
+                                new IndexAttribute("MySecondIndex") { IsUnique = true },
+                                new IndexAttribute("CompositeIndex3") { IsUnique = true, Order = 3 },
+                                new IndexAttribute("CompositeIndex1") { IsUnique = true, Order = 1 },
+                                new IndexAttribute("CompositeIndex4") { Order = 1 },
+                                new IndexAttribute("CompositeIndex5") { Order = 1 },
+                                new IndexAttribute("CompositeIndex6") { Order = 3 }
+                            }));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku)
+                    .HasAnnotation(
+                        IndexAnnotation.AnnotationName,
+                        new IndexAnnotation(
+                            new[]
+                            {
+                                new IndexAttribute("SkuIndex") { IsUnique = false },
+                                new IndexAttribute("AnotherSkuIndex"),
+                                new IndexAttribute("CompositeIndex1") { IsUnique = true, Order = 3 },
+                                new IndexAttribute("CompositeIndex4") { IsUnique = true, Order = 2 },
+                                new IndexAttribute("CompositeIndex5") { Order = 2 },
+                                new IndexAttribute("CompositeIndex6") { Order = 2 }
+                            }));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.OrderId)
+                    .HasAnnotation(
+                        IndexAnnotation.AnnotationName,
+                        new IndexAnnotation(
+                            new[]
+                            {
+                                new IndexAttribute("AnotherFKIndex"),
+                                new IndexAttribute("CompositeIndex1") { IsUnique = true, Order = 2 },
+                                new IndexAttribute("CompositeIndex3") { IsUnique = true, Order = 1 },
+                                new IndexAttribute("CompositeIndex4") { Order = 3 },
+                                new IndexAttribute("CompositeIndex5") { Order = 3 },
+                                new IndexAttribute("CompositeIndex6") { Order = 1 }
+                            }));
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(12, operations.Length);
+
+            for (var i = 0; i < 6; i++)
+            {
+                Assert.IsType<DropIndexOperation>(operations[i]);
+            }
+
+            for (var i = 6; i < 12; i++)
+            {
+                Assert.IsType<CreateIndexOperation>(operations[i]);
+            }
+
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "SkuIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "NewFKIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex2");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex3");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex4");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex6");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "SkuIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Sku" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "MySecondIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex1");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity", "OrderId", "Sku" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex3");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "OrderId", "Quantity" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex4");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity", "Sku", "OrderId" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex6");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "OrderId", "Sku", "Quantity" }, createOperation.Columns);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(12, operations.Length);
+
+            for (var i = 0; i < 6; i++)
+            {
+                Assert.IsType<DropIndexOperation>(operations[i]);
+            }
+
+            for (var i = 6; i < 12; i++)
+            {
+                Assert.IsType<CreateIndexOperation>(operations[i]);
+            }
+
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "SkuIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "MySecondIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex1");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex3");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex4");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "CompositeIndex6");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "SkuIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Sku" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "NewFKIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "OrderId" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex2");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Sku", "Quantity", "OrderId" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex3");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Sku", "Quantity" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex4");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity", "Sku", "OrderId" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "CompositeIndex6");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity", "Sku", "OrderId" }, createOperation.Columns);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_ImplicitIndexChanges :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_ImplicitIndexChanges.V1, AutoAndGenerateScenarios_ImplicitIndexChanges.V2>
+    {
+        public AutoAndGenerateScenarios_ImplicitIndexChanges()
+        {
+            IsDownDataLoss = true;
+            UpDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Ignore(ol => ol.Quantity);
+                
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Price)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("PriceIndex")));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")));
+
+                modelBuilder.Entity<WithGuidKey>()
+                    .Property(ol => ol.Id)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
+
+                modelBuilder.Ignore<MigrationsStore>();
+
+                modelBuilder.Entity<MigrationsProduct>()
+                    .Property(p => p.ProductId)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("ProductIdIndex")));
+
+                modelBuilder.Entity<Order>()
+                    .Property(p => p.OrderId)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")));
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("QuantityIndex")));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Ignore(ol => ol.Price);
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")))
+                    .HasColumnName("NuSku");
+
+                modelBuilder.Entity<WithGuidKey>()
+                    .ToTable("WithGooieKey")
+                    .Property(ol => ol.Id)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(s => s.Id)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IdIndex")));
+
+                modelBuilder.Ignore<MigrationsProduct>();
+
+                modelBuilder.Entity<Order>()
+                    .ToTable("Oeuvres")
+                    .Property(p => p.OrderId)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")))
+                    .HasColumnName("OeuvresId");
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(2, operations.OfType<DropIndexOperation>().Count());
+            Assert.Equal(2, operations.OfType<CreateIndexOperation>().Count());
+
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "PriceIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "ProductIdIndex");
+            Assert.Equal("dbo.MigrationsProducts", dropOperation.Table);
+
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "QuantityIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IdIndex");
+            Assert.Equal("dbo.MigrationsStores", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Id" }, createOperation.Columns);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(2, operations.OfType<DropIndexOperation>().Count());
+            Assert.Equal(2, operations.OfType<CreateIndexOperation>().Count());
+
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "QuantityIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IdIndex");
+            Assert.Equal("dbo.MigrationsStores", dropOperation.Table);
+
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "PriceIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Price" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "ProductIdIndex");
+            Assert.Equal("dbo.MigrationsProducts", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "ProductId" }, createOperation.Columns);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_DefaultNameIndexes :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_DefaultNameIndexes.V1, AutoAndGenerateScenarios_DefaultNameIndexes.V2>
+    {
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity);
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Price);
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku);
+
+                modelBuilder.Entity<WithGuidKey>()
+                    .Property(ol => ol.Id);
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(s => s.Id)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+
+                modelBuilder.Entity<MigrationsProduct>()
+                    .Property(p => p.ProductId)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Quantity)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Price)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+
+                modelBuilder.Entity<OrderLine>()
+                    .Property(ol => ol.Sku)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuedIndex")));
+
+                modelBuilder.Entity<WithGuidKey>()
+                    .Property(ol => ol.Id)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+
+                modelBuilder.Entity<MigrationsStore>()
+                    .Property(s => s.Id)
+                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute { IsUnique = true }));
+
+                modelBuilder.Entity<MigrationsProduct>()
+                    .Property(p => p.ProductId);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(7, operations.Length);
+            Assert.Equal(2, operations.OfType<DropIndexOperation>().Count());
+            Assert.Equal(5, operations.OfType<CreateIndexOperation>().Count());
+
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IdIndex");
+            Assert.Equal("dbo.MigrationsStores", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "ProductIdIndex");
+            Assert.Equal("dbo.MigrationsProducts", dropOperation.Table);
+
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "QuantityIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Quantity" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "PriceIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Price" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "SkuedIndex");
+            Assert.Equal("dbo.OrderLines", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Sku" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>()
+                .Single(o => o.Name == "IdIndex" && o.Table == "dbo.WithGuidKeys");
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Id" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>()
+                .Single(o => o.Name == "IdIndex" && o.Table == "dbo.MigrationsStores");
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Id" }, createOperation.Columns);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(7, operations.Length);
+            Assert.Equal(5, operations.OfType<DropIndexOperation>().Count());
+            Assert.Equal(2, operations.OfType<CreateIndexOperation>().Count());
+
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "QuantityIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "PriceIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "SkuedIndex");
+            Assert.Equal("dbo.OrderLines", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IdIndex" && o.Table == "dbo.WithGuidKeys");
+            Assert.Equal("dbo.WithGuidKeys", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IdIndex" && o.Table == "dbo.MigrationsStores");
+            Assert.Equal("dbo.MigrationsStores", dropOperation.Table);
+
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IdIndex");
+            Assert.Equal("dbo.MigrationsStores", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Id" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "ProductIdIndex");
+            Assert.Equal("dbo.MigrationsProducts", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "ProductId" }, createOperation.Columns);
         }
     }
 

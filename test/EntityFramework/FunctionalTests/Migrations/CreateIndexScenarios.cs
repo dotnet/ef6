@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Migrations.Model;
+
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
@@ -65,6 +67,12 @@ namespace System.Data.Entity.Migrations
         {
             public override void Up()
             {
+                AddColumn("dbo.OrderLines", "Int", c => c.Int(name: "Boo"));
+
+                var dropKey = new DropPrimaryKeyOperation { Table = "dbo.OrderLines" };
+                dropKey.Columns.Add("Id");
+                this.GetOperations().Add(dropKey);
+
                 CreateIndex("OrderLines", "OrderId", name: "IX_Custom_Name", clustered: true);
             }
         }

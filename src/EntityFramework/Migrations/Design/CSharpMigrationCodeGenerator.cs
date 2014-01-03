@@ -752,6 +752,11 @@ namespace System.Data.Entity.Migrations.Design
                     writer.Write(Quote(addPrimaryKeyOperation.Name));
                 }
 
+                if (!addPrimaryKeyOperation.IsClustered)
+                {
+                    writer.Write(", clustered: false");
+                }
+
                 writer.Write(")");
             }
         }
@@ -790,7 +795,9 @@ namespace System.Data.Entity.Migrations.Design
 
             writer.WriteLine();
             writer.Write(".Index(");
+
             Generate(createIndexOperation.Columns, writer);
+            WriteIndexParameters(createIndexOperation, writer);
             writer.Write(")");
         }
 
@@ -848,6 +855,11 @@ namespace System.Data.Entity.Migrations.Design
             {
                 writer.Write(", name: ");
                 writer.Write(Quote(addPrimaryKeyOperation.Name));
+            }
+
+            if (!addPrimaryKeyOperation.IsClustered)
+            {
+                writer.Write(", clustered: false");
             }
 
             writer.WriteLine(");");
@@ -1006,9 +1018,21 @@ namespace System.Data.Entity.Migrations.Design
                 writer.Write(" }");
             }
 
+            WriteIndexParameters(createIndexOperation, writer);
+
+            writer.WriteLine(");");
+        }
+
+        private void WriteIndexParameters(CreateIndexOperation createIndexOperation, IndentedTextWriter writer)
+        {
             if (createIndexOperation.IsUnique)
             {
                 writer.Write(", unique: true");
+            }
+
+            if (createIndexOperation.IsClustered)
+            {
+                writer.Write(", clustered: true");
             }
 
             if (!createIndexOperation.HasDefaultName)
@@ -1016,8 +1040,6 @@ namespace System.Data.Entity.Migrations.Design
                 writer.Write(", name: ");
                 writer.Write(Quote(createIndexOperation.Name));
             }
-
-            writer.WriteLine(");");
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Returned by <see cref="IndexAttribute.IsCompatibleWith"/> and related methods to indicate whether or
+    /// Returned by <see cref="IndexAttribute.IsCompatibleWith(IndexAttribute)"/> and related methods to indicate whether or
     /// not one object does not conflict with another such that the two can be combined into one.
     /// </summary>
     /// <remarks>

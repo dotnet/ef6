@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
 
     // <summary>
@@ -14,6 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string ClrTypeAnnotation = "ClrType";
         internal const string ClrTypeAnnotationWithPrefix = CustomAnnotationPrefix + ClrTypeAnnotation;
         internal const string UseClrTypesAnnotationWithPrefix = CustomAnnotationPrefix + "UseClrTypes";
+        internal const string IndexAnnotationWithPrefix = CustomAnnotationPrefix + IndexAnnotation.AnnotationName;
 
         // v3.5 of .net framework
         internal const string ModelNamespace_1 = "http://schemas.microsoft.com/ado/2006/04/edm";

@@ -367,6 +367,7 @@
     <Compile Include="Infrastructure\DefaultExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\ModelNamespaceConventionTests.cs" />
     <Compile Include="Infrastructure\ProviderInvariantNameTests.cs" />
+    <Compile Include="Infrastructure\ConsolidatedIndexTests.cs" />
     <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyKeyTests.cs" />

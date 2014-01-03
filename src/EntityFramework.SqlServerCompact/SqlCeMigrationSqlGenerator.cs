@@ -292,10 +292,7 @@ namespace System.Data.Entity.SqlServerCompact
                     writer.Write("UNIQUE ");
                 }
 
-                if (createIndexOperation.IsClustered)
-                {
-                    writer.Write("CLUSTERED ");
-                }
+                // Note: SQL CE only supports NONCLUSTERED, so ignore clustered config
 
                 writer.Write("INDEX ");
                 writer.Write(Quote(createIndexOperation.Name));

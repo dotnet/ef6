@@ -552,6 +552,54 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         [Fact]
+        public void Generate_can_output_add_primary_key_with_non_clustered_index()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var addPrimaryKeyOperation
+                = new AddPrimaryKeyOperation
+                {
+                    Table = "T",
+                    Name = "PK",
+                    IsClustered = false
+                };
+
+            addPrimaryKeyOperation.Columns.Add("c1");
+            addPrimaryKeyOperation.Columns.Add("c2");
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[] { addPrimaryKeyOperation },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" }, name: ""PK"", clustered: false);
+        }
+        
+        public override void Down()
+        {
+            DropPrimaryKey(""T"", name: ""PK"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
         public void Generate_can_output_simple_add_foreign_key()
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
@@ -856,6 +904,122 @@ namespace Foo
             Assert.Equal(2, generatedMigration.Resources.Count);
             Assert.Equal("Source", generatedMigration.Resources["Source"]);
             Assert.Equal("Target", generatedMigration.Resources["Target"]);
+        }
+
+        [Fact]
+        public void Generate_create_table_operation_with_non_clustered_key_and_fully_configured_index()
+        {
+            var createTableOperation = new CreateTableOperation("Customers");
+            
+            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32) { Name = "I.d" };
+            createTableOperation.Columns.Add(idColumn);
+            
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation
+            {
+                Name = "MyPK",
+                IsClustered = false
+            };
+            createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
+
+            var createIndexOperation = new CreateIndexOperation
+            {
+                Table = createTableOperation.Name, 
+                Name = "MyIndex",
+                IsClustered = true,
+                IsUnique = true
+            };
+            createIndexOperation.Columns.Add(idColumn.Name);
+
+            var generatedMigration
+                = new CSharpMigrationCodeGenerator().Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            createTableOperation,
+                            createIndexOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            CreateTable(
+                ""Customers"",
+                c => new
+                    {
+                        Id = c.Int(name: ""I.d""),
+                    })
+                .PrimaryKey(t => t.Id, name: ""MyPK"", clustered: false)
+                .Index(t => t.Id, unique: true, clustered: true, name: ""MyIndex"");
+            
+        }
+        
+        public override void Down()
+        {
+            DropIndex(""Customers"", ""MyIndex"");
+            DropTable(""Customers"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_create_fully_configured_create_index_operation()
+        {
+            var createIndexOperation = new CreateIndexOperation
+            {
+                Table = "MyTable",
+                Name = "MyIndex",
+                IsClustered = true,
+                IsUnique = true
+            };
+            createIndexOperation.Columns.Add("MyColumn");
+
+            var generatedMigration
+                = new CSharpMigrationCodeGenerator().Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            createIndexOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            CreateIndex(""MyTable"", ""MyColumn"", unique: true, clustered: true, name: ""MyIndex"");
+        }
+        
+        public override void Down()
+        {
+            DropIndex(""MyTable"", ""MyIndex"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
         }
 
         [Fact]

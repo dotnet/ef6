@@ -124,24 +124,5 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Assert.Throws<InvalidOperationException>(() => entityType.RemoveAnnotation("name"))
                     .Message);
         }
-
-        [Fact]
-        public void SerializableAnnotations_returns_only_annotations_with_annotation_prefix_and_strips_prefix()
-        {
-            var entityType = new EntityType("E", "N", DataSpace.CSpace);
-
-            Assert.Empty(entityType.SerializableAnnotations);
-
-            entityType.AddAnnotation("name", new object());
-
-            Assert.Empty(entityType.SerializableAnnotations);
-
-            entityType.AddAnnotation(XmlConstants.CustomAnnotationPrefix + "First", "Amy");
-            entityType.AddAnnotation(XmlConstants.CustomAnnotationPrefix + "Last", "Winehouse");
-
-            Assert.Equal(2, entityType.SerializableAnnotations.Count);
-            Assert.Same("Amy", entityType.SerializableAnnotations["First"]);
-            Assert.Same("Winehouse", entityType.SerializableAnnotations["Last"]);
-        }
     }
 }

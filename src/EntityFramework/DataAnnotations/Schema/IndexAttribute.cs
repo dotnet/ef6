@@ -204,7 +204,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
 
         /// <summary>
         /// Returns true if this attribute does not conflict with the given attribute such that
-        /// the two can be combined together using the <see cref="MergeWith"/> method.
+        /// the two can be combined together using the <see cref="MergeWith(IndexAttribute)"/> method.
         /// </summary>
         /// <remarks>
         /// Two attributes are considered compatible if they have the same name and all other properties
@@ -214,6 +214,11 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// <param name="other">The attribute to compare.</param>
         /// <returns>A CompatibilityResult indicating whether or not this attribute is compatible with the other.</returns>
         public virtual CompatibilityResult IsCompatibleWith(IndexAttribute other)
+        {
+            return IsCompatibleWith(other, ignoreOrder: false);
+        }
+
+        internal CompatibilityResult IsCompatibleWith(IndexAttribute other, bool ignoreOrder)
         {
             if (ReferenceEquals(this, other)
                 || other == null)
@@ -228,7 +233,8 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 errorMessage = Strings.ConflictingIndexAttributeProperty("Name", _name, other._name);
             }
 
-            if (_order != -1
+            if (!ignoreOrder
+                && _order != -1
                 && other._order != -1
                 && _order != other._order)
             {
@@ -268,9 +274,14 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// <param name="other">The attribute to merge with this one.</param>
         /// <returns>A new attribute with properties merged.</returns>
         /// <exception cref="InvalidOperationException">
-        /// The other attribute is not compatible with this attribute as determined by the <see cref="IsCompatibleWith"/> method.
+        /// The other attribute is not compatible with this attribute as determined by the <see cref="IsCompatibleWith(IndexAttribute)"/> method.
         /// </exception>
         public virtual IndexAttribute MergeWith(IndexAttribute other)
+        {
+            return MergeWith(other, ignoreOrder: false);
+        }
+
+        internal IndexAttribute MergeWith(IndexAttribute other, bool ignoreOrder)
         {
             if (ReferenceEquals(this, other)
                 || other == null)
@@ -278,7 +289,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 return this;
             }
 
-            var isCompatible = IsCompatibleWith(other);
+            var isCompatible = IsCompatibleWith(other, ignoreOrder);
             if (!isCompatible)
             {
                 throw new InvalidOperationException(
@@ -287,7 +298,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
 
             return new IndexAttribute(
                 _name ?? other._name,
-                _order != -1 ? _order : other._order,
+                ignoreOrder ? -1 : (_order != -1 ? _order : other._order),
                 _isClustered ?? other._isClustered,
                 _isUnique ?? other._isUnique);
         }
@@ -333,6 +344,58 @@ namespace System.ComponentModel.DataAnnotations.Schema
             builder.Append(hasContent ? " }" : "}");
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Returns true if this attribute specifies the same name and configuration as the given attribute.
+        /// </summary>
+        /// <param name="other">The attribute to compare.</param>
+        /// <returns>True if the other object is equal to this object; otherwise false.</returns>
+        protected virtual bool Equals(IndexAttribute other)
+        {
+            return _name == other._name
+                && _order == other._order
+                && _isClustered.Equals(other._isClustered)
+                && _isUnique.Equals(other._isUnique);
+        }
+
+        /// <summary>
+        /// Returns true if this attribute specifies the same name and configuration as the given attribute.
+        /// </summary>
+        /// <param name="obj">The attribute to compare.</param>
+        /// <returns>True if the other object is equal to this object; otherwise false.</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((IndexAttribute)obj);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (_name != null ? _name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ _order;
+                hashCode = (hashCode * 397) ^ _isClustered.GetHashCode();
+                hashCode = (hashCode * 397) ^ _isUnique.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

@@ -25,7 +25,11 @@ namespace System.Data.Entity.Infrastructure
     /// </remarks>
     public class IndexAnnotation : IMergeableAnnotation
     {
-        internal const string AnnotationName = "Index";
+        /// <summary>
+        /// The name used when this annotation is stored in Entity Framework metadata or serialized into
+        /// an SSDL/EDMX file.
+        /// </summary>
+        public const string AnnotationName = "Index";
         
         private readonly IList<IndexAttribute> _indexes = new List<IndexAttribute>();
 
@@ -114,7 +118,7 @@ namespace System.Data.Entity.Infrastructure
         /// Two annotations are considered compatible if each IndexAttribute with a given name is only
         /// contained in one annotation or the other, or if both annotations contain an IndexAttribute
         /// with the givebn name and these are considered compatible by means of the
-        /// <see cref="IndexAttribute.IsCompatibleWith"/> method.
+        /// <see cref="IndexAttribute.IsCompatibleWith(IndexAttribute)"/> method.
         /// </remarks>
         /// <param name="other">The annotation to compare.</param>
         /// <returns>A CompatibilityResult indicating whether or not this annotation is compatible with the other.</returns>
@@ -155,13 +159,13 @@ namespace System.Data.Entity.Infrastructure
         /// Each index annotation contains at most one <see cref="IndexAttribute"/> with a given name.
         /// The merged annotation will contain IndexAttributes from both this and the other annotation.
         /// If both annotations contain an IndexAttribute with the same name, then the merged annotation
-        /// will contain one IndexAttribute with that name obtained by calling <see cref="IndexAttribute.MergeWith"/>.
+        /// will contain one IndexAttribute with that name obtained by calling <see cref="IndexAttribute.MergeWith(IndexAttribute)"/>.
         /// </remarks>
         /// <param name="other">The annotation to merge with this one.</param>
         /// <returns>A new annotation with indexes from both annotations merged.</returns>
         /// <exception cref="InvalidOperationException">
         /// The other annotation contains indexes that are not compatible with indexes in this annotation
-        /// as determined by the <see cref="IndexAttribute.IsCompatibleWith"/> method.
+        /// as determined by the <see cref="IndexAttribute.IsCompatibleWith(IndexAttribute)"/> method.
         /// </exception>
         public virtual object MergeWith(object other)
         {

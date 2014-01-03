@@ -4,7 +4,6 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;

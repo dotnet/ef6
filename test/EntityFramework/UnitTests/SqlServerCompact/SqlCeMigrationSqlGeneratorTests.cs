@@ -455,7 +455,7 @@ ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
         }
 
         [Fact]
-        public void Generate_can_output_create_index_statement_clustered()
+        public void Generate_ignores_clustered_configuration_since_it_is_not_supported_on_CE()
         {
             var createTableOperation = new CreateTableOperation("Customers");
             var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
@@ -494,7 +494,7 @@ ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
                     "4.0").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                @"CREATE UNIQUE CLUSTERED INDEX [IX_Id] ON [Customers]([Id])", sql);
+                @"CREATE UNIQUE INDEX [IX_Id] ON [Customers]([Id])", sql);
         }
 
         [Fact]
