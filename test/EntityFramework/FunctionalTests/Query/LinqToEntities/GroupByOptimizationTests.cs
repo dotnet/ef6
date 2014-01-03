@@ -288,5 +288,57 @@ FROM ( SELECT DISTINCT
                 QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o == i);
             }
         }
+
+        [Fact]
+        public void Grouping_by_all_columns_doesnt_produce_a_groupby_statement()
+        {
+            var expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias]
+    FROM [dbo].[ArubaOwners] AS [Extent1]";
+
+            using (var context = new ArubaContext())
+            {
+                var query = context.Owners.GroupBy(o => o).Select(g => g.Key);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var results = query.ToList();
+                var expected = context.Owners.ToList().GroupBy(o => o).Select(g => g.Key).ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o == i);
+
+            }
+        }
+
+        [Fact]
+        public void Grouping_by_all_columns_with_aggregate_count_works()
+        {
+            var expectedSql =
+@"SELECT 
+    (SELECT 
+        COUNT(1) AS [A1]
+        FROM [dbo].[ArubaOwners] AS [Extent2]
+        WHERE [Extent1].[Id] = [Extent2].[Id]) AS [C1]
+    FROM [dbo].[ArubaOwners] AS [Extent1]";
+
+            using (var context = new ArubaContext())
+            {
+                var query = context.Owners.GroupBy(o => new { o.Id, o.FirstName, o.LastName, o.Alias }, c => new { c.LastName, c.FirstName }, (k, g) => g.Count());
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                query = context.Owners.GroupBy(o => o, c => new { c.LastName, c.FirstName }, (k, g) => g.Count());
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                query = context.Owners.GroupBy(o => o, c => c, (k, g) => g.Count());
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var results = query.ToList();
+                var expected = context.Owners.ToList().GroupBy(o => o, c => c, (k, g) => g.Count()).ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o == i);
+
+            }
+        }
     }
 }

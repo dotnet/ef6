@@ -103,6 +103,119 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
+        #region GroupByOpOnAllInputColumnsWithAggregateOperation
+
+        internal static readonly SimpleRule Rule_GroupByOpOnAllInputColumnsWithAggregateOperation = new SimpleRule(
+            OpType.GroupBy, ProcessGroupByOpOnAllInputColumnsWithAggregateOperation);
+
+        // <summary>
+        // Converts a GroupBy(X, Y, Z) => OuterApply(X', GroupBy(Filter(X, key(X') == key(X)), Y, Z))
+        // if and only if X is a ScanTableOp, and Z is the upper node of an aggregate function and
+        // the group by operation uses all the columns of X as the key.
+        // This is a fix for codeplex workitem 1959. Since now we're supporting NewRecordOp nodes as
+        // part of the GroupBy aggregate variable computations, we are also respecting the fact that
+        // group by (e => e) means that we're grouping by all columns of entity e. This was not a
+        // problem when the NewRecordOp node was not being processed since this caused the GroupBy
+        // statement to be simplified to a form with no keys and no output columns. The generated SQL
+        // is correct, but it is different from what it used to be and may be incompatible if the
+        // entity contains fields with datatypes that do not support being grouped by, such as blobs
+        // and images.
+        // This rule simplifies the tree so that we remain compatible with the way we were generating
+        // queries that contain group by (e => e).
+        // What this does is enabling the tree to take a shape that further optimization can convert
+        // into an expression that groups by the key of the table and calls the aggregate function
+        // as expected.
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="n"> Current ProjectOp node </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> Transformation status </returns>
+        private static bool ProcessGroupByOpOnAllInputColumnsWithAggregateOperation(RuleProcessingContext context, Node n, out Node newNode)
+        {
+            newNode = n;
+
+            if (n.Child0.Op.OpType != OpType.ScanTable)
+            {
+                return false;
+            }
+
+            if (n.Child2 == null
+                || n.Child2.Child0 == null
+                || n.Child2.Child0.Child0 == null
+                || n.Child2.Child0.Child0.Op.OpType != OpType.Aggregate)
+            {
+                return false;
+            }
+
+            var groupByOp = (GroupByOp)n.Op;
+
+            var sourceTable = ((ScanTableOp)n.Child0.Op).Table;
+            var allInputColumns = sourceTable.Columns;
+
+            // Exit if the group's keys do not contain all the columns defined by Child0
+            foreach (var column in allInputColumns)
+            {
+                if (!groupByOp.Keys.IsSet(column))
+                {
+                    return false;
+                }
+            }
+
+            // All the columns of Child0 are used, so remove them from the outputs and the keys
+            foreach (var column in allInputColumns)
+            {
+                groupByOp.Outputs.Clear(column);
+                groupByOp.Keys.Clear(column);
+            }
+
+            // Build the OuterApply and also set the filter around the GroupBy's scan table.
+            var command = context.Command;
+
+            var scanTableOp = command.CreateScanTableOp(sourceTable.TableMetadata);
+            var scanTable = command.CreateNode(scanTableOp);
+            var outerApplyNode = command.CreateNode(command.CreateOuterApplyOp(), scanTable, n);
+
+            Var newVar;
+            var varDefListNode = command.CreateVarDefListNode(command.CreateNode(command.CreateVarRefOp(groupByOp.Outputs.First)), out newVar);
+
+            newNode = command.CreateNode(
+                    command.CreateProjectOp(newVar),
+                    outerApplyNode,
+                    varDefListNode);
+
+            Node equality = null;
+            var leftKeys = scanTableOp.Table.Keys.GetEnumerator();
+            var rightKeys = sourceTable.Keys.GetEnumerator();
+            for (int i = 0; i < sourceTable.Keys.Count; ++i)
+            {
+                leftKeys.MoveNext();
+                rightKeys.MoveNext();
+                var comparison = command.CreateNode(
+                                    command.CreateComparisonOp(OpType.EQ),
+                                    command.CreateNode(command.CreateVarRefOp(leftKeys.Current)),
+                                    command.CreateNode(command.CreateVarRefOp(rightKeys.Current)));
+                if (equality != null)
+                {
+                    equality = command.CreateNode(
+                                    command.CreateConditionalOp(OpType.And),
+                                    equality, comparison);
+                }
+                else
+                {
+                    equality = comparison;
+                }
+            }
+
+            var filter = command.CreateNode(command.CreateFilterOp(),
+                         n.Child0,
+                         equality);
+            n.Child0 = filter;
+
+            return true; // subtree modified
+        }
+
+        #endregion
+
         #region GroupByOverProject
 
         internal static readonly PatternMatchRule Rule_GroupByOverProject =
@@ -357,6 +470,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 Rule_GroupByOpWithSimpleVarRedefinitions,
                 Rule_GroupByOverProject,
                 Rule_GroupByOpWithNoAggregates,
+                Rule_GroupByOpOnAllInputColumnsWithAggregateOperation,
             };
 
         #endregion
