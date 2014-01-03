@@ -13,6 +13,7 @@ namespace Microsoft.Data.Entity.Design.Model
     using Microsoft.Data.Entity.Design.Model.Visitor;
     using Microsoft.Data.Entity.Design.Model.XLinqAnnotations;
     using Microsoft.Data.Tools.XmlDesignerBase.Model;
+    using Microsoft.Data.Entity.Design.Common;
 
     internal abstract class EFArtifact : EFContainer
     {
@@ -1057,15 +1058,7 @@ namespace Microsoft.Data.Entity.Design.Model
         internal virtual LangEnum LanguageForCodeGeneration
         {
             get { return LangEnum.CSharp; }
-        }
-
-        // an enum identifying the language types we can generate code in.
-        internal enum LangEnum
-        {
-            Unknown = 0,
-            CSharp = 1,
-            VisualBasic = 2
-        }
+        }        
 
         /// <summary>
         ///     Return schema version

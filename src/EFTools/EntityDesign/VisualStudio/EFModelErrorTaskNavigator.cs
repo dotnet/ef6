@@ -72,7 +72,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 // document wasn't opened
                 var uri = Utils.FileName2Uri(task.Document);
                 if (Path.GetExtension(uri.LocalPath)
-                    .Equals(EntityDesignArtifact.EXTENSION_EDMX, StringComparison.OrdinalIgnoreCase))
+                    .Equals(EntityDesignArtifact.ExtensionEdmx, StringComparison.OrdinalIgnoreCase))
                 {
                     // load a temp model to determine if the document is designer safe (only for EDMX, don't do this for converter docs)
                     var isArtifactDesignerSafe = IsUnloadedDocumentDesignerSafe(uri);

@@ -14,6 +14,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
     using System.Xml.XPath;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Base.Context;
+    using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.Extensibility;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Eventing;
@@ -394,7 +395,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
             {
                 _artifactFileExtensions =
                     new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-                    { EXTENSION_EDMX, EXTENSION_DIAGRAM };
+                    { ExtensionEdmx, ExtensionDiagram };
 
                 // add any other extensions registered by converters
                 foreach (var exportInfo in EscherExtensionPointManager.LoadModelConversionExtensions())

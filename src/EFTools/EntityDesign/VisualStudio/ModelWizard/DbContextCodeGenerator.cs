@@ -11,6 +11,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using System.Linq;
     using EnvDTE;
     using EnvDTE80;
+    using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Tools.XmlDesignerBase.Base.Util;
     using Microsoft.Data.Entity.Design.Model;
 
@@ -127,7 +128,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             }
 
             var webTag = VsUtils.IsWebSiteProject(project) ? "WS" : "";
-            var languageTag = VsUtils.GetLanguageForProject(project) == EFArtifact.LangEnum.VisualBasic ? "VB" : "CS";
+            var languageTag = VsUtils.GetLanguageForProject(project) == LangEnum.VisualBasic ? "VB" : "CS";
             var version = useLegacyTemplate ? "5" : "6";
 
             var templateName = string.Format(CultureInfo.InvariantCulture, _templatePattern, languageTag, webTag, version);

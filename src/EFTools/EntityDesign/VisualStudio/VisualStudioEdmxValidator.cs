@@ -27,7 +27,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             // clear all errors for this project
             ErrorListHelper.ClearHierarchyErrors(pHierProj);
 
-            var fileFinder = new VSFileFinder(EntityDesignArtifact.EXTENSION_EDMX);
+            var fileFinder = new VSFileFinder(EntityDesignArtifact.ExtensionEdmx);
             fileFinder.FindInProject(pHierProj);
 
             var edmxFilesToValidate = new List<VSFileFinder.VSFileInfo>(fileFinder.MatchingFiles);
@@ -170,7 +170,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
             else
             {
-                if (Path.GetExtension(uri.LocalPath).Equals(EntityDesignArtifact.EXTENSION_EDMX, StringComparison.OrdinalIgnoreCase))
+                if (Path.GetExtension(uri.LocalPath).Equals(EntityDesignArtifact.ExtensionEdmx, StringComparison.OrdinalIgnoreCase))
                 {
                     // no doc data exists for this document, so load it into a temp model manager that can be disposed of when we're done. 
                     // Using the LoaderBasedXmlModelProvider will let us catch XML scanner and parser errors (the xml editor will try to 

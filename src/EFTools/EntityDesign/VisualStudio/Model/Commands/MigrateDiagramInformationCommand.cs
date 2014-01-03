@@ -31,7 +31,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model.Commands
         protected override void InvokeInternal(CommandProcessorContext cpc)
         {
             // First check if the diagram file exists, if yes quit immediately.
-            var diagramFilePath = _artifact.Uri.LocalPath + EntityDesignArtifact.EXTENSION_DIAGRAM;
+            var diagramFilePath = _artifact.Uri.LocalPath + EntityDesignArtifact.ExtensionDiagram;
             if (!File.Exists(diagramFilePath)
                 && (_artifact != null))
             {

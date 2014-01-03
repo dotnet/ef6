@@ -53,7 +53,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             "</edmx:Edmx>";
 
         internal static readonly string[] CsdlSsdlMslExtensions =
-            new[] { EntityDesignArtifact.EXTENSION_CSDL, EntityDesignArtifact.EXTENSION_SSDL, EntityDesignArtifact.EXTENSION_MSL };
+            new[] { EntityDesignArtifact.ExtensionCsdl, EntityDesignArtifact.ExtensionSsdl, EntityDesignArtifact.ExtensionMsl };
 
         internal static readonly string AppCodeFolderName = "." + Path.DirectorySeparatorChar + "App_Code" + Path.DirectorySeparatorChar;
 

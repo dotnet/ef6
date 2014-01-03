@@ -173,7 +173,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
                 // SaveDiagram file if the file exists
                 // TODO: What happened if saving diagram file failed? Should we rollback the model file?
                 var diagramDocData =
-                    VSHelpers.GetDocData(PackageManager.Package, fileName + EntityDesignArtifact.EXTENSION_DIAGRAM) as XmlModelDocData;
+                    VSHelpers.GetDocData(PackageManager.Package, fileName + EntityDesignArtifact.ExtensionDiagram) as XmlModelDocData;
                 if (diagramDocData != null)
                 {
                     int saveIsCancelled;

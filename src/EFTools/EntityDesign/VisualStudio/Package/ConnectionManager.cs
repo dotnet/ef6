@@ -27,6 +27,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using Microsoft.VisualStudio.TextManager.Interop;
     using Constants = EnvDTE.Constants;
     using Resources = Microsoft.Data.Entity.Design.Resources;
+    using Microsoft.Data.Entity.Design.Common;
 
     /// <summary>
     ///     The Connection Manager allows interaction with App.Config and Web.Config. It stores a "project dictionary" where each bucket corresponds
@@ -675,11 +676,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             var langEnum = VsUtils.GetLanguageForProject(project);
 
-            if (langEnum == EFArtifact.LangEnum.CSharp)
+            if (langEnum == LangEnum.CSharp)
             {
                 itemTemplateName = AppConfigItemTemplateCs;
             }
-            else if (langEnum == EFArtifact.LangEnum.VisualBasic)
+            else if (langEnum == LangEnum.VisualBasic)
             {
                 itemTemplateName = AppConfigItemTemplateVb;
             }
@@ -747,11 +748,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                         {
                             // in this case project.Kind does not indicate the language, so use fixed Guids instead
                             var projectLanguage = VsUtils.GetLanguageForProject(project);
-                            if (projectLanguage == EFArtifact.LangEnum.CSharp)
+                            if (projectLanguage == LangEnum.CSharp)
                             {
                                 itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, CsWebApplicationKind);
                             }
-                            else if (projectLanguage == EFArtifact.LangEnum.VisualBasic)
+                            else if (projectLanguage == LangEnum.VisualBasic)
                             {
                                 itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, VbWebApplicationKind);
                             }
@@ -1066,9 +1067,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 {
                     var connString = enumerator.Current.Value;
                     var metadata = connString.Builder.Metadata;
-                    if (metadata.Contains(fileName + EntityDesignArtifact.EXTENSION_CSDL)
-                        && metadata.Contains(fileName + EntityDesignArtifact.EXTENSION_MSL)
-                        && metadata.Contains(fileName + EntityDesignArtifact.EXTENSION_SSDL))
+                    if (metadata.Contains(fileName + EntityDesignArtifact.ExtensionCsdl)
+                        && metadata.Contains(fileName + EntityDesignArtifact.ExtensionMsl)
+                        && metadata.Contains(fileName + EntityDesignArtifact.ExtensionSsdl))
                     {
                         return connString;
                     }
@@ -1596,7 +1597,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         internal int OnAfterRenameFile(object sender, ModelChangeEventArgs args)
         {
             // ignore files that are not edmx
-            if (!Path.GetExtension(args.OldFileName).Equals(EntityDesignArtifact.EXTENSION_EDMX, StringComparison.CurrentCulture))
+            if (!Path.GetExtension(args.OldFileName).Equals(EntityDesignArtifact.ExtensionEdmx, StringComparison.CurrentCulture))
             {
                 return VSConstants.E_NOTIMPL;
             }
@@ -1613,7 +1614,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             // if we are renaming the extension to a non-edmx extension, then the artifact will be null
             if (args.Artifact == null)
             {
-                if (Path.GetExtension(args.NewFileName).Equals(EntityDesignArtifact.EXTENSION_EDMX, StringComparison.CurrentCulture))
+                if (Path.GetExtension(args.NewFileName).Equals(EntityDesignArtifact.ExtensionEdmx, StringComparison.CurrentCulture))
                 {
                     Debug.Fail("we are renaming the file to one with an edmx extension, why weren't we able to find the artifact?");
                 }

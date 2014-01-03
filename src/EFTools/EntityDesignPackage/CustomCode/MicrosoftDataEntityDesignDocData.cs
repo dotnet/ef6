@@ -350,7 +350,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 var fileExtension = fileInfo.Extension;
 
                 // now if this is not an EDMX file, hand off to the extension who can convert it to the writable content
-                if (!string.Equals(fileExtension, EntityDesignArtifact.EXTENSION_EDMX, StringComparison.OrdinalIgnoreCase))
+                if (!string.Equals(fileExtension, EntityDesignArtifact.ExtensionEdmx, StringComparison.OrdinalIgnoreCase))
                 {
                     // the current document coming from the serializers becomes our original
                     conversionContext = new ModelConversionContextImpl(

@@ -957,26 +957,26 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return GetProjectKind(project) == ProjectKind.Web;
         }
 
-        internal static EFArtifact.LangEnum GetLanguageForProject(Project project)
+        internal static LangEnum GetLanguageForProject(Project project)
         {
             switch (GetProjectKind(project))
             {
                 case ProjectKind.CSharp:
-                    return EFArtifact.LangEnum.CSharp;
+                    return LangEnum.CSharp;
                 case ProjectKind.VB:
-                    return EFArtifact.LangEnum.VisualBasic;
+                    return LangEnum.VisualBasic;
                 case ProjectKind.Web:
                     if (IsWebSiteVBProject(project))
                     {
-                        return EFArtifact.LangEnum.VisualBasic;
+                        return LangEnum.VisualBasic;
                     }
                     if (IsWebSiteCSharpProject(project))
                     {
-                        return EFArtifact.LangEnum.CSharp;
+                        return LangEnum.CSharp;
                     }
                     break;
             }
-            return EFArtifact.LangEnum.Unknown;
+            return LangEnum.Unknown;
         }
 
         internal static ProjectItem GetProjectItem(IVsHierarchy hierarchy, uint itemId)
@@ -1429,11 +1429,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 {
                     switch (GetLanguageForProject(sourceProjectItem.ContainingProject))
                     {
-                        case EFArtifact.LangEnum.CSharp:
+                        case LangEnum.CSharp:
                             return GetProjectItemForDocument(
                                 Path.ChangeExtension(sourceFileName, FileExtensions.CsExt), Services.ServiceProvider);
 
-                        case EFArtifact.LangEnum.VisualBasic:
+                        case LangEnum.VisualBasic:
                             return GetProjectItemForDocument(
                                 Path.ChangeExtension(sourceFileName, FileExtensions.VbExt), Services.ServiceProvider);
                     }

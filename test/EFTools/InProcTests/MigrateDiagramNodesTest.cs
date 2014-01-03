@@ -175,7 +175,7 @@ namespace EFDesigner.InProcTests
                                 entityDesignArtifact.IsDesignerSafe,
                                 "Artifact should not be in safe mode after MigrateDiagramInformationCommand is executed.");
                             Debug.Assert(
-                                new Uri(entityDesignArtifact.Uri.LocalPath + EntityDesignArtifact.EXTENSION_DIAGRAM)
+                                new Uri(entityDesignArtifact.Uri.LocalPath + EntityDesignArtifact.ExtensionDiagram)
                                 == entityDesignArtifact.DiagramArtifact.Uri);
 
                             runTest(entityDesignArtifact, commandProcessorContext);

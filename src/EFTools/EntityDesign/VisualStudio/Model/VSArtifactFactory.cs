@@ -35,7 +35,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
         private static DiagramArtifact GetDiagramArtifactIfAvailable(
             ModelManager modelManager, Uri modelUri, XmlModelProvider xmlModelProvider)
         {
-            var diagramFileName = modelUri.OriginalString + EntityDesignArtifact.EXTENSION_DIAGRAM;
+            var diagramFileName = modelUri.OriginalString + EntityDesignArtifact.ExtensionDiagram;
             return File.Exists(diagramFileName)
                        ? new VSDiagramArtifact(modelManager, new Uri(diagramFileName), xmlModelProvider)
                        : null;

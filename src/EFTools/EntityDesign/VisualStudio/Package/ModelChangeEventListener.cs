@@ -332,7 +332,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                     {
                         if (artifact == null
                             && Path.GetExtension(args.NewFileName)
-                                   .Equals(EntityDesignArtifact.EXTENSION_EDMX, StringComparison.CurrentCulture))
+                                   .Equals(EntityDesignArtifact.ExtensionEdmx, StringComparison.CurrentCulture))
                         {
                             tempModelManager = new EntityDesignModelManager(new EFArtifactFactory(), new VSArtifactSetFactory());
                             artifact = tempModelManager.GetNewOrExistingArtifact(

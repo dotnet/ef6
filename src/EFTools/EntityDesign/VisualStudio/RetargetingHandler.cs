@@ -82,7 +82,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         protected virtual IEnumerable<VSFileFinder.VSFileInfo> GetEdmxFileInfos()
         {
             // since this is about retargeting EDMX files on disk, no need to process other file extensions from any converters
-            return new VSFileFinder(EntityDesignArtifact.EXTENSION_EDMX).FindInProject(_hierarchy);
+            return new VSFileFinder(EntityDesignArtifact.ExtensionEdmx).FindInProject(_hierarchy);
         }
 
         // protected virtual to allow mocking

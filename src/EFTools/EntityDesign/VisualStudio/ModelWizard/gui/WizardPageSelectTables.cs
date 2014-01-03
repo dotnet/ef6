@@ -508,7 +508,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             {
                 // find the namespace used in the CSDL section of each existing edmx file in the project
                 var vsHierarchy = VsUtils.GetVsHierarchy(project, Services.ServiceProvider);
-                var fileFinder = new VSFileFinder(EntityDesignArtifact.EXTENSION_EDMX);
+                var fileFinder = new VSFileFinder(EntityDesignArtifact.ExtensionEdmx);
                 fileFinder.FindInProject(vsHierarchy);
 
                 foreach (var fileInfo in fileFinder.MatchingFiles)

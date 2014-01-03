@@ -913,6 +913,8 @@
     <ItemGroup>
       <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.edmx" />
       <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.edmx.diagram" />
+      <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.cs" />
+      <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.vb" />
     </ItemGroup>
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemCS.vstemplate;@(CommonTemplateFile)" OutputFileName="$(CSZip)" OverwriteExistingFile="true" />
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemVB.vstemplate;@(CommonTemplateFile)" OutputFileName="$(VBZip)" OverwriteExistingFile="true" />

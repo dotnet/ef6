@@ -56,6 +56,7 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.WizardFramework, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -167,6 +168,7 @@
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageBaseTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageDbConfigTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageStartTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\ModelObjectItemWizardTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Model\StandaloneXmlModelProviderTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\ConnectionManagerTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\EntityDesignDocumentFrameMgrTests.cs" />

@@ -1,7 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
-
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
     using System;
@@ -16,6 +14,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.Data.Entity.Design.Base.Context;
+    using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.Extensibility;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Commands;
@@ -35,14 +34,23 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using Microsoft.VisualStudio.TemplateWizard;
     using Command = Microsoft.Data.Entity.Design.Model.Commands.Command;
     using Resources = Microsoft.Data.Entity.Design.Resources;
+    using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
     /// <summary>
     ///     Visual Studio invokes this wizard when a new item of type "ADO.NET Entity Data Model" is added
     ///     to an existing project.  This wizard is registered in the .vstemplate file item template.
     ///     The files added by this item template are:
-    ///     +- modelName.edmx
-    ///     |
-    ///     +- modelName.Designer.cs [or vb] => code generator output
+    /// 
+    ///        +- modelName.edmx
+    ///        |
+    ///        +- modelName.edmx.diagram
+    ///        |
+    ///        +- modelName.Designer.cs [or vb] => code generator output (for EF5 and Legacy ObjectContext generator)
+    /// 
+    ///     or
+    /// 
+    ///        +- ModelName.cs [or vb] - for CodeFirst
+    /// 
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class ModelObjectItemWizard : IWizard
@@ -52,11 +60,21 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         private const string EntityContainerNameSuffix = "Container";
 
         private ProjectItem _edmxItem;
-        private Project _activeSolutionProject;
         internal const string EntityDeployBuildActionName = "EntityDeploy";
         internal const string ItemTypePropertyName = "ItemType";
 
         private ModelBuilderSettings _modelBuilderSettings;
+
+        public ModelObjectItemWizard()
+        {
+            
+        }
+
+        // for testing only
+        internal ModelObjectItemWizard(ModelBuilderSettings settings)
+        {
+            _modelBuilderSettings = settings;
+        }
 
         /// <summary>
         ///     This method is called before opening any item that has the OpenInEditor attribute
@@ -83,9 +101,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
             Debug.Assert(
-                VSArtifact.GetVSArtifactFileExtensions().Contains(Path.GetExtension(projectItem.Name)),
+                VSArtifact.GetVSArtifactFileExtensions()
+                    .Concat(new[] { FileExtensions.CsExt, FileExtensions.VbExt })
+                    .Contains(Path.GetExtension(projectItem.Name)),
                 "Unexpected file extension for project item");
-            if (string.Equals(Path.GetExtension(projectItem.Name), EntityDesignArtifact.EXTENSION_EDMX, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(Path.GetExtension(projectItem.Name), EntityDesignArtifact.ExtensionEdmx, StringComparison.OrdinalIgnoreCase))
             {
                 _edmxItem = projectItem;
             }
@@ -109,10 +129,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             var serviceProvider = new ServiceProvider((IOleServiceProvider)dte);
 
             // get the current project that the wizard is running in
-            _activeSolutionProject = VsUtils.GetActiveProject(dte);
-            Debug.Assert(_activeSolutionProject != null, "Unable to retrieve ActiveSolutionProject from DTE");
+            var project = VsUtils.GetActiveProject(dte);
+            Debug.Assert(project != null, "Unable to retrieve ActiveSolutionProject from DTE");
 
-            EnsureCanStartWizard(serviceProvider);
+            EnsureCanStartWizard(project, serviceProvider);
 
             // get file name the user chose 
             string modelName;
@@ -122,16 +142,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
             modelName = SanitizeModelName(modelName);
 
-            PopluateReplacementDictionary(replacementsDictionary, modelName);
+            PopluateReplacementDictionary(project, replacementsDictionary, modelName);
 
             _modelBuilderSettings = new ModelBuilderSettings
             {
-                VSApplicationType = VsUtils.GetApplicationType(serviceProvider, _activeSolutionProject),
+                VSApplicationType = VsUtils.GetApplicationType(serviceProvider, project),
                 WizardKind = WizardKind.Generate,
                 TargetSchemaVersion =
-                    EdmUtils.GetEntityFrameworkVersion(_activeSolutionProject, serviceProvider, useLatestIfNoEF: false),
-                NewItemFolder = GetFolderNameForNewItems(dte, _activeSolutionProject),
-                Project = _activeSolutionProject,
+                    EdmUtils.GetEntityFrameworkVersion(project, serviceProvider, useLatestIfNoEF: false),
+                NewItemFolder = GetFolderNameForNewItems(dte, project),
+                Project = project,
                 ModelName = modelName,
                 VsTemplatePath = customParams[0] as string, 
                 ReplacementDictionary =  replacementsDictionary
@@ -193,7 +213,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.Data.Entity.Design.VisualStudio.VsUtils.ShowErrorDialog(System.String)")]
-        private void EnsureCanStartWizard(IServiceProvider serviceProvider)
+        private static void EnsureCanStartWizard(Project project, IServiceProvider serviceProvider)
         {
             // make sure we can access the data package           
             if (serviceProvider.GetService(typeof(IVsDataConnectionManager)) == null)
@@ -220,8 +240,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 throw new WizardCancelledException(Resources.LoadOurPackageError, ex);
             }
 
-            if (!VsUtils.EntityFrameworkSupportedInProject(
-                _activeSolutionProject, serviceProvider, allowMiscProject: false))
+            if (!VsUtils.EntityFrameworkSupportedInProject(project, serviceProvider, allowMiscProject: false))
             {
                 VsUtils.ShowErrorDialog(
                     string.Format(
@@ -231,7 +250,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             }
         }
 
-        private void PopluateReplacementDictionary(Dictionary<string, string> replacementsDictionary, string modelName)
+        private static void PopluateReplacementDictionary(Project project, Dictionary<string, string> replacementsDictionary, string modelName)
         {
             // create a "fixed" version that removes non-valid characters and leading underscores
             var fixedModelName = XmlConvert.EncodeName(modelName).TrimStart('_');
@@ -252,8 +271,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
             // set the value to be used for EntityContainerName in blank models
             var entityContainerName = PackageManager.Package.ConnectionManager.ConstructUniqueEntityContainerName(
-                fixedModelName + EntityContainerNameSuffix,
-                _activeSolutionProject);
+                fixedModelName + EntityContainerNameSuffix, project);
+
             replacementsDictionary.Add("$conceptualEntityContainerName$", entityContainerName);
 
             // set default value of the EnablePluralization flag dependent on current culture
@@ -270,11 +289,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void RunFinished()
         {
-            if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
-            {
-                throw new NotImplementedException("Option temporarily not available. Please try again later.");
-            }
-
             if (_edmxItem == null)
             {
                 return;
@@ -283,7 +297,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             var fileExtension = Path.GetExtension(_edmxItem.FileNames[1]);
 
             Debug.Assert(
-                _activeSolutionProject.Equals(_edmxItem.ContainingProject),
+                _modelBuilderSettings.Project.Equals(_edmxItem.ContainingProject),
                 "ActiveSolutionProject is not the EDMX file's containing project");
             using (new VsUtils.HourglassHelper())
             {
@@ -301,7 +315,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                         writingModelWatch.Start();
                         var mbe = _modelBuilderSettings.ModelBuilderEngine;
 
-                        if (!string.Equals(fileExtension, EntityDesignArtifact.EXTENSION_EDMX, StringComparison.OrdinalIgnoreCase))
+                        if (!string.Equals(fileExtension, EntityDesignArtifact.ExtensionEdmx, StringComparison.OrdinalIgnoreCase))
                         {
                             // convert the file if this isn't EDMX
                             var edmxFileInfo = new FileInfo(_edmxItem.FileNames[1]);
@@ -345,7 +359,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     if (_modelBuilderSettings.VSApplicationType != VisualStudioProjectSystem.Website
                         && string.Equals(
                             fileExtension,
-                            EntityDesignArtifact.EXTENSION_EDMX,
+                            EntityDesignArtifact.ExtensionEdmx,
                             StringComparison.OrdinalIgnoreCase))
                     {
                         _edmxItem.Properties.Item(ItemTypePropertyName).Value = EntityDeployBuildActionName;
@@ -557,7 +571,23 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// </summary>
         public bool ShouldAddProjectItem(string filePath)
         {
-            return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst;
+            var itemExtension = Path.GetExtension(filePath);
+
+            Debug.Assert(!string.IsNullOrWhiteSpace(itemExtension), "Invalid project item extension");
+
+            if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
+            {
+                var projectLanguage = VsUtils.GetLanguageForProject(_modelBuilderSettings.Project);
+
+                return
+                    (FileExtensions.CsExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase) && projectLanguage == LangEnum.CSharp) ||
+                    (FileExtensions.VbExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase) && projectLanguage == LangEnum.VisualBasic);
+            }
+            else
+            {
+                return !FileExtensions.CsExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase) &&
+                       !FileExtensions.VbExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         /// <summary>

@@ -46,7 +46,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
             Debug.Assert(uri != null, "uri != null");
 
             return
-                EntityDesignArtifact.EXTENSION_EDMX.Equals(
+                EntityDesignArtifact.ExtensionEdmx.Equals(
                     Path.GetExtension(uri.LocalPath),
                     StringComparison.OrdinalIgnoreCase)
                     ? CreateAnnotatedXDocument(ReadEdmxContents(uri))
@@ -154,7 +154,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
 
                 // see if we are loading an EDMX file or not, and if we have any converters
                 if (!string.Equals(
-                    fileExtension, EntityDesignArtifact.EXTENSION_EDMX,
+                    fileExtension, EntityDesignArtifact.ExtensionEdmx,
                     StringComparison.OrdinalIgnoreCase))
                 {
                     conversionContext = new ModelConversionContextImpl(

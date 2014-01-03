@@ -405,7 +405,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         private static FileInfo ConstructTempEdmxFile(ModelBuilderSettings settings)
         {
-            var tempFilePath = Path.GetTempFileName().Replace(".tmp", EntityDesignArtifact.EXTENSION_EDMX);
+            var tempFilePath = Path.GetTempFileName().Replace(".tmp", EntityDesignArtifact.ExtensionEdmx);
             using (var fs = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write))
             {
                 using (var sw = new StreamWriter(fs, Encoding.UTF8))

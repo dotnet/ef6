@@ -21,11 +21,11 @@ namespace Microsoft.Data.Entity.Design.Model
     {
         #region Fields
 
-        internal static readonly string EXTENSION_MSL = ".msl";
-        internal static readonly string EXTENSION_CSDL = ".csdl";
-        internal static readonly string EXTENSION_SSDL = ".ssdl";
-        internal static readonly string EXTENSION_EDMX = ".edmx";
-        internal static readonly string EXTENSION_DIAGRAM = ".diagram";
+        internal static readonly string ExtensionMsl = ".msl";
+        internal static readonly string ExtensionCsdl = ".csdl";
+        internal static readonly string ExtensionSsdl = ".ssdl";
+        internal static readonly string ExtensionEdmx = ".edmx";
+        internal static readonly string ExtensionDiagram = ".diagram";
 
         // designer models
         private EFDesignerInfoRoot _designerInfoRoot;
@@ -200,15 +200,15 @@ namespace Microsoft.Data.Entity.Design.Model
             var lastdot = path.LastIndexOf('.');
             var extension = Uri.LocalPath.Substring(lastdot, path.Length - lastdot);
 
-            if (extension.EndsWith(EXTENSION_MSL, StringComparison.OrdinalIgnoreCase))
+            if (extension.EndsWith(ExtensionMsl, StringComparison.OrdinalIgnoreCase))
             {
                 _mappingModel = new MappingModel(this, XDocument.Root);
             }
-            else if (extension.EndsWith(EXTENSION_CSDL, StringComparison.OrdinalIgnoreCase))
+            else if (extension.EndsWith(ExtensionCsdl, StringComparison.OrdinalIgnoreCase))
             {
                 _conceptualEntityModel = new ConceptualEntityModel(this, XDocument.Root);
             }
-            else if (extension.EndsWith(EXTENSION_SSDL, StringComparison.OrdinalIgnoreCase))
+            else if (extension.EndsWith(ExtensionSsdl, StringComparison.OrdinalIgnoreCase))
             {
                 _storageEntityModel = new StorageEntityModel(this, XDocument.Root);
             }
@@ -858,7 +858,7 @@ namespace Microsoft.Data.Entity.Design.Model
         internal virtual HashSet<string> GetFileExtensions()
         {
             var extensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            extensions.Add(EXTENSION_EDMX);
+            extensions.Add(ExtensionEdmx);
             return extensions;
         }
 
