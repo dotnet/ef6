@@ -80,8 +80,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 {
                     new ListViewItem(Resources.GenerateFromDatabaseOption, "database.bmp"),
                     new ListViewItem(Resources.EmptyModelOption, "EmptyModel.bmp"),
-                    new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.bmp")
                 });
+
+            if (NetFrameworkVersioningHelper.TargetNetFrameworkVersion(wizard.ModelBuilderSettings.Project, serviceProvider) >=
+                NetFrameworkVersioningHelper.NetFrameworkVersion4)
+            {
+                listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.bmp"));
+            }
 
             // Always select the first item
             listViewModelContents.MultiSelect = false;
@@ -269,6 +274,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 else
                 {
                     Debug.Assert(nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected Index");
+                    Debug.Assert(
+                        NetFrameworkVersioningHelper.TargetNetFrameworkVersion(Wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider) > 
+                        NetFrameworkVersioningHelper.NetFrameworkVersion3_5, "Option should be disabled for .NET Framework 3.5");
 
                     // User selection = "Empty Model"
                     // - update hint textbox

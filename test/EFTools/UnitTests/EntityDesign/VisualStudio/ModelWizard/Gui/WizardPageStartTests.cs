@@ -2,7 +2,6 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
-    using System.Xml.Linq;
     using Microsoft.Data.Entity.Design.VersioningFacade;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Moq;
@@ -10,6 +9,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using UnitTests.TestHelpers;
     using Xunit;
 
     public class WizardPageStartTests
@@ -34,14 +34,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_creates_and_verifies_model_path()
         {
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+
             var modelBuilderSettings = new ModelBuilderSettings
             {
                 NewItemFolder = @"C:\temp",
-                ModelName = "myModel"
+                ModelName = "myModel",
+                Project = mockDte.Project
             };
 
             var wizard = new ModelBuilderWizardForm(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, new Mock<IServiceProvider>().Object) { CallBase = true };
+            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, mockDte.ServiceProvider) { CallBase = true };
             mockWizardPageStart
                 .Protected()
                 .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
@@ -57,14 +60,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_does_not_update_settings_if_model_file_already_exists()
         {
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+
             var modelBuilderSettings = new ModelBuilderSettings
             {
                 NewItemFolder = @"C:\temp",
-                ModelName = "myModel"
+                ModelName = "myModel",
+                Project = mockDte.Project
             };
 
             var wizard = new ModelBuilderWizardForm(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, new Mock<IServiceProvider>().Object) { CallBase = true };
+            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, mockDte.ServiceProvider) { CallBase = true };
             mockWizardPageStart
                 .Protected()
                 .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
@@ -79,16 +85,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_empty_model()
         {
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+
             var modelBuilderSettings = new ModelBuilderSettings
             {
                 NewItemFolder = @"C:\temp",
                 ModelName = "myModel",
                 ReplacementDictionary = new Dictionary<string, string>(),
-                TargetSchemaVersion = EntityFrameworkVersion.Version3
+                TargetSchemaVersion = EntityFrameworkVersion.Version3,
+                Project = mockDte.Project
             };
 
             var wizard = new ModelBuilderWizardForm(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, new Mock<IServiceProvider>().Object) { CallBase = true };
+            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, mockDte.ServiceProvider) { CallBase = true };
             mockWizardPageStart
                 .Protected()
                 .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
@@ -110,17 +119,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_generate_from_database()
         {
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+
             var modelBuilderSettings = new ModelBuilderSettings
             {
                 NewItemFolder = @"C:\temp",
                 ModelName = "myModel",
                 ReplacementDictionary = new Dictionary<string, string>(),
                 TargetSchemaVersion = EntityFrameworkVersion.Version3,
-                VsTemplatePath = "fake.vstemplate"
+                VsTemplatePath = "fake.vstemplate",
+                Project = mockDte.Project
             };
 
             var wizard = new ModelBuilderWizardForm(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, new Mock<IServiceProvider>().Object) { CallBase = true };
+            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, mockDte.ServiceProvider) { CallBase = true };
             mockWizardPageStart
                 .Protected()
                 .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
@@ -151,8 +163,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnActivate_result_depends_on_FileAlreadyExistsError()
         {
-            var wizard = new ModelBuilderWizardForm(new ModelBuilderSettings(), ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
-            var wizardPageStart = new WizardPageStart(wizard, new Mock<IServiceProvider>().Object);
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+            var wizard = new ModelBuilderWizardForm(
+                new ModelBuilderSettings { Project = mockDte.Project}, 
+                ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
+            var wizardPageStart = new WizardPageStart(wizard, mockDte.ServiceProvider);
 
             wizard.FileAlreadyExistsError = true;
             Assert.False(wizardPageStart.OnActivate());
