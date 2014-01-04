@@ -4,11 +4,14 @@ namespace System.Data.Entity.Interception
 {
     using System.Data.Common;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Resources;
+    using System.Data.SqlClient;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -19,7 +22,8 @@ namespace System.Data.Entity.Interception
         public void No_TransactionHandler_and_no_ExecutionStrategy_throws_CommitFailedException_on_commit_fail()
         {
             Execute_commit_failure_test(
-                c => Assert.Throws<CommitFailedException>(() => c.SaveChanges()),
+                c => Assert.Throws<DataException>(() => c()).InnerException.ValidateMessage("CommitFailed"),
+                c => Assert.Throws<CommitFailedException>(() => c()).ValidateMessage("CommitFailed"),
                 expectedBlogs: 1,
                 useTransactionHandler: false,
                 useExecutionStrategy: false,
@@ -30,7 +34,8 @@ namespace System.Data.Entity.Interception
         public void No_TransactionHandler_and_no_ExecutionStrategy_throws_CommitFailedException_on_false_commit_fail()
         {
             Execute_commit_failure_test(
-                c => Assert.Throws<CommitFailedException>(() => c.SaveChanges()),
+                c => Assert.Throws<DataException>(() => c()).InnerException.ValidateMessage("CommitFailed"),
+                c => Assert.Throws<CommitFailedException>(() => c()).ValidateMessage("CommitFailed"),
                 expectedBlogs: 2,
                 useTransactionHandler: false,
                 useExecutionStrategy: false,
@@ -41,9 +46,10 @@ namespace System.Data.Entity.Interception
         public void TransactionHandler_and_no_ExecutionStrategy_rethrows_original_exception_on_commit_fail()
         {
             Execute_commit_failure_test(
+                c => Assert.Throws<TimeoutException>(() => c()),
                 c =>
                 {
-                    var exception = Assert.Throws<EntityException>(() => c.SaveChanges());
+                    var exception = Assert.Throws<EntityException>(() => c());
                     Assert.IsType<TimeoutException>(exception.InnerException);
                 },
                 expectedBlogs: 1,
@@ -56,7 +62,8 @@ namespace System.Data.Entity.Interception
         public void TransactionHandler_and_no_ExecutionStrategy_does_not_throw_on_false_commit_fail()
         {
             Execute_commit_failure_test(
-                c => c.SaveChanges(),
+                c => c(),
+                c => c(),
                 expectedBlogs: 2,
                 useTransactionHandler: true,
                 useExecutionStrategy: false,
@@ -67,7 +74,8 @@ namespace System.Data.Entity.Interception
         public void No_TransactionHandler_and_ExecutionStrategy_throws_CommitFailedException_on_commit_fail()
         {
             Execute_commit_failure_test(
-                c => Assert.Throws<CommitFailedException>(() => c.SaveChanges()),
+                c => Assert.Throws<DataException>(() => c()).InnerException.ValidateMessage("CommitFailed"),
+                c => Assert.Throws<CommitFailedException>(() => c()).ValidateMessage("CommitFailed"),
                 expectedBlogs: 1,
                 useTransactionHandler: false,
                 useExecutionStrategy: true,
@@ -78,7 +86,8 @@ namespace System.Data.Entity.Interception
         public void No_TransactionHandler_and_ExecutionStrategy_throws_CommitFailedException_on_false_commit_fail()
         {
             Execute_commit_failure_test(
-                c => Assert.Throws<CommitFailedException>(() => c.SaveChanges()),
+                c => Assert.Throws<DataException>(() => c()).InnerException.ValidateMessage("CommitFailed"),
+                c => Assert.Throws<CommitFailedException>(() => c()).ValidateMessage("CommitFailed"),
                 expectedBlogs: 2,
                 useTransactionHandler: false,
                 useExecutionStrategy: true,
@@ -89,16 +98,15 @@ namespace System.Data.Entity.Interception
         public void TransactionHandler_and_ExecutionStrategy_retries_on_commit_fail()
         {
             Execute_commit_failure_test(
-                c => c.SaveChanges(),
+                c => c(),
+                c => c(),
                 expectedBlogs: 2,
                 useTransactionHandler: true,
                 useExecutionStrategy: true,
                 rollbackOnFail: true);
         }
 
-        private static void Execute_commit_failure_test(
-            Action<BlogContextCommit> runAndVerify, int expectedBlogs, bool useTransactionHandler, bool useExecutionStrategy,
-            bool rollbackOnFail)
+        private void Execute_commit_failure_test(Action<Action> verifyInitialization, Action<Action> verifySaveChanges, int expectedBlogs, bool useTransactionHandler, bool useExecutionStrategy, bool rollbackOnFail)
         {
             var failingTransactionInterceptor = new FailingTransactionInterceptor();
             DbInterception.Add(failingTransactionInterceptor);
@@ -119,21 +127,34 @@ namespace System.Data.Entity.Interception
             {
                 using (var context = new BlogContextCommit())
                 {
-                    FailingTransactionInterceptor.ShouldFailTimes = 0;
                     context.Database.Delete();
+                    FailingTransactionInterceptor.ShouldFailTimes = 1;
+                    FailingTransactionInterceptor.ShouldRollBack = rollbackOnFail;
+                    verifyInitialization(() => context.Blogs.Count());
+
+                    FailingTransactionInterceptor.ShouldFailTimes = 0;
                     Assert.Equal(1, context.Blogs.Count());
 
                     FailingTransactionInterceptor.ShouldFailTimes = 1;
-                    FailingTransactionInterceptor.ShouldRollBack = rollbackOnFail;
 
                     context.Blogs.Add(new BlogContext.Blog());
-                    runAndVerify(context);
+                    verifySaveChanges(() => context.SaveChanges());
                 }
 
                 using (var context = new BlogContextCommit())
                 {
                     Assert.Equal(expectedBlogs, context.Blogs.Count());
+
+                    using (var transactionContext = new TransactionContext(context.Database.Connection))
+                    {
+                        using (var infoContext = GetInfoContext(transactionContext))
+                        {
+                            Assert.True(!infoContext.TableExists("__Transactions")
+                                || !transactionContext.Transactions.Any());
+                        }
+                    }
                 }
+
             }
             finally
             {
@@ -226,17 +247,71 @@ namespace System.Data.Entity.Interception
 
                     FailingTransactionInterceptor.ShouldFailTimes = 0;
                     failingTransactionInterceptorMock.Verify(
-                        m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()), Times.Exactly(4));
+                        m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()), Times.Exactly(6));
                 }
 
                 using (var context = new BlogContextCommit())
                 {
                     Assert.Equal(2, context.Blogs.Count());
+
+                    using (var transactionContext = new TransactionContext(context.Database.Connection))
+                    {
+                        using (var infoContext = GetInfoContext(transactionContext))
+                        {
+                            Assert.True(!infoContext.TableExists("__Transactions")
+                                || !transactionContext.Transactions.Any());
+                        }
+                    }
                 }
             }
             finally
             {
                 DbInterception.Remove(failingTransactionInterceptorMock.Object);
+                MutableResolver.ClearResolvers();
+            }
+
+            DbDispatchersHelpers.AssertNoInterceptors();
+        }
+
+        [Fact]
+        public void CommitFailureHandler_supports_nested_transactions()
+        {
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
+
+            try
+            {
+                using (var context = new BlogContextCommit())
+                {
+                    context.Database.Delete();
+                    Assert.Equal(1, context.Blogs.Count());
+
+                    context.Blogs.Add(new BlogContext.Blog());
+                    using (var transaction = context.Database.BeginTransaction())
+                    {
+                        using (var innerContext = new BlogContextCommit())
+                        {
+                            using (var innerTransaction = innerContext.Database.BeginTransaction())
+                            {
+                                Assert.Equal(1, innerContext.Blogs.Count());
+                                innerContext.Blogs.Add(new BlogContext.Blog());
+                                innerContext.SaveChanges();
+                                innerTransaction.Commit();
+                            }
+                        }
+
+                        context.SaveChanges();
+                        transaction.Commit();
+                    }
+                }
+
+                using (var context = new BlogContextCommit())
+                {
+                    Assert.Equal(3, context.Blogs.Count());
+                }
+            }
+            finally
+            {
                 MutableResolver.ClearResolvers();
             }
 
@@ -287,6 +362,35 @@ namespace System.Data.Entity.Interception
             }
 
             DbDispatchersHelpers.AssertNoInterceptors();
+        }
+
+        [Fact]
+        public void BuildDatabaseInitializationScript_can_be_used_to_initialize_the_database_if_no_migration_generator()
+        {
+            var providerInvariantNameMock = new Mock<IProviderInvariantName>();
+            providerInvariantNameMock.Setup(m => m.Name).Returns("Foo");
+
+            var providerInvariantNameResolverMock = new Mock<IDbDependencyResolver>();
+            providerInvariantNameResolverMock.Setup(m => m.GetService(It.IsAny<Type>(), It.IsAny<object>()))
+                .Returns(providerInvariantNameMock.Object);
+
+            MutableResolver.AddResolver<IProviderInvariantName>(providerInvariantNameResolverMock.Object);
+
+            var mockDbProviderServiceResolver = new Mock<IDbDependencyResolver>();
+            mockDbProviderServiceResolver
+                .Setup(r => r.GetService(It.IsAny<Type>(), It.IsAny<string>()))
+                .Returns(SqlProviderServices.Instance);
+
+            MutableResolver.AddResolver<DbProviderServices>(mockDbProviderServiceResolver.Object);
+
+            var mockDbProviderFactoryResolver = new Mock<IDbDependencyResolver>();
+            mockDbProviderFactoryResolver
+                .Setup(r => r.GetService(It.IsAny<Type>(), It.IsAny<string>()))
+                .Returns(SqlClientFactory.Instance);
+
+            MutableResolver.AddResolver<DbProviderFactory>(mockDbProviderFactoryResolver.Object);
+
+            BuildDatabaseInitializationScript_can_be_used_to_initialize_the_database();
         }
 
         public class TransactionContextNoInit : TransactionContext

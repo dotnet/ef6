@@ -118,18 +118,23 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
         {
+            BuildSqlScript(migrationStatements, _sqlBuilder);
+        }
+
+        internal static void BuildSqlScript(IEnumerable<MigrationStatement> migrationStatements, StringBuilder sqlBuilder)
+        {
             foreach (var migrationStatement in migrationStatements)
             {
                 if (!string.IsNullOrWhiteSpace(migrationStatement.Sql))
                 {
                     if (!string.IsNullOrWhiteSpace(migrationStatement.BatchTerminator)
-                        && (_sqlBuilder.Length > 0))
+                        && (sqlBuilder.Length > 0))
                     {
-                        _sqlBuilder.AppendLine(migrationStatement.BatchTerminator);
-                        _sqlBuilder.AppendLine();
+                        sqlBuilder.AppendLine(migrationStatement.BatchTerminator);
+                        sqlBuilder.AppendLine();
                     }
 
-                    _sqlBuilder.AppendLine(migrationStatement.Sql);
+                    sqlBuilder.AppendLine(migrationStatement.Sql);
                 }
             }
         }

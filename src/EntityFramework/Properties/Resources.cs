@@ -13981,6 +13981,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.ConnectionOpenCanceledLog, p0, p1);
         }
+
+        // <summary>
+        // A string like "This instance of TransactionHandler has already been initialized."
+        // </summary>
+        internal static string TransactionHandler_AlreadyInitialized
+        {
+            get { return EntityRes.GetString(EntityRes.TransactionHandler_AlreadyInitialized); }
+        }
     }
 
     // <summary>
@@ -17384,6 +17392,7 @@ namespace System.Data.Entity.Resources
         internal const string TransactionRolledBackLog = "TransactionRolledBackLog";
         internal const string TransactionRollbackErrorLog = "TransactionRollbackErrorLog";
         internal const string ConnectionOpenCanceledLog = "ConnectionOpenCanceledLog";
+        internal const string TransactionHandler_AlreadyInitialized = "TransactionHandler_AlreadyInitialized";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

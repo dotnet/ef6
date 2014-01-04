@@ -91,5 +91,38 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             return this.GetServiceAsServices(type, key);
         }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var other = obj as TransactionHandlerResolver;
+            if (other == null)
+            {
+                return false;
+            }
+
+            return _transactionHandlerFactory == other._transactionHandlerFactory
+                   && _providerInvariantName == other._providerInvariantName
+                   && _serverName == other._serverName;
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var hashcode = _transactionHandlerFactory.GetHashCode();
+            unchecked
+            {
+                if (_providerInvariantName != null)
+                {
+                    hashcode = hashcode * 41 + _providerInvariantName.GetHashCode();
+
+                }
+                if (_serverName != null)
+                {
+                    hashcode = hashcode * 41 + _serverName.GetHashCode();
+                }
+            }
+            return hashcode;
+        }
     }
 }

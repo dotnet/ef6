@@ -6,7 +6,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Migrations.History;
@@ -20,8 +19,40 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
     public class RootDependencyResolverTests : TestBase
     {
+        public class DatabaseInitializerResolverTests : TestBase
+        {
+            [Fact]
+            public void The_database_initializer_resolver_can_be_obtained_from_the_root_resolver()
+            {
+                var initializerResolver = new DatabaseInitializerResolver();
+                Assert.Same(
+                    initializerResolver,
+                    new RootDependencyResolver(
+                        new DefaultProviderServicesResolver(), initializerResolver)
+                        .DatabaseInitializerResolver);
+            }
+        }
+
         public class GetService : TestBase
         {
+            [Fact]
+            public void The_root_resolver_returns_the_default_database_initializer_resolver_for_TransactionContext()
+            {
+                Assert.IsType<TransactionContextInitializer<TransactionContext>>(
+                    new RootDependencyResolver(
+                        new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
+                        .GetService<IDatabaseInitializer<TransactionContext>>());
+            }
+
+            [Fact]
+            public void The_root_resolver_returns_the_default_execution_strategy_resolver()
+            {
+                Assert.IsType<DefaultExecutionStrategy>(
+                    new RootDependencyResolver(
+                        new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
+                        .GetService<Func<IDbExecutionStrategy>>(new ExecutionStrategyKey("p", "s"))());
+            }
+
             [Fact]
             public void The_root_resolver_uses_the_default_provider_services_resolver_and_caches_provider_instances()
             {
@@ -94,17 +125,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void The_database_initializer_resolver_can_be_obtained_from_the_root_resolver()
-            {
-                var initializerResolver = new DatabaseInitializerResolver();
-                Assert.Same(
-                    initializerResolver,
-                    new RootDependencyResolver(
-                        new DefaultProviderServicesResolver(), initializerResolver)
-                        .DatabaseInitializerResolver);
-            }
-
-            [Fact]
             public void The_root_resolver_returns_the_default_manifest_token_service()
             {
                 Assert.IsType<DefaultManifestTokenResolver>(new RootDependencyResolver().GetService<IManifestTokenResolver>());
@@ -142,6 +162,33 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void The_root_resolver_returns_default_attribute_provider()
             {
                 Assert.IsType<AttributeProvider>(new RootDependencyResolver().GetService<AttributeProvider>());
+            }
+            
+            [Fact]
+            public void The_root_resolver_returns_default_TransactionContext_factory()
+            {
+                Assert.IsType<TransactionContext>(
+                    new RootDependencyResolver().GetService<Func<DbConnection, TransactionContext>>(new StoreKey("p", "s"))(
+                        new Mock<DbConnection>().Object));
+            }
+
+            [Fact]
+            public void The_root_resolver_returns_null_TransactionContext_factory_for_null_key()
+            {
+                Assert.Null(
+                    new RootDependencyResolver().GetService<Func<DbConnection, TransactionContext>>());
+            }
+
+            [Fact]
+            public void The_root_resolver_returns_DefaultTransactionHandler_factory()
+            {
+                Assert.IsType<DefaultTransactionHandler>(new RootDependencyResolver().GetService<Func<TransactionHandler>>(new StoreKey("p", "s"))());
+            }
+
+            [Fact]
+            public void The_root_resolver_returns_null_TransactionHandler_factory_for_null_key()
+            {
+                Assert.Null(new RootDependencyResolver().GetService<Func<TransactionHandler>>());
             }
 
             [Fact]
@@ -193,43 +240,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public class FakeContext : DbContext
             {
             }
-
-            [Fact]
-            public void The_root_resolver_returns_the_default_command_formatter_factory()
-            {
-                var factory =
-                    new RootDependencyResolver(new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
-                        .GetService<Func<DbContext, Action<string>, DatabaseLogFormatter>>();
-
-                var context = new Mock<DbContext>().Object;
-                Action<string> sink = new StringWriter().Write;
-
-                var formatter = factory(context, sink);
-
-                Assert.IsType<DatabaseLogFormatter>(formatter);
-                Assert.Same(context, formatter.Context);
-                Assert.Same(sink, formatter.WriteAction);
-            }
-
-            [Fact]
-            public void The_root_resolver_returns_the_ClrTypeAnnotationSerializer()
-            {
-                Assert.IsType<ClrTypeAnnotationSerializer>(
-                    new RootDependencyResolver().GetService<Func<IMetadataAnnotationSerializer>>(XmlConstants.ClrTypeAnnotation)());
-            }
-
-            [Fact]
-            public void The_root_resolver_returns_the_IndexAnnotationSerializer()
-            {
-                Assert.IsType<IndexAnnotationSerializer>(
-                    new RootDependencyResolver().GetService<Func<IMetadataAnnotationSerializer>>(IndexAnnotation.AnnotationName)());
-            }
-
-            [Fact]
-            public void The_root_resolver_does_not_return_a_serializer_for_unknown_annotations()
-            {
-                Assert.Null(new RootDependencyResolver().GetService<IMetadataAnnotationSerializer>("A:B"));
-            }
         }
 
         public class GetServices : TestBase
@@ -254,7 +264,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 rootResolver.AddDefaultResolver(mockDefaultResolver2.Object);
 
                 var attributeProviders = rootResolver.GetServices<AttributeProvider>().ToList();
-                
+
                 Assert.Equal(3, attributeProviders.Count);
                 Assert.Same(attributeProvider2, attributeProviders[0]);
                 Assert.Same(attributeProvider1, attributeProviders[1]);

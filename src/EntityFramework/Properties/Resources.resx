@@ -468,7 +468,7 @@
   <data name="EntityMappingConfiguration_TPCWithIAsOnNonLeafType" xml:space="preserve">
     <value>The association '{0}' between entity types '{1}' and '{2}' is invalid. In a TPC hierarchy independent associations are only allowed on the most derived types.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>  
+  </data>
   <data name="CannotIgnoreMappedBaseProperty" xml:space="preserve">
     <value>You cannot use Ignore method on the property '{0}' on type '{1}' because this type inherits from the type '{2}' where this property is mapped. To exclude this property from your model, use NotMappedAttribute or Ignore method on the base type.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
@@ -5556,5 +5556,8 @@
   </data>
   <data name="ConnectionOpenCanceledLog" xml:space="preserve">
     <value>Cancelled open connection at {0}{1}</value>
+  </data>
+  <data name="TransactionHandler_AlreadyInitialized" xml:space="preserve">
+    <value>This instance of TransactionHandler has already been initialized.</value>
   </data>
 </root>

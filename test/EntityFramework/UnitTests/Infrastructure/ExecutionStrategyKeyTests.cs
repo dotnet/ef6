@@ -19,6 +19,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
+        public void ProviderInvariantName_returns_the_supplied_value()
+        {
+            Assert.Equal("p", new ExecutionStrategyKey("p", null).ProviderInvariantName);
+        }
+
+        [Fact]
+        public void ServerName_returns_the_supplied_value()
+        {
+            Assert.Equal("s", new ExecutionStrategyKey("p", "s").ServerName);
+        }
+
+        [Fact]
         public void Equals_returns_correct_results()
         {
             TestEquals(

@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
@@ -122,16 +122,28 @@ namespace System.Data.Entity.Core.Objects
                 var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>(entityAdapter: entityAdapterMock.Object));
                 mockObjectContext.CallBase = true;
 
-                entityAdapterMock.Setup(m => m.Update(true)).Verifiable();
+                entityAdapterMock.Setup(m => m.Update()).Verifiable();
 
                 var entriesAffected = mockObjectContext.Object.SaveChanges(SaveOptions.None);
 
-                entityAdapterMock.Verify(m => m.Update(true), Times.Never());
+                entityAdapterMock.Verify(m => m.Update(), Times.Never());
                 Assert.Equal(0, entriesAffected);
             }
 
+
             [Fact]
             public void If_local_transaction_is_necessary_it_gets_created_commited()
+            {
+                If_local_transaction_is_necessary_it_gets_created(transactionNecessary: true);
+            }
+
+            [Fact]
+            public void If_executeInExistingTransaction_is_true_no_local_transaction_is_created()
+            {
+                If_local_transaction_is_necessary_it_gets_created(transactionNecessary: false);
+            }
+
+            private void If_local_transaction_is_necessary_it_gets_created(bool transactionNecessary)
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
                 var hasChangesCount = 0;
@@ -162,10 +174,10 @@ namespace System.Data.Entity.Core.Objects
                                      Returns(enlistedInUserTransactionCallCount == 1);
 
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
-                objectContext.SaveChanges(SaveOptions.None);
+                objectContext.SaveChanges(SaveOptions.None, !transactionNecessary);
 
-                entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
-                entityTransactionMock.Verify(m => m.Commit(), Times.Once());
+                entityConnectionMock.Verify(m => m.BeginTransaction(), transactionNecessary ? Times.Once():Times.Never());
+                entityTransactionMock.Verify(m => m.Commit(), transactionNecessary ? Times.Once() : Times.Never());
             }
 
             [Fact]
@@ -1598,7 +1610,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        public class Dispose
+        public class Dispose : TestBase
         {
             [Fact]
             public void ObjectContext_disposes_underlying_EntityConnection_if_contextOwnConnection_flag_is_set()
@@ -1641,6 +1653,33 @@ namespace System.Data.Entity.Core.Objects
                 objectContext.Dispose();
 
                 entityConnectionMock.Protected().Verify("Dispose", Times.Never(), true);
+            }
+
+            [Fact]
+            public void ObjectContext_disposes_TransactionHandler()
+            {
+                var transactionHandlerMock = new Mock<TransactionHandler>();
+                transactionHandlerMock.Protected().Setup("Dispose", ItExpr.IsAny<bool>()).Verifiable();
+
+                MutableResolver.AddResolver<Func<TransactionHandler>>(
+                    new TransactionHandlerResolver(() => transactionHandlerMock.Object, null, null));
+
+                try
+                {
+                    var objectContext = CreateObjectContext();
+
+                    Assert.Null(objectContext.TransactionHandler);
+                    objectContext.EnsureConnection();
+                    Assert.NotNull(objectContext.TransactionHandler);
+
+                    objectContext.Dispose();
+
+                    transactionHandlerMock.Verify();
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
             }
         }
 

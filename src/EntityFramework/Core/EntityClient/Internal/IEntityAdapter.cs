@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         // <summary>
         // Persists the changes made in the entity cache to the store.
         // </summary>
-        Int32 Update(bool throwOnClosedConnection = true);
+        Int32 Update();
 
 #if !NET40
 

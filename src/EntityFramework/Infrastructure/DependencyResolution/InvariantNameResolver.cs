@@ -47,9 +47,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         // </summary>
         public override bool Equals(object obj)
         {
-            var other = (InvariantNameResolver)obj;
-            if (other == null
-                || other.GetType() != typeof(InvariantNameResolver))
+            var other = obj as InvariantNameResolver;
+            if (other == null)
             {
                 return false;
             }

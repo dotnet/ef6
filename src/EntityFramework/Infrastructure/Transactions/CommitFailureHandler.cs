@@ -11,9 +11,11 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -39,7 +41,7 @@ namespace System.Data.Entity.Infrastructure
         /// <value>
         /// The transaction context.
         /// </value>
-        protected TransactionContext TransactionContext { get; private set; }
+        protected internal TransactionContext TransactionContext { get; private set; }
 
         /// <inheritdoc/>
         public override void Initialize(ObjectContext context)
@@ -76,6 +78,7 @@ namespace System.Data.Entity.Infrastructure
             if (TransactionContext != null)
             {
                 TransactionContext.Configuration.LazyLoadingEnabled = false;
+                TransactionContext.Configuration.AutoDetectChangesEnabled = false;
             }
         }
 
@@ -108,7 +111,17 @@ namespace System.Data.Entity.Infrastructure
         /// <inheritdoc/>
         public override string BuildDatabaseInitializationScript()
         {
-            return TransactionContext == null ? null : ((IObjectContextAdapter)TransactionContext).ObjectContext.CreateDatabaseScript();
+            if (TransactionContext != null)
+            {
+                var sqlStatements = TransactionContextInitializer<TransactionContext>.GenerateMigrationStatements(TransactionContext);
+
+                var sqlBuilder = new StringBuilder();
+                MigratorScriptingDecorator.BuildSqlScript(sqlStatements, sqlBuilder);
+
+                return sqlBuilder.ToString();
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -139,13 +152,13 @@ namespace System.Data.Entity.Infrastructure
                 ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
                 try
                 {
-                    objectContext.SaveChanges(SaveOptions.DetectChangesBeforeSave, executeInExistingTransaction: true);
+                    objectContext.SaveChanges(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
                     savedSuccesfully = true;
                 }
                 catch (UpdateException)
                 {
                     _transactions.Remove(interceptionContext.Result);
-                    TransactionContext.Transactions.Remove(transactionRow);
+                    TransactionContext.Entry(transactionRow).State = EntityState.Detached;
 
                     if (reinitializedDatabase)
                     {
@@ -164,6 +177,11 @@ namespace System.Data.Entity.Infrastructure
                         {
                             transactionId = Guid.NewGuid();
                             Debug.Assert(false, "Duplicate GUID! this should never happen");
+                        }
+                        else
+                        {
+                            // Unknown exception cause
+                            throw;
                         }
                     }
                     catch (EntityCommandExecutionException)
@@ -190,43 +208,38 @@ namespace System.Data.Entity.Infrastructure
         /// <seealso cref="IDbTransactionInterceptor.Committed" />
         public override void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
         {
+            TransactionRow transactionRow;
             if (TransactionContext == null
-                || !MatchesParentContext(transaction.Connection, interceptionContext))
+                || (transaction.Connection != null
+                    && !MatchesParentContext(transaction.Connection, interceptionContext))
+                || !_transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;
             }
 
-            TransactionRow transactionRow;
-            if (_transactions.TryGetValue(transaction, out transactionRow))
+            _transactions.Remove(transaction);
+            if (interceptionContext.Exception != null)
             {
-                _transactions.Remove(transaction);
-                if (interceptionContext.Exception != null)
+                var existingTransactionRow = TransactionContext.Transactions
+                    .AsNoTracking()
+                    .WithExecutionStrategy(new DefaultExecutionStrategy())
+                    .SingleOrDefault(t => t.Id == transactionRow.Id);
+
+                if (existingTransactionRow != null)
                 {
-                    var existingTransactionRow = TransactionContext.Transactions
-                        .AsNoTracking()
-                        .WithExecutionStrategy(new DefaultExecutionStrategy())
-                        .SingleOrDefault(t => t.Id == transactionRow.Id);
+                    // The transaction id is still in the database, so the commit succeeded
+                    interceptionContext.Exception = null;
 
-                    if (existingTransactionRow != null)
-                    {
-                        // The transaction id is still in the database, so the commit succeeded
-                        interceptionContext.Exception = null;
-
-                        PruneTransactionRows(transactionRow);
-                    }
-                    else
-                    {
-                        TransactionContext.Transactions.Local.Remove(transactionRow);
-                    }
+                    PruneTransactionRows(transactionRow);
                 }
                 else
                 {
-                    PruneTransactionRows(transactionRow);
+                    TransactionContext.Entry(transactionRow).State = EntityState.Detached;
                 }
             }
             else
             {
-                Debug.Assert(false, "Expected the transaction to be registered");
+                PruneTransactionRows(transactionRow);
             }
         }
 
@@ -238,18 +251,16 @@ namespace System.Data.Entity.Infrastructure
         /// <seealso cref="IDbTransactionInterceptor.RolledBack" />
         public override void RolledBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
         {
+            TransactionRow transactionRow;
             if (TransactionContext == null
-                || !MatchesParentContext(transaction.Connection, interceptionContext))
+                || (transaction.Connection != null && !MatchesParentContext(transaction.Connection, interceptionContext))
+                || !_transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;
             }
 
-            TransactionRow transactionRow;
-            if (_transactions.TryGetValue(transaction, out transactionRow))
-            {
-                _transactions.Remove(transaction);
-                TransactionContext.Transactions.Local.Remove(transactionRow);
-            }
+            _transactions.Remove(transaction);
+            TransactionContext.Entry(transactionRow).State = EntityState.Detached;
         }
 
         /// <summary>

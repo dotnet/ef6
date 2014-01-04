@@ -931,7 +931,15 @@ namespace System.Data.Entity.Migrations
             var interceptionContext = new DbInterceptionContext();
             interceptionContext = interceptionContext.WithDbContext(context);
 
-            DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
+            if (DbInterception.Dispatch.Connection.GetState(connection, interceptionContext) == ConnectionState.Broken)
+            {
+                DbInterception.Dispatch.Connection.Close(connection, interceptionContext);
+            }
+
+            if (DbInterception.Dispatch.Connection.GetState(connection, interceptionContext) == ConnectionState.Closed)
+            {
+                DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
+            }
 
             TransactionHandler transactionHandler = null;
             try

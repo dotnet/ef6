@@ -69,24 +69,23 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         // </summary>
         public int? CommandTimeout { get; set; }
 
-        public int Update(bool throwOnClosedConnection = true)
+        public int Update()
         {
-            return Update(0, ut => ut.Update(), throwOnClosedConnection);
+            return Update(0, ut => ut.Update());
         }
 
 #if !NET40
 
         public Task<int> UpdateAsync(CancellationToken cancellationToken)
         {
-            return Update(Task.FromResult(0), ut => ut.UpdateAsync(cancellationToken), true);
+            return Update(Task.FromResult(0), ut => ut.UpdateAsync(cancellationToken));
         }
 
 #endif
 
         private T Update<T>(
             T noChangesResult,
-            Func<UpdateTranslator, T> updateFunction,
-            bool throwOnClosedConnection)
+            Func<UpdateTranslator, T> updateFunction)
 
         {
             if (!IsStateManagerDirty(_context.ObjectStateManager))
@@ -108,8 +107,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             }
 
             // Check that the connection is open before we proceed
-            if (throwOnClosedConnection
-                && (ConnectionState.Open != _connection.State))
+            if (ConnectionState.Open != _connection.State)
             {
                 throw Error.EntityClient_ClosedConnectionForUpdate();
             }

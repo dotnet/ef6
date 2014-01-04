@@ -135,10 +135,6 @@ namespace System.Data.Entity.Core.Objects
                                             CallBase = true
                                         };
             objectContextMock.Setup(m => m.Connection).Returns(entityConnection);
-            //objectContextMock.Setup(m => m.EnsureConnection());
-#if !NET40
-            //objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
-#endif
 
             var model = EdmModel.CreateStoreModel(
                 new DbProviderInfo(GenericProviderFactory<DbProviderFactory>.Instance.InvariantProviderName, "2008"),

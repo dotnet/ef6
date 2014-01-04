@@ -151,6 +151,7 @@
     <Compile Include="Core\Common\Internal\Materialization\ShaperTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TranslatorTests.cs" />
+    <Compile Include="Core\EntityClient\EntityTransactionTests.cs" />
     <Compile Include="Core\EntityClient\Internal\DbConnectionOptionsTests.cs" />
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
@@ -298,6 +299,10 @@
     <Compile Include="DbFunctionsTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
     <Compile Include="IDbAsyncEnumerableExtensionsTests.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolverTests.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\TransactionContextResolverTests.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolverTests.cs" />
+    <Compile Include="Infrastructure\StoreKeyTests.cs" />
     <Compile Include="Infrastructure\Interception\BeginTransactionInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\Interception\CancelableDbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\Interception\DbCommandDispatcherTests.cs" />
@@ -365,6 +370,9 @@
     <Compile Include="Infrastructure\TestHelpers\DbMemberEntryVerifier.cs" />
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyKeyTests.cs" />
+    <Compile Include="Infrastructure\Transactions\CommitFailedExceptionTests.cs" />
+    <Compile Include="Infrastructure\Transactions\DefaultTransactionHandlerTests.cs" />
+    <Compile Include="Infrastructure\Transactions\CommitFailureHandlerTests.cs" />
     <Compile Include="Internal\CommandTracerTests.cs" />
     <Compile Include="Internal\ConfigFile\InterceptorsCollectionTests.cs" />
     <Compile Include="Internal\ConfigFile\InterceptorElementTests.cs" />

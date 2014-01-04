@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
@@ -353,10 +352,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             // don't allow the user to insert or update an entity that refers to a deleted principal
                             if (currentValues
                                 && null != existingPrincipal
-                                &&
-                                existingPrincipal.State == EntityState.Deleted
-                                &&
-                                (stateEntry.State == EntityState.Added || stateEntry.State == EntityState.Modified))
+                                && existingPrincipal.State == EntityState.Deleted
+                                && (stateEntry.State == EntityState.Added || stateEntry.State == EntityState.Modified))
                             {
                                 throw EntityUtil.Update(
                                     Strings.Update_InsertingOrUpdatingReferenceToDeletedEntity(associationSet.ElementType.FullName),
@@ -434,9 +431,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             BackPropagateServerGen(generatedValues);
 
-            var totalStateEntries = AcceptChanges();
-
-            return totalStateEntries;
+            return AcceptChanges();
         }
 
 #if !NET40
@@ -486,9 +481,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             BackPropagateServerGen(generatedValues);
 
-            var totalStateEntries = AcceptChanges();
-
-            return totalStateEntries;
+            return AcceptChanges();
         }
 
 #endif
@@ -553,8 +546,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 // check if a redirect to "owner" result is possible
                 if (PropagatorResult.NullIdentifier == generatedValue.Key.Identifier
-                    ||
-                    !KeyManager.TryGetIdentifierOwner(generatedValue.Key.Identifier, out context))
+                    || !KeyManager.TryGetIdentifierOwner(generatedValue.Key.Identifier, out context))
                 {
                     // otherwise, just use the straightforward context
                     context = generatedValue.Key;

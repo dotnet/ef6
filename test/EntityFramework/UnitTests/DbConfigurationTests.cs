@@ -133,10 +133,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class ProviderServices
+        public class SetProviderServices
         {
             [Fact]
-            public void ProviderServices_throws_if_given_a_null_provider_or_bad_invariant_name()
+            public void Throws_if_given_a_null_provider_or_bad_invariant_name()
             {
                 Assert.Equal(
                     "provider",
@@ -157,7 +157,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderServices_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var providerServices = new Mock<DbProviderServices>().Object;
@@ -168,7 +168,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderServices_also_adds_the_provider_as_a_default_resolver()
+            public void Also_adds_the_provider_as_a_default_resolver()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var providerServices = new Mock<DbProviderServices>().Object;
@@ -179,7 +179,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderServices_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -190,10 +190,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class ProviderFactory
+        public class SetProviderFactory
         {
             [Fact]
-            public void ProviderFactory_throws_if_given_a_null_provider_or_bad_invariant_name()
+            public void Throws_if_given_a_null_provider_or_bad_invariant_name()
             {
                 Assert.Equal(
                     "providerFactory",
@@ -214,7 +214,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderFactory_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var providerFactory = new Mock<DbProviderFactory>().Object;
@@ -226,7 +226,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderFactory_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -237,7 +237,123 @@ namespace System.Data.Entity
             }
         }
 
-        public class ExecutionStrategy
+        public class SetTransactionHandler
+        {
+            [Fact]
+            public void Throws_if_given_a_null_provider_or_bad_invariant_name()
+            {
+                Assert.Equal(
+                    "transactionHandlerFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler(null)).ParamName);
+
+                Assert.Equal(
+                    "transactionHandlerFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler(null, null)).ParamName);
+
+                Assert.Equal(
+                    "transactionHandlerFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler(null, null, null)).ParamName);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                Func<TransactionHandler> transactionHandlerFactory = () => new Mock<TransactionHandler>().Object;
+                
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler(transactionHandlerFactory);
+
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionHandlerResolver(transactionHandlerFactory, null, null), false));
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler(transactionHandlerFactory, "p");
+
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionHandlerResolver(transactionHandlerFactory, "p", null), false));
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler(transactionHandlerFactory, "p", "s");
+
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionHandlerResolver(transactionHandlerFactory, "p", "s"), false));
+            }
+
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetTransactionHandler"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetTransactionHandler(() => new Mock<TransactionHandler>().Object)).Message);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetTransactionHandler"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetTransactionHandler(() => new Mock<TransactionHandler>().Object, "Karl")).Message);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetTransactionHandler"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetTransactionHandler(() => new Mock<TransactionHandler>().Object, "Karl", "Marx")).Message);
+            }
+        }
+
+        public class SetTransactionContext
+        {
+            [Fact]
+            public void Throws_if_given_a_null_provider_or_bad_invariant_name()
+            {
+                Assert.Equal(
+                    "transactionContextFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionContext(null)).ParamName);
+
+                Assert.Equal(
+                    "transactionContextFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionContext(null, null)).ParamName);
+
+                Assert.Equal(
+                    "transactionContextFactory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionContext(null, null, null)).ParamName);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                Func<DbConnection, TransactionContext> transactionHandlerFactory = c => new Mock<TransactionContext>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionContext(transactionHandlerFactory);
+
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionContextResolver(transactionHandlerFactory, null, null), false));
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionContext(transactionHandlerFactory, "p");
+
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionContextResolver(transactionHandlerFactory, "p", null), false));
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionContext(transactionHandlerFactory, "p", "s");
+
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionContextResolver(transactionHandlerFactory, "p", "s"), false));
+            }
+
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetTransactionContext"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetTransactionContext(c => new Mock<TransactionContext>().Object)).Message);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetTransactionContext"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetTransactionContext(c => new Mock<TransactionContext>().Object, "Karl")).Message);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetTransactionContext"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetTransactionContext(c => new Mock<TransactionContext>().Object, "Karl", "Marx")).Message);
+            }
+        }
+
+        public class SetExecutionStrategy
         {
             [Fact]
             public void Throws_if_given_a_null_server_name_or_bad_invariant_name()
@@ -311,7 +427,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class ConnectionFactory : TestBase
+        public class SetDefaultConnectionFactory : TestBase
         {
             [Fact]
             public void Setting_ConnectionFactory_throws_if_given_a_null_factory()
@@ -351,7 +467,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class PluralizationService
+        public class SetPluralizationService
         {
             [Fact]
             public void Setting_PluralizationService_throws_if_given_a_null_service()
@@ -406,10 +522,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class DatabaseInitializer
+        public class SetDatabaseInitializer
         {
             [Fact]
-            public void DatabaseInitializer_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -420,7 +536,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void DatabaseInitializer_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var initializer = new Mock<IDatabaseInitializer<DbContext>>().Object;
@@ -431,7 +547,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void DatabaseInitializer_creates_null_initializer_when_given_null_argument()
+            public void Creates_null_initializer_when_given_null_argument()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
@@ -442,10 +558,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class MigrationSqlGeneratorTests
+        public class SetMigrationSqlGenerator
         {
             [Fact]
-            public void MigrationSqlGenerator_throws_if_given_a_null_generator_or_bad_invariant_name()
+            public void Throws_if_given_a_null_generator_or_bad_invariant_name()
             {
                 Assert.Equal(
                     "sqlGenerator",
@@ -466,7 +582,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void MigrationSqlGenerator_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -477,7 +593,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void MigrationSqlGenerator_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var generator = new Func<MigrationSqlGenerator>(() => new Mock<MigrationSqlGenerator>().Object);
@@ -488,10 +604,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class ManifestTokenResolver
+        public class SetManifestTokenResolver
         {
             [Fact]
-            public void ManifestTokenResolver_throws_if_given_a_null_service()
+            public void Throws_if_given_a_null_service()
             {
                 Assert.Equal(
                     "resolver",
@@ -499,7 +615,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ManifestTokenResolver_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -510,7 +626,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ManifestTokenResolver_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var service = new Mock<IManifestTokenResolver>().Object;
@@ -521,10 +637,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class ProviderFactoryResolver
+        public class SetProviderFactoryResolver
         {
             [Fact]
-            public void ProviderFactoryResolver_throws_if_given_a_null_service()
+            public void Throws_if_given_a_null_service()
             {
                 Assert.Equal(
                     "providerFactoryResolver",
@@ -532,7 +648,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderFactoryResolver_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -543,7 +659,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderFactoryResolver_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var service = new Mock<IDbProviderFactoryResolver>().Object;
@@ -554,10 +670,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class ModelCacheKey
+        public class SetModelCacheKey
         {
             [Fact]
-            public void ModelCacheKey_throws_if_given_a_null_factory()
+            public void Throws_if_given_a_null_factory()
             {
                 Assert.Equal(
                     "keyFactory",
@@ -565,7 +681,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ModelCacheKey_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -575,7 +691,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ModelCacheKey_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var factory = (Func<DbContext, IDbModelCacheKey>)(c => null);
@@ -586,7 +702,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class HistoryContextFactory
+        public class SetHistoryContext
         {
             [Fact]
             public void Throws_if_given_a_null_provider()
@@ -650,10 +766,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class SetDefaultSpatialProvider
+        public class SetDefaultSpatialServices
         {
             [Fact]
-            public void SetDefaultSpatialProvider_throws_if_given_a_null_factory()
+            public void Throws_if_given_a_null_factory()
             {
                 Assert.Equal(
                     "spatialProvider",
@@ -661,7 +777,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetDefaultSpatialProvider_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -672,7 +788,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetDefaultSpatialProvider_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var provider = new Mock<DbSpatialServices>().Object;
@@ -683,10 +799,10 @@ namespace System.Data.Entity
             }
         }
 
-        public class SetSpatialProvider
+        public class SetSpatialServices
         {
             [Fact]
-            public void SetSpatialProvider_throws_if_given_a_null_factory_or_key_or_an_empty_invariant_name()
+            public void Throws_if_given_a_null_factory_or_key_or_an_empty_invariant_name()
             {
                 Assert.Equal(
                     "spatialProvider",
@@ -720,7 +836,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetSpatialProvider_with_invariant_name_throws_if_the_configuation_is_locked()
+            public void With_invariant_name_throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -731,7 +847,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetSpatialProvider_with_key_throws_if_the_configuation_is_locked()
+            public void With_key_throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
@@ -744,7 +860,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetSpatialProvider_with_invariant_name_delegates_to_internal_configuration()
+            public void With_invariant_name_delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var provider = SqlSpatialServices.Instance;
@@ -765,7 +881,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetSpatialProvider_with_key_delegates_to_internal_configuration()
+            public void With_key_delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var provider = SqlSpatialServices.Instance;
@@ -777,7 +893,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class DatabaseLogFormatterTests
+        public class SetDatabaseLogFormatter
         {
             [Fact]
             public void Throws_if_given_a_null_factory()
@@ -811,7 +927,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class Interceptor
+        public class AddInterceptor
         {
             [Fact]
             public void Throws_if_given_a_null_interceptor()
@@ -846,7 +962,7 @@ namespace System.Data.Entity
         public class SetMetadataAnnotationSerializer
         {
             [Fact]
-            public void SetMetadataAnnotationSerializer_throws_if_given_a_null_serializer_or_bad_name()
+            public void Throws_if_given_a_null_serializer_or_bad_name()
             {
                 Assert.Equal(
                     "serializerFactory",
@@ -867,7 +983,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetMetadataAnnotationSerializer_delegates_to_internal_configuration()
+            public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 Func<IMetadataAnnotationSerializer> serializerFactory = () => new Mock<IMetadataAnnotationSerializer>().Object;
@@ -878,7 +994,7 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void SetMetadataAnnotationSerializer_throws_if_the_configuation_is_locked()
+            public void Throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 

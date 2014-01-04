@@ -154,30 +154,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     Strings.EntityClient_ClosedConnectionForUpdate,
                     Assert.Throws<InvalidOperationException>(() => entityAdapter.Update()).Message);
             }
-
-            [Fact]
-            public void Does_not_throw_invalid_operation_if_connection_is_closed_but_exception_suppressed()
-            {
-                var entityStateManagerMock = new Mock<ObjectStateManager>();
-                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
-                var entityStateEntryMock = new Mock<ObjectStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
-                    .Returns(new[] { entityStateEntryMock.Object });
-
-                var mockContext = new Mock<ObjectContext>(null, null, null, null);
-                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
-
-                var entityAdapter = new EntityAdapter(mockContext.Object);
-
-                var entityConnectionMock = new Mock<EntityConnection>();
-                entityConnectionMock.Setup(m => m.StoreConnection)
-                    .Returns(new Mock<DbConnection>().Object);
-                entityConnectionMock.Setup(m => m.StoreProviderFactory)
-                    .Returns(new Mock<DbProviderFactory>().Object);
-                entityAdapter.Connection = entityConnectionMock.Object;
-
-                Assert.Throws<NotSupportedException>(() => entityAdapter.Update(false));
-            }
         }
 
 #if !NET40

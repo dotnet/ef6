@@ -3,10 +3,11 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
+    using System.Data.Entity.Resources;
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Thrown when an error occurs commiting a <see cref="DbTransaction"/>.
+    /// Thrown when an error occurs committing a <see cref="DbTransaction"/>.
     /// </summary>
     [Serializable]
     public class CommitFailedException : DataException
@@ -15,6 +16,7 @@ namespace System.Data.Entity.Infrastructure
         /// Initializes a new instance of <see cref="CommitFailedException"/>
         /// </summary>
         public CommitFailedException()
+            : base(Strings.CommitFailed)
         {
         }
         

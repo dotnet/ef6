@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -34,6 +35,12 @@ namespace System.Data.Entity.Infrastructure
         public virtual void Initialize(ObjectContext context)
         {
             Check.NotNull(context, "context");
+            if (ObjectContext != null
+                || DbContext != null
+                || Connection != null)
+            {
+                throw new InvalidOperationException(Strings.TransactionHandler_AlreadyInitialized);
+            }
 
             ObjectContext = context;
             DbContext = context.InterceptionContext.DbContexts.FirstOrDefault();
@@ -52,6 +59,13 @@ namespace System.Data.Entity.Infrastructure
         public virtual void Initialize(DbContext context, DbConnection connection)
         {
             Check.NotNull(context, "context");
+            Check.NotNull(connection, "connection");
+            if (ObjectContext != null
+                || DbContext != null
+                || Connection != null)
+            {
+                throw new InvalidOperationException(Strings.TransactionHandler_AlreadyInitialized);
+            }
 
             DbContext = context;
             Connection = connection;
@@ -61,7 +75,7 @@ namespace System.Data.Entity.Infrastructure
         /// Gets the context.
         /// </summary>
         /// <value>
-        /// The <see cref="ObjectContext"/> for which transaction operations will be handled.
+        /// The <see cref="ObjectContext"/> for which the transaction operations will be handled.
         /// </value>
         public ObjectContext ObjectContext { get; private set; }
 
@@ -69,11 +83,21 @@ namespace System.Data.Entity.Infrastructure
         /// Gets the context.
         /// </summary>
         /// <value>
-        /// The <see cref="DbContext"/> context for which transaction operations will be handled, could be null.
+        /// The <see cref="DbContext"/> for which the transaction operations will be handled, could be null.
         /// </value>
         public DbContext DbContext { get; private set; }
 
-        private DbConnection Connection { get; set; }
+        /// <summary>
+        /// Gets the connection.
+        /// </summary>
+        /// <value>
+        /// The <see cref="DbConnection"/> for which the transaction operations will be handled.
+        /// </value>
+        /// <remarks>
+        /// This connection object is only used to determine whether a particular operation needs to be handled
+        /// in cases where a context is not available.
+        /// </remarks>
+        public DbConnection Connection { get; private set; }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -119,8 +143,11 @@ namespace System.Data.Entity.Infrastructure
         /// <remarks>
         /// Note that calling this method will trigger initialization of any DbContext referenced from the <paramref name="interceptionContext"/>
         /// </remarks>
-        protected virtual bool MatchesParentContext(DbConnection connection, DbInterceptionContext interceptionContext)
+        protected internal virtual bool MatchesParentContext(DbConnection connection, DbInterceptionContext interceptionContext)
         {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(interceptionContext, "interceptionContext");
+
             if (DbContext != null
                 && interceptionContext.DbContexts.Contains(DbContext, ReferenceEquals))
             {
@@ -137,7 +164,7 @@ namespace System.Data.Entity.Infrastructure
                 && !interceptionContext.ObjectContexts.Any()
                 && !interceptionContext.DbContexts.Any())
             {
-                return connection == Connection;
+                return ReferenceEquals(connection, Connection);
             }
 
             return false;
