@@ -379,7 +379,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 && PackageManager.Package.ModelManager != null)
             {
                 // since this is about retargeting EDMX files on disk, no need to process other file extensions from any converters
-                var fileFinder = new VSFileFinder(EntityDesignArtifact.EXTENSION_EDMX);
+                var fileFinder = new VSFileFinder(EntityDesignArtifact.ExtensionEdmx);
                 fileFinder.FindInProject(hierarchy);
 
                 var project = VSHelpers.GetProject(hierarchy);
