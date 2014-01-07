@@ -63,6 +63,7 @@ namespace System.Data.Entity.Migrations
 
         private MigrationSqlGenerator _sqlGenerator;
         private bool _emptyMigrationNeeded;
+        private bool _committedStatements;
 
         // <summary>
         // For testing.
@@ -976,6 +977,7 @@ namespace System.Data.Entity.Migrations
                     }
 
                     DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
+                    _committedStatements = true;
                 }
             }
             finally
@@ -1133,12 +1135,13 @@ namespace System.Data.Entity.Migrations
 
             try
             {
+                _committedStatements = false;
                 mustSucceedToKeepDatabase();
             }
             catch
             {
                 if (databaseCreated
-                    && !_historyRepository.HasMigrations())
+                    && !_committedStatements)
                 {
                     try
                     {

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.NotReady;
     using System.Data.Entity.Migrations.UpDownUp;
+    using System.Data.Entity.Migrations.UpDownUpPartial;
     using System.Linq;
     using Xunit;
 
@@ -59,6 +60,22 @@ namespace System.Data.Entity.Migrations
             static AlwaysDropContext3()
             {
                 Database.SetInitializer<AlwaysDropContext3>(new AlwaysDropInitializer());
+            }
+        }
+
+        [Fact] // CodePlex 1937
+        public void DropCreateDatabaseAlways_applies_all_good_Migrations_then_stops_without_dropping_database()
+        {
+            EnsureDeleted<AlwaysDropContext4>();
+
+            VerifyPartiallyInitialized<AlwaysDropContext4, AlwaysDropMigrationsConfig4>();
+        }
+
+        public class AlwaysDropContext4 : UpDownUpContext
+        {
+            static AlwaysDropContext4()
+            {
+                Database.SetInitializer<AlwaysDropContext4>(new AlwaysDropInitializer());
             }
         }
 
@@ -119,6 +136,22 @@ namespace System.Data.Entity.Migrations
             static ModelChangesContext3()
             {
                 Database.SetInitializer<ModelChangesContext3>(new ModelChangesInitializer());
+            }
+        }
+
+        [Fact] // CodePlex 1937
+        public void DropCreateDatabaseIfModelChanges_applies_all_good_Migrations_then_stops_without_dropping_database()
+        {
+            EnsureDeleted<ModelChangesContext4>();
+
+            VerifyPartiallyInitialized<ModelChangesContext4, ModelChangesMigrationsConfig4>();
+        }
+
+        public class ModelChangesContext4 : UpDownUpContext
+        {
+            static ModelChangesContext4()
+            {
+                Database.SetInitializer<ModelChangesContext4>(new ModelChangesInitializer());
             }
         }
 
@@ -186,6 +219,23 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+
+        [Fact] // CodePlex 1937
+        public void CreateDatabaseIfNotExists_applies_all_good_Migrations_then_stops_without_dropping_database()
+        {
+            EnsureDeleted<CreateFirstContext4>();
+
+            VerifyPartiallyInitialized<CreateFirstContext4, CreateFirstMigrationsConfig4>();
+        }
+
+        public class CreateFirstContext4 : UpDownUpContext
+        {
+            static CreateFirstContext4()
+            {
+                Database.SetInitializer<CreateFirstContext4>(new CreateFirstInitializer());
+            }
+        }
+
         public class CreateFirstInitializer : CreateDatabaseIfNotExists<UpDownUpContext>
         {
             protected override void Seed(UpDownUpContext context)
@@ -203,6 +253,26 @@ namespace System.Data.Entity.Migrations
         public class UpDownUpContext : DbContext
         {
             public DbSet<UpDownUpEntity> Entities { get; set; }
+        }
+
+        public class PartialContext : DbContext
+        {
+            static PartialContext()
+            {
+                Database.SetInitializer<PartialContext>(null);
+            }
+
+            public PartialContext(string connectionString)
+                : base(connectionString)
+            {
+            }
+
+            public DbSet<UpDownUpEntity> Entities { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<UpDownUpEntity>().Ignore(e => e.Extra);
+            }
         }
 
         public class UpDownUpEntity
@@ -276,6 +346,40 @@ namespace System.Data.Entity.Migrations
                 Assert.True(migrations.All(m => m.ContextKey == typeof(TMigrationsConfig).ToString()));
                 Assert.Equal("201303090309299_Test", migrations[0].MigrationId);
                 Assert.Equal("201303101635379_Second", migrations[1].MigrationId);
+            }
+        }
+
+        private static void VerifyPartiallyInitialized<TContext, TMigrationsConfig>()
+            where TContext : UpDownUpContext, new()
+        {
+            VerifyPartiallyInitializedOrMigrated<TContext, TMigrationsConfig>("Initializer");
+        }
+
+        private static void VerifyPartiallyMigrated<TContext, TMigrationsConfig>()
+            where TContext : UpDownUpContext, new()
+        {
+            VerifyPartiallyInitializedOrMigrated<TContext, TMigrationsConfig>("Migrations");
+        }
+
+        private static void VerifyPartiallyInitializedOrMigrated<TContext, TMigrationsConfig>(string expectedSeed)
+        where TContext : UpDownUpContext, new()
+        {
+            using (var context = new TContext())
+            {
+                Assert.Throws<AutomaticMigrationsDisabledException>(() => context.Database.Initialize(force: false));
+
+                Assert.True(context.Database.Exists());
+            }
+
+            using (var context = new PartialContext(SimpleConnectionString<TContext>()))
+            {
+                Assert.False(context.Entities.Any());
+
+                var migrations = context.Database.SqlQuery<MigrationRow>("select * from __MigrationHistory").ToList();
+
+                Assert.Equal(1, migrations.Count);
+                Assert.True(migrations.All(m => m.ContextKey == typeof(TMigrationsConfig).ToString()));
+                Assert.Equal("201303090309299_Test", migrations[0].MigrationId);
             }
         }
     }
@@ -461,6 +565,80 @@ namespace System.Data.Entity.Migrations.UpDownUp
             {
                 return
                     @"H4sIAAAAAAAEAM1XzW7bSAy+F+g7CHPqHupx3EO7gZwgjZNF0DoJqqR3WqKdwc6PVjNK7Wfbwz7SvkI51q/Hie0EPfRiSBzyI/mRHMr///tffLpUMnrEwgqjx+xoMGQR6tRkQi/GrHTz95/Y6cnbN/FFppbR90bvg9cjS23H7MG5/Jhzmz6gAjtQIi2MNXM3SI3ikBk+Gg7/5EdHHAmCEVYUxd9K7YTC9Qu9nhudYu5KkFOTobS1nE6SNWp0DQptDimOGelaI/Esz6VIwVE4o48sOpMCKJYE5ZxFoLVx66Pje4uJK4xeJDkJQN6tciS9OUiLdQbHnfqhyQxHPhneGb6KDNamSYleECFu5cNbJztm9/nE/ND3eXXQ1yXtL7jaEJDotjA5Fm71Dec1wlXGIr5px0PD1qxn44OgJ+0+jFh0XUoJM4ktZz1yE2cK/As1FuAwuwXnsNAeA6uYQ++BL//beKMiUcexaArLr6gX7mHM6JFFl2KJWSOpI7jXghqUjFxR4j4nF0tXwC/2EvOuWts1pAZ1IIiUOoLpWoJLF9Sw0k7Q1XqfpVlYFnXQVTsPgkZ4MpLWZzc5vBqdZsT4MzMWTyHPiZTezNWSKKkH7n3y8vZWFQZP7RNd3kbbeqJGggUGp37WM7wUhXUTcDADX5bzTG2p7WW48dMnOpyfjvdG2z9XFk/dOWFdAryOx0tKTdFErLPENqbdE15DJClIKJ6Y0XMjS6Wfm/Nd1tXU9e0ryeEI9Uj1IWrRNkbMAxZC2vkW78GNFRZxV/eHKq33dgqCbo/rzjtk7QStWKmwiMh5FJlvw2RlHaqBVxgk/8hzKSjfTmEKWszRujvzN9ItORoejYK99Yodwq3N5O+9SIQnYe+q2Nozh+8O/QhF+gDFOwXLP/pIL94PL0B62Q7Yvsh274Lwzt+7FKpuHLNsZiiZKugNHYH21atje0hi3v+CiydoxaKD8N9zGlN/T3agjc6VnpumBpRwP6JGJSjRFB1kxNtZ4cQcUkfHKVq73uTfQZa+imqG2ZW+KV1eujNrUc3kxqqM+W7/6/24GXN8k/s3+ytSoDAFpYA3+nMpZNbGfbnd689B+BaqB4iioi8ZglusWqRrow8EqumbYI7aj98dqlwSmL3RCTzi87Ht53CTsXgiYFGAsjVGZ+//UHD/j+LkJ5BDT8qDDAAA";
+            }
+        }
+    }
+}
+
+namespace System.Data.Entity.Migrations.UpDownUpPartial
+{
+    using System.CodeDom.Compiler;
+    using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Migrations.UpDownUp;
+
+    public class AlwaysDropMigrationsConfig4 : DbMigrationsConfiguration<InitializerScenarios.AlwaysDropContext4>
+    {
+        protected override void Seed(InitializerScenarios.AlwaysDropContext4 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class ModelChangesMigrationsConfig4 : DbMigrationsConfiguration<InitializerScenarios.ModelChangesContext4>
+    {
+        protected override void Seed(InitializerScenarios.ModelChangesContext4 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class CreateFirstMigrationsConfig4 : DbMigrationsConfiguration<InitializerScenarios.CreateFirstContext4>
+    {
+        protected override void Seed(InitializerScenarios.CreateFirstContext4 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public partial class Test : DbMigration
+    {
+        public override void Up()
+        {
+            CreateTable(
+                "dbo.UpDownUpEntities",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    Name = c.String(),
+                })
+                .PrimaryKey(t => t.Id);
+        }
+
+        public override void Down()
+        {
+            DropTable("dbo.UpDownUpEntities");
+        }
+    }
+
+    [GeneratedCode("EntityFramework.Migrations", "6.0.0")]
+    public sealed partial class Test : IMigrationMetadata
+    {
+        string IMigrationMetadata.Id
+        {
+            get { return "201303090309299_Test"; }
+        }
+
+        string IMigrationMetadata.Source
+        {
+            get { return null; }
+        }
+
+        string IMigrationMetadata.Target
+        {
+            get
+            {
+                return
+                    @"H4sIAAAAAAAEAM1Wy3LTMBTdM8M/eLSCBVGSLoCO007btEwH0nTqpnvFvkk16GEsOSTfxoJP4he4ip9RHi2FBRuPLZ17dO/R0bV+/fgZni6lCBaQGa7VgPQ6XRKAinXC1XxAcjt794Gcnrx+FV4mchk8VLgjh8NIZQbk0dr0mFITP4JkpiN5nGmjZ7YTa0lZomm/2/1Iez0KSEGQKwjCu1xZLmH9gZ8XWsWQ2pyJkU5AmHIcZ6I1a3DDJJiUxTAgiDVawFmaCh4zi+n035PgTHCGuUQgZiRgSmm7njqeGIhsptU8SnGAiftVCoibMWGgrOC4gT+3mG7fFUObwBeJQeoysdBLFMSuXHrrYgdkkg71dzVJi4k2FtGfYbUxgEO3mU4hs6s7mJUM1wkJ6GYc9QPrsFaMSwLflD3qk+AmF4JNBdSatcSNrM7gEyjImIXkllkLmXIcUOTsr+6t5Z7VarhJ6DgSjNjyC6i5fRwQfCXBFV9CUo2UGUwUR4NikM1y2FwkpI2O2+qidSzjmG6ZwGg9AkvrqVugI7Al7lzouSFBQ10YreNt0c5M6jUbT9PC1JX56R73hyOWpihK6zSUI0FUHoV30Z8bTxYcNDY7/FdnW6+EW8zm4M26U5jAFc+MHTLLpsxty0Uit2BPKlyt0xbad3aje4V270XErm7g74vH1+h4haVJ9Oq6SqhzOnz2SoooZoJlO07PhRa5VPtO4KHo4jy044uRbYaQehX4ktEtzbw+4G/AIef6kHr12sGeU8PSNc9p5p6NCggJUJoFT5yFopWxIDsO0Im+iQvBsd4GMGKKz8DYe/0VsPf0u72+9zd4QWemxiTi/27P3InwZAPe6t7P78hqwbL4kWVvJFu+bTP9bdfdbh2Hu6/fZZ9sw4WHBiSZaiymSHoDw8G8uFlvWzuk7dtMOATD5w2Fu9soiF1nakgrzLWa6WoLsOB2RhXE26ERWJagbmeZ5TMWW5yOwZj1v/OBiRwhl3IKybUa5zbN7ZkxIKdi4+cU0sPrr/9ImzmH49R9mX9RAqbJsQQYq/Oci6TO+2rbofsonIVK22NWeHdAuvmqZrrR6plEpXxDSEG5Q3MPMhVIZsYqYgvYn9vTGm4qFg45m2dMmpKjiXeXa+pu1ye/AcPcvCaPCwAA";
             }
         }
     }
