@@ -6,109 +6,120 @@
     <?define ItemTemplateDirs = CSharp\Data;VisualBasic\Data;Web\CSharp;Web\VisualBasic?>
     <?define ItemTemplateLCIDs = 1028;1031;1033;1034;1036;1040;1041;1042;1049;2052?>
 
-    <?foreach ItemTemplateVersion in $(var.ItemTemplateVersions)?>
-      <?foreach ItemTemplateRoot in $(var.ItemTemplateRoots)?>
-        <?foreach ItemTemplateDir in $(var.ItemTemplateDirs)?>
-          <?if $(var.ItemTemplateDir) = CSharp\Data?>
-            <?define generatorLanguage = CSharp?>
-            <?define qualifier1 = CS?>
-            <?define qualifier2 = CS?>
-            <?define qualifier3 = CSharp?>
-          <?elseif $(var.ItemTemplateDir) = VisualBasic\Data?>
-            <?define generatorLanguage = VB?>
-            <?define qualifier1 = VB?>
-            <?define qualifier2 = VB?>
-            <?define qualifier3 = VB?>
-          <?elseif $(var.ItemTemplateDir) = Web\CSharp?>
-            <?define generatorLanguage = CSharp?>
-            <?define qualifier1 = CSWS?>
-            <?define qualifier2 = CS_WS?>
-            <?define qualifier3 = CSharp_ASPNET?>
-          <?elseif $(var.ItemTemplateDir) = Web\VisualBasic?>
-            <?define generatorLanguage = VB?>
-            <?define qualifier1 = VBWS?>
-            <?define qualifier2 = VB_WS?>
-            <?define qualifier3 = VB_ASPNET?>
-          <?endif?>
+    <!-- DbContext Item Templates -->
+    <?foreach ItemTemplateRoot in $(var.ItemTemplateRoots)?>
+      <?foreach ItemTemplateDir in $(var.ItemTemplateDirs)?>
+        <?if $(var.ItemTemplateDir) = CSharp\Data?>
+          <?define generatorLanguage = CSharp?>
+          <?define qualifier1 = CS?>
+          <?define qualifier2 = CS?>
+          <?define qualifier3 = CSharp?>
+        <?elseif $(var.ItemTemplateDir) = VisualBasic\Data?>
+          <?define generatorLanguage = VB?>
+          <?define qualifier1 = VB?>
+          <?define qualifier2 = VB?>
+          <?define qualifier3 = VB?>
+        <?elseif $(var.ItemTemplateDir) = Web\CSharp?>
+          <?define generatorLanguage = CSharp?>
+          <?define qualifier1 = CSWS?>
+          <?define qualifier2 = CS_WS?>
+          <?define qualifier3 = CSharp_ASPNET?>
+        <?elseif $(var.ItemTemplateDir) = Web\VisualBasic?>
+          <?define generatorLanguage = VB?>
+          <?define qualifier1 = VBWS?>
+          <?define qualifier2 = VB_WS?>
+          <?define qualifier3 = VB_ASPNET?>
+        <?endif?>
 
-          <DirectoryRef Id="$(var.ItemTemplateRoot)_$(var.qualifier1)">
-            <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
-              <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = True?>
-                <Directory Id="_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)"
-                           Name="$(var.ItemTemplateLCID)">
+        <DirectoryRef Id="$(var.ItemTemplateRoot)_$(var.qualifier1)">
+          <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
+            <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = True?>
+              <Directory Id="_$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)"
+                         Name="$(var.ItemTemplateLCID)">
+                <?foreach ItemTemplateVersion in $(var.ItemTemplateVersions)?>
                   <Directory Id="$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)_DbCtx$(var.qualifier1)EF$(var.ItemTemplateVersion)"
                              Name="DbCtx$(var.qualifier1)EF$(var.ItemTemplateVersion)">
                     <Component Id="$(var.qualifier1)dbcontextcontexttt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)">
                       <File Id="$(var.generatorLanguage)dbcontextcontexttt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)"
-                            Source="$(var.TargetDir)DBContextItemTemplateFilesDir\EF$(var.ItemTemplateVersion)\$(var.generatorLanguage)DbContext.Context.tt" />
+                            Source="$(var.TargetDir)ItemTemplateFilesDir\EF$(var.ItemTemplateVersion)\$(var.generatorLanguage)DbContext.Context.tt" />
                     </Component>
                     <Component Id="$(var.qualifier1)dbcontexttypestt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)">
                       <File Id="$(var.generatorLanguage)dbcontexttypestt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)"
-                            Source="$(var.TargetDir)DBContextItemTemplateFilesDir\EF$(var.ItemTemplateVersion)\$(var.generatorLanguage)DbContext.Types.tt" />
+                            Source="$(var.TargetDir)ItemTemplateFilesDir\EF$(var.ItemTemplateVersion)\$(var.generatorLanguage)DbContext.Types.tt" />
                     </Component>
                     <Component Id="dbcontext_$(var.qualifier1)_V$(var.ItemTemplateVersion)0vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)">
                       <File Id="dbcontext_$(var.qualifier2)_V$(var.ItemTemplateVersion)0vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)"
-                            Source="$(var.TargetDir)DBContextItemTemplateFilesDir\$(var.ItemTemplateDir)\$(var.ItemTemplateLCID)\DbCtx$(var.qualifier1)EF$(var.ItemTemplateVersion)\DbContext_$(var.qualifier2)_V$(var.ItemTemplateVersion).0.vstemplate" />
+                            Source="$(var.TargetDir)ItemTemplateFilesDir\$(var.ItemTemplateDir)\$(var.ItemTemplateLCID)\DbCtx$(var.qualifier1)EF$(var.ItemTemplateVersion)\DbContext_$(var.qualifier2)_V$(var.ItemTemplateVersion).0.vstemplate" />
                     </Component>
                     <Component Id="__templateiconico_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)">
                       <File Id="__templateiconico_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)"
-                            Source="$(var.TargetDir)DBContextItemTemplateFilesDir\__TemplateIcon.ico" />
+                            Source="$(var.TargetDir)ItemTemplateFilesDir\__TemplateIcon.ico" />
                     </Component>
-                  </Directory>
-                  <?if $(var.ItemTemplateLCID) = 1033 and $(var.ItemTemplateVersion) = 5?>
-                    <Component Id="adonetentitydatamodel$(var.qualifier1)zip_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)">
-                      <File Id="adonetentitydatamodel$(var.qualifier3)zip_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)"
-                            Source="$(var.TargetDir)EntityDesigner\Templates\AdoNetEntityDataModel$(var.qualifier3).zip" />
-                    </Component>
-                  <?endif?>
+                  </Directory>                
+                <?endforeach?>
+                
+                <Directory Id="$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)_EFPkg$(var.qualifier1)EF6"
+                           Name="EFPkg$(var.qualifier1)EF6">
+                  <Component Id="efnugetpackage_$(var.qualifier1)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)">
+                    <File Id="efnugetpackage_$(var.qualifier2)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)"
+                          Source="$(var.TargetDir)ItemTemplateFilesDir\$(var.ItemTemplateDir)\$(var.ItemTemplateLCID)\EFPkg$(var.qualifier1)EF6\EFNuGetPackage_$(var.qualifier2)_V6.0.vstemplate" />
+                  </Component>                           
                 </Directory>
-              <?endif?>
-            <?endforeach?>
-          </DirectoryRef>
+                
+                <?if $(var.ItemTemplateLCID) = 1033?>
+                  <Component Id="adonetentitydatamodel$(var.qualifier1)zip_$(var.ItemTemplateRoot)">
+                    <File Id="adonetentitydatamodel$(var.qualifier3)zip_$(var.ItemTemplateRoot)"
+                          Source="$(var.TargetDir)EntityDesigner\Templates\AdoNetEntityDataModel$(var.qualifier3).zip" />
+                  </Component>
+                <?endif?>
+              </Directory>
+            <?endif?>
+          <?endforeach?>
+        </DirectoryRef>
 
-          <?undef generatorLanguage?>
-          <?undef qualifier1?>
-          <?undef qualifier2?>
-          <?undef qualifier3?>
-        <?endforeach?>
+        <?undef generatorLanguage?>
+        <?undef qualifier1?>
+        <?undef qualifier2?>
+        <?undef qualifier3?>
       <?endforeach?>
     <?endforeach?>
 
     <ComponentGroup Id="ItemTemplateComponents" Directory="itemtemplates">
-      <?foreach ItemTemplateVersion in $(var.ItemTemplateVersions)?>
-        <?foreach ItemTemplateRoot in $(var.ItemTemplateRoots)?>
-          <?foreach ItemTemplateDir in $(var.ItemTemplateDirs)?>
-            <?if $(var.ItemTemplateDir) = CSharp\Data?>
-              <?define qualifier = CS?>
-            <?elseif $(var.ItemTemplateDir) = VisualBasic\Data?>
-              <?define qualifier = VB?>
-            <?elseif $(var.ItemTemplateDir) = Web\CSharp?>
-              <?define qualifier = CSWS?>
-            <?elseif $(var.ItemTemplateDir) = Web\VisualBasic?>
-              <?define qualifier = VBWS?>
-            <?endif?>
 
-            <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
-              <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = True?>
+      <?foreach ItemTemplateRoot in $(var.ItemTemplateRoots)?>
+        <?foreach ItemTemplateDir in $(var.ItemTemplateDirs)?>
+          <?if $(var.ItemTemplateDir) = CSharp\Data?>
+            <?define qualifier = CS?>
+          <?elseif $(var.ItemTemplateDir) = VisualBasic\Data?>
+            <?define qualifier = VB?>
+          <?elseif $(var.ItemTemplateDir) = Web\CSharp?>
+            <?define qualifier = CSWS?>
+          <?elseif $(var.ItemTemplateDir) = Web\VisualBasic?>
+            <?define qualifier = VBWS?>
+          <?endif?>
+
+          <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
+            <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = True?>
+              <?foreach ItemTemplateVersion in $(var.ItemTemplateVersions)?>
                 <ComponentRef Id="$(var.qualifier)dbcontextcontexttt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
                 <ComponentRef Id="$(var.qualifier)dbcontexttypestt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
-                <ComponentRef Id="dbcontext_$(var.qualifier)_V$(var.ItemTemplateVersion)0vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
+                <ComponentRef Id="dbcontext_$(var.qualifier)_V$(var.ItemTemplateVersion)0vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />              
                 <ComponentRef Id="__templateiconico_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.qualifier)_$(var.ItemTemplateLCID)" />
-              <?endif?>
+              <?endforeach?>
+              <ComponentRef Id="efnugetpackage_$(var.qualifier)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
+            <?endif?>
 
-              <?if $(var.ItemTemplateLCID) = 1033 and $(var.ItemTemplateVersion) = 5?>
-                <ComponentRef Id="adonetentitydatamodel$(var.qualifier)zip_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)" />
-              <?endif?>
-            <?endforeach?>
-
-            <?undef qualifier?>
           <?endforeach?>
+          
+          <ComponentRef Id="adonetentitydatamodel$(var.qualifier)zip_$(var.ItemTemplateRoot)" />         
+              
+          <?undef qualifier?>
         <?endforeach?>
       <?endforeach?>
 
       <ComponentGroupRef Id="ItemTemplateIncludes" />
     </ComponentGroup>
-
+    
     <ComponentGroup Id="ItemTemplateIncludes" Directory="eft_templates_include">
       <Component>
         <File Source="$(var.TargetDir)\TextTemplates\includes\EF.Utility.CS.ttinclude" />

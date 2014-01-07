@@ -1,0 +1,99 @@
+﻿<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#
+    var types = new[]
+        {
+            new TemplateType
+                {
+                    TemplateDir = @"CSharp\Data",
+                    Qualifier1 = "CS",
+                    Qualifier2 = "CS",
+                },
+            new TemplateType
+                {
+                    TemplateDir = @"VisualBasic\Data",
+                    Qualifier1 = "VB",
+                    Qualifier2 = "VB",
+                },
+            new TemplateType
+                {
+                    TemplateDir = @"Web\CSharp",
+                    Qualifier1 = "CSWS",
+                    Qualifier2 = "CS_WS",
+                },
+            new TemplateType
+                {
+                    TemplateDir = @"Web\VisualBasic",
+                    Qualifier1 = "VBWS",
+                    Qualifier2 = "VB_WS",
+                }
+        };
+#>
+<#+
+    private void CopyTo(string sourceFileName, string destDirPath)
+    {
+        File.Copy(sourceFileName, Path.Combine(destDirPath, Path.GetFileName(sourceFileName)), true);
+    }
+
+    private void TransformTo(string sourceFileName, string destDirPath, TemplateCulture culture, string version)
+    {
+        var document = XDocument.Load(sourceFileName, LoadOptions.PreserveWhitespace);
+        var ns = document.Root.GetDefaultNamespace();
+        var templateData = document.Root.Element(ns + "TemplateData");
+        var packages = document.Root.Element(ns + "WizardData").Element(ns + "packages");
+
+        if (culture.TemplateName != null)
+        {
+            templateData.Element(ns + "Name").Value = string.Format(culture.TemplateName, version);
+        }
+
+        if (culture.TemplateDescription != null)
+        {
+            templateData.Element(ns + "Description").Value = string.Format(culture.TemplateDescription, version);
+        }
+
+        if (culture.SatellitePackageCulture != null)
+        {
+            var package = packages.Elements().Single();
+            var packageName = package.Attribute("id").Value;
+            var packageVersion = package.Attribute("version").Value;
+
+            var satellitePackageName = string.Format("{0}.{1}", packageName, culture.SatellitePackageCulture);
+            var satellitePackage = new XElement(
+                ns + "package",
+                new XAttribute("id", satellitePackageName),
+                new XAttribute("version", packageVersion));
+
+            packages.Add(new XText("  "));
+            packages.Add(satellitePackage);
+            packages.Add(new XText("\r\n    "));
+        }
+
+        using (var writer = XmlWriter.Create(
+                Path.Combine(destDirPath, Path.GetFileName(sourceFileName)),
+                new XmlWriterSettings { OmitXmlDeclaration = true }))
+        {
+            document.Save(writer);
+        }
+    }
+
+    private class TemplateType
+    {
+        public string TemplateDir { get; set; }
+        public string Qualifier1 { get; set; }
+        public string Qualifier2 { get; set; }
+    }
+
+    private class TemplateCulture
+    {
+        public int LCID { get; set; }
+        public string TemplateName { get; set; }
+        public string TemplateDescription { get; set; }
+        public string SatellitePackageCulture { get; set; }
+    }
+#>

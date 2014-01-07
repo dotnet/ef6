@@ -188,6 +188,7 @@
     <Compile Include="UI\ViewModels\PropertyWindow\Converters\ToRoleListConverter.cs" />
     <Compile Include="UI\Views\Explorer\IViewDiagram.cs" />
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
+    <Compile Include="VisualStudio\ModelWizard\AddEFNuGetPackageWizard.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\EdmxHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\IInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactory.cs" />
@@ -255,6 +256,11 @@
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\CSharpDbContext.Types.tt" />
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\VBDbContext.Context.tt" />
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\VBDbContext.Types.tt" />
+    <None Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EFNuGetPackage.txt</LastGenOutput>
+    </None>
+    <None Include="VisualStudio\InTheBoxItemTemplates\VSTemplateGeneratorUtils.ttinclude" />
     <None Include="workflows\TablePerTypeStrategy.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -642,6 +648,15 @@
     <Content Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\DbContext_VB_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\DbContext_VB_WS_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\DbContext\__TemplateIcon.ico" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EFNuGetPackage.tt</DependentUpon>
+    </Content>
+    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_CS_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_CS_WS_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_VB_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_VB_WS_V6.0.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS_ASPNET.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB.vstemplate" />
@@ -869,7 +884,7 @@
     <PropertyGroup>
       <TargetTemplateDir>$(TargetDir)EntityDesigner\Templates</TargetTemplateDir>
       <TargetIntellisenseDir>$(TargetDir)EntityDesigner\Intellisense</TargetIntellisenseDir>
-      <TargetDBContextItemTemplateFilesDir>$(TargetDir)DBContextItemTemplateFilesDir</TargetDBContextItemTemplateFilesDir>
+      <TargetItemTemplateFilesDir>$(TargetDir)ItemTemplateFilesDir</TargetItemTemplateFilesDir>
       <TargetDBContextNuGetPackagesDir>$(TargetDir)DBContextNuGetPackagesDir</TargetDBContextNuGetPackagesDir>
       <CSZip>$(TargetTemplateDir)\AdoNetEntityDataModelCSharp.zip</CSZip>
       <VBZip>$(TargetTemplateDir)\AdoNetEntityDataModelVB.zip</VBZip>
@@ -880,7 +895,7 @@
     </PropertyGroup>
     <MakeDir Directories="$(VersionedItemTemplateDir)" />
     <MakeDir Directories="$(TargetTemplateDir)" />
-    <MakeDir Directories="$(TargetDBContextItemTemplateFilesDir)" />
+    <MakeDir Directories="$(TargetItemTemplateFilesDir)" />
     <MakeDir Directories="$(TargetDBContextNuGetPackagesDir)" />
   </Target>
   <Target Name="UpdateTemplateVersion" DependsOnTargets="PrepareForPackaging">
@@ -904,10 +919,11 @@
     <!-- Updates the NuGet registry key name and copies templates to the bin dir to prepare for setup -->
     <ItemGroup>
       <InTheBoxItemDBContextItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\DBContext\**\*.*" />
+      <InTheBoxItemDBContextItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\**\*.*" />
     </ItemGroup>
-    <MakeDir Directories="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetDBContextItemTemplateFilesDir)\%(RecursiveDir)')" />
-    <RegexReplaceInFile Condition="'%(Extension)' == '.vstemplate'" InputFileName="%(InTheBoxItemDBContextItemTemplateFiles.Identity)" OutputFileName="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetDBContextItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" Patterns="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN;EFPACKAGEVERSION" Replacements="EntityFrameworkVisualStudio$(VisualStudioVersion.Substring(0,2))Tools;$(EF6NuGetPackageVersion)" />
-    <Copy Condition="'%(Extension)' != '.vstemplate'" SourceFiles="@(InTheBoxItemDBContextItemTemplateFiles)" DestinationFiles="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetDBContextItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <MakeDir Directories="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)')" />
+    <RegexReplaceInFile Condition="'%(Extension)' == '.vstemplate'" InputFileName="%(InTheBoxItemDBContextItemTemplateFiles.Identity)" OutputFileName="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" Patterns="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN;EFPACKAGEVERSION" Replacements="EntityFrameworkVisualStudio$(VisualStudioVersion.Substring(0,2))Tools;$(EF6NuGetPackageVersion)" />
+    <Copy Condition="'%(Extension)' != '.vstemplate'" SourceFiles="@(InTheBoxItemDBContextItemTemplateFiles)" DestinationFiles="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="CreateTemplatesAndPackages" DependsOnTargets="UpdateTTIncludeVSEnvVarVersion;UpdateTemplateVersion;PrepareTemplatesForSetup">
     <ItemGroup>
