@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.TestHelpers
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
@@ -9,7 +10,7 @@ namespace System.Data.Entity.TestHelpers
 
     public class TestLoadedInterceptor : IDbConfigurationInterceptor
     {
-        public static readonly List<string> HooksRun = new List<string>();
+        public static readonly ConcurrentStack<string> HooksRun = new ConcurrentStack<string>();
 
         private readonly string _tag;
 
@@ -27,7 +28,7 @@ namespace System.Data.Entity.TestHelpers
             DbConfigurationLoadedEventArgs loadedEventArgs,
             DbConfigurationInterceptionContext interceptionContext)
         {
-            HooksRun.Add(_tag);
+            HooksRun.Push(_tag);
         }
     }
 }

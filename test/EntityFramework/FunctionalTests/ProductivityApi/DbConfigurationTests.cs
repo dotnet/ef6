@@ -8,6 +8,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.TestHelpers;
     using System.Globalization;
+    using System.Linq;
     using SimpleModel;
     using Xunit;
 
@@ -31,7 +32,7 @@ namespace ProductivityApiTests
 
             Assert.Equal(
                 new[] { "Hook1()", "Hook1(2013, 'December 31')", "Hook2()", "Hook2('January 1', 2014)", "Hook2()", "Hook1(4102, '1 yraunaJ')", "Hook1()" },
-                TestLoadedInterceptor.HooksRun);
+                TestLoadedInterceptor.HooksRun.ToArray().Reverse());
         }
 
         public class TestLoadedInterceptor2 : IDbConfigurationInterceptor
@@ -52,7 +53,7 @@ namespace ProductivityApiTests
                 DbConfigurationLoadedEventArgs loadedEventArgs, 
                 DbConfigurationInterceptionContext interceptionContext)
             {
-                TestLoadedInterceptor.HooksRun.Add(_tag);
+                TestLoadedInterceptor.HooksRun.Push(_tag);
             }
         }
     }
