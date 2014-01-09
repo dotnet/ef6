@@ -58,12 +58,22 @@
                   </Directory>                
                 <?endforeach?>
                 
-                <Directory Id="$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)_EFPkg$(var.qualifier1)EF6"
-                           Name="EFPkg$(var.qualifier1)EF6">
-                  <Component Id="efnugetpackage_$(var.qualifier1)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)">
-                    <File Id="efnugetpackage_$(var.qualifier2)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)"
-                          Source="$(var.TargetDir)ItemTemplateFilesDir\$(var.ItemTemplateDir)\$(var.ItemTemplateLCID)\EFPkg$(var.qualifier1)EF6\EFNuGetPackage_$(var.qualifier2)_V6.0.vstemplate" />
-                  </Component>                           
+                <Directory Id="$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)_CF$(var.qualifier1)EF6"
+                           Name="CF$(var.qualifier1)EF6">
+                  <Component Id="codefirst_$(var.qualifier1)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)">
+                    <File Id="codefirst_$(var.qualifier2)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)"
+                          Source="$(var.TargetDir)ItemTemplateFilesDir\$(var.ItemTemplateDir)\$(var.ItemTemplateLCID)\CF$(var.qualifier1)EF6\CodeFirst_$(var.qualifier2)_V6.0.vstemplate" />
+                  </Component>
+                  
+                  <Component Id="projectitem_$(var.qualifier1)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)">
+                    <?if $(var.generatorLanguage) = CSharp ?>
+                      <File Id="projectitem_$(var.qualifier1)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)"
+                            Source="$(var.TargetDir)ItemTemplateFilesDir\$(var.ItemTemplateDir)\$(var.ItemTemplateLCID)\CF$(var.qualifier1)EF6\ProjectItem.cs" />
+                    <?else?>
+                      <File Id="projectitem_$(var.qualifier1)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)"
+                            Source="$(var.TargetDir)ItemTemplateFilesDir\$(var.ItemTemplateDir)\$(var.ItemTemplateLCID)\CF$(var.qualifier1)EF6\ProjectItem.vb" />
+                    <?endif?>
+                  </Component>
                 </Directory>
                 
                 <?if $(var.ItemTemplateLCID) = 1033?>
@@ -106,7 +116,8 @@
                 <ComponentRef Id="dbcontext_$(var.qualifier)_V$(var.ItemTemplateVersion)0vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />              
                 <ComponentRef Id="__templateiconico_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.qualifier)_$(var.ItemTemplateLCID)" />
               <?endforeach?>
-              <ComponentRef Id="efnugetpackage_$(var.qualifier)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
+              <ComponentRef Id="codefirst_$(var.qualifier)_V60vstemplate_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
+              <ComponentRef Id="projectitem_$(var.qualifier)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
             <?endif?>
 
           <?endforeach?>

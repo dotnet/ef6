@@ -35,10 +35,6 @@
         };
 #>
 <#+
-    private void CopyTo(string sourceFileName, string destDirPath)
-    {
-        File.Copy(sourceFileName, Path.Combine(destDirPath, Path.GetFileName(sourceFileName)), true);
-    }
 
     private void TransformTo(string sourceFileName, string destDirPath, TemplateCulture culture, string version)
     {

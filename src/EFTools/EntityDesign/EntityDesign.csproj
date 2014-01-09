@@ -188,7 +188,6 @@
     <Compile Include="UI\ViewModels\PropertyWindow\Converters\ToRoleListConverter.cs" />
     <Compile Include="UI\Views\Explorer\IViewDiagram.cs" />
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
-    <Compile Include="VisualStudio\ModelWizard\AddEFNuGetPackageWizard.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\EdmxHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\IInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactory.cs" />
@@ -256,9 +255,9 @@
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\CSharpDbContext.Types.tt" />
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\VBDbContext.Context.tt" />
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\VBDbContext.Types.tt" />
-    <None Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage.tt">
+    <None Include="VisualStudio\InTheBoxItemTemplates\CodeFirst.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EFNuGetPackage.txt</LastGenOutput>
+      <LastGenOutput>CodeFirst.txt</LastGenOutput>
     </None>
     <None Include="VisualStudio\InTheBoxItemTemplates\VSTemplateGeneratorUtils.ttinclude" />
     <None Include="workflows\TablePerTypeStrategy.xaml">
@@ -648,15 +647,17 @@
     <Content Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\DbContext_VB_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\DbContext\EF6\DbContext_VB_WS_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\DbContext\__TemplateIcon.ico" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage.txt">
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst.txt">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EFNuGetPackage.tt</DependentUpon>
+      <DependentUpon>CodeFirst.tt</DependentUpon>
     </Content>
-    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_CS_V6.0.vstemplate" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_CS_WS_V6.0.vstemplate" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_VB_V6.0.vstemplate" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\EFNuGetPackage_VB_WS_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_CS_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_CS_WS_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_WS_V6.0.vstemplate" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\ProjectItem.cs.template" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\ProjectItem.vb.template" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS_ASPNET.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB.vstemplate" />
@@ -919,7 +920,7 @@
     <!-- Updates the NuGet registry key name and copies templates to the bin dir to prepare for setup -->
     <ItemGroup>
       <InTheBoxItemDBContextItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\DBContext\**\*.*" />
-      <InTheBoxItemDBContextItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\EFNuGetPackage\**\*.*" />
+      <InTheBoxItemDBContextItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\**\*.*" />
     </ItemGroup>
     <MakeDir Directories="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)')" />
     <RegexReplaceInFile Condition="'%(Extension)' == '.vstemplate'" InputFileName="%(InTheBoxItemDBContextItemTemplateFiles.Identity)" OutputFileName="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" Patterns="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN;EFPACKAGEVERSION" Replacements="EntityFrameworkVisualStudio$(VisualStudioVersion.Substring(0,2))Tools;$(EF6NuGetPackageVersion)" />
@@ -929,8 +930,6 @@
     <ItemGroup>
       <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.edmx" />
       <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.edmx.diagram" />
-      <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.cs" />
-      <CommonTemplateFile Include="$(ItemTemplateDir)\ProjectItem.vb" />
     </ItemGroup>
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemCS.vstemplate;@(CommonTemplateFile)" OutputFileName="$(CSZip)" OverwriteExistingFile="true" />
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemVB.vstemplate;@(CommonTemplateFile)" OutputFileName="$(VBZip)" OverwriteExistingFile="true" />

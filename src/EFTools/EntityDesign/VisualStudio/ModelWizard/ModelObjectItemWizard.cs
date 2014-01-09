@@ -65,6 +65,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
         private ModelBuilderSettings _modelBuilderSettings;
 
+        /// <summary>
+        ///     This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.
+        /// </summary>
         public ModelObjectItemWizard()
         {
             
@@ -291,6 +294,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         {
             if (_edmxItem == null)
             {
+                if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
+                {
+                    AddOneEFItems(_modelBuilderSettings.Project, _modelBuilderSettings.ModelName);
+                }
+
                 return;
             }
 
@@ -564,30 +572,26 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 }
             }
         }
+        private static void AddOneEFItems(Project project, string modelName)
+        {
+            using (new VsUtils.HourglassHelper())
+            {
+                var webTag = VsUtils.IsWebSiteProject(project) ? "WS" : "";
+                var languageTag = VsUtils.GetLanguageForProject(project) == LangEnum.VisualBasic ? "VB" : "CS";
+        
+                var templateName = string.Format(CultureInfo.InvariantCulture, "CF{0}{1}EF6.zip", languageTag, webTag);
+                var template = ((Solution2)project.DTE.Solution).GetProjectItemTemplate(templateName, project.Kind);
+
+                project.ProjectItems.AddFromTemplate(template, modelName);
+            }
+        }
 
         /// <summary>
         ///     Indicates whether the specified project item should be added to the project
-        ///     We always return true
         /// </summary>
         public bool ShouldAddProjectItem(string filePath)
         {
-            var itemExtension = Path.GetExtension(filePath);
-
-            Debug.Assert(!string.IsNullOrWhiteSpace(itemExtension), "Invalid project item extension");
-
-            if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
-            {
-                var projectLanguage = VsUtils.GetLanguageForProject(_modelBuilderSettings.Project);
-
-                return
-                    (FileExtensions.CsExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase) && projectLanguage == LangEnum.CSharp) ||
-                    (FileExtensions.VbExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase) && projectLanguage == LangEnum.VisualBasic);
-            }
-            else
-            {
-                return !FileExtensions.CsExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase) &&
-                       !FileExtensions.VbExt.Equals(itemExtension, StringComparison.OrdinalIgnoreCase);
-            }
+            return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst;
         }
 
         /// <summary>

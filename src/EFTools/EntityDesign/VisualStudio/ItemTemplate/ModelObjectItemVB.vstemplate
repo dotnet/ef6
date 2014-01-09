@@ -35,7 +35,6 @@
 
     <ProjectItem OpenInEditor="false" SubType="" TargetFileName="$fileinputname$.edmx" ReplaceParameters="true">ProjectItem.edmx</ProjectItem>
     <ProjectItem OpenInEditor="false" TargetFileName="$fileinputname$.edmx.diagram" ReplaceParameters="true">ProjectItem.edmx.diagram</ProjectItem>
-    <ProjectItem OpenInEditor="true" TargetFileName="$fileinputname$.vb" ReplaceParameters="true">ProjectItem.vb</ProjectItem>
   </TemplateContent>
 
   <WizardExtension>
