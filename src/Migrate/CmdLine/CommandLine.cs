@@ -223,7 +223,14 @@ namespace CmdLine
         {
             var saveColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine(format, formatArgs);
+            if (formatArgs.Length > 0)
+            {
+                Console.WriteLine(format, formatArgs);
+            }
+            else
+            {
+                Console.WriteLine(format);
+            }
             Console.ForegroundColor = saveColor;
         }
 

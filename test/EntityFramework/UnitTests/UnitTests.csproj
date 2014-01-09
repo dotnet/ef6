@@ -125,6 +125,7 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
+    <Compile Include="CommandLine\CommandLineWriteLineColorTests.cs" />
     <Compile Include="CommandLine\CommandLineArgumentInvalidExceptionTests.cs" />
     <Compile Include="CommandLine\CommandLineExceptionTests.cs" />
     <Compile Include="CommandLine\CommandLineParameterAttributeTests.cs" />
