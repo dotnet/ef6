@@ -8,15 +8,9 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.SqlClient;
     using System.Linq;
-    using System.Text;
-    using System.Transactions;
-    using System.Xml;
     using FunctionalTests.Model;
     using SimpleModel;
     using Xunit;
@@ -1603,6 +1597,348 @@ namespace FunctionalTests
 
         public class LosPollosHermanos : FastFoodChain
         {
+        }
+
+        [Fact] // CodePlex 1924
+        public void Non_shared_columns_with_non_abstract_base_class_are_made_nullable_even_if_required()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Base1924>();
+            modelBuilder.Entity<Derived1924A>().Property(e => e.SomeString).IsRequired().HasColumnName("SomeStringA");
+            modelBuilder.Entity<Derived1924B>().Property(e => e.SomeString).IsRequired().HasColumnName("SomeStringB");
+            modelBuilder.Entity<Derived1924A>().Property(e => e.SomeInt).IsRequired().HasColumnName("SomeIntA");
+            modelBuilder.Entity<Derived1924B>().Property(e => e.SomeInt).IsRequired().HasColumnName("SomeIntB");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Derived1924A>("Base1924").Column("SomeStringA").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Derived1924B>("Base1924").Column("SomeStringB").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Derived1924A>("Base1924").Column("SomeIntA").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Derived1924B>("Base1924").Column("SomeIntB").DbEqual(true, p => p.Nullable);
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 1924
+        public void Shared_columns_with_non_abstract_base_class_are_made_nullable_even_if_required()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Base1924>();
+            modelBuilder.Entity<Derived1924A>().Property(e => e.SomeString).IsRequired().HasColumnName("NullMeString");
+            modelBuilder.Entity<Derived1924B>().Property(e => e.SomeString).IsRequired().HasColumnName("NullMeString");
+            modelBuilder.Entity<Derived1924A>().Property(e => e.SomeInt).IsRequired().HasColumnName("NullMeInt");
+            modelBuilder.Entity<Derived1924B>().Property(e => e.SomeInt).IsRequired().HasColumnName("NullMeInt");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Derived1924A>("Base1924").Column("NullMeString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Derived1924B>("Base1924").Column("NullMeString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Derived1924A>("Base1924").Column("NullMeInt").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Derived1924B>("Base1924").Column("NullMeInt").DbEqual(true, p => p.Nullable);
+
+            databaseMapping.AssertValid();
+        }
+
+        public class Base1924
+        {
+            public int Id { get; set; }
+        }
+
+        public class Derived1924A : Base1924
+        {
+            public string SomeString { get; set; }
+            public string SomeInt { get; set; }
+        }
+
+        public class Derived1924B : Base1924
+        {
+            public string SomeString { get; set; }
+            public string SomeInt { get; set; }
+        }
+
+        [Fact] // CodePlex 1924
+        public void Non_shared_columns_with_abstract_base_class_are_made_nullable_even_if_required()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<AbstractBase1924>();
+            modelBuilder.Entity<DerivedFromAbstract1924A>().Property(e => e.SomeString).IsRequired().HasColumnName("SomeStringA");
+            modelBuilder.Entity<DerivedFromAbstract1924B>().Property(e => e.SomeString).IsRequired().HasColumnName("SomeStringB");
+            modelBuilder.Entity<DerivedFromAbstract1924A>().Property(e => e.SomeInt).IsRequired().HasColumnName("SomeIntA");
+            modelBuilder.Entity<DerivedFromAbstract1924B>().Property(e => e.SomeInt).IsRequired().HasColumnName("SomeIntB");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<DerivedFromAbstract1924A>("AbstractBase1924").Column("SomeStringA").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<DerivedFromAbstract1924B>("AbstractBase1924").Column("SomeStringB").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<DerivedFromAbstract1924A>("AbstractBase1924").Column("SomeIntA").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<DerivedFromAbstract1924B>("AbstractBase1924").Column("SomeIntB").DbEqual(true, p => p.Nullable);
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 1924
+        public void Shared_columns_with_abstract_base_class_are_made_nullable_even_if_required()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<AbstractBase1924>();
+            modelBuilder.Entity<DerivedFromAbstract1924A>().Property(e => e.SomeString).IsRequired().HasColumnName("NullMeString");
+            modelBuilder.Entity<DerivedFromAbstract1924B>().Property(e => e.SomeString).IsRequired().HasColumnName("NullMeString");
+            modelBuilder.Entity<DerivedFromAbstract1924A>().Property(e => e.SomeInt).IsRequired().HasColumnName("NullMeInt");
+            modelBuilder.Entity<DerivedFromAbstract1924B>().Property(e => e.SomeInt).IsRequired().HasColumnName("NullMeInt");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<DerivedFromAbstract1924A>("AbstractBase1924").Column("NullMeString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<DerivedFromAbstract1924B>("AbstractBase1924").Column("NullMeString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<DerivedFromAbstract1924A>("AbstractBase1924").Column("NullMeInt").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<DerivedFromAbstract1924B>("AbstractBase1924").Column("NullMeInt").DbEqual(true, p => p.Nullable);
+
+            databaseMapping.AssertValid();
+        }
+
+        public abstract class AbstractBase1924
+        {
+            public int Id { get; set; }
+        }
+
+        public class DerivedFromAbstract1924A : AbstractBase1924
+        {
+            public string SomeString { get; set; }
+            public string SomeInt { get; set; }
+        }
+
+        public class DerivedFromAbstract1924B : AbstractBase1924
+        {
+            public string SomeString { get; set; }
+            public string SomeInt { get; set; }
+        }
+
+        [Fact] // CodePlex 1964
+        public void Subclasses_can_map_different_FKs_to_same_column_using_TPH()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<User1964>();
+            modelBuilder.Entity<Movie1964>();
+            
+            modelBuilder.Entity<Tag1964>();
+
+            modelBuilder.Entity<UserTag1964>().Property(m => m.UserId).HasColumnName("ItemId");
+            modelBuilder.Entity<UserTag1964>().HasRequired(m => m.User).WithMany().HasForeignKey(m => m.UserId);
+
+            modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieId).HasColumnName("ItemId");
+            modelBuilder.Entity<MovieTag1964>().HasRequired(m => m.Movie).WithMany().HasForeignKey(m => m.MovieId);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("ItemId");
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("ItemId");
+
+            Assert.Equal(0, databaseMapping.Database.AssociationTypes.Count());
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 1964
+        public void Subclasses_can_map_different_FKs_to_same_column_using_TPH_with_explicit_condition()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<User1964>();
+            modelBuilder.Entity<Movie1964>();
+
+            modelBuilder.Entity<Tag1964>()
+                .Map<UserTag1964>(m => m.Requires("TagType").HasValue("usertag"))
+                .Map<MovieTag1964>(m => m.Requires("TagType").HasValue("movietag"));
+
+            modelBuilder.Entity<UserTag1964>().Property(m => m.UserId).HasColumnName("ItemId");
+            modelBuilder.Entity<UserTag1964>().HasRequired(m => m.User).WithMany().HasForeignKey(m => m.UserId);
+
+            modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieId).HasColumnName("ItemId");
+            modelBuilder.Entity<MovieTag1964>().HasRequired(m => m.Movie).WithMany().HasForeignKey(m => m.MovieId);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("ItemId");
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("ItemId");
+
+            Assert.Equal(0, databaseMapping.Database.AssociationTypes.Count());
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 1964
+        public void Subclasses_can_map_different_composite_FKs_to_same_column_using_TPH()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<User1964>().HasKey(e => new { e.Id, e.MaybeId1, e.MaybeId2 });
+            modelBuilder.Entity<Movie1964>().HasKey(e => new { e.Id, e.MaybeId1, e.MaybeId2 });
+            
+            modelBuilder.Entity<Tag1964>();
+
+            modelBuilder.Entity<UserTag1964>().Property(m => m.UserId).HasColumnName("ItemId");
+            modelBuilder.Entity<UserTag1964>().Property(m => m.UserMaybeFk1).HasColumnName("ItemFk1");
+            modelBuilder.Entity<UserTag1964>().Property(m => m.UserMaybeFk2).HasColumnName("ItemFk2");
+            modelBuilder.Entity<UserTag1964>()
+                .HasRequired(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => new { m.UserId, m.UserMaybeFk1, m.UserMaybeFk2 });
+
+            modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieId).HasColumnName("ItemId");
+            modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieMaybeFk1).HasColumnName("ItemFk1");
+            modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieMaybeFk2).HasColumnName("ItemFk2");
+            modelBuilder.Entity<MovieTag1964>()
+                .HasRequired(m => m.Movie)
+                .WithMany()
+                .HasForeignKey(m => new { m.MovieId, m.MovieMaybeFk1, m.MovieMaybeFk2 });
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("ItemId");
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("ItemFk1");
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("ItemFk2");
+            
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("ItemId");
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("ItemFk1");
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("ItemFk2");
+
+            Assert.Equal(0, databaseMapping.Database.AssociationTypes.Count());
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 1964
+        public void Subclasses_can_map_parts_of_different_composite_FKs_to_same_column_using_TPH()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<User1964>().HasKey(e => new { e.Id, e.MaybeId1, e.MaybeId2 });
+            modelBuilder.Entity<Movie1964>().HasKey(e => new { e.Id, e.MaybeId1, e.MaybeId2 });
+
+            modelBuilder.Entity<Tag1964>();
+
+            modelBuilder.Entity<UserTag1964>().Property(m => m.UserId).HasColumnName("ItemId");
+            modelBuilder.Entity<UserTag1964>().Property(m => m.UserMaybeFk2).HasColumnName("ItemFk2");
+            modelBuilder.Entity<UserTag1964>()
+                .HasRequired(m => m.User)
+                .WithMany()
+                .HasForeignKey(m => new { m.UserId, m.UserMaybeFk1, m.UserMaybeFk2 });
+
+            modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieId).HasColumnName("ItemId");
+            modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieMaybeFk1).HasColumnName("ItemFk1");
+            modelBuilder.Entity<MovieTag1964>()
+                .HasRequired(m => m.Movie)
+                .WithMany()
+                .HasForeignKey(m => new { m.MovieId, m.MovieMaybeFk1, m.MovieMaybeFk2 });
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("ItemId");
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("UserMaybeFk1");
+            databaseMapping.Assert<UserTag1964>("Tag1964").HasColumn("ItemFk2");
+
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("ItemId");
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("ItemFk1");
+            databaseMapping.Assert<MovieTag1964>("Tag1964").HasColumn("MovieMaybeFk2");
+
+            Assert.Equal(0, databaseMapping.Database.AssociationTypes.Count());
+
+            databaseMapping.AssertValid();
+        }
+
+        public class User1964
+        {
+            public int Id { get; set; }
+            public string MaybeId1 { get; set; }
+            public Guid MaybeId2 { get; set; }
+
+            public string SomeData { get; set; }
+
+        }
+
+        public class Movie1964
+        {
+            public int Id { get; set; }
+            public string MaybeId1 { get; set; }
+            public Guid MaybeId2 { get; set; }
+
+            public string SomeData { get; set; }
+        }
+
+        public abstract class Tag1964
+        {
+            public int Id { get; set; }
+
+            public string SomeData { get; set; }
+        }
+
+        public class UserTag1964 : Tag1964
+        {
+            public int UserId { get; set; }
+            public string UserMaybeFk1 { get; set; }
+            public Guid UserMaybeFk2 { get; set; }
+
+            public virtual User1964 User { get; set; }
+        }
+
+        public class MovieTag1964 : Tag1964
+        {
+            public int MovieId { get; set; }
+            public string MovieMaybeFk1 { get; set; }
+            public Guid MovieMaybeFk2 { get; set; }
+
+            public virtual Movie1964 Movie { get; set; }
+        }
+
+        [Fact] // CodePlex 1964
+        public void Subclasses_that_map_different_FKs_to_same_column_using_TPH_can_roundtrip()
+        {
+            using (var context = new Context1964())
+            {
+                context.Database.Delete();
+
+                context.UserTags.Add(new UserTag1964 { User = new User1964 { SomeData = "UserData" }, SomeData = "UserTagData" });
+                context.MovieTags.Add(new MovieTag1964 { Movie = new Movie1964 { SomeData = "MovieData" }, SomeData = "MovieTagData" });
+
+                context.SaveChanges();
+            }
+
+            using (var context = new Context1964())
+            {
+                var userTag = context.UserTags.Single();
+                var movieTag = context.MovieTags.Single();
+
+                Assert.Equal("UserTagData", userTag.SomeData);
+                Assert.Equal("UserData", userTag.User.SomeData);
+                Assert.Equal("MovieTagData", movieTag.SomeData);
+                Assert.Equal("MovieData", movieTag.Movie.SomeData);
+            }
+        }
+
+        public class Context1964 : DbContext
+        {
+            public DbSet<User1964> Users { get; set; }
+            public DbSet<Movie1964> Movies { get; set; }
+            public DbSet<UserTag1964> UserTags { get; set; }
+            public DbSet<MovieTag1964> MovieTags { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Tag1964>()
+                    .Map<UserTag1964>(m => m.Requires("TagType").HasValue("usertag"))
+                    .Map<MovieTag1964>(m => m.Requires("TagType").HasValue("movietag"));
+
+                modelBuilder.Entity<UserTag1964>().Property(m => m.UserId).HasColumnName("ItemId");
+                modelBuilder.Entity<UserTag1964>().HasRequired(m => m.User).WithMany().HasForeignKey(m => m.UserId);
+
+                modelBuilder.Entity<MovieTag1964>().Property(m => m.MovieId).HasColumnName("ItemId");
+                modelBuilder.Entity<MovieTag1964>().HasRequired(m => m.Movie).WithMany().HasForeignKey(m => m.MovieId);
+            }
         }
 
         [Fact] // CodePlex 546

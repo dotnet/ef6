@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Moq;
@@ -23,7 +24,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var columns = CreateColumns(mockTableType, "Moist", "Moist");
             var mappings = CreateMappings(columns, "von", "Lipwig");
 
-            new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
 
             Assert.Equal(1, removed.Select(m => m.Name).Count(n => n == "Moist"));
 
@@ -46,7 +49,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 "Nanny1", "Ogg", "Nanny2", "Nanny2", "Granny", "Magrat1", "Weatherwax", "Weatherwax", "Magrat2", "Garlik", "Tiffany",
                 "Tiffany");
 
-            new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
 
             Assert.Equal(5, removed.Count);
             Assert.Equal(2, removed.Select(m => m.Name).Count(n => n == "Nanny"));
@@ -73,7 +78,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             mockTableType.Setup(m => m.HasMember(It.IsAny<EdmMember>())).Returns<EdmMember>(m => !removed.Contains(m));
 
-            new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
 
             Assert.Equal(1, removed.Count);
             Assert.Equal(1, removed.Select(m => m.Name).Count(n => n == "Nanny"));
@@ -88,6 +95,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 refColumn = refColumn ?? column;
                 Assert.Same(refColumn, column);
+                Assert.True(column.Nullable);
             }
         }
 
@@ -111,7 +119,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 };
             var mappings = CreateMappings(columns, "Sam", "Vimes");
 
-            var fixer = new TphColumnFixer(mappings);
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            var fixer = new TphColumnFixer(mappings, mockModel.Object);
 
             Assert.Equal(
                 Strings.BadTphMappingToSharedColumn(
@@ -140,7 +150,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 };
             var mappings = CreateMappings(columns, "Sam", "Vimes");
 
-            var fixer = new TphColumnFixer(mappings);
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            var fixer = new TphColumnFixer(mappings, mockModel.Object);
 
             Assert.Equal(
                 Strings.BadTphMappingToSharedColumn(
@@ -176,7 +188,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 };
             var mappings = CreateMappings(columns, "Sam", "Vimes", "Rules");
 
-            new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
 
             Assert.Equal(256, mappings[0].ColumnProperty.MaxLength);
             Assert.Equal(false, mappings[0].ColumnProperty.IsUnicode);
@@ -197,7 +211,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     CreateColumnMapping(entityType, "Lipwig", columns[1])
                 };
 
-            new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
 
             mockTableType.Verify(m => m.RemoveMember(It.IsAny<EdmMember>()), Times.Never());
         }
@@ -214,9 +230,44 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     CreateColumnMapping(CreateMockType("TheType2", CreateMockType("Base2").Object).Object, "Lipwig", columns[1])
                 };
 
-            new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+
+            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
 
             mockTableType.Verify(m => m.RemoveMember(It.IsAny<EdmMember>()), Times.Never());
+        }
+
+        [Fact] // CodePlex 1964
+        public void RemoveDuplicateTphColumns_removes_associations_when_FK_is_shared()
+        {
+            var columns = CreateColumns(
+                CreateMockType("Lancre"),
+                "Nanny", "Ogg", "Nanny", "Nanny", "Granny", "Magrat", "Weatherwax", "Weatherwax", "Magrat", "Garlik", "Tiffany", "Tiffany");
+
+            var mappings = CreateMappings(
+                columns,
+                "Nanny1", "Ogg", "Nanny2", "Nanny2", "Granny", "Magrat1", "Weatherwax", "Weatherwax", "Magrat2", "Garlik", "Tiffany",
+                "Tiffany");
+
+            var model = CreateModelWithAssociations(columns[0], columns[1], columns[2], null, columns[3], columns[6], columns[7], columns[9]);
+
+            Assert.Equal(
+                new[] { "Nanny0", "Ogg1", "Nanny2", "IA3", "Nanny4", "Weatherwax5", "Weatherwax6", "Garlik7" }, 
+                model.AssociationTypes.Select(a => a.Name).ToArray());
+
+            Assert.Equal(
+                new[] { "SetNanny0", "SetOgg1", "SetNanny2", "SetIA3", "SetNanny4", "SetWeatherwax5", "SetWeatherwax6", "SetGarlik7" },
+                model.Container.AssociationSets.Select(a => a.Name).ToArray());
+
+            new TphColumnFixer(mappings, model).RemoveDuplicateTphColumns();
+
+            Assert.Equal(
+                new[] { "Ogg1", "IA3", "Garlik7" },
+                model.AssociationTypes.Select(a => a.Name).ToArray());
+
+            Assert.Equal(
+                new[] { "SetOgg1", "SetIA3", "SetGarlik7" },
+                model.Container.AssociationSets.Select(a => a.Name).ToArray());
         }
 
         private static IList<EdmProperty> CreateColumns(Mock<EntityType> mockTable, params string[] names)
@@ -270,6 +321,46 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             mockType.Setup(m => m.BaseType).Returns(baseType);
             mockType.Setup(m => m.Name).Returns(name);
             return mockType;
+        }
+
+        private EdmModel CreateModelWithAssociations(params EdmProperty[] foreignKeys)
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+
+            for (var i = 0; i < foreignKeys.Length; i++)
+            {
+                var sourceEntityType = new EntityType("E" + i, "N", DataSpace.SSpace);
+                var targetEntityType = new EntityType("E" + i, "N", DataSpace.SSpace);
+
+                model.AddEntitySet("S" + i, sourceEntityType);
+                model.AddEntitySet("T" + i, targetEntityType);
+
+                var fk = foreignKeys[i];
+                var associationType = new AssociationType((fk == null ? "IA" : fk.Name) + i, "MN", false, DataSpace.SSpace)
+                {
+                    SourceEnd = new AssociationEndMember(
+                        "A_Source" + i, sourceEntityType.GetReferenceType(), RelationshipMultiplicity.ZeroOrOne),
+                    TargetEnd = new AssociationEndMember(
+                        "A_Target" + i, targetEntityType.GetReferenceType(), RelationshipMultiplicity.Many)
+                };
+
+                model.AddAssociationType(associationType);
+
+                if (fk != null)
+                {
+                    var constraint = new ReferentialConstraint(
+                        associationType.SourceEnd,
+                        associationType.TargetEnd,
+                        new[] { new EdmProperty("SourceProperty") },
+                        new[] { fk });
+
+                    associationType.Constraint = constraint;
+                }
+
+                model.AddAssociationSet("Set" + (fk == null ? "IA" : fk.Name) + i, associationType);
+            }
+
+            return model;
         }
     }
 }

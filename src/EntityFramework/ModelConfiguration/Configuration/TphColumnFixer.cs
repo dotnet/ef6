@@ -14,12 +14,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     internal class TphColumnFixer
     {
         private readonly IList<ColumnMappingBuilder> _columnMappings;
+        private readonly EdmModel _storeModel;
 
-        public TphColumnFixer(IEnumerable<ColumnMappingBuilder> columnMappings)
+        public TphColumnFixer(IEnumerable<ColumnMappingBuilder> columnMappings, EdmModel storeModel)
         {
             DebugCheck.NotNull(columnMappings);
+            DebugCheck.NotNull(storeModel);
 
             _columnMappings = columnMappings.OrderBy(m => m.ColumnProperty.Name).ToList();
+            _storeModel = storeModel;
         }
 
         public void RemoveDuplicateTphColumns()
@@ -77,6 +80,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                                 column.Name,
                                 column.DeclaringType.Name,
                                 configError));
+                    }
+
+                    column.Nullable = true;
+
+                    var associations = from a in _storeModel.AssociationTypes
+                        where a.Constraint != null
+                        let p = a.Constraint.ToProperties
+                        where p.Contains(column) || p.Contains(toFixup.ColumnProperty)
+                        select a;
+
+                    foreach (var association in associations.ToArray())
+                    {
+                        _storeModel.RemoveAssociationType(association);
                     }
 
                     if (toFixup.ColumnProperty.DeclaringType.HasMember(toFixup.ColumnProperty))

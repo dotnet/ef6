@@ -9,7 +9,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -690,7 +689,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         .SelectMany(e => e.EntityTypeMappings)
                         .SelectMany(e => e.MappingFragments)
                         .Where(f => f.Table == currentTable)
-                        .SelectMany(f => f.ColumnMappings)).RemoveDuplicateTphColumns();
+                        .SelectMany(f => f.ColumnMappings),
+                    databaseMapping.Database).RemoveDuplicateTphColumns();
             }
         }
 
