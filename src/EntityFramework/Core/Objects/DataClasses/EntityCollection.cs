@@ -840,9 +840,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // is contained in a navigation collection has its primary key set after it is saved.
                 // Therefore, we only use this optimization if we know for sure that the nav prop is
                 // using reference equality or if neither Equals or GetHashCode are overridden.
-
-                var collection = value as ICollection<TEntity>;
-                if (collection == null)
+                //
+                // Also, note that for most EF code to work the navigation property must be an ICollection.
+                // However, some limited code paths work with IEnumerable, so we check for IEnumerable here
+                // instead of ICollection to avoid breaking those code paths. If it's not IEnumerable, then
+                // the message still tells people to use ICollection since pointing them to use IEnumerable
+                // will likely cause more confusion and other errors as they continue development.
+                var enumerable = value as IEnumerable<TEntity>;
+                if (enumerable == null)
                 {
                     throw new EntityException(
                         Strings.ObjectStateEntry_UnableToEnumerateCollection(
@@ -854,10 +859,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     || (hashSet != null
                         && hashSet.Comparer is ObjectReferenceEqualityComparer))
                 {
-                    return collection.Contains((TEntity)wrapper.Entity);
+                    // Contains extension method will short-circuit to ICollection.Contains if possible
+                    return enumerable.Contains((TEntity)wrapper.Entity);
                 }
 
-                return collection.Any(o => ReferenceEquals(o, wrapper.Entity));
+                return enumerable.Any(o => ReferenceEquals(o, wrapper.Entity));
             }
             return false;
         }

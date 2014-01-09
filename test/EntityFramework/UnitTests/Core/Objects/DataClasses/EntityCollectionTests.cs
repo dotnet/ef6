@@ -173,6 +173,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             [Fact]
+            public void Check_does_not_throw_for_non_IEnumerable_nav_props()
+            {
+                var mockTarget = new Mock<IEntityWrapper>();
+                var collection = CreateCollectionForContains(new HashSet<object>().Select(e => e), new object(), mockTarget);
+
+                Assert.False(collection.CheckIfNavigationPropertyContainsEntity(mockTarget.Object));
+            }
+
+            [Fact]
             public void Check_returns_false_if_nav_property_does_not_contain_entity()
             {
                 var mockTarget = new Mock<IEntityWrapper>();
