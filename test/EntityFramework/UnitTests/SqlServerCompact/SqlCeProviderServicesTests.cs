@@ -14,6 +14,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
     using System.Linq;
+    using Moq;
     using SimpleModel;
     using Xunit;
 
@@ -54,7 +55,7 @@ namespace System.Data.Entity.SqlServerCompact
             var baseException = ex.GetBaseException();
 
             Assert.IsType<ArgumentException>(baseException);
-            Assert.Equal(Resources.Strings.UnableToDetermineStoreVersion, baseException.Message);
+            Assert.Equal(Strings.UnableToDetermineStoreVersion, baseException.Message);
         }
 
         [Fact]
@@ -89,18 +90,22 @@ namespace System.Data.Entity.SqlServerCompact
         public class DbCreateDatabase : TestBase
         {
             [Fact]
-            public void DbCreateDatabase_dispatches_commands_to_interceptors()
+            public void DbCreateDatabase_dispatches_to_interceptors()
             {
                 using (var context = new DdlDatabaseContext(SimpleCeConnection<DdlDatabaseContext>()))
                 {
                     var storeItemCollection =
                         (StoreItemCollection)
-                        ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                            ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
 
                     context.Database.Delete();
 
                     var interceptor = new TestNonQueryInterceptor();
                     DbInterception.Add(interceptor);
+                    var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+                    DbInterception.Add(dbConnectionInterceptorMock.Object);
+                    var transactionInterceptorMock = new Mock<IDbTransactionInterceptor>();
+                    DbInterception.Add(transactionInterceptorMock.Object);
                     try
                     {
                         SqlCeProviderServices.Instance.CreateDatabase(context.Database.Connection, null, storeItemCollection);
@@ -108,6 +113,8 @@ namespace System.Data.Entity.SqlServerCompact
                     finally
                     {
                         DbInterception.Remove(interceptor);
+                        DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                        DbInterception.Remove(transactionInterceptorMock.Object);
                     }
 
                     Assert.Equal(3, interceptor.CommandTexts.Count);
@@ -115,19 +122,41 @@ namespace System.Data.Entity.SqlServerCompact
                     Assert.True(interceptor.CommandTexts.Any(t => t.StartsWith("CREATE TABLE \"Products\" ")));
                     Assert.True(interceptor.CommandTexts.Any(t => t.StartsWith("CREATE TABLE \"Categories\" ")));
                     Assert.True(interceptor.CommandTexts.Any(t => t.StartsWith("ALTER TABLE \"Products\" ADD CONSTRAINT ")));
-                }
-            }
+                    
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                        Times.Once());
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                        Times.Once());
 
-            public class DdlDatabaseContext : SimpleModelContext
-            {
-                static DdlDatabaseContext()
-                {
-                    Database.SetInitializer<DdlDatabaseContext>(null);
-                }
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.BeginningTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
+                        Times.Once());
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.BeganTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
+                        Times.Once());
 
-                public DdlDatabaseContext(DbConnection connection)
-                    : base(connection, contextOwnsConnection: true)
-                {
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.Opening(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                        Times.Once());
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.Opened(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                        Times.Once());
+
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.Closing(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                        Times.Once());
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.Closed(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                        Times.Once());
+
+                    transactionInterceptorMock.Verify(
+                        m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                        Times.Once());
+                    transactionInterceptorMock.Verify(
+                        m => m.Committed(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                        Times.Once());
                 }
             }
 
@@ -142,6 +171,84 @@ namespace System.Data.Entity.SqlServerCompact
                     Assert.Empty(interceptionContext.DbContexts);
                     Assert.Empty(interceptionContext.ObjectContexts);
                 }
+            }
+        }
+
+        public class DbDeleteDatabase : TestBase
+        {
+            [Fact]
+            public void DbDeleteDatabase_dispatches_to_interceptors()
+            {
+                using (var context = new DdlDatabaseContext(SimpleCeConnection<DdlDatabaseContext>()))
+                {
+                    context.Database.CreateIfNotExists();
+
+                    var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+                    DbInterception.Add(dbConnectionInterceptorMock.Object);
+                    try
+                    {
+                        SqlCeProviderServices.Instance.DeleteDatabase(context.Database.Connection, null, new StoreItemCollection());
+                    }
+                    finally
+                    {
+                        DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                    }
+
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.StateGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<ConnectionState>>()),
+                        Times.Once());
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.StateGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<ConnectionState>>()),
+                        Times.Once());
+
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                        Times.Once());
+                    dbConnectionInterceptorMock.Verify(
+                        m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                        Times.Once());
+                }
+            }
+        }
+
+        public class DbDatabaseExists : TestBase
+        {
+            [Fact]
+            public void DbDatabaseExists_dispatches_to_interceptors()
+            {
+                var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+                DbInterception.Add(dbConnectionInterceptorMock.Object);
+                try
+                {
+                    using (var connection = new SqlCeConnection(ModelHelpers.SimpleCeConnectionString("I.Do.Not.Exist")))
+                    {
+                        Assert.False(SqlCeProviderServices.Instance.DatabaseExists(connection, null, new StoreItemCollection()));
+                    }
+                }
+                finally
+                {
+                    DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                }
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Once());
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Once());
+            }
+        }
+
+        public class DdlDatabaseContext : SimpleModelContext
+        {
+            static DdlDatabaseContext()
+            {
+                Database.SetInitializer<DdlDatabaseContext>(null);
+            }
+
+            public DdlDatabaseContext(DbConnection connection)
+                : base(connection, contextOwnsConnection: true)
+            {
             }
         }
     }

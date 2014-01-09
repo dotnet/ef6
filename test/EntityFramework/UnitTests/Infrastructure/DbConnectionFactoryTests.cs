@@ -414,50 +414,6 @@ namespace System.Data.Entity.Infrastructure
 
         #endregion
 
-        #region Exception thrown for bad connection (Dev11 364657)
-
-        [Fact]
-        public void Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_MVC4_connection_string_is_used()
-        {
-            Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_connection_string_is_used(
-                "Data Source=(localdb)\v11.0", Strings.BadLocalDBDatabaseName);
-        }
-
-        [Fact]
-        public void Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_general_bad_connection_string_is_used()
-        {
-            Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_connection_string_is_used(
-                "Data Source=WotNoServer", Strings.FailedToGetProviderInformation);
-        }
-
-        [Fact]
-        public void Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_correct_LocalDB_name_is_used_but_it_still_fails()
-        {
-            Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_connection_string_is_used(
-                "Data Source=(localdb)\\v11.0", Strings.FailedToGetProviderInformation);
-        }
-
-        private void Useful_exception_is_thrown_by_GetProviderManifestTokenChecked_if_bad_connection_string_is_used(
-            string connectionString, string expectedMessage)
-        {
-            var fakeConnection = new SqlConnection(connectionString);
-            var innerException = new ProviderIncompatibleException();
-
-            var mockProviderServices = new Mock<DbProviderServices>();
-            mockProviderServices
-                .Protected()
-                .Setup("GetDbProviderManifestToken", fakeConnection)
-                .Throws(innerException);
-
-            var ex =
-                Assert.Throws<ProviderIncompatibleException>(
-                    () => mockProviderServices.Object.GetProviderManifestTokenChecked(fakeConnection));
-            Assert.Equal(expectedMessage, ex.Message);
-            Assert.Same(innerException, ex.InnerException);
-        }
-
-        #endregion
-
         #region LocalDbConnectionFactory tests
 
         [Fact]

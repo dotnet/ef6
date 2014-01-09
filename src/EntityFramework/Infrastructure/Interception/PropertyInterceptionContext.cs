@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.ComponentModel;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -47,26 +49,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
         }
 
-        /// <summary>
-        /// Creates a new <see cref="PropertyInterceptionContext{TValue}" /> by copying immutable state from the given
-        /// interception context. Also see <see cref="Clone" />
-        /// </summary>
-        /// <param name="copyFrom">The context from which to copy state.</param>
-        /// <param name="value">The value that will be assigned to the target property.</param>
-        public PropertyInterceptionContext(DbInterceptionContext copyFrom, TValue value)
-            : base(copyFrom)
-        {
-            Check.NotNull(copyFrom, "copyFrom");
-
-            _value = value;
-        }
-
         InterceptionContextMutableData IDbMutableInterceptionContext.MutableData
-        {
-            get { return _mutableData; }
-        }
-
-        internal InterceptionContextMutableData MutableData
         {
             get { return _mutableData; }
         }
@@ -200,6 +183,35 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(context, "context");
 
             return (PropertyInterceptionContext<TValue>)base.WithObjectContext(context);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

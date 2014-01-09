@@ -2,14 +2,15 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System;
     using System.Configuration;
-    using System.Data.Entity;
+    using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
     using Moq;
+    using Moq.Protected;
     using Xunit;
 
     /// <summary>
@@ -24,7 +25,8 @@ namespace System.Data.Entity.Internal
         {
             using (var connection = new SqlConnection())
             {
-                using (var internalConnection = new EagerInternalConnection(new DbContext(connection, false),
+                using (var internalConnection = new EagerInternalConnection(
+                    new DbContext(connection, false),
                     connection, connectionOwned: false))
                 {
                     Assert.Same(connection, internalConnection.Connection);
@@ -213,6 +215,81 @@ namespace System.Data.Entity.Internal
         }
 
         [Fact]
+        public void ConnectionKey_uses_interception()
+        {
+            using (var internalConnection = new LazyInternalConnection("NameNotInAppConfig"))
+            {
+                var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+                DbInterception.Add(dbConnectionInterceptorMock.Object);
+                try
+                {
+                    Assert.Equal(
+                        @"System.Data.SqlClient.SqlConnection;Data Source=.\SQLEXPRESS;Initial Catalog=NameNotInAppConfig;Integrated Security=True",
+                        internalConnection.ConnectionKey);
+                }
+                finally
+                {
+                    DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                }
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+            }
+        }
+
+        [Fact]
+        public void OriginalConnectionString_uses_interception()
+        {
+            using (var internalConnection = new LazyInternalConnection("NameNotInAppConfig"))
+            {
+                var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+                DbInterception.Add(dbConnectionInterceptorMock.Object);
+                try
+                {
+                    Assert.Equal(
+                        @"Data Source=.\SQLEXPRESS;Initial Catalog=NameNotInAppConfig;Integrated Security=True",
+                        internalConnection.OriginalConnectionString);
+                }
+                finally
+                {
+                    DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                }
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Once());
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Once());
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringSetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionPropertyInterceptionContext<string>>()),
+                    Times.Once());
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringSet(It.IsAny<DbConnection>(), It.IsAny<DbConnectionPropertyInterceptionContext<string>>()),
+                    Times.Once());
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DatabaseGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DatabaseGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+            }
+        }
+
+        [Fact]
         public void Changed_by_convention_IDbConnectionFactory_is_used_to_create_connection()
         {
             try
@@ -329,7 +406,8 @@ namespace System.Data.Entity.Internal
             {
                 connection.Disposed += (_, __) => disposed = true;
 
-                using (var internalConnection = new EagerInternalConnection(new DbContext(connection, false)
+                using (var internalConnection = new EagerInternalConnection(
+                    new DbContext(connection, false)
                     , connection, connectionOwned: false))
                 {
                     var _ = internalConnection.Connection;
@@ -348,13 +426,126 @@ namespace System.Data.Entity.Internal
 
             connection.Disposed += (_, __) => disposed = true;
 
-            using (var internalConnection = new EagerInternalConnection(new DbContext(connection, false),
+            using (var internalConnection = new EagerInternalConnection(
+                new DbContext(connection, false),
                 connection, connectionOwned: true))
             {
                 var _ = internalConnection.Connection;
             }
 
             Assert.True(disposed);
+        }
+
+        [Fact]
+        public void EagerInternalConnection_Dispose_uses_interception()
+        {
+            var connectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+            connectionMock.Setup(m => m.ConnectionString).Returns("fake");
+            connectionMock.Setup(m => m.Database).Returns("fakeDb");
+            connectionMock.Setup(m => m.DataSource).Returns("fakeSource");
+            connectionMock.Protected().Setup("Dispose", ItExpr.IsAny<bool>());
+            connectionMock.Setup(m => m.ToString()).Returns("Mock Connection");
+
+                var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+                DbInterception.Add(dbConnectionInterceptorMock.Object);
+            try
+            {
+                using (var internalConnection = new EagerInternalConnection(
+                    new DbContext(connectionMock.Object, false),
+                    connectionMock.Object, connectionOwned: true))
+                {
+                    var _ = internalConnection.Connection;
+                }
+            }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+            }
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.Disposing(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                Times.Once());
+            dbConnectionInterceptorMock.Verify(
+                m => m.Disposed(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                Times.Once());
+            connectionMock.Protected().Verify("Dispose", Times.Once(), ItExpr.IsAny<bool>());
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Exactly(2));
+            dbConnectionInterceptorMock.Verify(
+                m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Exactly(2));
+            connectionMock.Verify(m => m.DataSource, Times.Exactly(2));
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.DatabaseGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Exactly(2));
+            dbConnectionInterceptorMock.Verify(
+                m => m.DatabaseGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Exactly(2));
+            connectionMock.Verify(m => m.Database, Times.Exactly(2));
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Exactly(2));
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Exactly(2));
+            connectionMock.Verify(m => m.ConnectionString, Times.Exactly(2));
+        }
+
+        [Fact]
+        public void LazyInternalConnection_Dispose_uses_interception()
+        {
+            var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+            DbInterception.Add(dbConnectionInterceptorMock.Object);
+            try
+            {
+                using (var internalConnection = new LazyInternalConnection("Couger35.Hubcap.FullNameDbContext"))
+                {
+                    var _ = internalConnection.Connection;
+                }
+            }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+            }
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.Disposing(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                Times.Once());
+            dbConnectionInterceptorMock.Verify(
+                m => m.Disposed(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                Times.Once());
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+            dbConnectionInterceptorMock.Verify(
+                m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.DatabaseGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+            dbConnectionInterceptorMock.Verify(
+                m => m.DatabaseGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringSetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionPropertyInterceptionContext<string>>()),
+                Times.Once());
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringSet(It.IsAny<DbConnection>(), It.IsAny<DbConnectionPropertyInterceptionContext<string>>()),
+                Times.Once());
         }
 
         [Fact]
@@ -430,7 +621,8 @@ namespace System.Data.Entity.Internal
             {
                 connection.Disposed += (_, __) => disposed = true;
 
-                var internalConnection = new EagerInternalConnection(new DbContext(connection, false),
+                var internalConnection = new EagerInternalConnection(
+                    new DbContext(connection, false),
                     connection, connectionOwned: false);
                 try
                 {
@@ -459,7 +651,8 @@ namespace System.Data.Entity.Internal
         {
             using (
                 var connection =
-                    new LazyInternalConnection(new DbContext("Database=DatabaseFromDbConnectionInfo"),
+                    new LazyInternalConnection(
+                        new DbContext("Database=DatabaseFromDbConnectionInfo"),
                         new DbConnectionInfo("Database=DatabaseFromDbConnectionInfo", "System.Data.SqlClient")))
             {
                 Assert.IsType<SqlConnection>(connection.Connection);
@@ -472,7 +665,9 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_create_connection_from_DbConnectionInfo_from_config_file()
         {
-            using (var connection = new LazyInternalConnection(new DbContext("LazyConnectionTest"), new DbConnectionInfo("LazyConnectionTest")))
+            using (
+                var connection = new LazyInternalConnection(new DbContext("LazyConnectionTest"), new DbConnectionInfo("LazyConnectionTest"))
+                )
             {
                 Assert.IsType<SqlCeConnection>(connection.Connection);
                 Assert.Equal("ConnectionFromAppConfig.sdf", connection.Connection.Database);
@@ -495,7 +690,8 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_create_connection_from_DbConnectionInfo_from_overridden_config_file()
         {
-            using (var connection = new LazyInternalConnection(new DbContext("LazyConnectionTest"),
+            using (var connection = new LazyInternalConnection(
+                new DbContext("LazyConnectionTest"),
                 new DbConnectionInfo("LazyConnectionTest")))
             {
                 connection.AppConfig =
@@ -567,7 +763,8 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_calculate_ConnectionHasModel_false_from_DbConnectionInfo_without_initializing()
         {
-            using (var connection = new LazyInternalConnection(new DbContext("LazyConnectionTest"),
+            using (var connection = new LazyInternalConnection(
+                new DbContext("LazyConnectionTest"),
                 new DbConnectionInfo("LazyConnectionTest")))
             {
                 Assert.False(connection.ConnectionHasModel);
@@ -578,7 +775,8 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_calculate_ConnectionHasModel_true_from_DbConnectionInfo_without_initializing()
         {
-            using (var connection = new LazyInternalConnection(new DbContext("EntityConnectionString"),
+            using (var connection = new LazyInternalConnection(
+                new DbContext("EntityConnectionString"),
                 new DbConnectionInfo("EntityConnectionString")))
             {
                 Assert.True(connection.ConnectionHasModel);

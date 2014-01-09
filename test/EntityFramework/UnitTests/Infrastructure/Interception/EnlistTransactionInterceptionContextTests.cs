@@ -2,36 +2,33 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
-    using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Threading.Tasks;
-    using Moq;
+    using System.Transactions;
     using Xunit;
 
-    public class BeginTransactionInterceptionContextTests
+    public class EnlistTransactionInterceptionContextTests : TestBase
     {
         [Fact]
         public void Constructor_throws_on_null()
         {
             Assert.Equal(
                 "copyFrom",
-                Assert.Throws<ArgumentNullException>(() => new BeginTransactionInterceptionContext(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new EnlistTransactionInterceptionContext(null)).ParamName);
         }
 
         [Fact]
         public void Initially_has_no_state()
         {
-            var interceptionContext = new BeginTransactionInterceptionContext();
+            var interceptionContext = new EnlistTransactionInterceptionContext();
 
             Assert.Empty(interceptionContext.DbContexts);
             Assert.Null(interceptionContext.Exception);
             Assert.False(interceptionContext.IsAsync);
             Assert.False(interceptionContext.IsExecutionSuppressed);
-            Assert.Equal(IsolationLevel.Unspecified, interceptionContext.IsolationLevel);
+            Assert.Null(interceptionContext.Transaction);
             Assert.Empty(interceptionContext.ObjectContexts);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.Null(interceptionContext.OriginalResult);
-            Assert.Null(interceptionContext.Result);
             Assert.Equal((TaskStatus)0, interceptionContext.TaskStatus);
         }
 
@@ -41,28 +38,22 @@ namespace System.Data.Entity.Infrastructure.Interception
             var objectContext = new ObjectContext();
             var dbContext = DbContextMockHelper.CreateDbContext(objectContext);
 
-            var interceptionContext = new BeginTransactionInterceptionContext();
+            var interceptionContext = new EnlistTransactionInterceptionContext();
+            interceptionContext.SuppressExecution();
+            interceptionContext.Exception = new Exception("Cheez Whiz");
 
-            var mutableData = ((IDbMutableInterceptionContext<DbTransaction>)interceptionContext).MutableData;
-            var transaction = new Mock<DbTransaction>().Object;
-            mutableData.SetExecuted(transaction);
-            mutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
-
+            var transaction = new CommittableTransaction();
             interceptionContext = interceptionContext
                 .WithDbContext(dbContext)
                 .WithObjectContext(objectContext)
-                .WithIsolationLevel(IsolationLevel.RepeatableRead)
+                .WithTransaction(transaction)
                 .AsAsync();
-
-            interceptionContext = new BeginTransactionInterceptionContext(interceptionContext);
 
             Assert.Equal(new[] { objectContext }, interceptionContext.ObjectContexts);
             Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
             Assert.True(interceptionContext.IsAsync);
-            Assert.Equal(IsolationLevel.RepeatableRead, interceptionContext.IsolationLevel);
+            Assert.Same(transaction, interceptionContext.Transaction);
 
-            Assert.Null(interceptionContext.Result);
-            Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
             Assert.False(interceptionContext.IsExecutionSuppressed);
@@ -73,11 +64,11 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             Assert.Equal(
                 "context",
-                Assert.Throws<ArgumentNullException>(() => new BeginTransactionInterceptionContext().WithObjectContext(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new EnlistTransactionInterceptionContext().WithObjectContext(null)).ParamName);
 
             Assert.Equal(
                 "context",
-                Assert.Throws<ArgumentNullException>(() => new BeginTransactionInterceptionContext().WithDbContext(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new EnlistTransactionInterceptionContext().WithDbContext(null)).ParamName);
         }
     }
 }

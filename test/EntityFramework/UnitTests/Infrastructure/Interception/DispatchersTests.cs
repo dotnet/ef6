@@ -32,6 +32,12 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             dispatchers.Configuration.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             mockInterceptor.Verify(m => m.CallMe(), Times.Exactly(5));
+
+            dispatchers.Connection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            mockInterceptor.Verify(m => m.CallMe(), Times.Exactly(6));
+
+            dispatchers.Transaction.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            mockInterceptor.Verify(m => m.CallMe(), Times.Exactly(7));
         }
 
         [Fact]
@@ -48,12 +54,15 @@ namespace System.Data.Entity.Infrastructure.Interception
             dispatchers.CancelableCommand.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             dispatchers.CancelableEntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             dispatchers.Configuration.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            dispatchers.Connection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            dispatchers.Transaction.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
 
             mockInterceptor.Verify(m => m.CallMe(), Times.Never());
         }
 
         internal abstract class FakeInterceptor : IDbCommandInterceptor, IDbCommandTreeInterceptor, ICancelableDbCommandInterceptor,
-                                                  ICancelableEntityConnectionInterceptor, IDbConfigurationInterceptor
+            ICancelableEntityConnectionInterceptor, IDbConfigurationInterceptor, IDbConnectionInterceptor,
+            IDbTransactionInterceptor
         {
             public abstract void CallMe();
 
@@ -77,6 +86,81 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             public abstract void Loaded(
                 DbConfigurationLoadedEventArgs loadedEventArgs, DbConfigurationInterceptionContext interceptionContext);
+
+            public abstract void BeginningTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext);
+
+            public abstract void BeganTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext);
+
+            public abstract void Closing(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
+
+            public abstract void Closed(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
+
+            public abstract void ConnectionStringGetting(
+                DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void ConnectionStringGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void ConnectionStringSetting(
+                DbConnection connection, DbConnectionPropertyInterceptionContext<string> interceptionContext);
+
+            public abstract void ConnectionStringSet(
+                DbConnection connection, DbConnectionPropertyInterceptionContext<string> interceptionContext);
+
+            public abstract void ConnectionTimeoutGetting(DbConnection connection, DbConnectionInterceptionContext<int> interceptionContext);
+
+            public abstract void ConnectionTimeoutGot(DbConnection connection, DbConnectionInterceptionContext<int> interceptionContext);
+
+            public abstract void DatabaseGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void DatabaseGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void DataSourceGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void DataSourceGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
+
+            public abstract void Disposed(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
+
+            public abstract void EnlistingTransaction(DbConnection connection, EnlistTransactionInterceptionContext interceptionContext);
+
+            public abstract void EnlistedTransaction(DbConnection connection, EnlistTransactionInterceptionContext interceptionContext);
+
+            public abstract void Opening(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
+
+            public abstract void Opened(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
+
+            public abstract void ServerVersionGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void ServerVersionGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+            public abstract void StateGetting(DbConnection connection, DbConnectionInterceptionContext<ConnectionState> interceptionContext);
+
+            public abstract void StateGot(DbConnection connection, DbConnectionInterceptionContext<ConnectionState> interceptionContext);
+
+            public abstract void ConnectionGetting(
+                DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext);
+
+            public abstract void ConnectionGot(
+                DbTransaction transaction, DbTransactionInterceptionContext<DbConnection> interceptionContext);
+
+            public abstract void IsolationLevelGetting(
+                DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext);
+
+            public abstract void IsolationLevelGot(
+                DbTransaction transaction, DbTransactionInterceptionContext<IsolationLevel> interceptionContext);
+
+            public abstract void Committing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
+
+            public abstract void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
+
+            public abstract void Disposing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
+
+            public abstract void Disposed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
+
+            public abstract void RollingBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
+
+            public abstract void RolledBack(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext);
         }
     }
 }

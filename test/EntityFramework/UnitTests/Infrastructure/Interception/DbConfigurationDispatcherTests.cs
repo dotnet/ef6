@@ -6,7 +6,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using Moq;
     using Xunit;
 
-    public class DbConfigurationDispatcherTests
+    public class DbConfigurationDispatcherTests : TestBase
     {
         [Fact]
         public void Loaded_dispatches_to_interceptors()

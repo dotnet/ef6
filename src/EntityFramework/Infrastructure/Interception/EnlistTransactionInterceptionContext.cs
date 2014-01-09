@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Transactions;
 
     /// <summary>
@@ -16,7 +18,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// contextual information use one of the With... or As... methods to create a new
     /// interception context containing the new information.
     /// </remarks>
-    public class EnlistTransactionInterceptionContext : DbConnectionInterceptionContext<DbTransaction>
+    public class EnlistTransactionInterceptionContext : DbConnectionInterceptionContext
     {
         private Transaction _transaction;
 
@@ -110,6 +112,35 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(context, "context");
 
             return (EnlistTransactionInterceptionContext)base.WithObjectContext(context);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

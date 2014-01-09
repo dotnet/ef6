@@ -597,6 +597,24 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <summary>
         /// Does not write to log unless overridden.
         /// </summary>
+        /// <param name="connection">The connection being disposed.</param>
+        /// <param name="interceptionContext">Contextual information associated with the call.</param>
+        public virtual void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+        }
+
+        /// <summary>
+        /// Does not write to log unless overridden.
+        /// </summary>
+        /// <param name="connection">The connection that was disposed.</param>
+        /// <param name="interceptionContext">Contextual information associated with the call.</param>
+        public virtual void Disposed(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+        }
+
+        /// <summary>
+        /// Does not write to log unless overridden.
+        /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         public virtual void ServerVersionGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)

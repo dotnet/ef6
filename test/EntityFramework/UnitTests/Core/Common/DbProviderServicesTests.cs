@@ -225,6 +225,8 @@ namespace System.Data.Entity.Core.Common
                 providerFactoryServiceMock.Setup(m => m.ResolveProviderFactory(It.IsAny<DbConnection>()))
                     .Returns(FakeSqlProviderFactory.Instance);
 
+                var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+                DbInterception.Add(dbConnectionInterceptorMock.Object);
                 MutableResolver.AddResolver<IDbProviderFactoryResolver>(k => providerFactoryServiceMock.Object);
                 try
                 {
@@ -235,7 +237,52 @@ namespace System.Data.Entity.Core.Common
                 finally
                 {
                     MutableResolver.ClearResolvers();
+                    DbInterception.Remove(dbConnectionInterceptorMock.Object);
                 }
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Exactly(2));
+                connectionMock.Verify(m => m.DataSource, Times.Exactly(2));
+            }
+
+            [Fact]
+            public void Static_method_dispatches_to_interceptors()
+            {
+                var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+
+                var model = EdmModel.CreateStoreModel(
+                    new DbProviderInfo("System.Data.FakeSqlClient", "2008"),
+                    new SqlProviderManifest("2008"));
+
+                var storeItemCollectionMock = new Mock<StoreItemCollection>(model) { CallBase = true };
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollectionMock.Object);
+
+                var connectionMock = new Mock<DbConnection>();
+                var entityConnection = new EntityConnection(
+                    workspace: null, connection: connectionMock.Object, skipInitialization: true, entityConnectionOwnsStoreConnection: false);
+                
+                DbInterception.Add(dbConnectionInterceptorMock.Object);
+                try
+                {
+                    DbProviderServices.GetExecutionStrategy(entityConnection, metadataWorkspaceMock.Object);
+                }
+                finally
+                {
+                    DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                }
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Once());
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.Once());
             }
         }
 

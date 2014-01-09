@@ -323,6 +323,24 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         /// Can be implemented in a derived class.
         /// </summary>
+        /// <param name="connection">The connection being disposed.</param>
+        /// <param name="interceptionContext">Contextual information associated with the call.</param>
+        public virtual void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+        }
+
+        /// <summary>
+        /// Can be implemented in a derived class.
+        /// </summary>
+        /// <param name="connection">The connection that was disposed.</param>
+        /// <param name="interceptionContext">Contextual information associated with the call.</param>
+        public virtual void Disposed(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+        }
+
+        /// <summary>
+        /// Can be implemented in a derived class.
+        /// </summary>
         /// <param name="connection">The connection.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         /// <seealso cref="IDbConnectionInterceptor.EnlistingTransaction"/>

@@ -4,7 +4,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 {
     using Xunit;
 
-    public class InterceptionTests
+    public class InterceptionTests : TestBase
     {
         [Fact]
         public void Interception_add_and_remove_check_for_null_interceptors()

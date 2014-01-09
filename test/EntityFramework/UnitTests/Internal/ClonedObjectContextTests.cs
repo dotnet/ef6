@@ -2,10 +2,9 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal.MockingProxies;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
@@ -29,11 +28,11 @@ namespace System.Data.Entity.Internal
 
             mockConnection.Verify(
                 m =>
-                m.CreateNew(
-                    It.Is<SqlConnection>(
-                        p =>
-                        p != null && !ReferenceEquals(p, storeConnection) &&
-                        p.ConnectionString == "Database=PinkyDinkyDo")));
+                    m.CreateNew(
+                        It.Is<SqlConnection>(
+                            p =>
+                                p != null && !ReferenceEquals(p, storeConnection) &&
+                                p.ConnectionString == "Database=PinkyDinkyDo")));
         }
 
         [Fact]
@@ -97,6 +96,26 @@ namespace System.Data.Entity.Internal
 
             mockContext.Verify(m => m.CreateNew(It.IsAny<EntityConnectionProxy>()));
             Assert.Same(mockClonedContext.Object, clonedContext.ObjectContext);
+        }
+
+        [Fact]
+        public void When_cloning_an_ObjectContext_interception_is_used()
+        {
+            var mockClonedContext = new Mock<ObjectContextProxy>();
+            var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
+
+            var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+            DbInterception.Add(dbConnectionInterceptorMock.Object);
+            try
+            {
+                new ClonedObjectContext(
+                    mockContext.Object, "Database=PinkyDinkyDo",
+                    transferLoadedAssemblies: false);
+            }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+            }
         }
 
         [Fact]
@@ -174,11 +193,11 @@ namespace System.Data.Entity.Internal
 
             mockConnection.Setup(m => m.CreateNew(It.IsAny<SqlConnection>())).Returns<SqlConnection>(
                 c =>
-                    {
-                        var mockClonedConnection = new Mock<EntityConnectionProxy>();
-                        mockClonedConnection.Setup(cc => cc.StoreConnection).Returns(c);
-                        return mockClonedConnection.Object;
-                    });
+                {
+                    var mockClonedConnection = new Mock<EntityConnectionProxy>();
+                    mockClonedConnection.Setup(cc => cc.StoreConnection).Returns(c);
+                    return mockClonedConnection.Object;
+                });
 
             return mockConnection;
         }
@@ -196,12 +215,12 @@ namespace System.Data.Entity.Internal
 
             mockContext.Setup(m => m.GetObjectItemCollection()).Returns(
                 new List<GlobalItem>
-                    {
-                        CreateFakeComplexType(),
-                        CreateFakeEntityType(),
-                        CreateFakeEnumType(),
-                        CreateFakePrimitiveType(),
-                    });
+                {
+                    CreateFakeComplexType(),
+                    CreateFakeEntityType(),
+                    CreateFakeEnumType(),
+                    CreateFakePrimitiveType(),
+                });
 
             mockContext.Setup(m => m.GetClrType(It.IsAny<ComplexType>())).Returns(typeof(object));
             mockContext.Setup(m => m.GetClrType(It.IsAny<EntityType>())).Returns(GetType());
@@ -209,10 +228,10 @@ namespace System.Data.Entity.Internal
 
             mockContext.Setup(m => m.CreateNew(It.IsAny<EntityConnectionProxy>())).Returns<EntityConnectionProxy>(
                 c =>
-                    {
-                        mockClonedContext.Setup(cc => cc.Connection).Returns(c);
-                        return mockClonedContext.Object;
-                    });
+                {
+                    mockClonedContext.Setup(cc => cc.Connection).Returns(c);
+                    return mockClonedContext.Object;
+                });
 
             return mockContext;
         }

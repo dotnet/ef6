@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.SqlClient;
     using System.Linq;
     using Moq;
@@ -13,6 +14,31 @@ namespace System.Data.Entity.Internal
 
     public class EdmMetadataRepositoryTests : TestBase
     {
+        [Fact]
+        public void QueryForModelHash_uses_interception()
+        {
+            var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+            DbInterception.Add(dbConnectionInterceptorMock.Object);
+            try
+            {
+                var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
+                var mockContext = CreateMockContext("Hash");
+
+                repository.QueryForModelHash(c => mockContext.Object);
+            }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+            }
+
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+            dbConnectionInterceptorMock.Verify(
+                m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                Times.Once());
+        }
+
         [Fact]
         public void QueryForModelHash_returns_the_model_hash_if_it_exists()
         {

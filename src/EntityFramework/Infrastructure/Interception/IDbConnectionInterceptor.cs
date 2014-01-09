@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.ComponentModel;
     using System.Data.Common;
 
     /// <summary>
@@ -113,6 +114,20 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <param name="connection">The connection.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         void DataSourceGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext);
+
+        /// <summary>
+        /// Called before <see cref="Component.Dispose()" /> is invoked.
+        /// </summary>
+        /// <param name="connection">The connection being disposed.</param>
+        /// <param name="interceptionContext">Contextual information associated with the call.</param>
+        void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
+
+        /// <summary>
+        /// Called after <see cref="Component.Dispose()" /> is invoked.
+        /// </summary>
+        /// <param name="connection">The connection that was disposed.</param>
+        /// <param name="interceptionContext">Contextual information associated with the call.</param>
+        void Disposed(DbConnection connection, DbConnectionInterceptionContext interceptionContext);
 
         /// <summary>
         /// Called before <see cref="DbConnection.EnlistTransaction" /> is invoked.

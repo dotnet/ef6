@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Represents contextual information associated with calls to <see cref="DbConnection.BeginTransaction(System.Data.IsolationLevel)" />
@@ -42,7 +44,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 _isolationLevel = asThisType._isolationLevel;
             }
         }
-        
+
         /// <summary>
         /// Creates a new <see cref="BeginTransactionInterceptionContext" /> that contains all the contextual information in this
         /// interception context together with the <see cref="DbInterceptionContext.IsAsync" /> flag set to true.
@@ -78,7 +80,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             return (BeginTransactionInterceptionContext)Clone();
         }
-        
+
         /// <inheritdoc />
         protected override DbInterceptionContext Clone()
         {
@@ -109,6 +111,35 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(context, "context");
 
             return (BeginTransactionInterceptionContext)base.WithObjectContext(context);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

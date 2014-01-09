@@ -123,7 +123,7 @@ namespace System.Data.Entity.Internal
         // <summary>
         // Gets the original connection string.
         // </summary>
-        public string OriginalConnectionString
+        public virtual string OriginalConnectionString
         {
             get
             {

@@ -112,7 +112,7 @@ namespace System.Data.Entity.Internal
                 _objectContext = null;
 
                 tempContext.Dispose();
-                connection.Dispose();
+                DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
             }
         }
     }

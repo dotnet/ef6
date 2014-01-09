@@ -112,8 +112,7 @@ namespace System.Data.Entity.Core.EntityClient
                         null /*workspace*/,
                         null /*connection*/,
                         true /*skipInitialization*/,
-                        true /*entityConnectionOwnsStoreConnection*/,
-                        null);
+                        true /*entityConnectionOwnsStoreConnection*/);
 
                 var entityCommandMock = new Mock<EntityCommand>();
                 entityCommandMock.SetupGet(m => m.Connection).Returns(entityConnectionMock.Object);
@@ -273,8 +272,7 @@ namespace System.Data.Entity.Core.EntityClient
                         null /*workspace*/,
                         null /*connection*/,
                         true /*skipInitialization*/,
-                        true /*entityConnectionOwnsStoreConnection*/,
-                        null);
+                        true /*entityConnectionOwnsStoreConnection*/);
 
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(metadataWorkspaceMock.Object);
 

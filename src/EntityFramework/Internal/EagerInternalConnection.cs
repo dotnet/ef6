@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
@@ -58,7 +59,14 @@ namespace System.Data.Entity.Internal
         {
             if (_connectionOwned)
             {
-                UnderlyingConnection.Dispose();
+                if (UnderlyingConnection is EntityConnection)
+                {
+                    UnderlyingConnection.Dispose();
+                }
+                else
+                {
+                    DbInterception.Dispatch.Connection.Dispose(UnderlyingConnection, InterceptionContext);
+                }
             }
         }
 

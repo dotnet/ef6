@@ -9,7 +9,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -44,11 +44,11 @@ namespace System.Data.Entity.Migrations.History
         private bool _contextKeyColumnExists;
 
         public HistoryRepository(
-            string connectionString, 
-            DbProviderFactory providerFactory, 
-            string contextKey, 
-            int? commandTimeout, 
-            Func<DbConnection, string, HistoryContext> historyContextFactory, 
+            string connectionString,
+            DbProviderFactory providerFactory,
+            string contextKey,
+            int? commandTimeout,
+            Func<DbConnection, string, HistoryContext> historyContextFactory,
             IEnumerable<string> schemas = null,
             DbContext contextForInterception = null,
             DatabaseExistenceState initialExistence = DatabaseExistenceState.Unknown)
@@ -68,9 +68,11 @@ namespace System.Data.Entity.Migrations.History
 
             _contextForInterception = contextForInterception;
             _historyContextFactory = historyContextFactory;
-
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     var historyRowEntity
@@ -87,8 +89,8 @@ namespace System.Data.Entity.Migrations.History
 
                     _migrationIdMaxLength
                         = maxLength.HasValue
-                              ? maxLength.Value
-                              : HistoryContext.MigrationIdMaxLength;
+                            ? maxLength.Value
+                            : HistoryContext.MigrationIdMaxLength;
 
                     maxLength
                         = historyRowEntity
@@ -98,8 +100,15 @@ namespace System.Data.Entity.Migrations.History
 
                     _contextKeyMaxLength
                         = maxLength.HasValue
-                              ? maxLength.Value
-                              : HistoryContext.ContextKeyMaxLength;
+                            ? maxLength.Value
+                            : HistoryContext.ContextKeyMaxLength;
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
 
@@ -142,8 +151,11 @@ namespace System.Data.Entity.Migrations.History
                 return null;
             }
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     using (new TransactionScope(TransactionScopeOption.Suppress))
@@ -153,10 +165,10 @@ namespace System.Data.Entity.Migrations.History
                                 .OrderByDescending(h => h.MigrationId)
                                 .Select(
                                     s => new
-                                             {
-                                                 s.MigrationId,
-                                                 s.Model
-                                             })
+                                    {
+                                        s.MigrationId,
+                                        s.Model
+                                    })
                                 .FirstOrDefault();
 
                         if (lastModel == null)
@@ -168,6 +180,13 @@ namespace System.Data.Entity.Migrations.History
 
                         return new ModelCompressor().Decompress(lastModel.Model);
                     }
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }
@@ -183,8 +202,11 @@ namespace System.Data.Entity.Migrations.History
 
             migrationId = migrationId.RestrictTo(_migrationIdMaxLength);
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     var model = CreateHistoryQuery(context)
@@ -193,6 +215,13 @@ namespace System.Data.Entity.Migrations.History
                         .Single();
 
                     return (model == null) ? null : new ModelCompressor().Decompress(model);
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }
@@ -206,8 +235,11 @@ namespace System.Data.Entity.Migrations.History
                 return localMigrations;
             }
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     List<string> databaseMigrations;
@@ -244,6 +276,13 @@ namespace System.Data.Entity.Migrations.History
                     return pendingMigrations.ToList();
                 }
             }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
+            }
         }
 
         public virtual IEnumerable<string> GetMigrationsSince(string migrationId)
@@ -252,8 +291,11 @@ namespace System.Data.Entity.Migrations.History
 
             var exists = Exists();
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     var query = CreateHistoryQuery(context);
@@ -281,6 +323,13 @@ namespace System.Data.Entity.Migrations.History
                         .ToList();
                 }
             }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
+            }
         }
 
         public virtual string GetMigrationId(string migrationName)
@@ -292,8 +341,11 @@ namespace System.Data.Entity.Migrations.History
                 return null;
             }
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     var migrationIds
@@ -315,6 +367,13 @@ namespace System.Data.Entity.Migrations.History
                     throw Error.AmbiguousMigrationName(migrationName);
                 }
             }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
+            }
         }
 
         private IQueryable<HistoryRow> CreateHistoryQuery(HistoryContext context, string contextKey = null)
@@ -323,8 +382,8 @@ namespace System.Data.Entity.Migrations.History
 
             contextKey
                 = !string.IsNullOrWhiteSpace(contextKey)
-                      ? contextKey.RestrictTo(_contextKeyMaxLength)
-                      : _contextKey;
+                    ? contextKey.RestrictTo(_contextKeyMaxLength)
+                    : _contextKey;
 
             if (_contextKeyColumnExists)
             {
@@ -342,11 +401,21 @@ namespace System.Data.Entity.Migrations.History
                 return false;
             }
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     return context.History.Any(hr => hr.ContextKey != _contextKey);
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }
@@ -363,11 +432,21 @@ namespace System.Data.Entity.Migrations.History
                 return true;
             }
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     return context.History.Count(hr => hr.ContextKey == _contextKey) > 0;
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }
@@ -391,8 +470,11 @@ namespace System.Data.Entity.Migrations.History
                 return false;
             }
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 if (_initialExistence == DatabaseExistenceState.Unknown)
                 {
                     using (var context = CreateContext(connection))
@@ -449,6 +531,13 @@ namespace System.Data.Entity.Migrations.History
                     }
                 }
             }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
+            }
 
             return !string.IsNullOrWhiteSpace(_currentSchema);
         }
@@ -465,8 +554,11 @@ namespace System.Data.Entity.Migrations.History
                 yield break;
             }
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 const string tableName = "dbo." + HistoryContext.DefaultTableName;
 
                 using (var context = new LegacyHistoryContext(connection))
@@ -522,12 +614,12 @@ namespace System.Data.Entity.Migrations.History
                         yield return new AddColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
-                                {
-                                    MaxLength = 32,
-                                    Name = "ProductVersion",
-                                    IsNullable = false,
-                                    DefaultValue = "0.7.0.0"
-                                });
+                            {
+                                MaxLength = 32,
+                                Name = "ProductVersion",
+                                IsNullable = false,
+                                DefaultValue = "0.7.0.0"
+                            });
                     }
 
                     if (!_contextKeyColumnExists)
@@ -540,23 +632,23 @@ namespace System.Data.Entity.Migrations.History
                         yield return new AddColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
-                                {
-                                    MaxLength = _contextKeyMaxLength,
-                                    Name = "ContextKey",
-                                    IsNullable = false,
-                                    DefaultValue = _contextKey
-                                });
+                            {
+                                MaxLength = _contextKeyMaxLength,
+                                Name = "ContextKey",
+                                IsNullable = false,
+                                DefaultValue = _contextKey
+                            });
 
                         var emptyModel = new DbModelBuilder().Build(connection).GetModel();
                         var createTableOperation = (CreateTableOperation)
-                                                   new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
+                            new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
 
                         var dropPrimaryKeyOperation
                             = new DropPrimaryKeyOperation
-                                  {
-                                      Table = tableName,
-                                      CreateTableOperation = createTableOperation
-                                  };
+                            {
+                                Table = tableName,
+                                CreateTableOperation = createTableOperation
+                            };
 
                         dropPrimaryKeyOperation.Columns.Add("MigrationId");
 
@@ -565,24 +657,31 @@ namespace System.Data.Entity.Migrations.History
                         yield return new AlterColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
-                                {
-                                    MaxLength = _migrationIdMaxLength,
-                                    Name = "MigrationId",
-                                    IsNullable = false
-                                },
+                            {
+                                MaxLength = _migrationIdMaxLength,
+                                Name = "MigrationId",
+                                IsNullable = false
+                            },
                             isDestructiveChange: false);
 
                         var addPrimaryKeyOperation
                             = new AddPrimaryKeyOperation
-                                  {
-                                      Table = tableName
-                                  };
+                            {
+                                Table = tableName
+                            };
 
                         addPrimaryKeyOperation.Columns.Add("MigrationId");
                         addPrimaryKeyOperation.Columns.Add("ContextKey");
 
                         yield return addPrimaryKeyOperation;
                     }
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }
@@ -592,18 +691,21 @@ namespace System.Data.Entity.Migrations.History
             DebugCheck.NotEmpty(migrationId);
             DebugCheck.NotNull(model);
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     context.History.Add(
                         new HistoryRow
-                            {
-                                MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
-                                ContextKey = _contextKey,
-                                Model = new ModelCompressor().Compress(model),
-                                ProductVersion = _productVersion
-                            });
+                        {
+                            MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
+                            ContextKey = _contextKey,
+                            Model = new ModelCompressor().Compress(model),
+                            ProductVersion = _productVersion
+                        });
 
                     using (var commandTracer = new CommandTracer(context))
                     {
@@ -614,22 +716,32 @@ namespace System.Data.Entity.Migrations.History
                     }
                 }
             }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
+            }
         }
 
         public virtual MigrationOperation CreateDeleteOperation(string migrationId)
         {
             DebugCheck.NotEmpty(migrationId);
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     var historyRow
                         = new HistoryRow
-                              {
-                                  MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
-                                  ContextKey = _contextKey
-                              };
+                        {
+                            MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
+                            ContextKey = _contextKey
+                        };
 
                     context.History.Attach(historyRow);
                     context.History.Remove(historyRow);
@@ -643,12 +755,22 @@ namespace System.Data.Entity.Migrations.History
                     }
                 }
             }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
+            }
         }
 
         public virtual IEnumerable<DbQueryCommandTree> CreateDiscoveryQueryTrees()
         {
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 foreach (var schema in _schemas)
                 {
                     using (var context = CreateContext(connection, schema))
@@ -685,6 +807,13 @@ namespace System.Data.Entity.Migrations.History
                                             commandTracer.DbCommands.Single().Parameters)));
                         }
                     }
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }
@@ -728,8 +857,11 @@ namespace System.Data.Entity.Migrations.History
         {
             DebugCheck.NotNull(model);
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var context = CreateContext(connection))
                 {
                     context.Database.ExecuteSqlCommand(
@@ -737,16 +869,23 @@ namespace System.Data.Entity.Migrations.History
 
                     context.History.Add(
                         new HistoryRow
-                            {
-                                MigrationId = MigrationAssembly
-                                    .CreateMigrationId(Strings.InitialCreate)
-                                    .RestrictTo(_migrationIdMaxLength),
-                                ContextKey = _contextKey,
-                                Model = new ModelCompressor().Compress(model),
-                                ProductVersion = _productVersion
-                            });
+                        {
+                            MigrationId = MigrationAssembly
+                                .CreateMigrationId(Strings.InitialCreate)
+                                .RestrictTo(_migrationIdMaxLength),
+                            ContextKey = _contextKey,
+                            Model = new ModelCompressor().Compress(model),
+                            ProductVersion = _productVersion
+                        });
 
                     context.SaveChanges();
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }

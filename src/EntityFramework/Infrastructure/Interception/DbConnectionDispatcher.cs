@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -85,6 +87,34 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
+        /// Sends <see cref="IDbConnectionInterceptor.Disposing" /> and
+        /// <see cref="IDbConnectionInterceptor.Disposed" /> to any <see cref="IDbConnectionInterceptor" />
+        /// registered on <see cref="DbInterception" /> before/after making a
+        /// call to <see cref="Component.Dispose()" />.
+        /// </summary>
+        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
+        public virtual void Dispose(
+            DbConnection dbConnection, DbInterceptionContext interceptionContext)
+        {
+            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(interceptionContext, "interceptionContext");
+
+            var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
+
+            InternalDispatcher.Dispatch(
+                () =>
+                {
+                    // using dynamic here to emulate the behavior of the using statement
+                    dynamic connection = dbConnection;
+                    connection.Dispose();
+                },
+                clonedInterceptionContext,
+                i => i.Disposing(dbConnection, clonedInterceptionContext),
+                i => i.Disposed(dbConnection, clonedInterceptionContext));
+        }
+
+        /// <summary>
         /// Sends <see cref="IDbConnectionInterceptor.ConnectionStringGetting" /> and
         /// <see cref="IDbConnectionInterceptor.ConnectionStringGot" /> to any <see cref="IDbConnectionInterceptor" />
         /// registered on <see cref="DbInterception" /> before/after
@@ -120,7 +150,8 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// </summary>
         /// <param name="dbConnection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Information about the context of the call being made, including the value to be set.</param>
-        public virtual void SetConnectionString(DbConnection dbConnection, DbConnectionPropertyInterceptionContext<string> interceptionContext)
+        public virtual void SetConnectionString(
+            DbConnection dbConnection, DbConnectionPropertyInterceptionContext<string> interceptionContext)
         {
             Check.NotNull(dbConnection, "dbConnection");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -133,7 +164,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 i => i.ConnectionStringSetting(dbConnection, clonedInterceptionContext),
                 i => i.ConnectionStringSet(dbConnection, clonedInterceptionContext));
         }
-            
+
         /// <summary>
         /// Sends <see cref="IDbConnectionInterceptor.ConnectionTimeoutGetting" /> and
         /// <see cref="IDbConnectionInterceptor.ConnectionTimeoutGot" /> to any <see cref="IDbConnectionInterceptor" />
@@ -349,6 +380,38 @@ namespace System.Data.Entity.Infrastructure.Interception
                 clonedInterceptionContext,
                 i => i.StateGetting(dbConnection, clonedInterceptionContext),
                 i => i.StateGot(dbConnection, clonedInterceptionContext));
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Type" /> of the current instance.
+        /// </summary>
+        /// <returns>The exact runtime type of the current instance.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

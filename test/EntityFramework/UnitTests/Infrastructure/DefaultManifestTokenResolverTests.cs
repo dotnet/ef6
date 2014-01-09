@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
+    using Moq;
     using Xunit;
 
     public class DefaultManifestTokenResolverTests
@@ -34,6 +36,21 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
+        public void ResolveManifestToken_uses_interception()
+        {
+            var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+            DbInterception.Add(dbConnectionInterceptorMock.Object);
+            try
+            {
+                new DefaultManifestTokenResolver().ResolveManifestToken(CreateConnection<FakeSqlConnection>("1908", "Cheese", "Pickle"));
+            }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+            }
+        }
+
+    [Fact]
         public void ResolveManifestToken_throws_if_given_null_connection()
         {
             Assert.Equal(

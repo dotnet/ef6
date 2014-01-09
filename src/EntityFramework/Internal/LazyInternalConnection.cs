@@ -108,16 +108,23 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        // <summary>
-        // Returns a key consisting of the connection type and connection string.
-        // If this is an EntityConnection then the metadata path is included in the key returned.
-        // </summary>
+        // <inheritdoc />
         public override string ConnectionKey
         {
             get
             {
                 Initialize();
                 return base.ConnectionKey;
+            }
+        }
+
+        // <inheritdoc />
+        public override string OriginalConnectionString
+        {
+            get
+            {
+                Initialize();
+                return base.OriginalConnectionString;
             }
         }
 
@@ -212,7 +219,14 @@ namespace System.Data.Entity.Internal
         {
             if (UnderlyingConnection != null)
             {
-                UnderlyingConnection.Dispose();
+                if (UnderlyingConnection is EntityConnection)
+                {
+                    UnderlyingConnection.Dispose();
+                }
+                else
+                {
+                    DbInterception.Dispatch.Connection.Dispose(UnderlyingConnection, InterceptionContext);
+                }
                 UnderlyingConnection = null;
             }
         }
@@ -249,8 +263,8 @@ namespace System.Data.Entity.Internal
                     _connectionStringOrigin = DbConnectionStringOrigin.DbContextInfo;
                     _connectionStringName = connection.Name;
                 }
-                // If the name or connection string is a simple name or is in the form "name=foo" then use
-                // that name to try to load from the app/web config file. 
+                    // If the name or connection string is a simple name or is in the form "name=foo" then use
+                    // that name to try to load from the app/web config file. 
                 else if (!DbHelpers.TryGetConnectionName(_nameOrConnectionString, out name)
                          || !TryInitializeFromAppConfig(name, AppConfig))
                 {
@@ -278,7 +292,7 @@ namespace System.Data.Entity.Internal
                             // Otherwise figure out the connection factory to use (either the default,
                             // the one set in code, or one provided by DbContextInfo via the AppSettings property
                             UnderlyingConnection = DbConfiguration.DependencyResolver.GetService<IDbConnectionFactory>()
-                                                                  .CreateConnection(name ?? _nameOrConnectionString);
+                                .CreateConnection(name ?? _nameOrConnectionString);
 
                             if (UnderlyingConnection == null)
                             {
@@ -338,9 +352,9 @@ namespace System.Data.Entity.Internal
             // Build a list of candidate names that might be found in the app.config/web.config file.
             // The first entry is the full name.
             var candidates = new List<string>
-                {
-                    name
-                };
+            {
+                name
+            };
 
             // Second entry is full name with namespace stripped out.
             var lastDot = name.LastIndexOf('.');
@@ -352,8 +366,8 @@ namespace System.Data.Entity.Internal
 
             // Now go through each candidate.  As soon as we find one that matches, stop.
             var appConfigConnection = (from c in candidates
-                                       where config.GetConnectionString(c) != null
-                                       select config.GetConnectionString(c)).FirstOrDefault();
+                where config.GetConnectionString(c) != null
+                select config.GetConnectionString(c)).FirstOrDefault();
             return appConfigConnection;
         }
 
@@ -377,7 +391,8 @@ namespace System.Data.Entity.Internal
             {
                 CreateConnectionFromProviderName(providerInvariantName);
 
-                DbInterception.Dispatch.Connection.SetConnectionString(UnderlyingConnection,
+                DbInterception.Dispatch.Connection.SetConnectionString(
+                    UnderlyingConnection,
                     new DbConnectionPropertyInterceptionContext<string>().WithValue(appConfigConnection.ConnectionString));
             }
         }

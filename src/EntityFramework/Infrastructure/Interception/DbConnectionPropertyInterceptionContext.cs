@@ -2,12 +2,14 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Represents contextual information associated with calls to <see cref="DbConnection"/> that don't return any results.
+    /// Represents contextual information associated with calls to property setters of type <typeparamref name="TValue"/> on a <see cref="DbConnection"/>.
     /// </summary>
     /// <typeparam name="TValue">The type of the target property.</typeparam>
     public class DbConnectionPropertyInterceptionContext<TValue> : PropertyInterceptionContext<TValue>
@@ -31,7 +33,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        /// Creates a new <see cref="BeginTransactionInterceptionContext" /> that contains all the contextual information in this
+        /// Creates a new <see cref="DbConnectionPropertyInterceptionContext{TValue}" /> that contains all the contextual information in this
         /// interception context together with the given property value.
         /// </summary>
         /// <param name="value">The value that will be assigned to the target property.</param>
@@ -81,6 +83,35 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(context, "context");
 
             return (DbConnectionPropertyInterceptionContext<TValue>)base.WithObjectContext(context);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

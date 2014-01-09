@@ -69,7 +69,7 @@ namespace System.Data.Entity.Migrations
         // For testing.
         // </summary>
         internal DbMigrator(
-            DbContext usersContext = null, 
+            DbContext usersContext = null,
             DbProviderFactory providerFactory = null,
             MigrationAssembly migrationAssembly = null)
             : base(null)
@@ -113,8 +113,8 @@ namespace System.Data.Entity.Migrations
             {
                 _usersContextInfo
                     = configuration.TargetDatabase == null
-                          ? new DbContextInfo(configuration.ContextType)
-                          : new DbContextInfo(configuration.ContextType, configuration.TargetDatabase);
+                        ? new DbContextInfo(configuration.ContextType)
+                        : new DbContextInfo(configuration.ContextType, configuration.TargetDatabase);
 
                 if (!_usersContextInfo.IsConstructible)
                 {
@@ -154,18 +154,18 @@ namespace System.Data.Entity.Migrations
                         _providerFactory,
                         _configuration.ContextKey,
                         _configuration.CommandTimeout,
-                        _historyContextFactory, 
-                        schemas: new[] { _defaultSchema }.Concat(GetHistorySchemas()), 
+                        _historyContextFactory,
+                        schemas: new[] { _defaultSchema }.Concat(GetHistorySchemas()),
                         contextForInterception: _contextForInterception,
                         initialExistence: _existenceState);
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
-                          ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                          : DbConfiguration
-                                .DependencyResolver
-                                .GetService<IManifestTokenResolver>()
-                                .ResolveManifestToken(connection);
+                        ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
+                        : DbConfiguration
+                            .DependencyResolver
+                            .GetService<IManifestTokenResolver>()
+                            .ResolveManifestToken(connection);
 
                 var modelBuilder
                     = context.InternalContext.CodeFirstModel.CachedModelBuilder;
@@ -173,12 +173,12 @@ namespace System.Data.Entity.Migrations
                 _modificationCommandTreeGenerator
                     = new Lazy<ModificationCommandTreeGenerator>(
                         () =>
-                        new ModificationCommandTreeGenerator(
-                            modelBuilder.BuildDynamicUpdateModel(
-                                new DbProviderInfo(
-                            _usersContextInfo.ConnectionProviderName,
-                            _providerManifestToken)),
-                            CreateConnection()));
+                            new ModificationCommandTreeGenerator(
+                                modelBuilder.BuildDynamicUpdateModel(
+                                    new DbProviderInfo(
+                                        _usersContextInfo.ConnectionProviderName,
+                                        _providerManifestToken)),
+                                CreateConnection()));
 
                 var interceptionContext = new DbInterceptionContext();
                 interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
@@ -209,19 +209,29 @@ namespace System.Data.Entity.Migrations
         {
             return new Lazy<XDocument>(
                 () => new DbModelBuilder()
-                          .Build(new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken))
-                          .GetModel());
+                    .Build(new DbProviderInfo(_usersContextInfo.ConnectionProviderName, _providerManifestToken))
+                    .GetModel());
         }
 
         private XDocument GetHistoryModel(string defaultSchema)
         {
             DebugCheck.NotEmpty(defaultSchema);
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 using (var historyContext = _historyContextFactory(connection, defaultSchema))
                 {
                     return historyContext.GetModel();
+                }
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
             }
         }
@@ -348,9 +358,9 @@ namespace System.Data.Entity.Migrations
 
             var migrationOperations
                 = ignoreChanges
-                      ? Enumerable.Empty<MigrationOperation>()
-                      : _modelDiffer.Diff(sourceModel, _currentModel, _modificationCommandTreeGenerator, SqlGenerator)
-                            .ToList();
+                    ? Enumerable.Empty<MigrationOperation>()
+                    : _modelDiffer.Diff(sourceModel, _currentModel, _modificationCommandTreeGenerator, SqlGenerator)
+                        .ToList();
 
             if (!rescaffolding)
             {
@@ -470,7 +480,7 @@ namespace System.Data.Entity.Migrations
                         = pendingMigrations
                             .Where(
                                 m =>
-                                string.CompareOrdinal(m.ToLowerInvariant(), targetMigrationId.ToLowerInvariant()) <= 0);
+                                    string.CompareOrdinal(m.ToLowerInvariant(), targetMigrationId.ToLowerInvariant()) <= 0);
                 }
                 else
                 {
@@ -505,7 +515,7 @@ namespace System.Data.Entity.Migrations
 
             var migrationId
                 = GetPendingMigrations()
-                      .SingleOrDefault(m => m.MigrationName().EqualsIgnoreCase(migration))
+                    .SingleOrDefault(m => m.MigrationName().EqualsIgnoreCase(migration))
                   ?? _historyRepository.GetMigrationId(migration);
 
             if (migrationId == null)
@@ -565,7 +575,8 @@ namespace System.Data.Entity.Migrations
 
             // Context may not be constructable when Migrations is being called by DbContext CreateDatabase
             // and the config cannot have Seed data anyway, so avoid doing model diff and creating the context to seed.
-            if (!_calledByCreateDatabase && !IsModelOutOfDate(_currentModel, lastMigration))
+            if (!_calledByCreateDatabase
+                && !IsModelOutOfDate(_currentModel, lastMigration))
             {
                 base.SeedDatabase();
             }
@@ -621,8 +632,8 @@ namespace System.Data.Entity.Migrations
                 var migration = _migrationAssembly.GetMigration(migrationId);
                 var nextMigrationId = pendingMigrations.ElementAt(i + 1);
                 var targetModel = (nextMigrationId != InitialDatabase)
-                                      ? _historyRepository.GetModel(nextMigrationId)
-                                      : _emptyModel.Value;
+                    ? _historyRepository.GetModel(nextMigrationId)
+                    : _emptyModel.Value;
 
                 Debug.Assert(targetModel != null);
 
@@ -750,8 +761,8 @@ namespace System.Data.Entity.Migrations
                     .LastOrDefault(m => string.CompareOrdinal(m, migrationId) < 0);
 
             return (lastMigrationId == null)
-                       ? EdmModelExtensions.DefaultSchema
-                       : GetDefaultSchema(_migrationAssembly.GetMigration(lastMigrationId));
+                ? EdmModelExtensions.DefaultSchema
+                : GetDefaultSchema(_migrationAssembly.GetMigration(lastMigrationId));
         }
 
         internal override bool HistoryExists()
@@ -836,9 +847,9 @@ namespace System.Data.Entity.Migrations
 
             var newTableForeignKeys
                 = (from ct in operations.OfType<CreateTableOperation>()
-                   from afk in operations.OfType<AddForeignKeyOperation>()
-                   where ct.Name.EqualsIgnoreCase(afk.DependentTable)
-                   select afk)
+                    from afk in operations.OfType<AddForeignKeyOperation>()
+                    where ct.Name.EqualsIgnoreCase(afk.DependentTable)
+                    select afk)
                     .ToList();
 
             var orderedOperations
@@ -915,10 +926,20 @@ namespace System.Data.Entity.Migrations
         {
             DebugCheck.NotNull(migrationStatements);
 
-            using (var connection = CreateConnection())
+            DbConnection connection = null;
+            try
             {
+                connection = CreateConnection();
+
                 DbProviderServices.GetExecutionStrategy(connection).Execute(
                     () => ExecuteStatementsInternal(migrationStatements, connection));
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
             }
         }
 
@@ -995,7 +1016,8 @@ namespace System.Data.Entity.Migrations
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
+        internal override void ExecuteSql(
+            DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(transaction);
             DebugCheck.NotNull(migrationStatement);
@@ -1004,7 +1026,7 @@ namespace System.Data.Entity.Migrations
             {
                 return;
             }
-            
+
             if (!migrationStatement.SuppressTransaction)
             {
                 var dbCommand = DbInterception.Dispatch.Transaction.GetConnection(transaction, interceptionContext).CreateCommand();
@@ -1017,14 +1039,23 @@ namespace System.Data.Entity.Migrations
             }
             else
             {
-                using (var connection = CreateConnection())
+                DbConnection connection = null;
+                try
                 {
+                    connection = CreateConnection();
                     var dbCommand = connection.CreateCommand();
                     using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql, interceptionContext))
                     {
                         DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
 
                         command.ExecuteNonQuery();
+                    }
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        DbInterception.Dispatch.Connection.Dispose(connection, interceptionContext);
                     }
                 }
             }
@@ -1055,9 +1086,9 @@ namespace System.Data.Entity.Migrations
                 var principalTable = GetStandardizedTableName(foreignKeyOperation.PrincipalTable);
                 var entitySetName
                     = (from es in targetModel.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                       where new DatabaseName(es.TableAttribute(), es.SchemaAttribute()).ToString()
-                           .EqualsIgnoreCase(principalTable)
-                       select es.NameAttribute()).SingleOrDefault();
+                        where new DatabaseName(es.TableAttribute(), es.SchemaAttribute()).ToString()
+                            .EqualsIgnoreCase(principalTable)
+                        select es.NameAttribute()).SingleOrDefault();
 
                 if (entitySetName != null)
                 {
@@ -1119,15 +1150,27 @@ namespace System.Data.Entity.Migrations
             var databaseCreated = false;
             var databaseCreator = new DatabaseCreator(_configuration.CommandTimeout);
 
-            using (var connection = CreateConnection())
             {
-                if (_existenceState == DatabaseExistenceState.DoesNotExist
-                    || (_existenceState == DatabaseExistenceState.Unknown
-                        && !databaseCreator.Exists(connection)))
+                DbConnection connection = null;
+                try
                 {
-                    databaseCreator.Create(connection);
+                    connection = CreateConnection();
 
-                    databaseCreated = true;
+                    if (_existenceState == DatabaseExistenceState.DoesNotExist
+                        || (_existenceState == DatabaseExistenceState.Unknown
+                            && !databaseCreator.Exists(connection)))
+                    {
+                        databaseCreator.Create(connection);
+
+                        databaseCreated = true;
+                    }
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                    }
                 }
             }
 
@@ -1143,12 +1186,12 @@ namespace System.Data.Entity.Migrations
                 if (databaseCreated
                     && !_committedStatements)
                 {
+                    DbConnection connection = null;
                     try
                     {
-                        using (var connection = CreateConnection())
-                        {
-                            databaseCreator.Delete(connection);
-                        }
+                        connection = CreateConnection();
+
+                        databaseCreator.Delete(connection);
                     }
                     catch
                     {
@@ -1156,6 +1199,13 @@ namespace System.Data.Entity.Migrations
                         // original exception again for the user to see what the real problem is. An
                         // exception here is unlikely and would not be a root cause, but rather a
                         // cleanup issue.
+                    }
+                    finally
+                    {
+                        if (connection != null)
+                        {
+                            DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                        }
                     }
                 }
                 throw;

@@ -1615,7 +1615,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_disposes_underlying_EntityConnection_if_contextOwnConnection_flag_is_set()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true, null);
+                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
@@ -1630,7 +1630,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_set()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true, null);
+                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", false).Verifiable();
@@ -1644,7 +1644,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_specified()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true, null);
+                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
