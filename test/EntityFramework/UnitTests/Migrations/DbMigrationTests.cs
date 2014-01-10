@@ -816,6 +816,21 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
+        public void RenameIndex_should_add_rename_index_operation()
+        {
+            var migration = new TestMigration();
+
+            migration.RenameIndex("table", "old", "new");
+
+            var renameIndexOperation = (RenameIndexOperation)migration.Operations.Single();
+
+            Assert.NotNull(renameIndexOperation);
+            Assert.Equal("table", renameIndexOperation.Table);
+            Assert.Equal("old", renameIndexOperation.Name);
+            Assert.Equal("new", renameIndexOperation.NewName);
+        }
+
+        [Fact]
         public void CreateIndex_should_add_create_index_operation()
         {
             var migration = new TestMigration();

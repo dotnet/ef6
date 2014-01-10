@@ -140,6 +140,48 @@ End Namespace
         }
 
         [Fact]
+        public void Generate_can_output_rename_index_operation()
+        {
+            var renameIndexOperation
+                = new RenameIndexOperation("Foo", "Bar", "Baz");
+
+            var codeGenerator = new VisualBasicMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            renameIndexOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            RenameIndex(table := ""Foo"", name := ""Bar"", newName := ""Baz"")
+        End Sub
+        
+        Public Overrides Sub Down()
+            RenameIndex(table := ""Foo"", name := ""Baz"", newName := ""Bar"")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
         public void Generate_can_output_rename_procedure_operation()
         {
             var renameProcedureOperation

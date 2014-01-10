@@ -221,10 +221,6 @@
     <value>More than one migrations configuration type was found in the assembly '{0}'. Specify the name of the one to use.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
-  <data name="SqlCeColumnRenameNotSupported" xml:space="preserve">
-    <value>Direct column renaming is not supported by SQL Server Compact. To rename a column in SQL Server Compact, you will need to recreate it.</value>
-    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
-  </data>
   <data name="MigrationsNamespaceNotUnderRootNamespace" xml:space="preserve">
     <value>In VB.NET projects, the migrations namespace '{0}' must be under the root namespace '{1}'. Update the migrations project's root namespace to allow classes under the migrations namespace to be added.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
@@ -493,9 +489,6 @@
   </data>
   <data name="BadAnnotationName" xml:space="preserve">
     <value>The annotation name '{0}' is not valid. Annotation names have the same restrictions as C# and EDM identifiers.</value>
-  </data>
-  <data name="BadIndexName" xml:space="preserve">
-    <value>The index name '{0}' is not valid. Index names used in the Entity Framework model have the same restrictions as C# identifiers.</value>
   </data>
   <data name="CircularComplexTypeHierarchy" xml:space="preserve">
     <value>A circular ComplexType hierarchy was detected. Self-referencing ComplexTypes are not supported.</value>
@@ -5339,10 +5332,6 @@
   </data>
   <data name="EntityClient_CannotOpenBrokenConnection" xml:space="preserve">
     <value>The connection could not be opened because it is broken. The connection must be closed before it can be opened.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
-  <data name="SqlServerMigrationSqlGenerator_UnknownOperation" xml:space="preserve">
-    <value>The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation).</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ModificationFunctionParameterNotFoundOriginal" xml:space="preserve">

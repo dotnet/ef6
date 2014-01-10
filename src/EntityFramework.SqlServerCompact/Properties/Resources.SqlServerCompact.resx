@@ -264,4 +264,8 @@
     <value>The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation).</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="SqlCeIndexRenameNotSupported" xml:space="preserve">
+    <value>Direct index renaming is not supported by SQL Server Compact. To rename an index in SQL Server Compact, you will need to recreate it.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
 </root>

@@ -888,6 +888,29 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
+        /// Generates SQL for a <see cref="RenameIndexOperation" />.
+        /// Generated SQL should be added using the Statement method.
+        /// </summary>
+        /// <param name="renameIndexOperation"> The operation to produce SQL for. </param>
+        protected virtual void Generate(RenameIndexOperation renameIndexOperation)
+        {
+            Check.NotNull(renameIndexOperation, "renameIndexOperation");
+
+            using (var writer = Writer())
+            {
+                writer.Write("EXECUTE sp_rename @objname = N'");
+                writer.Write(Escape(renameIndexOperation.Table));
+                writer.Write(".");
+                writer.Write(Escape(renameIndexOperation.Name));
+                writer.Write("', @newname = N'");
+                writer.Write(Escape(renameIndexOperation.NewName));
+                writer.Write("', @objtype = N'INDEX'");
+
+                Statement(writer);
+            }
+        }
+
+        /// <summary>
         /// Generates SQL for a <see cref="RenameTableOperation" />.
         /// Generated SQL should be added using the Statement method.
         /// </summary>

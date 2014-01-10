@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
@@ -59,7 +60,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             XDocument sourceModel,
             XDocument targetModel,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator = null,
-            MigrationSqlGenerator migrationSqlGenerator = null)
+            MigrationSqlGenerator migrationSqlGenerator = null,
+            string sourceModelVersion = null,
+            string targetModelVersion = null)
         {
             DebugCheck.NotNull(sourceModel);
             DebugCheck.NotNull(targetModel);
@@ -105,7 +108,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     ProviderInfo = providerInfo
                 };
 
-            return Diff(source, target, modificationCommandTreeGenerator, migrationSqlGenerator);
+            return Diff(
+                source, 
+                target, 
+                modificationCommandTreeGenerator, 
+                migrationSqlGenerator, 
+                sourceModelVersion, 
+                targetModelVersion);
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -113,7 +122,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             ModelMetadata source,
             ModelMetadata target,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
-            MigrationSqlGenerator migrationSqlGenerator)
+            MigrationSqlGenerator migrationSqlGenerator,
+            string sourceModelVersion = null,
+            string targetModelVersion = null)
         {
             DebugCheck.NotNull(source);
             DebugCheck.NotNull(target);
@@ -128,8 +139,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             associationTypePairs.AddRange(FindStoreOnlyAssociationTypePairs(associationTypePairs, tablePairs));
 
-            var renamedTablePairs = FindRenamedTablePairs(tablePairs).ToList();
-            var renamedTables = FindRenamedTables(renamedTablePairs).ToList();
+            var renamedTables = FindRenamedTables(tablePairs).ToList();
             var renamedColumns = FindRenamedColumns(mappingFragmentPairs, associationTypePairs).ToList();
 
             var addedColumns = FindAddedColumns(tablePairs, renamedColumns).ToList();
@@ -168,33 +178,40 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var renamedModificationFunctions = FindRenamedModificationFunctions().ToList();
             var movedModificationFunctions = FindMovedModificationFunctions().ToList();
 
-            var sourceIndexes = FindSourceIndexes(renamedTablePairs, renamedColumns).ToList();
-            var targetIndexes = FindTargetIndexes().ToList();
+            // Compat: Simulate pre 6.1 FK index convention behavior.
+            var sourceIndexes
+                = (string.IsNullOrWhiteSpace(sourceModelVersion)
+                   || string.Compare(sourceModelVersion.Substring(0, 3), "6.1", StringComparison.Ordinal) >= 0
+                    ? FindSourceIndexes(tablePairs)
+                    : BuildLegacyIndexes(source))
+                    .ToList();
 
-            var droppedIndexes = FindDroppedIndexes(sourceIndexes, targetIndexes).ToList();
-            var addedIndexes = FindAddedIndexes(sourceIndexes, targetIndexes).ToList();
+            // Compat: Simulate pre 6.1 FK index convention behavior.
+            var targetIndexes
+                = (string.IsNullOrWhiteSpace(targetModelVersion)
+                   || string.Compare(targetModelVersion.Substring(0, 3), "6.1", StringComparison.Ordinal) >= 0
+                    ? FindTargetIndexes()
+                    : BuildLegacyIndexes(target))
+                    .ToList();
+
+            var addedIndexes = FindAddedIndexes(sourceIndexes, targetIndexes, alteredColumns, renamedColumns).ToList();
+            var droppedIndexes = FindDroppedIndexes(sourceIndexes, targetIndexes, alteredColumns, renamedColumns).ToList();
+            var renamedIndexes = FindRenamedIndexes(addedIndexes, droppedIndexes, alteredColumns, renamedColumns).ToList();
 
             return HandleTransitiveRenameDependencies(renamedTables)
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(droppedForeignKeys.Distinct(_foreignKeyEqualityComparer))
-                .Concat(
-                    droppedForeignKeys
-                        .Select(fko => fko.CreateDropIndexOperation())
-                        .Concat(droppedIndexes)
-                        .Distinct(_indexEqualityComparer))
+                .Concat(droppedIndexes.Distinct(_indexEqualityComparer))
                 .Concat(orphanedColumns)
                 .Concat(HandleTransitiveRenameDependencies(renamedColumns))
+                .Concat(HandleTransitiveRenameDependencies(renamedIndexes))
                 .Concat(alteredPrimaryKeys.OfType<DropPrimaryKeyOperation>())
                 .Concat(addedTables)
                 .Concat(alteredTables)
                 .Concat(addedColumns)
                 .Concat(alteredColumns)
                 .Concat(alteredPrimaryKeys.OfType<AddPrimaryKeyOperation>())
-                .Concat(
-                    addedForeignKeys
-                        .Select(fko => fko.CreateCreateIndexOperation())
-                        .Concat(addedIndexes)
-                        .Distinct(_indexEqualityComparer))
+                .Concat(addedIndexes.Distinct(_indexEqualityComparer))
                 .Concat(addedForeignKeys.Distinct(_foreignKeyEqualityComparer))
                 .Concat(droppedColumns)
                 .Concat(droppedTables)
@@ -204,6 +221,33 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(alteredModificationFunctions)
                 .Concat(removedModificationFunctions)
                 .ToList();
+        }
+
+        private static IEnumerable<ConsolidatedIndex> BuildLegacyIndexes(ModelMetadata modelMetadata)
+        {
+            DebugCheck.NotNull(modelMetadata);
+
+            foreach (var associationType in modelMetadata.StoreItemCollection.GetItems<AssociationType>())
+            {
+                var dependentColumnNames = associationType.Constraint.ToProperties.Select(p => p.Name);
+                var indexName = IndexOperation.BuildDefaultName(dependentColumnNames);
+                var indexAttribute = new IndexAttribute(indexName);
+
+                var tableName
+                    = GetSchemaQualifiedName(
+                        modelMetadata.StoreEntityContainer.EntitySets
+                            .Single(es => es.ElementType == associationType.Constraint.DependentEnd.GetEntityType()));
+
+                var consolidatedIndex = new ConsolidatedIndex(tableName, indexAttribute);
+
+                foreach (var dependentColumn in associationType.Constraint.ToProperties)
+                {
+                    indexAttribute.Order++;
+                    consolidatedIndex.Add(dependentColumn.Name, indexAttribute);
+                }
+
+                yield return consolidatedIndex;
+            }
         }
 
         private IEnumerable<Tuple<EntityType, EntityType>> FindEntityTypePairs()
@@ -533,8 +577,21 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 renameColumnOperations,
                 (rc1, rc2) => rc1.Table.EqualsIgnoreCase(rc2.Table)
                               && rc1.Name.EqualsIgnoreCase(rc2.NewName),
-                (t, rc) => new RenameColumnOperation(rc.Table, t, rc.NewName),
-                (rc, t) => rc.NewName = t);
+                (c, rc) => new RenameColumnOperation(rc.Table, c, rc.NewName),
+                (rc, c) => rc.NewName = c);
+        }
+
+        private static IEnumerable<RenameIndexOperation> HandleTransitiveRenameDependencies(
+            IList<RenameIndexOperation> renameIndexOperations)
+        {
+            DebugCheck.NotNull(renameIndexOperations);
+
+            return HandleTransitiveRenameDependencies(
+                renameIndexOperations,
+                (ri1, ri2) => ri1.Table.EqualsIgnoreCase(ri2.Table)
+                              && ri1.Name.EqualsIgnoreCase(ri2.NewName),
+                (i, rc) => new RenameIndexOperation(rc.Table, i, rc.NewName),
+                (rc, i) => rc.NewName = i);
         }
 
         private static IEnumerable<T> HandleTransitiveRenameDependencies<T>(
@@ -1320,20 +1377,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         select o);
         }
 
-        private static IEnumerable<Tuple<string, EntitySet>> FindRenamedTablePairs(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
+        private static IEnumerable<RenameTableOperation> FindRenamedTables(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
         {
             DebugCheck.NotNull(tablePairs);
 
             return tablePairs
                 .Where(p => !p.Item1.Table.EqualsIgnoreCase(p.Item2.Table))
-                .Select(p => Tuple.Create(GetSchemaQualifiedName(p.Item1), p.Item2));
-        }
-
-        private static IEnumerable<RenameTableOperation> FindRenamedTables(ICollection<Tuple<string, EntitySet>> renamedTablePairs)
-        {
-            DebugCheck.NotNull(renamedTablePairs);
-
-            return renamedTablePairs.Select(p => new RenameTableOperation(p.Item1, p.Item2.Table));
+                .Select(p => new RenameTableOperation(GetSchemaQualifiedName(p.Item1), p.Item2.Table));
         }
 
         private IEnumerable<CreateTableOperation> FindAddedTables(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
@@ -1705,27 +1755,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select BuildAlterColumnOperation(t, p2, _target, p1, _source);
         }
 
-        private IEnumerable<ConsolidatedIndex> FindSourceIndexes(
-            ICollection<Tuple<string, EntitySet>> renameTablePairs,
-            ICollection<RenameColumnOperation> renamedColumns)
+        private IEnumerable<ConsolidatedIndex> FindSourceIndexes(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
         {
-            DebugCheck.NotNull(renameTablePairs);
-            DebugCheck.NotNull(renamedColumns);
+            DebugCheck.NotNull(tablePairs);
 
             return
                 from es in _source.StoreEntityContainer.EntitySets
-                let ot = GetSchemaQualifiedName(es)
-                let t = renameTablePairs.Where(rt => rt.Item1.EqualsIgnoreCase(ot))
-                    .Select(rt => GetSchemaQualifiedName(rt.Item2))
-                    .SingleOrDefault() ?? ot
-                from i in ConsolidatedIndex.BuildIndexes(
-                    t, es.ElementType.Properties.Select(
-                        c => Tuple.Create(
-                            renamedColumns.Where(
-                                rc => rc.Table.EqualsIgnoreCase(t)
-                                      && rc.Name.EqualsIgnoreCase(c.Name))
-                                .Select(rc => rc.NewName)
-                                .SingleOrDefault() ?? c.Name, c)))
+                let p = tablePairs.SingleOrDefault(p => p.Item1 == es)
+                let t = GetSchemaQualifiedName(p != null ? p.Item2 : es)
+                from i in ConsolidatedIndex.BuildIndexes(t, es.ElementType.Properties.Select(c => Tuple.Create(c.Name, c)))
                 select i;
         }
 
@@ -1740,22 +1778,109 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private static IEnumerable<CreateIndexOperation> FindAddedIndexes(
             ICollection<ConsolidatedIndex> sourceIndexes,
-            ICollection<ConsolidatedIndex> targetIndexes)
+            ICollection<ConsolidatedIndex> targetIndexes,
+            ICollection<AlterColumnOperation> alteredColumns,
+            ICollection<RenameColumnOperation> renamedColumns)
         {
             DebugCheck.NotNull(sourceIndexes);
             DebugCheck.NotNull(targetIndexes);
+            DebugCheck.NotNull(alteredColumns);
+            DebugCheck.NotNull(renamedColumns);
 
-            return targetIndexes.Except(sourceIndexes).Select(i => i.CreateCreateIndexOperation());
+            return targetIndexes
+                .Except(
+                    sourceIndexes,
+                    (i1, i2) => IndexesEqual(i1, i2, renamedColumns)
+                                && !alteredColumns.Any(
+                                    ac => ac.Table.EqualsIgnoreCase(i2.Table)
+                                          && i2.Columns.Contains(ac.Column.Name, StringComparer.OrdinalIgnoreCase)))
+                .Select(i => i.CreateCreateIndexOperation());
         }
 
         private static IEnumerable<DropIndexOperation> FindDroppedIndexes(
             ICollection<ConsolidatedIndex> sourceIndexes,
-            ICollection<ConsolidatedIndex> targetIndexes)
+            ICollection<ConsolidatedIndex> targetIndexes,
+            ICollection<AlterColumnOperation> alteredColumns,
+            ICollection<RenameColumnOperation> renamedColumns)
         {
             DebugCheck.NotNull(sourceIndexes);
             DebugCheck.NotNull(targetIndexes);
+            DebugCheck.NotNull(alteredColumns);
+            DebugCheck.NotNull(renamedColumns);
 
-            return sourceIndexes.Except(targetIndexes).Select(i => i.CreateDropIndexOperation());
+            return sourceIndexes
+                .Except(
+                    targetIndexes,
+                    (i2, i1) => IndexesEqual(i1, i2, renamedColumns)
+                                && !alteredColumns.Any(
+                                    ac => ac.Table.EqualsIgnoreCase(i2.Table)
+                                          && i2.Columns.Contains(ac.Column.Name, StringComparer.OrdinalIgnoreCase)))
+                .Select(i => i.CreateDropIndexOperation());
+        }
+
+        private static bool IndexesEqual(
+            ConsolidatedIndex consolidatedIndex1,
+            ConsolidatedIndex consolidatedIndex2, 
+            ICollection<RenameColumnOperation> renamedColumns)
+        {
+            DebugCheck.NotNull(consolidatedIndex1);
+            DebugCheck.NotNull(consolidatedIndex2);
+            DebugCheck.NotNull(renamedColumns);
+
+            if (!consolidatedIndex1.Table.EqualsIgnoreCase(consolidatedIndex2.Table))
+            {
+                return false;
+            }
+
+            if (!consolidatedIndex1.Index.Equals(consolidatedIndex2.Index))
+            {
+                return false;
+            }
+
+            return consolidatedIndex1.Columns
+                .Select(
+                    c =>
+                        renamedColumns.Where(
+                            rc => rc.Table.EqualsIgnoreCase(consolidatedIndex1.Table)
+                                  && rc.Name.EqualsIgnoreCase(c))
+                            .Select(rc => rc.NewName)
+                            .SingleOrDefault() ?? c)
+                .SequenceEqual(consolidatedIndex2.Columns, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private static IEnumerable<RenameIndexOperation> FindRenamedIndexes(
+            ICollection<CreateIndexOperation> addedIndexes,
+            ICollection<DropIndexOperation> droppedIndexes,
+            ICollection<AlterColumnOperation> alteredColumns,
+            ICollection<RenameColumnOperation> renamedColumns)
+        {
+            DebugCheck.NotNull(addedIndexes);
+            DebugCheck.NotNull(droppedIndexes);
+            DebugCheck.NotNull(alteredColumns);
+            DebugCheck.NotNull(renamedColumns);
+
+            return
+                from ci1 in addedIndexes.ToList()
+                from di in droppedIndexes.ToList()
+                let ci2 = (CreateIndexOperation)di.Inverse
+                where ci1.Table.EqualsIgnoreCase(ci2.Table)
+                      && !ci1.Name.EqualsIgnoreCase(ci2.Name)
+                      && ci1.Columns.SequenceEqual(
+                          ci2.Columns.Select(
+                              c =>
+                                  renamedColumns.Where(
+                                      rc => rc.Table.EqualsIgnoreCase(ci2.Table)
+                                            && rc.Name.EqualsIgnoreCase(c))
+                                      .Select(rc => rc.NewName)
+                                      .SingleOrDefault() ?? c), StringComparer.OrdinalIgnoreCase)
+                      && ci1.IsClustered == ci2.IsClustered
+                      && ci1.IsUnique == ci2.IsUnique
+                      && (!alteredColumns.Any(
+                          ac => ac.Table.EqualsIgnoreCase(ci1.Table)
+                                && ci1.Columns.Contains(ac.Column.Name, StringComparer.OrdinalIgnoreCase))
+                          && addedIndexes.Remove(ci1)
+                          && droppedIndexes.Remove(di))
+                select new RenameIndexOperation(ci1.Table, di.Name, ci1.Name);
         }
 
         private bool DiffColumns(EdmProperty column1, EdmProperty column2)

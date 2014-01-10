@@ -30,14 +30,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal(
                 "order",
                 Assert.Throws<ArgumentOutOfRangeException>(() => new IndexAttribute("I1", -1)).ParamName);
-
-            Assert.Equal(
-                Strings.BadIndexName("<CheeseAndPickle>"),
-                Assert.Throws<ArgumentException>(() => new IndexAttribute("<CheeseAndPickle>")).Message);
-
-            Assert.Equal(
-                Strings.BadIndexName("<CheeseAndPickle>"),
-                Assert.Throws<ArgumentException>(() => new IndexAttribute("<CheeseAndPickle>", 0)).Message);
         }
 
         [Fact]

@@ -127,8 +127,9 @@ namespace System.Data.Entity.Migrations
         }
 
         public DbMigrator CreateMigrator<TContext>(
-            DbMigration migration, 
-            IEnumerable<Tuple<string, MigrationSqlGenerator>> sqlGenerators = null)
+            DbMigration migration,
+            IEnumerable<Tuple<string, MigrationSqlGenerator>> sqlGenerators = null,
+            bool automaticDataLossEnabled = false)
             where TContext : DbContext
         {
             using (var context = CreateContext<TContext>())
@@ -147,7 +148,8 @@ namespace System.Data.Entity.Migrations
 
                 return new DbMigrator(CreateMigrationsConfiguration<TContext>(
                     scaffoldedMigrations: generatedMigration,
-                    sqlGenerators: sqlGenerators));
+                    sqlGenerators: sqlGenerators,
+                    automaticDataLossEnabled: automaticDataLossEnabled));
             }
         }
 
@@ -425,16 +427,13 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        protected HistoryOperation CreateInsertOperation(string contextKey, string migrationId, XDocument model)
+        protected HistoryOperation CreateInsertOperation(
+            string contextKey, string migrationId, XDocument model, string productVersion = null)
         {
-            var productVersion = typeof(DbContext).Assembly()
-                .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
-                .Single()
-                .InformationalVersion;
-
             using (var connection = ProviderFactory.CreateConnection())
             {
                 connection.ConnectionString = ConnectionString;
+
                 using (var historyContext = new HistoryContext(connection, "dbo"))
                 {
                     historyContext.History.Add(
@@ -443,7 +442,12 @@ namespace System.Data.Entity.Migrations
                             MigrationId = migrationId,
                             ContextKey = contextKey,
                             Model = CompressModel(model),
-                            ProductVersion = productVersion,
+                            ProductVersion
+                                = productVersion
+                                  ?? typeof(DbContext).Assembly()
+                                      .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
+                                      .Single()
+                                      .InformationalVersion,
                         });
 
                     var cancellingLogger = new CommandTreeCancellingLogger(historyContext);

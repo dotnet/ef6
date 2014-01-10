@@ -295,8 +295,10 @@ namespace System.Data.Entity.Migrations
 
         internal ScaffoldedMigration ScaffoldInitialCreate(string @namespace)
         {
-            string migrationId;
-            var databaseModel = _historyRepository.GetLastModel(out migrationId, contextKey: _legacyContextKey);
+            string migrationId, _;
+
+            var databaseModel 
+                = _historyRepository.GetLastModel(out migrationId, out _, contextKey: _legacyContextKey);
 
             if ((databaseModel == null)
                 || !migrationId.MigrationName().Equals(Strings.InitialCreate))
@@ -350,14 +352,22 @@ namespace System.Data.Entity.Migrations
             XDocument sourceModel = null;
             CheckLegacyCompatibility(() => sourceModel = _currentModel);
 
-            string sourceMigrationId = null;
-            sourceModel = sourceModel ?? (_historyRepository.GetLastModel(out sourceMigrationId) ?? _emptyModel.Value);
-            var modelCompressor = new ModelCompressor();
+            string sourceMigrationId = null, sourceModelVersion = null;
 
+            sourceModel 
+                = sourceModel
+                    ?? (_historyRepository.GetLastModel(out sourceMigrationId, out sourceModelVersion) 
+                        ?? _emptyModel.Value);
+            
             var migrationOperations
                 = ignoreChanges
                     ? Enumerable.Empty<MigrationOperation>()
-                    : _modelDiffer.Diff(sourceModel, _currentModel, _modificationCommandTreeGenerator, SqlGenerator)
+                      : _modelDiffer.Diff(
+                            sourceModel, 
+                            _currentModel, 
+                            _modificationCommandTreeGenerator, 
+                            SqlGenerator,
+                            sourceModelVersion: sourceModelVersion)
                         .ToList();
 
             if (!rescaffolding)
@@ -365,6 +375,8 @@ namespace System.Data.Entity.Migrations
                 migrationName = _migrationAssembly.UniquifyName(migrationName);
                 migrationId = MigrationAssembly.CreateMigrationId(migrationName);
             }
+
+            var modelCompressor = new ModelCompressor();
 
             var scaffoldedMigration
                 = _configuration.CodeGenerator.Generate(
@@ -563,9 +575,9 @@ namespace System.Data.Entity.Migrations
                             ? Strings.InitialCreate
                             : Strings.AutomaticMigration),
                     _calledByCreateDatabase
-                        ? _emptyModel.Value
+                        ? new VersionedModel(_emptyModel.Value)
                         : GetLastModel(lastMigration),
-                    _currentModel,
+                    new VersionedModel(_currentModel),
                     false);
             }
 
@@ -596,28 +608,26 @@ namespace System.Data.Entity.Migrations
 
             var sourceModel = GetLastModel(lastMigration);
 
-            return _modelDiffer.Diff(sourceModel, model).Any();
+            return _modelDiffer.Diff(sourceModel.Model, model, sourceModelVersion: sourceModel.Version).Any();
         }
 
-        private XDocument GetLastModel(DbMigration lastMigration, string currentMigrationId = null)
+        private VersionedModel GetLastModel(DbMigration lastMigration, string currentMigrationId = null)
         {
             if (lastMigration != null)
             {
-                var migrationMetadata = (IMigrationMetadata)lastMigration;
-
-                return new ModelCompressor().Decompress(Convert.FromBase64String(migrationMetadata.Target));
+                return lastMigration.GetTargetModel();
             }
 
-            string migrationId;
-            var lastModel = _historyRepository.GetLastModel(out migrationId);
+            string migrationId, productVersion;
+            var lastModel = _historyRepository.GetLastModel(out migrationId, out productVersion);
 
             if (lastModel != null
                 && (currentMigrationId == null || string.CompareOrdinal(migrationId, currentMigrationId) < 0))
             {
-                return lastModel;
+                return new VersionedModel(lastModel, productVersion);
             }
 
-            return _emptyModel.Value;
+            return new VersionedModel(_emptyModel.Value);
         }
 
         internal override void Downgrade(IEnumerable<string> pendingMigrations)
@@ -627,17 +637,24 @@ namespace System.Data.Entity.Migrations
                 var migrationId = pendingMigrations.ElementAt(i);
                 var migration = _migrationAssembly.GetMigration(migrationId);
                 var nextMigrationId = pendingMigrations.ElementAt(i + 1);
+
+                string targetModelVersion = null;
                 var targetModel = (nextMigrationId != InitialDatabase)
-                    ? _historyRepository.GetModel(nextMigrationId)
+                                      ? _historyRepository.GetModel(nextMigrationId, out targetModelVersion)
                     : _emptyModel.Value;
 
                 Debug.Assert(targetModel != null);
 
-                var sourceModel = _historyRepository.GetModel(migrationId);
+                string _;
+                var sourceModel = _historyRepository.GetModel(migrationId, out _);
 
                 if (migration == null)
                 {
-                    base.AutoMigrate(migrationId, sourceModel, targetModel, downgrading: true);
+                    base.AutoMigrate(
+                        migrationId, 
+                        new VersionedModel(sourceModel),
+                        new VersionedModel(targetModel, targetModelVersion), 
+                        downgrading: true);
                 }
                 else
                 {
@@ -657,7 +674,7 @@ namespace System.Data.Entity.Migrations
             if (ReferenceEquals(targetModel, _emptyModel.Value)
                 && !_historyRepository.IsShared())
             {
-                systemOperations = _modelDiffer.Diff(historyModel, targetModel);
+                systemOperations = _modelDiffer.Diff(historyModel, _emptyModel.Value);
             }
             else
             {
@@ -681,18 +698,13 @@ namespace System.Data.Entity.Migrations
             DebugCheck.NotNull(migration);
 
             var migrationMetadata = (IMigrationMetadata)migration;
-            var compressor = new ModelCompressor();
-
             var lastModel = GetLastModel(lastMigration, migrationMetadata.Id);
-            var targetModel = compressor.Decompress(Convert.FromBase64String(migrationMetadata.Target));
+            var sourceModel = migration.GetSourceModel();
+            var targetModel = migration.GetTargetModel();
 
-            if (migrationMetadata.Source != null)
+            if (sourceModel != null
+                && IsModelOutOfDate(sourceModel.Model, lastMigration))
             {
-                var sourceModel
-                    = compressor.Decompress(Convert.FromBase64String(migrationMetadata.Source));
-
-                if (IsModelOutOfDate(sourceModel, lastMigration))
-                {
                     base.AutoMigrate(
                         migrationMetadata.Id.ToAutomaticMigrationId(),
                         lastModel,
@@ -701,17 +713,16 @@ namespace System.Data.Entity.Migrations
 
                     lastModel = sourceModel;
                 }
-            }
 
             var migrationSchema = GetDefaultSchema(migration);
             var historyModel = GetHistoryModel(migrationSchema);
 
             var systemOperations = Enumerable.Empty<MigrationOperation>();
 
-            if (ReferenceEquals(lastModel, _emptyModel.Value)
+            if (ReferenceEquals(lastModel.Model, _emptyModel.Value)
                 && !base.HistoryExists())
             {
-                systemOperations = _modelDiffer.Diff(lastModel, historyModel);
+                systemOperations = _modelDiffer.Diff(_emptyModel.Value, historyModel);
             }
             else
             {
@@ -727,7 +738,7 @@ namespace System.Data.Entity.Migrations
 
             migration.Up();
 
-            ExecuteOperations(migrationMetadata.Id, targetModel, migration.Operations, systemOperations, false);
+            ExecuteOperations(migrationMetadata.Id, targetModel.Model, migration.Operations, systemOperations, false);
         }
 
         private static string GetDefaultSchema(DbMigration migration)
@@ -767,22 +778,22 @@ namespace System.Data.Entity.Migrations
         }
 
         internal override void AutoMigrate(
-            string migrationId, XDocument sourceModel, XDocument targetModel, bool downgrading)
+            string migrationId, VersionedModel sourceModel, VersionedModel targetModel, bool downgrading)
         {
             var systemOperations = Enumerable.Empty<MigrationOperation>();
 
             if (!_historyRepository.IsShared())
             {
-                if (ReferenceEquals(targetModel, _emptyModel.Value))
+                if (ReferenceEquals(targetModel.Model, _emptyModel.Value))
                 {
                     systemOperations
-                        = _modelDiffer.Diff(GetHistoryModel(EdmModelExtensions.DefaultSchema), targetModel);
+                        = _modelDiffer.Diff(GetHistoryModel(EdmModelExtensions.DefaultSchema), _emptyModel.Value);
                 }
-                else if (ReferenceEquals(sourceModel, _emptyModel.Value))
+                else if (ReferenceEquals(sourceModel.Model, _emptyModel.Value))
                 {
                     systemOperations
                         = _modelDiffer.Diff(
-                            sourceModel,
+                            _emptyModel.Value,
                             _calledByCreateDatabase
                                 ? GetHistoryModel(_defaultSchema)
                                 : GetHistoryModel(EdmModelExtensions.DefaultSchema));
@@ -792,16 +803,18 @@ namespace System.Data.Entity.Migrations
             var operations
                 = _modelDiffer
                     .Diff(
-                        sourceModel,
-                        targetModel,
-                        targetModel == _currentModel
+                        sourceModel.Model,
+                        targetModel.Model,
+                        targetModel.Model == _currentModel
                             ? _modificationCommandTreeGenerator
                             : null,
-                        SqlGenerator)
+                        SqlGenerator,
+                        sourceModel.Version,
+                        targetModel.Version)
                     .ToList();
 
             if (!_calledByCreateDatabase
-                && ReferenceEquals(targetModel, _currentModel))
+                && ReferenceEquals(targetModel.Model, _currentModel))
             {
                 var lastDefaultSchema = GetLastDefaultSchema(migrationId);
 
@@ -817,13 +830,13 @@ namespace System.Data.Entity.Migrations
                 throw Error.AutomaticDataLoss();
             }
 
-            if ((targetModel != _currentModel)
+            if ((targetModel.Model != _currentModel)
                 && (operations.Any(o => o is ProcedureOperation)))
             {
                 throw Error.AutomaticStaleFunctions(migrationId);
             }
 
-            ExecuteOperations(migrationId, targetModel, operations, systemOperations, downgrading, auto: true);
+            ExecuteOperations(migrationId, targetModel.Model, operations, systemOperations, downgrading, auto: true);
         }
 
         private void ExecuteOperations(

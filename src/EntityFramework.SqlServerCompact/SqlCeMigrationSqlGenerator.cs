@@ -544,6 +544,16 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
+        /// Generates SQL for a <see cref="RenameIndexOperation" />.
+        /// Generated SQL should be added using the Statement method.
+        /// </summary>
+        /// <param name="renameIndexOperation"> The operation to produce SQL for. </param>
+        protected virtual void Generate(RenameIndexOperation renameIndexOperation)
+        {
+            throw Error.SqlCeIndexRenameNotSupported();
+        }
+
+        /// <summary>
         /// Generates SQL for a <see cref="RenameTableOperation" />.
         /// Generated SQL should be added using the Statement method.
         /// </summary>

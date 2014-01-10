@@ -1433,6 +1433,25 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
+        /// Generates code to perform a <see cref="RenameIndexOperation" />.
+        /// </summary>
+        /// <param name="renameIndexOperation"> The operation to generate code for. </param>
+        /// <param name="writer"> Text writer to add the generated code to. </param>
+        protected virtual void Generate(RenameIndexOperation renameIndexOperation, IndentedTextWriter writer)
+        {
+            Check.NotNull(renameIndexOperation, "renameIndexOperation");
+            Check.NotNull(writer, "writer");
+
+            writer.Write("RenameIndex(table: ");
+            writer.Write(Quote(renameIndexOperation.Table));
+            writer.Write(", name: ");
+            writer.Write(Quote(renameIndexOperation.Name));
+            writer.Write(", newName: ");
+            writer.Write(Quote(renameIndexOperation.NewName));
+            writer.WriteLine(");");
+        }
+
+        /// <summary>
         /// Generates code to perform a <see cref="SqlOperation" />.
         /// </summary>
         /// <param name="sqlOperation"> The operation to generate code for. </param>

@@ -416,6 +416,7 @@
     <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGeneratorTests.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperationTests.cs" />
     <Compile Include="Migrations\Model\AlterTableOperationTests.cs" />
+    <Compile Include="Migrations\Model\RenameIndexOperationTests.cs" />
     <Compile Include="Migrations\Model\UpdateDatabaseOperationTests.cs" />
     <Compile Include="Migrations\Model\MoveProcedureOperationTests.cs" />
     <Compile Include="Migrations\Model\RenameProcedureOperationTests.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionOfTypeWithHavingTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionTests.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHavingTests.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Edm\Db\ForeignKeyIndexConventionTests.cs" />
     <Compile Include="ModelConfiguration\ConventionTests.cs" />
     <Compile Include="ModelConfiguration\Edm\FunctionParameterExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\EdmTypeExtensionsTests.cs" />

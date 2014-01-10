@@ -37,7 +37,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         internal override void AutoMigrate(
-            string migrationId, XDocument sourceModel, XDocument targetModel, bool downgrading)
+            string migrationId, VersionedModel sourceModel, VersionedModel targetModel, bool downgrading)
         {
             DebugCheck.NotEmpty(migrationId);
 
