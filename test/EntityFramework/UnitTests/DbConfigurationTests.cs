@@ -244,15 +244,30 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     "transactionHandlerFactory",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler(null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetDefaultTransactionHandler(null)).ParamName);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetTransactionHandler(null, () => null)).Message);
 
                 Assert.Equal(
                     "transactionHandlerFactory",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler(null, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler("p", null)).ParamName);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetTransactionHandler(null, () => null, "s")).Message);
 
                 Assert.Equal(
                     "transactionHandlerFactory",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler(null, null, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionHandler("p", null, "s")).ParamName);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("serverName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetTransactionHandler("p", () => null, null)).Message);
             }
 
             [Fact]
@@ -261,14 +276,14 @@ namespace System.Data.Entity
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 Func<TransactionHandler> transactionHandlerFactory = () => new Mock<TransactionHandler>().Object;
                 
-                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler(transactionHandlerFactory);
+                new DbConfiguration(mockInternalConfiguration.Object).SetDefaultTransactionHandler(transactionHandlerFactory);
 
                 mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionHandlerResolver(transactionHandlerFactory, null, null), false));
 
-                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler(transactionHandlerFactory, "p");
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler("p", transactionHandlerFactory);
 
                 mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionHandlerResolver(transactionHandlerFactory, "p", null), false));
-                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler(transactionHandlerFactory, "p", "s");
+                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionHandler("p", transactionHandlerFactory, "s");
 
                 mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionHandlerResolver(transactionHandlerFactory, "p", "s"), false));
             }
@@ -281,75 +296,17 @@ namespace System.Data.Entity
                 Assert.Equal(
                     Strings.ConfigurationLocked("SetTransactionHandler"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetTransactionHandler(() => new Mock<TransactionHandler>().Object)).Message);
+                        () => configuration.SetDefaultTransactionHandler(() => new Mock<TransactionHandler>().Object)).Message);
 
                 Assert.Equal(
                     Strings.ConfigurationLocked("SetTransactionHandler"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetTransactionHandler(() => new Mock<TransactionHandler>().Object, "Karl")).Message);
+                        () => configuration.SetTransactionHandler("Karl", () => new Mock<TransactionHandler>().Object)).Message);
 
                 Assert.Equal(
                     Strings.ConfigurationLocked("SetTransactionHandler"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetTransactionHandler(() => new Mock<TransactionHandler>().Object, "Karl", "Marx")).Message);
-            }
-        }
-
-        public class SetTransactionContext
-        {
-            [Fact]
-            public void Throws_if_given_a_null_provider_or_bad_invariant_name()
-            {
-                Assert.Equal(
-                    "transactionContextFactory",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionContext(null)).ParamName);
-
-                Assert.Equal(
-                    "transactionContextFactory",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionContext(null, null)).ParamName);
-
-                Assert.Equal(
-                    "transactionContextFactory",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTransactionContext(null, null, null)).ParamName);
-            }
-
-            [Fact]
-            public void Delegates_to_internal_configuration()
-            {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
-                Func<DbConnection, TransactionContext> transactionHandlerFactory = c => new Mock<TransactionContext>().Object;
-
-                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionContext(transactionHandlerFactory);
-
-                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionContextResolver(transactionHandlerFactory, null, null), false));
-
-                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionContext(transactionHandlerFactory, "p");
-
-                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionContextResolver(transactionHandlerFactory, "p", null), false));
-                new DbConfiguration(mockInternalConfiguration.Object).SetTransactionContext(transactionHandlerFactory, "p", "s");
-
-                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new TransactionContextResolver(transactionHandlerFactory, "p", "s"), false));
-            }
-
-            [Fact]
-            public void Throws_if_the_configuation_is_locked()
-            {
-                var configuration = CreatedLockedConfiguration();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("SetTransactionContext"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetTransactionContext(c => new Mock<TransactionContext>().Object)).Message);
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("SetTransactionContext"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetTransactionContext(c => new Mock<TransactionContext>().Object, "Karl")).Message);
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("SetTransactionContext"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetTransactionContext(c => new Mock<TransactionContext>().Object, "Karl", "Marx")).Message);
+                        () => configuration.SetTransactionHandler("Karl", () => new Mock<TransactionHandler>().Object, "Marx")).Message);
             }
         }
 

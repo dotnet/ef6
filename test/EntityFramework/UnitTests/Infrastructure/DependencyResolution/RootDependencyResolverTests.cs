@@ -161,13 +161,6 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.IsType<AttributeProvider>(new RootDependencyResolver().GetService<AttributeProvider>());
             }
             
-            [Fact]
-            public void The_root_resolver_returns_default_TransactionContext_factory()
-            {
-                Assert.IsType<TransactionContext>(
-                    new RootDependencyResolver().GetService<Func<DbConnection, TransactionContext>>(new StoreKey("p", "s"))(
-                        new Mock<DbConnection>().Object));
-            }
 
             [Fact]
             public void The_root_resolver_returns_null_TransactionContext_factory_for_null_key()
@@ -179,7 +172,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void The_root_resolver_returns_DefaultTransactionHandler_factory()
             {
-                Assert.IsType<DefaultTransactionHandler>(new RootDependencyResolver().GetService<Func<TransactionHandler>>(new StoreKey("p", "s"))());
+                Assert.IsType<DefaultTransactionHandler>(new RootDependencyResolver().GetService<Func<TransactionHandler>>(new ExecutionStrategyKey("p", "s"))());
             }
 
             [Fact]

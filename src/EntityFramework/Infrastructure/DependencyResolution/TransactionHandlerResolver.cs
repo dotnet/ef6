@@ -40,7 +40,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         /// <summary>
         /// If the given type is <see cref="Func{TransactionHandler}" />, then this method will attempt
         /// to return the service to use, otherwise it will return <c>null</c>. When the given type is
-        /// <see cref="Func{TransactionHandler}" />, then the key is expected to be a <see cref="StoreKey" />.
+        /// <see cref="Func{TransactionHandler}" />, then the key is expected to be a <see cref="ExecutionStrategyKey" />.
         /// </summary>
         /// <param name="type">The service type to resolve.</param>
         /// <param name="key">A key used to make a determination of the service to return.</param>
@@ -51,12 +51,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             if (type == typeof(Func<TransactionHandler>))
             {
-                var transactionHandlerKey = key as StoreKey;
+                var transactionHandlerKey = key as ExecutionStrategyKey;
                 if (transactionHandlerKey == null)
                 {
                     throw new ArgumentException(
                         Strings.DbDependencyResolver_InvalidKey(
-                            typeof(StoreKey).Name, "Func<TransactionHandler>"));
+                            typeof(ExecutionStrategyKey).Name, "Func<TransactionHandler>"));
                 }
 
                 if (_providerInvariantName != null
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         /// <summary>
         /// If the given type is <see cref="Func{TransactionHandler}" />, then this resolver will attempt
         /// to return the service to use, otherwise it will return an empty enumeration. When the given type is
-        /// <see cref="Func{TransactionHandler}" />, then the key is expected to be an <see cref="StoreKey" />.
+        /// <see cref="Func{TransactionHandler}" />, then the key is expected to be an <see cref="ExecutionStrategyKey" />.
         /// </summary>
         /// <param name="type">The service type to resolve.</param>
         /// <param name="key">A key used to make a determination of the service to return.</param>

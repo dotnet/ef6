@@ -32,13 +32,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void GetService_throws_for_null_or_incorrect_key_type()
             {
                 Assert.Equal(
-                    Strings.DbDependencyResolver_InvalidKey(typeof(StoreKey).Name, "Func<TransactionHandler>"),
+                    Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<TransactionHandler>"),
                     Assert.Throws<ArgumentException>(
                         () => new TransactionHandlerResolver(() => new Mock<TransactionHandler>().Object, null, null)
                             .GetService<Func<TransactionHandler>>(null)).Message);
 
                 Assert.Equal(
-                    Strings.DbDependencyResolver_InvalidKey(typeof(StoreKey).Name, "Func<TransactionHandler>"),
+                    Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<TransactionHandler>"),
                     Assert.Throws<ArgumentException>(
                         () => new TransactionHandlerResolver(() => new Mock<TransactionHandler>().Object, null, null)
                             .GetService<Func<TransactionHandler>>("Oh No!")).Message);
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.Null(
                     new TransactionHandlerResolver(() => new Mock<TransactionHandler>().Object, "p", "s")
-                        .GetService<Func<TransactionHandler>>(new StoreKey("p1", "s")));
+                        .GetService<Func<TransactionHandler>>(new ExecutionStrategyKey("p1", "s")));
             }
 
             [Fact]
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.Null(
                     new TransactionHandlerResolver(() => new Mock<TransactionHandler>().Object, "p", "s")
-                        .GetService<Func<TransactionHandler>>(new StoreKey("p", "s1")));
+                        .GetService<Func<TransactionHandler>>(new ExecutionStrategyKey("p", "s1")));
             }
 
             [Fact]
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     transactionHandlerFactory,
                     new TransactionHandlerResolver(transactionHandlerFactory, "p", "s").GetService<Func<TransactionHandler>>(
-                        new StoreKey("p", "s")));
+                        new ExecutionStrategyKey("p", "s")));
             }
 
             [Fact]
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     transactionHandlerFactory,
                     new TransactionHandlerResolver(transactionHandlerFactory, "p", null).GetService<Func<TransactionHandler>>(
-                        new StoreKey("p", "s")));
+                        new ExecutionStrategyKey("p", "s")));
             }
 
             [Fact]
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     transactionHandlerFactory,
                     new TransactionHandlerResolver(transactionHandlerFactory, null, "s").GetService<Func<TransactionHandler>>(
-                        new StoreKey("p", "s")));
+                        new ExecutionStrategyKey("p", "s")));
             }
         }
 
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     transactionHandlerFactory,
                     new TransactionHandlerResolver(transactionHandlerFactory, null, null).GetServices<Func<TransactionHandler>>(
-                        new StoreKey("p", "s")).Single());
+                        new ExecutionStrategyKey("p", "s")).Single());
             }
         }
 

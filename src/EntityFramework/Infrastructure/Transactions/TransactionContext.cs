@@ -18,7 +18,7 @@ namespace System.Data.Entity.Infrastructure
     /// </remarks>
     public class TransactionContext : DbContext
     {
-        private const string _defaultTableName = "__Transactions";
+        private const string _defaultTableName = "__TransactionHistory";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionContext"/> class.

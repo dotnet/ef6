@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure.Transactions
 {
@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure.Transactions
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.TestDoubles;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -67,7 +68,6 @@ namespace System.Data.Entity.Infrastructure.Transactions
                         Assert.Throws<ArgumentNullException>(() => handler.Initialize(null)).ParamName);
                 }
             }
-
 
             [Fact]
             public void Throws_if_already_initialized_with_ObjectContext()
@@ -282,34 +282,34 @@ namespace System.Data.Entity.Infrastructure.Transactions
             }
         }
 
-        public class PruneTransactionRows : TestBase
+        public class PruneTransactionHistory : TestBase
         {
             [Fact]
             public void Delegates_to_protected_method()
             {
                 var handlerMock = new Mock<CommitFailureHandler> { CallBase = true };
-                handlerMock.Protected().Setup("PruneTransactionRows", ItExpr.IsAny<bool>()).Callback(() => { });
+                handlerMock.Protected().Setup("PruneTransactionHistory", ItExpr.IsAny<bool>()).Callback(() => { });
                 using (var handler = handlerMock.Object)
                 {
-                    handler.PruneTransactionRows();
-                    handlerMock.Protected().Verify("PruneTransactionRows", Times.Once(), true);
+                    handler.PruneTransactionHistory();
+                    handlerMock.Protected().Verify("PruneTransactionHistory", Times.Once(), true);
                 }
             }
         }
 
 #if !NET40
-        public class PruneTransactionRowsAsync : TestBase
+        public class PruneTransactionHistoryAsync : TestBase
         {
             [Fact]
             public void Delegates_to_protected_method()
             {
                 var handlerMock = new Mock<CommitFailureHandler> { CallBase = true };
-                handlerMock.Protected().Setup<Task>("PruneTransactionRowsAsync", ItExpr.IsAny<bool>(), ItExpr.IsAny<CancellationToken>())
+                handlerMock.Protected().Setup<Task>("PruneTransactionHistoryAsync", ItExpr.IsAny<bool>(), ItExpr.IsAny<CancellationToken>())
                     .Returns(() => Task.FromResult(true));
                 using (var handler = handlerMock.Object)
                 {
-                    handler.PruneTransactionRowsAsync().Wait();
-                    handlerMock.Protected().Verify<Task>("PruneTransactionRowsAsync", Times.Once(), true, CancellationToken.None);
+                    handler.PruneTransactionHistoryAsync().Wait();
+                    handlerMock.Protected().Verify<Task>("PruneTransactionHistoryAsync", Times.Once(), true, CancellationToken.None);
                 }
             }
 
@@ -317,13 +317,68 @@ namespace System.Data.Entity.Infrastructure.Transactions
             public void Delegates_to_protected_method_with_CancelationToken()
             {
                 var handlerMock = new Mock<CommitFailureHandler> { CallBase = true };
-                handlerMock.Protected().Setup<Task>("PruneTransactionRowsAsync", ItExpr.IsAny<bool>(), ItExpr.IsAny<CancellationToken>())
+                handlerMock.Protected().Setup<Task>("PruneTransactionHistoryAsync", ItExpr.IsAny<bool>(), ItExpr.IsAny<CancellationToken>())
                     .Returns(() => Task.FromResult(true));
                 using (var handler = handlerMock.Object)
                 {
                     var token = new CancellationToken();
-                    handler.PruneTransactionRowsAsync(token).Wait();
-                    handlerMock.Protected().Verify<Task>("PruneTransactionRowsAsync", Times.Once(), true, token);
+                    handler.PruneTransactionHistoryAsync(token).Wait();
+                    handlerMock.Protected().Verify<Task>("PruneTransactionHistoryAsync", Times.Once(), true, token);
+                }
+            }
+        }
+#endif
+
+        public class ClearTransactionHistory : TestBase
+        {
+            [Fact]
+            public void Delegates_to_protected_method()
+            {
+                var context = MockHelper.CreateMockObjectContext<int>();
+                var commitFailureHandlerMock = CreateCommitFailureHandlerMock();
+                commitFailureHandlerMock.Object.Initialize(context);
+                using (var handler = commitFailureHandlerMock.Object)
+                {
+                    handler.ClearTransactionHistory();
+                    commitFailureHandlerMock.Protected().Verify("PruneTransactionHistory", Times.Once(), true);
+                }
+            }
+        }
+
+#if !NET40
+        public class ClearTransactionHistoryAsync : TestBase
+        {
+            [Fact]
+            public void Delegates_to_protected_method()
+            {
+                var context = MockHelper.CreateMockObjectContext<int>();
+                var commitFailureHandlerMock = CreateCommitFailureHandlerMock();
+                commitFailureHandlerMock.Object.Initialize(context);
+                commitFailureHandlerMock.Protected()
+                    .Setup<Task>("PruneTransactionHistoryAsync", ItExpr.IsAny<bool>(), ItExpr.IsAny<CancellationToken>())
+                    .Returns(() => Task.FromResult(true));
+                using (var handler = commitFailureHandlerMock.Object)
+                {
+                    handler.ClearTransactionHistoryAsync().Wait();
+                    commitFailureHandlerMock.Protected()
+                        .Verify<Task>("PruneTransactionHistoryAsync", Times.Once(), true, CancellationToken.None);
+                }
+            }
+
+            [Fact]
+            public void Delegates_to_protected_method_with_CancelationToken()
+            {
+                var context = MockHelper.CreateMockObjectContext<int>();
+                var commitFailureHandlerMock = CreateCommitFailureHandlerMock();
+                commitFailureHandlerMock.Object.Initialize(context);
+                commitFailureHandlerMock.Protected()
+                    .Setup<Task>("PruneTransactionHistoryAsync", ItExpr.IsAny<bool>(), ItExpr.IsAny<CancellationToken>())
+                    .Returns(() => Task.FromResult(true));
+                using (var handler = commitFailureHandlerMock.Object)
+                {
+                    var token = new CancellationToken();
+                    handler.ClearTransactionHistoryAsync(token).Wait();
+                    commitFailureHandlerMock.Protected().Verify<Task>("PruneTransactionHistoryAsync", Times.Once(), true, token);
                 }
             }
         }
@@ -337,6 +392,21 @@ namespace System.Data.Entity.Infrastructure.Transactions
                 .Returns(GenericProviderFactory<DbProviderFactory>.Instance);
 
             return connectionMock.Object;
+        }
+
+        private static Mock<CommitFailureHandler> CreateCommitFailureHandlerMock()
+        {
+            Func<DbConnection, TransactionContext> transactionContextFactory =
+                c =>
+                {
+                    var transactionContextMock = new Mock<TransactionContext>(c) { CallBase = true };
+                    var transactionRowSet = new InMemoryDbSet<TransactionRow>();
+                    transactionContextMock.Setup(m => m.Transactions).Returns(transactionRowSet);
+                    return transactionContextMock.Object;
+                };
+            var handlerMock = new Mock<CommitFailureHandler>(transactionContextFactory) { CallBase = true };
+            handlerMock.Protected().Setup("PruneTransactionHistory", ItExpr.IsAny<bool>()).Callback(() => { });
+            return handlerMock;
         }
     }
 }

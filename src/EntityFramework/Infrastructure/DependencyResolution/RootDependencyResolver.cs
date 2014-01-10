@@ -57,8 +57,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
             _resolvers.Add(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
             _resolvers.Add(new SingletonDependencyResolver<Func<DbContext, Action<string>, DatabaseLogFormatter>>((c, w) => new DatabaseLogFormatter(c, w)));
-            _resolvers.Add(new SingletonDependencyResolver<Func<DbConnection, TransactionContext>>(c => new TransactionContext(c), k => k is StoreKey));
-            _resolvers.Add(new SingletonDependencyResolver<Func<TransactionHandler>>(() => new DefaultTransactionHandler(), k => k is StoreKey));
+            _resolvers.Add(new SingletonDependencyResolver<Func<TransactionHandler>>(() => new DefaultTransactionHandler(), k => k is ExecutionStrategyKey));
 
 #if NET40
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryResolver>(new Net40DefaultDbProviderFactoryResolver()));

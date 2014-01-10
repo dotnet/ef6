@@ -1751,7 +1751,7 @@ namespace System.Data.Entity.Core.Objects
                     DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(storeMetadata.ProviderFactory).Name;
 
                 var transactionHandlerFactory = DbConfiguration.DependencyResolver.GetService<Func<TransactionHandler>>(
-                    new StoreKey(providerInvariantName, Connection.DataSource));
+                    new ExecutionStrategyKey(providerInvariantName, Connection.DataSource));
 
                 if (transactionHandlerFactory != null)
                 {

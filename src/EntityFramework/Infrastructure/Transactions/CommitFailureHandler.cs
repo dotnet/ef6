@@ -5,11 +5,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Utilities;
@@ -22,11 +19,12 @@ namespace System.Data.Entity.Infrastructure
     /// <summary>
     /// A transaction handler that allows to gracefully recover from connection failures
     /// during transaction commit by storing transaction tracing information in the database.
-    /// It needs to be registered by using <see cref="DbConfiguration.SetTransactionHandler(System.Func{TransactionHandler})" />.
+    /// It needs to be registered by using <see cref="DbConfiguration.SetDefaultTransactionHandler" />.
     /// </summary>
     /// <remarks>
-    /// This transaction handler uses <see cref="TransactionContext"/> that can be changed using
-    /// <see cref="DbConfiguration.SetTransactionContext(System.Func{DbConnection, TransactionContext})" />.
+    /// This transaction handler uses <see cref="TransactionContext"/> to store the transaction information
+    /// the schema used can be configured by creating a class derived from <see cref="TransactionContext"/>
+    /// that overrides <see cref="DbContext.OnModelCreating"/> and passing it to the constructor of this class.
     /// </remarks>
     public class CommitFailureHandler : TransactionHandler
     {
@@ -34,6 +32,33 @@ namespace System.Data.Entity.Infrastructure
         private readonly Dictionary<DbTransaction, TransactionRow> _transactions = new Dictionary<DbTransaction, TransactionRow>();
 
         private readonly List<TransactionRow> _rowsToDelete = new List<TransactionRow>();
+
+        private readonly Func<DbConnection, TransactionContext> _transactionContextFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommitFailureHandler"/> class using the default <see cref="TransactionContext"/>.
+        /// </summary>
+        /// <remarks>
+        /// One of the Initialize methods needs to be called before this instance can be used.
+        /// </remarks>
+        public CommitFailureHandler()
+            : this(c => new TransactionContext(c))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommitFailureHandler"/> class.
+        /// </summary>
+        /// <param name="transactionContextFactory">The transaction context factory.</param>
+        /// <remarks>
+        /// One of the Initialize methods needs to be called before this instance can be used.
+        /// </remarks>
+        public CommitFailureHandler(Func<DbConnection, TransactionContext> transactionContextFactory)
+        {
+            Check.NotNull(transactionContextFactory, "transactionContextFactory");
+
+            _transactionContextFactory = transactionContextFactory;
+        }
 
         /// <summary>
         /// Gets the transaction context.
@@ -47,11 +72,9 @@ namespace System.Data.Entity.Infrastructure
         public override void Initialize(ObjectContext context)
         {
             base.Initialize(context);
-
-            var storeMetadata = (StoreItemCollection)context.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
             var connection = ((EntityConnection)ObjectContext.Connection).StoreConnection;
 
-            Initialize(connection, storeMetadata.ProviderFactory);
+            Initialize(connection);
         }
 
         /// <inheritdoc/>
@@ -59,22 +82,12 @@ namespace System.Data.Entity.Infrastructure
         {
             base.Initialize(context, connection);
 
-            var providerFactory = DbProviderServices.GetProviderFactory(connection);
-
-            Initialize(connection, providerFactory);
+            Initialize(connection);
         }
 
-        private void Initialize(DbConnection connection, DbProviderFactory providerFactory)
+        private void Initialize(DbConnection connection)
         {
-            var providerInvariantName =
-                DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(providerFactory).Name;
-
-            var dataSource = DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext());
-
-            var transactionContextFactory = DbConfiguration.DependencyResolver.GetService<Func<DbConnection, TransactionContext>>(
-                new StoreKey(providerInvariantName, dataSource));
-
-            TransactionContext = transactionContextFactory(connection);
+            TransactionContext = _transactionContextFactory(connection);
             if (TransactionContext != null)
             {
                 TransactionContext.Configuration.LazyLoadingEnabled = false;
@@ -100,7 +113,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 if (_rowsToDelete.Any())
                 {
-                    PruneTransactionRows(force: true);
+                    PruneTransactionHistory(force: true);
                 }
                 TransactionContext.Dispose();
             }
@@ -230,7 +243,7 @@ namespace System.Data.Entity.Infrastructure
                     // The transaction id is still in the database, so the commit succeeded
                     interceptionContext.Exception = null;
 
-                    PruneTransactionRows(transactionRow);
+                    PruneTransactionHistory(transactionRow);
                 }
                 else
                 {
@@ -239,7 +252,7 @@ namespace System.Data.Entity.Infrastructure
             }
             else
             {
-                PruneTransactionRows(transactionRow);
+                PruneTransactionHistory(transactionRow);
             }
         }
 
@@ -275,6 +288,53 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
+        /// Removes all the transaction history.
+        /// </summary>
+        /// <remarks>
+        /// This method should only be invoked when there are no active transactions to remove any leftover history
+        /// that was not deleted due to catastrophic failures
+        /// </remarks>
+        public virtual void ClearTransactionHistory()
+        {
+            foreach (var transactionRow in TransactionContext.Transactions)
+            {
+                MarkTransactionForPruning(transactionRow);
+            }
+            PruneTransactionHistory(force: true);
+        }
+
+#if !NET40
+        /// <summary>
+        /// Asynchronously removes all the transaction history.
+        /// </summary>
+        /// <remarks>
+        /// This method should only be invoked when there are no active transactions to remove any leftover history
+        /// that was not deleted due to catastrophic failures
+        /// </remarks>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public Task ClearTransactionHistoryAsync()
+        {
+            return ClearTransactionHistoryAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Asynchronously removes all the transaction history.
+        /// </summary>
+        /// <remarks>
+        /// This method should only be invoked when there are no active transactions to remove any leftover history
+        /// that was not deleted due to catastrophic failures
+        /// </remarks>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public virtual async Task ClearTransactionHistoryAsync(CancellationToken cancellationToken)
+        {
+            await TransactionContext.Transactions.ForEachAsync(MarkTransactionForPruning, cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
+            await PruneTransactionHistoryAsync( /*force:*/ true, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+        }
+#endif
+
+        /// <summary>
         /// Adds the specified transaction to the list of transactions that can be removed from the database
         /// </summary>
         /// <param name="transaction">The transaction to be removed from the database.</param>
@@ -282,15 +342,18 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(transaction, "transaction");
 
-            _rowsToDelete.Add(transaction);
+            if (!_rowsToDelete.Contains(transaction))
+            {
+                _rowsToDelete.Add(transaction);
+            }
         }
 
         /// <summary>
         /// Removes the transactions marked for deletion.
         /// </summary>
-        public void PruneTransactionRows()
+        public void PruneTransactionHistory()
         {
-            PruneTransactionRows(force: true);
+            PruneTransactionHistory(force: true);
         }
 
 #if !NET40
@@ -298,9 +361,9 @@ namespace System.Data.Entity.Infrastructure
         /// Asynchronously removes the transactions marked for deletion.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public Task PruneTransactionRowsAsync()
+        public Task PruneTransactionHistoryAsync()
         {
-            return PruneTransactionRowsAsync( /*force:*/ true, CancellationToken.None);
+            return PruneTransactionHistoryAsync( /*force:*/ true, CancellationToken.None);
         }
 
         /// <summary>
@@ -308,9 +371,9 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public Task PruneTransactionRowsAsync(CancellationToken cancellationToken)
+        public Task PruneTransactionHistoryAsync(CancellationToken cancellationToken)
         {
-            return PruneTransactionRowsAsync( /*force:*/ true, cancellationToken);
+            return PruneTransactionHistoryAsync( /*force:*/ true, cancellationToken);
         }
 #endif
 
@@ -320,7 +383,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="force">
         /// if set to <c>true</c> will remove all the old transactions even if their number does not exceed <see cref="PruningLimit"/>.
         /// </param>
-        protected virtual void PruneTransactionRows(bool force)
+        protected virtual void PruneTransactionHistory(bool force)
         {
             if (force || _rowsToDelete.Count > PruningLimit)
             {
@@ -350,7 +413,7 @@ namespace System.Data.Entity.Infrastructure
         /// </param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual async Task PruneTransactionRowsAsync(bool force, CancellationToken cancellationToken)
+        protected virtual async Task PruneTransactionHistoryAsync(bool force, CancellationToken cancellationToken)
         {
             if (force || _rowsToDelete.Count > PruningLimit)
             {
@@ -372,10 +435,36 @@ namespace System.Data.Entity.Infrastructure
         }
 #endif
 
-        private void PruneTransactionRows(TransactionRow transaction)
+        private void PruneTransactionHistory(TransactionRow transaction)
         {
             MarkTransactionForPruning(transaction);
-            PruneTransactionRows(force: false);
+            PruneTransactionHistory(force: false);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="CommitFailureHandler"/> associated with the <paramref name="context"/> if there is one;
+        /// otherwise returns <c>null</c>.
+        /// </summary>
+        /// <param name="context">The context</param>
+        /// <returns>The associated <see cref="CommitFailureHandler"/>.</returns>
+        public static CommitFailureHandler FromContext(DbContext context)
+        {
+            Check.NotNull(context, "context");
+
+            return FromContext(((IObjectContextAdapter)context).ObjectContext);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="CommitFailureHandler"/> associated with the <paramref name="context"/> if there is one;
+        /// otherwise returns <c>null</c>.
+        /// </summary>
+        /// <param name="context">The context</param>
+        /// <returns>The associated <see cref="CommitFailureHandler"/>.</returns>
+        public static CommitFailureHandler FromContext(ObjectContext context)
+        {
+            Check.NotNull(context, "context");
+
+            return context.TransactionHandler as CommitFailureHandler;
         }
     }
 }

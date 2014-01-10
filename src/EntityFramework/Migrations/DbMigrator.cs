@@ -976,7 +976,7 @@ namespace System.Data.Entity.Migrations
                     var dataSource = DbInterception.Dispatch.Connection.GetDataSource(connection, interceptionContext);
 
                     var transactionHandlerFactory = DbConfiguration.DependencyResolver.GetService<Func<TransactionHandler>>(
-                        new StoreKey(providerInvariantName, dataSource));
+                        new ExecutionStrategyKey(providerInvariantName, dataSource));
 
                     if (transactionHandlerFactory != null)
                     {

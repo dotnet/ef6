@@ -290,8 +290,7 @@ namespace System.Data.Entity
         /// a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="transactionHandlerFactory"> A function that returns a new instance of a transaction handler. </param>
-        protected internal void SetTransactionHandler(
-             Func<TransactionHandler> transactionHandlerFactory)
+        protected internal void SetDefaultTransactionHandler(Func<TransactionHandler> transactionHandlerFactory)
         {
             Check.NotNull(transactionHandlerFactory, "transactionHandlerFactory");
 
@@ -310,14 +309,14 @@ namespace System.Data.Entity
         /// <see cref="TransactionHandler" />. This means that, if desired, the same functionality can be achieved using
         /// a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
-        /// <param name="transactionHandlerFactory"> A function that returns a new instance of a transaction handler. </param>
         /// <param name="providerInvariantName">
         /// The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this transaction handler will be used.
         /// </param>
-        protected internal void SetTransactionHandler(
-             Func<TransactionHandler> transactionHandlerFactory, string providerInvariantName)
+        /// <param name="transactionHandlerFactory"> A function that returns a new instance of a transaction handler. </param>
+        protected internal void SetTransactionHandler(string providerInvariantName, Func<TransactionHandler> transactionHandlerFactory)
         {
             Check.NotNull(transactionHandlerFactory, "transactionHandlerFactory");
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
 
             _internalConfiguration.CheckNotLocked("SetTransactionHandler");
             _internalConfiguration.AddDependencyResolver(
@@ -335,91 +334,20 @@ namespace System.Data.Entity
         /// <see cref="TransactionHandler" />. This means that, if desired, the same functionality can be achieved using
         /// a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
-        /// <param name="transactionHandlerFactory"> A function that returns a new instance of a transaction handler. </param>
         /// <param name="providerInvariantName">
         /// The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this transaction handler will be used.
         /// </param>
+        /// <param name="transactionHandlerFactory"> A function that returns a new instance of a transaction handler. </param>
         /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
-        protected internal void SetTransactionHandler(
-             Func<TransactionHandler> transactionHandlerFactory, string providerInvariantName, string serverName)
+        protected internal void SetTransactionHandler(string providerInvariantName, Func<TransactionHandler> transactionHandlerFactory, string serverName)
         {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(transactionHandlerFactory, "transactionHandlerFactory");
+            Check.NotEmpty(serverName, "serverName");
 
             _internalConfiguration.CheckNotLocked("SetTransactionHandler");
             _internalConfiguration.AddDependencyResolver(
                 new TransactionHandlerResolver(transactionHandlerFactory, providerInvariantName, serverName));
-        }
-        /// <summary>
-        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register a
-        /// <see cref="TransactionContext" /> for use with the provider represented by the given invariant name and
-        /// for a given server name.
-        /// </summary>
-        /// <remarks>
-        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
-        /// Internally it works in the same way as using <see cref="AddDependencyResolver"/> to add an appropriate resolver for
-        /// <see cref="TransactionContext" />. This means that, if desired, the same functionality can be achieved using
-        /// a custom resolver or a resolver backed by an Inversion-of-Control container.
-        /// </remarks>
-        /// <param name="transactionContextFactory"> A function that returns a new instance of a transaction context. </param>
-        protected internal void SetTransactionContext(
-             Func<DbConnection, TransactionContext> transactionContextFactory)
-        {
-            Check.NotNull(transactionContextFactory, "transactionContextFactory");
-
-            _internalConfiguration.CheckNotLocked("SetTransactionContext");
-            _internalConfiguration.AddDependencyResolver(
-                new TransactionContextResolver(transactionContextFactory, providerInvariantName: null, serverName: null));
-        }
-
-        /// <summary>
-        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register a
-        /// <see cref="TransactionContext" /> for use with the provider represented by the given invariant name and
-        /// for a given server name.
-        /// </summary>
-        /// <remarks>
-        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
-        /// Internally it works in the same way as using <see cref="AddDependencyResolver"/> to add an appropriate resolver for
-        /// <see cref="TransactionContext" />. This means that, if desired, the same functionality can be achieved using
-        /// a custom resolver or a resolver backed by an Inversion-of-Control container.
-        /// </remarks>
-        /// <param name="transactionContextFactory"> A function that returns a new instance of a transaction context. </param>
-        /// <param name="providerInvariantName">
-        /// The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this transaction context will be used.
-        /// </param>
-        protected internal void SetTransactionContext(
-             Func<DbConnection, TransactionContext> transactionContextFactory, string providerInvariantName)
-        {
-            Check.NotNull(transactionContextFactory, "transactionContextFactory");
-
-            _internalConfiguration.CheckNotLocked("SetTransactionContext");
-            _internalConfiguration.AddDependencyResolver(
-                new TransactionContextResolver(transactionContextFactory, providerInvariantName, serverName: null));
-        }
-
-        /// <summary>
-        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register a
-        /// <see cref="TransactionContext" /> for use with the provider represented by the given invariant name and
-        /// for a given server name.
-        /// </summary>
-        /// <remarks>
-        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
-        /// Internally it works in the same way as using <see cref="AddDependencyResolver"/> to add an appropriate resolver for
-        /// <see cref="TransactionContext" />. This means that, if desired, the same functionality can be achieved using
-        /// a custom resolver or a resolver backed by an Inversion-of-Control container.
-        /// </remarks>
-        /// <param name="transactionContextFactory"> A function that returns a new instance of a transaction context. </param>
-        /// <param name="providerInvariantName">
-        /// The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this transaction context will be used.
-        /// </param>
-        /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
-        protected internal void SetTransactionContext(
-             Func<DbConnection, TransactionContext> transactionContextFactory, string providerInvariantName, string serverName)
-        {
-            Check.NotNull(transactionContextFactory, "transactionContextFactory");
-
-            _internalConfiguration.CheckNotLocked("SetTransactionContext");
-            _internalConfiguration.AddDependencyResolver(
-                new TransactionContextResolver(transactionContextFactory, providerInvariantName, serverName));
         }
 
         /// <summary>

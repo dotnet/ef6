@@ -13,7 +13,8 @@ namespace System.Data.Entity.Infrastructure
 
     /// <summary>
     /// The base class for interceptors that handle the transaction operations. Derived classes can be registered using
-    /// <see cref="DbConfiguration.SetTransactionHandler(System.Func{TransactionHandler})" />.
+    /// <see cref="DbConfiguration.SetDefaultTransactionHandler" /> or
+    /// <see cref="DbConfiguration.SetTransactionHandler(string,System.Func{System.Data.Entity.Infrastructure.TransactionHandler},string)" />.
     /// </summary>
     public abstract class TransactionHandler : IDbTransactionInterceptor, IDbConnectionInterceptor, IDisposable
     {

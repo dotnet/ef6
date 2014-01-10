@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.SqlClient;
     using System.Linq;
     using System.Linq.Expressions;
+    using Moq.Protected;
 #if !NET40
     using System.Threading;
     using System.Threading.Tasks;
@@ -107,6 +108,9 @@ namespace System.Data.Entity.Core.Objects
             {
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Setup(m => m.DataSource).Returns("fakeDb");
+                dbConnectionMock.Setup(m => m.ConnectionString).Returns("Data Source=fakeDb");
+                dbConnectionMock.Protected().SetupGet<DbProviderFactory>("DbProviderFactory")
+                    .Returns(GenericProviderFactory<DbProviderFactory>.Instance);
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
                 entityConnection = entityConnectionMock.Object;

@@ -301,7 +301,6 @@
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
     <Compile Include="IDbAsyncEnumerableExtensionsTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolverTests.cs" />
-    <Compile Include="Infrastructure\DependencyResolution\TransactionContextResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolverTests.cs" />
     <Compile Include="Infrastructure\Interception\DatabaseLoggerTests.cs" />
     <Compile Include="Infrastructure\Interception\DbTransactionDispatcherTests.cs" />
@@ -309,7 +308,6 @@
     <Compile Include="Infrastructure\Interception\DbConnectionPropertyInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\Interception\DbTransactionInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\Interception\DbConnectionInterceptionContextTests.cs" />
-    <Compile Include="Infrastructure\StoreKeyTests.cs" />
     <Compile Include="Infrastructure\Interception\BeginTransactionInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\Interception\CancelableDbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\Interception\DbCommandDispatcherTests.cs" />

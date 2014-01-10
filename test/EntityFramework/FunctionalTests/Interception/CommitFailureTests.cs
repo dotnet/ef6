@@ -10,7 +10,6 @@ namespace System.Data.Entity.Interception
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
-    using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Linq;
     using Moq;
@@ -168,6 +167,9 @@ namespace System.Data.Entity.Interception
         [Fact]
         public void TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail()
         {
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
+
             TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_with_custom_implementation(
                 context => context.SaveChanges());
         }
@@ -176,6 +178,9 @@ namespace System.Data.Entity.Interception
         [Fact]
         public void TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_async()
         {
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
+
             TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_with_custom_implementation(
                 context => context.SaveChangesAsync().Wait());
         }
@@ -184,8 +189,8 @@ namespace System.Data.Entity.Interception
         [Fact]
         public void TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_with_custom_TransactionContext()
         {
-            MutableResolver.AddResolver<Func<DbConnection, TransactionContext>>(
-                new TransactionContextResolver(c => new MyTransactionContext(c), null, null));
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(c => new MyTransactionContext(c)), null, null));
 
             TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_with_custom_implementation(
                 context =>
@@ -223,9 +228,6 @@ namespace System.Data.Entity.Interception
         {
             var failingTransactionInterceptorMock = new Mock<FailingTransactionInterceptor> { CallBase = true };
             DbInterception.Add(failingTransactionInterceptorMock.Object);
-
-            MutableResolver.AddResolver<Func<TransactionHandler>>(
-                new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
 
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
                 key => (Func<IDbExecutionStrategy>)(() => new SqlAzureExecutionStrategy()));
@@ -335,8 +337,8 @@ namespace System.Data.Entity.Interception
                     Assert.Equal(1, context.Blogs.Count());
                 }
 
-                MutableResolver.AddResolver<Func<DbConnection, TransactionContext>>(
-                    new TransactionContextResolver(c => new TransactionContextNoInit(c), null, null));
+                MutableResolver.AddResolver<Func<TransactionHandler>>(
+                    new TransactionHandlerResolver(() => new CommitFailureHandler(c => new TransactionContextNoInit(c)), null, null));
 
                 using (var context = new BlogContextCommit())
                 {
@@ -391,6 +393,33 @@ namespace System.Data.Entity.Interception
             MutableResolver.AddResolver<DbProviderFactory>(mockDbProviderFactoryResolver.Object);
 
             BuildDatabaseInitializationScript_can_be_used_to_initialize_the_database();
+        }
+
+        public void FromContext_returns_the_current_handler()
+        {
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
+
+            try
+            {
+                using (var context = new BlogContextCommit())
+                {
+                    context.Database.Delete();
+                    Assert.Null(CommitFailureHandler.FromContext(context));
+                    Assert.Null(CommitFailureHandler.FromContext(((IObjectContextAdapter)context).ObjectContext));
+
+                    // This will connect to the database and build the CommitFailureHandler
+                    Assert.Equal(1, context.Blogs.Count());
+
+                    var commitFailureHandler = CommitFailureHandler.FromContext(((IObjectContextAdapter)context).ObjectContext);
+                    Assert.IsType<CommitFailureHandler>(commitFailureHandler);
+                    Assert.Same(commitFailureHandler, CommitFailureHandler.FromContext(context));
+                }
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
         }
 
         public class TransactionContextNoInit : TransactionContext
