@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Objects
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using ConcurrencyModel;
     using System.Data.Entity.Infrastructure;
@@ -495,6 +494,138 @@ namespace System.Data.Entity.Objects
         {
             [DatabaseGenerated(DatabaseGeneratedOption.None)]
             public long Id { get; set; }
+        }
+
+        [Fact] // CodePlex 683
+        public void Accessing_FK_in_change_tracking_proxy_does_not_cause_lazy_loading_of_relationship()
+        {
+            using (var context = new Context683())
+            {
+                var country = context.Countries.Find(1);
+                
+                Assert.Equal(1, context.Countries.Local.Count);
+                Assert.Equal(0, context.Citizens.Local.Count);
+
+                context.Citizens.Add(new Citizen { Id = 10, CountryId = country.Id, });
+
+                Assert.Equal(1, context.Countries.Local.Count);
+                Assert.Equal(1, context.Citizens.Local.Count);
+            }
+        }
+
+        public class Country
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual int Id { get; set; }
+            
+            public virtual ICollection<Citizen> Countries { get; set; }
+        }
+
+        public class Citizen
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual int Id { get; set; }
+            
+            public virtual int CountryId { get; set; }
+        }
+
+        public class Context683 : DbContext
+        {
+            static Context683()
+            {
+                Database.SetInitializer(new Initializer683());
+            }
+
+            public DbSet<Country> Countries { get; set; }
+            public DbSet<Citizen> Citizens { get; set; }
+        }
+
+        public class Initializer683 : DropCreateDatabaseAlways<Context683>
+        {
+            protected override void Seed(Context683 context)
+            {
+                context.Countries.Add(new Country { Id = 1 });
+                context.Countries.Add(new Country { Id = 2 });
+
+                context.Citizens.Add(new Citizen { Id = 1, CountryId = 1 });
+                context.Citizens.Add(new Citizen { Id = 2, CountryId = 2 });
+                context.Citizens.Add(new Citizen { Id = 3, CountryId = 1 });
+                context.Citizens.Add(new Citizen { Id = 4, CountryId = 2 });
+            }
+        }
+
+        [Fact] // CodePlex 1874
+        public void Accessing_many_to_many_relationship_in_change_tracking_proxy_for_insertion_does_not_lazy_load()
+        {
+            using (var context = new Context1874())
+            {
+                var trigger = context.Triggers.Find(1);
+
+                Assert.Equal(0, context.Devices.Local.Count);
+                Assert.Equal(1, context.Triggers.Local.Count);
+
+                context.Devices.Add(new Device { Id = 10, Triggers = new List<Trigger> { trigger }, });
+
+                Assert.Equal(1, context.Devices.Local.Count);
+                Assert.Equal(1, context.Triggers.Local.Count);
+            }
+        }
+
+        public class Device
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual int Id { get; set; }
+
+            public virtual ICollection<Trigger> Triggers { get; set; }
+        }
+
+        public class Trigger
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual int Id { get; set; }
+
+            public virtual ICollection<Device> Devices { get; set; }
+        }
+
+        public class Context1874 : DbContext
+        {
+            static Context1874()
+            {
+                Database.SetInitializer(new Initializer1874());
+            }
+
+            public DbSet<Device> Devices { get; set; }
+            public DbSet<Trigger> Triggers { get; set; }
+        }
+
+        public class Initializer1874 : DropCreateDatabaseAlways<Context1874>
+        {
+            protected override void Seed(Context1874 context)
+            {
+                var devices = context.Devices.AddRange(
+                    new[]
+                    {
+                        new Device { Id = 1 },
+                        new Device { Id = 2 },
+                        new Device { Id = 3 }
+                    }).ToArray();
+
+                var triggers = context.Triggers.AddRange(
+                    new[]
+                    {
+                        new Trigger { Id = 1 },
+                        new Trigger { Id = 2 },
+                        new Trigger { Id = 3 }
+                    }).ToArray();
+
+                devices[0].Triggers = triggers.ToList();
+                devices[1].Triggers = triggers.ToList();
+                devices[2].Triggers = triggers.ToList();
+
+                triggers[0].Devices = devices.ToList();
+                triggers[1].Devices = devices.ToList();
+                triggers[2].Devices = devices.ToList();
+            }
         }
     }
 }

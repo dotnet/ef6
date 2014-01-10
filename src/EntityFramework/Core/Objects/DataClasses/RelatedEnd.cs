@@ -2779,5 +2779,26 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         #endregion
+
+        internal bool DisableLazyLoading()
+        {
+            if (_context == null)
+            {
+                return false;
+            }
+
+            var loadingState = _context.ContextOptions.LazyLoadingEnabled;
+            _context.ContextOptions.LazyLoadingEnabled = false;
+
+            return loadingState;
+        }
+
+        internal void ResetLazyLoading(bool state)
+        {
+            if (_context != null)
+            {
+                _context.ContextOptions.LazyLoadingEnabled = state;
+            }
+        }
     }
 }

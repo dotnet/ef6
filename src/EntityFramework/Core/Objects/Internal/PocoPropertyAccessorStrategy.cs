@@ -56,6 +56,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     var factory = new EntityProxyFactory();
                     relatedEnd.TargetAccessor.ValueGetter = factory.CreateBaseGetter(propertyInfo.DeclaringType, propertyInfo);
                 }
+                var loadingState = relatedEnd.DisableLazyLoading();
                 try
                 {
                     navPropValue = relatedEnd.TargetAccessor.ValueGetter(_entity);
@@ -65,6 +66,10 @@ namespace System.Data.Entity.Core.Objects.Internal
                     throw new EntityException(
                         Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(
                             relatedEnd.TargetAccessor.PropertyName, _entity.GetType().FullName), ex);
+                }
+                finally
+                {
+                    relatedEnd.ResetLazyLoading(loadingState);
                 }
             }
             return navPropValue;
