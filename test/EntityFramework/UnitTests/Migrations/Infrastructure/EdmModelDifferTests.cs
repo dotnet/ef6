@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
@@ -3263,6 +3264,51 @@ namespace System.Data.Entity.Migrations.Infrastructure
             entityType.AddAnnotation(XmlConstants.IndexAnnotationWithPrefix, new IndexAnnotation(new IndexAttribute()));
 
             Assert.Equal(2, EdmModelDiffer.GetAnnotations(entityType).Count);
+        }
+
+        [Fact] // CodePlex 1901
+        public void BuildColumnModel_handles_unbounded_values()
+        {
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String);
+            var typeUsage =
+                TypeUsage.Create(
+                    primitiveType,
+                    new[]
+                    {
+                        CreateIntFacet(DbProviderManifest.MaxLengthFacetName, EdmConstants.Unbounded.Instance),
+                        CreateByteFacet(DbProviderManifest.PrecisionFacetName, EdmConstants.Unbounded.Instance),
+                        CreateByteFacet(DbProviderManifest.ScaleFacetName, EdmConstants.Unbounded.Instance),
+                        CreateBoolFacet(DbProviderManifest.NullableFacetName, true),
+                    });
+
+            var property = new EdmProperty("P", typeUsage);
+
+            var model = EdmModelDiffer.BuildColumnModel(property, new TypeUsage(), typeUsage, null);
+
+            Assert.Null(model.MaxLength);
+            Assert.Null(model.Precision);
+            Assert.Null(model.Scale);
+        }
+
+        private static Facet CreateIntFacet(string facetName, object value)
+        {
+            return Facet.Create(
+                new FacetDescription(facetName, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), 0, 1, 0, false, null),
+                value);
+        }
+
+        private static Facet CreateByteFacet(string facetName, object value)
+        {
+            return Facet.Create(
+                new FacetDescription(facetName, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Byte), 0, 1, (byte)0, false, null),
+                value);
+        }
+
+        private static Facet CreateBoolFacet(string facetName, object value)
+        {
+            return Facet.Create(
+                new FacetDescription(facetName, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Boolean), 0, 1, 0, true, null),
+                value);
         }
 
         #endregion

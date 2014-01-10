@@ -1986,53 +1986,65 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(property);
             DebugCheck.NotNull(modelMetadata);
 
-            var conceptualTypeUsage
-                = modelMetadata.ProviderManifest.GetEdmType(property.TypeUsage);
+            var conceptualTypeUsage = modelMetadata.ProviderManifest.GetEdmType(property.TypeUsage);
+            var defaultStoreTypeUsage = modelMetadata.ProviderManifest.GetStoreType(conceptualTypeUsage);
 
-            var defaultStoreTypeUsage
-                = modelMetadata.ProviderManifest.GetStoreType(conceptualTypeUsage);
+            return BuildColumnModel(property, conceptualTypeUsage, defaultStoreTypeUsage, annotations);
+        }
 
-            var column
-                = new ColumnModel(property.PrimitiveType.PrimitiveTypeKind, conceptualTypeUsage)
-                {
-                    Name 
-                        = property.Name,
-                    IsNullable 
-                        = !property.Nullable ? false : (bool?)null,
-                    StoreType
-                        = !property.TypeName.EqualsIgnoreCase(defaultStoreTypeUsage.EdmType.Name)
-                            ? property.TypeName
-                            : null,
-                    IsIdentity
-                        = property.IsStoreGeneratedIdentity
-                          && _validIdentityTypes.Contains(property.PrimitiveType.PrimitiveTypeKind),
-                    IsTimestamp
-                        = property.PrimitiveType.PrimitiveTypeKind == PrimitiveTypeKind.Binary
-                          && property.MaxLength == 8
-                          && property.IsStoreGeneratedComputed,
-                    IsUnicode
-                        = property.IsUnicode == false ? false : (bool?)null,
-                    IsFixedLength
-                        = property.IsFixedLength == true ? true : (bool?)null,
-                    Annotations 
-                        = annotations
-                };
+        public static ColumnModel BuildColumnModel(
+            EdmProperty property,
+            TypeUsage conceptualTypeUsage,
+            TypeUsage defaultStoreTypeUsage,
+            IDictionary<string, AnnotationPair> annotations)
+        {
+            DebugCheck.NotNull(property);
+            DebugCheck.NotNull(conceptualTypeUsage);
+            DebugCheck.NotNull(defaultStoreTypeUsage);
+
+            var column = new ColumnModel(property.PrimitiveType.PrimitiveTypeKind, conceptualTypeUsage)
+            {
+                Name
+                    = property.Name,
+                IsNullable
+                    = !property.Nullable ? false : (bool?)null,
+                StoreType
+                    = !property.TypeName.EqualsIgnoreCase(defaultStoreTypeUsage.EdmType.Name)
+                        ? property.TypeName
+                        : null,
+                IsIdentity
+                    = property.IsStoreGeneratedIdentity
+                      && _validIdentityTypes.Contains(property.PrimitiveType.PrimitiveTypeKind),
+                IsTimestamp
+                    = property.PrimitiveType.PrimitiveTypeKind == PrimitiveTypeKind.Binary
+                      && property.MaxLength == 8
+                      && property.IsStoreGeneratedComputed,
+                IsUnicode
+                    = property.IsUnicode == false ? false : (bool?)null,
+                IsFixedLength
+                    = property.IsFixedLength == true ? true : (bool?)null,
+                Annotations
+                    = annotations
+            };
 
             Facet facet;
 
             if (property.TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, true, out facet)
+                && !facet.IsUnbounded
                 && !facet.Description.IsConstant)
             {
                 column.MaxLength = (int?)facet.Value;
             }
 
             if (property.TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, true, out facet)
+                && !facet.IsUnbounded
                 && !facet.Description.IsConstant)
             {
                 column.Precision = (byte?)facet.Value;
             }
 
             if (property.TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, true, out facet)
+                && !facet.IsUnbounded
                 && !facet.Description.IsConstant)
             {
                 column.Scale = (byte?)facet.Value;
