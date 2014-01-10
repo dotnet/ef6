@@ -113,11 +113,20 @@
   </Target>
   
   <Target Name="RestoreLocalPackages">
-    <!-- Loop over all local packages (which can include the localized ones) exploding the packages -->
+    <!-- Loop over all local packages (which, on a nightly build, should include the localized ones
+         but exclude the dated ones) exploding the packages -->
     <ItemGroup>
+      <!-- Note: the construction of DatedLocalPackages assumes the date will be the
+                 only part after "$(EF6NuGetPackageVersion)-" in the package name -->
+      <DatedLocalPackages Include="$(PackagesInputDir)\EntityFramework.$(EF6NuGetPackageVersion)-*.nupkg" />
+      <DatedLocalPackages Include="$(PackagesInputDir)\EntityFramework.*.$(EF6NuGetPackageVersion)-*.nupkg" />
+
+      <!-- On a local build the symbols.nupkg files are in the same directory as the .nupkgs and must be excluded -->
       <LocalPackages Include="$(PackagesInputDir)\EntityFramework*.nupkg"
-                     Exclude="$(PackagesInputDir)\EntityFramework*.symbols.nupkg" />
+                     Exclude="$(PackagesInputDir)\EntityFramework*.symbols.nupkg;@(DatedLocalPackages)" />
     </ItemGroup>
+    
+    <Error Condition="'@(LocalPackages)' == ''" Text="LocalPackages is empty and must not be.  It should contain the list of non-dated, non-symbols EntityFramework .nupkg's from directory $(PackagesInputDir)" />
     <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
              Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
   </Target>
