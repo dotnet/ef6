@@ -192,22 +192,20 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
-                var someRandomThing = new Random();
-                mockSqlProvider.Setup(m => m.GetService(typeof(Random), null)).Returns(someRandomThing);
-
                 var resolvers = new ResolverChain();
                 mockConfiguration.Setup(m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>()))
                     .Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object).GetService<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(4));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
                 mockConfiguration.Verify(
-                    m => m.AddDefaultResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Once());
+                    m => m.AddDefaultResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Never());
+                mockConfiguration.Verify(
+                    m => m.SetDefaultProviderServices(mockSqlProvider.Object, SqlProviderServices.ProviderInvariantName), Times.Once());
 
                 Assert.Equal("Robot.Rock", resolvers.GetService<string>());
-                Assert.Same(someRandomThing, resolvers.GetService<Random>());
-                Assert.Same(mockSqlProvider.Object, resolvers.GetService<DbProviderServices>("System.Data.SqlClient"));
+                Assert.Null(resolvers.GetService<DbProviderServices>("System.Data.SqlClient"));
             }
 
             [Fact]
@@ -544,22 +542,20 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
-                var someRandomThing = new Random();
-                mockSqlProvider.Setup(m => m.GetService(typeof(Random), null)).Returns(someRandomThing);
-
                 var resolvers = new ResolverChain();
                 mockConfiguration.Setup(m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>()))
                     .Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object).GetServices<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(4));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
                 mockConfiguration.Verify(
-                    m => m.AddDefaultResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Once());
+                    m => m.AddDefaultResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Never());
+                mockConfiguration.Verify(
+                    m => m.SetDefaultProviderServices(mockSqlProvider.Object, SqlProviderServices.ProviderInvariantName), Times.Once());
 
                 Assert.Equal("Robot.Rock", resolvers.GetService<string>());
-                Assert.Same(someRandomThing, resolvers.GetService<Random>());
-                Assert.Same(mockSqlProvider.Object, resolvers.GetService<DbProviderServices>("System.Data.SqlClient"));
+                Assert.Null(resolvers.GetService<DbProviderServices>("System.Data.SqlClient"));
             }
 
             [Fact]

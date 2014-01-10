@@ -221,15 +221,22 @@ namespace CmdLine
 
         public static void WriteLineColor(ConsoleColor color, string format, params object[] formatArgs)
         {
+            WriteLineColor(Console.WriteLine, Console.WriteLine, color, format, formatArgs);
+        }
+
+        public static void WriteLineColor(
+            Action<string> outputNoParams, Action<string, object[]> outputParams, 
+            ConsoleColor color, string format, params object[] formatArgs)
+        {
             var saveColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
             if (formatArgs.Length > 0)
             {
-                Console.WriteLine(format, formatArgs);
+                outputParams(format, formatArgs);
             }
             else
             {
-                Console.WriteLine(format);
+                outputNoParams(format);
             }
             Console.ForegroundColor = saveColor;
         }

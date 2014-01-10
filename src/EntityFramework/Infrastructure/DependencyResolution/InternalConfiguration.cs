@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
@@ -91,6 +92,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             // Default resolvers only kick in if nothing else before the root resolves the dependency.
             _rootResolver.AddDefaultResolver(resolver);
+        }
+
+        public virtual void SetDefaultProviderServices(DbProviderServices provider, string invariantName)
+        {
+            DebugCheck.NotNull(provider);
+            DebugCheck.NotEmpty(invariantName);
+
+            _rootResolver.SetDefaultProviderServices(provider, invariantName);
         }
 
         public virtual void RegisterSingleton<TService>(TService instance)

@@ -5,14 +5,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using System.IO;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -192,25 +189,32 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void The_root_resolver_resolves_from_default_resolvers_before_roots()
+            public void The_root_resolver_resolves_from_default_resolvers_then_default_provider_then_roots()
             {
-                var attributeProvider1 = new Mock<AttributeProvider>().Object;
-                var attributeProvider2 = new Mock<AttributeProvider>().Object;
+                var defaultService1 = new Mock<AttributeProvider>().Object;
+                var defaultService2 = new Mock<AttributeProvider>().Object;
+                var providerService = new Mock<AttributeProvider>().Object;
 
                 var mockDefaultResolver1 = new Mock<IDbDependencyResolver>();
-                mockDefaultResolver1.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider1);
+                mockDefaultResolver1.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(defaultService1);
                 var mockDefaultResolver2 = new Mock<IDbDependencyResolver>();
-                mockDefaultResolver2.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider2);
+                mockDefaultResolver2.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(defaultService2);
+
+                var mockProvider = new Mock<DbProviderServices>();
+                mockProvider.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(providerService);
 
                 var rootResolver = new RootDependencyResolver();
 
                 Assert.IsType<AttributeProvider>(rootResolver.GetService<AttributeProvider>());
 
+                rootResolver.SetDefaultProviderServices(mockProvider.Object, "My.Provider");
+                Assert.Same(providerService, rootResolver.GetService<AttributeProvider>());
+
                 rootResolver.AddDefaultResolver(mockDefaultResolver1.Object);
-                Assert.Same(attributeProvider1, rootResolver.GetService<AttributeProvider>());
+                Assert.Same(defaultService1, rootResolver.GetService<AttributeProvider>());
 
                 rootResolver.AddDefaultResolver(mockDefaultResolver2.Object);
-                Assert.Same(attributeProvider2, rootResolver.GetService<AttributeProvider>());
+                Assert.Same(defaultService2, rootResolver.GetService<AttributeProvider>());
             }
 
             /// <summary>

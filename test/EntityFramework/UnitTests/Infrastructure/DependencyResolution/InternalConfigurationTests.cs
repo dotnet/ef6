@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure.Interception;
     using Moq;
     using Xunit;
@@ -133,19 +134,23 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 mockRootResolver.Verify(m => m.AddDefaultResolver(resolver));
             }
+        }
 
+        public class SetDefaultProviderServices
+        {
             [Fact]
-            public void AddDefaultResolver_adds_a_resolver_to_the_app_config_chain_when_override_flag_is_used()
+            public void SetDefaultProviderServices_sets_the_default_provider_on_the_root()
             {
-                var mockAppConfigChain = new Mock<ResolverChain>();
-                var resolver = new Mock<IDbDependencyResolver>().Object;
+                var mockRootResolver = new Mock<RootDependencyResolver>();
+                var provider = new Mock<DbProviderServices>().Object;
 
                 new InternalConfiguration(
-                    mockAppConfigChain.Object, new Mock<ResolverChain>().Object,
-                    new RootDependencyResolver(),
-                    new Mock<AppConfigDependencyResolver>().Object).AddDependencyResolver(resolver, overrideConfigFile: true);
+                    new Mock<ResolverChain>().Object,
+                    new Mock<ResolverChain>().Object,
+                    mockRootResolver.Object,
+                    new Mock<AppConfigDependencyResolver>().Object).SetDefaultProviderServices(provider, "My.Provider");
 
-                mockAppConfigChain.Verify(m => m.Add(resolver));
+                mockRootResolver.Verify(m => m.SetDefaultProviderServices(provider, "My.Provider"));
             }
         }
 

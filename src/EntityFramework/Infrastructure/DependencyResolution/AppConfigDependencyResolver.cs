@@ -168,10 +168,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             if (provider != null)
             {
                 // This provider goes just above the root resolver so that any other provider registered in code
-                // still takes precedence.
-                _internalConfiguration.AddDefaultResolver(
-                    new SingletonDependencyResolver<DbProviderServices>(provider, "System.Data.SqlClient"));
-                _internalConfiguration.AddDefaultResolver(provider);
+                // still takes precedence, including any additional services registered by that provider.
+                _internalConfiguration.SetDefaultProviderServices(provider, "System.Data.SqlClient");
             }
         }
     }

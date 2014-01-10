@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
@@ -22,6 +23,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     // </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {
+        private readonly ResolverChain _defaultProviderResolvers = new ResolverChain();
         private readonly ResolverChain _defaultResolvers = new ResolverChain();
         private readonly ResolverChain _resolvers = new ResolverChain();
         private readonly DatabaseInitializerResolver _databaseInitializerResolver;
@@ -77,7 +79,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         // <inheritdoc />
         public virtual object GetService(Type type, object key)
         {
-            return _defaultResolvers.GetService(type, key) ?? _resolvers.GetService(type, key);
+            return _defaultResolvers.GetService(type, key) 
+                ?? _defaultProviderResolvers.GetService(type, key)
+                ?? _resolvers.GetService(type, key);
         }
 
         public virtual void AddDefaultResolver(IDbDependencyResolver resolver)
@@ -85,6 +89,15 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             DebugCheck.NotNull(resolver);
 
             _defaultResolvers.Add(resolver);
+        }
+
+        public virtual void SetDefaultProviderServices(DbProviderServices provider, string invariantName)
+        {
+            DebugCheck.NotNull(provider);
+            DebugCheck.NotEmpty(invariantName);
+
+            _defaultProviderResolvers.Add(new SingletonDependencyResolver<DbProviderServices>(provider, invariantName));
+            _defaultProviderResolvers.Add(provider);
         }
 
         public IEnumerable<object> GetServices(Type type, object key)
