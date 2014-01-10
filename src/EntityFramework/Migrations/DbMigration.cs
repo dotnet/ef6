@@ -2,16 +2,19 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Builders;
+    using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Base class for code-based migrations.
@@ -1320,6 +1323,34 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
+        /// Adds an operation to rename an index.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="table">
+        /// The name of the table that contains the index to be renamed. Schema name is optional, if no
+        /// schema is specified then dbo is assumed.
+        /// </param>
+        /// <param name="name"> The name of the index to be renamed. </param>
+        /// <param name="newName"> The new name for the index. </param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected internal void RenameIndex(
+            string table, string name, string newName, object anonymousArguments = null)
+        {
+            Check.NotEmpty(table, "table");
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(newName, "newName");
+
+            AddOperation(new RenameIndexOperation(table, name, newName, anonymousArguments));
+        }
+
+        /// <summary>
         /// Adds an operation to execute a SQL command.
         ///
         /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
@@ -1370,6 +1401,42 @@ namespace System.Data.Entity.Migrations
         internal void Reset()
         {
             _operations.Clear();
+        }
+
+        internal VersionedModel GetSourceModel()
+        {
+            return GetModel(mm => mm.Source);
+        }
+
+        internal VersionedModel GetTargetModel()
+        {
+            return GetModel(mm => mm.Target);
+        }
+
+        private VersionedModel GetModel(Func<IMigrationMetadata, string> modelAccessor)
+        {
+            var migrationMetadata = (IMigrationMetadata)this;
+
+            var modelData = modelAccessor(migrationMetadata);
+
+            if (string.IsNullOrWhiteSpace(modelData))
+            {
+                return null;
+            }
+
+            var generatedCodeAttribute
+                = GetType().GetCustomAttributes<GeneratedCodeAttribute>(inherit: false)
+                    .SingleOrDefault();
+
+            var version
+                = generatedCodeAttribute != null
+                  && !string.IsNullOrWhiteSpace(generatedCodeAttribute.Version)
+                    ? generatedCodeAttribute.Version
+                    : typeof(DbMigration).Assembly().GetInformationalVersion();
+
+            return new VersionedModel(
+                new ModelCompressor().Decompress(Convert.FromBase64String(modelData)),
+                version);
         }
 
         #region Hide object members

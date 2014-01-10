@@ -337,9 +337,11 @@
     <Compile Include="Internal\ConfigFile\InterceptorsCollection.cs" />
     <Compile Include="Internal\DatabaseExistenceState.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
+    <Compile Include="Migrations\Infrastructure\VersionedModel.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />
     <Compile Include="Migrations\Model\AlterTableOperation.cs" />
     <Compile Include="Migrations\Model\IAnnotationTarget.cs" />
+    <Compile Include="Migrations\Model\RenameIndexOperation.cs" />
     <Compile Include="Migrations\Model\UpdateDatabaseOperation.cs" />
     <Compile Include="Migrations\Model\MoveProcedureOperation.cs" />
     <Compile Include="Migrations\Model\RenameProcedureOperation.cs" />
@@ -371,6 +373,7 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHaving`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHaving.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHavingBase.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Edm\Db\ForeignKeyIndexConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\IConceptualModelConvention`.cs" />
     <Compile Include="ModelConfiguration\Conventions\IStoreModelConvention`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Sets\ConventionSet.cs" />

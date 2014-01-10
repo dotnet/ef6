@@ -970,12 +970,7 @@ namespace System.Data.Entity.Migrations
 
         protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
-            Assert.Equal(4, migrationOperations.Count());
-
-            var dropIndexOperation =
-                migrationOperations.OfType<DropIndexOperation>().SingleOrDefault(
-                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
-            Assert.NotNull(dropIndexOperation);
+            Assert.Equal(2, migrationOperations.Count());
 
             var dropForeignKeyOperation =
                 migrationOperations.OfType<DropForeignKeyOperation>().SingleOrDefault(
@@ -983,11 +978,6 @@ namespace System.Data.Entity.Migrations
                     o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(dropForeignKeyOperation);
-
-            var createIndexOperation =
-                migrationOperations.OfType<CreateIndexOperation>().SingleOrDefault(
-                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
-            Assert.NotNull(createIndexOperation);
 
             var addForeignKeyOperation =
                 migrationOperations.OfType<AddForeignKeyOperation>().SingleOrDefault(
@@ -1001,12 +991,7 @@ namespace System.Data.Entity.Migrations
 
         protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
-            Assert.Equal(4, migrationOperations.Count());
-
-            var dropIndexOperation =
-                migrationOperations.OfType<DropIndexOperation>().SingleOrDefault(
-                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
-            Assert.NotNull(dropIndexOperation);
+            Assert.Equal(2, migrationOperations.Count());
 
             var dropForeignKeyOperation =
                 migrationOperations.OfType<DropForeignKeyOperation>().SingleOrDefault(
@@ -1014,11 +999,6 @@ namespace System.Data.Entity.Migrations
                     o.PrincipalTable == "dbo.Orders" && o.DependentTable == "dbo.OrderLines" && o.DependentColumns.Count == 1
                     && o.DependentColumns.Single() == "OrderId");
             Assert.NotNull(dropForeignKeyOperation);
-
-            var createIndexOperation =
-                migrationOperations.OfType<CreateIndexOperation>().SingleOrDefault(
-                    o => o.Table == "dbo.OrderLines" && o.Columns.Count == 1 && o.Columns.Single() == "OrderId");
-            Assert.NotNull(createIndexOperation);
 
             var addForeignKeyOperation =
                 migrationOperations.OfType<AddForeignKeyOperation>().SingleOrDefault(
@@ -3695,19 +3675,19 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(2, operations.OfType<DropIndexOperation>().Count());
             Assert.Equal(5, operations.OfType<CreateIndexOperation>().Count());
 
-            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IdIndex");
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_Id");
             Assert.Equal("dbo.MigrationsStores", dropOperation.Table);
 
-            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "ProductIdIndex");
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_ProductId");
             Assert.Equal("dbo.MigrationsProducts", dropOperation.Table);
 
-            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "QuantityIndex");
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IX_Quantity");
             Assert.Equal("dbo.OrderLines", createOperation.Table);
             Assert.False(createOperation.IsClustered);
             Assert.False(createOperation.IsUnique);
             Assert.Equal(new List<string> { "Quantity" }, createOperation.Columns);
 
-            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "PriceIndex");
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IX_Price");
             Assert.Equal("dbo.OrderLines", createOperation.Table);
             Assert.False(createOperation.IsClustered);
             Assert.False(createOperation.IsUnique);
@@ -3720,13 +3700,13 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(new List<string> { "Sku" }, createOperation.Columns);
 
             createOperation = operations.OfType<CreateIndexOperation>()
-                .Single(o => o.Name == "IdIndex" && o.Table == "dbo.WithGuidKeys");
+                .Single(o => o.Name == "IX_Id" && o.Table == "dbo.WithGuidKeys");
             Assert.False(createOperation.IsClustered);
             Assert.False(createOperation.IsUnique);
             Assert.Equal(new List<string> { "Id" }, createOperation.Columns);
 
             createOperation = operations.OfType<CreateIndexOperation>()
-                .Single(o => o.Name == "IdIndex" && o.Table == "dbo.MigrationsStores");
+                .Single(o => o.Name == "IX_Id" && o.Table == "dbo.MigrationsStores");
             Assert.False(createOperation.IsClustered);
             Assert.True(createOperation.IsUnique);
             Assert.Equal(new List<string> { "Id" }, createOperation.Columns);
@@ -3740,28 +3720,28 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(5, operations.OfType<DropIndexOperation>().Count());
             Assert.Equal(2, operations.OfType<CreateIndexOperation>().Count());
 
-            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "QuantityIndex");
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_Quantity");
             Assert.Equal("dbo.OrderLines", dropOperation.Table);
 
-            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "PriceIndex");
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_Price");
             Assert.Equal("dbo.OrderLines", dropOperation.Table);
 
             dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "SkuedIndex");
             Assert.Equal("dbo.OrderLines", dropOperation.Table);
 
-            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IdIndex" && o.Table == "dbo.WithGuidKeys");
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_Id" && o.Table == "dbo.WithGuidKeys");
             Assert.Equal("dbo.WithGuidKeys", dropOperation.Table);
 
-            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IdIndex" && o.Table == "dbo.MigrationsStores");
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_Id" && o.Table == "dbo.MigrationsStores");
             Assert.Equal("dbo.MigrationsStores", dropOperation.Table);
 
-            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IdIndex");
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IX_Id");
             Assert.Equal("dbo.MigrationsStores", createOperation.Table);
             Assert.False(createOperation.IsClustered);
             Assert.False(createOperation.IsUnique);
             Assert.Equal(new List<string> { "Id" }, createOperation.Columns);
 
-            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "ProductIdIndex");
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IX_ProductId");
             Assert.Equal("dbo.MigrationsProducts", createOperation.Table);
             Assert.False(createOperation.IsClustered);
             Assert.False(createOperation.IsUnique);

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure.Annotations
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Xunit;
 
     public class IndexAnnotationSerializerTests
@@ -16,11 +17,11 @@ namespace System.Data.Entity.Infrastructure.Annotations
                 Serialize(new IndexAttribute()));
 
             Assert.Equal(
-                "{ Name: 'EekyBear' }",
+                "{ Name: EekyBear }",
                 Serialize(new IndexAttribute("EekyBear")));
 
             Assert.Equal(
-                "{ Name: 'EekyBear', Order: 7 }",
+                "{ Name: EekyBear, Order: 7 }",
                 Serialize(new IndexAttribute("EekyBear", 7)));
 
             Assert.Equal(
@@ -36,8 +37,50 @@ namespace System.Data.Entity.Infrastructure.Annotations
                 Serialize(new IndexAttribute { IsUnique = true }));
 
             Assert.Equal(
-                "{ Name: 'EekyBear', Order: 7, IsClustered: False, IsUnique: False }",
+                "{ Name: EekyBear, Order: 7, IsClustered: False, IsUnique: False }",
                 Serialize(new IndexAttribute("EekyBear", 7) { IsClustered = false, IsUnique = false }));
+        }
+
+        [Fact]
+        public void Can_roundtrip_index_names_having_special_characters()
+        {
+            Assert.Equal(
+                "{ Name: \"\\,'<>[]\\,'\\} }{ Name: \"\\,'<foo>[]\\,'\\} }",
+                Serialize(Deserialize("{Name:\"\\,'<>[]\\,'\\}}{Name:\"\\,'<foo>[]\\,'\\}}")));
+
+            Assert.Equal(
+                "{ Name: \"\\,'<>[]\\,'\\}, Order: 42 }{ Name: \"\\,'<foo>[]\\,'\\}, Order: 42 }",
+                Serialize(Deserialize("{Name:\"\\,'<>[]\\,'\\},Order: 42}  { Name: \"\\,'<foo>[]\\,'\\},  Order: 42 }")));
+
+            var indexAnnotation1 = new IndexAnnotation(new IndexAttribute("\",'<>[],'"));
+
+            var indexAnnotation2 = Deserialize(Serialize(indexAnnotation1));
+
+            Assert.NotSame(indexAnnotation1, indexAnnotation2);
+            Assert.Equal("\",'<>[],'", indexAnnotation2.Indexes.Single().Name);
+
+            indexAnnotation1 = new IndexAnnotation(new IndexAttribute("\",'<>[],'", 42));
+
+            indexAnnotation2 = Deserialize(Serialize(indexAnnotation1));
+
+            Assert.NotSame(indexAnnotation1, indexAnnotation2);
+            Assert.Equal("\",'<>[],'", indexAnnotation2.Indexes.Single().Name);
+            Assert.Equal(42, indexAnnotation2.Indexes.Single().Order);
+            
+            indexAnnotation1 = new IndexAnnotation(new IndexAttribute("\",'<>[]',"));
+
+            indexAnnotation2 = Deserialize(Serialize(indexAnnotation1));
+
+            Assert.NotSame(indexAnnotation1, indexAnnotation2);
+            Assert.Equal("\",'<>[]',", indexAnnotation2.Indexes.Single().Name);
+
+            indexAnnotation1 = new IndexAnnotation(new IndexAttribute("\",'<>[]',", 42));
+
+            indexAnnotation2 = Deserialize(Serialize(indexAnnotation1));
+
+            Assert.NotSame(indexAnnotation1, indexAnnotation2);
+            Assert.Equal("\",'<>[]',", indexAnnotation2.Indexes.Single().Name);
+            Assert.Equal(42, indexAnnotation2.Indexes.Single().Order);
         }
 
         [Fact]
@@ -45,12 +88,12 @@ namespace System.Data.Entity.Infrastructure.Annotations
         {
             Assert.Equal(
                 "{ }"
-                + "{ Name: 'MrsPandy' }"
-                + "{ Name: 'EekyBear', Order: 7 }"
-                + "{ Name: 'Splash', Order: 8 }"
-                + "{ Name: 'Tarquin', IsClustered: False }"
-                + "{ Name: 'MrsKoalie', IsUnique: False }"
-                + "{ Name: 'EekyJnr', Order: 7, IsClustered: True, IsUnique: True }",
+                + "{ Name: MrsPandy }"
+                + "{ Name: EekyBear, Order: 7 }"
+                + "{ Name: Splash, Order: 8 }"
+                + "{ Name: Tarquin, IsClustered: False }"
+                + "{ Name: MrsKoalie, IsUnique: False }"
+                + "{ Name: EekyJnr, Order: 7, IsClustered: True, IsUnique: True }",
                 Serialize(
                     new IndexAttribute(),
                     new IndexAttribute("MrsPandy"),
@@ -98,12 +141,12 @@ namespace System.Data.Entity.Infrastructure.Annotations
                 Serialize(Deserialize("{ }")));
 
             Assert.Equal(
-                "{ Name: 'EekyBear' }",
-                Serialize(Deserialize("{ Name: 'EekyBear' }")));
+                "{ Name: EekyBear }",
+                Serialize(Deserialize("{ Name: EekyBear }")));
 
             Assert.Equal(
-                "{ Name: 'EekyBear', Order: 7 }",
-                Serialize(Deserialize("{ Name: 'EekyBear', Order: 7 }")));
+                "{ Name: EekyBear, Order: 7 }",
+                Serialize(Deserialize("{ Name: EekyBear, Order: 7 }")));
 
             Assert.Equal(
                 "{ Order: 8 }",
@@ -118,12 +161,12 @@ namespace System.Data.Entity.Infrastructure.Annotations
                 Serialize(Deserialize("{ IsUnique: True }")));
 
             Assert.Equal(
-                "{ Name: 'EekyBear', Order: 7, IsClustered: False, IsUnique: False }",
-                Serialize(Deserialize("{ Name: 'EekyBear', Order: 7, IsClustered: False, IsUnique: False }")));
+                "{ Name: EekyBear, Order: 7, IsClustered: False, IsUnique: False }",
+                Serialize(Deserialize("{ Name: EekyBear, Order: 7, IsClustered: False, IsUnique: False }")));
 
             Assert.Equal(
-                "{ Name: 'EekyBear', Order: 7, IsClustered: False, IsUnique: False }",
-                Serialize(Deserialize(" {  Name:  'EekyBear' ,  Order:  7 ,  IsClustered:  False ,  IsUnique:  False  } ")));
+                "{ Name: EekyBear, Order: 7, IsClustered: False, IsUnique: False }",
+                Serialize(Deserialize(" {  Name:  EekyBear ,  Order:  7 ,  IsClustered:  False ,  IsUnique:  False  } ")));
         }
 
         [Fact]
@@ -131,39 +174,39 @@ namespace System.Data.Entity.Infrastructure.Annotations
         {
             Assert.Equal(
                 "{ }"
-                + "{ Name: 'MrsPandy' }"
-                + "{ Name: 'EekyBear', Order: 7 }"
-                + "{ Name: 'Splash', Order: 8 }"
-                + "{ Name: 'Tarquin', IsClustered: False }"
-                + "{ Name: 'MrsKoalie', IsUnique: False }"
-                + "{ Name: 'EekyJnr', Order: 7, IsClustered: True, IsUnique: True }",
+                + "{ Name: MrsPandy }"
+                + "{ Name: EekyBear, Order: 7 }"
+                + "{ Name: Splash, Order: 8 }"
+                + "{ Name: Tarquin, IsClustered: False }"
+                + "{ Name: MrsKoalie, IsUnique: False }"
+                + "{ Name: EekyJnr, Order: 7, IsClustered: True, IsUnique: True }",
                 Serialize(
                     Deserialize(
                         "{ }"
-                        + "{ Name: 'MrsPandy' }"
-                        + "{ Name: 'EekyBear', Order: 7 }"
-                        + "{ Name: 'Splash', Order: 8 }"
-                        + "{ Name: 'Tarquin', IsClustered: False }"
-                        + "{ Name: 'MrsKoalie', IsUnique: False }"
-                        + "{ Name: 'EekyJnr', Order: 7, IsClustered: True, IsUnique: True }")));
+                        + "{ Name: MrsPandy }"
+                        + "{ Name: EekyBear, Order: 7 }"
+                        + "{ Name: Splash, Order: 8 }"
+                        + "{ Name: Tarquin, IsClustered: False }"
+                        + "{ Name: MrsKoalie, IsUnique: False }"
+                        + "{ Name: EekyJnr, Order: 7, IsClustered: True, IsUnique: True }")));
 
             Assert.Equal(
                 "{ }"
-                + "{ Name: 'MrsPandy' }"
-                + "{ Name: 'EekyBear', Order: 7 }"
-                + "{ Name: 'Splash', Order: 88 }"
-                + "{ Name: 'Tarquin', IsClustered: False }"
-                + "{ Name: 'MrsKoalie', IsUnique: False }"
-                + "{ Name: 'EekyJnr', Order: 7, IsClustered: True, IsUnique: True }",
+                + "{ Name: MrsPandy }"
+                + "{ Name: EekyBear, Order: 7 }"
+                + "{ Name: Splash, Order: 88 }"
+                + "{ Name: Tarquin, IsClustered: False }"
+                + "{ Name: MrsKoalie, IsUnique: False }"
+                + "{ Name: EekyJnr, Order: 7, IsClustered: True, IsUnique: True }",
                 Serialize(
                     Deserialize(
                         " {} "
-                        + " { Name: 'MrsPandy' } "
-                        + " { Name: 'EekyBear', Order: 7 } "
-                        + " { Name: 'Splash', Order: 88 } "
-                        + " { Name: 'Tarquin', IsClustered: False } "
-                        + " { Name: 'MrsKoalie', IsUnique: False } "
-                        + " { Name: 'EekyJnr', Order: 7, IsClustered: True, IsUnique: True } ")));
+                        + " { Name: MrsPandy } "
+                        + " { Name: EekyBear, Order: 7 } "
+                        + " { Name: Splash, Order: 88 } "
+                        + " { Name: Tarquin, IsClustered: False } "
+                        + " { Name: MrsKoalie, IsUnique: False } "
+                        + " { Name: EekyJnr, Order: 7, IsClustered: True, IsUnique: True } ")));
         }
 
         [Fact]
@@ -180,24 +223,30 @@ namespace System.Data.Entity.Infrastructure.Annotations
                     () => new IndexAnnotationSerializer().Deserialize(" ", "{}")).Message);
 
             Assert.Equal(
-                "value",
-                Assert.Throws<ArgumentNullException>(
-                    () => new IndexAnnotationSerializer().Deserialize("Index", null)).ParamName);
+                Strings.ArgumentIsNullOrWhitespace("value"),
+                Assert.Throws<ArgumentException>(
+                    () => new IndexAnnotationSerializer().Deserialize("Index", null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("value"),
+                Assert.Throws<ArgumentException>(
+                    () => new IndexAnnotationSerializer().Deserialize("Index", " ")).Message);
         }
 
         [Fact]
         public void DeserializeValue_throws_on_invalid_formats()
         {
-            TestBadDeserialize("{ Name: '' }");
+            TestBadDeserialize("{ Name: }");
             TestBadDeserialize("{ Name: 'EekyBear', Name: 'EekyBear' }");
             TestBadDeserialize("{ Order: 7, Order: 7 }");
             TestBadDeserialize("{ IsClustered: True, IsClustered: True }");
             TestBadDeserialize("{ IsUnique: True, IsUnique: True }");
             TestBadDeserialize("{ Order: 7a7 }");
-            TestBadDeserialize("{ Name: EekyBear }");
+            TestBadDeserialize("{ Name: Eeky,Bear }");
+            TestBadDeserialize("{ Name: Eeky} {Bear }");
             TestBadDeserialize("{ Order: }");
-            TestBadDeserialize("{ IsClustered: ");
-            TestBadDeserialize("{ IsUnique: }");
+            TestBadDeserialize("{ IsClustered:");
+            TestBadDeserialize("{ IsUnique:}");
             TestBadDeserialize("{ Order: 9876543210 }");
         }
 

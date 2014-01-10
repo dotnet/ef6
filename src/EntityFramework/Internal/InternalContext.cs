@@ -270,11 +270,11 @@ namespace System.Data.Entity.Internal
         // <summary>
         // Checks whether the given model (an EDMX document) matches the current model.
         // </summary>
-        public virtual bool ModelMatches(XDocument model)
+        public virtual bool ModelMatches(VersionedModel model)
         {
             DebugCheck.NotNull(model);
 
-            return !new EdmModelDiffer().Diff(model, Owner.GetModel()).Any();
+            return !new EdmModelDiffer().Diff(model.Model, Owner.GetModel(), sourceModelVersion: model.Version).Any();
         }
 
         // <summary>
@@ -292,9 +292,12 @@ namespace System.Data.Entity.Internal
         // Queries the database for a model stored in the MigrationHistory table and returns it as an EDMX, or returns
         // null if the database does not contain a model.
         // </summary>
-        public virtual XDocument QueryForModel(DatabaseExistenceState existenceState)
+        public virtual VersionedModel QueryForModel(DatabaseExistenceState existenceState)
         {
-            return CreateHistoryRepository(existenceState).GetLastModel();
+            string _, productVersion;
+            var lastModel = CreateHistoryRepository(existenceState).GetLastModel(out _, out productVersion);
+            
+            return lastModel != null ? new VersionedModel(lastModel, productVersion) : null;
         }
 
         // <summary>

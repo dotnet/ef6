@@ -255,14 +255,6 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Direct column renaming is not supported by SQL Server Compact. To rename a column in SQL Server Compact, you will need to recreate it."
-        // </summary>
-        internal static string SqlCeColumnRenameNotSupported
-        {
-            get { return EntityRes.GetString(EntityRes.SqlCeColumnRenameNotSupported); }
-        }
-
-        // <summary>
         // A string like "In VB.NET projects, the migrations namespace '{0}' must be under the root namespace '{1}'. Update the migrations project's root namespace to allow classes under the migrations namespace to be added."
         // </summary>
         internal static string MigrationsNamespaceNotUnderRootNamespace(object p0, object p1)
@@ -836,14 +828,6 @@ namespace System.Data.Entity.Resources
         internal static string BadAnnotationName(object p0)
         {
             return EntityRes.GetString(EntityRes.BadAnnotationName, p0);
-        }
-
-        // <summary>
-        // A string like "The index name '{0}' is not valid. Index names used in the Entity Framework model have the same restrictions as C# identifiers."
-        // </summary>
-        internal static string BadIndexName(object p0)
-        {
-            return EntityRes.GetString(EntityRes.BadIndexName, p0);
         }
 
         // <summary>
@@ -13439,14 +13423,6 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
-        // </summary>
-        internal static string SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.SqlServerMigrationSqlGenerator_UnknownOperation, p0, p1);
-        }
-
-        // <summary>
         // A string like "An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token."
         // </summary>
         internal static string ModificationFunctionParameterNotFoundOriginal(object p0, object p1)
@@ -14147,14 +14123,6 @@ namespace System.Data.Entity.Resources
         internal static Exception AssemblyMigrator_MultipleConfigurations(object p0)
         {
             return new Migrations.Infrastructure.MigrationsException(Strings.AssemblyMigrator_MultipleConfigurations(p0));
-        }
-
-        // <summary>
-        // Migrations.Infrastructure.MigrationsException with message like "Direct column renaming is not supported by SQL Server Compact. To rename a column in SQL Server Compact, you will need to recreate it."
-        // </summary>
-        internal static Exception SqlCeColumnRenameNotSupported()
-        {
-            return new Migrations.Infrastructure.MigrationsException(Strings.SqlCeColumnRenameNotSupported);
         }
 
         // <summary>
@@ -15606,14 +15574,6 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // InvalidOperationException with message like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
-        // </summary>
-        internal static Exception SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
-        {
-            return new InvalidOperationException(Strings.SqlServerMigrationSqlGenerator_UnknownOperation(p0, p1));
-        }
-
-        // <summary>
         // InvalidOperationException with message like "An original value parameter binding to the property '{0}' was not found on the modification function '{1}'. Ensure that the parameter is a concurrency token."
         // </summary>
         internal static Exception ModificationFunctionParameterNotFoundOriginal(object p0, object p1)
@@ -15716,7 +15676,6 @@ namespace System.Data.Entity.Resources
         internal const string AssemblyMigrator_MultipleConfigurationsWithName = "AssemblyMigrator_MultipleConfigurationsWithName";
         internal const string AssemblyMigrator_NoConfiguration = "AssemblyMigrator_NoConfiguration";
         internal const string AssemblyMigrator_MultipleConfigurations = "AssemblyMigrator_MultipleConfigurations";
-        internal const string SqlCeColumnRenameNotSupported = "SqlCeColumnRenameNotSupported";
         internal const string MigrationsNamespaceNotUnderRootNamespace = "MigrationsNamespaceNotUnderRootNamespace";
         internal const string UnableToDispatchAddOrUpdate = "UnableToDispatchAddOrUpdate";
         internal const string NoSqlGeneratorForProvider = "NoSqlGeneratorForProvider";
@@ -15789,7 +15748,6 @@ namespace System.Data.Entity.Resources
         internal const string IncorrectColumnCount = "IncorrectColumnCount";
         internal const string BadKeyNameForAnnotation = "BadKeyNameForAnnotation";
         internal const string BadAnnotationName = "BadAnnotationName";
-        internal const string BadIndexName = "BadIndexName";
         internal const string CircularComplexTypeHierarchy = "CircularComplexTypeHierarchy";
         internal const string UnableToDeterminePrincipal = "UnableToDeterminePrincipal";
         internal const string UnmappedAbstractType = "UnmappedAbstractType";
@@ -17364,7 +17322,6 @@ namespace System.Data.Entity.Resources
         internal const string InvalidResourceName = "InvalidResourceName";
         internal const string ModificationFunctionParameterNotFound = "ModificationFunctionParameterNotFound";
         internal const string EntityClient_CannotOpenBrokenConnection = "EntityClient_CannotOpenBrokenConnection";
-        internal const string SqlServerMigrationSqlGenerator_UnknownOperation = "SqlServerMigrationSqlGenerator_UnknownOperation";
         internal const string ModificationFunctionParameterNotFoundOriginal = "ModificationFunctionParameterNotFoundOriginal";
         internal const string ResultBindingNotFound = "ResultBindingNotFound";
         internal const string ConflictingFunctionsMapping = "ConflictingFunctionsMapping";

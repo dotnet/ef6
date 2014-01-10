@@ -12,7 +12,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Globalization;
@@ -456,6 +456,19 @@ BEGIN
     FROM [dbo].[Orders] AS t0
     WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @order_id AND t0.[Key] = @key_for_update2 AND t0.[Code] = @Code AND t0.[Signature] = @Signature
 END", sql);
+        }
+        
+        [Fact]
+        public void Generate_can_output_rename_index_statements()
+        {
+            var renameIndexOperation = new RenameIndexOperation("dbo.Foo", "Bar", "Baz");
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { renameIndexOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains(
+                @"EXECUTE sp_rename @objname = N'dbo.Foo.Bar', @newname = N'Baz', @objtype = N'INDEX'", sql);
         }
 
         [Fact]

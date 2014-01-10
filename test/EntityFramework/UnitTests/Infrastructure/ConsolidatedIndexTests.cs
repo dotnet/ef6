@@ -21,7 +21,7 @@ namespace System.Data.Entity.Infrastructure
             index.Add("tut2", new IndexAttribute("pong", 1));
 
             Assert.Equal("pong", index.Index.Name);
-            Assert.Equal(new[] { "tut1", "tut2", "tut3" }, index.ColumnNames);
+            Assert.Equal(new[] { "tut1", "tut2", "tut3" }, index.Columns);
             Assert.True(index.Index.IsClustered);
             Assert.True(index.Index.IsClusteredConfigured);
             Assert.False(index.Index.IsUniqueConfigured);
@@ -65,17 +65,17 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(5, indexes.Length);
 
             var index = indexes.Single(i => i.Index.Name == "pong1");
-            Assert.Equal(new[] { "tut1", "tut3", "tut4" }, index.ColumnNames);
+            Assert.Equal(new[] { "tut1", "tut3", "tut4" }, index.Columns);
 
             index = indexes.Single(i => i.Index.Name == "pong2");
-            Assert.Equal(new[] { "tut4", "tut1" }, index.ColumnNames);
+            Assert.Equal(new[] { "tut4", "tut1" }, index.Columns);
 
             index = indexes.Single(i => i.Index.Name == "pong3");
-            Assert.Equal(new[] { "tut3" }, index.ColumnNames);
+            Assert.Equal(new[] { "tut3" }, index.Columns);
 
             var unnamedIndexes = indexes.Where(i => i.Index.Name == null).ToArray();
             Assert.Equal(2, unnamedIndexes.Length);
-            Assert.Equal(new[] { "tut3", "tut5" }, unnamedIndexes.Select(i => i.ColumnNames.Single()).OrderBy(n => n));
+            Assert.Equal(new[] { "tut3", "tut5" }, unnamedIndexes.Select(i => i.Columns.Single()).OrderBy(n => n));
         }
 
         private static Tuple<string, EdmProperty> CreateColumn(string columnName, params IndexAttribute[] indexes)
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Infrastructure
             var operation = index.CreateCreateIndexOperation();
 
             Assert.Equal("raS", operation.Table);
-            Assert.Equal("tutIndex", operation.Name);
+            Assert.Equal("IX_tut", operation.Name);
             Assert.Equal(new List<string> { "tut" }, operation.Columns);
             Assert.True(operation.IsUnique);
             Assert.False(operation.IsClustered);
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Infrastructure
             var inverse = (DropIndexOperation)operation.Inverse;
 
             Assert.Equal("raS", inverse.Table);
-            Assert.Equal("tutIndex", inverse.Name);
+            Assert.Equal("IX_tut", inverse.Name);
             Assert.Equal(new List<string> { "tut" }, inverse.Columns);
         }
 
@@ -157,90 +157,16 @@ namespace System.Data.Entity.Infrastructure
             var operation = index.CreateDropIndexOperation();
 
             Assert.Equal("raS", operation.Table);
-            Assert.Equal("tutIndex", operation.Name);
+            Assert.Equal("IX_tut", operation.Name);
             Assert.Equal(new List<string> { "tut" }, operation.Columns);
 
             var inverse = (CreateIndexOperation)operation.Inverse;
 
             Assert.Equal("raS", inverse.Table);
-            Assert.Equal("tutIndex", inverse.Name);
+            Assert.Equal("IX_tut", inverse.Name);
             Assert.Equal(new List<string> { "tut" }, inverse.Columns);
             Assert.False(inverse.IsUnique);
             Assert.False(inverse.IsClustered);
         }
-
-        [Fact]
-        public void Equals_returns_true_for_equal_indexes()
-        {
-            var index1 = new ConsolidatedIndex("raS", "tut1", new IndexAttribute("pong", 0) { IsClustered = true });
-            index1.Add("tut2", new IndexAttribute("pong", 1) { IsUnique = true });
-
-            var index2 = new ConsolidatedIndex("raS", "tut1", new IndexAttribute("pong", 3) { IsUnique = true });
-            index2.Add("tut2", new IndexAttribute("pong", 4) { IsClustered = true });
-
-            Assert.True(index1.Equals(index1));
-            Assert.True(index1.Equals(index2));
-            Assert.True(index2.Equals(index1));
         }
-
-        [Fact]
-        public void Equals_returns_false_for_different_indexes_with_different_tables()
-        {
-            var index1 = new ConsolidatedIndex("raS1", "tut", new IndexAttribute());
-            var index2 = new ConsolidatedIndex("raS2", "tut", new IndexAttribute());
-
-            Assert.False(index1.Equals(index2));
         }
-
-        [Fact]
-        public void Equals_returns_false_for_different_indexes_with_different_names()
-        {
-            var index1 = new ConsolidatedIndex("raS", "tut", new IndexAttribute("pong1"));
-            var index2 = new ConsolidatedIndex("raS", "tut", new IndexAttribute("pong2"));
-
-            Assert.False(index1.Equals(index2));
-        }
-
-        [Fact]
-        public void Equals_returns_false_for_different_indexes_with_different_configuration()
-        {
-            var index1 = new ConsolidatedIndex("raS", "tut", new IndexAttribute { IsClustered = true });
-            var index2 = new ConsolidatedIndex("raS", "tut", new IndexAttribute { IsClustered = false });
-
-            Assert.False(index1.Equals(index2));
-        }
-
-        [Fact]
-        public void Equals_returns_false_for_null_or_wrong_object()
-        {
-            var index = new ConsolidatedIndex("raS", "tut", new IndexAttribute());
-
-            Assert.False(index.Equals(null));
-            Assert.False(index.Equals(new Random()));
-        }
-
-        [Fact]
-        public void Equals_returns_false_for_different_indexes_with_different_column_orders()
-        {
-            var index1 = new ConsolidatedIndex("raS", "tut1", new IndexAttribute("pong", 0));
-            index1.Add("tut2", new IndexAttribute("pong", 1));
-
-            var index2 = new ConsolidatedIndex("raS", "tut1", new IndexAttribute("pong", 1));
-            index2.Add("tut2", new IndexAttribute("pong", 0));
-
-            Assert.False(index1.Equals(index2));
-        }
-
-        [Fact]
-        public void GetHashCode_returns_the_same_value_for_equal_indexes()
-        {
-            var index1 = new ConsolidatedIndex("raS", "tut1", new IndexAttribute("pong", 0) { IsClustered = true });
-            index1.Add("tut2", new IndexAttribute("pong", 1) { IsUnique = true });
-
-            var index2 = new ConsolidatedIndex("raS", "tut1", new IndexAttribute("pong", 3) { IsUnique = true });
-            index2.Add("tut2", new IndexAttribute("pong", 4) { IsClustered = true });
-
-            Assert.Equal(index1.GetHashCode(), index2.GetHashCode());
-        }
-    }
-}

@@ -62,7 +62,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
                     new IConvention[]
                         {
                             new PluralizingTableNameConvention(),
-                            new ColumnOrderingConvention()
+                            new ColumnOrderingConvention(),
+                            new ForeignKeyIndexConvention()
                         });
 
         public static ConventionSet Conventions

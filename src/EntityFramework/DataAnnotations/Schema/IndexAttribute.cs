@@ -2,6 +2,7 @@
 
 namespace System.ComponentModel.DataAnnotations.Schema
 {
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -22,7 +23,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes")]
     public class IndexAttribute : Attribute
     {
-        private readonly string _name;
+        private string _name;
         private int _order = -1;
         private bool? _isClustered;
         private bool? _isUnique;
@@ -44,13 +45,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
         {
             Check.NotEmpty(name, "name");
 
-            // This makes handling the index names easier and doesn't seem too restrictive. If necessary this
-            // could be relaxed in the future, but then proper handling of strange names must happen when serializing
-            if (!name.IsValidUndottedName())
-            {
-                throw new ArgumentException(Strings.BadIndexName(name));
-            }
-
             _name = name;
         }
 
@@ -67,13 +61,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
         public IndexAttribute(string name, int order)
         {
             Check.NotEmpty(name, "name");
-
-            // This makes handling the index names easier and doesn't seem too restrictive. If necessary this
-            // could be relaxed in the future, but then proper handling of strange names must happen when serializing
-            if (!name.IsValidUndottedName())
-            {
-                throw new ArgumentException(Strings.BadIndexName(name));
-            }
 
             if (order < 0)
             {
@@ -102,6 +89,12 @@ namespace System.ComponentModel.DataAnnotations.Schema
         public virtual string Name
         {
             get { return _name; }
+            internal set
+            {
+                DebugCheck.NotEmpty(value);
+                
+                _name = value;
+        }
         }
 
         /// <summary>
@@ -182,49 +175,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
             }
         }
 
-        /// <inheritdoc/>
-        public override string ToString()
-        {
-            return "IndexAttribute: " + DetailsToString();
-        }
-
-        // For example: "{ Name: 'Foo', Order: 1, IsClustered: True, IsUnique: False }"
-        internal virtual string DetailsToString()
-        {
-            var builder = new StringBuilder();
-
-            var hasContent = false;
-            builder.Append("{ ");
-
-            if (_name != null)
-            {
-                builder.Append("Name: '").Append(_name).Append("'");
-                hasContent = true;
-            }
-
-            if (_order != -1)
-            {
-                builder.Append(hasContent ? ", " : "").Append("Order: ").Append(_order);
-                hasContent = true;
-            }
-
-            if (_isClustered.HasValue)
-            {
-                builder.Append(hasContent ? ", " : "").Append("IsClustered: ").Append(_isClustered);
-                hasContent = true;
-            }
-
-            if (_isUnique.HasValue)
-            {
-                builder.Append(hasContent ? ", " : "").Append("IsUnique: ").Append(_isUnique);
-                hasContent = true;
-            }
-
-            builder.Append(hasContent ? " }" : "}");
-
-            return builder.ToString();
-        }
-
         /// <summary>
         /// Returns true if this attribute specifies the same name and configuration as the given attribute.
         /// </summary>
@@ -236,6 +186,12 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 && _order == other._order
                 && _isClustered.Equals(other._isClustered)
                 && _isUnique.Equals(other._isUnique);
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return IndexAnnotationSerializer.SerializeIndexAttribute(this);
         }
 
         /// <summary>

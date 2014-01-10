@@ -136,15 +136,10 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        public virtual XDocument GetLastModel()
-        {
-            string _;
-            return GetLastModel(out _);
-        }
-
-        public virtual XDocument GetLastModel(out string migrationId, string contextKey = null)
+        public virtual XDocument GetLastModel(out string migrationId, out string productVersion, string contextKey = null)
         {
             migrationId = null;
+            productVersion = null;
 
             if (!Exists(contextKey))
             {
@@ -160,25 +155,54 @@ namespace System.Data.Entity.Migrations.History
                 {
                     using (new TransactionScope(TransactionScopeOption.Suppress))
                     {
-                        var lastModel
+                        var baseQuery
                             = CreateHistoryQuery(context, contextKey)
-                                .OrderByDescending(h => h.MigrationId)
-                                .Select(
-                                    s => new
-                                    {
-                                        s.MigrationId,
-                                        s.Model
-                                    })
-                                .FirstOrDefault();
+                                .OrderByDescending(h => h.MigrationId);
 
-                        if (lastModel == null)
+                        if (_contextKeyColumnExists)
                         {
-                            return null;
+                            var lastModel
+                                = baseQuery
+                                    .Select(
+                                        s => new
+                                        {
+                                            s.MigrationId,
+                                            s.Model,
+                                            s.ProductVersion
+                                        })
+                                    .FirstOrDefault();
+
+                            if (lastModel == null)
+                            {
+                                return null;
+                            }
+
+                            migrationId = lastModel.MigrationId;
+                            productVersion = lastModel.ProductVersion;
+
+                            return new ModelCompressor().Decompress(lastModel.Model);
                         }
+                        else
+                        {
+                            var lastModel
+                                = baseQuery
+                                    .Select(
+                                        s => new
+                                        {
+                                            s.MigrationId,
+                                            s.Model
+                                        })
+                                    .FirstOrDefault();
 
-                        migrationId = lastModel.MigrationId;
+                            if (lastModel == null)
+                            {
+                                return null;
+                            }
 
-                        return new ModelCompressor().Decompress(lastModel.Model);
+                            migrationId = lastModel.MigrationId;
+
+                            return new ModelCompressor().Decompress(lastModel.Model);
+                        }
                     }
                 }
             }
@@ -191,9 +215,11 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        public virtual XDocument GetModel(string migrationId)
+        public virtual XDocument GetModel(string migrationId, out string productVersion)
         {
             DebugCheck.NotEmpty(migrationId);
+
+            productVersion = null;
 
             if (!Exists())
             {
@@ -209,12 +235,37 @@ namespace System.Data.Entity.Migrations.History
 
                 using (var context = CreateContext(connection))
                 {
-                    var model = CreateHistoryQuery(context)
-                        .Where(h => h.MigrationId == migrationId)
-                        .Select(h => h.Model)
-                        .Single();
+                    var baseQuery
+                        = CreateHistoryQuery(context)
+                            .Where(h => h.MigrationId == migrationId);
 
-                    return (model == null) ? null : new ModelCompressor().Decompress(model);
+                    if (_contextKeyColumnExists)
+                    {
+                        var model
+                            = baseQuery
+                                .Select(
+                                    h => new
+                                    {
+                                        h.Model,
+                                        h.ProductVersion
+                                    })
+                                .SingleOrDefault();
+
+                        if (model == null)
+                        {
+                            return null;
+                        }
+
+                        productVersion = model.ProductVersion;
+
+                        return new ModelCompressor().Decompress(model.Model);
+                    }
+                    else
+                    {
+                        var model = baseQuery.Select(h => new { h.Model }).SingleOrDefault();
+
+                        return model == null ? null : new ModelCompressor().Decompress(model.Model);
+                    }
                 }
             }
             finally

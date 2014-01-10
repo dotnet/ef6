@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServerCompact
 {
+    using System.Data.Entity.SqlServerCompact.Resources;
     using Moq;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -11,7 +12,6 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.TestHelpers;
     using System.Data.Entity.Utilities;
     using System.Globalization;
@@ -57,6 +57,21 @@ namespace System.Data.Entity.SqlServerCompact
                 Assert.Equal(
                     Strings.SqlCeColumnRenameNotSupported,
                     Assert.Throws<MigrationsException>(() => migrationProvider.Generate(new[] { renameColumnOperation }, "4.0").ToList()).
+                        Message);
+            }
+        }
+
+        [Fact]
+        public void Generate_should_throw_when_index_rename()
+        {
+            if (LocalizationTestHelpers.IsEnglishLocale())
+            {
+                var migrationProvider = new SqlCeMigrationSqlGenerator();
+                var renameIndexOperation = new RenameIndexOperation("T", "c", "c'");
+
+                Assert.Equal(
+                    Strings.SqlCeIndexRenameNotSupported,
+                    Assert.Throws<MigrationsException>(() => migrationProvider.Generate(new[] { renameIndexOperation }, "4.0").ToList()).
                         Message);
             }
         }

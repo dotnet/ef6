@@ -14,11 +14,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.OSpaceRenames_v2;
     using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.Migrations.UserRoles_v2;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Xml.Linq;
     using Xunit;
+    using Order = System.Data.Entity.Migrations.Order;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
@@ -830,6 +832,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
+            Assert.Equal(1, operations.Count());
+
             var moveTableOperation = (MoveTableOperation)operations.Single();
 
             Assert.Equal("foo.Join", moveTableOperation.Name);
@@ -1415,7 +1419,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            var columnRename = (RenameColumnOperation)operations.Single();
+            Assert.Equal(2, operations.Count());
+
+            var columnRename = operations.OfType<RenameColumnOperation>().Single();
 
             Assert.Equal("dbo.OneManySelfRefs", columnRename.Table);
             Assert.Equal("Parent_Id", columnRename.Name);
@@ -1439,8 +1445,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations = new EdmModelDiffer().Diff(
-                model1.GetModel(), model2.GetModel());
+            var operations 
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
 
@@ -1596,7 +1602,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations 
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(2, operations.Count());
+            Assert.Equal(3, operations.Count());
 
             var columnRename = operations.OfType<RenameColumnOperation>().ElementAt(0);
 
@@ -1980,7 +1986,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            var renameColumnOperation = (RenameColumnOperation)operations.Single();
+            Assert.Equal(2, operations.Count());
+
+            var renameColumnOperation = operations.OfType<RenameColumnOperation>().Single();
 
             Assert.Equal("Fk", renameColumnOperation.Name);
             Assert.Equal("changed", renameColumnOperation.NewName);
@@ -1991,7 +1999,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<Migrations.Order>();
+            modelBuilder.Entity<Order>();
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -2002,9 +2010,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations 
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(1, operations.Count());
+            Assert.Equal(2, operations.Count());
 
-            var columnRename = operations.OfType<RenameColumnOperation>().ElementAt(0);
+            var columnRename = operations.OfType<RenameColumnOperation>().Single();
 
             Assert.Equal("dbo.OrderLines", columnRename.Table);
             Assert.Equal("OrderId", columnRename.Name);
@@ -2029,9 +2037,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations 
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(1, operations.Count());
+            Assert.Equal(2, operations.Count());
 
-            var columnRename = operations.OfType<RenameColumnOperation>().ElementAt(0);
+            var columnRename = operations.OfType<RenameColumnOperation>().Single();
 
             Assert.Equal("dbo.Comments", columnRename.Table);
             Assert.Equal("Blog_MigrationsBlogId", columnRename.Name);
@@ -2056,7 +2064,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations 
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(3, operations.Count());
+            Assert.Equal(4, operations.Count());
         }
 
         #endregion
@@ -2124,13 +2132,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<Migrations.Order>();
+            modelBuilder.Entity<Order>();
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<Migrations.Order>().Ignore(o => o.Version);
+            modelBuilder.Entity<Order>().Ignore(o => o.Version);
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -2208,7 +2216,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public void Can_detect_dropped_columns()
         {
             var modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<Migrations.Order>()
+            modelBuilder.Entity<Order>()
                 .Property(e => e.Version)
                 .HasColumnAnnotation("A1", "V1")
                 .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
@@ -2216,7 +2224,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<Migrations.Order>().Ignore(o => o.Version);
+            modelBuilder.Entity<Order>().Ignore(o => o.Version);
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
@@ -2485,7 +2493,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
-            modelBuilder.Entity<Migrations.Order>();
+            modelBuilder.Entity<Order>();
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2565,7 +2573,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
-            modelBuilder.Entity<Migrations.Order>();
+            modelBuilder.Entity<Order>();
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2644,7 +2652,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(5, operations.Count());
+            Assert.Equal(4, operations.Count());
 
             var dropForeignKeyOperation = operations.OfType<DropForeignKeyOperation>().Single();
 
@@ -2656,64 +2664,59 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("dbo.Comments", dropForeignKeyOperationInverse.DependentTable);
             Assert.Equal("Blog_MigrationsBlogId", dropForeignKeyOperationInverse.DependentColumns.Single());
 
-            var dropIndexOperation = operations.OfType<DropIndexOperation>().Single();
+            var dropIndexOperation = operations.OfType<RenameIndexOperation>().Single();
 
             Assert.Equal("dbo.Comments", dropIndexOperation.Table);
-            Assert.Equal("Blog_MigrationsBlogId", dropIndexOperation.Columns.Single());
-
-            var dropIndexOperationInverse = (CreateIndexOperation)dropIndexOperation.Inverse;
-
-            Assert.Equal("dbo.Comments", dropIndexOperationInverse.Table);
-            Assert.Equal("Blog_MigrationsBlogId", dropIndexOperationInverse.Columns.Single());
+            Assert.Equal("IX_Blog_MigrationsBlogId", dropIndexOperation.Name);
+            Assert.Equal("IX_MigrationsBlogId", dropIndexOperation.NewName);
         }
 
-        //        [MigrationsTheory]
-        //        public void Can_detect_changed_foreign_keys_when_cascade()
-        //        {
-        //            var modelBuilder = new DbModelBuilder();
-        //
-        //            modelBuilder.Entity<Order>();
-        //
-        //            var model1 = modelBuilder.Build(ProviderInfo);
-        //
-        //            modelBuilder.Entity<Order>().HasMany(o => o.OrderLines).WithOptional().WillCascadeOnDelete(false);
-        //
-        //            var model2 = modelBuilder.Build(ProviderInfo);
-        //
-        //            var operations = new EdmModelDiffer().Diff(
-        //                model1.GetModel(), model2.GetModel());
-        //
-        //            Assert.Equal(4, operations.Count());
-        //            Assert.Equal(1, operations.OfType<DropForeignKeyOperation>().Count());
-        //            Assert.Equal(1, operations.OfType<DropIndexOperation>().Count());
-        //            Assert.Equal(1, operations.OfType<CreateIndexOperation>().Count());
-        //            var addForeignKeyOperation = operations.OfType<AddForeignKeyOperation>().Single();
-        //
-        //            Assert.Equal("ordering.Orders", addForeignKeyOperation.PrincipalTable);
-        //            Assert.Equal("OrderId", addForeignKeyOperation.PrincipalColumns.Single());
-        //            Assert.Equal("dbo.OrderLines", addForeignKeyOperation.DependentTable);
-        //            Assert.Equal("OrderId", addForeignKeyOperation.DependentColumns.Single());
-        //            Assert.False(addForeignKeyOperation.CascadeDelete);
-        //        }
-        //
-        //        [MigrationsTheory]
-        //        public void Should_not_detect_changed_foreign_keys_when_multiplicity()
-        //        {
-        //            var modelBuilder = new DbModelBuilder();
-        //
-        //            modelBuilder.Entity<Order>();
-        //
-        //            var model1 = modelBuilder.Build(ProviderInfo);
-        //
-        //            modelBuilder.Entity<Order>().HasMany(o => o.OrderLines).WithRequired();
-        //
-        //            var model2 = modelBuilder.Build(ProviderInfo);
-        //
-        //            var operations = new EdmModelDiffer().Diff(
-        //                model1.GetModel(), model2.GetModel());
-        //
-        //            Assert.Equal(0, operations.Count());
-        //        }
+        [MigrationsTheory]
+        public void Can_detect_changed_foreign_keys_when_cascade()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Order>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<Order>().HasMany(o => o.OrderLines).WithOptional().WillCascadeOnDelete(false);
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations 
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(2, operations.Count());
+            Assert.Equal(1, operations.OfType<DropForeignKeyOperation>().Count());
+            
+            var addForeignKeyOperation = operations.OfType<AddForeignKeyOperation>().Single();
+
+            Assert.Equal("ordering.Orders", addForeignKeyOperation.PrincipalTable);
+            Assert.Equal("OrderId", addForeignKeyOperation.PrincipalColumns.Single());
+            Assert.Equal("dbo.OrderLines", addForeignKeyOperation.DependentTable);
+            Assert.Equal("OrderId", addForeignKeyOperation.DependentColumns.Single());
+            Assert.False(addForeignKeyOperation.CascadeDelete);
+        }
+
+        [MigrationsTheory]
+        public void Should_not_detect_changed_foreign_keys_when_multiplicity()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Order>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<Order>().HasMany(o => o.OrderLines).WithRequired();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations 
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(0, operations.Count());
+        }
 
         #endregion
 
@@ -2904,8 +2907,166 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         #endregion
-        
+
+        #region Indexes
+
+        public class IndexRename
+        {
+            public int Id { get; set; }
+
+            [Index]
+            public string Indexed { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_renamed_indexes()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<IndexRename>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder
+                .Entity<IndexRename>()
+                .Property(p => p.Indexed)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("NewName")));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            var renameIndexOperation = (RenameIndexOperation)operations.Single();
+
+            Assert.Equal("dbo.IndexRenames", renameIndexOperation.Table);
+            Assert.Equal("IX_Indexed", renameIndexOperation.Name);
+            Assert.Equal("NewName", renameIndexOperation.NewName);
+        }
+
+        public class IndexColumnRenameParent
+        {
+            public int Id { get; set; }
+            public ICollection<IndexColumnRenameChild> Children { get; set; }
+        }
+
+        public class IndexColumnRenameChild
+        {
+            public int Id { get; set; }
+            public int IndexColumnRenameParentId { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Indexes_have_correct_columns_when_column_being_renamed_and_altered()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<IndexColumnRenameParent>();
+            modelBuilder.Entity<IndexColumnRenameChild>().Ignore(c => c.IndexColumnRenameParentId);
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<IndexColumnRenameParent>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(6, operations.Count);
+
+            var dropIndexOperation = operations.OfType<DropIndexOperation>().Single();
+
+            Assert.Equal("IndexColumnRenameParent_Id", dropIndexOperation.Columns.Single());
+            Assert.Equal("IndexColumnRenameParent_Id", ((CreateIndexOperation)dropIndexOperation.Inverse).Columns.Single());
+
+        }
+
+        #endregion
+
         #region Misc.
+
+        [MigrationsTheory]
+        public void Should_not_detect_diffs_when_upgrading_to_6_1()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MigrationsCustomer>();
+            modelBuilder.Conventions.Remove<ForeignKeyIndexConvention>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MigrationsCustomer>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel(), sourceModelVersion: "6.0.0");
+
+            Assert.Equal(0, operations.Count());
+        }
+
+        [MigrationsTheory]
+        public void Should_detect_diffs_when_upgrading_to_6_1_and_new_user_index()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MigrationsCustomer>();
+            modelBuilder.Conventions.Remove<ForeignKeyIndexConvention>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<MigrationsCustomer>()
+                .Property(c => c.Name)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute()));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel(), sourceModelVersion: "5.0.0");
+
+            var createIndexOperation
+                = operations.OfType<CreateIndexOperation>().Single();
+
+            Assert.Equal("IX_Name", createIndexOperation.Name);
+        }
+
+        [MigrationsTheory]
+        public void Should_detect_diffs_when_upgrading_to_6_1_and_fk_index_renamed()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Order>();
+            modelBuilder.Conventions.Remove<ForeignKeyIndexConvention>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Order>();
+            modelBuilder
+                .Entity<OrderLine>()
+                .Property(c => c.OrderId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("NewName")));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel(), sourceModelVersion: "4.3.0");
+
+            var renameIndexOperation
+                = operations.OfType<RenameIndexOperation>().Single();
+
+            Assert.Equal("IX_OrderId", renameIndexOperation.Name);
+            Assert.Equal("NewName", renameIndexOperation.NewName);
+        }
 
         [MigrationsTheory]
         public void Should_not_detect_diffs_when_models_are_identical()
@@ -3015,15 +3176,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(
-                DatabaseProvider == DatabaseProvider.SqlClient ? 3 : 2, // SQL column's max length changes too
+                DatabaseProvider == DatabaseProvider.SqlClient ? 5 : 3, // SQL column's max length changes too
                 operations.Count());
 
-            var dropColumnOperation = (DropColumnOperation)operations.First();
+            var dropColumnOperation = operations.OfType<DropColumnOperation>().Single();
 
             Assert.Equal("dbo.ClassBs", dropColumnOperation.Table);
             Assert.Equal("ClassAId", dropColumnOperation.Name);
 
-            var renameColumnOperation = (RenameColumnOperation)operations.ElementAt(1);
+            var renameColumnOperation = operations.OfType<RenameColumnOperation>().Single();
 
             Assert.Equal("dbo.ClassBs", renameColumnOperation.Table);
             Assert.Equal("ClassA_Id", renameColumnOperation.Name);
@@ -3055,15 +3216,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(
-                DatabaseProvider == DatabaseProvider.SqlClient ? 3 : 2, // SQL column's max length changes too
+                DatabaseProvider == DatabaseProvider.SqlClient ? 5 : 3, // SQL column's max length changes too
                 operations.Count());
 
-            var dropColumnOperation = (DropColumnOperation)operations.First();
+            var dropColumnOperation = operations.OfType<DropColumnOperation>().Single();
 
             Assert.Equal("dbo.OrphanedColumn1", dropColumnOperation.Table);
             Assert.Equal("OrphanedColumnParentId", dropColumnOperation.Name);
 
-            var renameColumnOperation = (RenameColumnOperation)operations.ElementAt(1);
+            var renameColumnOperation = operations.OfType<RenameColumnOperation>().Single();
 
             Assert.Equal("dbo.OrphanedColumn1", renameColumnOperation.Table);
             Assert.Equal("OrphanedColumnParent_Id", renameColumnOperation.Name);
@@ -3093,15 +3254,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(
-                DatabaseProvider == DatabaseProvider.SqlClient ? 4 : 3, // SQL column's max length changes too
+                DatabaseProvider == DatabaseProvider.SqlClient ? 6 : 4, // SQL column's max length changes too
                 operations.Count());
 
-            var dropColumnOperation = (DropColumnOperation)operations.ElementAt(1);
+            var dropColumnOperation = operations.OfType<DropColumnOperation>().Single();
 
             Assert.Equal("dbo.Renamed", dropColumnOperation.Table);
             Assert.Equal("ClassAId", dropColumnOperation.Name);
 
-            var renameColumnOperation = (RenameColumnOperation)operations.ElementAt(2);
+            var renameColumnOperation = operations.OfType<RenameColumnOperation>().Single();
 
             Assert.Equal("dbo.Renamed", renameColumnOperation.Table);
             Assert.Equal("ClassA_Id", renameColumnOperation.Name);

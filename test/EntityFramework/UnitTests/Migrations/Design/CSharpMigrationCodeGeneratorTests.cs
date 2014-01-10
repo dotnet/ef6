@@ -183,7 +183,50 @@ namespace System.Data.Entity.Migrations.Design
 ",
                 generatedMigration.UserCode);
         }
+        
+        [Fact]
+        public void Generate_can_output_rename_index_operation()
+        {
+            var renameIndexOperation
+                = new RenameIndexOperation("Foo", "Bar", "Baz");
 
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            renameIndexOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            RenameIndex(table: ""Foo"", name: ""Bar"", newName: ""Baz"");
+        }
+        
+        public override void Down()
+        {
+            RenameIndex(table: ""Foo"", name: ""Baz"", newName: ""Bar"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+        
         [Fact]
         public void Generate_can_output_drop_procedure_operations()
         {

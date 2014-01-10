@@ -396,6 +396,14 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         {
             return EntityRes.GetString(EntityRes.SqlServerMigrationSqlGenerator_UnknownOperation, p0, p1);
         }
+
+        // <summary>
+        // A string like "Direct index renaming is not supported by SQL Server Compact. To rename an index in SQL Server Compact, you will need to recreate it."
+        // </summary>
+        internal static string SqlCeIndexRenameNotSupported
+        {
+            get { return EntityRes.GetString(EntityRes.SqlCeIndexRenameNotSupported); }
+        }
     }
 
     // <summary>
@@ -427,6 +435,14 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         internal static Exception SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
         {
             return new InvalidOperationException(Strings.SqlServerMigrationSqlGenerator_UnknownOperation(p0, p1));
+        }
+        
+        // <summary>
+        // Migrations.Infrastructure.MigrationsException with message like "Direct index renaming is not supported by SQL Server Compact. To rename an index in SQL Server Compact, you will need to recreate it."
+        // </summary>
+        internal static Exception SqlCeIndexRenameNotSupported()
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.SqlCeIndexRenameNotSupported);
         }
         // <summary>
         // The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
@@ -509,6 +525,7 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         internal const string SqlCeColumnRenameNotSupported = "SqlCeColumnRenameNotSupported";
         internal const string InvalidDatabaseName = "InvalidDatabaseName";
         internal const string SqlServerMigrationSqlGenerator_UnknownOperation = "SqlServerMigrationSqlGenerator_UnknownOperation";
+        internal const string SqlCeIndexRenameNotSupported = "SqlCeIndexRenameNotSupported";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

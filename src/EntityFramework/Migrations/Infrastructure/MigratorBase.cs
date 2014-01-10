@@ -112,9 +112,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         internal virtual void AutoMigrate(
-            string migrationId, XDocument sourceModel, XDocument targetModel, bool downgrading)
+            string migrationId, VersionedModel sourceModel, VersionedModel targetModel, bool downgrading)
         {
-            Check.NotNull(targetModel, "targetModel");
+            DebugCheck.NotNull(targetModel);
 
             _this.AutoMigrate(migrationId, sourceModel, targetModel, downgrading);
         }

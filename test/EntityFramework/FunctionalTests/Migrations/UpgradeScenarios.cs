@@ -9,12 +9,12 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.IO;
+    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Xml;
-    using System.Xml.Linq;
     using FunctionalTests.SimpleMigrationsModel;
+    using Moq;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -22,6 +22,161 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class UpgradeScenarios : DbTestCase
     {
+        public class IndexUpgradeContext_v1 : DbContext
+        {
+            public DbSet<Parent> Parents { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Conventions.Remove<ForeignKeyIndexConvention>();
+            }
+        }
+
+        public class IndexUpgradeContext_v2 : DbContext
+        {
+            public DbSet<Parent> Parents { get; set; }
+        }
+
+        public class Parent
+        {
+            public int Id { get; set; }
+            public ICollection<Child> Children { get; set; }
+        }
+
+        public class Child
+        {
+            public int Id { get; set; }
+        }
+
+        public class IndexUpgradeContext_v2b : DbContext
+        {
+            public DbSet<Parent> Parents { get; set; }
+            public DbSet<Other> Others { get; set; }
+        }
+
+        public class Other
+        {
+            public int Id { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Can_upgrade_to_6_1_and_no_diffs_produced_when_model_unchanged_generated()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<IndexUpgradeContext_v1>();
+
+            migrator.Update();
+
+            // create v5 history rows
+            using (var context = CreateContext<IndexUpgradeContext_v1>())
+            {
+                ExecuteOperations(
+                    new MigrationOperation[]
+                    {
+                        GetDropHistoryTableOperation(),
+                        GetCreateHistoryTableOperation(),
+                        CreateInsertOperation("MyKey", "201112202056275_v60_Migration", GetModel(context), "6.0.0")
+                    });
+            }
+
+            migrator = CreateMigrator<IndexUpgradeContext_v2>(contextKey: "MyKey");
+
+            var scaffoldedMigration
+                = new MigrationScaffolder(migrator.Configuration).Scaffold("Empty");
+
+            Assert.False(scaffoldedMigration.UserCode.Contains("CreateIndex"));
+            Assert.False(scaffoldedMigration.UserCode.Contains("DropIndex"));
+        }
+
+        [MigrationsTheory]
+        public void Can_upgrade_to_6_1_and_no_diffs_produced_when_model_unchanged_automatic()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<IndexUpgradeContext_v1>();
+
+            migrator.Update();
+
+            // create v5 history rows
+            using (var context = CreateContext<IndexUpgradeContext_v1>())
+            {
+                ExecuteOperations(
+                    new MigrationOperation[]
+                    {
+                        GetDropHistoryTableOperation(),
+                        GetCreateHistoryTableOperation(),
+                        CreateInsertOperation("MyKey", "201112202056275_v60_Migration", GetModel(context), "6.0.0")
+                    });
+            }
+
+            var mockSqlGenerator = new Mock<MigrationSqlGenerator>();
+
+            migrator
+                = CreateMigrator<IndexUpgradeContext_v2>(
+                    contextKey: "MyKey",
+                    sqlGenerators: new[]
+                    {
+                        Tuple.Create(ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName, mockSqlGenerator.Object),
+                        Tuple.Create(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName, mockSqlGenerator.Object)
+                    });
+
+            migrator.Update();
+
+            mockSqlGenerator
+                .Verify(m => m.Generate(It.IsAny<IEnumerable<MigrationOperation>>(), It.IsAny<string>()), Times.Never());
+        }
+
+        [MigrationsTheory]
+        public void Can_downgrade_from_6_1_and_no_diffs_produced_when_model_unchanged()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<IndexUpgradeContext_v1>();
+
+            migrator.Update();
+
+            // create v5 history rows
+            using (var context = CreateContext<IndexUpgradeContext_v1>())
+            {
+                ExecuteOperations(
+                    new MigrationOperation[]
+                    {
+                        GetDropHistoryTableOperation(),
+                        GetCreateHistoryTableOperation(),
+                        CreateInsertOperation("MyKey", "201112202056275_v60_Migration", GetModel(context), "6.0.0")
+                    });
+            }
+
+            migrator = CreateMigrator<IndexUpgradeContext_v2b>(contextKey: "MyKey");
+
+            migrator.Update();
+
+            Assert.True(TableExists("Other"));
+
+            var mockSqlGenerator = new Mock<MigrationSqlGenerator>();
+
+            migrator = CreateMigrator<IndexUpgradeContext_v1>(
+                contextKey: "MyKey", 
+                sqlGenerators: new[]
+                    {
+                        Tuple.Create(ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName, mockSqlGenerator.Object),
+                        Tuple.Create(ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName, mockSqlGenerator.Object)
+                    },
+                automaticDataLossEnabled: true);
+
+            IEnumerable<MigrationOperation> operations = null;
+
+            mockSqlGenerator
+                .Setup(m => m.Generate(It.IsAny<IEnumerable<MigrationOperation>>(), It.IsAny<string>()))
+                .Callback((IEnumerable<MigrationOperation> os, string _) => operations = os)
+                .Returns(Enumerable.Empty<MigrationStatement>());
+
+            migrator.Update("v60_Migration");
+
+            Assert.True(!operations.OfType<DropIndexOperation>().Any());
+        }
+
         public class Ef5MigrationsContext : DbContext
         {
             public DbSet<Blog> Blogs { get; set; }
@@ -206,10 +361,10 @@ namespace System.Data.Entity.Migrations
 
                 // create v5 history rows
                 ExecuteOperations(
-                    new[]
+                    new MigrationOperation[]
                         {
                             CreateInsertOperation(migrationsConfiguration.ContextKey, "201112202056275_InitialCreate", model),
-                            CreateInsertOperation(migrationsConfiguration.ContextKey, "201112202056573_AddUrlToBlog", model),
+                            CreateInsertOperation(migrationsConfiguration.ContextKey, "201112202056573_AddUrlToBlog", model)
                         });
             }
 
@@ -237,7 +392,7 @@ namespace System.Data.Entity.Migrations
                         {
                             GetDropHistoryTableOperation(),
                             GetCreateHistoryTableOperation(),
-                            CreateInsertOperation("MyKey", "201112202056275_NoHistoryModelAutomaticMigration", GetModel(context)),
+                            CreateInsertOperation("MyKey", "201112202056275_NoHistoryModelAutomaticMigration", GetModel(context))
                         });
             }
 

@@ -14,18 +14,27 @@ namespace System.Data.Entity.Infrastructure
 
     internal class ConsolidatedIndex
     {
-        private readonly string _tableName;
+        private readonly string _table;
         private IndexAttribute _index;
-        private readonly IDictionary<int, string> _columnNames = new Dictionary<int, string>();
+        private readonly IDictionary<int, string> _columns = new Dictionary<int, string>();
 
-        public ConsolidatedIndex(string tableName, string columnName, IndexAttribute index)
+        public ConsolidatedIndex(string table, IndexAttribute index)
         {
-            DebugCheck.NotEmpty(tableName);
+            DebugCheck.NotEmpty(table);
             DebugCheck.NotNull(index);
 
-            _tableName = tableName;
+            _table = table;
             _index = index;
-            _columnNames[index.Order] = columnName;
+        }
+
+        public ConsolidatedIndex(string table, string column, IndexAttribute index)
+            : this(table, index)
+        {
+            DebugCheck.NotEmpty(table);
+            DebugCheck.NotEmpty(column);
+            DebugCheck.NotNull(index);
+
+            _columns[index.Order] = column;
         }
 
         public static IEnumerable<ConsolidatedIndex> BuildIndexes(string tableName, IEnumerable<Tuple<string, EdmProperty>> columns)
@@ -56,15 +65,20 @@ namespace System.Data.Entity.Infrastructure
 
             return allIndexes;
         }
-        
+
         public IndexAttribute Index
         {
             get { return _index; }
         }
 
-        public IEnumerable<string> ColumnNames
+        public IEnumerable<string> Columns
         {
-            get { return _columnNames.OrderBy(c => c.Key).Select(c => c.Value); }
+            get { return _columns.OrderBy(c => c.Key).Select(c => c.Value); }
+        }
+
+        public string Table
+        {
+            get { return _table; }
         }
 
         public void Add(string columnName, IndexAttribute index)
@@ -74,18 +88,18 @@ namespace System.Data.Entity.Infrastructure
 
             Debug.Assert(_index.Name == index.Name);
 
-            if (_columnNames.ContainsKey(index.Order))
+            if (_columns.ContainsKey(index.Order))
             {
                 throw new InvalidOperationException(
-                    Strings.OrderConflictWhenConsolidating(index.Name, _tableName, index.Order, _columnNames[index.Order], columnName));
+                    Strings.OrderConflictWhenConsolidating(index.Name, _table, index.Order, _columns[index.Order], columnName));
             }
 
-            _columnNames[index.Order] = columnName;
+            _columns[index.Order] = columnName;
 
             var compat = _index.IsCompatibleWith(index, ignoreOrder: true);
             if (!compat)
             {
-                throw new InvalidOperationException(Strings.ConflictWhenConsolidating(index.Name, _tableName, compat.ErrorMessage));
+                throw new InvalidOperationException(Strings.ConflictWhenConsolidating(index.Name, _table, compat.ErrorMessage));
             }
 
             _index = _index.MergeWith(index, ignoreOrder: true);
@@ -93,14 +107,14 @@ namespace System.Data.Entity.Infrastructure
 
         public CreateIndexOperation CreateCreateIndexOperation()
         {
-            var columnNames = ColumnNames.ToArray();
+            var columnNames = Columns.ToArray();
             Debug.Assert(columnNames.Length > 0);
             Debug.Assert(_index.Name != null || columnNames.Length == 1);
-            
+
             var operation = new CreateIndexOperation
             {
-                Name = _index.Name ?? columnNames[0] + "Index",
-                Table = _tableName
+                Name = _index.Name ?? IndexOperation.BuildDefaultName(columnNames),
+                Table = _table
             };
 
             foreach (var columnName in columnNames)
@@ -124,43 +138,6 @@ namespace System.Data.Entity.Infrastructure
         public DropIndexOperation CreateDropIndexOperation()
         {
             return (DropIndexOperation)CreateCreateIndexOperation().Inverse;
-        }
-
-        protected bool Equals(ConsolidatedIndex other)
-        {
-            return _tableName == other._tableName
-                   && _index.Equals(other._index)
-                   && ColumnNames.SequenceEqual(other.ColumnNames);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((ConsolidatedIndex)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ColumnNames.Aggregate(
-                    (_tableName.GetHashCode() * 397) ^ _index.GetHashCode(),
-                    (h, v) => (h * 397) ^ v.GetHashCode());
-            }
         }
     }
 }
