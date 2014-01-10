@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
+    using System.Data.Entity.Core;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
     using Xunit;
@@ -413,6 +414,49 @@ FROM ( SELECT DISTINCT
                 QueryTestHelpers.VerifyDbQuery(query8, expectedSqlD);
 
             }
+        }
+
+
+        [Fact]
+        public void GroupBy_with_aggregate_does_not_throw_for_types_incompatible_with_GroupBy()
+        {
+            using (var context = new ImageContext())
+            {
+                var query2 = context.Users.GroupBy(o => o, u => new { u.Image, u.Name }, (k, g) => g.Count());
+
+                Assert.DoesNotThrow(() => query2.ToList());
+            }
+        }
+
+        [Fact]
+        public void GroupBy_fails_when_image_column_is_included()
+        {
+            using (var context = new ImageContext())
+            {
+                var query0 = from u in context.Users
+                    group u by u.Image
+                    into g
+                    select new { Image = g.Key };
+
+                Assert.Throws<EntityCommandExecutionException>(() => query0.ToList());   
+            }            
+        }
+
+        public class ImageContext : DbContext
+        {
+            public DbSet<User> Users { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<User>().Property(u => u.Image).HasColumnType("image");
+            }
+        }
+
+        public class User
+        {
+            public int Id { get; set; }
+            public byte[] Image { get; set; }
+            public string Name { get; set; }
         }
     }
 }
