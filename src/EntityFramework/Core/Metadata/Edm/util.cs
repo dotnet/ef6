@@ -34,8 +34,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Conditional("DEBUG")]
         internal static void AssertItemHasIdentity(MetadataItem item, string argumentName)
         {
-            DebugCheck.NotEmpty(item.Identity);
             Check.NotNull(item, argumentName);
+            DebugCheck.NotEmpty(item.Identity);
         }
 
         // <summary>

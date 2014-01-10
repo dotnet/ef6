@@ -166,9 +166,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _members.Contains(member);
         }
 
-        internal virtual void NotifyItemIdentityChanged()
+        internal virtual void NotifyItemIdentityChanged(EdmMember item, string initialIdentity)
         {
-            _members.InvalidateCache();
+            _members.HandleIdentityChange(item, initialIdentity);
         }
     }
 }

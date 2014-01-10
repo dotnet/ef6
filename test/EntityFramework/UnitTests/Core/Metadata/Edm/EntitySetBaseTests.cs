@@ -33,9 +33,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             entitySetBase.ChangeEntityContainerWithoutCollectionFixup(entityContainerMock.Object);
 
+            var initialIdentity = entitySetBase.Identity;
             entitySetBase.Name = "Foo";
 
-            entityContainerMock.Verify(e => e.NotifyItemIdentityChanged(), Times.Once());
+            entityContainerMock.Verify(e => e.NotifyItemIdentityChanged(entitySetBase, initialIdentity), Times.Once());
         }
 
         [Fact]

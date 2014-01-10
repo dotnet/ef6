@@ -319,9 +319,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return entityContainer;
         }
 
-        internal virtual void NotifyItemIdentityChanged()
+        internal virtual void NotifyItemIdentityChanged(EntitySetBase item, string initialIdentity)
         {
-            _baseEntitySets.Source.InvalidateCache();
+            _baseEntitySets.Source.HandleIdentityChange(item, initialIdentity);
         }
     }
 }

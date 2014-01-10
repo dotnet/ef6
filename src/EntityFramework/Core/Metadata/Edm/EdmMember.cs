@@ -66,6 +66,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 if (!string.Equals(_name, value, StringComparison.Ordinal))
                 {
+                    var initialIdentity = Identity;
                     _name = value;
 
                     if (_declaringType != null)
@@ -80,7 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             _identity = _declaringType.Members.Select(i => i.Identity).Uniquify(Identity);
                         }
 
-                        _declaringType.NotifyItemIdentityChanged();
+                        _declaringType.NotifyItemIdentityChanged(this, initialIdentity);
                     }
                 }
             }
@@ -138,7 +139,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     && currentIdentity != null
                     && !string.Equals(currentIdentity, _identity, StringComparison.Ordinal))
                 {
-                    _declaringType.NotifyItemIdentityChanged();
+                    _declaringType.NotifyItemIdentityChanged(this, currentIdentity);
                 }
 
                 // TypeUsage is always readonly, no need to set it

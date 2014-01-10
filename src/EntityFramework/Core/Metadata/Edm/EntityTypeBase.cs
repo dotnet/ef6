@@ -191,11 +191,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             base.RemoveMember(member);
         }
 
-        internal override void NotifyItemIdentityChanged()
+        internal override void NotifyItemIdentityChanged(EdmMember item, string initialIdentity)
         {
-            base.NotifyItemIdentityChanged();
+            base.NotifyItemIdentityChanged(item, initialIdentity);
 
-            _keyMembers.Source.InvalidateCache();
+            _keyMembers.Source.HandleIdentityChange(item, initialIdentity);
         }
     }
 }

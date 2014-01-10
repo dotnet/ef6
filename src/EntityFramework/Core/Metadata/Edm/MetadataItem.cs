@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // </summary>
         internal void AddMetadataProperties(List<MetadataProperty> metadataProperties)
         {
-            GetMetadataProperties().AtomicAddRange(metadataProperties);
+            GetMetadataProperties().AddRange(metadataProperties);
         }
 
         internal DataSpace GetDataSpace()

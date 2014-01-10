@@ -102,20 +102,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // Gets an item from the collection with the given identity
-        // </summary>
-        // <param name="identity"> The identity of the item to search for </param>
-        // <returns> An item from the collection </returns>
-        // <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
-        // <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
-        // <exception cref="System.InvalidOperationException">Always thrown on setter</exception>
-        public override EdmMember this[string identity]
-        {
-            get { return GetValue(identity, false); }
-            set { throw new InvalidOperationException(Strings.OperationOnReadOnlyCollection); }
-        }
-
-        // <summary>
         // Adds an item to the collection
         // </summary>
         // <param name="member"> The item to add to the list </param>
@@ -237,21 +223,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             return item != null;
-        }
-
-        // <summary>
-        // Gets an itme with identity
-        // </summary>
-        public override EdmMember GetValue(string identity, bool ignoreCase)
-        {
-            EdmMember item = null;
-
-            if (!TryGetValue(identity, ignoreCase, out item))
-            {
-                throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
-            }
-
-            return item;
         }
 
         // <summary>

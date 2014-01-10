@@ -126,11 +126,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 if (!string.Equals(_name, value, StringComparison.Ordinal))
                 {
+                    var initialIdentity = Identity;
                     _name = value;
 
                     if (_entityContainer != null)
                     {
-                        _entityContainer.NotifyItemIdentityChanged();
+                        _entityContainer.NotifyItemIdentityChanged(this, initialIdentity);
                     }
                 }
             }

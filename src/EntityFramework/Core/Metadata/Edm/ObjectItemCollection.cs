@@ -246,10 +246,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     // No errors, so go ahead and add the types and make them readonly
                     // The existence of the loading lock tells us whether we should be thread safe or not, if we need
-                    // to be thread safe, then we need to use AtomicAddRange. We don't need to actually use the lock
-                    // because the caller should have done it already
+                    // to be thread safe. We don't need to actually use the lock because the caller should have done
+                    // it already.
                     // Recheck the assemblies added, another list is created just to match up the collection type
-                    // taken in by AtomicAddRange()
+                    // taken in by AddRange()
                     AddLoadedTypes(typesInLoading);
                 }
 
@@ -299,7 +299,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Create a new ObjectItemCollection and add all the global items to it. 
             // Also copy all the existing items from the existing collection
-            AtomicAddRange(globalItems);
+            AddRange(globalItems);
         }
 
         /// <summary>Returns a collection of primitive type objects.</summary>

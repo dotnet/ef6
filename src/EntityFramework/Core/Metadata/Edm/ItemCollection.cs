@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
         // <exception cref="System.ArgumentException">Thrown if the item that is being added already belongs to another ItemCollection</exception>
         // <exception cref="System.ArgumentException">Thrown if the ItemCollection already contains an item with the same identity</exception>
-        internal bool AtomicAddRange(List<GlobalItem> items)
+        internal void AddRange(List<GlobalItem> items)
         {
 #if DEBUG
     // We failed to add, so undo the setting of the ItemCollection reference
@@ -96,12 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
 #endif
-            if (base.Source.AtomicAddRange(items))
-            {
-                return true;
-            }
-
-            return false;
+            base.Source.AddRange(items);
         }
 
         /// <summary>
