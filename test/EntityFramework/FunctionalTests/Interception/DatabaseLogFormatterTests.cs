@@ -9,7 +9,6 @@ namespace System.Data.Entity.Interception
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using Xunit;
 
     internal static partial class TestHelper
@@ -84,7 +83,7 @@ namespace System.Data.Entity.Interception
             Assert.Equal(updateCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogComplete", l, new AnyValueParameter(), "1", "")));
 
             Assert.Equal(transactionCount, logLines.Count(l => _resourceVerifier.IsMatch("TransactionStartedLog", l, new AnyValueParameter(), "")));
-            Assert.Equal(transactionCount, logLines.Count(l => _resourceVerifier.IsMatch("TransactionRolledBackLog", l, new AnyValueParameter(), "")));
+            Assert.Equal(transactionCount, logLines.Count(l => _resourceVerifier.IsMatch("TransactionDisposedLog", l, new AnyValueParameter(), "")));
 
             Assert.Equal(connectionCount, logLines.Count(l => _resourceVerifier.IsMatch("ConnectionOpenedLog", l, new AnyValueParameter(), "")));
             Assert.Equal(connectionCount, logLines.Count(l => _resourceVerifier.IsMatch("ConnectionClosedLog", l, new AnyValueParameter(), "")));

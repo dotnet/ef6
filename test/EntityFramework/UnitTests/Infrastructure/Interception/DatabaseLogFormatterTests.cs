@@ -751,40 +751,39 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
         }
 
-        public class Disposed : TestBase
+        public class Disposing_Transaction : TestBase
         {
             [Fact]
-            public void Disposed_validates_arguments()
+            public void Disposing_validates_arguments()
             {
                 var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "transaction",
                     Assert.Throws<ArgumentNullException>(
-                        () => formatter.Disposed(null, new DbTransactionInterceptionContext()))
+                        () => formatter.Disposing(null, new DbTransactionInterceptionContext()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => formatter.Disposed(new Mock<DbTransaction>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.Disposing(new Mock<DbTransaction>().Object, null)).ParamName);
             }
 
             [Fact]
-            public void Disposed_logs()
+            public void Disposing_logs_if_transaction_still_active()
             {
                 var writer = new StringWriter();
-                new DatabaseLogFormatter(writer.Write).Disposed(new Mock<DbTransaction>().Object, new DbTransactionInterceptionContext());
-                Assert.True(_resourceVerifier.IsMatch("TransactionRolledBackLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+                var transactionMock = new Mock<DbTransaction>();
+                transactionMock.Protected().Setup<DbConnection>("DbConnection").Returns(new Mock<DbConnection>().Object);
+                new DatabaseLogFormatter(writer.Write).Disposing(transactionMock.Object, new DbTransactionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("TransactionDisposedLog", GetSingleLine(writer), new AnyValueParameter(), ""));
             }
 
             [Fact]
-            public void Disposed_logs_exceptions()
+            public void Disposing_does_not_log_if_transaction_not_active()
             {
                 var writer = new StringWriter();
-                var interceptionContext = new DbTransactionInterceptionContext();
-                interceptionContext.Exception = new Exception("Boo");
-                new DatabaseLogFormatter(writer.Write).Disposed(new Mock<DbTransaction>().Object, interceptionContext);
-                Assert.True(
-                    _resourceVerifier.IsMatch("TransactionRollbackErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+                new DatabaseLogFormatter(writer.Write).Disposing(new Mock<DbTransaction>().Object, new DbTransactionInterceptionContext());
+                Assert.Empty(GetSingleLine(writer));
             }
         }
 
@@ -859,6 +858,42 @@ namespace System.Data.Entity.Infrastructure.Interception
                 interceptionContext.Exception = new Exception("Boo");
                 new DatabaseLogFormatter(writer.Write).Closed(new Mock<DbConnection>().Object, interceptionContext);
                 Assert.True(_resourceVerifier.IsMatch("ConnectionCloseErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+        }
+
+        public class Disposing_Connection : TestBase
+        {
+            [Fact]
+            public void Disposing_validates_arguments()
+            {
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
+
+                Assert.Equal(
+                    "connection",
+                    Assert.Throws<ArgumentNullException>(
+                        () => formatter.Disposing(null, new DbConnectionInterceptionContext()))
+                        .ParamName);
+                Assert.Equal(
+                    "interceptionContext",
+                    Assert.Throws<ArgumentNullException>(() => formatter.Disposing(new Mock<DbConnection>().Object, null)).ParamName);
+            }
+
+            [Fact]
+            public void Disposing_logs_if_connection_open()
+            {
+                var writer = new StringWriter();
+                var connectionMock = new Mock<DbConnection>();
+                connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
+                new DatabaseLogFormatter(writer.Write).Disposing(connectionMock.Object, new DbConnectionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("ConnectionDisposedLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void Disposing_does_not_log_if_connection_closed()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).Disposing(new Mock<DbConnection>().Object, new DbConnectionInterceptionContext());
+                Assert.Empty(GetSingleLine(writer));
             }
         }
 

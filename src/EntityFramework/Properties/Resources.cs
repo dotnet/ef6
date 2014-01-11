@@ -14005,6 +14005,22 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.TransactionHandler_AlreadyInitialized); }
         }
+
+        // <summary>
+        // A string like "Disposed connection at {0}{1}"
+        // </summary>
+        internal static string ConnectionDisposedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionDisposedLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Disposed transaction at {0}{1}"
+        // </summary>
+        internal static string TransactionDisposedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.TransactionDisposedLog, p0, p1);
+        }
     }
 
     // <summary>
@@ -17411,6 +17427,8 @@ namespace System.Data.Entity.Resources
         internal const string TransactionRollbackErrorLog = "TransactionRollbackErrorLog";
         internal const string ConnectionOpenCanceledLog = "ConnectionOpenCanceledLog";
         internal const string TransactionHandler_AlreadyInitialized = "TransactionHandler_AlreadyInitialized";
+        internal const string ConnectionDisposedLog = "ConnectionDisposedLog";
+        internal const string TransactionDisposedLog = "TransactionDisposedLog";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

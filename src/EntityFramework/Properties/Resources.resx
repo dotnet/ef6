@@ -5566,4 +5566,10 @@
   <data name="TransactionHandler_AlreadyInitialized" xml:space="preserve">
     <value>This instance of TransactionHandler has already been initialized.</value>
   </data>
+  <data name="ConnectionDisposedLog" xml:space="preserve">
+    <value>Disposed connection at {0}{1}</value>
+  </data>
+  <data name="TransactionDisposedLog" xml:space="preserve">
+    <value>Disposed transaction at {0}{1}</value>
+  </data>
 </root>

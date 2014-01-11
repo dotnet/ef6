@@ -597,12 +597,23 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        /// Does not write to log unless overridden.
+        /// Called before <see cref="Component.Dispose()" /> is invoked.
+        /// The default implementation of this method filters by <see cref="DbContext" /> set into
+        /// <see cref="Context" />, if any, and then logs the event.
         /// </summary>
         /// <param name="connection">The connection being disposed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         public virtual void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
         {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(interceptionContext, "interceptionContext");
+
+            if ((Context == null
+                 || interceptionContext.DbContexts.Contains(Context, ReferenceEquals))
+                && connection.State == ConnectionState.Open)
+            {
+                Write(Strings.ConnectionDisposedLog(DateTimeOffset.Now, Environment.NewLine));
+            }
         }
 
         /// <summary>
@@ -723,24 +734,32 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        /// Does not write to log unless overridden.
+        /// This method is called before <see cref="DbTransaction.Dispose()" /> is invoked.
+        /// The default implementation of this method filters by <see cref="DbContext" /> set into
+        /// <see cref="Context" />, if any, and then logs the event.
         /// </summary>
         /// <param name="transaction">The transaction being disposed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         public virtual void Disposing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
         {
+            Check.NotNull(transaction, "transaction");
+            Check.NotNull(interceptionContext, "interceptionContext");
+
+            if ((Context == null
+                 || interceptionContext.DbContexts.Contains(Context, ReferenceEquals))
+                && transaction.Connection != null)
+            {
+                Write(Strings.TransactionDisposedLog(DateTimeOffset.Now, Environment.NewLine));
+            }
         }
 
         /// <summary>
-        /// This method is called after <see cref="DbTransaction.Dispose()" /> is invoked.
-        /// The default implementation of this method filters by <see cref="DbContext" /> set into
-        /// <see cref="Context" />, if any, and then logs the event.
+        /// Does not write to log unless overridden.
         /// </summary>
         /// <param name="transaction">The transaction that was disposed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
         public virtual void Disposed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
         {
-            RolledBack(transaction, interceptionContext);
         }
 
         /// <summary>

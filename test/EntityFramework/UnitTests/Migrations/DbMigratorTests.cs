@@ -623,6 +623,13 @@ namespace System.Data.Entity.Migrations
                 transactionInterceptorMock.Verify(
                     m => m.Committed(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
                     Times.Once());
+
+                transactionInterceptorMock.Verify(
+                    m => m.Disposing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Once());
+                transactionInterceptorMock.Verify(
+                    m => m.Disposed(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Once());
             }
             finally
             {

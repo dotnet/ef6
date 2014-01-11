@@ -987,11 +987,14 @@ namespace System.Data.Entity.Migrations
 
                 var beginTransactionInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext)
                     .WithIsolationLevel(IsolationLevel.Serializable);
-
-                using (var transaction = DbInterception.Dispatch.Connection.BeginTransaction(
-                    connection,
-                    beginTransactionInterceptionContext))
+                
+                DbTransaction transaction = null;
+                try
                 {
+                    transaction = DbInterception.Dispatch.Connection.BeginTransaction(
+                        connection,
+                        beginTransactionInterceptionContext);
+
                     foreach (var migrationStatement in migrationStatements)
                     {
                         base.ExecuteSql(transaction, migrationStatement, interceptionContext);
@@ -999,6 +1002,10 @@ namespace System.Data.Entity.Migrations
 
                     DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
                     _committedStatements = true;
+                }
+                finally
+                {
+                    DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
                 }
             }
             finally
