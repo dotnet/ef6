@@ -57,11 +57,13 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// This constructor must be called by a class that inherits from this class to override the behavior
         /// of <see cref="Database.Log" />.
         /// </remarks>
-        /// <param name="context">The context for which commands should be logged.</param>
+        /// <param name="context">
+        /// The context for which commands should be logged. Pass null to log every command
+        /// from any context and also commands that do not originate from a context.
+        /// </param>
         /// <param name="writeAction">The delegate to which output will be sent.</param>
         public DatabaseLogFormatter(DbContext context, Action<string> writeAction)
         {
-            Check.NotNull(context, "context");
             Check.NotNull(writeAction, "writeAction");
 
             _context = context;

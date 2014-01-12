@@ -303,6 +303,7 @@
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolverTests.cs" />
+    <Compile Include="Infrastructure\Interception\DatabaseLoggerTests.cs" />
     <Compile Include="Infrastructure\Interception\DbTransactionDispatcherTests.cs" />
     <Compile Include="Infrastructure\Interception\EnlistTransactionInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\Interception\DbConnectionPropertyInterceptionContextTests.cs" />

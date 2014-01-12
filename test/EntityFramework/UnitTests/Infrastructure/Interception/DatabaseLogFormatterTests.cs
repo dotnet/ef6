@@ -25,9 +25,6 @@ namespace System.Data.Entity.Infrastructure.Interception
             public void Constructors_validate_arguments()
             {
                 Assert.Equal(
-                    "context",
-                    Assert.Throws<ArgumentNullException>(() => new DatabaseLogFormatter(null, new StringWriter().Write)).ParamName);
-                Assert.Equal(
                     "writeAction",
                     Assert.Throws<ArgumentNullException>(() => new DatabaseLogFormatter(new Mock<DbContext>().Object, null)).ParamName);
                 Assert.Equal(

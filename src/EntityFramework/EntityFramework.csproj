@@ -245,6 +245,7 @@
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolver.cs" />
+    <Compile Include="Infrastructure\Interception\DatabaseLogger.cs" />
     <Compile Include="Infrastructure\Interception\DbConfigurationDispatcher.cs" />
     <Compile Include="Infrastructure\Interception\DbConfigurationInterceptionContext.cs" />
     <Compile Include="Infrastructure\Interception\IDbConfigurationInterceptor.cs" />
