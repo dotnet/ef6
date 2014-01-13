@@ -38,8 +38,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         {
             VsUtils.EnsureProvider(artifact);
 
-            var project = VSHelpers.GetProjectForDocument(artifact.Uri.LocalPath, PackageManager.Package);
             var serviceProvider = Services.ServiceProvider;
+            var project = VSHelpers.GetProjectForDocument(artifact.Uri.LocalPath, serviceProvider);
 
             // set up ModelBuilderSettings for startMode=PerformDatabaseConfigAndSelectTables
             ModelBuilderWizardForm.WizardMode startMode;

@@ -1505,10 +1505,17 @@ Full error message:
     <value>Use Legacy Provider</value>
   </data>
   <data name="CannotTranslateDesignTimeConnectionString" xml:space="preserve">
-    <value>Unable to convert design-time connection string to its runtime equivalent. Connection string: {0}</value>
+    <!-- Note: {0} is used to insert DDEXNotInstalled string if applicable (or the empty string if not applicable) -->
+    <value>Unable to convert design-time connection string to its runtime equivalent. {0} Connection string: {1}</value>
   </data>
   <data name="CannotTranslateRuntimeConnectionString" xml:space="preserve">
-    <value>Unable to convert runtime connection string to its design-time equivalent. Connection string: {0}</value>
+    <!-- Note: {0} is used to insert DDEXNotInstalled string if applicable (or the empty string if not applicable) -->
+    <value>Unable to convert runtime connection string to its design-time equivalent. {0} Connection string: {1}</value>
+  </data>
+  <data name="DDEXNotInstalled">
+    <!-- This string becomes part of CannotTranslateDesignTimeConnectionString/CannotTranslateRuntimeConnectionString 
+    message if applicable -->
+    <value>The libraries required to enable Visual Studio to communicate with the database for design purposes (DDEX provider) are not installed for provider '{0}'.</value>
   </data>
   <data name="EntityFrameworkVersionName" xml:space="preserve">
     <value>Entity Framework {0}</value>

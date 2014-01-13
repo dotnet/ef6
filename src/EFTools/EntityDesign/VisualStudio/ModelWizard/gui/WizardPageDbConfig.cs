@@ -554,7 +554,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             // update the Design and Runtime Connection String values stored in ModelBuilderSettings
             // these connection strings & invariant names are coming from the ddex provider, so these are "design-time"
-            Wizard.ModelBuilderSettings.SetInvariantNamesAndConnectionStrings(
+            Wizard.ModelBuilderSettings.SetInvariantNamesAndConnectionStrings(ServiceProvider,
                 Wizard.Project, Wizard.ModelBuilderSettings.DesignTimeProviderInvariantName, newConnectionString,
                 newAppConfigConnectionString, true);
             return true;
@@ -677,7 +677,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             // these connection strings & invariant names are coming from the ddex provider, so these are "design-time"
             var invariantName = DataConnectionUtils.GetProviderInvariantName(_dataProviderManager, _dataConnection.Provider);
-            Wizard.ModelBuilderSettings.SetInvariantNamesAndConnectionStrings(
+            Wizard.ModelBuilderSettings.SetInvariantNamesAndConnectionStrings(ServiceProvider,
                 Wizard.Project, invariantName, decryptedConnectionString, appConfigConnectionString, true);
         }
 
@@ -686,13 +686,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             // providerGuid will be the design-time provider guid from DDEX, so we need to translate to the runtime provider invariant name 
             var designTimeProviderInvariantName = DataConnectionUtils.GetProviderInvariantName(_dataProviderManager, providerGuid);
             var runtimeProviderInvariantName = ConnectionManager.TranslateInvariantName(
-                designTimeProviderInvariantName, maskedConnectionString, true);
+                ServiceProvider, designTimeProviderInvariantName, maskedConnectionString, true);
 
-            var translatedConnectionString = ConnectionManager.TranslateConnectionString(
+            var translatedConnectionString = ConnectionManager.TranslateConnectionString(ServiceProvider,
                 Wizard.Project, designTimeProviderInvariantName, maskedConnectionString, true);
 
             var metadataFiles = ConnectionManager.GetMetadataFileNamesFromArtifactFileName(
-                Wizard.ModelBuilderSettings.Project, Wizard.ModelBuilderSettings.ModelPath, PackageManager.Package);
+                Wizard.ModelBuilderSettings.Project, Wizard.ModelBuilderSettings.ModelPath, ServiceProvider);
 
             var connStringText = ConnectionManager.CreateEntityConnectionString(
                 Wizard.Project,

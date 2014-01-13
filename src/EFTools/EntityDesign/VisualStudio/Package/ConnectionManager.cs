@@ -2,6 +2,18 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
+    using EnvDTE;
+    using EnvDTE80;
+    using Microsoft.Data.Entity.Design.Common;
+    using Microsoft.Data.Entity.Design.Model;
+    using Microsoft.Data.Entity.Design.Model.Designer;
+    using Microsoft.Data.Tools.VSXmlDesignerBase.Common;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Data.Core;
+    using Microsoft.VisualStudio.DataTools.Interop;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio.TextManager.Interop;
+    using Microsoft.VSDesigner.Data.Local;
     using System;
     using System.Collections.Generic;
     using System.Data.Common;
@@ -15,19 +27,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using System.Runtime.InteropServices;
     using System.Text;
     using System.Xml;
-    using EnvDTE;
-    using EnvDTE80;
-    using Microsoft.Data.Entity.Design.Model;
-    using Microsoft.Data.Entity.Design.Model.Designer;
-    using Microsoft.Data.Tools.VSXmlDesignerBase.Common;
-    using Microsoft.VSDesigner.Data.Local;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.DataTools.Interop;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.TextManager.Interop;
     using Constants = EnvDTE.Constants;
     using Resources = Microsoft.Data.Entity.Design.Resources;
-    using Microsoft.Data.Entity.Design.Common;
 
     /// <summary>
     ///     The Connection Manager allows interaction with App.Config and Web.Config. It stores a "project dictionary" where each bucket corresponds
@@ -173,8 +174,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
 
             internal ConnectionString(string connStringText)
+                : this(new EntityConnectionStringBuilder(connStringText))
             {
-                _builder = new EntityConnectionStringBuilder(connStringText);
             }
 
             internal ConnectionString(EntityConnectionStringBuilder builder)
@@ -184,12 +185,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             internal string DesignTimeProviderInvariantName
             {
-                get { return TranslateInvariantName(_builder.Provider, _builder.ProviderConnectionString, false); }
+                get { return TranslateInvariantName(PackageManager.Package, _builder.Provider, _builder.ProviderConnectionString, false); }
             }
 
             internal string GetDesignTimeProviderConnectionString(Project project)
             {
-                return TranslateConnectionString(project, _builder.Provider, _builder.ProviderConnectionString, false);
+                return TranslateConnectionString(
+                    PackageManager.Package, project, _builder.Provider, _builder.ProviderConnectionString, false);
             }
 
             internal Guid Provider
@@ -1858,7 +1860,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         /// <summary>
         ///     Translate an invariant name from design-time to runtime or vice versa
         /// </summary>
-        internal static string TranslateInvariantName(string invariantName, string connectionString, bool isDesignTime)
+        internal static string TranslateInvariantName(IServiceProvider serviceProvider, string invariantName, string connectionString, bool isDesignTime)
         {
             if (connectionString == null)
             {
@@ -1871,7 +1873,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
             var translatedInvariantName = invariantName;
 
-            var providerMapper = PackageManager.Package.GetService(typeof(IDTAdoDotNetProviderMapper)) as IDTAdoDotNetProviderMapper;
+            var providerMapper = serviceProvider.GetService(typeof(IDTAdoDotNetProviderMapper)) as IDTAdoDotNetProviderMapper;
             var providerMapper2 = providerMapper as IDTAdoDotNetProviderMapper2;
 
             if (providerMapper2 != null)
@@ -1896,11 +1898,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         /// <summary>
         ///     Translate a connection string from design-time to runtime or vice versa.
         /// </summary>
-        internal static string TranslateConnectionString(Project project, string invariantName, string connectionString, bool isDesignTime)
+        internal static string TranslateConnectionString(IServiceProvider serviceProvider, Project project, string invariantName, string connectionString, bool isDesignTime)
         {
-            var converter =
-                (IConnectionStringConverterService)
-                PackageManager.Package.GetService(typeof(IConnectionStringConverterService));
+            Debug.Assert(serviceProvider != null, "serviceProvider must not be null");
+            Debug.Assert(project != null, "project must not be null");
+            Debug.Assert(!string.IsNullOrWhiteSpace(invariantName), "invalid invariantName");
+            Debug.Assert(!string.IsNullOrWhiteSpace(connectionString), "invalid connectionString");
+
+            var converter = (IConnectionStringConverterService)serviceProvider.GetService(typeof(IConnectionStringConverterService));
             if (converter == null)
             {
                 return connectionString;
@@ -1909,23 +1914,44 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             try
             {
                 return isDesignTime
-                           ? converter.ToRunTime(project, connectionString, invariantName)
-                           : converter.ToDesignTime(
-                               project, connectionString,
-                               TranslateInvariantName(invariantName, connectionString, false));
+                    ? converter.ToRunTime(project, connectionString, invariantName)
+                    : converter.ToDesignTime(
+                        project, connectionString, TranslateInvariantName(serviceProvider, invariantName, connectionString, false));
             }
             catch (ConnectionStringConverterServiceException)
             {
+                var ddexNotInstalledMsg = 
+                    !DDEXProviderInstalled(serviceProvider, invariantName) ? 
+                    string.Format(CultureInfo.CurrentCulture, Resources.DDEXNotInstalled, invariantName) :
+                    string.Empty;
+
                 // ConnectionStringConverterServiceException has no Message - convert to a more descriptive exception
                 var errMsg = isDesignTime
                                  ? string.Format(
                                      CultureInfo.CurrentCulture,
-                                     Resources.CannotTranslateDesignTimeConnectionString, connectionString)
+                                     Resources.CannotTranslateDesignTimeConnectionString,
+                                     ddexNotInstalledMsg,
+                                     connectionString)
                                  : string.Format(
                                      CultureInfo.CurrentCulture,
-                                     Resources.CannotTranslateRuntimeConnectionString, connectionString);
+                                     Resources.CannotTranslateRuntimeConnectionString,
+                                     ddexNotInstalledMsg,
+                                     connectionString);
                 throw new ArgumentException(errMsg);
             }
+        }
+
+        private static bool DDEXProviderInstalled(IServiceProvider serviceProvider, string invariantName)
+        {
+            Debug.Assert(serviceProvider != null, "serviceProvider must not be null");
+            Debug.Assert(!string.IsNullOrWhiteSpace(invariantName), "Invalid invariant name");
+
+            var dataProviderManager = (IVsDataProviderManager)serviceProvider.GetService(typeof(IVsDataProviderManager));
+            Debug.Assert(dataProviderManager != null, "Could not find IVsDataProviderManager");
+
+            return
+                dataProviderManager.Providers.Values.Any(
+                    p => invariantName.Equals((string)p.GetProperty("InvariantName"), StringComparison.Ordinal));
         }
 
         /// <summary>

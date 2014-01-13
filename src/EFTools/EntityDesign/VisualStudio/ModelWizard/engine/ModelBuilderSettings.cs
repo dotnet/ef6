@@ -173,31 +173,28 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         /// <summary>
         ///     This will set up the design-time &amp; runtime invariant name properties &amp; connection string properties.
         /// </summary>
-        /// <param name="project"></param>
-        /// <param name="invariantName"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="appConfigConnectionString"></param>
         /// <param name="isDesignTime">Indicates if invariant name &amp; connection strings are design-time or runtime.</param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
-        internal void SetInvariantNamesAndConnectionStrings(
+        internal void SetInvariantNamesAndConnectionStrings(IServiceProvider serviceProvider,
             Project project, string invariantName, string connectionString, string appConfigConnectionString, bool isDesignTime)
         {
             if (isDesignTime)
             {
                 _designTimeConnectionString = connectionString;
                 _appConfigConnectionString = ConnectionManager.TranslateConnectionString(
-                    project, invariantName, appConfigConnectionString, true);
+                    serviceProvider, project, invariantName, appConfigConnectionString, true);
                 _designTimeProviderInvariantName = invariantName;
                 _runtimeProviderInvariantName = ConnectionManager.TranslateInvariantName(
-                    _designTimeProviderInvariantName, _designTimeConnectionString, true);
+                    serviceProvider, _designTimeProviderInvariantName, _designTimeConnectionString, true);
             }
             else
             {
-                _designTimeConnectionString = ConnectionManager.TranslateConnectionString(project, invariantName, connectionString, false);
+                _designTimeConnectionString = ConnectionManager.TranslateConnectionString(
+                    serviceProvider, project, invariantName, connectionString, false);
                 _appConfigConnectionString = appConfigConnectionString;
                 _runtimeProviderInvariantName = invariantName;
                 _designTimeProviderInvariantName = ConnectionManager.TranslateInvariantName(
-                    _runtimeProviderInvariantName, _designTimeConnectionString, false);
+                    serviceProvider, _runtimeProviderInvariantName, _designTimeConnectionString, false);
             }
         }
 

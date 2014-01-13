@@ -158,7 +158,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal static void SetupSettingsAndModeForDbPages(
-            IServiceProvider sp,
+            IServiceProvider serviceProvider,
             Project project,
             EFArtifact artifact,
             bool checkDatabaseConnection,
@@ -176,7 +176,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             // set up ModelBuilderSettings for startMode=noConnectionMode
             startMode = noConnectionMode;
             settings = new ModelBuilderSettings();
-            var appType = VsUtils.GetApplicationType(sp, project);
+            var appType = VsUtils.GetApplicationType(serviceProvider, project);
             settings.VSApplicationType = appType;
             settings.AppConfigConnectionPropertyName = entityContainerName;
             settings.Artifact = artifact;
@@ -211,10 +211,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     IVsDataConnection dataConnection = null;
                     try
                     {
-                        var dataConnectionManager = sp.GetService(typeof(IVsDataConnectionManager)) as IVsDataConnectionManager;
+                        var dataConnectionManager = serviceProvider.GetService(typeof(IVsDataConnectionManager)) as IVsDataConnectionManager;
                         Debug.Assert(dataConnectionManager != null, "Could not find IVsDataConnectionManager");
 
-                        var dataProviderManager = sp.GetService(typeof(IVsDataProviderManager)) as IVsDataProviderManager;
+                        var dataProviderManager = serviceProvider.GetService(typeof(IVsDataProviderManager)) as IVsDataProviderManager;
                         Debug.Assert(dataProviderManager != null, "Could not find IVsDataProviderManager");
 
                         if (dataConnectionManager != null
@@ -231,7 +231,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                                 "Could not find the IVsDataConnection; an exception should have been thrown if this was the case");
                             if (dataConnection != null)
                             {
-                                VsUtils.EnsureProvider(runtimeProviderName, settings.UseLegacyProvider, project, sp);
+                                VsUtils.EnsureProvider(runtimeProviderName, settings.UseLegacyProvider, project, serviceProvider);
 
                                 if (CanCreateAndOpenConnection(
                                     new StoreSchemaConnectionFactory(),
@@ -279,6 +279,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     // the invariant name and connection string came from app.config, so they are "runtime" invariant names and not "design-time"
                     // (Note: it is OK for InitialCatalog to be null at this stage e.g. from a provider who do not support the concept of Initial Catalog)
                     settings.SetInvariantNamesAndConnectionStrings(
+                        serviceProvider,
                         project,
                         runtimeProviderName,
                         runtimeProviderConnectionString,
@@ -288,7 +289,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     settings.AppConfigConnectionPropertyName = entityContainerName;
                     settings.SaveConnectionStringInAppConfig = false;
 
-                    VsUtils.EnsureProvider(runtimeProviderName, settings.UseLegacyProvider, project, sp);
+                    VsUtils.EnsureProvider(runtimeProviderName, settings.UseLegacyProvider, project, serviceProvider);
                 }
             }
         }
