@@ -93,11 +93,15 @@
     <PackagesInputDir Condition=" '$(PackagesInputDir)' == '' AND '$(NuGetOutputPath)' != ''">$(NuGetOutputPath)</PackagesInputDir>
     <PackagesInputDir Condition=" '$(PackagesInputDir)' == ''">$(OutputPath)..\Release\NuGet</PackagesInputDir>
 
-    <!-- override output dir for package restore (which will automatically append \packages to path) -->
+    <!-- override output dir for EF5 package restore (which will automatically append \packages to path) -->
     <PackageRestoreOutputDir>$(PackagesInputDir)</PackageRestoreOutputDir>
 
-    <!-- Now align PackagesDir with PackageRestoreOutputDir so that the local framework and the EF5 framework end up in the same directory -->
+    <!-- Now align PackagesDir with PackagesInputDir so that the local framework and the EF5 framework end up in the same directory -->
     <PackagesDir>$(PackagesInputDir)\packages</PackagesDir>
+    
+    <!-- Allow the source of local packages to be overridden for a frozen runtime -->
+    <LocalPackageSourceDir Condition="'$(FrozenRuntimeDir)' != ''">$(FrozenRuntimeDir)</LocalPackageSourceDir>
+    <LocalPackageSourceDir Condition="'$(LocalPackageSourceDir)' == ''">$(PackagesInputDir)</LocalPackageSourceDir>
     
     <!-- Ensure SetComputedProperties comes before RestoreLocalPackages so that EF6NuGetPackageVersion is set -->
     <BuildDependsOn>RestorePackages;SetComputedProperties;RestoreLocalPackages;ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
@@ -118,17 +122,22 @@
     <ItemGroup>
       <!-- Note: the construction of DatedLocalPackages assumes the date will be the
                  only part after "$(EF6NuGetPackageVersion)-" in the package name -->
-      <DatedLocalPackages Include="$(PackagesInputDir)\EntityFramework.$(EF6NuGetPackageVersion)-*.nupkg" />
-      <DatedLocalPackages Include="$(PackagesInputDir)\EntityFramework.*.$(EF6NuGetPackageVersion)-*.nupkg" />
+      <DatedLocalPackages Include="$(LocalPackageSourceDir)\EntityFramework.$(EF6NuGetPackageVersion)-*.nupkg" />
+      <DatedLocalPackages Include="$(LocalPackageSourceDir)\EntityFramework.*.$(EF6NuGetPackageVersion)-*.nupkg" />
 
       <!-- On a local build the symbols.nupkg files are in the same directory as the .nupkgs and must be excluded -->
-      <LocalPackages Include="$(PackagesInputDir)\EntityFramework*.nupkg"
-                     Exclude="$(PackagesInputDir)\EntityFramework*.symbols.nupkg;@(DatedLocalPackages)" />
+      <LocalPackages Include="$(LocalPackageSourceDir)\EntityFramework*.nupkg"
+                     Exclude="$(LocalPackageSourceDir)\EntityFramework*.symbols.nupkg;@(DatedLocalPackages)" />
     </ItemGroup>
     
-    <Error Condition="'@(LocalPackages)' == ''" Text="LocalPackages is empty and must not be.  It should contain the list of non-dated, non-symbols EntityFramework .nupkg's from directory $(PackagesInputDir)" />
+    <Error Condition="'@(LocalPackages)' == ''" Text="LocalPackages is empty and must not be.  It should contain the list of non-dated, non-symbols EntityFramework .nupkg's from directory $(LocalPackageSourceDir)" />
+    
+    <!-- Restore the EF6 packages from $(LocalPackageSourceDir) -->
+    <Message Importance="High"
+             Text="RestoreLocalPackages: Using package input directory $(LocalPackageSourceDir)" />
     <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
-             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
+             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(LocalPackageSourceDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
+             
   </Target>
 
   <Target Name="ReplaceEFToolsStrings">
@@ -149,7 +158,7 @@
       <DefineConstants>$(DefineConstants);VisualStudioVersion=$(VisualStudioVersion);MajorVisualStudioVersion=$(VisualStudioVersion.Substring(0, 2))</DefineConstants>
       <DefineConstants>$(DefineConstants);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
       <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath=$(AssemblyPath)</DefineConstants>
-      <DefineConstants>$(DefineConstants);SatelliteAssemblyPath=$(SatelliteAssemblyPath);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts)</DefineConstants>
+      <DefineConstants>$(DefineConstants);SatelliteAssemblyPath=$(SatelliteAssemblyPath);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts);FrozenRuntimeDir=$(FrozenRuntimeDir)</DefineConstants>
     </PropertyGroup>
   </Target>
   <Target Name="AfterBuild">

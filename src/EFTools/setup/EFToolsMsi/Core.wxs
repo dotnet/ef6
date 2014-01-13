@@ -35,9 +35,14 @@
               AssemblyApplication="Microsoft.Data.Entity.Design.dll"
               Assembly=".net"
               KeyPath="yes" />
-        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.AssemblyPath)\EntityFramework.dll" />
-        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.AssemblyPath)\EntityFramework.SqlServerCompact.dll" />
-        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.AssemblyPath)\EntityFramework.SqlServer.dll" />
+        <?if $(var.FrozenRuntimeDir) = "" ?>
+          <?define RuntimeDllDir=$(var.AssemblyPath) ?>
+        <?else?>
+          <?define RuntimeDllDir=$(var.FrozenRuntimeDir) ?>
+        <?endif?>
+        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.RuntimeDllDir)\EntityFramework.dll" />
+        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.RuntimeDllDir)\EntityFramework.SqlServerCompact.dll" />
+        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.RuntimeDllDir)\EntityFramework.SqlServer.dll" />
         <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft">
           <RegistryKey Key="VisualStudio\$(var.VisualStudioVersion)\TextTemplating\DirectiveProcessors\T4VSHost">
             <RegistryValue Type="string"
