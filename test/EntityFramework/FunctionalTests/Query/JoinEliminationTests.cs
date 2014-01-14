@@ -129,6 +129,8 @@ WHERE 1 = [Extent1].[Id]";
                 public string Name { get; set; }
                 public Nullable<int> ProductModelID { get; set; }
                 public virtual ProductModel ProductModel { get; set; }
+                public Nullable<int> StringInstrumentId { get; set; }
+                public virtual StringInstrument StringInstrument { get; set; }
             }
 
             public partial class ProductModel
@@ -172,7 +174,8 @@ WHERE 1 = [Extent1].[Id]";
     [Extent1].[Name] AS [Name]
     FROM   [dbo].[Products] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ProductModels] AS [Extent2] ON [Extent1].[ProductModelID] = [Extent2].[ProductModelID]
-    WHERE ([Extent2].[ModifiedDate] >= @p__linq__0) AND ([Extent2].[ModifiedDate] <= @p__linq__1)";
+    INNER JOIN [dbo].[StringInstruments] AS [Extent3] ON [Extent1].[StringInstrumentId] = [Extent3].[StringInstrumentId]
+    WHERE ([Extent2].[ModifiedDate] >= @p__linq__0) AND ([Extent3].[ProductionDate]=@p__linq__1) AND ([Extent2].[ModifiedDate] <= @p__linq__2)";
 
             const string expectedSqlStrings = 
 @"SELECT
@@ -190,9 +193,11 @@ WHERE 1 = [Extent1].[Id]";
 
                 var MinDate = new DateTime(2011, 02, 03);
                 var MaxDate = new DateTime(2011, 03, 04);
+                var ProductionDate = new DateTime(2011, 03, 04);
 
                 var query = context.Products
                                    .Where(p => p.ProductModel.ModifiedDate >= MinDate
+                                               && p.StringInstrument.ProductionDate == ProductionDate
                                                && p.ProductModel.ModifiedDate <= MaxDate)
                                    .Select(p => p.Name);
 

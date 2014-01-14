@@ -513,6 +513,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             var rightTableNodeInfo = command.GetExtendedNodeInfo(rightInputNode);
             var predicate = new Predicate(command, filterNode.Child1);
+            if (joinOp.OpType == OpType.LeftOuterJoin
+                && !predicate.PreservesNulls(rightTableNodeInfo.Definitions, true))
+            {
+                // In case of multiple joins allow the JoinElimination phase to eliminate 
+                // the redundant ones before promoting the LeftOuter join to Inner join.
+                if (!(leftInputNode.Op is JoinBaseOp)
+                    || trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.JoinElimination))
+                {
+                    joinOp = command.CreateInnerJoinOp();
+                    needsTransformation = true;
+                }
+                else
+                {
+                    trc.PlanCompiler.ForceApplyTransformationsAfterJoinElimination = true;
+                }
+            }
             var leftTableInfo = command.GetExtendedNodeInfo(leftInputNode);
 
             //

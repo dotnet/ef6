@@ -14,6 +14,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     {
         #region public methods and properties
 
+        internal PlanCompiler PlanCompiler
+        {
+            get { return m_compilerState; }
+        }
+
         // <summary>
         // Whether any rule was applied that may have caused modifications such that projection pruning
         // may be useful

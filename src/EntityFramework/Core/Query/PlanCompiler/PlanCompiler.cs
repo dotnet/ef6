@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
-    using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -75,6 +74,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private PlanCompilerPhase m_phase;
+
+        // Phases preceding the current phase.
+        private int _precedingPhases;
 
         // <summary>
         // Set of phases we need to go through
@@ -234,6 +236,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_neededPhases = m_neededPhases | (1 << (int)phase);
         }
 
+        internal bool IsAfterPhase(PlanCompilerPhase phase)
+        {
+            return (_precedingPhases & (1 << (int) phase)) != 0;
+        }
+
         #endregion
 
         #region private methods
@@ -348,7 +355,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 beforeJoinElimination1 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
                 var modified = JoinElimination.Process(this);
-                if (modified)
+                if (modified || ForceApplyTransformationsAfterJoinElimination)
                 {
                     ApplyTransformations(ref beforeTransformationRules3, TransformationRulesGroup.PostJoinElimination);
                     beforeJoinElimination2 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
@@ -418,7 +425,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             var iqtDumpResult = string.Empty;
 
+            if (newPhase != m_phase)
+            {
+                _precedingPhases |= (1 << (int) m_phase);
+            }
+
             m_phase = newPhase;
+
 #if DEBUG
             if (s_traceCallback != null)
             {
@@ -453,6 +466,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return m_mayApplyTransformationRules.Value;
             }
         }
+
+        internal bool ForceApplyTransformationsAfterJoinElimination { get; set; }
 
         // <summary>
         // Compute whether transformations may be applied.
