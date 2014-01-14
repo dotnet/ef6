@@ -2,23 +2,23 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
-    using System.Globalization;
-    using System.IO;
+    using Microsoft.Data.Entity.Design.Common;
+    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
+    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
+    using Microsoft.WizardFramework;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Windows.Forms;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
-    using Microsoft.WizardFramework;
 #if VS12
     using Microsoft.VisualStudio.PlatformUI;
 #endif
-
 
     /// <summary>
     ///     This is the first page in the ModelBuilder VS wizard and lets the user select whether to:
@@ -133,7 +133,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         /// </summary>
         public override bool OnDeactivate()
         {
-            var modelPath = CreateModelFileInfo(Wizard.ModelBuilderSettings, "edmx");
+            var modelPath = 
+                CreateModelFileInfo(Wizard.ModelBuilderSettings, GetNewModelFileExtension(Wizard.ModelBuilderSettings));
 
             // if we threw the exception here it would be swallowed and then the "Add New Item" dialog
             // would be closed. Therefore we set the flag so that the exception is thrown from the 
@@ -155,6 +156,24 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
+        private static string GetNewModelFileExtension(ModelBuilderSettings settings)
+        {
+            switch (settings.GenerationOption)
+            {
+                case ModelGenerationOption.GenerateFromDatabase:
+                case ModelGenerationOption.EmptyModel:
+                    return "edmx";
+
+                default :
+                    Debug.Assert(settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst, "unexpected generation option");
+
+                    return
+                        VsUtils.GetLanguageForProject(settings.Project) == LangEnum.VisualBasic
+                            ? FileExtensions.VbExt
+                            : FileExtensions.CsExt;
+            }
+        }
+
         /// <summary>
         ///     Helper to update ModelBuilderSettings from listbox selection
         /// </summary>
@@ -164,16 +183,21 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             if (selectedOptionIndex == GenerateEmptyModelIndex)
             {
-                Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModel;
+                Debug.Assert(
+                    Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModel, 
+                    "Generation option not updated correctly");
+
                 LazyInitialModelContentsFactory.AddSchemaSpecificReplacements(
                     Wizard.ModelBuilderSettings.ReplacementDictionary,
                     Wizard.ModelBuilderSettings.TargetSchemaVersion);
             }
             else if (selectedOptionIndex == GenerateFromDatabaseIndex)
             {
-                Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
-
+                Debug.Assert(
+                    Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase,
+                    "Generation option not updated correctly");
                 Debug.Assert(Wizard.ModelBuilderSettings.VsTemplatePath != null, "Invalid vstemplate path.");
+
                 Wizard.ModelBuilderSettings.ModelBuilderEngine =
                     new InMemoryModelBuilderEngine(
                         new LazyInitialModelContentsFactory(
@@ -183,8 +207,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             else
             {
                 Debug.Assert(selectedOptionIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected index.");
-
-                Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
+                Debug.Assert(
+                    Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst,
+                    "Generation option not updated correctly");
             }
         }
 
@@ -256,12 +281,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     // User selection = "Empty Model"
                     // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelText;
+                    Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModel;
                 }
                 else if (nSelectedItemIndex == GenerateFromDatabaseIndex)
                 {
                     // User selection = "Generate from database"
                     // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_GenerateFromDBText;
+                    Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
 
                     // add in the WizardPageDbConfig and WizardPageSelectTables pages:
                     // skip first wizard page, since it is still in the collection
@@ -281,6 +308,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     // User selection = "Empty Model"
                     // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelCodeFirstText;
+                    Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
                 }
             }
             Wizard.OnValidationStateChanged(this);

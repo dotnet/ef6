@@ -121,12 +121,16 @@ namespace UnitTests.TestHelpers
         }
 
         public MockDTE(
-            object targetFrameworkMoniker, string projectUniqueName = null,
-            IEnumerable<Reference> references = null)
+            object targetFrameworkMoniker, string projectUniqueName = null, IEnumerable<Reference> references = null)
+            : this(targetFrameworkMoniker, CreateProject(projectUniqueName, CreateVsProject2(references), null, null, null))
+        {
+        }
+
+        public MockDTE(object targetFrameworkMoniker, Project project)
         {
             TargetFrameworkMoniker = targetFrameworkMoniker;
 
-            Project = CreateProject(projectUniqueName, CreateVsProject2(references), null, null, null);
+            Project = project;
             Hierarchy = CreateVsHierarchy(targetFrameworkMoniker, Project);
             Solution = CreateVsSolution(Hierarchy);
 

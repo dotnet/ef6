@@ -2,6 +2,8 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using EnvDTE;
+    using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.VersioningFacade;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Moq;
@@ -34,13 +36,43 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_creates_and_verifies_model_path()
         {
-            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModel, LangEnum.CSharp, false, ".edmx");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModel, LangEnum.CSharp, true, ".edmx");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModel, LangEnum.VisualBasic, false, ".edmx");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModel, LangEnum.VisualBasic, true, ".edmx");
+
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.GenerateFromDatabase, LangEnum.CSharp, false, ".edmx");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.GenerateFromDatabase, LangEnum.CSharp, true, ".edmx");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.GenerateFromDatabase, LangEnum.VisualBasic, false, ".edmx");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.GenerateFromDatabase, LangEnum.VisualBasic, true, ".edmx");
+
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModelCodeFirst, LangEnum.CSharp, false, ".cs");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModelCodeFirst, LangEnum.CSharp, true, ".cs");
+
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModelCodeFirst, LangEnum.VisualBasic, false, ".vb");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModelCodeFirst, LangEnum.VisualBasic, true, ".vb");
+        }
+
+        private static void Run_OnDeactivate_creates_and_verifies_model_path(
+            ModelGenerationOption generationOption, LangEnum language, bool isWebSite, string expectedExtension)
+        {
+            var mockDte =
+                new MockDTE(
+                    ".NETFramework, Version=v4.5",
+                    isWebSite
+                        ? MockDTE.CreateWebSite(
+                            properties: new Dictionary<string, object>
+                            {
+                                { "CurrentWebsiteLanguage", language == LangEnum.CSharp ? "C#" : "VB" }
+                            })
+                        : MockDTE.CreateProject(kind: language == LangEnum.CSharp ? MockDTE.CSharpProjectKind : MockDTE.VBProjectKind));
 
             var modelBuilderSettings = new ModelBuilderSettings
             {
                 NewItemFolder = @"C:\temp",
                 ModelName = "myModel",
-                Project = mockDte.Project
+                Project = mockDte.Project,
+                GenerationOption = generationOption
             };
 
             var wizard = new ModelBuilderWizardForm(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
@@ -54,7 +86,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             mockWizardPageStart
                 .Protected()
-                .Verify("VerifyModelFilePath", Times.Once(), @"C:\temp\myModel.edmx");
+                .Verify("VerifyModelFilePath", Times.Once(), @"C:\temp\myModel" + expectedExtension);
         }
 
         [Fact]
@@ -93,7 +125,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 ModelName = "myModel",
                 ReplacementDictionary = new Dictionary<string, string>(),
                 TargetSchemaVersion = EntityFrameworkVersion.Version3,
-                Project = mockDte.Project
+                Project = mockDte.Project,
+                GenerationOption = ModelGenerationOption.EmptyModel
+
             };
 
             var wizard = new ModelBuilderWizardForm(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
