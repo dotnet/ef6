@@ -476,6 +476,84 @@ namespace System.Data.Entity.Core.Objects
 
                 entityConnectionMock.Verify(m => m.Open(), Times.Once());
             }
+
+            [Fact] // CodePlex 1159
+            public void Opens_and_closes_connection_when_transaction_has_changed_without_losing_track_of_open_count()
+            {
+                var state = ConnectionState.Closed;
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.Setup(m => m.Close()).Callback(() => { state = ConnectionState.Closed; });
+                entityConnectionMock.Setup(m => m.Open()).Callback(
+                    () =>
+                    {
+                        state = ConnectionState.Open;
+                    });
+                entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
+
+                var objectContext = MockHelper.CreateMockObjectContext<object>(entityConnection: entityConnectionMock.Object);
+
+                using (new TransactionScope())
+                {
+                    objectContext.EnsureConnection();
+                }
+
+                using (new TransactionScope())
+                {
+                    objectContext.EnsureConnection();
+                }
+
+                entityConnectionMock.Verify(m => m.Open(), Times.Exactly(2));
+                entityConnectionMock.Verify(m => m.Close(), Times.Once());
+
+                objectContext.ReleaseConnection();
+
+                entityConnectionMock.Verify(m => m.Close(), Times.Once());
+
+                objectContext.ReleaseConnection();
+
+                entityConnectionMock.Verify(m => m.Close(), Times.Exactly(2));
+            }
+
+#if !NET40
+            [Fact] // CodePlex 1159
+            public void Async_Opens_and_closes_connection_when_transaction_has_changed_without_losing_track_of_open_count()
+            {
+                var state = ConnectionState.Closed;
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.Setup(m => m.Close()).Callback(() => { state = ConnectionState.Closed; });
+                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
+                    () =>
+                    {
+                        state = ConnectionState.Open;
+                    }).Returns(Task.FromResult<object>(null));
+                entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
+
+                var objectContext = MockHelper.CreateMockObjectContext<object>(entityConnection: entityConnectionMock.Object);
+
+                var cancellationToken = new CancellationToken();
+
+                using (new TransactionScope())
+                {
+                    objectContext.EnsureConnectionAsync(cancellationToken).Wait(cancellationToken);
+                }
+
+                using (new TransactionScope())
+                {
+                    objectContext.EnsureConnectionAsync(cancellationToken).Wait(cancellationToken);
+                }
+
+                entityConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+                entityConnectionMock.Verify(m => m.Close(), Times.Once());
+
+                objectContext.ReleaseConnection();
+
+                entityConnectionMock.Verify(m => m.Close(), Times.Once());
+
+                objectContext.ReleaseConnection();
+
+                entityConnectionMock.Verify(m => m.Close(), Times.Exactly(2));
+            }
+#endif
         }
 
         public class ExecuteStoreCommand : TestBase

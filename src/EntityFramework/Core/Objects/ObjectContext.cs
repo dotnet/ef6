@@ -1660,8 +1660,7 @@ namespace System.Data.Entity.Core.Objects
                     () =>
                     {
                         Connection.Open();
-                        _openedConnection = true;
-                        _connectionRequestCount++;
+                        Debug.Assert(_openedConnection);
                         return true;
                     },
                     false);
@@ -1719,8 +1718,7 @@ namespace System.Data.Entity.Core.Objects
                         await
                             Connection.OpenAsync(cancellationToken).ConfigureAwait(
                                 continueOnCapturedContext: false);
-                        _openedConnection = true;
-                        _connectionRequestCount++;
+                        Debug.Assert(_openedConnection);
                         return true;
                     },
                     Task.FromResult(false)).ConfigureAwait(continueOnCapturedContext: false);
