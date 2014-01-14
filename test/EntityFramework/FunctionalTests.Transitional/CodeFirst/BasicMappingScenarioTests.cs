@@ -83,10 +83,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            databaseMapping.Assert<TypeClass>(t => t.StringProp).FacetEqual(true, f => f.IsUnicode);
-            databaseMapping.Assert<TypeClass>(t => t.StringProp).FacetEqual(false, f => f.IsFixedLength);
-            databaseMapping.Assert<TypeClass>(t => t.StringProp).FacetEqual(42, f => f.MaxLength);
+            databaseMapping.Assert<TypeClass>(t => t.StringProp).DbEqual(true, f => f.IsUnicode);
+            databaseMapping.Assert<TypeClass>(t => t.StringProp).DbEqual(false, f => f.IsFixedLength);
             databaseMapping.Assert<TypeClass>(t => t.StringProp).DbEqual(42, f => f.MaxLength);
+            databaseMapping.Assert<TypeClass>(t => t.StringProp).FacetEqual(42, f => f.MaxLength);
         }
 
         public class TypeClass

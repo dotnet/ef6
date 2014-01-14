@@ -1109,7 +1109,40 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void IsUnicode_does_not_override_annotation()
+            public void IsUnicode_does_not_override_explicit_configuration()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>().Property(t => t.StringProperty).IsUnicode(true);
+
+                modelBuilder.Properties().Where(p => p.Name == "StringProperty")
+                    .Configure(p => p.IsUnicode(false));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntityWithAnnotations>(t => t.StringProperty).FacetEqual(true, p => p.IsUnicode);
+            }
+
+            [Fact]
+            public void IsUnicode_works_with_explicit_MaxLength()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>().Property(t => t.StringProperty).HasMaxLength(42);
+
+                modelBuilder.Properties().Where(p => p.Name == "StringProperty")
+                    .Configure(p => p.IsUnicode(false));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>(t => t.StringProperty).FacetEqual(false, p => p.IsUnicode);
+                databaseMapping.Assert<LightweightEntity>(t => t.StringProperty).FacetEqual(42, p => p.MaxLength);
+                databaseMapping.Assert<LightweightEntity>(t => t.StringProperty).DbEqual(false, p => p.IsUnicode);
+                databaseMapping.Assert<LightweightEntity>(t => t.StringProperty).DbEqual(42, p => p.MaxLength);
+            }
+
+            [Fact]
+            public void IsUnicode_works_with_StringLengthAttribute()
             {
                 var modelBuilder = new DbModelBuilder();
 
@@ -1120,10 +1153,10 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                var entityType
-                    = databaseMapping.Model.EntityTypes.Single(e => e.Name == "LightweightEntityWithAnnotations");
-
-                Assert.Equal(true, entityType.Properties.Single(c => c.Name == "StringProperty").IsUnicode);
+                databaseMapping.Assert<LightweightEntityWithAnnotations>(t => t.StringProperty).FacetEqual(false, p => p.IsUnicode);
+                databaseMapping.Assert<LightweightEntityWithAnnotations>(t => t.StringProperty).FacetEqual(15, p => p.MaxLength);
+                databaseMapping.Assert<LightweightEntityWithAnnotations>(t => t.StringProperty).DbEqual(false, p => p.IsUnicode);
+                databaseMapping.Assert<LightweightEntityWithAnnotations>(t => t.StringProperty).DbEqual(15, p => p.MaxLength);
             }
 
             [Fact]

@@ -431,12 +431,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     {
                         _lengthConfiguration.Value.IsFixedLength = false;
                     }
-
-                    if (_stringConfiguration.Value != null
-                        && _stringConfiguration.Value.IsUnicode == null)
-                    {
-                        _stringConfiguration.Value.IsUnicode = true;
-                    }
                 }
             }
 

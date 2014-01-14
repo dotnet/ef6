@@ -565,7 +565,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void HasMaxLength_configures_IsUnicode_when_unset()
+        public void HasMaxLength_does_not_configure_IsUnicode_when_unset()
         {
             var innerConfig = new Properties.Primitive.StringPropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
@@ -574,7 +574,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.Equal(256, innerConfig.MaxLength);
             Assert.Equal(false, innerConfig.IsFixedLength);
-            Assert.Equal(true, innerConfig.IsUnicode);
+            Assert.Equal(null, innerConfig.IsUnicode);
             Assert.Same(config, result);
         }
 

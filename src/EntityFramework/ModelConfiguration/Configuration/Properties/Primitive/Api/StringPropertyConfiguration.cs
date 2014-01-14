@@ -36,8 +36,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             base.HasMaxLength(value);
 
-            Configuration.IsUnicode = Configuration.IsUnicode ?? true;
-
             return this;
         }
 
