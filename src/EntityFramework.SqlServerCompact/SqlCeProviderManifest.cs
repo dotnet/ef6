@@ -422,8 +422,7 @@ namespace System.Data.Entity.SqlServerCompact
         private static XmlReader GetXmlResource(string resourceName)
         {
             return XmlReader.Create(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName),
-                null, resourceName);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
         }
 
         // <summary>

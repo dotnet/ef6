@@ -531,7 +531,7 @@ namespace System.Data.Entity.Core.Common
                 throw Error.InvalidResourceName(resourceName);
             }
 
-            return XmlReader.Create(stream, null, resourceName);
+            return XmlReader.Create(stream);
         }
 
         /// <summary>Generates a data definition language (DDL script that creates schema objects (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</summary>
