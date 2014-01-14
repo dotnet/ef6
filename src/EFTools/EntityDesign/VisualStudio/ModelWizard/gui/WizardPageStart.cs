@@ -127,6 +127,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return listViewModelContents.SelectedIndices[0];
         }
 
+        // used for testing/mocking
+        protected virtual bool AnyItemSelected
+        {
+            get { return listViewModelContents.SelectedIndices.Count > 0; }
+        }
+
         /// <summary>
         ///     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
         ///     Updates ModelBuilderSettings from the GUI
@@ -271,7 +277,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         /// </summary>
         private void listViewModelContents_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listViewModelContents.SelectedIndices.Count > 0)
+            if (AnyItemSelected)
             {
                 RemoveAllExceptFirstPage();
 
@@ -282,6 +288,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModel;
+
+                    Wizard.OnValidationStateChanged(this);
                 }
                 else if (nSelectedItemIndex == GenerateFromDatabaseIndex)
                 {
@@ -297,6 +305,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     {
                         Wizard.AddPage(page);
                     }
+
+                    Wizard.OnValidationStateChanged(this);
                 }
                 else
                 {
@@ -309,14 +319,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelCodeFirstText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
+
+                    Wizard.OnValidationStateChanged(this);
+                    Wizard.EnableButton(ButtonType.Finish, FinishClickable(Wizard.ModelBuilderSettings));
                 }
             }
-            Wizard.OnValidationStateChanged(this);
         }
 
-        private void listViewModelContents_DoubleClick(object sender, EventArgs e)
+        // internal for testing
+        internal void listViewModelContents_DoubleClick(object sender, EventArgs e)
         {
-            if (listViewModelContents.SelectedIndices.Count > 0)
+            if (AnyItemSelected)
             {
                 var nSelectedItemIndex = GetSelectedOptionIndex();
                 if (nSelectedItemIndex == GenerateEmptyModelIndex)
@@ -324,11 +337,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     // "Empty Model" - act as if user had clicked "Finish"
                     Wizard.OnFinish();
                 }
-                else
+                else if (nSelectedItemIndex == GenerateFromDatabaseIndex)
                 {
-                    Debug.Assert(nSelectedItemIndex == GenerateFromDatabaseIndex, "Unexpected index.");
                     // "Generate from DB" - act as if user had clicked "Next"
                     Wizard.OnNext();
+                }
+                else
+                {
+                    Debug.Assert(nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected index.");
+
+                    if (FinishClickable(Wizard.ModelBuilderSettings))
+                    {
+                        Wizard.OnFinish();    
+                    }
                 }
             }
         }
@@ -349,6 +370,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 _templateContent.Add(vstemplatePath, edmxTemplate);
             }
             return edmxTemplate;
+        }
+
+        private static bool FinishClickable(ModelBuilderSettings settings)
+        {
+            Debug.Assert(settings != null, "settings must not be null");
+            Debug.Assert(settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst, "unexpected generation option");
+
+            // OneEF supported only for EF6 or if the proeject does not have any references to EF
+            var entityFrameworkAssemblyVersion = VsUtils.GetInstalledEntityFrameworkAssemblyVersion(settings.Project);
+            return entityFrameworkAssemblyVersion == null 
+                || entityFrameworkAssemblyVersion >= RuntimeVersion.Version6;
         }
     }
 }

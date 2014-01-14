@@ -12,6 +12,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Collections.Generic;
     using System.Linq;
     using UnitTests.TestHelpers;
+    using VSLangProj;
     using Xunit;
 
     public class WizardPageStartTests
@@ -208,6 +209,99 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             wizard.FileAlreadyExistsError = false;
             Assert.True(wizardPageStart.OnActivate());
+        }
+
+        [Fact]
+        public void listViewModelContents_DoubleClick_calls_OnFinish_if_EmptyModel_selected()
+        {
+            var mockDte = new MockDTE(
+                ".NETFramework, Version=v4.5", 
+                references: new[] { MockDTE.CreateReference("EntityFramework", "5.0.0.0") });
+
+            var mockWizard = SetupMockWizard(mockDte.Project, ModelGenerationOption.EmptyModel);
+            var mockWizardPageStart =
+                SetupMockWizardPageStart(mockDte.ServiceProvider, mockWizard, WizardPageStart.GenerateEmptyModelIndex);
+
+            mockWizard.Setup(w => w.OnFinish());
+
+            mockWizardPageStart.Object.listViewModelContents_DoubleClick(sender: null, e: null);
+
+            mockWizard.Verify(w => w.OnFinish(), Times.Once());
+        }
+
+        [Fact]
+        public void listViewModelContents_DoubleClick_calls_OnFinish_if_EmptyModelCodeFirst_selected_and_EF_not_referenced_or_EF6_referenced()
+        {
+            var mockDtes = new[]
+            {
+                new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]),
+                new MockDTE(".NETFramework, Version=v4.5",
+                    references: new[] { MockDTE.CreateReference("EntityFramework", "6.0.0.0") })
+            };
+
+            foreach (var mockDte in mockDtes)
+            {
+                var mockWizard = SetupMockWizard(mockDte.Project, ModelGenerationOption.EmptyModelCodeFirst);
+                var mockWizardPageStart =
+                    SetupMockWizardPageStart(mockDte.ServiceProvider, mockWizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex);
+
+                mockWizard.Setup(w => w.OnFinish());
+
+                mockWizardPageStart.Object.listViewModelContents_DoubleClick(sender: null, e: null);
+
+                mockWizard.Verify(w => w.OnFinish(), Times.Once());
+            }
+        }
+
+        [Fact]
+        public void listViewModelContents_DoubleClick_wont_call_OnFinish_if_EmptyModelCodeFirst_selected_and_EF5_referenced()
+        {
+            var mockDte =
+                new MockDTE(
+                    ".NETFramework, Version=v4.5",
+                    references: new[] { MockDTE.CreateReference("EntityFramework", "5.0.0.0") });
+
+            var mockWizard = SetupMockWizard(mockDte.Project, ModelGenerationOption.EmptyModelCodeFirst);
+            var mockWizardPageStart = 
+                SetupMockWizardPageStart(mockDte.ServiceProvider, mockWizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex);
+
+            mockWizard.Setup(w => w.OnFinish());
+
+            mockWizardPageStart.Object.listViewModelContents_DoubleClick(sender: null, e: null);
+
+            mockWizard.Verify(w => w.OnFinish(), Times.Never());
+        }
+
+        private static Mock<ModelBuilderWizardForm> SetupMockWizard(Project project, ModelGenerationOption generationOption)
+        {
+            var modelBuilderSettings = new ModelBuilderSettings
+            {
+                Project = project,
+                GenerationOption = generationOption
+            };
+
+            var mockWizard =
+                new Mock<ModelBuilderWizardForm>(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality)
+                {
+                    CallBase = true
+                };
+            return mockWizard;
+        }
+
+        private static Mock<WizardPageStart> SetupMockWizardPageStart(IServiceProvider serviceProvider, 
+            Mock<ModelBuilderWizardForm> mockWizard, int itemIndex)
+        {
+            var mockWizardPageStart = new Mock<WizardPageStart>(mockWizard.Object, serviceProvider) { CallBase = true };
+            mockWizardPageStart
+                .Protected()
+                .Setup<bool>("AnyItemSelected")
+                .Returns(true);
+
+            mockWizardPageStart
+                .Protected()
+                .Setup<int>("GetSelectedOptionIndex")
+                .Returns(itemIndex);
+            return mockWizardPageStart;
         }
     }
 }
