@@ -57,7 +57,10 @@ function Add-EFProvider
         [string] $TypeName
     )
 
-    Check-Project $project
+	if (!(Check-Project $project))
+	{
+	    return
+	}
 
     $runner = New-EFConfigRunner $Project
 
@@ -130,7 +133,10 @@ function Add-EFDefaultConnectionFactory
         [string[]] $ConstructorArguments
     )
 
-    Check-Project $project
+	if (!(Check-Project $project))
+	{
+	    return
+	}
 
     $runner = New-EFConfigRunner $Project
 
@@ -190,7 +196,10 @@ function Initialize-EFConfiguration
         $Project
     )
 
-    Check-Project $project
+	if (!(Check-Project $project))
+	{
+	    return
+	}
 
     $runner = New-EFConfigRunner $Project
 
@@ -1005,6 +1014,8 @@ function Check-Project($project)
     {
         throw "The Project argument must refer to a Visual Studio project. Use the '`$project' variable provided by NuGet when running in install.ps1."
     }
+
+	return $project.CodeModel
 }
 
 Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory', 'Initialize-EFConfiguration') -Variable InitialDatabase
