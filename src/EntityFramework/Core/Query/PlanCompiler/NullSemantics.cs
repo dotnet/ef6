@@ -164,7 +164,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                             return IsNull(x);
                         default:
                             return _negated
-                                ? And(n, Not(Or(IsNull(Clone(x)), IsNull(Clone(y)))))
+                                ? And(n, NotXor(Clone(x), Clone(y)))
                                 : Or(n, And(IsNull(Clone(x)), IsNull(Clone(y))));
                     }
             }
@@ -203,6 +203,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node Or(Node x, Node y)
         {
             return _command.CreateNode(_command.CreateConditionalOp(OpType.Or), x, y);
+        }
+
+        private Node Boolean(bool value)
+        {
+            return _command.CreateNode(_command.CreateConstantOp(_command.BooleanType, value));
+        }
+
+        private Node NotXor(Node x, Node y)
+        {
+            return 
+                _command.CreateNode(
+                    _command.CreateComparisonOp(OpType.EQ),
+                    _command.CreateNode(
+                        _command.CreateCaseOp(_command.BooleanType),
+                        IsNull(x), Boolean(true), Boolean(false)),
+                    _command.CreateNode(
+                        _command.CreateCaseOp(_command.BooleanType),
+                        IsNull(y), Boolean(true), Boolean(false)));
         }
 
         private struct VariableNullabilityTable

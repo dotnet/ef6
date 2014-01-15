@@ -182,6 +182,12 @@ namespace System.Data.Entity.Query
                 var query1 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name != parameter);
                 var query2 = context.Products.Where(p => p.Category.Id == "Fruit" && parameter != p.Name);
                 var query3 = context.Products.Where(p => p.Category.Id == "Fruit" && !(p.Name == parameter));
+
+                parameter = null;
+                var query4 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name != parameter);
+                var query5 = context.Products.Where(p => p.Category.Id == "Fruit" && parameter != p.Name);
+                var query6 = context.Products.Where(p => p.Category.Id == "Fruit" && !(p.Name == parameter));
+
                 var expectedSql1 =
 @"SELECT 
     [Extent1].[Discriminator] AS [Discriminator], 
@@ -190,7 +196,7 @@ namespace System.Data.Entity.Query
     [Extent1].[Name] AS [Name], 
     [Extent1].[PromotionalCode] AS [PromotionalCode]
     FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ( NOT (([Extent1].[Name] = @p__linq__0) AND ( NOT ([Extent1].[Name] IS NULL OR @p__linq__0 IS NULL))))";
+    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ( NOT (([Extent1].[Name] = @p__linq__0) AND ((CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))";
                 var expectedSql2 =
 @"SELECT 
     [Extent1].[Discriminator] AS [Discriminator], 
@@ -199,13 +205,18 @@ namespace System.Data.Entity.Query
     [Extent1].[Name] AS [Name], 
     [Extent1].[PromotionalCode] AS [PromotionalCode]
     FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ( NOT ((@p__linq__0 = [Extent1].[Name]) AND ( NOT (@p__linq__0 IS NULL OR [Extent1].[Name] IS NULL))))";
+    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ( NOT ((@p__linq__0 = [Extent1].[Name]) AND ((CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))";
 
                 QueryTestHelpers.VerifyDbQuery(query1, expectedSql1);
                 QueryTestHelpers.VerifyDbQuery(query2, expectedSql2);
                 QueryTestHelpers.VerifyDbQuery(query3, expectedSql1);
+                QueryTestHelpers.VerifyDbQuery(query4, expectedSql1);
+                QueryTestHelpers.VerifyDbQuery(query5, expectedSql2);
+                QueryTestHelpers.VerifyDbQuery(query6, expectedSql1);
                 Assert.Equal(2, query1.Count());
                 Assert.Equal(2, query2.Count());
+                Assert.Equal(2, query4.Count());
+                Assert.Equal(2, query5.Count());
             }
         }
 
@@ -281,7 +292,7 @@ namespace System.Data.Entity.Query
     [Extent1].[Id] AS [Id], 
     [Extent1].[Name] AS [Name]
     FROM [dbo].[A] AS [Extent1]
-    WHERE NOT (([Extent1].[Id] = @p__linq__0) AND (@p__linq__0 IS NOT NULL))";
+    WHERE  NOT (([Extent1].[Id] = @p__linq__0) AND (0 = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END)))";
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
@@ -326,7 +337,7 @@ namespace System.Data.Entity.Query
     [Extent1].[Name] AS [Name]
     FROM [dbo].[A] AS [Extent1]
     WHERE  NOT (
-        (([Extent1].[Name] = @p__linq__0) AND ( NOT ([Extent1].[Name] IS NULL OR @p__linq__0 IS NULL))) OR 
+        (([Extent1].[Name] = @p__linq__0) AND ((CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))) OR 
         ( NOT (([Extent1].[Name] = @p__linq__1) OR (([Extent1].[Name] IS NULL) AND (@p__linq__1 IS NULL)))) OR 
         ( NOT (([Extent1].[Name] = @p__linq__2) OR (([Extent1].[Name] IS NULL) AND (@p__linq__2 IS NULL)))))";
 
@@ -348,7 +359,7 @@ namespace System.Data.Entity.Query
     CASE 
     WHEN (([Extent1].[Name] = @p__linq__0) OR (([Extent1].[Name] IS NULL) AND (@p__linq__0 IS NULL))) 
         THEN cast(1 as bit) 
-    WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND ( NOT ([Extent1].[Name] IS NULL OR @p__linq__0 IS NULL)))) 
+    WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND ((CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END)))) 
         THEN cast(0 as bit) 
     END AS [C1]
     FROM [dbo].[A] AS [Extent1]";
@@ -371,8 +382,9 @@ namespace System.Data.Entity.Query
     CASE 
     WHEN ([Extent1].[Name] = @p__linq__0) 
         THEN cast(1 as bit) 
-    WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND (@p__linq__0 IS NOT NULL))) 
-        THEN cast(0 as bit) END AS [C1]
+    WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND (0 = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))
+        THEN cast(0 as bit)
+    END AS [C1]
     FROM [dbo].[B] AS [Extent1]";
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
