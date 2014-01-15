@@ -94,6 +94,11 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+        public bool IsSqlCe
+        {
+            get { return _databaseProvider == DatabaseProvider.SqlServerCe; }
+        }
+
         public void WhenSqlCe(Action action)
         {
             if (_databaseProvider == DatabaseProvider.SqlServerCe)

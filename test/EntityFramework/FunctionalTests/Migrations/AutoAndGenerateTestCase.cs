@@ -11,9 +11,7 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
-    // Issue #1010
-    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.VB)]
+    [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.VB)]
     public abstract class AutoAndGenerateTestCase<TContextV1, TContextV2> : DbTestCase
         where TContextV1 : DbContext
         where TContextV2 : DbContext

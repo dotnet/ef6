@@ -21,5 +21,10 @@ namespace System.Data.Entity
                 modelBuilder.Entity<MigrationsStore>().Ignore(e => e.FloorPlan);
             }
         }
+
+        public static bool IsSqlCe(this DbContext context)
+        {
+            return context.Database.Connection is SqlCeConnection;
+        }
     }
 }

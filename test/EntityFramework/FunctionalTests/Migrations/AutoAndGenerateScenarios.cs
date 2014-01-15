@@ -74,7 +74,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(createTableOperation.PrimaryKey.Columns.Count == 1);
             Assert.Equal("Id", createTableOperation.PrimaryKey.Columns.Single());
-            Assert.Equal(7, createTableOperation.Columns.Count);
+            Assert.Equal(IsSqlCe ? 5 : 7, createTableOperation.Columns.Count);
 
             var idColumn = createTableOperation.Columns.SingleOrDefault(c => c.Name == "Id");
             Assert.NotNull(idColumn);
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(PrimitiveTypeKind.String, nameColumn.Type);
             Assert.Null(nameColumn.IsNullable);
             Assert.Null(nameColumn.IsFixedLength);
-            Assert.Null(nameColumn.MaxLength);
+            Assert.Equal(IsSqlCe ? (int?)4000 : null, nameColumn.MaxLength);
 
             var addressCityColumn = createTableOperation.Columns.SingleOrDefault(c => c.Name == "Address_City");
             Assert.NotNull(addressCityColumn);
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Migrations
                 migrationOperations.OfType<CreateTableOperation>().SingleOrDefault(o => o.Name == "dbo.MigrationsStores");
             Assert.NotNull(createTableOperation);
 
-            Assert.Equal(7, createTableOperation.Columns.Count);
+            Assert.Equal(IsSqlCe ? 5 : 7, createTableOperation.Columns.Count);
         }
     }
 
@@ -309,7 +309,14 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>();
 
                 // Compensate for convention differences
-                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).IsRequired().HasMaxLength(128);
+                if (this.IsSqlCe())
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).IsRequired().HasMaxLength(4000);
+                }
+                else
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).IsRequired().HasMaxLength(128);
+                }
 
                 this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
@@ -370,6 +377,8 @@ namespace System.Data.Entity.Migrations
                     .HasTableAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
                     .HasTableAnnotation("A2", "V2")
                     .HasTableAnnotation("A1", "V1");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -428,6 +437,8 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Name)
                     .HasColumnAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -494,6 +505,8 @@ namespace System.Data.Entity.Migrations
                     .HasColumnAnnotation("A2", "V2")
                     .HasColumnAnnotation("A1", "V1")
                     .HasColumnAnnotation("A3", "V3");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -559,6 +572,8 @@ namespace System.Data.Entity.Migrations
                     .HasTableAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
                     .HasTableAnnotation("A2", "V2")
                     .HasTableAnnotation("A1", "V1");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -607,6 +622,8 @@ namespace System.Data.Entity.Migrations
                     .HasTableAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
                     .HasTableAnnotation("A2", "V2")
                     .HasTableAnnotation("A1", "V1");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -618,6 +635,8 @@ namespace System.Data.Entity.Migrations
                     .HasTableAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"))
                     .HasTableAnnotation("A1", "V1")
                     .HasTableAnnotation("A3", "V3");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -673,6 +692,8 @@ namespace System.Data.Entity.Migrations
                     .HasTableAnnotation("A2", "V2")
                     .HasTableAnnotation("A1", "V1")
                     .ToTable("EekyBear", "dbo");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -685,6 +706,8 @@ namespace System.Data.Entity.Migrations
                     .HasTableAnnotation("A1", "V1")
                     .HasTableAnnotation("A3", "V3")
                     .ToTable("MrsPandy", "dbo");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -1051,7 +1074,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.Null(addColumnOperation.Column.IsFixedLength);
             Assert.Null(addColumnOperation.Column.IsNullable);
-            Assert.Null(addColumnOperation.Column.MaxLength);
+            Assert.Equal(IsSqlCe ? (int?)4000 : null, addColumnOperation.Column.MaxLength);
             Assert.Null(addColumnOperation.Column.StoreType);
             Assert.Equal(PrimitiveTypeKind.String, addColumnOperation.Column.Type);
         }
@@ -1425,9 +1448,10 @@ namespace System.Data.Entity.Migrations
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MigrationsStore>();
-
-                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+                if (!this.IsSqlCe())
+                {
+                    modelBuilder.Entity<MigrationsStore>();
+                }
             }
         }
 
@@ -1435,14 +1459,21 @@ namespace System.Data.Entity.Migrations
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).HasColumnName("Renamed");
-
-                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+                if (!this.IsSqlCe())
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).HasColumnName("Renamed");
+                }
             }
         }
 
         protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // Renames not supported on SQL CE
+            if (IsSqlCe)
+            {
+                return;
+            }
+
             Assert.Equal(1, migrationOperations.Count());
 
             var renameColumnOperation =
@@ -1455,6 +1486,12 @@ namespace System.Data.Entity.Migrations
 
         protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // Renames not supported on SQL CE
+            if (IsSqlCe)
+            {
+                return;
+            }
+
             Assert.Equal(1, migrationOperations.Count());
 
             var renameColumnOperation =
@@ -1473,9 +1510,11 @@ namespace System.Data.Entity.Migrations
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MigrationsStore>();
-
-                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+                // Spatial types not supported on SQL CE
+                if (!this.IsSqlCe())
+                {
+                    modelBuilder.Entity<MigrationsStore>();
+                }
             }
         }
 
@@ -1483,15 +1522,23 @@ namespace System.Data.Entity.Migrations
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MigrationsStore>().Property(s => s.Location).HasColumnName("Locomotion");
-                modelBuilder.Entity<MigrationsStore>().Property(s => s.FloorPlan).HasColumnName("PoorPlan");
-
-                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+                // Spatial types not supported on SQL CE
+                if (!this.IsSqlCe())
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Location).HasColumnName("Locomotion");
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.FloorPlan).HasColumnName("PoorPlan");
+                }
             }
         }
 
         protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // Spatial types not supported on SQL CE
+            if (IsSqlCe)
+            {
+                return;
+            }
+
             Assert.Equal(2, migrationOperations.Count());
 
             Assert.Equal(
@@ -1509,6 +1556,12 @@ namespace System.Data.Entity.Migrations
 
         protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // Spatial types not supported on SQL CE
+            if (IsSqlCe)
+            {
+                return;
+            }
+
             Assert.Equal(2, migrationOperations.Count());
 
             Assert.Equal(
@@ -1995,14 +2048,14 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AlterColumnFixedLength()
         {
-            UpDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<MigrationsStore>();
+                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).HasMaxLength(64);
 
                 this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
@@ -2374,10 +2427,16 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnUnicode :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnUnicode.V1, AutoAndGenerateScenarios_AlterColumnUnicode.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnUnicode()
+        public override void Init(DatabaseProvider provider, ProgrammingLanguage language)
         {
-            IsDownDataLoss = true;
-            UpDataLoss = true;
+            base.Init(provider, language);
+
+            if (!IsSqlCe)
+            {
+                // SQL CE columns are always Unicode
+                IsDownDataLoss = true;
+                UpDataLoss = true;
+            }
         }
 
         public class V1 : AutoAndGenerateContext_v1
@@ -2402,6 +2461,13 @@ namespace System.Data.Entity.Migrations
 
         protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // SQL CE columns are always Unicode
+            if (IsSqlCe)
+            {
+                Assert.Empty(migrationOperations);
+                return;
+            }
+
             Assert.Equal(1, migrationOperations.Count());
 
             var alterColumnOperation =
@@ -2414,6 +2480,13 @@ namespace System.Data.Entity.Migrations
 
         protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // SQL CE columns are always Unicode
+            if (IsSqlCe)
+            {
+                Assert.Empty(migrationOperations);
+                return;
+            }
+
             Assert.Equal(1, migrationOperations.Count());
 
             var alterColumnOperation =
@@ -2726,6 +2799,8 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(ol => ol.Address.City)
                     .HasColumnAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"));
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -2740,6 +2815,8 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(ol => ol.Name)
                     .HasColumnAnnotation("Collation", new CollationAttribute("Danish_Norwegian_CS_AS"));
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -2812,6 +2889,8 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Ignore(e => e.Name);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -2828,6 +2907,8 @@ namespace System.Data.Entity.Migrations
                     .HasColumnAnnotation("A2", "V2")
                     .HasColumnAnnotation("A1", "V1")
                     .HasColumnAnnotation("A3", "V3");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -2910,6 +2991,8 @@ namespace System.Data.Entity.Migrations
                     .HasColumnAnnotation("A2", "V2")
                     .HasColumnAnnotation("A1", "V1")
                     .HasColumnAnnotation("A3", "V3");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -2922,6 +3005,8 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Ignore(e => e.Name);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -3387,40 +3472,52 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_ImplicitIndexChanges :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_ImplicitIndexChanges.V1, AutoAndGenerateScenarios_ImplicitIndexChanges.V2>
     {
-        public AutoAndGenerateScenarios_ImplicitIndexChanges()
+        public override void Init(DatabaseProvider provider, ProgrammingLanguage language)
         {
-            IsDownDataLoss = true;
-            UpDataLoss = true;
+            base.Init(provider, language);
+
+            // Renames not supported on SQL CE
+            if (!IsSqlCe)
+            {
+                IsDownDataLoss = true;
+                UpDataLoss = true;
+            }
         }
 
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<OrderLine>()
-                    .Ignore(ol => ol.Quantity);
+                // Renames not supported on SQL CE
+                if (!this.IsSqlCe())
+                {
+                    modelBuilder.Entity<OrderLine>()
+                        .Ignore(ol => ol.Quantity);
                 
-                modelBuilder.Entity<OrderLine>()
-                    .Property(ol => ol.Price)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("PriceIndex")));
+                    modelBuilder.Entity<OrderLine>()
+                        .Property(ol => ol.Price)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("PriceIndex")));
 
-                modelBuilder.Entity<OrderLine>()
-                    .Property(ol => ol.Sku)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")));
+                    modelBuilder.Entity<OrderLine>()
+                        .Property(ol => ol.Sku)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")));
 
-                modelBuilder.Entity<WithGuidKey>()
-                    .Property(ol => ol.Id)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
+                    modelBuilder.Entity<WithGuidKey>()
+                        .Property(ol => ol.Id)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
 
-                modelBuilder.Ignore<MigrationsStore>();
+                    modelBuilder.Entity<MigrationsProduct>()
+                        .Property(p => p.ProductId)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("ProductIdIndex")));
 
-                modelBuilder.Entity<MigrationsProduct>()
-                    .Property(p => p.ProductId)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("ProductIdIndex")));
+                    modelBuilder.Entity<Order>()
+                        .Property(p => p.OrderId)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")));
 
-                modelBuilder.Entity<Order>()
-                    .Property(p => p.OrderId)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")));
+                    modelBuilder.Ignore<MigrationsStore>();
+
+                    modelBuilder.Entity<MigrationsProduct>();
+                }
             }
         }
 
@@ -3428,39 +3525,49 @@ namespace System.Data.Entity.Migrations
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<OrderLine>()
-                    .Property(ol => ol.Quantity)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("QuantityIndex")));
-
-                modelBuilder.Entity<OrderLine>()
-                    .Ignore(ol => ol.Price);
-
-                modelBuilder.Entity<OrderLine>()
-                    .Property(ol => ol.Sku)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")))
-                    .HasColumnName("NuSku");
-
-                modelBuilder.Entity<WithGuidKey>()
-                    .ToTable("WithGooieKey")
-                    .Property(ol => ol.Id)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
-
-                modelBuilder.Entity<MigrationsStore>()
-                    .Property(s => s.Id)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IdIndex")));
-
-                modelBuilder.Ignore<MigrationsProduct>();
-
-                modelBuilder.Entity<Order>()
-                    .ToTable("Oeuvres")
-                    .Property(p => p.OrderId)
-                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")))
-                    .HasColumnName("OeuvresId");
+                // Renames not supported on SQL CE
+                if (!this.IsSqlCe())
+                {
+                    modelBuilder.Entity<OrderLine>()
+                        .Property(ol => ol.Quantity)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("QuantityIndex")));
+            
+                    modelBuilder.Entity<OrderLine>()
+                        .Ignore(ol => ol.Price);
+            
+                    modelBuilder.Entity<OrderLine>()
+                        .Property(ol => ol.Sku)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")))
+                        .HasColumnName("NuSku");
+            
+                    modelBuilder.Entity<WithGuidKey>()
+                        .ToTable("WithGooieKey")
+                        .Property(ol => ol.Id)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
+            
+                    modelBuilder.Entity<MigrationsStore>()
+                        .Property(s => s.Id)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IdIndex")));
+            
+                    modelBuilder.Ignore<MigrationsProduct>();
+            
+                    modelBuilder.Entity<Order>()
+                        .ToTable("Oeuvres")
+                        .Property(p => p.OrderId)
+                        .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")))
+                        .HasColumnName("OeuvresId");
+                }
             }
         }
 
         protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // Renames not supported on SQL CE
+            if (IsSqlCe)
+            {
+                return;
+            }
+
             var operations = migrationOperations.ToArray();
 
             Assert.Equal(2, operations.OfType<DropIndexOperation>().Count());
@@ -3487,6 +3594,12 @@ namespace System.Data.Entity.Migrations
 
         protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
+            // Renames not supported on SQL CE
+            if (IsSqlCe)
+            {
+                return;
+            }
+
             var operations = migrationOperations.ToArray();
 
             Assert.Equal(2, operations.OfType<DropIndexOperation>().Count());
@@ -3538,6 +3651,8 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsProduct>()
                     .Property(p => p.ProductId)
                     .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
@@ -3567,6 +3682,8 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<MigrationsProduct>()
                     .Property(p => p.ProductId);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
         }
 
