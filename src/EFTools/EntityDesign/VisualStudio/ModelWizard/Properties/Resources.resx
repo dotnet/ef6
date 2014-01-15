@@ -489,10 +489,10 @@ Error message: '{0}'</value>
     <value>Your project targets .NET Framework 3.5. To use the latest version of Entity Framework, exit this wizard and change your project's target framework to .NET Framework 4.0 or higher before performing this action.</value>
   </data>
   <data name="RuntimeConfig_NoProvider" xml:space="preserve">
-    <value>An Entity Framework database provider compatible with the latest version of Entity Framework could not be found for your data connection. To use the latest version of Entity Framework, exit this wizard, install a compatible provider, and rebuild your project before performing this action.</value>
+    <value>An Entity Framework database provider compatible with the latest version of Entity Framework could not be found for your data connection. If you have already installed a compatible provider, ensure you have rebuilt your project before performing this action. Otherwise, exit this wizard, install a compatible provider, and rebuild your project before performing this action.</value>
   </data>
   <data name="RuntimeConfig_SixInstalledButNoProvider" xml:space="preserve">
-    <value>Your project references the latest version of Entity Framework; however, an Entity Framework database provider compatible with this version could not be found for your data connection. Exit this wizard, install a compatible provider, and rebuild your project before performing this action.</value>
+    <value>Your project references the latest version of Entity Framework; however, an Entity Framework database provider compatible with this version could not be found for your data connection. If you have already installed a compatible provider, ensure you have rebuilt your project before performing this action. Otherwise, exit this wizard, install a compatible provider, and rebuild your project before performing this action.</value>
   </data>
   <data name="Error" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bitmaps\Error.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

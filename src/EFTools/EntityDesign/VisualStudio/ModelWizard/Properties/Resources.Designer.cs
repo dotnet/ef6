@@ -718,7 +718,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An Entity Framework database provider compatible with the latest version of Entity Framework could not be found for your data connection. To use the latest version of Entity Framework, exit this wizard, install a compatible provider, and rebuild your project before performing this action..
+        ///   Looks up a localized string similar to An Entity Framework database provider compatible with the latest version of Entity Framework could not be found for your data connection. If you have already installed a compatible provider, ensure you have rebuilt your project before performing this action. Otherwise, exit this wizard, install a compatible provider, and rebuild your project before performing this action..
         /// </summary>
         internal static string RuntimeConfig_NoProvider {
             get {
@@ -736,7 +736,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your project references the latest version of Entity Framework; however, an Entity Framework database provider compatible with this version could not be found for your data connection. Exit this wizard, install a compatible provider, and rebuild your project before performing this action..
+        ///   Looks up a localized string similar to Your project references the latest version of Entity Framework; however, an Entity Framework database provider compatible with this version could not be found for your data connection. If you have already installed a compatible provider, ensure you have rebuilt your project before performing this action. Otherwise, exit this wizard, install a compatible provider, and rebuild your project before performing this action..
         /// </summary>
         internal static string RuntimeConfig_SixInstalledButNoProvider {
             get {
@@ -1026,7 +1026,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Empty Model Code First. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..
+        ///   Looks up a localized string similar to Empty Model Code First - description placeholder..
         /// </summary>
         internal static string StartPage_EmptyModelCodeFirstText {
             get {
