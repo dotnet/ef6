@@ -24,6 +24,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void Identity_dictionaries_are_created_lazily_once()
+        {
+            var collection = CreateEntityTypeCollection(MetadataCollection<EntityType>.UseDictionaryCrossover + 1);
+
+            Assert.False(collection.HasCaseSensitiveDictionary);
+            Assert.False(collection.HasCaseInsensitiveDictionary);
+
+            var dictionary1 = collection.GetCaseSensitiveDictionary();
+            var dictionary2 = collection.GetCaseSensitiveDictionary();
+
+            Assert.Same(dictionary1, dictionary2);
+            Assert.True(collection.HasCaseSensitiveDictionary);
+            Assert.False(collection.HasCaseInsensitiveDictionary);
+
+            var dictionary3 = collection.GetCaseInsensitiveDictionary();
+            var dictionary4 = collection.GetCaseInsensitiveDictionary();
+
+            Assert.Same(dictionary3, dictionary4);
+            Assert.True(collection.HasCaseSensitiveDictionary);
+            Assert.True(collection.HasCaseInsensitiveDictionary);
+        }
+
+        [Fact]
         public void Add_throws_ArgumentException_for_duplicate_identity()
         {
             var metadataCollection = new MetadataCollection<EntityType>();

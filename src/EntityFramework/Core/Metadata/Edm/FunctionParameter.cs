@@ -104,7 +104,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotEmpty(name);
 
-            var initialIdentity = Identity;
             _name = name;
 
             if (DeclaringFunction == null)
@@ -117,7 +116,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     ? DeclaringFunction.ReturnParameters.Source
                     : DeclaringFunction.Parameters.Source;
 
-            parameterCollection.HandleIdentityChange(this, initialIdentity);
+            parameterCollection.InvalidateCache();
         }
 
         /// <summary>

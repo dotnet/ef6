@@ -498,12 +498,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Gets the case sensitive dictionary.
         // </summary>
+        // Internal for test purpose only, do not use outside this class.
 #if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        private Dictionary<string, T> GetCaseSensitiveDictionary()
+        internal Dictionary<string, T> GetCaseSensitiveDictionary()
         {
-            if (_caseInsensitiveDictionary == null
+            if (_caseSensitiveDictionary == null
                 && _metadataList.Count > UseDictionaryCrossover)
             {
                 _caseSensitiveDictionary = CreateCaseSensitiveDictionary();
@@ -532,10 +533,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Gets the case insensitive dictionary.
         // </summary>
+        // Internal for test purpose only, do not use outside this class.
 #if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        private Dictionary<string, int> GetCaseInsensitiveDictionary()
+        internal Dictionary<string, int> GetCaseInsensitiveDictionary()
         {
             if (_caseInsensitiveDictionary == null
                 && _metadataList.Count > UseDictionaryCrossover)
