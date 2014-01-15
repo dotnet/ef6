@@ -827,21 +827,8 @@ namespace System.Data.Entity.Internal
                     {
                         Initialize();
 
-                        var disposableEnumerable = ObjectContext.ExecuteStoreQuery<TElement>(
+                        return ObjectContext.ExecuteStoreQuery<TElement>(
                             sql, new ExecutionOptions(MergeOption.AppendOnly, streaming), parameters);
-                        try
-                        {
-                            var result = disposableEnumerable.GetEnumerator();
-                            return result;
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
                     });
         }
 
@@ -864,29 +851,14 @@ namespace System.Data.Entity.Internal
             ObjectContext.AsyncMonitor.EnsureNotEntered();
 
             return new LazyAsyncEnumerator<TElement>(
-                async cancellationToken =>
-                    {
-                        // Not initializing asynchronously as it's not expected to be done frequently
-                        Initialize();
+                cancellationToken =>
+                {
+                    // Not initializing asynchronously as it's not expected to be done frequently
+                    Initialize();
 
-                        var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                            sql, new ExecutionOptions(MergeOption.AppendOnly, streaming), cancellationToken, parameters)
-                                                                      .ConfigureAwait(
-                                                                          continueOnCapturedContext: false);
-
-                        try
-                        {
-                            return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+                    return ObjectContext.ExecuteStoreQueryAsync<TElement>(
+                        sql, new ExecutionOptions(MergeOption.AppendOnly, streaming), cancellationToken, parameters);
+                });
         }
 
 #endif

@@ -662,7 +662,6 @@
     <Compile Include="Core\Common\Utils\Pair.cs" />
     <Compile Include="Core\Common\Utils\Set.cs" />
     <Compile Include="Core\Common\Utils\StringUtil.cs" />
-    <Compile Include="Core\Common\Utils\ThreadSafeList.cs" />
     <Compile Include="Core\Common\Utils\TrailingSpaceComparer.cs" />
     <Compile Include="Core\Common\Utils\TrailingSpaceStringComparer.cs" />
     <Compile Include="Core\Common\Utils\TreePrinter.cs" />

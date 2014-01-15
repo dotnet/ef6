@@ -394,8 +394,9 @@
     <Compile Include="Internal\InternalReferenceEntryTests.cs" />
     <Compile Include="Internal\InternalSqlSetQueryTests.cs" />
     <Compile Include="Internal\LazyAsyncEnumeratorTests.cs" />
+    <Compile Include="Internal\LazyEnumeratorTests.cs" />
     <Compile Include="Internal\LazyInternalContextTests.cs" />
-    <Compile Include="Internal\Linq\DbQueryPorivderTests.cs" />
+    <Compile Include="Internal\Linq\DbQueryProviderTests.cs" />
     <Compile Include="Internal\Linq\InternalDbQueryTests.cs" />
     <Compile Include="Internal\Linq\InternalDbSetTests.cs" />
     <Compile Include="Internal\Linq\InternalSetTests.cs" />

@@ -565,23 +565,7 @@ namespace System.Data.Entity.Core.Objects
         {
             QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
 
-            return new LazyEnumerator<T>(
-                () =>
-                    {
-                        var disposableEnumerable = GetResults(null);
-                        try
-                        {
-                            return disposableEnumerable.GetEnumerator();
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+            return new LazyEnumerator<T>(() => GetResults(null));
         }
 
         #endregion
@@ -599,24 +583,7 @@ namespace System.Data.Entity.Core.Objects
         {
             QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
 
-            return new LazyAsyncEnumerator<T>(
-                async cancellationToken =>
-                    {
-                        var disposableEnumerable =
-                            await GetResultsAsync(null, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                        try
-                        {
-                            return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+            return new LazyAsyncEnumerator<T>(cancellationToken => GetResultsAsync(null, cancellationToken));
         }
 
 #endif

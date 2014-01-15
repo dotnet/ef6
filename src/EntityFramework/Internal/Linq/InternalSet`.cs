@@ -781,25 +781,8 @@ namespace System.Data.Entity.Internal.Linq
             Initialize();
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 
-            return new LazyEnumerator<TEntity>(
-                () =>
-                    {
-                        var disposableEnumerable = InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(
-                            sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), parameters);
-                        try
-                        {
-                            var result = disposableEnumerable.GetEnumerator();
-                            return result;
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+            return new LazyEnumerator<TEntity>(() => InternalContext.ObjectContext.ExecuteStoreQuery<TEntity>(
+                            sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), parameters));
         }
 
 #if !NET40
@@ -826,25 +809,8 @@ namespace System.Data.Entity.Internal.Linq
             var mergeOption = asNoTracking ? MergeOption.NoTracking : MergeOption.AppendOnly;
 
             return new LazyAsyncEnumerator<TEntity>(
-                async cancellationToken =>
-                    {
-                        var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                            sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), cancellationToken, parameters)
-                                                                        .ConfigureAwait(continueOnCapturedContext: false);
-
-                        try
-                        {
-                            return ((IDbAsyncEnumerable<TEntity>)disposableEnumerable).GetAsyncEnumerator();
-                        }
-                        catch
-                        {
-                            // if there is a problem creating the enumerator, we should dispose
-                            // the enumerable (if there is no problem, the enumerator will take 
-                            // care of the dispose)
-                            disposableEnumerable.Dispose();
-                            throw;
-                        }
-                    });
+                cancellationToken => InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
+                    sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), cancellationToken, parameters));
         }
 
 #endif

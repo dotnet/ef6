@@ -8,7 +8,7 @@ namespace System.Data.Entity.Internal.Linq
     using Moq;
     using Xunit;
 
-    public class DbQueryPorivderTests
+    public class DbQueryProviderTests
     {
 #if !NET40
 

@@ -1,53 +1,40 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-
 #if !NET40
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Used to wrap ObjectResult and defer async query execution until first call to MoveNextAsyc is completed. 
+    /// </summary>
+    /// <typeparam name="T">The element type of the wrapped ObjectResult</typeparam>
+    /// <remarks>This class is not thread safe.</remarks>
     internal class LazyAsyncEnumerator<T> : IDbAsyncEnumerator<T>
     {
-        private readonly Func<CancellationToken, Task<IDbAsyncEnumerator<T>>> _getEnumeratorAsync;
-        private volatile Task<IDbAsyncEnumerator<T>> _asyncEnumeratorTask;
+        private readonly Func<CancellationToken, Task<ObjectResult<T>>> _getObjectResultAsync;
+        private IDbAsyncEnumerator<T> _objectResultAsyncEnumerator;
 
-        // <summary>
-        // Initializes a new instance of <see cref="LazyAsyncEnumerator{T}" />
-        // </summary>
-        // <param name="getEnumeratorAsync">
-        // Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}" /> . Should not return null.
-        // </param>
-        public LazyAsyncEnumerator(Func<CancellationToken, Task<IDbAsyncEnumerator<T>>> getEnumeratorAsync)
+        public LazyAsyncEnumerator(Func<CancellationToken, Task<ObjectResult<T>>> getObjectResultAsync)
         {
-            DebugCheck.NotNull(getEnumeratorAsync);
-
-            _getEnumeratorAsync = getEnumeratorAsync;
-        }
-
-        private Task<IDbAsyncEnumerator<T>> GetEnumeratorAsync(CancellationToken cancellationToken)
-        {
-            if (_asyncEnumeratorTask == null)
-            {
-                lock (_getEnumeratorAsync)
-                {
-                    if (_asyncEnumeratorTask == null)
-                    {
-                        _asyncEnumeratorTask = _getEnumeratorAsync(cancellationToken);
-                    }
-                }
-            }
-
-            return _asyncEnumeratorTask;
+            DebugCheck.NotNull(getObjectResultAsync);
+            _getObjectResultAsync = getObjectResultAsync;
         }
 
         public T Current
         {
-            get { return GetEnumeratorAsync(CancellationToken.None).Result.Current; }
+            get
+            {
+                return _objectResultAsyncEnumerator == null
+                    ? default(T)
+                    : _objectResultAsyncEnumerator.Current;
+            }
         }
 
         object IDbAsyncEnumerator.Current
@@ -57,23 +44,41 @@ namespace System.Data.Entity.Internal
 
         public void Dispose()
         {
-            if (_asyncEnumeratorTask != null
-                && !_asyncEnumeratorTask.IsCanceled
-                && !_asyncEnumeratorTask.IsFaulted)
+            if (_objectResultAsyncEnumerator != null)
             {
-                Debug.Assert(
-                    _asyncEnumeratorTask.IsCompleted,
-                    "Task hasn't completed, this means that the tasks returned from MoveNextAsync wasn't awaited on.");
-                _asyncEnumeratorTask.Result.Dispose();
+                _objectResultAsyncEnumerator.Dispose();
             }
         }
 
-        public async Task<bool> MoveNextAsync(CancellationToken cancellationToken)
+        public Task<bool> MoveNextAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var enumerator = await GetEnumeratorAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-            return await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            if (_objectResultAsyncEnumerator != null)
+            {
+                return _objectResultAsyncEnumerator.MoveNextAsync(cancellationToken);
+            }
+
+            return FirstMoveNextAsync(cancellationToken);
+        }
+
+        private async Task<bool> FirstMoveNextAsync(CancellationToken cancellationToken)
+        {
+            var objectResult = await _getObjectResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            DebugCheck.NotNull(objectResult); // await _getObjectResultAsync should never return null 
+            try
+            {
+                _objectResultAsyncEnumerator = ((IDbAsyncEnumerable<T>)objectResult).GetAsyncEnumerator();
+            }
+            catch
+            {
+                // if there is a problem creating the enumerator, we should dispose
+                // the enumerable (if there is no problem, the enumerator will take 
+                // care of the dispose)
+                objectResult.Dispose();
+                throw;
+            }
+            return await _objectResultAsyncEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

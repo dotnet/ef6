@@ -6,7 +6,9 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -20,42 +22,51 @@ namespace System.Data.Entity.Internal
             var initialized = false;
             var _ = new LazyAsyncEnumerator<object>(
                 ct =>
-                    {
-                        initialized = true;
-                        return null;
-                    });
+                {
+                    initialized = true;
+                    return null;
+                });
 
             Assert.False(initialized);
         }
 
         [Fact]
-        public void Current_runs_initializer()
+        public void Current_doesnt_run_initializer()
         {
             var initialized = false;
             var enumerator = new LazyAsyncEnumerator<object>(
                 ct =>
-                    {
-                        initialized = true;
-                        return Task.FromResult(new Mock<IDbAsyncEnumerator<object>>().Object);
-                    });
+                {
+                    initialized = true;
+                    return Task.FromResult(new Mock<ObjectResult<object>>().Object);
+                });
 
             var _ = enumerator.Current;
 
-            Assert.True(initialized);
+            Assert.False(initialized);
         }
 
         [Fact]
         public void MoveNextAsync_runs_initializer()
         {
+            var mockShaper = Core.Objects.MockHelper.CreateShaperMock<int>();
+            mockShaper
+                .Setup(m => m.GetEnumerator())
+                .Returns(() => new DbEnumeratorShim<int>(Enumerable.Range(1, 1).GetEnumerator()));
+
+            var mockObjectResult = 
+                new Mock<ObjectResult<int>>(mockShaper.Object, null, null)
+                {
+                    CallBase = true
+                };
+
             var initialized = false;
             var enumerator = new LazyAsyncEnumerator<int>(
                 ct =>
-                    {
-                        initialized = true;
-                        return Task.FromResult(
-                            (IDbAsyncEnumerator<int>)new DbEnumeratorShim<int>(
-                                                         ((IEnumerable<int>)new[] { 1 }).GetEnumerator()));
-                    });
+                {
+                    initialized = true;
+                    return Task.FromResult(mockObjectResult.Object);
+                });
 
             Assert.True(enumerator.MoveNextAsync(CancellationToken.None).Result);
 
@@ -68,28 +79,44 @@ namespace System.Data.Entity.Internal
         {
             var cancellationToken = new CancellationTokenSource().Token;
 
-            var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<int>>();
-            mockAsyncEnumerator
-                .Setup(e => e.MoveNextAsync(It.IsAny<CancellationToken>()))
-                .Returns(
-                    (CancellationToken token) =>
-                    {
-                        Assert.Equal(cancellationToken, token);
-                        return Task.FromResult(false);
-                    });
+            var mockEnumerator = 
+                new Mock<DbEnumeratorShim<int>>(Enumerable.Empty<int>().GetEnumerator());
 
-            var lazyEnumerator = 
+            mockEnumerator
+                .As<IDbAsyncEnumerator<int>>()
+                .Setup(e => e.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .Returns((CancellationToken token) => Task.FromResult(false));
+
+            var mockShaper = Core.Objects.MockHelper.CreateShaperMock<int>();
+
+            mockShaper
+                .Setup(m => m.GetEnumerator())
+                .Returns(() => mockEnumerator.Object);
+
+            var mockObjectResult = 
+                new Mock<ObjectResult<int>>(mockShaper.Object, null, null)
+                {
+                    CallBase = true
+                };
+
+            var lazyEnumerator =
                 new LazyAsyncEnumerator<int>(
                     token =>
                     {
                         Assert.Equal(cancellationToken, token);
-                        return Task.FromResult(mockAsyncEnumerator.Object);
+                        return Task.FromResult(mockObjectResult.Object);
                     });
 
-            lazyEnumerator
-                .MoveNextAsync(cancellationToken)
-                .GetAwaiter()
-                .GetResult();
+            Assert.False(
+                lazyEnumerator
+                    .MoveNextAsync(cancellationToken)
+                    .GetAwaiter()
+                    .GetResult());
+            
+            mockEnumerator
+                .As<IDbAsyncEnumerator<int>>()
+                .Verify(e => e.MoveNextAsync(cancellationToken), Times.Once());
+
         }
 
         [Fact]
