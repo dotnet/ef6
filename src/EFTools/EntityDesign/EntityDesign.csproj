@@ -263,6 +263,12 @@
     <Compile Include="VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerator.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\InitialModelContentsFactory.cs" />
+    <Compile Include="VisualStudio\ModelWizard\OneEFWizard.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="VisualStudio\ProjectExecutionContext.cs" />
     <Compile Include="VisualStudio\RetargetingHandler.cs" />
     <Compile Include="VisualStudio\RuntimeVersion.cs" />
@@ -274,11 +280,6 @@
     </Compile>
     <Compile Include="VisualStudio\ModelWizard\Gui\WizardPageRuntimeConfig.Designer.cs">
       <DependentUpon>WizardPageRuntimeConfig.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VisualStudio\ModelWizard\Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="VisualStudio\CustomDirectiveProcessor\FallbackT4VSHostProcessor.cs" />
     <Compile Include="VisualStudio\NetFrameworkVersioningHelper.cs" />
@@ -1009,12 +1010,12 @@
   <Target Name="PrepareTemplatesForSetup" DependsOnTargets="PrepareForPackaging">
     <!-- Updates the NuGet registry key name and copies templates to the bin dir to prepare for setup -->
     <ItemGroup>
-      <InTheBoxItemDBContextItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\DBContext\**\*.*" />
-      <InTheBoxItemDBContextItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\**\*.*" />
+      <InTheBoxItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\DBContext\**\*.*" />
+      <InTheBoxItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\**\*.*" />
     </ItemGroup>
-    <MakeDir Directories="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)')" />
-    <RegexReplaceInFile Condition="'%(Extension)' == '.vstemplate'" InputFileName="%(InTheBoxItemDBContextItemTemplateFiles.Identity)" OutputFileName="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" Patterns="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN;EFPACKAGEVERSION" Replacements="EntityFrameworkVisualStudio$(VisualStudioVersion.Substring(0,2))Tools;$(EF6NuGetPackageVersion)" />
-    <Copy Condition="'%(Extension)' != '.vstemplate'" SourceFiles="@(InTheBoxItemDBContextItemTemplateFiles)" DestinationFiles="@(InTheBoxItemDBContextItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <MakeDir Directories="@(InTheBoxItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)')" />
+    <RegexReplaceInFile Condition="'%(Extension)' == '.vstemplate'" InputFileName="%(InTheBoxItemTemplateFiles.Identity)" OutputFileName="@(InTheBoxItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" Patterns="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN;EFPACKAGEVERSION;EFDESIGNERVERSIONTOKEN" Replacements="EntityFrameworkVisualStudio$(VisualStudioVersion.Substring(0,2))Tools;$(EF6NuGetPackageVersion);$(AssemblyVersion)" />
+    <Copy Condition="'%(Extension)' != '.vstemplate'" SourceFiles="@(InTheBoxItemTemplateFiles)" DestinationFiles="@(InTheBoxItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Target Name="CreateTemplatesAndPackages" DependsOnTargets="UpdateTTIncludeVSEnvVarVersion;UpdateTemplateVersion;PrepareTemplatesForSetup">
     <ItemGroup>

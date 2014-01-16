@@ -44,7 +44,8 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="envdte" />
+    <Reference Include="EnvDte" />
+    <Reference Include="EnvDte80" />
     <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.DataTools.Interop" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -215,6 +216,7 @@
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageDbConfigTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageStartTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\ModelObjectItemWizardTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\OneEFWizardTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Model\StandaloneXmlModelProviderTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\ConnectionManagerTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\EntityDesignDocumentFrameMgrTests.cs" />

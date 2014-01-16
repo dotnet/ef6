@@ -70,6 +70,54 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to // Your context has been configured to use a &apos;{0}&apos; connection string from your application&apos;s 
+        ///        // configuration file (App.config or Web.config). By default, this connection string targets the 
+        ///        // &apos;{1}.{0}&apos; database on your LocalDb instance. 
+        ///        // 
+        ///        // If you wish to target a different database and/or database provider, modify the &apos;{0}&apos; 
+        ///        // connection string in the application configuration file..
+        /// </summary>
+        internal static string CodeFirstCodeFile_CtorComment_CS {
+            get {
+                return ResourceManager.GetString("CodeFirstCodeFile_CtorComment_CS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos; Your context has been configured to use a &apos;{0}&apos; connection string from your application&apos;s 
+        ///        &apos; configuration file (App.config or Web.config). By default, this connection string targets the 
+        ///        &apos; &apos;{1}.{0}&apos; database on your LocalDb instance. 
+        ///        &apos; 
+        ///        &apos; If you wish to target a different database and/or database provider, modify the &apos;{0}&apos; 
+        ///        &apos; connection string in the application configuration file..
+        /// </summary>
+        internal static string CodeFirstCodeFile_CtorComment_VB {
+            get {
+                return ResourceManager.GetString("CodeFirstCodeFile_CtorComment_VB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Add a DbSet for each entity type that you want to include in your model. For more information 
+        ///        // on configuring and using a Code First model, see http://go.microsoft.com/fwlink/?LinkId=390109..
+        /// </summary>
+        internal static string CodeFirstCodeFile_DbSetComment_CS {
+            get {
+                return ResourceManager.GetString("CodeFirstCodeFile_DbSetComment_CS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos; Add a DbSet for each entity type that you want to include in your model. For more information 
+        ///        &apos; on configuring and using a Code First model, see http:&apos;go.microsoft.com/fwlink/?LinkId=390109..
+        /// </summary>
+        internal static string CodeFirstCodeFile_DbSetComment_VB {
+            get {
+                return ResourceManager.GetString("CodeFirstCodeFile_DbSetComment_VB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; conflicts with an existing property name in the Application Settings. Please choose a different name..
         /// </summary>
         internal static string ConnectionStringDuplicateIdentifer {

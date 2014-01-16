@@ -1,15 +1,25 @@
 namespace $rootnamespace$
 {
+	using System;
     using System.Data.Entity;
-    
-    /// <summary>
-    /// The $safeitemname$ class.
-    /// </summary>
+    using System.Linq;
+
     public class $safeitemname$ : DbContext
     {
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		$ctorcomment$
+        public $safeitemname$()
+            : base("name=$safeitemname$")
         {
-            // Configure your model here
         }
+
+		$dbsetcomment$
+
+        // public DbSet<MyEntity> MyEntities { get; set; }
     }
+
+    //public class MyEntity
+    //{
+    //    public int Id { get; set; }
+    //    public string Name { get; set; }
+    //}
 }
