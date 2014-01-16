@@ -313,9 +313,9 @@ FROM ( SELECT DISTINCT
         }
 
         [Fact]
-        public void Grouping_by_all_columns_with_aggregate_count_works()
+        public void Grouping_by_all_columns_with_aggregate_function_works()
         {
-            var expectedSql =
+            var expectedSqlA =
 @"SELECT 
     (SELECT 
         COUNT(1) AS [A1]
@@ -323,20 +323,94 @@ FROM ( SELECT DISTINCT
         WHERE [Extent1].[Id] = [Extent2].[Id]) AS [C1]
     FROM [dbo].[ArubaOwners] AS [Extent1]";
 
+            var expectedSqlB =
+@"SELECT 
+    [GroupBy1].[K1] AS [Id], 
+    [GroupBy1].[A1] AS [C1]
+    FROM ( SELECT 
+        [Extent1].[Id] AS [K1], 
+        [Extent1].[FirstName] AS [K2], 
+        [Extent1].[LastName] AS [K3], 
+        [Extent1].[Alias] AS [K4], 
+        COUNT(1) AS [A1]
+        FROM [dbo].[ArubaOwners] AS [Extent1]
+        GROUP BY [Extent1].[Id], [Extent1].[FirstName], [Extent1].[LastName], [Extent1].[Alias]
+    )  AS [GroupBy1]";
+
+            var expectedSqlC =
+@"SELECT 
+    [GroupBy1].[K1] AS [Id], 
+    [GroupBy1].[K4] AS [Alias],
+    [GroupBy1].[A1] AS [C1]
+    FROM ( SELECT 
+        [Extent1].[Id] AS [K1], 
+        [Extent1].[FirstName] AS [K2], 
+        [Extent1].[LastName] AS [K3], 
+        [Extent1].[Alias] AS [K4], 
+        COUNT(1) AS [A1]
+        FROM [dbo].[ArubaOwners] AS [Extent1]
+        GROUP BY [Extent1].[Id], [Extent1].[FirstName], [Extent1].[LastName], [Extent1].[Alias]
+    )  AS [GroupBy1]";
+
+            var expectedSqlD =
+@"SELECT 
+    [GroupBy1].[K1] AS [Id], 
+    [GroupBy1].[A1] AS [C1], 
+    [GroupBy1].[A2] AS [C2]
+    FROM ( SELECT 
+        [Extent1].[Id] AS [K1], 
+        [Extent1].[FirstName] AS [K2], 
+        [Extent1].[LastName] AS [K3], 
+        [Extent1].[Alias] AS [K4], 
+        SUM([Extent1].[Id]) AS [A1], 
+        COUNT(1) AS [A2]
+        FROM [dbo].[ArubaOwners] AS [Extent1]
+        GROUP BY [Extent1].[Id], [Extent1].[FirstName], [Extent1].[LastName], [Extent1].[Alias]
+    )  AS [GroupBy1]";
+
             using (var context = new ArubaContext())
             {
-                var query = context.Owners.GroupBy(o => new { o.Id, o.FirstName, o.LastName, o.Alias }, c => new { c.LastName, c.FirstName }, (k, g) => g.Count());
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+                var query1 = context.Owners.GroupBy(o => new { o.Id, o.FirstName, o.LastName, o.Alias }, c => new { c.LastName, c.FirstName }, (k, g) => g.Count());
+                QueryTestHelpers.VerifyDbQuery(query1, expectedSqlA);
 
-                query = context.Owners.GroupBy(o => o, c => new { c.LastName, c.FirstName }, (k, g) => g.Count());
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+                query1 = context.Owners.GroupBy(o => o, c => new { c.LastName, c.FirstName }, (k, g) => g.Count());
+                QueryTestHelpers.VerifyDbQuery(query1, expectedSqlA);
 
-                query = context.Owners.GroupBy(o => o, c => c, (k, g) => g.Count());
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+                query1 = context.Owners.GroupBy(o => o, c => c, (k, g) => g.Count());
+                QueryTestHelpers.VerifyDbQuery(query1, expectedSqlA);
 
-                var results = query.ToList();
+                var results = query1.ToList();
                 var expected = context.Owners.ToList().GroupBy(o => o, c => c, (k, g) => g.Count()).ToList();
                 QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o == i);
+
+                var query2 = context.Owners.GroupBy(o => o, c => c, (k, g) => new { Count = g.Count() });
+                QueryTestHelpers.VerifyDbQuery(query2, expectedSqlB);
+
+                var query3 = context.Owners.GroupBy(o => o, c => c, (k, g) => new { Id = k.Id, Count = g.Count() });
+                QueryTestHelpers.VerifyDbQuery(query3, expectedSqlB);
+
+                var query4 = context.Owners.GroupBy(o => o, c => c, (k, g) => new { Id = k.Id, Alias = k.Alias, Count = g.Count() });
+                QueryTestHelpers.VerifyDbQuery(query4, expectedSqlC);
+
+                var query5 = from o in context.Owners
+                             group o by o into g
+                             select g.Count();
+                QueryTestHelpers.VerifyDbQuery(query5, expectedSqlA);
+
+                var query6 = from o in context.Owners
+                             group o by o into g
+                             select new { Id = g.Key.Id, Count = g.Count() };
+                QueryTestHelpers.VerifyDbQuery(query6, expectedSqlB);
+
+                var query7 = from o in context.Owners
+                             group o by o into g
+                             select new { Id = g.Key.Id, Alias = g.Key.Alias, Count = g.Count() };
+                QueryTestHelpers.VerifyDbQuery(query7, expectedSqlC);
+
+                var query8 = from o in context.Owners
+                             group o by o into g
+                             select new { Id = g.Key.Id, Sum = g.Sum(x => x.Id), Count = g.Count() };
+                QueryTestHelpers.VerifyDbQuery(query8, expectedSqlD);
 
             }
         }
