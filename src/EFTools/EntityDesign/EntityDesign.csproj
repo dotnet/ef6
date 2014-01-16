@@ -261,6 +261,7 @@
     <Compile Include="VisualStudio\ModelWizard\Engine\EdmxHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\IInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactory.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerationOption.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerator.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\InitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\OneEFWizard.cs" />
@@ -890,6 +891,7 @@
     <Content Include="VisualStudio\ModelWizard\bitmaps\DbTables.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModel.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModelCodeFirst.bmp" />
+    <Content Include="VisualStudio\ModelWizard\bitmaps\CodeFirstFromDatabase.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\PageIcon.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\Table.bmp" />
     <Content Include="VisualStudio\ModelWizard\native.rc" />

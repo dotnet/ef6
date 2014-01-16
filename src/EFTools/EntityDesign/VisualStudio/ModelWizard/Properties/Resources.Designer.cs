@@ -118,6 +118,25 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CodeFirstFromDatabase {
+            get {
+                object obj = ResourceManager.GetObject("CodeFirstFromDatabase", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code First from database.
+        /// </summary>
+        internal static string CodeFirstFromDatabaseOption {
+            get {
+                return ResourceManager.GetString("CodeFirstFromDatabaseOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; conflicts with an existing property name in the Application Settings. Please choose a different name..
         /// </summary>
         internal static string ConnectionStringDuplicateIdentifer {
@@ -1070,6 +1089,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         internal static string StartPage_AccessibleSelectionExplanation {
             get {
                 return ResourceManager.GetString("StartPage_AccessibleSelectionExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code First From Database - description placeholder..
+        /// </summary>
+        internal static string StartPage_CodeFirstFromDatabaseText {
+            get {
+                return ResourceManager.GetString("StartPage_CodeFirstFromDatabaseText", resourceCulture);
             }
         }
         

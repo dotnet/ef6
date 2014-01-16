@@ -36,6 +36,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         internal static readonly int GenerateFromDatabaseIndex = 0;
         internal static readonly int GenerateEmptyModelIndex = 1;
         internal static readonly int GenerateEmptyModelCodeFirstIndex = 2;
+        internal static readonly int GenerateCodeFirstFromDatabaseIndex = 3;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public WizardPageStart(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
@@ -64,6 +65,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             imageList.Images.Add("database.bmp", Resources.Database);
             imageList.Images.Add("EmptyModel.bmp", Resources.EmptyModel);
             imageList.Images.Add("EmptyModelCodeFirst.bmp", Resources.EmptyModelCodeFirst);
+            imageList.Images.Add("CodeFirstFromDatabase.bmp", Resources.CodeFirstFromDatabase);
 
 #if VS12
             // scale images as appropriate for screen resolution
@@ -86,6 +88,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 NetFrameworkVersioningHelper.NetFrameworkVersion4)
             {
                 listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.bmp"));
+                listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "CodeFirstFromDatabase.bmp"));
             }
 
             // Always select the first item
@@ -171,7 +174,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     return "edmx";
 
                 default :
-                    Debug.Assert(settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst, "unexpected generation option");
+                    Debug.Assert(
+                        settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst || 
+                        settings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase , 
+                        "unexpected generation option");
 
                     return
                         VsUtils.GetLanguageForProject(settings.Project) == LangEnum.VisualBasic
@@ -212,9 +218,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
             else
             {
-                Debug.Assert(selectedOptionIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected index.");
                 Debug.Assert(
-                    Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst,
+                    selectedOptionIndex == GenerateEmptyModelCodeFirstIndex ||
+                    selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex,
+                    "Unexpected index.");
+
+                Debug.Assert(
+                    (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst
+                     && selectedOptionIndex == GenerateEmptyModelCodeFirstIndex) ||
+                    (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase
+                     && selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex),
                     "Generation option not updated correctly");
             }
         }
@@ -248,18 +261,21 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         /// </summary>
         private void UpdateGuiFromSettings()
         {
-            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModel)
+            switch (Wizard.ModelBuilderSettings.GenerationOption)
             {
-                listViewModelContents.SelectedIndices.Add(GenerateEmptyModelIndex);
+                case ModelGenerationOption.EmptyModel:
+                    listViewModelContents.SelectedIndices.Add(GenerateEmptyModelIndex);
+                    break;
+                case ModelGenerationOption.GenerateFromDatabase:
+                    listViewModelContents.SelectedIndices.Add(GenerateFromDatabaseIndex);
+                    break;
+                case ModelGenerationOption.EmptyModelCodeFirst:
+                    listViewModelContents.SelectedIndices.Add(GenerateEmptyModelCodeFirstIndex);
+                    break;
+                case ModelGenerationOption.CodeFirstFromDatabase:
+                    listViewModelContents.SelectedIndices.Add(GenerateCodeFirstFromDatabaseIndex);
+                    break;
             }
-            else if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
-            {
-                listViewModelContents.SelectedIndices.Add(GenerateFromDatabaseIndex);
-            }
-            else if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
-            {
-                listViewModelContents.SelectedIndices.Add(GenerateEmptyModelCodeFirstIndex);
-            } 
         }
 
         private void RemoveAllExceptFirstPage()
@@ -284,8 +300,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 var nSelectedItemIndex = GetSelectedOptionIndex();
                 if (nSelectedItemIndex == GenerateEmptyModelIndex)
                 {
-                    // User selection = "Empty Model"
-                    // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModel;
 
@@ -293,8 +307,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 }
                 else if (nSelectedItemIndex == GenerateFromDatabaseIndex)
                 {
-                    // User selection = "Generate from database"
-                    // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_GenerateFromDBText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
 
@@ -308,20 +320,30 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
                     Wizard.OnValidationStateChanged(this);
                 }
-                else
+                else if (nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex)
                 {
-                    Debug.Assert(nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected Index");
                     Debug.Assert(
-                        NetFrameworkVersioningHelper.TargetNetFrameworkVersion(Wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider) > 
-                        NetFrameworkVersioningHelper.NetFrameworkVersion3_5, "Option should be disabled for .NET Framework 3.5");
+                        NetFrameworkVersioningHelper.TargetNetFrameworkVersion(Wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider)
+                        > NetFrameworkVersioningHelper.NetFrameworkVersion3_5, "Option should be disabled for .NET Framework 3.5");
 
-                    // User selection = "Empty Model"
-                    // - update hint textbox
                     textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelCodeFirstText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
 
                     Wizard.OnValidationStateChanged(this);
                     Wizard.EnableButton(ButtonType.Finish, FinishClickable(Wizard.ModelBuilderSettings));
+                }
+                else
+                {
+                    Debug.Assert(nSelectedItemIndex == GenerateCodeFirstFromDatabaseIndex, "Unexpected Index");
+
+                    textboxListViewSelectionInfo.Text = Resources.StartPage_CodeFirstFromDatabaseText;
+                    Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.CodeFirstFromDatabase;
+
+                    Wizard.OnValidationStateChanged(this);
+
+                    // TODO: CodeFirst from database blocked at the moment
+                    Wizard.EnableButton(ButtonType.Finish, false);
+                    Wizard.EnableButton(ButtonType.Next, false);
                 }
             }
         }
@@ -342,14 +364,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     // "Generate from DB" - act as if user had clicked "Next"
                     Wizard.OnNext();
                 }
-                else
+                else if(nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex)
                 {
-                    Debug.Assert(nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected index.");
-
                     if (FinishClickable(Wizard.ModelBuilderSettings))
                     {
-                        Wizard.OnFinish();    
+                        Wizard.OnFinish();
                     }
+                }
+                else
+                {
+                    Debug.Assert(nSelectedItemIndex == GenerateCodeFirstFromDatabaseIndex, "Unexpected index.");
+
+                    // TODO: NoOp CodeFirst from database blocked at the moment
                 }
             }
         }
@@ -375,12 +401,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private static bool FinishClickable(ModelBuilderSettings settings)
         {
             Debug.Assert(settings != null, "settings must not be null");
-            Debug.Assert(settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst, "unexpected generation option");
+            Debug.Assert(
+                settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst || 
+                settings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
+                "unexpected generation option");
 
-            // OneEF supported only for EF6 or if the proeject does not have any references to EF
+            // OneEF supported only for EF6 or if the project does not have any references to EF
             var entityFrameworkAssemblyVersion = VsUtils.GetInstalledEntityFrameworkAssemblyVersion(settings.Project);
-            return entityFrameworkAssemblyVersion == null 
-                || entityFrameworkAssemblyVersion >= RuntimeVersion.Version6;
+            return entityFrameworkAssemblyVersion == null
+                   || entityFrameworkAssemblyVersion >= RuntimeVersion.Version6;
         }
     }
 }

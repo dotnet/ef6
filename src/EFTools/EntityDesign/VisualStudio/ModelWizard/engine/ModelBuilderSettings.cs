@@ -17,14 +17,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
 
-    internal enum ModelGenerationOption
-    {
-        GenerateFromDatabase = 0,
-        EmptyModel = 1,
-        GenerateDatabaseScript = 3,
-        EmptyModelCodeFirst = 4
-    }
-
     /// <summary>
     ///     Settings class used by ModelBuilderEngine
     /// </summary>

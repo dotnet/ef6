@@ -52,6 +52,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModelCodeFirst, LangEnum.VisualBasic, false, ".vb");
             Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.EmptyModelCodeFirst, LangEnum.VisualBasic, true, ".vb");
+
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.CodeFirstFromDatabase, LangEnum.CSharp, false, ".cs");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.CodeFirstFromDatabase, LangEnum.CSharp, true, ".cs");
+
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.CodeFirstFromDatabase, LangEnum.VisualBasic, false, ".vb");
+            Run_OnDeactivate_creates_and_verifies_model_path(ModelGenerationOption.CodeFirstFromDatabase, LangEnum.VisualBasic, true, ".vb");
         }
 
         private static void Run_OnDeactivate_creates_and_verifies_model_path(

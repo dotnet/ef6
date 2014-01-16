@@ -146,7 +146,10 @@
   </data>
   <data name="EmptyModelCodeFirstOption" xml:space="preserve">
     <value>Empty Code First model</value>
-  </data>  
+  </data>
+  <data name="CodeFirstFromDatabaseOption" xml:space="preserve">
+    <value>Code First from database</value>
+  </data>
   <data name="Engine_AppConfigException" xml:space="preserve">
     <value>Unable to update the App.Config file because of the following exception: '{0}'</value>
   </data>
@@ -226,7 +229,10 @@
   </data>
   <data name="StartPage_EmptyModelCodeFirstText" xml:space="preserve">
     <value>Empty Model Code First - description placeholder.</value>
-  </data>  
+  </data>
+  <data name="StartPage_CodeFirstFromDatabaseText" xml:space="preserve">
+    <value>Code First From Database - description placeholder.</value>
+  </data>
   <data name="StartPage_ListViewNoSelectionText" xml:space="preserve">
     <value>Choose model contents from the items above.</value>
   </data>
@@ -445,6 +451,9 @@ Error message: '{0}'</value>
   </data>
   <data name="EmptyModelCodeFirst" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bitmaps\EmptyModelCodeFirst.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CodeFirstFromDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\CodeFirstFromDatabase.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="database_schema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bitmaps\database_schema.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
