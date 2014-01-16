@@ -14,223 +14,364 @@ namespace System.Data.Entity.Query
     using Xunit;
     using Xunit.Extensions;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class NullSemanticsTests : FunctionalTestBase
     {
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void Query_string_and_results_are_valid_for_column_equals_constant()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new NullSemanticsContext())
             {
-                SetupContext(context);
+                var query1 = context.Entities.Where(e => e.Foo == "Foo" && e.Bar == "Bar");
+                var query2 = context.Entities.Where(e => e.Foo == "Foo" && "Bar" == e.Bar);
 
-                var query1 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name == "Grapes");
-                var query2 = context.Products.Where(p => p.Category.Id == "Fruit" && "Grapes" == p.Name);
                 var expectedSql =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND (N'Grapes' = [Extent1].[Name])";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND (N'Bar' = [Extent1].[Bar])";
 
                 QueryTestHelpers.VerifyDbQuery(query1, expectedSql);
                 QueryTestHelpers.VerifyDbQuery(query2, expectedSql);
-                Assert.Equal(1, query1.Count());
-                Assert.Equal(1, query2.Count());
+
+                var expected = context.Entities.ToList().Where(e => e.Foo == "Foo" && e.Bar == "Bar").ToList();
+
+                Assert.Equal(expected.Count, query1.Count());
+                Assert.Equal(expected.Count, query2.Count());
             }
         }
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void Query_string_and_results_are_valid_for_column_not_equal_constant()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new NullSemanticsContext())
             {
-                SetupContext(context);
+                var query1 = context.Entities.Where(e => e.Foo == "Foo" && e.Bar != "Bar");
+                var query2 = context.Entities.Where(e => e.Foo == "Foo" && "Bar" != e.Bar);
+                var query3 = context.Entities.Where(e => e.Foo == "Foo" && !("Bar" == e.Bar));
 
-                var query1 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name != "Grapes");
-                var query2 = context.Products.Where(p => p.Category.Id == "Fruit" && "Grapes" != p.Name);
-                var query3 = context.Products.Where(p => p.Category.Id == "Fruit" && !("Grapes" == p.Name));
                 var expectedSql =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ( NOT ((N'Grapes' = [Extent1].[Name]) AND ([Extent1].[Name] IS NOT NULL)))";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar] 
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND ( NOT ((N'Bar' = [Extent1].[Bar]) AND ([Extent1].[Bar] IS NOT NULL)))";
 
                 QueryTestHelpers.VerifyDbQuery(query1, expectedSql);
                 QueryTestHelpers.VerifyDbQuery(query2, expectedSql);
                 QueryTestHelpers.VerifyDbQuery(query3, expectedSql);
-                Assert.Equal(2, query1.Count());
+
+                var expected = context.Entities.ToList().Where(e => e.Foo == "Foo" && e.Bar != "Bar");
+
+                Assert.Equal(expected.Count(), query1.Count());
+                Assert.Equal(expected.Count(), query2.Count());
+                Assert.Equal(expected.Count(), query3.Count());
             }
         }
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void Query_string_and_results_are_valid_for_column_equals_null()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new NullSemanticsContext())
             {
-                SetupContext(context);
-
-                var query1 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name == null);
-                var query2 = context.Products.Where(p => p.Category.Id == "Fruit" && null == p.Name);
+                var query1 = context.Entities.Where(e => e.Foo == "Foo" && e.Bar == null);
+                var query2 = context.Entities.Where(e => e.Foo == "Foo" && null == e.Bar);
                 var expectedSql =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ([Extent1].[Name] IS NULL)";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND ([Extent1].[Bar] IS NULL)";
 
                 QueryTestHelpers.VerifyDbQuery(query1, expectedSql);
                 QueryTestHelpers.VerifyDbQuery(query2, expectedSql);
-                Assert.Equal(1, query1.Count());
-                Assert.Equal(1, query2.Count());
+
+                var expected = context.Entities.ToList().Where(e => e.Foo == "Foo" && e.Bar == null);
+                
+                Assert.Equal(expected.Count(), query1.Count());
+                Assert.Equal(expected.Count(), query2.Count());
             }
         }
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void Query_string_and_results_are_valid_for_column_not_equal_null()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new NullSemanticsContext())
             {
-                SetupContext(context);
-
-                var query1 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name != null);
-                var query2 = context.Products.Where(p => p.Category.Id == "Fruit" && null != p.Name);
-                var query3 = context.Products.Where(p => p.Category.Id == "Fruit" && !(null == p.Name));
+                var query1 = context.Entities.Where(e => e.Foo == "Foo" && e.Bar != null);
+                var query2 = context.Entities.Where(e => e.Foo == "Foo" && null != e.Bar);
+                var query3 = context.Entities.Where(e => e.Foo == "Foo" && !(null == e.Bar));
                 var expectedSql =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ([Extent1].[Name] IS NOT NULL)";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND ([Extent1].[Bar] IS NOT NULL)";
 
                 QueryTestHelpers.VerifyDbQuery(query1, expectedSql);
                 QueryTestHelpers.VerifyDbQuery(query2, expectedSql);
                 QueryTestHelpers.VerifyDbQuery(query3, expectedSql);
-                Assert.Equal(2, query1.Count());
+
+                var expected = context.Entities.ToList().Where(e => e.Foo == "Foo" && e.Bar != null);
+                
+                Assert.Equal(expected.Count(), query1.Count());
             }
         }
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void Query_string_and_results_are_valid_for_column_equals_parameter()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new NullSemanticsContext())
             {
-                SetupContext(context);
-
-                var parameter = "Bananas";
-                var query1 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name == parameter);
-                var query2 = context.Products.Where(p => p.Category.Id == "Fruit" && parameter == p.Name);
+                var parameter = "Bar";
+                var query1 = context.Entities.Where(e => e.Foo == "Foo" && e.Bar == parameter);
+                var query2 = context.Entities.Where(e => e.Foo == "Foo" && parameter == e.Bar);
                 var expectedSql1 =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND (([Extent1].[Name] = @p__linq__0) OR (([Extent1].[Name] IS NULL) AND (@p__linq__0 IS NULL)))";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND (([Extent1].[Bar] = @p__linq__0) OR (([Extent1].[Bar] IS NULL) AND (@p__linq__0 IS NULL)))";
                 var expectedSql2 =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ((@p__linq__0 = [Extent1].[Name]) OR ((@p__linq__0 IS NULL) AND ([Extent1].[Name] IS NULL)))";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND ((@p__linq__0 = [Extent1].[Bar]) OR ((@p__linq__0 IS NULL) AND ([Extent1].[Bar] IS NULL)))";
 
                 QueryTestHelpers.VerifyDbQuery(query1, expectedSql1);
                 QueryTestHelpers.VerifyDbQuery(query2, expectedSql2);
-                Assert.Equal(1, query1.Count());
-                Assert.Equal(1, query2.Count());
+
+                var expected = context.Entities.Where(e => e.Foo == "Foo" && e.Bar == parameter);
+
+                Assert.Equal(expected.Count(), query1.Count());
+                Assert.Equal(expected.Count(), query2.Count());
             }
         }
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void Query_string_and_results_are_valid_for_column_not_equal_parameter()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new NullSemanticsContext())
             {
-                SetupContext(context);
-
-                var parameter = "Bananas";
-                var query1 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name != parameter);
-                var query2 = context.Products.Where(p => p.Category.Id == "Fruit" && parameter != p.Name);
-                var query3 = context.Products.Where(p => p.Category.Id == "Fruit" && !(p.Name == parameter));
-
-                parameter = null;
-                var query4 = context.Products.Where(p => p.Category.Id == "Fruit" && p.Name != parameter);
-                var query5 = context.Products.Where(p => p.Category.Id == "Fruit" && parameter != p.Name);
-                var query6 = context.Products.Where(p => p.Category.Id == "Fruit" && !(p.Name == parameter));
-
+                var parameter = "Bar";
+                var query1 = context.Entities.Where(e => e.Foo == "Foo" && e.Bar != parameter);
+                var query2 = context.Entities.Where(e => e.Foo == "Foo" && parameter != e.Bar);
+                var query3 = context.Entities.Where(e => e.Foo == "Foo" && !(e.Bar == parameter));
                 var expectedSql1 =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ( NOT (([Extent1].[Name] = @p__linq__0) AND ((CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND ( NOT (([Extent1].[Bar] = @p__linq__0) AND ((CASE WHEN ([Extent1].[Bar] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))";
                 var expectedSql2 =
 @"SELECT 
-    [Extent1].[Discriminator] AS [Discriminator], 
     [Extent1].[Id] AS [Id], 
-    [Extent1].[CategoryId] AS [CategoryId], 
-    [Extent1].[Name] AS [Name], 
-    [Extent1].[PromotionalCode] AS [PromotionalCode]
-    FROM [dbo].[Products] AS [Extent1]
-    WHERE ([Extent1].[Discriminator] IN (N'FeaturedProduct',N'Product')) AND (N'Fruit' = [Extent1].[CategoryId]) AND ( NOT ((@p__linq__0 = [Extent1].[Name]) AND ((CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))";
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (N'Foo' = [Extent1].[Foo]) AND ( NOT ((@p__linq__0 = [Extent1].[Bar]) AND ((CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN ([Extent1].[Bar] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))";
 
                 QueryTestHelpers.VerifyDbQuery(query1, expectedSql1);
                 QueryTestHelpers.VerifyDbQuery(query2, expectedSql2);
                 QueryTestHelpers.VerifyDbQuery(query3, expectedSql1);
-                QueryTestHelpers.VerifyDbQuery(query4, expectedSql1);
-                QueryTestHelpers.VerifyDbQuery(query5, expectedSql2);
-                QueryTestHelpers.VerifyDbQuery(query6, expectedSql1);
-                Assert.Equal(2, query1.Count());
-                Assert.Equal(2, query2.Count());
-                Assert.Equal(2, query4.Count());
-                Assert.Equal(2, query5.Count());
+
+                var expected = context.Entities.ToList().Where(e => e.Foo == "Foo" && e.Bar != parameter);
+
+                Assert.Equal(expected.Count(), query1.Count());
+                Assert.Equal(expected.Count(), query2.Count());
             }
         }
 
-        private void SetupContext(SimpleModelContext context)
+        [Fact]
+        public void Query_string_and_results_are_valid_for_column_compared_with_other_column()
         {
-            context.Configuration.UseDatabaseNullSemantics = false;
+            using (var context = new NullSemanticsContext())
+            {
+                var query1 = context.Entities.Where(e => e.Foo == e.Bar);
+                var query2 = context.Entities.Where(e => e.Foo != e.Bar);
+                var query3 = context.Entities.Where(e => !(e.Foo == e.Bar));
 
-            context.Categories.Add(new Category { Id = "Fruit" });
+                var expectedSql1 =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE ([Extent1].[Foo] = [Extent1].[Bar]) OR (([Extent1].[Foo] IS NULL) AND ([Extent1].[Bar] IS NULL))";
 
-            context.Products.Add(new Product { Name = "Grapes", CategoryId = "Fruit" });
-            context.Products.Add(new Product { Name = null, CategoryId = "Fruit" });
-            context.Products.Add(new Product { Name = "Bananas", CategoryId = "Fruit" });
+                var expectedSql2 =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE  NOT (([Extent1].[Foo] = [Extent1].[Bar]) AND ((CASE WHEN ([Extent1].[Foo] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN ([Extent1].[Bar] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END)))";
 
-            context.SaveChanges();
+                QueryTestHelpers.VerifyDbQuery(query1, expectedSql1);
+                QueryTestHelpers.VerifyDbQuery(query2, expectedSql2);
+                QueryTestHelpers.VerifyDbQuery(query3, expectedSql2);
+
+                var expected1 = context.Entities.ToList().Where(e => e.Foo == e.Bar);
+                var expected2 = context.Entities.ToList().Where(e => e.Foo != e.Bar);
+
+                Assert.Equal(expected1.Count(), query1.Count());
+                Assert.Equal(expected2.Count(), query2.Count());
+                Assert.Equal(expected2.Count(), query3.Count());
+            }
+        }
+
+        [Fact]
+        public void Query_with_comparison_in_projection_works_with_clr_semantics()
+        {
+            using (var context = new NullSemanticsContext())
+            {
+                var query = context.Entities.Select(e => e.Foo == e.Bar);
+                var expectedSql =
+@"SELECT 
+    CASE WHEN (([Extent1].[Foo] = [Extent1].[Bar]) OR (([Extent1].[Foo] IS NULL) AND ([Extent1].[Bar] IS NULL))) THEN cast(1 as bit) WHEN ( NOT (([Extent1].[Foo] = [Extent1].[Bar]) AND ((CASE WHEN ([Extent1].[Foo] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN ([Extent1].[Bar] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END)))) THEN cast(0 as bit) END AS [C1]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]";
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var expected = context.Entities.ToList().Select(e => e.Foo == e.Bar).ToList();
+
+                QueryTestHelpers.VerifyQueryResult(expected, query.ToList(), (o, i) => o == i);
+            }
+        }
+
+        [Fact]
+        public void Query_with_comparison_of_function_result_with_nullable_parameters_works()
+        {
+            using (var context = new NullSemanticsContext())
+            {
+                var query = context.Entities.Where(e => e.Foo.Length == e.Bar.Length);
+
+                var expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM [dbo].[NullSemanticsEntities] AS [Extent1]
+    WHERE (( CAST(LEN([Extent1].[Foo]) AS int)) = ( CAST(LEN([Extent1].[Bar]) AS int))) OR (([Extent1].[Foo] IS NULL) AND ([Extent1].[Bar] IS NULL))";
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
+        [Fact]
+        public void Query_with_Count_with_predicate_works_with_clr_semantics()
+        {
+            using (var context = new NullSemanticsContext())
+            {
+                var query = context.Entities.Count(e => e.Foo == e.Bar);
+                var expected = context.Entities.ToList().Count(e => e.Foo == e.Bar);
+
+                Assert.Equal(query, expected);
+            }
+        }
+
+        // TODO uncomment when functional bug is translation is fixed
+        ////[Fact]
+        public void Query_with_All_with_predicate_works_with_clr_semantics()
+        {
+            using (var context = new NullSemanticsContext())
+            {
+                var query1 = context.Entities.Where(e => e.Id == 1 || e.Id == 5).All(e => e.Foo == e.Bar);
+                var query2 = context.Entities.Where(e => e.Id == 5).All(e => e.Foo != e.Bar);
+                var expected1 = context.Entities.ToList().Where(e => e.Id == 1 || e.Id == 5).All(e => e.Foo == e.Bar);
+                var expected2 = context.Entities.ToList().Where(e => e.Id == 5).All(e => e.Foo != e.Bar);
+
+                Assert.Equal(query1, expected1);
+                Assert.Equal(query2, expected2);
+            }
+        }
+
+        // TODO uncomment when functional bug is translation is fixed
+        ////[Fact]
+        public void Query_with_Any_with_predicate_works_with_clr_semantics()
+        {
+            using (var context = new NullSemanticsContext())
+            {
+                var query1 = context.Entities.Where(e => e.Id != 1).Any(e => e.Foo == e.Bar);
+                var query2 = context.Entities.Where(e => e.Id == 5).Any(e => e.Foo != e.Bar);
+                var expected1 = context.Entities.ToList().Where(e => e.Id != 1).Any(e => e.Foo == e.Bar);
+                var expected2 = context.Entities.ToList().Where(e => e.Id == 5).Any(e => e.Foo != e.Bar);
+
+                Assert.Equal(query1, expected1);
+                Assert.Equal(query2, expected2);
+            }
+        }
+
+        [Fact]
+        public void Query_with_comparison_in_subquery_works_with_clr_semantics()
+        {
+            using (var context = new NullSemanticsContext())
+            {
+                var query = context.Entities.Where(c => context.Entities.Where(e => e.Foo != e.Bar).Count() == context.Entities.Where(e => e.Foo != e.Bar).FirstOrDefault().Id);
+
+                var expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Foo] AS [Foo], 
+    [Extent1].[Bar] AS [Bar]
+    FROM   [dbo].[NullSemanticsEntities] AS [Extent1]
+    LEFT OUTER JOIN  (SELECT TOP (1) [Extent2].[Id] AS [Id]
+        FROM [dbo].[NullSemanticsEntities] AS [Extent2]
+        WHERE  NOT (([Extent2].[Foo] = [Extent2].[Bar]) AND ((CASE WHEN ([Extent2].[Foo] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN ([Extent2].[Bar] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))) ) AS [Limit1] ON 1 = 1
+    INNER JOIN  (SELECT 
+        COUNT(1) AS [A1]
+        FROM [dbo].[NullSemanticsEntities] AS [Extent3]
+        WHERE  NOT (([Extent3].[Foo] = [Extent3].[Bar]) AND ((CASE WHEN ([Extent3].[Foo] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN ([Extent3].[Bar] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))) ) AS [GroupBy1] ON ([GroupBy1].[A1] = [Limit1].[Id]) OR (([GroupBy1].[A1] IS NULL) AND ([Limit1].[Id] IS NULL))";
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                var expected = context.Entities.ToList().Where(c => context.Entities.ToList().Where(e => e.Foo == e.Bar).Count() != context.Entities.ToList().Where(e => e.Foo != e.Bar).FirstOrDefault().Id).ToList();
+
+                QueryTestHelpers.VerifyQueryResult(expected, query.ToList(), (o, i) => o == i);
+            }
+        }
+
+        private class NullSemanticsContext : DbContext
+        {
+            public NullSemanticsContext()
+            {
+                Database.SetInitializer(new NullSemanticsContextInitializer());
+            }
+
+            public DbSet<NullSemanticsEntity> Entities { get; set; }
+        }
+
+        private class NullSemanticsEntity
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+            public string Foo { get; set; }
+            public string Bar { get; set; }
+        }
+
+        private class NullSemanticsContextInitializer : DropCreateDatabaseIfModelChanges<NullSemanticsContext>
+        {
+            protected override void Seed(NullSemanticsContext context)
+            {
+                var e1 = new NullSemanticsEntity { Id = 1, Foo = "Foo", Bar = "Foo" };
+                var e2 = new NullSemanticsEntity { Id = 2, Foo = "Foo", Bar = "Bar" };
+                var e3 = new NullSemanticsEntity { Id = 3, Foo = "Foo", Bar = null };
+                var e4 = new NullSemanticsEntity { Id = 4, Foo = null, Bar = "Bar" };
+                var e5 = new NullSemanticsEntity { Id = 5, Foo = null, Bar = null };
+
+                context.Entities.AddRange(new[] { e1, e2, e3, e4, e5 });
+                context.SaveChanges();
+            }
         }
 
         public class A
@@ -307,6 +448,7 @@ namespace System.Data.Entity.Query
                     from a in context.As
                     where a.Name == context.Bs.FirstOrDefault().Name
                     select a;
+
                 var expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id], 
@@ -337,8 +479,19 @@ namespace System.Data.Entity.Query
     [Extent1].[Name] AS [Name]
     FROM [dbo].[A] AS [Extent1]
     WHERE  NOT (
-        (([Extent1].[Name] = @p__linq__0) AND ((CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))) OR 
-        ( NOT (([Extent1].[Name] = @p__linq__1) OR (([Extent1].[Name] IS NULL) AND (@p__linq__1 IS NULL)))) OR 
+        (([Extent1].[Name] = @p__linq__0) AND 
+        ((CASE 
+            WHEN ([Extent1].[Name] IS NULL) 
+            THEN cast(1 as bit) 
+            ELSE cast(0 as bit) 
+        END) = 
+        (CASE 
+            WHEN (@p__linq__0 IS NULL) 
+            THEN cast(1 as bit) 
+            ELSE cast(0 as bit) 
+        END))) OR 
+        ( NOT (([Extent1].[Name] = @p__linq__1) OR 
+        (([Extent1].[Name] IS NULL) AND (@p__linq__1 IS NULL)))) OR 
         ( NOT (([Extent1].[Name] = @p__linq__2) OR (([Extent1].[Name] IS NULL) AND (@p__linq__2 IS NULL)))))";
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
@@ -359,7 +512,16 @@ namespace System.Data.Entity.Query
     CASE 
     WHEN (([Extent1].[Name] = @p__linq__0) OR (([Extent1].[Name] IS NULL) AND (@p__linq__0 IS NULL))) 
         THEN cast(1 as bit) 
-    WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND ((CASE WHEN ([Extent1].[Name] IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END) = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END)))) 
+    WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND ((
+        CASE 
+        WHEN ([Extent1].[Name] IS NULL) 
+            THEN cast(1 as bit) 
+        ELSE cast(0 as bit) END) = 
+        (CASE 
+        WHEN (@p__linq__0 IS NULL) 
+            THEN cast(1 as bit) 
+        ELSE cast(0 as bit) 
+        END)))) 
         THEN cast(0 as bit) 
     END AS [C1]
     FROM [dbo].[A] AS [Extent1]";
@@ -379,12 +541,7 @@ namespace System.Data.Entity.Query
                     select b.Name == name;
                 var expectedSql =
 @"SELECT 
-    CASE 
-    WHEN ([Extent1].[Name] = @p__linq__0) 
-        THEN cast(1 as bit) 
-    WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND (0 = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END))))
-        THEN cast(0 as bit)
-    END AS [C1]
+    CASE WHEN ([Extent1].[Name] = @p__linq__0) THEN cast(1 as bit) WHEN ( NOT (([Extent1].[Name] = @p__linq__0) AND (0 = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END)))) THEN cast(0 as bit) END AS [C1]
     FROM [dbo].[B] AS [Extent1]";
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
