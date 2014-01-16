@@ -867,7 +867,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                     var value = serializer == null 
                         ? extendedProperty.Value.ToString()
-                        : serializer().SerializeValue(attributeName, extendedProperty.Value);
+                        : serializer().Serialize(attributeName, extendedProperty.Value);
 
                     _xmlWriter.WriteAttributeString(attributeName, xmlNamespaceUri, value);
                 }

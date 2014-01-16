@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Builders;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
@@ -315,13 +316,13 @@ namespace System.Data.Entity.Migrations
         protected internal void AlterTableAnnotations<TColumns>(
             string name,
             Func<ColumnBuilder, TColumns> columnsAction,
-            IDictionary<string, AnnotationPair> annotations,
+            IDictionary<string, AnnotationValues> annotations,
             object anonymousArguments = null)
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(columnsAction, "columnsAction");
 
-            var operation = new AlterTableAnnotationsOperation(name, annotations, anonymousArguments);
+            var operation = new AlterTableOperation(name, annotations, anonymousArguments);
 
             AddColumns(columnsAction(new ColumnBuilder()), operation.Columns);
 

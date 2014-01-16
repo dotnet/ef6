@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -21,8 +22,9 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Equal("pong", index.Index.Name);
             Assert.Equal(new[] { "tut1", "tut2", "tut3" }, index.ColumnNames);
-            Assert.Equal(true, index.Index.ClusteredConfiguration);
-            Assert.Null(index.Index.UniqueConfiguration);
+            Assert.True(index.Index.IsClustered);
+            Assert.True(index.Index.IsClusteredConfigured);
+            Assert.False(index.Index.IsUniqueConfigured);
         }
 
         [Fact]

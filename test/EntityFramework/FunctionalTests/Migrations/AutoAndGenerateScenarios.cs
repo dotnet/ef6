@@ -5,7 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
@@ -353,6 +353,11 @@ namespace System.Data.Entity.Migrations
             IsDownDataLoss = true;
         }
 
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
         }
@@ -362,9 +367,9 @@ namespace System.Data.Entity.Migrations
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1");
+                    .HasTableAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasTableAnnotation("A2", "V2")
+                    .HasTableAnnotation("A1", "V1");
             }
         }
 
@@ -401,6 +406,11 @@ namespace System.Data.Entity.Migrations
             IsDownDataLoss = true;
         }
 
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
         }
@@ -411,13 +421,13 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Address.City)
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A3", "V3");
+                    .HasColumnAnnotation("A2", "V2")
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A3", "V3");
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Name)
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+                    .HasColumnAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
             }
         }
 
@@ -466,19 +476,24 @@ namespace System.Data.Entity.Migrations
             UpDataLoss = true;
         }
 
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Address.City)
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+                    .HasColumnAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Name)
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A3", "V3");
+                    .HasColumnAnnotation("A2", "V2")
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A3", "V3");
             }
         }
 
@@ -531,14 +546,19 @@ namespace System.Data.Entity.Migrations
             UpDataLoss = true;
         }
 
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1");
+                    .HasTableAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasTableAnnotation("A2", "V2")
+                    .HasTableAnnotation("A1", "V1");
             }
         }
 
@@ -574,14 +594,19 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterTableAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterTableAnnotations.V1, AutoAndGenerateScenarios_AlterTableAnnotations.V2>
     {
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1");
+                    .HasTableAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasTableAnnotation("A2", "V2")
+                    .HasTableAnnotation("A1", "V1");
             }
         }
 
@@ -590,16 +615,16 @@ namespace System.Data.Entity.Migrations
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
-                    .HasAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"))
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A3", "V3");
+                    .HasTableAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"))
+                    .HasTableAnnotation("A1", "V1")
+                    .HasTableAnnotation("A3", "V3");
             }
         }
 
         protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
             Assert.Equal(1, migrationOperations.Count());
-            var operation = migrationOperations.OfType<AlterTableAnnotationsOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+            var operation = migrationOperations.OfType<AlterTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
 
             Assert.Equal(3, operation.Annotations.Count);
 
@@ -616,7 +641,7 @@ namespace System.Data.Entity.Migrations
         protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
         {
             Assert.Equal(1, migrationOperations.Count());
-            var operation = migrationOperations.OfType<AlterTableAnnotationsOperation>().Single(o => o.Name == "dbo.MigrationsStores");
+            var operation = migrationOperations.OfType<AlterTableOperation>().Single(o => o.Name == "dbo.MigrationsStores");
 
             Assert.Equal(3, operation.Annotations.Count);
 
@@ -634,14 +659,19 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_RenameTableWithAnnotations :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RenameTableWithAnnotations.V1, AutoAndGenerateScenarios_RenameTableWithAnnotations.V2>
     {
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1")
+                    .HasTableAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"))
+                    .HasTableAnnotation("A2", "V2")
+                    .HasTableAnnotation("A1", "V1")
                     .ToTable("EekyBear", "dbo");
             }
         }
@@ -651,9 +681,9 @@ namespace System.Data.Entity.Migrations
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
-                    .HasAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"))
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A3", "V3")
+                    .HasTableAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"))
+                    .HasTableAnnotation("A1", "V1")
+                    .HasTableAnnotation("A3", "V3")
                     .ToTable("MrsPandy", "dbo");
             }
         }
@@ -665,7 +695,7 @@ namespace System.Data.Entity.Migrations
             var renameOperation = (RenameTableOperation)migrationOperations.First();
             Assert.Equal("dbo.EekyBear", renameOperation.Name);
 
-            var alterOperation = (AlterTableAnnotationsOperation)migrationOperations.Skip(1).First();
+            var alterOperation = (AlterTableOperation)migrationOperations.Skip(1).First();
             Assert.Equal("dbo.MrsPandy", alterOperation.Name);
 
             Assert.Equal(3, alterOperation.Annotations.Count);
@@ -684,7 +714,7 @@ namespace System.Data.Entity.Migrations
         {
             Assert.Equal(2, migrationOperations.Count());
 
-            var alterOperation = migrationOperations.OfType<AlterTableAnnotationsOperation>().Single();
+            var alterOperation = migrationOperations.OfType<AlterTableOperation>().Single();
 
             Assert.Equal(3, alterOperation.Annotations.Count);
 
@@ -2404,10 +2434,10 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Price)
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A2", "V2A")
-                    .HasAnnotation("A3", "V3")
-                    .HasAnnotation("A4", "V4A");
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A2", "V2A")
+                    .HasColumnAnnotation("A3", "V3")
+                    .HasColumnAnnotation("A4", "V4A");
             }
         }
 
@@ -2417,10 +2447,10 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Price)
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A2", "V2B")
-                    .HasAnnotation("A3", "V3")
-                    .HasAnnotation("A4", "V4B");
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A2", "V2B")
+                    .HasColumnAnnotation("A3", "V3")
+                    .HasColumnAnnotation("A4", "V4B");
             }
         }
 
@@ -2476,9 +2506,9 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Sku)
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A3", "V3");
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A2", "V2")
+                    .HasColumnAnnotation("A3", "V3");
             }
         }
 
@@ -2534,9 +2564,9 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Sku)
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A3", "V3");
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A2", "V2")
+                    .HasColumnAnnotation("A3", "V3");
             }
         }
 
@@ -2600,10 +2630,10 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Price)
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A3", "V3A")
-                    .HasAnnotation("A4", "V4A");
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A2", "V2")
+                    .HasColumnAnnotation("A3", "V3A")
+                    .HasColumnAnnotation("A4", "V4A");
             }
         }
 
@@ -2613,10 +2643,10 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Price)
-                    .HasAnnotation("A3", "V3B")
-                    .HasAnnotation("A4", "V4B")
-                    .HasAnnotation("A5", "V5")
-                    .HasAnnotation("A6", "V6");
+                    .HasColumnAnnotation("A3", "V3B")
+                    .HasColumnAnnotation("A4", "V4B")
+                    .HasColumnAnnotation("A5", "V5")
+                    .HasColumnAnnotation("A6", "V6");
             }
         }
 
@@ -2684,13 +2714,18 @@ namespace System.Data.Entity.Migrations
     public class AutoAndGenerateScenarios_AlterColumnCustomAnnotation :
     AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterColumnCustomAnnotation.V1, AutoAndGenerateScenarios_AlterColumnCustomAnnotation.V2>
     {
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(ol => ol.Address.City)
-                    .HasAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"));
+                    .HasColumnAnnotation("Collation", new CollationAttribute("Finnish_Swedish_CS_AS"));
             }
         }
 
@@ -2700,11 +2735,11 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(ol => ol.Address.City)
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+                    .HasColumnAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(ol => ol.Name)
-                    .HasAnnotation("Collation", new CollationAttribute("Danish_Norwegian_CS_AS"));
+                    .HasColumnAnnotation("Collation", new CollationAttribute("Danish_Norwegian_CS_AS"));
             }
         }
 
@@ -2763,6 +2798,11 @@ namespace System.Data.Entity.Migrations
             IsDownDataLoss = true;
         }
 
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -2781,13 +2821,13 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Address.City)
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+                    .HasColumnAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Name)
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A3", "V3");
+                    .HasColumnAnnotation("A2", "V2")
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A3", "V3");
             }
         }
 
@@ -2852,19 +2892,24 @@ namespace System.Data.Entity.Migrations
             UpDataLoss = true;
         }
 
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
+        }
+
         public class V1 : AutoAndGenerateContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Address.City)
-                    .HasAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
+                    .HasColumnAnnotation("Collation", new CollationAttribute("Icelandic_CS_AS"));
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(e => e.Name)
-                    .HasAnnotation("A2", "V2")
-                    .HasAnnotation("A1", "V1")
-                    .HasAnnotation("A3", "V3");
+                    .HasColumnAnnotation("A2", "V2")
+                    .HasColumnAnnotation("A1", "V1")
+                    .HasColumnAnnotation("A3", "V3");
             }
         }
 
@@ -2955,7 +3000,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
             }
         }
 
@@ -2992,7 +3037,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex")));
             }
         }
 
@@ -3002,7 +3047,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
             }
         }
 
@@ -3052,7 +3097,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("MyIndex") { IsUnique = true }));
             }
         }
 
@@ -3098,7 +3143,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(
+                    .HasColumnAnnotation(
                         IndexAnnotation.AnnotationName,
                         new IndexAnnotation(
                             new[]
@@ -3113,7 +3158,7 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Sku)
-                    .HasAnnotation(
+                    .HasColumnAnnotation(
                         IndexAnnotation.AnnotationName,
                         new IndexAnnotation(
                             new[]
@@ -3129,7 +3174,7 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.OrderId)
-                    .HasAnnotation(
+                    .HasColumnAnnotation(
                         IndexAnnotation.AnnotationName,
                         new IndexAnnotation(
                             new[]
@@ -3150,7 +3195,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(
+                    .HasColumnAnnotation(
                         IndexAnnotation.AnnotationName,
                         new IndexAnnotation(
                             new[]
@@ -3166,7 +3211,7 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Sku)
-                    .HasAnnotation(
+                    .HasColumnAnnotation(
                         IndexAnnotation.AnnotationName,
                         new IndexAnnotation(
                             new[]
@@ -3181,7 +3226,7 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.OrderId)
-                    .HasAnnotation(
+                    .HasColumnAnnotation(
                         IndexAnnotation.AnnotationName,
                         new IndexAnnotation(
                             new[]
@@ -3357,25 +3402,25 @@ namespace System.Data.Entity.Migrations
                 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Price)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("PriceIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("PriceIndex")));
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Sku)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")));
 
                 modelBuilder.Entity<WithGuidKey>()
                     .Property(ol => ol.Id)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
 
                 modelBuilder.Ignore<MigrationsStore>();
 
                 modelBuilder.Entity<MigrationsProduct>()
                     .Property(p => p.ProductId)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("ProductIdIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("ProductIdIndex")));
 
                 modelBuilder.Entity<Order>()
                     .Property(p => p.OrderId)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")));
             }
         }
 
@@ -3385,31 +3430,31 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("QuantityIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("QuantityIndex")));
 
                 modelBuilder.Entity<OrderLine>()
                     .Ignore(ol => ol.Price);
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Sku)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")))
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuIndex")))
                     .HasColumnName("NuSku");
 
                 modelBuilder.Entity<WithGuidKey>()
                     .ToTable("WithGooieKey")
                     .Property(ol => ol.Id)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("GuidIndex")));
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(s => s.Id)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IdIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("IdIndex")));
 
                 modelBuilder.Ignore<MigrationsProduct>();
 
                 modelBuilder.Entity<Order>()
                     .ToTable("Oeuvres")
                     .Property(p => p.OrderId)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")))
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("OrderIdIndex")))
                     .HasColumnName("OeuvresId");
             }
         }
@@ -3488,11 +3533,11 @@ namespace System.Data.Entity.Migrations
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(s => s.Id)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
 
                 modelBuilder.Entity<MigrationsProduct>()
                     .Property(p => p.ProductId)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
             }
         }
 
@@ -3502,23 +3547,23 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Quantity)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Price)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
 
                 modelBuilder.Entity<OrderLine>()
                     .Property(ol => ol.Sku)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuedIndex")));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("SkuedIndex")));
 
                 modelBuilder.Entity<WithGuidKey>()
                     .Property(ol => ol.Id)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute()));
 
                 modelBuilder.Entity<MigrationsStore>()
                     .Property(s => s.Id)
-                    .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute { IsUnique = true }));
+                    .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute { IsUnique = true }));
 
                 modelBuilder.Entity<MigrationsProduct>()
                     .Property(p => p.ProductId);

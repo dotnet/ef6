@@ -6,7 +6,7 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.TestHelpers;
     using Xunit;
 
@@ -84,7 +84,7 @@ namespace FunctionalTests
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<EntityWithIndexes>()
                 .Property(p => p.SimpleProp)
-                .HasAnnotation("Index", new IndexAnnotation(new IndexAttribute("Fluent")));
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("Fluent")));
 
             var databaseMapping = BuildMapping(modelBuilder);
 

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Resources;
     using Xunit;
 
@@ -25,7 +26,7 @@ namespace System.Data.Entity.Migrations.Model
             var column = new ColumnModel(PrimitiveTypeKind.Decimal)
             {
                 Name = "C",
-                Annotations = new Dictionary<string, AnnotationPair> { { "A1", new AnnotationPair(null, "V1") } }
+                Annotations = new Dictionary<string, AnnotationValues> { { "A1", new AnnotationValues(null, "V1") } }
             };
 
             var addColumnOperation

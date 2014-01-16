@@ -7,6 +7,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;

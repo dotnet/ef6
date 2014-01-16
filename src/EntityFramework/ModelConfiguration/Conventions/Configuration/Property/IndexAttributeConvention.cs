@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Linq;
 
     /// <summary>

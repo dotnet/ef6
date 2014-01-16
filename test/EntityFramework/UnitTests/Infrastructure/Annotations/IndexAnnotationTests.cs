@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Annotations
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -14,15 +14,15 @@ namespace System.Data.Entity.Infrastructure
         public void Constructors_check_arguments()
         {
             Assert.Equal(
-                "index",
+                "indexAttribute",
                 Assert.Throws<ArgumentNullException>(() => new IndexAnnotation((IndexAttribute)null)).ParamName);
 
             Assert.Equal(
-                "indexes",
+                "indexAttributes",
                 Assert.Throws<ArgumentNullException>(() => new IndexAnnotation((IEnumerable<IndexAttribute>)null)).ParamName);
 
             Assert.Equal(
-                "index",
+                "indexAttribute",
                 Assert.Throws<ArgumentNullException>(() => new IndexAnnotation(new IndexAttribute[] { null })).ParamName);
         }
 
@@ -45,13 +45,17 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Null(attributes[0].Name);
             Assert.Equal(1, attributes[0].Order);
-            Assert.Equal(true, attributes[0].ClusteredConfiguration);
-            Assert.Equal(false, attributes[0].UniqueConfiguration);
+            Assert.True(attributes[0].IsClusteredConfigured);
+            Assert.True(attributes[0].IsClustered);
+            Assert.True(attributes[0].IsUniqueConfigured);
+            Assert.False(attributes[0].IsUnique);
 
             Assert.Equal("EekyBear", attributes[1].Name);
             Assert.Equal(0, attributes[1].Order);
-            Assert.Equal(false, attributes[1].ClusteredConfiguration);
-            Assert.Equal(true, attributes[1].UniqueConfiguration);
+            Assert.True(attributes[1].IsClusteredConfigured);
+            Assert.False(attributes[1].IsClustered);
+            Assert.True(attributes[1].IsUniqueConfigured);
+            Assert.True(attributes[1].IsUnique);
         }
 
         [Fact]
@@ -214,26 +218,34 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Equal("EekyBear", attributes[0].Name);
             Assert.Equal(0, attributes[0].Order);
-            Assert.Equal(false, attributes[0].ClusteredConfiguration);
-            Assert.Equal(true, attributes[0].UniqueConfiguration);
+            Assert.True(attributes[0].IsClusteredConfigured);
+            Assert.False(attributes[0].IsClustered);
+            Assert.True(attributes[0].IsUniqueConfigured);
+            Assert.True(attributes[0].IsUnique);
 
             Assert.Null(attributes[1].Name);
             Assert.Equal(1, attributes[1].Order);
-            Assert.Equal(true, attributes[1].ClusteredConfiguration);
-            Assert.Equal(false, attributes[1].UniqueConfiguration);
+            Assert.True(attributes[1].IsClusteredConfigured);
+            Assert.True(attributes[1].IsClustered);
+            Assert.True(attributes[1].IsUniqueConfigured);
+            Assert.False(attributes[1].IsUnique);
 
             attributes = ((IndexAnnotation)annotation2.MergeWith(annotation1)).Indexes.ToArray();
             Assert.Equal(2, attributes.Length);
 
             Assert.Null(attributes[0].Name);
             Assert.Equal(1, attributes[0].Order);
-            Assert.Equal(true, attributes[0].ClusteredConfiguration);
-            Assert.Equal(false, attributes[0].UniqueConfiguration);
+            Assert.True(attributes[0].IsClusteredConfigured);
+            Assert.True(attributes[0].IsClustered);
+            Assert.True(attributes[0].IsUniqueConfigured);
+            Assert.False(attributes[0].IsUnique);
 
             Assert.Equal("EekyBear", attributes[1].Name);
             Assert.Equal(0, attributes[1].Order);
-            Assert.Equal(false, attributes[1].ClusteredConfiguration);
-            Assert.Equal(true, attributes[1].UniqueConfiguration);
+            Assert.True(attributes[1].IsClusteredConfigured);
+            Assert.False(attributes[1].IsClustered);
+            Assert.True(attributes[1].IsUniqueConfigured);
+            Assert.True(attributes[1].IsUnique);
         }
 
         [Fact]

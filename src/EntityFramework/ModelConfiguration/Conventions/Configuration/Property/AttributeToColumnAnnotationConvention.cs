@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 {
                     if (a.Any())
                     {
-                        c.HasAnnotation(annotationName, annotationFactory(c.ClrPropertyInfo, a));
+                        c.HasColumnAnnotation(annotationName, annotationFactory(c.ClrPropertyInfo, a));
                     }
                 });
         }

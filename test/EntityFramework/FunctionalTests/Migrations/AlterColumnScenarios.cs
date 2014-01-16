@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
@@ -133,11 +134,11 @@ namespace System.Data.Entity.Migrations
                     "MigrationsCustomers",
                     "Name",
                     c => c.String(
-                        annotations: new Dictionary<string, AnnotationPair>
+                        annotations: new Dictionary<string, AnnotationValues>
                         {
                             {
                                 CollationAttribute.AnnotationName,
-                                new AnnotationPair(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
+                                new AnnotationValues(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
                             }
                         }));
             }
@@ -174,11 +175,11 @@ namespace System.Data.Entity.Migrations
                     "MigrationsCustomers",
                     "Name",
                     c => c.String(
-                        annotations: new Dictionary<string, AnnotationPair>
+                        annotations: new Dictionary<string, AnnotationValues>
                         {
                             {
                                 CollationAttribute.AnnotationName,
-                                new AnnotationPair(new CollationAttribute("Finnish_Swedish_CS_AS"), null)
+                                new AnnotationValues(new CollationAttribute("Finnish_Swedish_CS_AS"), null)
                             }
                         }));
             }
@@ -225,11 +226,11 @@ namespace System.Data.Entity.Migrations
                     "MigrationsCustomers",
                     "Name",
                     c => c.String(
-                        annotations: new Dictionary<string, AnnotationPair>
+                        annotations: new Dictionary<string, AnnotationValues>
                         {
                             {
                                 CollationAttribute.AnnotationName,
-                                new AnnotationPair(
+                                new AnnotationValues(
                                     new CollationAttribute("Finnish_Swedish_CS_AS"), 
                                     new CollationAttribute("Icelandic_CS_AS"))
                             }
@@ -262,6 +263,11 @@ namespace System.Data.Entity.Migrations
 
             var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
             Assert.Equal("Icelandic_CS_AS", column.Collation);
+        }
+
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
@@ -513,11 +514,11 @@ namespace System.Data.Entity.Migrations
                     "new_col", c => c.String(
                         storeType: "nvarchar",
                         annotations:
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
                                 {
                                     CollationAttribute.AnnotationName,
-                                    new AnnotationPair(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
+                                    new AnnotationValues(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
                                 }
                             }));
             }
@@ -546,6 +547,11 @@ namespace System.Data.Entity.Migrations
 
             var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
             Assert.Equal("Finnish_Swedish_CS_AS", column.Collation);
+        }
+
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
         }
     }
 }

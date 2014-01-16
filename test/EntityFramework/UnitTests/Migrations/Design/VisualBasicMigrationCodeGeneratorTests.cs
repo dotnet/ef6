@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
@@ -1328,29 +1329,29 @@ End Class
                         Name = "MyColumn",
                         IsFixedLength = true,
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
-                                { "A2", new AnnotationPair(null, "V2") },
-                                { "A3", new AnnotationPair(null, "V3") },
-                                { "A1", new AnnotationPair(null, "V1") },
-                                { "A8", new AnnotationPair("V8A", "V8B") },
-                                { "A7", new AnnotationPair("V7A", "V7B") },
-                                { "A9", new AnnotationPair("V9A", "V9B") },
-                                { "A5", new AnnotationPair("V5", null) },
-                                { "A4", new AnnotationPair("V4", null) },
-                                { "A6", new AnnotationPair("V6", null) }
+                                { "A2", new AnnotationValues(null, "V2") },
+                                { "A3", new AnnotationValues(null, "V3") },
+                                { "A1", new AnnotationValues(null, "V1") },
+                                { "A8", new AnnotationValues("V8A", "V8B") },
+                                { "A7", new AnnotationValues("V7A", "V7B") },
+                                { "A9", new AnnotationValues("V9A", "V9B") },
+                                { "A5", new AnnotationValues("V5", null) },
+                                { "A4", new AnnotationValues("V4", null) },
+                                { "A6", new AnnotationValues("V6", null) }
                             }
                     },
                     false),
             };
 
             var generator = new VisualBasicMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
                 @"Imports System
 Imports System.Collections.Generic
+Imports System.Data.Entity.Infrastructure.Annotations
 Imports System.Data.Entity.Migrations
 Imports Microsoft.VisualBasic
 
@@ -1360,43 +1361,43 @@ Namespace MyNamespace
     
         Public Overrides Sub Up()
             AlterColumn(""MyTable"", ""MyColumn"", Function(c) c.Int(fixedLength := true,
-                annotations := New Dictionary(Of String, AnnotationPair)() From _
+                annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
                     {
                         ""A1"",
-                        New AnnotationPair(oldValue := Nothing, newValue := ""V1"")
+                        New AnnotationValues(oldValue := Nothing, newValue := ""V1"")
                      },
                     {
                         ""A2"",
-                        New AnnotationPair(oldValue := Nothing, newValue := ""V2"")
+                        New AnnotationValues(oldValue := Nothing, newValue := ""V2"")
                      },
                     {
                         ""A3"",
-                        New AnnotationPair(oldValue := Nothing, newValue := ""V3"")
+                        New AnnotationValues(oldValue := Nothing, newValue := ""V3"")
                      },
                     {
                         ""A4"",
-                        New AnnotationPair(oldValue := ""V4"", newValue := Nothing)
+                        New AnnotationValues(oldValue := ""V4"", newValue := Nothing)
                      },
                     {
                         ""A5"",
-                        New AnnotationPair(oldValue := ""V5"", newValue := Nothing)
+                        New AnnotationValues(oldValue := ""V5"", newValue := Nothing)
                      },
                     {
                         ""A6"",
-                        New AnnotationPair(oldValue := ""V6"", newValue := Nothing)
+                        New AnnotationValues(oldValue := ""V6"", newValue := Nothing)
                      },
                     {
                         ""A7"",
-                        New AnnotationPair(oldValue := ""V7A"", newValue := ""V7B"")
+                        New AnnotationValues(oldValue := ""V7A"", newValue := ""V7B"")
                      },
                     {
                         ""A8"",
-                        New AnnotationPair(oldValue := ""V8A"", newValue := ""V8B"")
+                        New AnnotationValues(oldValue := ""V8A"", newValue := ""V8B"")
                      },
                     {
                         ""A9"",
-                        New AnnotationPair(oldValue := ""V9A"", newValue := ""V9B"")
+                        New AnnotationValues(oldValue := ""V9A"", newValue := ""V9B"")
                      }
                 }))
         End Sub
@@ -1420,11 +1421,11 @@ End Namespace
                     {
                         Name = "MyColumn",
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
                                 {
                                     CollationAttribute.AnnotationName,
-                                    new AnnotationPair(
+                                    new AnnotationValues(
                                         new CollationAttribute("At a reasonable volume..."),
                                         new CollationAttribute("While I'm collating..."))
                                 }
@@ -1437,11 +1438,11 @@ End Namespace
                         {
                             Name = "MyColumn",
                             Annotations =
-                                new Dictionary<string, AnnotationPair>
+                                new Dictionary<string, AnnotationValues>
                                 {
                                     {
                                         CollationAttribute.AnnotationName,
-                                        new AnnotationPair(
+                                        new AnnotationValues(
                                             new CollationAttribute("While I'm collating..."),
                                             new CollationAttribute("At a reasonable volume..."))
                                     }
@@ -1450,12 +1451,13 @@ End Namespace
             };
 
             var generator = new VisualBasicMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
                 @"Imports System
 Imports System.Collections.Generic
+Imports System.Data.Entity.Infrastructure.Annotations
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.TestHelpers
 Imports Microsoft.VisualBasic
@@ -1466,22 +1468,22 @@ Namespace MyNamespace
     
         Public Overrides Sub Up()
             AlterColumn(""MyTable"", ""MyColumn"", Function(c) c.Int(
-                annotations := New Dictionary(Of String, AnnotationPair)() From _
+                annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
                     {
                         ""Collation"",
-                        New AnnotationPair(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
+                        New AnnotationValues(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
                      }
                 }))
         End Sub
         
         Public Overrides Sub Down()
             AlterColumn(""MyTable"", ""MyColumn"", Function(c) c.Int(
-                annotations := New Dictionary(Of String, AnnotationPair)() From _
+                annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
                     {
                         ""Collation"",
-                        New AnnotationPair(oldValue := new CollationAttribute(""While I'm collating...""), newValue := new CollationAttribute(""At a reasonable volume...""))
+                        New AnnotationValues(oldValue := new CollationAttribute(""While I'm collating...""), newValue := new CollationAttribute(""At a reasonable volume...""))
                      }
                 }))
         End Sub
@@ -1503,22 +1505,22 @@ End Namespace
                         Name = "MyColumn",
                         IsFixedLength = true,
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
-                                { "A3", new AnnotationPair(null, "V3") },
-                                { "A1", new AnnotationPair(null, "V1") },
+                                { "A3", new AnnotationValues(null, "V3") },
+                                { "A1", new AnnotationValues(null, "V1") },
                             }
                     },
                     false),
             };
 
             var generator = new VisualBasicMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
                 @"Imports System
 Imports System.Collections.Generic
+Imports System.Data.Entity.Infrastructure.Annotations
 Imports System.Data.Entity.Migrations
 Imports Microsoft.VisualBasic
 
@@ -1528,15 +1530,15 @@ Namespace MyNamespace
     
         Public Overrides Sub Up()
             AddColumn(""MyTable"", ""MyColumn"", Function(c) c.String(fixedLength := true,
-                annotations := New Dictionary(Of String, AnnotationPair)() From _
+                annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
                     {
                         ""A1"",
-                        New AnnotationPair(oldValue := Nothing, newValue := ""V1"")
+                        New AnnotationValues(oldValue := Nothing, newValue := ""V1"")
                      },
                     {
                         ""A3"",
-                        New AnnotationPair(oldValue := Nothing, newValue := ""V3"")
+                        New AnnotationValues(oldValue := Nothing, newValue := ""V3"")
                      }
                 }))
         End Sub
@@ -1567,11 +1569,11 @@ End Namespace
                         Name = "MyColumn",
                         IsFixedLength = true,
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
                                 {
                                     CollationAttribute.AnnotationName,
-                                    new AnnotationPair(
+                                    new AnnotationValues(
                                         new CollationAttribute("At a reasonable volume..."),
                                         new CollationAttribute("While I'm collating..."))
                                 }
@@ -1581,12 +1583,13 @@ End Namespace
             };
 
             var generator = new VisualBasicMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
                 @"Imports System
 Imports System.Collections.Generic
+Imports System.Data.Entity.Infrastructure.Annotations
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.TestHelpers
 Imports Microsoft.VisualBasic
@@ -1597,11 +1600,11 @@ Namespace MyNamespace
     
         Public Overrides Sub Up()
             AddColumn(""MyTable"", ""MyColumn"", Function(c) c.String(fixedLength := true,
-                annotations := New Dictionary(Of String, AnnotationPair)() From _
+                annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
                     {
                         ""Collation"",
-                        New AnnotationPair(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
+                        New AnnotationValues(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
                      }
                 }))
         End Sub
@@ -1636,10 +1639,10 @@ End Namespace
                 IsNullable = true,
                 IsIdentity = true,
                 Annotations =
-                    new Dictionary<string, AnnotationPair>
+                    new Dictionary<string, AnnotationValues>
                     {
-                        { "A1", new AnnotationPair(null, "V1") },
-                        { "A2", new AnnotationPair(null, "V2") }
+                        { "A1", new AnnotationValues(null, "V1") },
+                        { "A2", new AnnotationValues(null, "V2") }
                     }
             };
             createTableOperation.Columns.Add(idColumn);
@@ -1650,11 +1653,11 @@ End Namespace
                     Name = "Name",
                     IsNullable = false,
                     Annotations =
-                        new Dictionary<string, AnnotationPair>
+                        new Dictionary<string, AnnotationValues>
                         {
                             {
                                 CollationAttribute.AnnotationName,
-                                new AnnotationPair(
+                                new AnnotationValues(
                                     new CollationAttribute("At a reasonable volume..."),
                                     new CollationAttribute("While I'm collating..."))
                             }
@@ -1670,12 +1673,13 @@ End Namespace
             var operations = new[] { createTableOperation };
 
             var generator = new VisualBasicMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
                 @"Imports System
 Imports System.Collections.Generic
+Imports System.Data.Entity.Infrastructure.Annotations
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.TestHelpers
 Imports Microsoft.VisualBasic
@@ -1690,23 +1694,23 @@ Namespace MyNamespace
                 Function(c) New With
                     {
                         .Id = c.Int(name := ""I.d"", identity := True,
-                            annotations := New Dictionary(Of String, AnnotationPair)() From _
+                            annotations := New Dictionary(Of String, AnnotationValues)() From _
                             {
                                 {
                                     ""A1"",
-                                    New AnnotationPair(oldValue := Nothing, newValue := ""V1"")
+                                    New AnnotationValues(oldValue := Nothing, newValue := ""V1"")
                                  },
                                 {
                                     ""A2"",
-                                    New AnnotationPair(oldValue := Nothing, newValue := ""V2"")
+                                    New AnnotationValues(oldValue := Nothing, newValue := ""V2"")
                                  }
                             }),
                         .Name = c.String(nullable := False,
-                            annotations := New Dictionary(Of String, AnnotationPair)() From _
+                            annotations := New Dictionary(Of String, AnnotationValues)() From _
                             {
                                 {
                                     ""Collation"",
-                                    New AnnotationPair(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
+                                    New AnnotationValues(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
                                  }
                             })
                     },
@@ -1754,18 +1758,18 @@ End Namespace
         [Fact]
         public void Can_generate_AlterTableAnnotations_with_annotations()
         {
-            var operation = new AlterTableAnnotationsOperation(
+            var operation = new AlterTableOperation(
                 "Customers",
-                new Dictionary<string, AnnotationPair>
+                new Dictionary<string, AnnotationValues>
                 {
-                    { "AT1", new AnnotationPair(null, "VT1") },
+                    { "AT1", new AnnotationValues(null, "VT1") },
                     {
                         CollationAttribute.AnnotationName,
-                        new AnnotationPair(
+                        new AnnotationValues(
                             new CollationAttribute("At a reasonable volume..."),
                             new CollationAttribute("While I'm collating..."))
                     },
-                    { "AT2", new AnnotationPair(null, "VT2") }
+                    { "AT2", new AnnotationValues(null, "VT2") }
 
                 });
 
@@ -1775,10 +1779,10 @@ End Namespace
                 IsNullable = true,
                 IsIdentity = true,
                 Annotations =
-                    new Dictionary<string, AnnotationPair>
+                    new Dictionary<string, AnnotationValues>
                     {
-                        { "A1", new AnnotationPair(null, "V1") },
-                        { "A2", new AnnotationPair(null, "V2") }
+                        { "A1", new AnnotationValues(null, "V1") },
+                        { "A2", new AnnotationValues(null, "V2") }
                     }
             };
             operation.Columns.Add(idColumn);
@@ -1789,11 +1793,11 @@ End Namespace
                     Name = "Name",
                     IsNullable = false,
                     Annotations =
-                        new Dictionary<string, AnnotationPair>
+                        new Dictionary<string, AnnotationValues>
                         {
                             {
                                 CollationAttribute.AnnotationName,
-                                new AnnotationPair(
+                                new AnnotationValues(
                                     new CollationAttribute("At a reasonable volume..."),
                                     new CollationAttribute("While I'm collating..."))
                             }
@@ -1803,12 +1807,13 @@ End Namespace
             var operations = new[] { operation };
 
             var generator = new VisualBasicMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
                 @"Imports System
 Imports System.Collections.Generic
+Imports System.Data.Entity.Infrastructure.Annotations
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.TestHelpers
 Imports Microsoft.VisualBasic
@@ -1823,39 +1828,39 @@ Namespace MyNamespace
                 Function(c) New With
                     {
                         .Id = c.Int(name := ""I.d"", identity := True,
-                            annotations := New Dictionary(Of String, AnnotationPair)() From _
+                            annotations := New Dictionary(Of String, AnnotationValues)() From _
                             {
                                 {
                                     ""A1"",
-                                    New AnnotationPair(oldValue := Nothing, newValue := ""V1"")
+                                    New AnnotationValues(oldValue := Nothing, newValue := ""V1"")
                                  },
                                 {
                                     ""A2"",
-                                    New AnnotationPair(oldValue := Nothing, newValue := ""V2"")
+                                    New AnnotationValues(oldValue := Nothing, newValue := ""V2"")
                                  }
                             }),
                         .Name = c.String(nullable := False,
-                            annotations := New Dictionary(Of String, AnnotationPair)() From _
+                            annotations := New Dictionary(Of String, AnnotationValues)() From _
                             {
                                 {
                                     ""Collation"",
-                                    New AnnotationPair(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
+                                    New AnnotationValues(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
                                  }
                             })
                     },
-                annotations := New Dictionary(Of String, AnnotationPair)() From _
+                annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
                     {
                         ""AT1"",
-                        New AnnotationPair(oldValue := Nothing, newValue := ""VT1"")
+                        New AnnotationValues(oldValue := Nothing, newValue := ""VT1"")
                      },
                     {
                         ""AT2"",
-                        New AnnotationPair(oldValue := Nothing, newValue := ""VT2"")
+                        New AnnotationValues(oldValue := Nothing, newValue := ""VT2"")
                      },
                     {
                         ""Collation"",
-                        New AnnotationPair(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
+                        New AnnotationValues(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
                      }
                 })
             
@@ -1867,39 +1872,39 @@ Namespace MyNamespace
                 Function(c) New With
                     {
                         .Id = c.Int(name := ""I.d"", identity := True,
-                            annotations := New Dictionary(Of String, AnnotationPair)() From _
+                            annotations := New Dictionary(Of String, AnnotationValues)() From _
                             {
                                 {
                                     ""A1"",
-                                    New AnnotationPair(oldValue := Nothing, newValue := ""V1"")
+                                    New AnnotationValues(oldValue := Nothing, newValue := ""V1"")
                                  },
                                 {
                                     ""A2"",
-                                    New AnnotationPair(oldValue := Nothing, newValue := ""V2"")
+                                    New AnnotationValues(oldValue := Nothing, newValue := ""V2"")
                                  }
                             }),
                         .Name = c.String(nullable := False,
-                            annotations := New Dictionary(Of String, AnnotationPair)() From _
+                            annotations := New Dictionary(Of String, AnnotationValues)() From _
                             {
                                 {
                                     ""Collation"",
-                                    New AnnotationPair(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
+                                    New AnnotationValues(oldValue := new CollationAttribute(""At a reasonable volume...""), newValue := new CollationAttribute(""While I'm collating...""))
                                  }
                             })
                     },
-                annotations := New Dictionary(Of String, AnnotationPair)() From _
+                annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
                     {
                         ""AT1"",
-                        New AnnotationPair(oldValue := ""VT1"", newValue := Nothing)
+                        New AnnotationValues(oldValue := ""VT1"", newValue := Nothing)
                      },
                     {
                         ""AT2"",
-                        New AnnotationPair(oldValue := ""VT2"", newValue := Nothing)
+                        New AnnotationValues(oldValue := ""VT2"", newValue := Nothing)
                      },
                     {
                         ""Collation"",
-                        New AnnotationPair(oldValue := new CollationAttribute(""While I'm collating...""), newValue := new CollationAttribute(""At a reasonable volume...""))
+                        New AnnotationValues(oldValue := new CollationAttribute(""While I'm collating...""), newValue := new CollationAttribute(""At a reasonable volume...""))
                      }
                 })
             
@@ -1937,11 +1942,11 @@ End Namespace
                 Assert.Throws<ArgumentNullException>(
                     () =>
                         generator.GenerateAnnotations(
-                            (IDictionary<string, AnnotationPair>)null, new IndentedTextWriter(new Mock<TextWriter>().Object))).ParamName);
+                            (IDictionary<string, AnnotationValues>)null, new IndentedTextWriter(new Mock<TextWriter>().Object))).ParamName);
 
             Assert.Equal(
                 "writer",
-                Assert.Throws<ArgumentNullException>(() => generator.GenerateAnnotations(new Dictionary<string, AnnotationPair>(), null))
+                Assert.Throws<ArgumentNullException>(() => generator.GenerateAnnotations(new Dictionary<string, AnnotationValues>(), null))
                     .ParamName);
         }
 
@@ -1951,12 +1956,12 @@ End Namespace
             var generator = new VisualBasicMigrationCodeGenerator();
 
             Assert.Equal(
-                "alterTableAnnotationsOperation",
+                "alterTableOperation",
                 Assert.Throws<ArgumentNullException>(() => generator.Generate(null, new IndentedTextWriter(new Mock<TextWriter>().Object))).ParamName);
 
             Assert.Equal(
                 "writer",
-                Assert.Throws<ArgumentNullException>(() => generator.Generate(new AlterTableAnnotationsOperation("N", null), null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => generator.Generate(new AlterTableOperation("N", null), null)).ParamName);
         }
     }
 }

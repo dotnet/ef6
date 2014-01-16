@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.ComponentModel.DataAnnotations.Schema
+namespace System.Data.Entity.Infrastructure.Annotations
 {
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Returned by <see cref="IndexAttribute.IsCompatibleWith(IndexAttribute)"/> and related methods to indicate whether or
+    /// Returned by <see cref="IMergeableAnnotation.IsCompatibleWith"/> and related methods to indicate whether or
     /// not one object does not conflict with another such that the two can be combined into one.
     /// </summary>
     /// <remarks>

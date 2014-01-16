@@ -481,11 +481,11 @@ namespace FunctionalTests
 
             modelBuilder.Entity<SalesPerson>()
                 .ToTable("tbl_sp")
-                .HasAnnotation("A1", "V1")
-                .HasAnnotation("A2", "V2")
-                .HasAnnotation("A3", "V3")
-                .HasAnnotation("A1", "V4")
-                .HasAnnotation("A3", null);
+                .HasTableAnnotation("A1", "V1")
+                .HasTableAnnotation("A2", "V2")
+                .HasTableAnnotation("A3", "V3")
+                .HasTableAnnotation("A1", "V4")
+                .HasTableAnnotation("A3", null);
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -501,11 +501,11 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<SalesPerson>()
-                .HasAnnotation("A1", "V1")
-                .HasAnnotation("A2", "V2")
-                .HasAnnotation("A3", "V3")
-                .HasAnnotation("A1", "V4")
-                .HasAnnotation("A3", null);
+                .HasTableAnnotation("A1", "V1")
+                .HasTableAnnotation("A2", "V2")
+                .HasTableAnnotation("A3", "V3")
+                .HasTableAnnotation("A1", "V4")
+                .HasTableAnnotation("A3", null);
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -621,10 +621,10 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<TPHBase>()
-                .Map(mc => mc.HasAnnotation("A1", "V1").Requires("MyDisc").HasValue("a"))
-                .Map<TPHDerived>(mc => mc.HasAnnotation("A2", "V2").Requires("MyDisc").HasValue("b"))
-                .Map<TPHLeaf>(mc => mc.HasAnnotation("A3", "V3").Requires("MyDisc").HasValue("c"))
-                .HasAnnotation("A4", "V4");
+                .Map(mc => mc.HasTableAnnotation("A1", "V1").Requires("MyDisc").HasValue("a"))
+                .Map<TPHDerived>(mc => mc.HasTableAnnotation("A2", "V2").Requires("MyDisc").HasValue("b"))
+                .Map<TPHLeaf>(mc => mc.HasTableAnnotation("A3", "V3").Requires("MyDisc").HasValue("c"))
+                .HasTableAnnotation("A4", "V4");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -660,9 +660,9 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<TPHBase>()
-                .Map(mc => mc.HasAnnotation("A1", "V1"))
-                .Map<TPHDerived>(mc => mc.HasAnnotation("A2", "V2"))
-                .Map<TPHLeaf>(mc => mc.HasAnnotation("A1", "V3"));
+                .Map(mc => mc.HasTableAnnotation("A1", "V1"))
+                .Map<TPHDerived>(mc => mc.HasTableAnnotation("A2", "V2"))
+                .Map<TPHLeaf>(mc => mc.HasTableAnnotation("A1", "V3"));
 
             Assert.Throws<InvalidOperationException>(
                 () => BuildMapping(modelBuilder))
@@ -1178,24 +1178,24 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<TPHRoot>()
-                .HasAnnotation("A0", "V0")
+                .HasTableAnnotation("A0", "V0")
                 .Map(
                     mc =>
                         {
                             mc.Requires("MyDisc").HasValue("a");
-                            mc.ToTable("Woof").HasAnnotation("A1", "V1");
+                            mc.ToTable("Woof").HasTableAnnotation("A1", "V1");
                         })
                 .Map<TPHNodeA>(
                     mc =>
                         {
                             mc.Requires("MyDisc").HasValue("b");
-                            mc.ToTable("Woof").HasAnnotation("A2", "V2");
+                            mc.ToTable("Woof").HasTableAnnotation("A2", "V2");
                         })
                 .Map<TPHNodeB>(
                     mc =>
                         {
                             mc.Requires("MyDisc").HasValue("c");
-                            mc.ToTable("Woof").HasAnnotation("A3", "V3");
+                            mc.ToTable("Woof").HasTableAnnotation("A3", "V3");
                         });
             modelBuilder.Ignore<TPHNodeC>();
 
@@ -1910,13 +1910,13 @@ namespace FunctionalTests
 
             modelBuilder.Entity<AssocBase>()
                 .ToTable("Bases")
-                .HasAnnotation("A1", "V1")
+                .HasTableAnnotation("A1", "V1")
                 .Ignore(b => b.AssocRelatedBase)
                 .Ignore(b => b.AssocRelatedBaseId);
 
             modelBuilder.Entity<AssocDerived>()
                 .ToTable("Deriveds")
-                .HasAnnotation("A1", "V2")
+                .HasTableAnnotation("A1", "V2")
                 .Ignore(b => b.AssocRelated)
                 .Ignore(b => b.AssocRelatedId);
 
@@ -1940,8 +1940,8 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1").HasAnnotation("A1", "V1");
-            modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2").HasAnnotation("A1", "V2");
+            modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1").HasTableAnnotation("A1", "V1");
+            modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2").HasTableAnnotation("A1", "V2");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1959,9 +1959,9 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<AbsAtBase>().ToTable("Bases").HasAnnotation("A1", "V1");
-            modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1").HasAnnotation("A1", "V2");
-            modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2").HasAnnotation("A1", "V3");
+            modelBuilder.Entity<AbsAtBase>().ToTable("Bases").HasTableAnnotation("A1", "V1");
+            modelBuilder.Entity<AbsAtBaseL1>().ToTable("L1").HasTableAnnotation("A1", "V2");
+            modelBuilder.Entity<AbsAtBaseL2>().ToTable("L2").HasTableAnnotation("A1", "V3");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1981,10 +1981,10 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<AssocBase>().ToTable("Bases").HasAnnotation("A1", "V1");
+            modelBuilder.Entity<AssocBase>().ToTable("Bases").HasTableAnnotation("A1", "V1");
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
-            modelBuilder.Entity<AssocDerived>().ToTable("Derived").HasAnnotation("A1", "V2");
+            modelBuilder.Entity<AssocDerived>().ToTable("Derived").HasTableAnnotation("A1", "V2");
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.Deriveds);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
@@ -2095,9 +2095,9 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<TPHBase>().ToTable("A").HasAnnotation("A1", "V1");
-            modelBuilder.Entity<TPHDerived>().ToTable("B").HasAnnotation("A1", "V2");
-            modelBuilder.Entity<TPHLeaf>().ToTable("C").HasAnnotation("A1", "V3");
+            modelBuilder.Entity<TPHBase>().ToTable("A").HasTableAnnotation("A1", "V1");
+            modelBuilder.Entity<TPHDerived>().ToTable("B").HasTableAnnotation("A1", "V2");
+            modelBuilder.Entity<TPHLeaf>().ToTable("C").HasTableAnnotation("A1", "V3");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2121,26 +2121,26 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<CKCategory>().Property(p => p.Key1).HasColumnType("uniqueidentifier");
-            modelBuilder.Entity<CKCategory>().Map(m => m.ToTable("Principal").HasAnnotation("A1", "V1"));
+            modelBuilder.Entity<CKCategory>().Map(m => m.ToTable("Principal").HasTableAnnotation("A1", "V1"));
             modelBuilder.Entity<CKCategory>().HasKey(e => new { e.Key1, e.Key2 });
-            modelBuilder.Entity<CKCategory>().HasAnnotation("A0", "V01");
+            modelBuilder.Entity<CKCategory>().HasTableAnnotation("A0", "V01");
 
             modelBuilder.Entity<CKImage>().Property(p => p.Key1).HasColumnType("uniqueidentifier");
-            modelBuilder.Entity<CKImage>().Map(m => m.ToTable("Images").HasAnnotation("A1", "V2"));
+            modelBuilder.Entity<CKImage>().Map(m => m.ToTable("Images").HasTableAnnotation("A1", "V2"));
             modelBuilder.Entity<CKImage>().HasKey(e => new { e.Key1, e.Key2 });
-            modelBuilder.Entity<CKImage>().HasAnnotation("A0", "V02");
+            modelBuilder.Entity<CKImage>().HasTableAnnotation("A0", "V02");
 
             modelBuilder.Entity<CKProduct>().HasRequired(e => e.CKCategory).WithOptional().WillCascadeOnDelete(true);
-            modelBuilder.Entity<CKProduct>().Map(m => m.ToTable("Dependent").HasAnnotation("A1", "V3"));
+            modelBuilder.Entity<CKProduct>().Map(m => m.ToTable("Dependent").HasTableAnnotation("A1", "V3"));
             modelBuilder.Entity<CKProduct>().HasKey(e => new { e.CKCategoryKey1, e.CKCategoryKey2 });
-            modelBuilder.Entity<CKProduct>().HasAnnotation("A0", "V03");
+            modelBuilder.Entity<CKProduct>().HasTableAnnotation("A0", "V03");
 
-            modelBuilder.Entity<CKDerivedProduct>().Map(m => m.ToTable("DerivedDependent").HasAnnotation("A1", "V4"));
+            modelBuilder.Entity<CKDerivedProduct>().Map(m => m.ToTable("DerivedDependent").HasTableAnnotation("A1", "V4"));
             modelBuilder.Entity<CKDerivedProduct>().HasRequired(dp => dp.Image).WithOptional();
-            modelBuilder.Entity<CKDerivedProduct>().HasAnnotation("A0", "V04");
+            modelBuilder.Entity<CKDerivedProduct>().HasTableAnnotation("A0", "V04");
 
-            modelBuilder.Entity<CKDerivedProduct2>().Map(m => m.ToTable("DerivedDependent2").HasAnnotation("A1", "V5"));
-            modelBuilder.Entity<CKDerivedProduct2>().HasAnnotation("A0", "V05");
+            modelBuilder.Entity<CKDerivedProduct2>().Map(m => m.ToTable("DerivedDependent2").HasTableAnnotation("A1", "V5"));
+            modelBuilder.Entity<CKDerivedProduct2>().HasTableAnnotation("A0", "V05");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2412,10 +2412,10 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<Repro137329_A1>().ToTable("A1").HasAnnotation("A1", "V1");
-            modelBuilder.Entity<Repro137329_A2>().ToTable("A1").HasAnnotation("A2", "V2");
-            modelBuilder.Entity<Repro137329_A3>().ToTable("A1").HasAnnotation("A3", "V3");
-            modelBuilder.Entity<Repro137329_A4>().ToTable("A1").HasAnnotation("A4", "V4");
+            modelBuilder.Entity<Repro137329_A1>().ToTable("A1").HasTableAnnotation("A1", "V1");
+            modelBuilder.Entity<Repro137329_A2>().ToTable("A1").HasTableAnnotation("A2", "V2");
+            modelBuilder.Entity<Repro137329_A3>().ToTable("A1").HasTableAnnotation("A3", "V3");
+            modelBuilder.Entity<Repro137329_A4>().ToTable("A1").HasTableAnnotation("A4", "V4");
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertMapping<Repro137329_A1>("A1", false)
@@ -2828,14 +2828,14 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<AssocBase>()
-                .HasAnnotation("A0", "V01")
-                .Map(mc => mc.ToTable("Bases").HasAnnotation("A1", "V1"));
+                .HasTableAnnotation("A0", "V01")
+                .Map(mc => mc.ToTable("Bases").HasTableAnnotation("A1", "V1"));
             
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBase);
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Entity<AssocDerived>()
-                .HasAnnotation("A0", "V02")
-                .Map(mc => mc.MapInheritedProperties().ToTable("Deriveds").HasAnnotation("A1", "V2"));
+                .HasTableAnnotation("A0", "V02")
+                .Map(mc => mc.MapInheritedProperties().ToTable("Deriveds").HasTableAnnotation("A1", "V2"));
             
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
@@ -3106,7 +3106,7 @@ namespace FunctionalTests
             modelBuilder.Entity<ByteDerived>()
                 .Property(x => x.DerivedData)
                 .HasColumnType("image")
-                .HasAnnotation("A1", "V1");
+                .HasColumnAnnotation("A1", "V1");
 
             modelBuilder.Entity<ByteDerived>()
                 .Map(
@@ -3413,7 +3413,7 @@ namespace FunctionalTests
             modelBuilder.Entity<Repro144459_Product>()
                 .Property(e => e.Name)
                 .HasColumnName("NameOfProduct")
-                .HasAnnotation("Fish", "Blub");
+                .HasColumnAnnotation("Fish", "Blub");
 
             modelBuilder.Entity<Repro144459_Product>().ToTable("Products");
             modelBuilder.Entity<Repro144459_ClearanceProduct>().Map(mapping => { mapping.MapInheritedProperties(); }).
@@ -4152,9 +4152,9 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<AssocBase>()
-                .HasAnnotation("A0", "V0")
-                .Map(mc => mc.ToTable("NameTbl").HasAnnotation("A1", "V1").Properties(a => new { a.Id, a.Name }))
-                .Map(mc => mc.ToTable("DataTbl").HasAnnotation("A2", "V2").Properties(a => new { a.Id, a.BaseData }));
+                .HasTableAnnotation("A0", "V0")
+                .Map(mc => mc.ToTable("NameTbl").HasTableAnnotation("A1", "V1").Properties(a => new { a.Id, a.Name }))
+                .Map(mc => mc.ToTable("DataTbl").HasTableAnnotation("A2", "V2").Properties(a => new { a.Id, a.BaseData }));
             
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBase);
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
@@ -6495,8 +6495,8 @@ namespace FunctionalTests
                     {
                         m.Property(t => t.Value)
                             .HasColumnName("Int1")
-                            .HasAnnotation("Elephant", "Toot")
-                            .HasAnnotation("Fish", "Blub");
+                            .HasColumnAnnotation("Elephant", "Toot")
+                            .HasColumnAnnotation("Fish", "Blub");
                         
                         m.Requires("TypeID").HasValue(1);
                     });
@@ -6505,8 +6505,8 @@ namespace FunctionalTests
                     {
                         m.Property(t => t.Height)
                             .HasColumnName("Int1")
-                            .HasAnnotation("Seal", "Ow ow ow")
-                            .HasAnnotation("Fox", "No one knows...");
+                            .HasColumnAnnotation("Seal", "Ow ow ow")
+                            .HasColumnAnnotation("Fox", "No one knows...");
                         
                         m.Requires("TypeID").HasValue(2);
                     });

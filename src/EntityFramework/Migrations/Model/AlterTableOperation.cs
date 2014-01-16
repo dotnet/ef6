@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -13,14 +14,14 @@ namespace System.Data.Entity.Migrations.Model
     /// (such as the end user of an application). If input is accepted from such sources it should be validated
     /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
-    public class AlterTableAnnotationsOperation : MigrationOperation
+    public class AlterTableOperation : MigrationOperation, IAnnotationTarget
     {
         private readonly string _name;
         private readonly List<ColumnModel> _columns = new List<ColumnModel>();
-        private readonly IDictionary<string, AnnotationPair> _annotations;
+        private readonly IDictionary<string, AnnotationValues> _annotations;
 
         /// <summary>
-        /// Initializes a new instance of the AlterTableAnnotationsOperation class.
+        /// Initializes a new instance of the AlterTableOperation class.
         /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources
         /// (such as the end user of an application). If input is accepted from such sources it should be validated
         /// before being passed to these APIs to protect against SQL injection attacks etc.
@@ -32,13 +33,13 @@ namespace System.Data.Entity.Migrations.Model
         /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public AlterTableAnnotationsOperation(string name, IDictionary<string, AnnotationPair> annotations, object anonymousArguments = null)
+        public AlterTableOperation(string name, IDictionary<string, AnnotationValues> annotations, object anonymousArguments = null)
             : base(anonymousArguments)
         {
             Check.NotEmpty(name, "name");
 
             _name = name;
-            _annotations = annotations ?? new Dictionary<string, AnnotationPair>();
+            _annotations = annotations ?? new Dictionary<string, AnnotationValues>();
         }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         /// Gets the custom annotations that have changed on the table.
         /// </summary>
-        public virtual IDictionary<string, AnnotationPair> Annotations
+        public virtual IDictionary<string, AnnotationValues> Annotations
         {
             get { return _annotations; }
         }
@@ -73,8 +74,8 @@ namespace System.Data.Entity.Migrations.Model
         {
             get
             {
-                var inverse = new AlterTableAnnotationsOperation(
-                    Name, Annotations.ToDictionary(a => a.Key, a => new AnnotationPair(a.Value.NewValue, a.Value.OldValue)));
+                var inverse = new AlterTableOperation(
+                    Name, Annotations.ToDictionary(a => a.Key, a => new AnnotationValues(a.Value.NewValue, a.Value.OldValue)));
 
                 inverse._columns.AddRange(_columns);
 
@@ -86,6 +87,15 @@ namespace System.Data.Entity.Migrations.Model
         public override bool IsDestructiveChange
         {
             get { return false; }
+        }
+
+        bool IAnnotationTarget.HasAnnotations
+        {
+            get
+            {
+                return Annotations.Any()
+                       || Columns.SelectMany(c => c.Annotations).Any();
+            }
         }
     }
 }

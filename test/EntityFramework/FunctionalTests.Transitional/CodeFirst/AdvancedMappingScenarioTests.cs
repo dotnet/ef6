@@ -280,15 +280,15 @@ namespace FunctionalTests
 
             modelBuilder.Entity<SplitProduct>()
                 .ToTable("Product")
-                .HasAnnotation("A1", "V1")
-                .HasAnnotation("A2", "V2")
-                .HasAnnotation("A1", "V1B");
+                .HasTableAnnotation("A1", "V1")
+                .HasTableAnnotation("A2", "V2")
+                .HasTableAnnotation("A1", "V1B");
 
             modelBuilder.Entity<SplitProductDetail>()
-                .HasAnnotation("A1", "V1B")
-                .HasAnnotation("A3", "V3")
-                .HasAnnotation("A4", "V4")
-                .HasAnnotation("A3", null)
+                .HasTableAnnotation("A1", "V1B")
+                .HasTableAnnotation("A3", "V3")
+                .HasTableAnnotation("A4", "V4")
+                .HasTableAnnotation("A3", null)
                 .ToTable("Product");
 
             var databaseMapping = BuildMapping(modelBuilder);
@@ -309,12 +309,12 @@ namespace FunctionalTests
 
             modelBuilder.Entity<SplitProduct>()
                 .ToTable("Product")
-                .HasAnnotation("A1", "V1")
-                .HasAnnotation("A2", "V2");
+                .HasTableAnnotation("A1", "V1")
+                .HasTableAnnotation("A2", "V2");
 
             modelBuilder.Entity<SplitProductDetail>()
-                .HasAnnotation("A1", "V3")
-                .HasAnnotation("A3", "V4")
+                .HasTableAnnotation("A1", "V3")
+                .HasTableAnnotation("A3", "V4")
                 .ToTable("Product");
 
             Assert.Throws<InvalidOperationException>(
@@ -333,7 +333,7 @@ namespace FunctionalTests
                 .ToTable("Product")
                 .Property(s => s.Name)
                 .HasColumnName("Unique")
-                .HasAnnotation("Fish", "Blub");
+                .HasColumnAnnotation("Fish", "Blub");
 
             var databaseMapping = BuildMapping(modelBuilder);
 

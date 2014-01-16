@@ -7,6 +7,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.OSpaceRenames_v1;
@@ -83,14 +84,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(e => e.Id)
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder.Entity<MigrationsCustomer>()
                 .ToTable("Customer")
                 .Property(e => e.Id)
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -878,11 +879,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>()
-                .HasAnnotation("AT1", "VT1")
+                .HasTableAnnotation("AT1", "VT1")
                 .ToTable("[foo.[]]].bar")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP1")
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation("AP1", "VP1")
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -1059,17 +1060,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>()
-                .HasAnnotation("AT1", "VT1")
+                .HasTableAnnotation("AT1", "VT1")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP1");
+                .HasColumnAnnotation("AP1", "VP1");
             
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>()
-                .HasAnnotation("AT1", "VT2")
+                .HasTableAnnotation("AT1", "VT2")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP1");
+                .HasColumnAnnotation("AP1", "VP1");
             
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -1077,7 +1078,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(1, operations.Count());
 
-            var operation = operations.OfType<AlterTableAnnotationsOperation>().Single();
+            var operation = operations.OfType<AlterTableOperation>().Single();
 
             Assert.Equal("VT1", operation.Annotations["AT1"].OldValue);
             Assert.Equal("VT2", operation.Annotations["AT1"].NewValue);
@@ -1092,17 +1093,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>()
-                .HasAnnotation("AT1", "VT1")
+                .HasTableAnnotation("AT1", "VT1")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP1");
+                .HasColumnAnnotation("AP1", "VP1");
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>()
-                .HasAnnotation("AT1", "VT2")
+                .HasTableAnnotation("AT1", "VT2")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP2");
+                .HasColumnAnnotation("AP1", "VP2");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -1115,7 +1116,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("VP1", alterColumnOperation.Column.Annotations["AP1"].OldValue);
             Assert.Equal("VP2", alterColumnOperation.Column.Annotations["AP1"].NewValue);
 
-            var alterTableAnnotationsOperation = operations.OfType<AlterTableAnnotationsOperation>().Single();
+            var alterTableAnnotationsOperation = operations.OfType<AlterTableOperation>().Single();
 
             Assert.Equal("VT1", alterTableAnnotationsOperation.Annotations["AT1"].OldValue);
             Assert.Equal("VT2", alterTableAnnotationsOperation.Annotations["AT1"].NewValue);
@@ -1134,10 +1135,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>()
-                .HasAnnotation("AT1", "VT1")
+                .HasTableAnnotation("AT1", "VT1")
                 .Property(e => e.OrderId)
-                .HasAnnotation("AP1", "VP1")
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation("AP1", "VP1")
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -1463,7 +1464,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(p => p.CustomerNumber)
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -1471,7 +1472,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Entity<MigrationsCustomer>()
                 .Property(p => p.CustomerNumber)
                 .HasColumnName("CusNum")
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2068,8 +2069,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<OrderLine>()
                 .Property(e => e.OrderId)
-                .HasAnnotation("A1", "V1")
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation("A1", "V1")
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
             
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2209,8 +2210,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<Migrations.Order>()
                 .Property(e => e.Version)
-                .HasAnnotation("A1", "V1")
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation("A1", "V1")
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -2292,14 +2293,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.FullName)
-                .HasAnnotation("A1", "V1");
+                .HasColumnAnnotation("A1", "V1");
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.FullName)
-                .HasAnnotation("A1", "V2");
+                .HasColumnAnnotation("A1", "V2");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2323,7 +2324,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.FullName)
-                .HasAnnotation("A1", "V2");
+                .HasColumnAnnotation("A1", "V2");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2341,7 +2342,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.FullName)
-                .HasAnnotation("A1", "V1");
+                .HasColumnAnnotation("A1", "V1");
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -2365,14 +2366,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.CustomerNumber)
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.CustomerNumber)
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella") { IsUnique = true }));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella") { IsUnique = true }));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2404,7 +2405,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.CustomerNumber)
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -2422,7 +2423,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>()
                 .Property(c => c.CustomerNumber)
-                .HasAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
+                .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
 
             var model1 = modelBuilder.Build(ProviderInfo);
 

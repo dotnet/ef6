@@ -1445,8 +1445,8 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
             var generator = new SqlServerMigrationSqlGenerator();
 
             Assert.Equal(
-                "alterTableAnnotationsOperation",
-                Assert.Throws<ArgumentNullException>(() => generator.Generate((AlterTableAnnotationsOperation)null)).ParamName);
+                "alterTableOperation",
+                Assert.Throws<ArgumentNullException>(() => generator.Generate((AlterTableOperation)null)).ParamName);
         }
 
         [Fact]

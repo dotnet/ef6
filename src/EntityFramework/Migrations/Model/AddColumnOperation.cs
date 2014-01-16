@@ -13,7 +13,7 @@ namespace System.Data.Entity.Migrations.Model
     /// (such as the end user of an application). If input is accepted from such sources it should be validated 
     /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
-    public class AddColumnOperation : MigrationOperation
+    public class AddColumnOperation : MigrationOperation, IAnnotationTarget
     {
         private readonly string _table;
         private readonly ColumnModel _column;
@@ -71,6 +71,11 @@ namespace System.Data.Entity.Migrations.Model
         public override bool IsDestructiveChange
         {
             get { return false; }
+        }
+
+        bool IAnnotationTarget.HasAnnotations
+        {
+            get { return Column.Annotations.Any(); }
         }
     }
 }

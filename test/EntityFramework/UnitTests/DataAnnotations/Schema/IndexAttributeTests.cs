@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.DataAnnotations.Schema
+namespace System.ComponentModel.DataAnnotations.Schema
 {
-    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Resources;
     using Xunit;
 
@@ -66,43 +66,23 @@ namespace System.Data.Entity.DataAnnotations.Schema
         }
 
         [Fact]
-        public void ClusteredConfiguration_can_get_and_set_clustered_configuration()
+        public void Can_get_and_set_clustered_configuration()
         {
-            Assert.Null(new IndexAttribute().ClusteredConfiguration);
-            Assert.Null(new IndexAttribute { ClusteredConfiguration = null }.ClusteredConfiguration);
-            Assert.Equal(true, new IndexAttribute { ClusteredConfiguration = true }.ClusteredConfiguration);
-            Assert.Equal(false, new IndexAttribute { ClusteredConfiguration = false }.ClusteredConfiguration);
+            Assert.False(new IndexAttribute().IsClusteredConfigured);
+            Assert.True(new IndexAttribute { IsClustered = true }.IsClusteredConfigured);
+            Assert.True(new IndexAttribute { IsClustered = true }.IsClustered);
+            Assert.True(new IndexAttribute { IsClustered = false }.IsClusteredConfigured);
+            Assert.False(new IndexAttribute { IsClustered = false }.IsClustered);
         }
 
         [Fact]
-        public void IsClustered_can_set_clustered_configuration_but_throws_on_get()
+        public void Can_get_and_set_unique_configuration()
         {
-            Assert.Equal(true, new IndexAttribute { IsClustered = true }.ClusteredConfiguration);
-            Assert.Equal(false, new IndexAttribute { IsClustered = false }.ClusteredConfiguration);
-
-            Assert.Equal(
-                Strings.IndexAttributeNonNullableProperty("IsClustered", "ClusteredConfiguration"),
-                Assert.Throws<NotSupportedException>(() => new IndexAttribute().IsClustered).Message);
-        }
-
-        [Fact]
-        public void UniqueConfiguration_can_get_and_set_uniqueness_configuration()
-        {
-            Assert.Null(new IndexAttribute().UniqueConfiguration);
-            Assert.Null(new IndexAttribute { UniqueConfiguration = null }.UniqueConfiguration);
-            Assert.Equal(true, new IndexAttribute { UniqueConfiguration = true }.UniqueConfiguration);
-            Assert.Equal(false, new IndexAttribute { UniqueConfiguration = false }.UniqueConfiguration);
-        }
-
-        [Fact]
-        public void IsUnique_can_set_uniqueness_configuration_but_throws_on_get()
-        {
-            Assert.Equal(true, new IndexAttribute { IsUnique = true }.UniqueConfiguration);
-            Assert.Equal(false, new IndexAttribute { IsUnique = false }.UniqueConfiguration);
-
-            Assert.Equal(
-                Strings.IndexAttributeNonNullableProperty("IsUnique", "UniqueConfiguration"),
-                Assert.Throws<NotSupportedException>(() => new IndexAttribute().IsUnique).Message);
+            Assert.False(new IndexAttribute().IsUniqueConfigured);
+            Assert.True(new IndexAttribute { IsUnique = true }.IsUniqueConfigured);
+            Assert.True(new IndexAttribute { IsUnique = true }.IsUnique);
+            Assert.True(new IndexAttribute { IsUnique = false }.IsUniqueConfigured);
+            Assert.False(new IndexAttribute { IsUnique = false }.IsUnique);
         }
 
         [Fact]
@@ -237,48 +217,64 @@ namespace System.Data.Entity.DataAnnotations.Schema
             Assert.Equal(7, new IndexAttribute().MergeWith(new IndexAttribute { Order = 7 }).Order);
             Assert.Equal(7, new IndexAttribute { Order = 7 }.MergeWith(new IndexAttribute { Order = 7 }).Order);
 
-            Assert.Equal(true, new IndexAttribute { IsClustered = true }.MergeWith(new IndexAttribute()).ClusteredConfiguration);
-            Assert.Equal(true, new IndexAttribute().MergeWith(new IndexAttribute { IsClustered = true }).ClusteredConfiguration);
-            Assert.Equal(
-                true,
-                new IndexAttribute { IsClustered = true }.MergeWith(new IndexAttribute { IsClustered = true }).ClusteredConfiguration);
+            Assert.True(new IndexAttribute { IsClustered = true }.MergeWith(new IndexAttribute()).IsClusteredConfigured);
+            Assert.True(new IndexAttribute().MergeWith(new IndexAttribute { IsClustered = true }).IsClusteredConfigured);
+            Assert.True(new IndexAttribute { IsClustered = true }.MergeWith(new IndexAttribute { IsClustered = true }).IsClusteredConfigured);
 
-            Assert.Equal(false, new IndexAttribute { IsClustered = false }.MergeWith(new IndexAttribute()).ClusteredConfiguration);
-            Assert.Equal(false, new IndexAttribute().MergeWith(new IndexAttribute { IsClustered = false }).ClusteredConfiguration);
-            Assert.Equal(
-                false,
-                new IndexAttribute { IsClustered = false }.MergeWith(new IndexAttribute { IsClustered = false }).ClusteredConfiguration);
+            Assert.True(new IndexAttribute { IsClustered = true }.MergeWith(new IndexAttribute()).IsClustered);
+            Assert.True(new IndexAttribute().MergeWith(new IndexAttribute { IsClustered = true }).IsClustered);
+            Assert.True(new IndexAttribute { IsClustered = true }.MergeWith(new IndexAttribute { IsClustered = true }).IsClustered);
 
-            Assert.Equal(true, new IndexAttribute { IsUnique = true }.MergeWith(new IndexAttribute()).UniqueConfiguration);
-            Assert.Equal(true, new IndexAttribute().MergeWith(new IndexAttribute { IsUnique = true }).UniqueConfiguration);
-            Assert.Equal(true, new IndexAttribute { IsUnique = true }.MergeWith(new IndexAttribute { IsUnique = true }).UniqueConfiguration);
+            Assert.True(new IndexAttribute { IsClustered = false }.MergeWith(new IndexAttribute()).IsClusteredConfigured);
+            Assert.True(new IndexAttribute().MergeWith(new IndexAttribute { IsClustered = false }).IsClusteredConfigured);
+            Assert.True(new IndexAttribute { IsClustered = false }.MergeWith(new IndexAttribute { IsClustered = false }).IsClusteredConfigured);
 
-            Assert.Equal(false, new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute()).UniqueConfiguration);
-            Assert.Equal(false, new IndexAttribute().MergeWith(new IndexAttribute { IsUnique = false }).UniqueConfiguration);
-            Assert.Equal(
-                false,
-                new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute { IsUnique = false }).UniqueConfiguration);
+            Assert.False(new IndexAttribute { IsClustered = false }.MergeWith(new IndexAttribute()).IsClustered);
+            Assert.False(new IndexAttribute().MergeWith(new IndexAttribute { IsClustered = false }).IsClustered);
+            Assert.False(new IndexAttribute { IsClustered = false }.MergeWith(new IndexAttribute { IsClustered = false }).IsClustered);
+
+            Assert.True(new IndexAttribute { IsUnique = true }.MergeWith(new IndexAttribute()).IsUniqueConfigured);
+            Assert.True(new IndexAttribute().MergeWith(new IndexAttribute { IsUnique = true }).IsUniqueConfigured);
+            Assert.True(new IndexAttribute { IsUnique = true }.MergeWith(new IndexAttribute { IsUnique = true }).IsUniqueConfigured);
+
+            Assert.True(new IndexAttribute { IsUnique = true }.MergeWith(new IndexAttribute()).IsUnique);
+            Assert.True(new IndexAttribute().MergeWith(new IndexAttribute { IsUnique = true }).IsUnique);
+            Assert.True(new IndexAttribute { IsUnique = true }.MergeWith(new IndexAttribute { IsUnique = true }).IsUnique);
+
+            Assert.True(new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute()).IsUniqueConfigured);
+            Assert.True(new IndexAttribute().MergeWith(new IndexAttribute { IsUnique = false }).IsUniqueConfigured);
+            Assert.True(new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute { IsUnique = false }).IsUniqueConfigured);
+
+            Assert.False(new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute()).IsUnique);
+            Assert.False(new IndexAttribute().MergeWith(new IndexAttribute { IsUnique = false }).IsUnique);
+            Assert.False(new IndexAttribute { IsUnique = false }.MergeWith(new IndexAttribute { IsUnique = false }).IsUnique);
 
             var merged = new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false }
                 .MergeWith(new IndexAttribute("MrsPandy"));
             Assert.Equal("MrsPandy", merged.Name);
             Assert.Equal(7, merged.Order);
-            Assert.Equal(false, merged.ClusteredConfiguration);
-            Assert.Equal(true, merged.UniqueConfiguration);
+            Assert.True(merged.IsClusteredConfigured);
+            Assert.False(merged.IsClustered);
+            Assert.True(merged.IsUniqueConfigured);
+            Assert.True(merged.IsUnique);
 
             merged = new IndexAttribute("MrsPandy")
                 .MergeWith(new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false });
             Assert.Equal("MrsPandy", merged.Name);
             Assert.Equal(7, merged.Order);
-            Assert.Equal(false, merged.ClusteredConfiguration);
-            Assert.Equal(true, merged.UniqueConfiguration);
+            Assert.True(merged.IsClusteredConfigured);
+            Assert.False(merged.IsClustered);
+            Assert.True(merged.IsUniqueConfigured);
+            Assert.True(merged.IsUnique);
 
             merged = new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false }
                 .MergeWith(new IndexAttribute("MrsPandy", 7) { IsUnique = true, IsClustered = false });
             Assert.Equal("MrsPandy", merged.Name);
             Assert.Equal(7, merged.Order);
-            Assert.Equal(false, merged.ClusteredConfiguration);
-            Assert.Equal(true, merged.UniqueConfiguration);
+            Assert.True(merged.IsClusteredConfigured);
+            Assert.False(merged.IsClustered);
+            Assert.True(merged.IsUniqueConfigured);
+            Assert.True(merged.IsUnique);
         }
 
         [Fact]

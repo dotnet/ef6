@@ -10,6 +10,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
@@ -1375,7 +1376,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                             BuildCreateTableOperation(es, _source))));
         }
 
-        private IEnumerable<AlterTableAnnotationsOperation> FindAlteredTables(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
+        private IEnumerable<AlterTableOperation> FindAlteredTables(ICollection<Tuple<EntitySet, EntitySet>> tablePairs)
         {
             DebugCheck.NotNull(tablePairs);
 
@@ -1384,9 +1385,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Select(p => BuildAlterTableAnnotationsOperation(p.Item1, p.Item2));
         }
 
-        private AlterTableAnnotationsOperation BuildAlterTableAnnotationsOperation(EntitySet sourceTable, EntitySet destinationTable)
+        private AlterTableOperation BuildAlterTableAnnotationsOperation(EntitySet sourceTable, EntitySet destinationTable)
         {
-            var operation = new AlterTableAnnotationsOperation(
+            var operation = new AlterTableOperation(
                 GetSchemaQualifiedName(destinationTable),
                 BuildAnnotationPairs(
                     GetAnnotations(sourceTable.ElementType),
@@ -1398,7 +1399,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         operation.Columns.Add(
                             BuildColumnModel(
                                 p, _target,
-                                GetAnnotations(p).ToDictionary(a => a.Key, a => new AnnotationPair(a.Value, a.Value)))));
+                                GetAnnotations(p).ToDictionary(a => a.Key, a => new AnnotationValues(a.Value, a.Value)))));
             return operation;
         }
 
@@ -1620,7 +1621,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select new AddColumnOperation(
                     t,
                     BuildColumnModel(
-                        c, _target, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value))));
+                        c, _target, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationValues(null, a.Value))));
         }
 
         private IEnumerable<DropColumnOperation> FindDroppedColumns(
@@ -1648,7 +1649,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     new AddColumnOperation(
                         t,
                         BuildColumnModel(
-                            c, _source, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
+                            c, _source, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationValues(null, a.Value)))));
         }
 
         private IEnumerable<DropColumnOperation> FindOrphanedColumns(
@@ -1678,7 +1679,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     new AddColumnOperation(
                         t,
                         BuildColumnModel(
-                            c, _source, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
+                            c, _source, GetAnnotations(c).ToDictionary(a => a.Key, a => new AnnotationValues(null, a.Value)))));
         }
 
         private IEnumerable<AlterColumnOperation> FindAlteredColumns(
@@ -1813,7 +1814,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 GetAnnotations(sourceProperty), GetAnnotations(targetProperty));
             
             var sourceAnnotations = targetAnnotations
-                .ToDictionary(a => a.Key, a => new AnnotationPair(a.Value.NewValue, a.Value.OldValue));
+                .ToDictionary(a => a.Key, a => new AnnotationValues(a.Value.NewValue, a.Value.OldValue));
 
             var targetModel
                 = BuildColumnModel(targetProperty, targetModelMetadata, targetAnnotations);
@@ -1834,26 +1835,26 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     isDestructiveChange: sourceModel.IsNarrowerThan(targetModel, _target.ProviderManifest)));
         }
 
-        private static IDictionary<string, AnnotationPair> BuildAnnotationPairs(
+        private static IDictionary<string, AnnotationValues> BuildAnnotationPairs(
             IDictionary<string, object> rawSourceAnnotations,
             IDictionary<string, object> rawTargetAnnotations)
         {
-            var pairs = new Dictionary<string, AnnotationPair>();
+            var pairs = new Dictionary<string, AnnotationValues>();
 
             var allKeys = rawTargetAnnotations.Keys.Concat(rawSourceAnnotations.Keys).Distinct();
             foreach (var key in allKeys)
             {
                 if (!rawSourceAnnotations.ContainsKey(key))
                 {
-                    pairs[key] = new AnnotationPair(null, rawTargetAnnotations[key]);
+                    pairs[key] = new AnnotationValues(null, rawTargetAnnotations[key]);
                 }
                 else if (!rawTargetAnnotations.ContainsKey(key))
                 {
-                    pairs[key] = new AnnotationPair(rawSourceAnnotations[key], null);
+                    pairs[key] = new AnnotationValues(rawSourceAnnotations[key], null);
                 }
                 else if (!Equals(rawSourceAnnotations[key], rawTargetAnnotations[key]))
                 {
-                    pairs[key] = new AnnotationPair(rawSourceAnnotations[key], rawTargetAnnotations[key]);
+                    pairs[key] = new AnnotationValues(rawSourceAnnotations[key], rawTargetAnnotations[key]);
                 }
             }
 
@@ -1968,7 +1969,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         createTableOperation.Columns.Add(
                             BuildColumnModel(
                                 p, modelMetadata,
-                                GetAnnotations(p).ToDictionary(a => a.Key, a => new AnnotationPair(null, a.Value)))));
+                                GetAnnotations(p).ToDictionary(a => a.Key, a => new AnnotationValues(null, a.Value)))));
 
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation();
 
@@ -1981,7 +1982,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static ColumnModel BuildColumnModel(
-            EdmProperty property, ModelMetadata modelMetadata, IDictionary<string, AnnotationPair> annotations)
+            EdmProperty property, ModelMetadata modelMetadata, IDictionary<string, AnnotationValues> annotations)
         {
             DebugCheck.NotNull(property);
             DebugCheck.NotNull(modelMetadata);
@@ -1996,7 +1997,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             EdmProperty property,
             TypeUsage conceptualTypeUsage,
             TypeUsage defaultStoreTypeUsage,
-            IDictionary<string, AnnotationPair> annotations)
+            IDictionary<string, AnnotationValues> annotations)
         {
             DebugCheck.NotNull(property);
             DebugCheck.NotNull(conceptualTypeUsage);

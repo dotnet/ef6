@@ -309,8 +309,6 @@ namespace System.Data.Entity.Migrations
                     .Diff(_emptyModel.Value, databaseModel, _modificationCommandTreeGenerator, SqlGenerator)
                     .ToList();
 
-            _configuration.CodeGenerator.RegisterAnnotationGenerators(migrationOperations);
-
             var scaffoldedMigration
                 = _configuration.CodeGenerator.Generate(
                     migrationId,
@@ -367,8 +365,6 @@ namespace System.Data.Entity.Migrations
                 migrationName = _migrationAssembly.UniquifyName(migrationName);
                 migrationId = MigrationAssembly.CreateMigrationId(migrationName);
             }
-
-            _configuration.CodeGenerator.RegisterAnnotationGenerators(migrationOperations);
 
             var scaffoldedMigration
                 = _configuration.CodeGenerator.Generate(

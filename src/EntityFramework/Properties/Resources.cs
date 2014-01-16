@@ -463,14 +463,6 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Getting the value of '{0}' is not supported because C# syntax for attributes does not support nullable types and the value of '{0}' is null if it has not been explicitly set. Use the '{1}' property instead."
-        // </summary>
-        internal static string IndexAttributeNonNullableProperty(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.IndexAttributeNonNullableProperty, p0, p1);
-        }
-
-        // <summary>
         // A string like "An object of type '{0}' cannot be serialized by the {1}. Only '{2}' objects can be serialized."
         // </summary>
         internal static string AnnotationSerializeWrongType(object p0, object p1, object p2)
@@ -15734,7 +15726,6 @@ namespace System.Data.Entity.Resources
         internal const string ConflictingIndexAttribute = "ConflictingIndexAttribute";
         internal const string ConflictingIndexAttributesOnProperty = "ConflictingIndexAttributesOnProperty";
         internal const string IncompatibleTypes = "IncompatibleTypes";
-        internal const string IndexAttributeNonNullableProperty = "IndexAttributeNonNullableProperty";
         internal const string AnnotationSerializeWrongType = "AnnotationSerializeWrongType";
         internal const string AnnotationSerializeBadFormat = "AnnotationSerializeBadFormat";
         internal const string ConflictWhenConsolidating = "ConflictWhenConsolidating";

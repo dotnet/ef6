@@ -962,44 +962,6 @@ namespace System.Data.Entity
             }
         }
 
-        public class SetAnnotationCodeGenerator
-        {
-            [Fact]
-            public void SetAnnotationCodeGenerator_throws_if_given_a_null_serializer_or_bad_name()
-            {
-                Assert.Equal(
-                    "codeGeneratorFactory",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetAnnotationCodeGenerator("Karl", null)).ParamName);
-
-                Assert.Equal(
-                    Strings.ArgumentIsNullOrWhitespace("annotationName"),
-                    Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().SetAnnotationCodeGenerator(null, () => null)).Message);
-            }
-
-            [Fact]
-            public void SetAnnotationCodeGenerator_delegates_to_internal_configuration()
-            {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
-                Func<AnnotationCodeGenerator> codeGeneratorFactory = () => new Mock<AnnotationCodeGenerator>().Object;
-
-                new DbConfiguration(mockInternalConfiguration.Object).SetAnnotationCodeGenerator("Foo", codeGeneratorFactory);
-
-                mockInternalConfiguration.Verify(m => m.RegisterSingleton(codeGeneratorFactory, "Foo"));
-            }
-
-            [Fact]
-            public void SetAnnotationCodeGenerator_throws_if_the_configuation_is_locked()
-            {
-                var configuration = CreatedLockedConfiguration();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("SetAnnotationCodeGenerator"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetAnnotationCodeGenerator("Karl", () => null)).Message);
-            }
-        }
-
         public class SetContextFactory
         {
             public class SomeContext : DbContext

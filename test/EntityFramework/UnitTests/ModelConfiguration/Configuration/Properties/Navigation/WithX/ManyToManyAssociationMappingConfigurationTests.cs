@@ -148,8 +148,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             manyToManyAssociationMappingConfiguration1.MapLeftKey("Bar");
             manyToManyAssociationMappingConfiguration1.MapRightKey("Baz");
 
-            manyToManyAssociationMappingConfiguration1.HasAnnotation("A1", "V1");
-            manyToManyAssociationMappingConfiguration1.HasAnnotation("A2", "V2");
+            manyToManyAssociationMappingConfiguration1.HasTableAnnotation("A1", "V1");
+            manyToManyAssociationMappingConfiguration1.HasTableAnnotation("A2", "V2");
 
             var manyToManyAssociationMappingConfiguration2 = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration2.ToTable("Foo");
@@ -157,8 +157,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             manyToManyAssociationMappingConfiguration2.MapLeftKey("Bar");
             manyToManyAssociationMappingConfiguration2.MapRightKey("Baz");
 
-            manyToManyAssociationMappingConfiguration2.HasAnnotation("A2", "V2");
-            manyToManyAssociationMappingConfiguration2.HasAnnotation("A1", "V1");
+            manyToManyAssociationMappingConfiguration2.HasTableAnnotation("A2", "V2");
+            manyToManyAssociationMappingConfiguration2.HasTableAnnotation("A1", "V1");
 
             Assert.Equal(manyToManyAssociationMappingConfiguration1, manyToManyAssociationMappingConfiguration2);
         }
@@ -170,15 +170,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(null, null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasTableAnnotation(null, null)).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(" ", null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasTableAnnotation(" ", null)).Message);
 
             Assert.Equal(
                 Strings.BadAnnotationName("Cheese:Pickle"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation("Cheese:Pickle", null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasTableAnnotation("Cheese:Pickle", null)).Message);
         }
     }
 }

@@ -622,7 +622,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             string xmlNamespaceUri, string attributeName, string value)
         {
             var serializer = _resolver.GetService<Func<IMetadataAnnotationSerializer>>(attributeName);
-            var parsedValue = serializer == null ? value : serializer().DeserializeValue(attributeName, value);
+            var parsedValue = serializer == null ? value : serializer().Deserialize(attributeName, value);
 
             return MetadataProperty.CreateAnnotation(xmlNamespaceUri + ":" + attributeName, parsedValue);
         }

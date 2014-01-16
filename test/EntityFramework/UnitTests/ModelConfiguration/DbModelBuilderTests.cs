@@ -815,14 +815,14 @@ namespace System.Data.Entity.ModelConfiguration
         {
             var configuration = new ForeignKeyAssociationMappingConfiguration();
             configuration.MapKey("C1", "C2");
-            configuration.HasKeyAnnotation("C1", "A1", "V1");
-            configuration.HasKeyAnnotation("C2", "A2", "V2");
+            configuration.HasColumnAnnotation("C1", "A1", "V1");
+            configuration.HasColumnAnnotation("C2", "A2", "V2");
 
             var clone = (ForeignKeyAssociationMappingConfiguration)configuration.Clone();
 
             Assert.Equal(configuration, clone);
 
-            configuration.HasKeyAnnotation("C2", "A2", "V3");
+            configuration.HasColumnAnnotation("C2", "A2", "V3");
 
             Assert.NotEqual(configuration, clone);
         }
@@ -840,7 +840,7 @@ namespace System.Data.Entity.ModelConfiguration
             configuration.MapLeftKey("C1");
             configuration.MapRightKey("C2");
             configuration.ToTable("T", "S");
-            configuration.HasAnnotation("A1", "V1");
+            configuration.HasTableAnnotation("A1", "V1");
 
             var clone = (ManyToManyAssociationMappingConfiguration)configuration.Clone();
             Assert.Equal(configuration, clone);
@@ -857,7 +857,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.NotEqual(configuration, clone);
 
             clone = (ManyToManyAssociationMappingConfiguration)configuration.Clone();
-            clone.HasAnnotation("A1", "V2");
+            clone.HasTableAnnotation("A1", "V2");
             Assert.NotEqual(configuration, clone);
         }
 

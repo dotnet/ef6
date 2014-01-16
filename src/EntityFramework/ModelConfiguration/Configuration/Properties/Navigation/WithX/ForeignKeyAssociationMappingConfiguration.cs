@@ -76,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="value">The annotation value, which may be a string or some other type that
         /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
         /// <returns>The same ForeignKeyAssociationMappingConfiguration instance so that multiple calls can be chained.</returns>
-        public ForeignKeyAssociationMappingConfiguration HasKeyAnnotation(string keyColumnName, string annotationName, object value)
+        public ForeignKeyAssociationMappingConfiguration HasColumnAnnotation(string keyColumnName, string annotationName, object value)
         {
             Check.NotEmpty(keyColumnName, "keyColumnName");
             Check.NotEmpty(annotationName, "annotationName");

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Annotations
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -34,32 +34,32 @@ namespace System.Data.Entity.Infrastructure
         private readonly IList<IndexAttribute> _indexes = new List<IndexAttribute>();
 
         /// <summary>
-        /// Creates a new annotation for the given indexe.
+        /// Creates a new annotation for the given index.
         /// </summary>
-        /// <param name="index">An index attributes representing an index.</param>
-        public IndexAnnotation(IndexAttribute index)
+        /// <param name="indexAttribute">An index attributes representing an index.</param>
+        public IndexAnnotation(IndexAttribute indexAttribute)
         {
-            Check.NotNull(index, "index");
+            Check.NotNull(indexAttribute, "indexAttribute");
 
-            _indexes.Add(index);
+            _indexes.Add(indexAttribute);
         }
 
         /// <summary>
         /// Creates a new annotation for the given collection of indexes.
         /// </summary>
-        /// <param name="indexes">Index attributes representing one or more indexes.</param>
-        public IndexAnnotation(IEnumerable<IndexAttribute> indexes)
+        /// <param name="indexAttributes">Index attributes representing one or more indexes.</param>
+        public IndexAnnotation(IEnumerable<IndexAttribute> indexAttributes)
         {
-            Check.NotNull(indexes, "indexes");
+            Check.NotNull(indexAttributes, "indexAttributes");
 
-            MergeLists(_indexes, indexes, null);
+            MergeLists(_indexes, indexAttributes, null);
         }
 
-        internal IndexAnnotation(PropertyInfo propertyInfo, IEnumerable<IndexAttribute> indexes)
+        internal IndexAnnotation(PropertyInfo propertyInfo, IEnumerable<IndexAttribute> indexAttributes)
         {
-            Check.NotNull(indexes, "indexes");
+            Check.NotNull(indexAttributes, "indexAttributes");
 
-            MergeLists(_indexes, indexes, propertyInfo);
+            MergeLists(_indexes, indexAttributes, propertyInfo);
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 if (index == null)
                 {
-                    throw new ArgumentNullException("index");
+                    throw new ArgumentNullException("indexAttribute");
                 }
 
                 var existingIndex = existingIndexes.SingleOrDefault(i => i.Name == index.Name);
@@ -117,8 +117,7 @@ namespace System.Data.Entity.Infrastructure
         /// Each index annotation contains at most one <see cref="IndexAttribute"/> with a given name.
         /// Two annotations are considered compatible if each IndexAttribute with a given name is only
         /// contained in one annotation or the other, or if both annotations contain an IndexAttribute
-        /// with the givebn name and these are considered compatible by means of the
-        /// <see cref="IndexAttribute.IsCompatibleWith(IndexAttribute)"/> method.
+        /// with the given name.
         /// </remarks>
         /// <param name="other">The annotation to compare.</param>
         /// <returns>A CompatibilityResult indicating whether or not this annotation is compatible with the other.</returns>
@@ -159,13 +158,12 @@ namespace System.Data.Entity.Infrastructure
         /// Each index annotation contains at most one <see cref="IndexAttribute"/> with a given name.
         /// The merged annotation will contain IndexAttributes from both this and the other annotation.
         /// If both annotations contain an IndexAttribute with the same name, then the merged annotation
-        /// will contain one IndexAttribute with that name obtained by calling <see cref="IndexAttribute.MergeWith(IndexAttribute)"/>.
+        /// will contain one IndexAttribute with that name.
         /// </remarks>
         /// <param name="other">The annotation to merge with this one.</param>
         /// <returns>A new annotation with indexes from both annotations merged.</returns>
         /// <exception cref="InvalidOperationException">
-        /// The other annotation contains indexes that are not compatible with indexes in this annotation
-        /// as determined by the <see cref="IndexAttribute.IsCompatibleWith(IndexAttribute)"/> method.
+        /// The other annotation contains indexes that are not compatible with indexes in this annotation.
         /// </exception>
         public virtual object MergeWith(object other)
         {
@@ -189,7 +187,7 @@ namespace System.Data.Entity.Infrastructure
         /// <inheritdoc/>
         public override string ToString()
         {
-            return "IndexAnnotation: " + new IndexAnnotationSerializer().SerializeValue(AnnotationName, this);
+            return "IndexAnnotation: " + new IndexAnnotationSerializer().Serialize(AnnotationName, this);
         }
     }
 }

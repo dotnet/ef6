@@ -437,13 +437,13 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Override this method to generate SQL when annotations on tables are changed. The default
-        /// implementation of this method does nothing.
+        /// Override this method to generate SQL when the definition of a table or its attributes are changed.
+        /// The default implementation of this method does nothing.
         /// </summary>
-        /// <param name="alterTableAnnotationsOperation"> The operation describing changes to table annotations. </param>
-        protected internal virtual void Generate(AlterTableAnnotationsOperation alterTableAnnotationsOperation)
+        /// <param name="alterTableOperation"> The operation describing changes to the table. </param>
+        protected internal virtual void Generate(AlterTableOperation alterTableOperation)
         {
-            Check.NotNull(alterTableAnnotationsOperation, "alterTableAnnotationsOperation");
+            Check.NotNull(alterTableOperation, "alterTableOperation");
 
             // Nothing to do since there is no inherent semantics associated with annotations
         }

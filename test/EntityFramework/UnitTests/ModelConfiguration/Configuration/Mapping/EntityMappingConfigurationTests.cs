@@ -234,15 +234,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(null, null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasTableAnnotation(null, null)).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(" ", null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasTableAnnotation(" ", null)).Message);
 
             Assert.Equal(
                 Strings.BadAnnotationName("Cheese:Pickle"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation("Cheese:Pickle", null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasTableAnnotation("Cheese:Pickle", null)).Message);
         }
     }
 }

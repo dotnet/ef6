@@ -84,9 +84,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var configuration = new ForeignKeyAssociationMappingConfiguration();
             configuration.MapKey("K1")
-                .HasKeyAnnotation("K1", "A1", "V1")
-                .HasKeyAnnotation("K1", "A2", "V2")
-                .HasKeyAnnotation("K1", "A1", "V3");
+                .HasColumnAnnotation("K1", "A1", "V1")
+                .HasColumnAnnotation("K1", "A2", "V2")
+                .HasColumnAnnotation("K1", "A1", "V3");
 
             configuration.Configure(associationSetMapping, database, new MockPropertyInfo());
 
@@ -104,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var associationSetMapping = CreateIAMapping(database, dependentTable);
 
             var configuration = new ForeignKeyAssociationMappingConfiguration();
-            configuration.MapKey("K1").HasKeyAnnotation("BadKey", "A1", "V1");
+            configuration.MapKey("K1").HasColumnAnnotation("BadKey", "A1", "V1");
 
             Assert.Equal(
                 Strings.BadKeyNameForAnnotation("BadKey", "A1"),
@@ -145,15 +145,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             independentAssociationMappingConfiguration1
                 .ToTable("Foo", "Bar")
                 .MapKey("Baz", "Biz")
-                .HasKeyAnnotation("Biz", "Buz", "Knees")
-                .HasKeyAnnotation("Baz", "Boz", "Bees");
+                .HasColumnAnnotation("Biz", "Buz", "Knees")
+                .HasColumnAnnotation("Baz", "Boz", "Bees");
 
             var independentAssociationMappingConfiguration2 = new ForeignKeyAssociationMappingConfiguration();
             independentAssociationMappingConfiguration2
                 .ToTable("Foo", "Bar")
                 .MapKey("Baz", "Biz")
-                .HasKeyAnnotation("Baz", "Boz", "Bees")
-                .HasKeyAnnotation("Biz", "Buz", "Knees");
+                .HasColumnAnnotation("Baz", "Boz", "Bees")
+                .HasColumnAnnotation("Biz", "Buz", "Knees");
 
             Assert.Equal(independentAssociationMappingConfiguration1, independentAssociationMappingConfiguration2);
         }
@@ -194,14 +194,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var independentAssociationMappingConfiguration1 = new ForeignKeyAssociationMappingConfiguration();
             independentAssociationMappingConfiguration1
                 .MapKey("Baz", "Biz")
-                .HasKeyAnnotation("Baz", "Boz", "Bees")
-                .HasKeyAnnotation("Biz", "Buz", "Knees");
+                .HasColumnAnnotation("Baz", "Boz", "Bees")
+                .HasColumnAnnotation("Biz", "Buz", "Knees");
 
             var independentAssociationMappingConfiguration2 = new ForeignKeyAssociationMappingConfiguration();
             independentAssociationMappingConfiguration2
                 .MapKey("Baz", "Biz")
-                .HasKeyAnnotation("Baz", "Boz", "Cheese")
-                .HasKeyAnnotation("Biz", "Buz", "Knees");
+                .HasColumnAnnotation("Baz", "Boz", "Cheese")
+                .HasColumnAnnotation("Biz", "Buz", "Knees");
 
             Assert.NotEqual(independentAssociationMappingConfiguration1, independentAssociationMappingConfiguration2);
         }
@@ -213,19 +213,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("keyColumnName"),
-                Assert.Throws<ArgumentException>(() => configuration.HasKeyAnnotation(null, "A", "V")).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasColumnAnnotation(null, "A", "V")).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("keyColumnName"),
-                Assert.Throws<ArgumentException>(() => configuration.HasKeyAnnotation(" ", "A", "V")).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasColumnAnnotation(" ", "A", "V")).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("annotationName"),
-                Assert.Throws<ArgumentException>(() => configuration.HasKeyAnnotation("K", null, "V")).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasColumnAnnotation("K", null, "V")).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("annotationName"),
-                Assert.Throws<ArgumentException>(() => configuration.HasKeyAnnotation("K", " ", "V")).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasColumnAnnotation("K", " ", "V")).Message);
         }
     }
 }

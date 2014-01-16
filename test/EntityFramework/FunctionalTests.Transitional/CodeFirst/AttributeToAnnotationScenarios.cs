@@ -78,7 +78,7 @@ namespace FunctionalTests
             modelBuilder.Conventions.Add(_columnConvention);
             modelBuilder.Entity<EntityWithAttributes>()
                 .Property(p => p.SimpleProp)
-                .HasAnnotation("Eeky", "Loves Pandy");
+                .HasColumnAnnotation("Eeky", "Loves Pandy");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -117,7 +117,7 @@ namespace FunctionalTests
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Conventions.Add(_tableConvention);
             modelBuilder.Entity<EntityWithAttributes>()
-                .HasAnnotation("Pandy", "Loves Eeky");
+                .HasTableAnnotation("Pandy", "Loves Eeky");
 
             var databaseMapping = BuildMapping(modelBuilder);
 

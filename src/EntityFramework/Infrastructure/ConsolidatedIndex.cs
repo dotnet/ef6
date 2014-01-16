@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -107,14 +108,14 @@ namespace System.Data.Entity.Infrastructure
                 operation.Columns.Add(columnName);
             }
 
-            if (_index.ClusteredConfiguration.HasValue)
+            if (_index.IsClusteredConfigured)
             {
-                operation.IsClustered = (bool)_index.ClusteredConfiguration;
+                operation.IsClustered = _index.IsClustered;
             }
 
-            if (_index.UniqueConfiguration.HasValue)
+            if (_index.IsUniqueConfigured)
             {
-                operation.IsUnique = (bool)_index.UniqueConfiguration;
+                operation.IsUnique = _index.IsUnique;
             }
 
             return operation;

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Builders
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Spatial;
     using Xunit;
@@ -199,10 +200,10 @@ namespace System.Data.Entity.Migrations.Builders
         {
             var builder = new ColumnBuilder();
 
-            var annotations = new Dictionary<string, AnnotationPair>
+            var annotations = new Dictionary<string, AnnotationValues>
             {
-                { "A1", new AnnotationPair("O1", "N1") },
-                { "A2", new AnnotationPair("O2", "N2") }
+                { "A1", new AnnotationValues("O1", "N1") },
+                { "A2", new AnnotationValues("O2", "N2") }
             };
             
             VerifyAnnotations(builder.Binary(annotations: annotations));

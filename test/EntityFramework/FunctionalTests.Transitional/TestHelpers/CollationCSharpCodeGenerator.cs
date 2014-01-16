@@ -3,7 +3,7 @@
 namespace System.Data.Entity.TestHelpers
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Utilities;
 
     public class CollationCSharpCodeGenerator : AnnotationCodeGenerator

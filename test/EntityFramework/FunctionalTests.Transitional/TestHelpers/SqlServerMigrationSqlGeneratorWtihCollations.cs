@@ -4,6 +4,7 @@ namespace System.Data.Entity.TestHelpers
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
@@ -122,27 +123,27 @@ namespace System.Data.Entity.TestHelpers
             _tableCollation = null;
         }
 
-        protected override void Generate(AlterTableAnnotationsOperation alterTableAnnotationsOperation)
+        protected override void Generate(AlterTableOperation alterTableOperation)
         {
-            _tableCollation = alterTableAnnotationsOperation.Annotations.ContainsKey(CollationAttribute.AnnotationName)
-                ? (CollationAttribute)alterTableAnnotationsOperation.Annotations[CollationAttribute.AnnotationName].NewValue
+            _tableCollation = alterTableOperation.Annotations.ContainsKey(CollationAttribute.AnnotationName)
+                ? (CollationAttribute)alterTableOperation.Annotations[CollationAttribute.AnnotationName].NewValue
                 : null;
 
             if (_tableCollation != null)
             {
                 // Need to alter any column that doesn't have explictly set collation
-                foreach (var column in alterTableAnnotationsOperation.Columns.Where(
+                foreach (var column in alterTableOperation.Columns.Where(
                     c => c.ClrType == typeof(string)
                          && !c.Annotations.ContainsKey(CollationAttribute.AnnotationName)))
                 {
-                    Generate(new AlterColumnOperation(alterTableAnnotationsOperation.Name, column, false));
+                    Generate(new AlterColumnOperation(alterTableOperation.Name, column, false));
                 }
             }
 
             _tableCollation = null;
         }
 
-        private CollationAttribute TryGetCollation(IDictionary<string, AnnotationPair> annotations)
+        private CollationAttribute TryGetCollation(IDictionary<string, AnnotationValues> annotations)
         {
             return annotations.ContainsKey(CollationAttribute.AnnotationName)
                 ? (CollationAttribute)annotations[CollationAttribute.AnnotationName].NewValue

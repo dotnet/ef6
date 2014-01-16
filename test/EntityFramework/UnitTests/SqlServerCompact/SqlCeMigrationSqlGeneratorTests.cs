@@ -710,8 +710,8 @@ WHERE (([MigrationId] = N'House Lannister') AND ([ContextKey] = N'The pointy end
             var generator = new SqlCeMigrationSqlGenerator();
 
             Assert.Equal(
-                "alterTableAnnotationsOperation",
-                Assert.Throws<ArgumentNullException>(() => generator.Generate((AlterTableAnnotationsOperation)null)).ParamName);
+                "alterTableOperation",
+                Assert.Throws<ArgumentNullException>(() => generator.Generate((AlterTableOperation)null)).ParamName);
         }
     }
 }

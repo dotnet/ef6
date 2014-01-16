@@ -31,8 +31,10 @@ namespace System.Data.Entity.TestHelpers
 
             return string.Equals(x.Name, y.Name, StringComparison.Ordinal)
                    && x.Order == y.Order
-                   && Equals(x.ClusteredConfiguration, y.ClusteredConfiguration)
-                   && Equals(x.UniqueConfiguration, y.UniqueConfiguration);
+                   && x.IsClusteredConfigured == y.IsClusteredConfigured
+                   && x.IsClustered == y.IsClustered
+                   && x.IsUniqueConfigured == y.IsUniqueConfigured
+                   && x.IsUnique == y.IsUnique;
         }
 
         public int GetHashCode(IndexAttribute obj)
@@ -41,8 +43,10 @@ namespace System.Data.Entity.TestHelpers
             {
                 var hashCode = obj.Name != null ? obj.Name.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ obj.Order;
-                hashCode = (hashCode * 397) ^ obj.ClusteredConfiguration.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.UniqueConfiguration.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.IsClusteredConfigured.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.IsClustered.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.IsUniqueConfigured.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.IsUnique.GetHashCode();
                 return hashCode;
             }
         }

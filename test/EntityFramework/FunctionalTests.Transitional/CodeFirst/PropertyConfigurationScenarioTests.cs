@@ -34,7 +34,7 @@ namespace FunctionalTests
                 .Property(e => e.DateTimeProperty)
                 .HasColumnType("datetime2")
                 .HasPrecision(4)
-                .HasAnnotation("Dog", "Woof");
+                .HasColumnAnnotation("Dog", "Woof");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -551,13 +551,13 @@ namespace FunctionalTests
             modelBuilder.Entity<UnitMeasure>().HasKey(u => u.UnitMeasureCode);
             modelBuilder.Entity<UnitMeasure>()
                 .Property(u => u.UnitMeasureCode)
-                .HasAnnotation("Dog", "Woof")
-                .HasAnnotation("Cat", "Meow")
-                .HasAnnotation("Fox", "Its fur is red...")
-                .HasAnnotation("Fox", "...so beautiful")
-                .HasAnnotation("Elephant", "Toot")
-                .HasAnnotation("Elephant", null)
-                .HasAnnotation("Seal", someObject);
+                .HasColumnAnnotation("Dog", "Woof")
+                .HasColumnAnnotation("Cat", "Meow")
+                .HasColumnAnnotation("Fox", "Its fur is red...")
+                .HasColumnAnnotation("Fox", "...so beautiful")
+                .HasColumnAnnotation("Elephant", "Toot")
+                .HasColumnAnnotation("Elephant", null)
+                .HasColumnAnnotation("Seal", someObject);
 
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
@@ -578,15 +578,15 @@ namespace FunctionalTests
 
             modelBuilder.Entity<CTEmployee>()
                 .Property(a => a.HomeAddress.Line1)
-                .HasAnnotation("Dog", "Woof");
+                .HasColumnAnnotation("Dog", "Woof");
 
             modelBuilder.Entity<Building>()
                 .Property(b => b.Address.Line1)
-                .HasAnnotation("Cat", "Meow");
+                .HasColumnAnnotation("Cat", "Meow");
 
             modelBuilder.ComplexType<Address>()
                 .Property(a => a.Line1)
-                .HasAnnotation("Fox", "No one knows...");
+                .HasColumnAnnotation("Fox", "No one knows...");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -612,14 +612,14 @@ namespace FunctionalTests
 
             modelBuilder.ComplexType<Address>()
                 .Property(a => a.Line1)
-                .HasAnnotation("Fox", "No one knows...");
+                .HasColumnAnnotation("Fox", "No one knows...");
 
             modelBuilder.Entity<Building>()
                 .Property(b => b.Address.Line1);
 
             modelBuilder.Entity<CTEmployee>()
                 .Property(a => a.HomeAddress.Line1)
-                .HasAnnotation("Fox", "Hatee Hatee Hatee Ho!");
+                .HasColumnAnnotation("Fox", "Hatee Hatee Hatee Ho!");
 
             var databaseMapping = BuildMapping(modelBuilder);
 

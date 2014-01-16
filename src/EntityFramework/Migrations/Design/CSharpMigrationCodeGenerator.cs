@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
@@ -390,12 +391,12 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         /// <param name="annotations">The annotations to generate.</param>
         /// <param name="writer">The writer to which generated code should be written.</param>
-        protected internal virtual void GenerateAnnotations(IDictionary<string, AnnotationPair> annotations, IndentedTextWriter writer)
+        protected internal virtual void GenerateAnnotations(IDictionary<string, AnnotationValues> annotations, IndentedTextWriter writer)
         {
             Check.NotNull(annotations, "annotations");
             Check.NotNull(writer, "writer");
 
-            writer.WriteLine("new Dictionary<string, AnnotationPair>");
+            writer.WriteLine("new Dictionary<string, AnnotationValues>");
             writer.WriteLine("{");
             writer.Indent++;
 
@@ -406,7 +407,7 @@ namespace System.Data.Entity.Migrations.Design
                     writer.WriteLine("{ ");
                     writer.Indent++;
                     writer.WriteLine(Quote(name) + ",");
-                    writer.Write("new AnnotationPair(oldValue: ");
+                    writer.Write("new AnnotationValues(oldValue: ");
                     GenerateAnnotation(name, annotations[name].OldValue, writer);
                     writer.Write(", newValue: ");
                     GenerateAnnotation(name, annotations[name].NewValue, writer);
@@ -442,9 +443,9 @@ namespace System.Data.Entity.Migrations.Design
                 return;
             }
 
-            Debug.Assert(AnnotationGenerators.ContainsKey(name));
-            var annotationGenerator = AnnotationGenerators[name];
-            if (annotationGenerator != null)
+            Func<AnnotationCodeGenerator> annotationGenerator;
+            if (AnnotationGenerators.TryGetValue(name, out annotationGenerator)
+                && annotationGenerator != null)
             {
                 annotationGenerator().Generate(name, annotation, writer);
             }
@@ -683,25 +684,25 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        /// Generates code for an <see cref="AlterTableAnnotationsOperation"/>.
+        /// Generates code for an <see cref="AlterTableOperation"/>.
         /// </summary>
-        /// <param name="alterTableAnnotationsOperation">The operation for which code should be generated.</param>
+        /// <param name="alterTableOperation">The operation for which code should be generated.</param>
         /// <param name="writer">The writer to which generated code should be written.</param>
-        protected internal virtual void Generate(AlterTableAnnotationsOperation alterTableAnnotationsOperation, IndentedTextWriter writer)
+        protected internal virtual void Generate(AlterTableOperation alterTableOperation, IndentedTextWriter writer)
         {
-            Check.NotNull(alterTableAnnotationsOperation, "alterTableAnnotationsOperation");
+            Check.NotNull(alterTableOperation, "alterTableOperation");
             Check.NotNull(writer, "writer");
 
             writer.WriteLine("AlterTableAnnotations(");
             writer.Indent++;
-            writer.Write(Quote(alterTableAnnotationsOperation.Name));
+            writer.Write(Quote(alterTableOperation.Name));
             writer.WriteLine(",");
             writer.WriteLine("c => new");
             writer.Indent++;
             writer.WriteLine("{");
             writer.Indent++;
 
-            alterTableAnnotationsOperation.Columns.Each(
+            alterTableOperation.Columns.Each(
                 c =>
                 {
                     var scrubbedName = ScrubName(c.Name);
@@ -716,11 +717,11 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write("}");
             writer.Indent--;
 
-            if (alterTableAnnotationsOperation.Annotations.Any())
+            if (alterTableOperation.Annotations.Any())
             {
                 writer.WriteLine(",");
                 writer.Write("annotations: ");
-                GenerateAnnotations(alterTableAnnotationsOperation.Annotations, writer);
+                GenerateAnnotations(alterTableOperation.Annotations, writer);
             }
 
             writer.Write(")");

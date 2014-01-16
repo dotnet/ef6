@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Builders;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
@@ -593,12 +594,12 @@ namespace System.Data.Entity.Migrations
                 {
                     Id = cs.Int()
                 },
-                new Dictionary<string, AnnotationPair>
+                new Dictionary<string, AnnotationValues>
                 {
-                    { "Everyone's", new AnnotationPair("At", "It") }
+                    { "Everyone's", new AnnotationValues("At", "It") }
                 });
 
-            var operation = migration.Operations.Cast<AlterTableAnnotationsOperation>().Single();
+            var operation = migration.Operations.Cast<AlterTableOperation>().Single();
 
             Assert.Equal("Customers", operation.Name);
 
@@ -623,7 +624,7 @@ namespace System.Data.Entity.Migrations
                 },
                 null);
 
-            var operation = migration.Operations.Cast<AlterTableAnnotationsOperation>().Single();
+            var operation = migration.Operations.Cast<AlterTableOperation>().Single();
 
             Assert.Equal("Customers", operation.Name);
 

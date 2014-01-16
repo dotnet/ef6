@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 {
                     if (a.Any())
                     {
-                        c.HasAnnotation(annotationName, annotationFactory(c.ClrType, a));
+                        c.HasTableAnnotation(annotationName, annotationFactory(c.ClrType, a));
                     }
                 });
         }

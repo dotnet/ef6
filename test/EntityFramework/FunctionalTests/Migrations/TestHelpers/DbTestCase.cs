@@ -129,7 +129,6 @@ namespace System.Data.Entity.Migrations
             using (var context = CreateContext<TContext>())
             {
                 var operations = migration.GetOperations();
-                CodeGenerator.RegisterAnnotationGenerators(operations);
                 
                 var generatedMigration
                     = CodeGenerator
@@ -223,7 +222,13 @@ namespace System.Data.Entity.Migrations
                 }
             }
 
+            ModifyMigrationsConfiguration(migrationsConfiguration);
+
             return migrationsConfiguration;
+        }
+
+        protected virtual void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
         }
 
         public void ConfigureMigrationsConfiguration(DbMigrationsConfiguration migrationsConfiguration)

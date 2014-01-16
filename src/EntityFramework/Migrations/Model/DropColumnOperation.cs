@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Represents a column being dropped from a table.
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Migrations.Model
     /// (such as the end user of an application). If input is accepted from such sources it should be validated 
     /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
-    public class DropColumnOperation : MigrationOperation
+    public class DropColumnOperation : MigrationOperation, IAnnotationTarget
     {
         private readonly string _table;
         private readonly string _name;
@@ -135,6 +136,16 @@ namespace System.Data.Entity.Migrations.Model
         public override bool IsDestructiveChange
         {
             get { return true; }
+        }
+
+        bool IAnnotationTarget.HasAnnotations
+        {
+            get
+            {
+                var inverse = Inverse as AddColumnOperation;
+                return RemovedAnnotations.Any() 
+                    || (inverse != null && (((IAnnotationTarget)inverse).HasAnnotations));
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
@@ -210,11 +211,11 @@ namespace System.Data.Entity.Migrations
                         Id = t.Int(),
                         Bar = t.String(
                             annotations:
-                                new Dictionary<string, AnnotationPair>
+                                new Dictionary<string, AnnotationValues>
                                 {
                                     {
                                         CollationAttribute.AnnotationName,
-                                        new AnnotationPair(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
+                                        new AnnotationValues(null, new CollationAttribute("Finnish_Swedish_CS_AS"))
                                     }
                                 })
                     })
@@ -256,11 +257,11 @@ namespace System.Data.Entity.Migrations
                         Beanie = t.String(),
                         Bar = t.String(
                             annotations:
-                                new Dictionary<string, AnnotationPair>
+                                new Dictionary<string, AnnotationValues>
                                 {
                                     {
                                         CollationAttribute.AnnotationName,
-                                        new AnnotationPair(null, new CollationAttribute("Icelandic_CS_AS"))
+                                        new AnnotationValues(null, new CollationAttribute("Icelandic_CS_AS"))
                                     }
                                 }),
                         Boo = t.String()
@@ -303,6 +304,11 @@ namespace System.Data.Entity.Migrations
 
             column = Info.Columns.Single(c => c.TableName == "Foo" && c.Name == "Bar");
             Assert.Equal("Icelandic_CS_AS", column.Collation);
+        }
+
+        protected override void ModifyMigrationsConfiguration(DbMigrationsConfiguration configuration)
+        {
+            configuration.CodeGenerator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
         }
     }
 }

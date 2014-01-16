@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Annotations
 {
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>

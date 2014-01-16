@@ -1,7 +1,8 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations
+namespace System.Data.Entity.Infrastructure.Annotations
 {
+    using System.Data.Entity.Migrations;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Migrations
     /// that when the Code First model changes the old annotation value and the new annotation
     /// value can be provided to the migration and used in SQL generation.
     /// </remarks>
-    public sealed class AnnotationPair
+    public sealed class AnnotationValues
     {
         private readonly object _oldValue;
         private readonly object _newValue;
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         /// <param name="oldValue">The old value of the annotation, which may be null if the annotation has just been created.</param>
         /// <param name="newValue">The new value of the annotation, which may be null if the annotation has been deleted.</param>
-        public AnnotationPair(object oldValue, object newValue)
+        public AnnotationValues(object oldValue, object newValue)
         {
             _oldValue = oldValue;
             _newValue = newValue;
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Migrations
             get { return _newValue; }
         }
 
-        private bool Equals(AnnotationPair other)
+        private bool Equals(AnnotationValues other)
         {
             return Equals(_oldValue, other._oldValue) && Equals(_newValue, other._newValue);
         }
@@ -64,7 +65,7 @@ namespace System.Data.Entity.Migrations
                 return true;
             }
 
-            return obj is AnnotationPair && Equals((AnnotationPair)obj);
+            return obj is AnnotationValues && Equals((AnnotationValues)obj);
         }
 
         /// <inheritdoc/>
@@ -83,7 +84,7 @@ namespace System.Data.Entity.Migrations
         /// <param name="right">A pair of annotation values.</param>
         /// <returns>True if both pairs contain the same values.</returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates")]
-        public static bool operator ==(AnnotationPair left, AnnotationPair right)
+        public static bool operator ==(AnnotationValues left, AnnotationValues right)
         {
             return Equals(left, right);
         }
@@ -95,7 +96,7 @@ namespace System.Data.Entity.Migrations
         /// <param name="right">A pair of annotation values.</param>
         /// <returns>True if the pairs contain different values.</returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates")]
-        public static bool operator !=(AnnotationPair left, AnnotationPair right)
+        public static bool operator !=(AnnotationValues left, AnnotationValues right)
         {
             return !Equals(left, right);
         }

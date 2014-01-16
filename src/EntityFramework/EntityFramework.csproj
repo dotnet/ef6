@@ -145,7 +145,6 @@
     <Compile Include="Core\Objects\StateManagerValue.cs" />
     <Compile Include="Core\Query\PlanCompiler\NullSemantics.cs" />
     <Compile Include="Core\Query\PlanCompiler\TransformationRulesGroup.cs" />
-    <Compile Include="DataAnnotations\Schema\CompatibilityResult.cs" />
     <Compile Include="DataAnnotations\Schema\IndexAttribute.cs" />
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="DbConfigurationTypeAttribute.cs" />
@@ -242,6 +241,13 @@
     <Compile Include="Core\Metadata\Edm\DbModelExtensions.cs" />
     <Compile Include="Core\Metadata\Edm\IEdmModelAdapter.cs" />
     <Compile Include="Core\Metadata\Edm\RelationshipMultiplicityConverter.cs" />
+    <Compile Include="Infrastructure\Annotations\AnnotationCodeGenerator.cs" />
+    <Compile Include="Infrastructure\Annotations\AnnotationValues.cs" />
+    <Compile Include="Infrastructure\Annotations\CompatibilityResult.cs" />
+    <Compile Include="Infrastructure\Annotations\IMergeableAnnotation.cs" />
+    <Compile Include="Infrastructure\Annotations\IndexAnnotation.cs" />
+    <Compile Include="Infrastructure\Annotations\IndexAnnotationSerializer.cs" />
+    <Compile Include="Infrastructure\Annotations\IndexAttributeExtensions.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolver.cs" />
     <Compile Include="Infrastructure\Interception\DatabaseLogger.cs" />
@@ -274,11 +280,8 @@
     <Compile Include="Infrastructure\DependencyResolution\RootDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\SingletonDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\WrappingDependencyResolver`.cs" />
-    <Compile Include="Infrastructure\IMergeableAnnotation.cs" />
     <Compile Include="Infrastructure\IMetadataAnnotationSerializer.cs" />
     <Compile Include="Infrastructure\Interception\BeginTransactionInterceptionContext.cs" />
-    <Compile Include="Infrastructure\IndexAnnotation.cs" />
-    <Compile Include="Infrastructure\IndexAnnotationSerializer.cs" />
     <Compile Include="Infrastructure\Interception\CancelableDbCommandDispatcher.cs" />
     <Compile Include="Infrastructure\Interception\CancelableEntityConnectionDispatcher.cs" />
     <Compile Include="Infrastructure\Interception\DatabaseLogFormatter.cs" />
@@ -333,11 +336,10 @@
     <Compile Include="Internal\ConfigFile\InterceptorElement.cs" />
     <Compile Include="Internal\ConfigFile\InterceptorsCollection.cs" />
     <Compile Include="Internal\DatabaseExistenceState.cs" />
-    <Compile Include="Migrations\AnnotationPair.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
-    <Compile Include="Migrations\Design\AnnotationCodeGenerator.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />
-    <Compile Include="Migrations\Model\AlterTableAnnotationsOperation.cs" />
+    <Compile Include="Migrations\Model\AlterTableOperation.cs" />
+    <Compile Include="Migrations\Model\IAnnotationTarget.cs" />
     <Compile Include="Migrations\Model\UpdateDatabaseOperation.cs" />
     <Compile Include="Migrations\Model\MoveProcedureOperation.cs" />
     <Compile Include="Migrations\Model\RenameProcedureOperation.cs" />

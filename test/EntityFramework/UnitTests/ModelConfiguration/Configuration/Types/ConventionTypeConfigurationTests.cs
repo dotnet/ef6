@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             config().ToTable("Table1", "Schema1");
             config().MapToStoredProcedures();
             config().MapToStoredProcedures(c => { });
-            config().HasAnnotation("A", "V");
+            config().HasTableAnnotation("A", "V");
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.MapToStoredProcedures(c => { }), "MapToStoredProcedures");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasAnnotation("A1", "V1"), "HasAnnotation");
+                config => config.HasTableAnnotation("A1", "V1"), "HasTableAnnotation");
         }
 
         private void Ignore_type_throws_with_any_other_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
@@ -309,7 +309,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             IsComplexType_throws_with_conflicting_configuration_implementation(
                 config => config.NavigationProperty(config.ClrType.GetRuntimeProperties().First(p => p.IsPublic())), "NavigationProperty");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasAnnotation("A1", "V1"), "HasAnnotation");
+                config => config.HasTableAnnotation("A1", "V1"), "HasTableAnnotation");
         }
 
         private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
@@ -642,15 +642,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => config.HasAnnotation(null, null)).Message);
+                Assert.Throws<ArgumentException>(() => config.HasTableAnnotation(null, null)).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => config.HasAnnotation(" ", null)).Message);
+                Assert.Throws<ArgumentException>(() => config.HasTableAnnotation(" ", null)).Message);
 
             Assert.Equal(
                 Strings.BadAnnotationName("Cheese:Pickle"),
-                Assert.Throws<ArgumentException>(() => config.HasAnnotation("Cheese:Pickle", null)).Message);
+                Assert.Throws<ArgumentException>(() => config.HasTableAnnotation("Cheese:Pickle", null)).Message);
         }
 
         [Fact]
@@ -661,7 +661,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             innerConfig.SetAnnotation("A1", "V1");
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2");
+            var result = config.HasTableAnnotation("A1", "V1B").HasTableAnnotation("A2", "V2");
 
             Assert.Equal("V1", innerConfig.Annotations["A1"]);
             Assert.Equal("V2", innerConfig.Annotations["A2"]);

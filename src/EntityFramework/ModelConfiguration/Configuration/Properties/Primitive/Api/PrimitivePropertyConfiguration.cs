@@ -142,7 +142,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="value">The annotation value, which may be a string or some other type that
         /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
         /// <returns>The same PrimitivePropertyConfiguration instance so that multiple calls can be chained.</returns>
-        public PrimitivePropertyConfiguration HasAnnotation(string name, object value)
+        public PrimitivePropertyConfiguration HasColumnAnnotation(string name, object value)
         {
             Check.NotEmpty(name, "name");
 

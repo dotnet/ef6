@@ -201,13 +201,13 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        /// Override this method to generate SQL when annotations on tables are changed. The default
-        /// implementation of this method does nothing.
+        /// Override this method to generate SQL when the definition of a table or its attributes are changed.
+        /// The default implementation of this method does nothing.
         /// </summary>
-        /// <param name="alterTableAnnotationsOperation"> The operation describing changes to table annotations. </param>
-        protected internal virtual void Generate(AlterTableAnnotationsOperation alterTableAnnotationsOperation)
+        /// <param name="alterTableOperation"> The operation describing changes to the table. </param>
+        protected internal virtual void Generate(AlterTableOperation alterTableOperation)
         {
-            Check.NotNull(alterTableAnnotationsOperation, "alterTableAnnotationsOperation");
+            Check.NotNull(alterTableOperation, "alterTableOperation");
 
             // Nothing to do since there is no inherent semantics associated with annotations
         }
@@ -589,10 +589,16 @@ namespace System.Data.Entity.SqlServerCompact
         {
         }
 
-        private void Generate(ColumnModel column, IndentedTextWriter writer)
+        /// <summary>
+        /// Generates SQL for the given column model. This method is called by other methods that
+        /// process columns and can be overridden to change the SQL generated.
+        /// </summary>
+        /// <param name="column">The column for which SQL is being generated.</param>
+        /// <param name="writer">The writer to which generated SQL should be written.</param>
+        protected internal void Generate(ColumnModel column, IndentedTextWriter writer)
         {
-            DebugCheck.NotNull(column);
-            DebugCheck.NotNull(writer);
+            Check.NotNull(column, "column");
+            Check.NotNull(writer, "writer");
 
             writer.Write(Quote(column.Name));
             writer.Write(" ");

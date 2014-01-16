@@ -1,15 +1,16 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations.Design
+namespace System.Data.Entity.Infrastructure.Annotations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
     /// Inherit from this class to create a service that allows for code generation of custom annotations as part of 
-    /// scaffolding Migrations. The derived class should be registered using <see cref="DbConfiguration.SetAnnotationCodeGenerator"/>.
+    /// scaffolding Migrations. The derived class should be set onto the <see cref="MigrationCodeGenerator"/>.
     /// </summary>
     /// <remarks>
     /// Note that an <see cref="AnnotationCodeGenerator" /> is not needed if the annotation uses a simple string value,

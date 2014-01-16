@@ -90,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="value">The annotation value, which may be a string or some other type that
         /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
         /// <returns>The same configuration instance so that multiple calls can be chained.</returns>
-        public ManyToManyAssociationMappingConfiguration HasAnnotation(string name, object value)
+        public ManyToManyAssociationMappingConfiguration HasTableAnnotation(string name, object value)
         {
             Check.NotEmpty(name, "name");
 

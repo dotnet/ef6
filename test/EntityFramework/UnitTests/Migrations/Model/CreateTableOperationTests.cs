@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
@@ -67,10 +68,10 @@ namespace System.Data.Entity.Migrations.Model
                 new ColumnModel(PrimitiveTypeKind.Int64)
                 {
                     Name = "C1",
-                    Annotations = new Dictionary<string, AnnotationPair>
+                    Annotations = new Dictionary<string, AnnotationValues>
                     {
-                        { "AC1A", new AnnotationPair(null, "VC1A") },
-                        { "AC1B", new AnnotationPair(null, "VC1B") }
+                        { "AC1A", new AnnotationValues(null, "VC1A") },
+                        { "AC1B", new AnnotationValues(null, "VC1B") }
                     }
                 });
 
@@ -78,10 +79,10 @@ namespace System.Data.Entity.Migrations.Model
                 new ColumnModel(PrimitiveTypeKind.Int64)
                 {
                     Name = "C2",
-                    Annotations = new Dictionary<string, AnnotationPair>
+                    Annotations = new Dictionary<string, AnnotationValues>
                     {
-                        { "AC2A", new AnnotationPair(null, "VC2A") },
-                        { "AC2B", new AnnotationPair(null, "VC2B") }
+                        { "AC2A", new AnnotationValues(null, "VC2A") },
+                        { "AC2B", new AnnotationValues(null, "VC2B") }
                     }
                 });
 

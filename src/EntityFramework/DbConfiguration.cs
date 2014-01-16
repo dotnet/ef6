@@ -482,31 +482,6 @@ namespace System.Data.Entity
 
         /// <summary>
         /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        /// a factory for implementations of <see cref="AnnotationCodeGenerator" /> which allows for code generation
-        /// of custom annotations as part of scaffolding Migrations.
-        /// </summary>
-        /// <remarks>
-        /// Note that an <see cref="AnnotationCodeGenerator" /> is not needed if the annotation uses a simple string value,
-        /// or if calling ToString on the annotation object is sufficient for use in the scaffolded Migration.
-        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
-        /// Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        /// <see cref="Func{AnnotationCodeGenerator}" />. This means that, if desired, the same functionality can be achieved using
-        /// a custom resolver or a resolver backed by an Inversion-of-Control container.
-        /// </remarks>
-        /// <param name="annotationName"> The name of custom annotation that will be handled by this code generator. </param>
-        /// <param name="codeGeneratorFactory"> A delegate that will be used to create code generator instances. </param>
-        protected internal void SetAnnotationCodeGenerator(
-            string annotationName, Func<AnnotationCodeGenerator> codeGeneratorFactory)
-        {
-            Check.NotEmpty(annotationName, "annotationName");
-            Check.NotNull(codeGeneratorFactory, "codeGeneratorFactory");
-
-            _internalConfiguration.CheckNotLocked("SetAnnotationCodeGenerator");
-            _internalConfiguration.RegisterSingleton(codeGeneratorFactory, annotationName);
-        }
-
-        /// <summary>
-        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
         /// an implementation of <see cref="IDbProviderFactoryResolver" /> which allows a <see cref="DbProviderFactory" />
         /// to be obtained from a <see cref="DbConnection" /> in cases where the default implementation is not
         /// sufficient.

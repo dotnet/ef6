@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
@@ -1339,24 +1340,23 @@ public partial class Bar : DbMigration
                         Name = "MyColumn",
                         IsFixedLength = true,
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
-                                { "A2", new AnnotationPair(null, "V2") },
-                                { "A3", new AnnotationPair(null, "V3") },
-                                { "A1", new AnnotationPair(null, "V1") },
-                                { "A8", new AnnotationPair("V8A", "V8B") },
-                                { "A7", new AnnotationPair("V7A", "V7B") },
-                                { "A9", new AnnotationPair("V9A", "V9B") },
-                                { "A5", new AnnotationPair("V5", null) },
-                                { "A4", new AnnotationPair("V4", null) },
-                                { "A6", new AnnotationPair("V6", null) }
+                                { "A2", new AnnotationValues(null, "V2") },
+                                { "A3", new AnnotationValues(null, "V3") },
+                                { "A1", new AnnotationValues(null, "V1") },
+                                { "A8", new AnnotationValues("V8A", "V8B") },
+                                { "A7", new AnnotationValues("V7A", "V7B") },
+                                { "A9", new AnnotationValues("V9A", "V9B") },
+                                { "A5", new AnnotationValues("V5", null) },
+                                { "A4", new AnnotationValues("V4", null) },
+                                { "A6", new AnnotationValues("V6", null) }
                             }
                     },
                     false),
             };
 
             var generator = new CSharpMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
@@ -1364,6 +1364,7 @@ public partial class Bar : DbMigration
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     
     public partial class MyMigration : DbMigration
@@ -1371,43 +1372,43 @@ public partial class Bar : DbMigration
         public override void Up()
         {
             AlterColumn(""MyTable"", ""MyColumn"", c => c.Int(fixedLength: true,
-                annotations: new Dictionary<string, AnnotationPair>
+                annotations: new Dictionary<string, AnnotationValues>
                 {
                     { 
                         ""A1"",
-                        new AnnotationPair(oldValue: null, newValue: ""V1"")
+                        new AnnotationValues(oldValue: null, newValue: ""V1"")
                     },
                     { 
                         ""A2"",
-                        new AnnotationPair(oldValue: null, newValue: ""V2"")
+                        new AnnotationValues(oldValue: null, newValue: ""V2"")
                     },
                     { 
                         ""A3"",
-                        new AnnotationPair(oldValue: null, newValue: ""V3"")
+                        new AnnotationValues(oldValue: null, newValue: ""V3"")
                     },
                     { 
                         ""A4"",
-                        new AnnotationPair(oldValue: ""V4"", newValue: null)
+                        new AnnotationValues(oldValue: ""V4"", newValue: null)
                     },
                     { 
                         ""A5"",
-                        new AnnotationPair(oldValue: ""V5"", newValue: null)
+                        new AnnotationValues(oldValue: ""V5"", newValue: null)
                     },
                     { 
                         ""A6"",
-                        new AnnotationPair(oldValue: ""V6"", newValue: null)
+                        new AnnotationValues(oldValue: ""V6"", newValue: null)
                     },
                     { 
                         ""A7"",
-                        new AnnotationPair(oldValue: ""V7A"", newValue: ""V7B"")
+                        new AnnotationValues(oldValue: ""V7A"", newValue: ""V7B"")
                     },
                     { 
                         ""A8"",
-                        new AnnotationPair(oldValue: ""V8A"", newValue: ""V8B"")
+                        new AnnotationValues(oldValue: ""V8A"", newValue: ""V8B"")
                     },
                     { 
                         ""A9"",
-                        new AnnotationPair(oldValue: ""V9A"", newValue: ""V9B"")
+                        new AnnotationValues(oldValue: ""V9A"", newValue: ""V9B"")
                     },
                 }));
         }
@@ -1432,11 +1433,11 @@ public partial class Bar : DbMigration
                     {
                         Name = "MyColumn",
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
                                 {
                                     CollationAttribute.AnnotationName,
-                                    new AnnotationPair(
+                                    new AnnotationValues(
                                         new CollationAttribute("At a reasonable volume..."),
                                         new CollationAttribute("While I'm collating..."))
                                 }
@@ -1449,11 +1450,11 @@ public partial class Bar : DbMigration
                         {
                             Name = "MyColumn",
                             Annotations =
-                                new Dictionary<string, AnnotationPair>
+                                new Dictionary<string, AnnotationValues>
                                 {
                                     {
                                         CollationAttribute.AnnotationName,
-                                        new AnnotationPair(
+                                        new AnnotationValues(
                                             new CollationAttribute("While I'm collating..."),
                                             new CollationAttribute("At a reasonable volume..."))
                                     }
@@ -1462,7 +1463,7 @@ public partial class Bar : DbMigration
             };
 
             var generator = new CSharpMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
@@ -1470,6 +1471,7 @@ public partial class Bar : DbMigration
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.TestHelpers;
     
@@ -1478,11 +1480,11 @@ public partial class Bar : DbMigration
         public override void Up()
         {
             AlterColumn(""MyTable"", ""MyColumn"", c => c.Int(
-                annotations: new Dictionary<string, AnnotationPair>
+                annotations: new Dictionary<string, AnnotationValues>
                 {
                     { 
                         ""Collation"",
-                        new AnnotationPair(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
+                        new AnnotationValues(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
                     },
                 }));
         }
@@ -1490,11 +1492,11 @@ public partial class Bar : DbMigration
         public override void Down()
         {
             AlterColumn(""MyTable"", ""MyColumn"", c => c.Int(
-                annotations: new Dictionary<string, AnnotationPair>
+                annotations: new Dictionary<string, AnnotationValues>
                 {
                     { 
                         ""Collation"",
-                        new AnnotationPair(oldValue: new CollationAttribute(""While I'm collating...""), newValue: new CollationAttribute(""At a reasonable volume...""))
+                        new AnnotationValues(oldValue: new CollationAttribute(""While I'm collating...""), newValue: new CollationAttribute(""At a reasonable volume...""))
                     },
                 }));
         }
@@ -1516,17 +1518,16 @@ public partial class Bar : DbMigration
                         Name = "MyColumn",
                         IsFixedLength = true,
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
-                                { "A3", new AnnotationPair(null, "V3") },
-                                { "A1", new AnnotationPair(null, "V1") },
+                                { "A3", new AnnotationValues(null, "V3") },
+                                { "A1", new AnnotationValues(null, "V1") },
                             }
                     },
                     false),
             };
 
             var generator = new CSharpMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
@@ -1534,6 +1535,7 @@ public partial class Bar : DbMigration
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     
     public partial class MyMigration : DbMigration
@@ -1541,15 +1543,15 @@ public partial class Bar : DbMigration
         public override void Up()
         {
             AddColumn(""MyTable"", ""MyColumn"", c => c.String(fixedLength: true,
-                annotations: new Dictionary<string, AnnotationPair>
+                annotations: new Dictionary<string, AnnotationValues>
                 {
                     { 
                         ""A1"",
-                        new AnnotationPair(oldValue: null, newValue: ""V1"")
+                        new AnnotationValues(oldValue: null, newValue: ""V1"")
                     },
                     { 
                         ""A3"",
-                        new AnnotationPair(oldValue: null, newValue: ""V3"")
+                        new AnnotationValues(oldValue: null, newValue: ""V3"")
                     },
                 }));
         }
@@ -1581,11 +1583,11 @@ public partial class Bar : DbMigration
                         Name = "MyColumn",
                         IsFixedLength = true,
                         Annotations =
-                            new Dictionary<string, AnnotationPair>
+                            new Dictionary<string, AnnotationValues>
                             {
                                 {
                                     CollationAttribute.AnnotationName,
-                                    new AnnotationPair(
+                                    new AnnotationValues(
                                         new CollationAttribute("At a reasonable volume..."),
                                         new CollationAttribute("While I'm collating..."))
                                 }
@@ -1595,7 +1597,7 @@ public partial class Bar : DbMigration
             };
 
             var generator = new CSharpMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
@@ -1603,6 +1605,7 @@ public partial class Bar : DbMigration
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.TestHelpers;
     
@@ -1611,11 +1614,11 @@ public partial class Bar : DbMigration
         public override void Up()
         {
             AddColumn(""MyTable"", ""MyColumn"", c => c.String(fixedLength: true,
-                annotations: new Dictionary<string, AnnotationPair>
+                annotations: new Dictionary<string, AnnotationValues>
                 {
                     { 
                         ""Collation"",
-                        new AnnotationPair(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
+                        new AnnotationValues(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
                     },
                 }));
         }
@@ -1651,10 +1654,10 @@ public partial class Bar : DbMigration
                 IsNullable = true,
                 IsIdentity = true,
                 Annotations =
-                    new Dictionary<string, AnnotationPair>
+                    new Dictionary<string, AnnotationValues>
                     {
-                        { "A1", new AnnotationPair(null, "V1") },
-                        { "A2", new AnnotationPair(null, "V2") }
+                        { "A1", new AnnotationValues(null, "V1") },
+                        { "A2", new AnnotationValues(null, "V2") }
                     }
             };
             createTableOperation.Columns.Add(idColumn);
@@ -1665,11 +1668,11 @@ public partial class Bar : DbMigration
                     Name = "Name",
                     IsNullable = false,
                     Annotations =
-                        new Dictionary<string, AnnotationPair>
+                        new Dictionary<string, AnnotationValues>
                         {
                             {
                                 CollationAttribute.AnnotationName,
-                                new AnnotationPair(
+                                new AnnotationValues(
                                     new CollationAttribute("At a reasonable volume..."),
                                     new CollationAttribute("While I'm collating..."))
                             }
@@ -1685,7 +1688,7 @@ public partial class Bar : DbMigration
             var operations = new[] { createTableOperation };
 
             var generator = new CSharpMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
@@ -1693,6 +1696,7 @@ public partial class Bar : DbMigration
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.TestHelpers;
     
@@ -1705,23 +1709,23 @@ public partial class Bar : DbMigration
                 c => new
                     {
                         Id = c.Int(name: ""I.d"", identity: true,
-                            annotations: new Dictionary<string, AnnotationPair>
+                            annotations: new Dictionary<string, AnnotationValues>
                             {
                                 { 
                                     ""A1"",
-                                    new AnnotationPair(oldValue: null, newValue: ""V1"")
+                                    new AnnotationValues(oldValue: null, newValue: ""V1"")
                                 },
                                 { 
                                     ""A2"",
-                                    new AnnotationPair(oldValue: null, newValue: ""V2"")
+                                    new AnnotationValues(oldValue: null, newValue: ""V2"")
                                 },
                             }),
                         Name = c.String(nullable: false,
-                            annotations: new Dictionary<string, AnnotationPair>
+                            annotations: new Dictionary<string, AnnotationValues>
                             {
                                 { 
                                     ""Collation"",
-                                    new AnnotationPair(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
+                                    new AnnotationValues(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
                                 },
                             }),
                     },
@@ -1770,18 +1774,18 @@ public partial class Bar : DbMigration
         [Fact]
         public void Can_generate_AlterTableAnnotations_with_annotations()
         {
-            var operation = new AlterTableAnnotationsOperation(
+            var operation = new AlterTableOperation(
                 "Customers",
-                new Dictionary<string, AnnotationPair>
+                new Dictionary<string, AnnotationValues>
                 {
-                    { "AT1", new AnnotationPair(null, "VT1") },
+                    { "AT1", new AnnotationValues(null, "VT1") },
                     {
                         CollationAttribute.AnnotationName,
-                        new AnnotationPair(
+                        new AnnotationValues(
                             new CollationAttribute("At a reasonable volume..."),
                             new CollationAttribute("While I'm collating..."))
                     },
-                    { "AT2", new AnnotationPair(null, "VT2") }
+                    { "AT2", new AnnotationValues(null, "VT2") }
 
                 });
 
@@ -1791,10 +1795,10 @@ public partial class Bar : DbMigration
                 IsNullable = true,
                 IsIdentity = true,
                 Annotations =
-                    new Dictionary<string, AnnotationPair>
+                    new Dictionary<string, AnnotationValues>
                     {
-                        { "A1", new AnnotationPair(null, "V1") },
-                        { "A2", new AnnotationPair(null, "V2") }
+                        { "A1", new AnnotationValues(null, "V1") },
+                        { "A2", new AnnotationValues(null, "V2") }
                     }
             };
             operation.Columns.Add(idColumn);
@@ -1805,11 +1809,11 @@ public partial class Bar : DbMigration
                     Name = "Name",
                     IsNullable = false,
                     Annotations =
-                        new Dictionary<string, AnnotationPair>
+                        new Dictionary<string, AnnotationValues>
                         {
                             {
                                 CollationAttribute.AnnotationName,
-                                new AnnotationPair(
+                                new AnnotationValues(
                                     new CollationAttribute("At a reasonable volume..."),
                                     new CollationAttribute("While I'm collating..."))
                             }
@@ -1819,7 +1823,7 @@ public partial class Bar : DbMigration
             var operations = new[] { operation };
 
             var generator = new CSharpMigrationCodeGenerator();
-            generator.RegisterAnnotationGenerators(operations);
+            generator.AnnotationGenerators[CollationAttribute.AnnotationName] = () => new CollationCSharpCodeGenerator();
             var generatedMigration = generator.Generate("Migration", operations, "Source", "Target", "MyNamespace", "MyMigration");
 
             Assert.Equal(
@@ -1827,6 +1831,7 @@ public partial class Bar : DbMigration
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.TestHelpers;
     
@@ -1839,39 +1844,39 @@ public partial class Bar : DbMigration
                 c => new
                     {
                         Id = c.Int(name: ""I.d"", identity: true,
-                            annotations: new Dictionary<string, AnnotationPair>
+                            annotations: new Dictionary<string, AnnotationValues>
                             {
                                 { 
                                     ""A1"",
-                                    new AnnotationPair(oldValue: null, newValue: ""V1"")
+                                    new AnnotationValues(oldValue: null, newValue: ""V1"")
                                 },
                                 { 
                                     ""A2"",
-                                    new AnnotationPair(oldValue: null, newValue: ""V2"")
+                                    new AnnotationValues(oldValue: null, newValue: ""V2"")
                                 },
                             }),
                         Name = c.String(nullable: false,
-                            annotations: new Dictionary<string, AnnotationPair>
+                            annotations: new Dictionary<string, AnnotationValues>
                             {
                                 { 
                                     ""Collation"",
-                                    new AnnotationPair(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
+                                    new AnnotationValues(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
                                 },
                             }),
                     },
-                annotations: new Dictionary<string, AnnotationPair>
+                annotations: new Dictionary<string, AnnotationValues>
                 {
                     { 
                         ""AT1"",
-                        new AnnotationPair(oldValue: null, newValue: ""VT1"")
+                        new AnnotationValues(oldValue: null, newValue: ""VT1"")
                     },
                     { 
                         ""AT2"",
-                        new AnnotationPair(oldValue: null, newValue: ""VT2"")
+                        new AnnotationValues(oldValue: null, newValue: ""VT2"")
                     },
                     { 
                         ""Collation"",
-                        new AnnotationPair(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
+                        new AnnotationValues(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
                     },
                 });
             
@@ -1884,39 +1889,39 @@ public partial class Bar : DbMigration
                 c => new
                     {
                         Id = c.Int(name: ""I.d"", identity: true,
-                            annotations: new Dictionary<string, AnnotationPair>
+                            annotations: new Dictionary<string, AnnotationValues>
                             {
                                 { 
                                     ""A1"",
-                                    new AnnotationPair(oldValue: null, newValue: ""V1"")
+                                    new AnnotationValues(oldValue: null, newValue: ""V1"")
                                 },
                                 { 
                                     ""A2"",
-                                    new AnnotationPair(oldValue: null, newValue: ""V2"")
+                                    new AnnotationValues(oldValue: null, newValue: ""V2"")
                                 },
                             }),
                         Name = c.String(nullable: false,
-                            annotations: new Dictionary<string, AnnotationPair>
+                            annotations: new Dictionary<string, AnnotationValues>
                             {
                                 { 
                                     ""Collation"",
-                                    new AnnotationPair(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
+                                    new AnnotationValues(oldValue: new CollationAttribute(""At a reasonable volume...""), newValue: new CollationAttribute(""While I'm collating...""))
                                 },
                             }),
                     },
-                annotations: new Dictionary<string, AnnotationPair>
+                annotations: new Dictionary<string, AnnotationValues>
                 {
                     { 
                         ""AT1"",
-                        new AnnotationPair(oldValue: ""VT1"", newValue: null)
+                        new AnnotationValues(oldValue: ""VT1"", newValue: null)
                     },
                     { 
                         ""AT2"",
-                        new AnnotationPair(oldValue: ""VT2"", newValue: null)
+                        new AnnotationValues(oldValue: ""VT2"", newValue: null)
                     },
                     { 
                         ""Collation"",
-                        new AnnotationPair(oldValue: new CollationAttribute(""While I'm collating...""), newValue: new CollationAttribute(""At a reasonable volume...""))
+                        new AnnotationValues(oldValue: new CollationAttribute(""While I'm collating...""), newValue: new CollationAttribute(""At a reasonable volume...""))
                     },
                 });
             
@@ -1954,11 +1959,11 @@ public partial class Bar : DbMigration
                 Assert.Throws<ArgumentNullException>(
                     () =>
                         generator.GenerateAnnotations(
-                            (IDictionary<string, AnnotationPair>)null, new IndentedTextWriter(new Mock<TextWriter>().Object))).ParamName);
+                            (IDictionary<string, AnnotationValues>)null, new IndentedTextWriter(new Mock<TextWriter>().Object))).ParamName);
 
             Assert.Equal(
                 "writer",
-                Assert.Throws<ArgumentNullException>(() => generator.GenerateAnnotations(new Dictionary<string, AnnotationPair>(), null))
+                Assert.Throws<ArgumentNullException>(() => generator.GenerateAnnotations(new Dictionary<string, AnnotationValues>(), null))
                     .ParamName);
         }
 
@@ -1968,12 +1973,12 @@ public partial class Bar : DbMigration
             var generator = new CSharpMigrationCodeGenerator();
 
             Assert.Equal(
-                "alterTableAnnotationsOperation",
+                "alterTableOperation",
                 Assert.Throws<ArgumentNullException>(() => generator.Generate(null, new IndentedTextWriter(new Mock<TextWriter>().Object))).ParamName);
 
             Assert.Equal(
                 "writer",
-                Assert.Throws<ArgumentNullException>(() => generator.Generate(new AlterTableAnnotationsOperation("N", null), null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => generator.Generate(new AlterTableOperation("N", null), null)).ParamName);
         }
     }
 }

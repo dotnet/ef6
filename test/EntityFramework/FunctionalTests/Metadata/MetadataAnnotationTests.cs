@@ -6,7 +6,7 @@ namespace System.Data.Entity.Metadata
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.TestHelpers;
     using System.Data.Entity.TestModels.GearsOfWarModel;
     using System.Linq;

@@ -76,7 +76,6 @@ namespace System.Data.Entity.TestHelpers
             SetContextFactory(() => new CodeFirstScaffoldingContextWithConnection("Bar"));
 
             SetMetadataAnnotationSerializer(CollationAttribute.AnnotationName, () => new CollationSerializer());
-            SetAnnotationCodeGenerator(CollationAttribute.AnnotationName, () => new CollationCSharpCodeGenerator());
 
             AddInterceptor(new TestLoadedInterceptor());
             AddInterceptor(new TestLoadedInterceptor(4102, "1 yraunaJ"));

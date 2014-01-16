@@ -352,14 +352,14 @@ namespace FunctionalTests
             modelBuilder.Entity<Entity1DuplicateProps>()
                 .Property(e => e.SomeProperty)
                 .HasColumnName("Foo")
-                .HasAnnotation("Annotation1", "Entity1")
-                .HasAnnotation("Annotation2", "Common");
+                .HasColumnAnnotation("Annotation1", "Entity1")
+                .HasColumnAnnotation("Annotation2", "Common");
             
             modelBuilder.Entity<Entity2DuplicateProps>()
                 .Property(e => e.SomeProperty)
                 .HasColumnName("Foo")
-                .HasAnnotation("Annotation1", "Entity2")
-                .HasAnnotation("Annotation2", "Common");
+                .HasColumnAnnotation("Annotation1", "Entity2")
+                .HasColumnAnnotation("Annotation2", "Common");
             
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -406,13 +406,13 @@ namespace FunctionalTests
                     m =>
                     {
                         m.ToTable("Left").Properties(p => new { p.Id, p.Prop1 });
-                        m.Property(p => p.Id).HasAnnotation("A0", "V01").HasAnnotation("A1", "V1");
+                        m.Property(p => p.Id).HasColumnAnnotation("A0", "V01").HasColumnAnnotation("A1", "V1");
                     })
                 .Map(
                     m =>
                     {
                         m.ToTable("Right").Properties(p => new { p.Id, p.Prop2 });
-                        m.Property(p => p.Id).HasAnnotation("A0", "V02").HasAnnotation("A2", "V2");
+                        m.Property(p => p.Id).HasColumnAnnotation("A0", "V02").HasColumnAnnotation("A2", "V2");
                     });
 
             var databaseMapping = BuildMapping(modelBuilder);
@@ -442,15 +442,15 @@ namespace FunctionalTests
                     m =>
                     {
                         m.ToTable("Left").Properties(p => new { p.Id, p.Prop1 });
-                        m.Property(p => p.Id).HasAnnotation("A0", "V01").HasAnnotation("A1", "V1");
+                        m.Property(p => p.Id).HasColumnAnnotation("A0", "V01").HasColumnAnnotation("A1", "V1");
                     })
                 .Map(
                     m =>
                     {
                         m.ToTable("Right").Properties(p => new { p.Id, p.Prop2 });
-                        m.Property(p => p.Id).HasAnnotation("A0", "V02").HasAnnotation("A2", "V2");
+                        m.Property(p => p.Id).HasColumnAnnotation("A0", "V02").HasColumnAnnotation("A2", "V2");
                     });
-            modelBuilder.Entity<SplitTeaSoup>().Property(e => e.Id).HasAnnotation("A3", "V3");
+            modelBuilder.Entity<SplitTeaSoup>().Property(e => e.Id).HasColumnAnnotation("A3", "V3");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1151,20 +1151,20 @@ namespace FunctionalTests
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<TPTHorse>()
                 .Property(e => e.Id)
-                .HasAnnotation("WhatDoesItSay", "Mor...or...or...or...orse")
-                .HasAnnotation("Common", "Just a pony.")
+                .HasColumnAnnotation("WhatDoesItSay", "Mor...or...or...or...orse")
+                .HasColumnAnnotation("Common", "Just a pony.")
                 .HasColumnName("horse_id");
             
             modelBuilder.Entity<TPTUnicorn>()
                 .Property(e => e.Id)
                 .HasColumnName("unicorn_id")
-                .HasAnnotation("WhatDoesItSay", "Hor...or...or...or...orn")
-                .HasAnnotation("Common", "Just a pony.");
+                .HasColumnAnnotation("WhatDoesItSay", "Hor...or...or...or...orn")
+                .HasColumnAnnotation("Common", "Just a pony.");
             
             modelBuilder.Entity<TPTHornedPegasus>()
                 .Property(e => e.Id)
                 .HasColumnName("pegasus_id")
-                .HasAnnotation("WhatDoesItSay", "Prin...in...in...in...cess");
+                .HasColumnAnnotation("WhatDoesItSay", "Prin...in...in...in...cess");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1262,14 +1262,14 @@ namespace FunctionalTests
             modelBuilder.Entity<Student>()
                 .Property(p => p.Career)
                 .HasColumnName("ColumnName")
-                .HasAnnotation("Annotation1", "Value1")
-                .HasAnnotation("Annotation2", "Value2");
+                .HasColumnAnnotation("Annotation1", "Value1")
+                .HasColumnAnnotation("Annotation2", "Value2");
 
             modelBuilder.Entity<Officer>()
                 .Property(p => p.Department)
                 .HasColumnName("ColumnName")
-                .HasAnnotation("Annotation1", "Value1")
-                .HasAnnotation("Annotation2", "Different Value");
+                .HasColumnAnnotation("Annotation1", "Value1")
+                .HasColumnAnnotation("Annotation2", "Different Value");
 
             var details = Environment.NewLine + "\t" +
                           string.Format(
@@ -1293,8 +1293,8 @@ namespace FunctionalTests
                 .HasColumnName("Data")
                 .HasMaxLength(256)
                 .HasColumnType("varchar")
-                .HasAnnotation("Annotation1", "Value1")
-                .HasAnnotation("Annotation2", "Value2");
+                .HasColumnAnnotation("Annotation1", "Value1")
+                .HasColumnAnnotation("Annotation2", "Value2");
 
             modelBuilder.Entity<Teacher>().Property(p => p.Department).HasColumnName("Data");
             modelBuilder.Entity<Lawyer>().Property(p => p.Specialty).HasColumnName("Data");
@@ -1333,8 +1333,8 @@ namespace FunctionalTests
                 .Property(p => p.Career)
                 .HasColumnName("Data")
                 .HasMaxLength(256)
-                .HasAnnotation("Annotation1", "Value1")
-                .HasAnnotation("Annotation2", "Value2");
+                .HasColumnAnnotation("Annotation1", "Value1")
+                .HasColumnAnnotation("Annotation2", "Value2");
             
             modelBuilder.Entity<Officer>()
                 .Property(p => p.Department)
@@ -1345,8 +1345,8 @@ namespace FunctionalTests
                 .Property(p => p.Department)
                 .HasColumnName("Data")
                 .HasColumnType("varchar")
-                .HasAnnotation("Annotation1", "Value1")
-                .HasAnnotation("Annotation2", "Value2");
+                .HasColumnAnnotation("Annotation1", "Value1")
+                .HasColumnAnnotation("Annotation2", "Value2");
             
             modelBuilder.Entity<Lawyer>()
                 .Property(p => p.Specialty)

@@ -107,9 +107,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="value">The annotation value, which may be a string or some other type that
         /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
         /// <returns>The same DateTimePropertyConfiguration instance so that multiple calls can be chained.</returns>
-        public new DateTimePropertyConfiguration HasAnnotation(string name, object value)
+        public new DateTimePropertyConfiguration HasColumnAnnotation(string name, object value)
         {
-            base.HasAnnotation(name, value);
+            base.HasColumnAnnotation(name, value);
 
             return this;
         }

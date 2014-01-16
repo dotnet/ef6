@@ -8,7 +8,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
     internal class ClrTypeAnnotationSerializer : IMetadataAnnotationSerializer
     {
-        public string SerializeValue(string name, object value)
+        public string Serialize(string name, object value)
         {
             DebugCheck.NotEmpty(name);
             DebugCheck.NotNull(value);
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             return ((Type)value).AssemblyQualifiedName;
         }
 
-        public object DeserializeValue(string name, string value)
+        public object Deserialize(string name, string value)
         {
             DebugCheck.NotEmpty(name);
             DebugCheck.NotNull(value);

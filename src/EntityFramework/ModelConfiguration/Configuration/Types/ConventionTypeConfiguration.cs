@@ -459,10 +459,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="value">The annotation value, which may be a string or some other type that
         /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
         /// <returns>The same configuration instance so that multiple calls can be chained.</returns>
-        public ConventionTypeConfiguration HasAnnotation(string name, object value)
+        public ConventionTypeConfiguration HasTableAnnotation(string name, object value)
         {
             Check.NotEmpty(name, "name");
-            ValidateConfiguration(ConfigurationAspect.HasAnnotation);
+            ValidateConfiguration(ConfigurationAspect.HasTableAnnotation);
 
             if (_entityTypeConfiguration != null
                 && !_entityTypeConfiguration().Annotations.ContainsKey(name))
@@ -532,7 +532,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 ConfigurationAspect.NavigationProperty,
                 ConfigurationAspect.Property,
                 ConfigurationAspect.ToTable,
-                ConfigurationAspect.HasAnnotation
+                ConfigurationAspect.HasTableAnnotation
             };
 
         private static readonly List<ConfigurationAspect> ConfigurationAspectsConflictingWithComplexType = new List<ConfigurationAspect>
@@ -542,7 +542,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 ConfigurationAspect.MapToStoredProcedures,
                 ConfigurationAspect.NavigationProperty,
                 ConfigurationAspect.ToTable,
-                ConfigurationAspect.HasAnnotation
+                ConfigurationAspect.HasTableAnnotation
             };
 
         private void ValidateConfiguration(ConfigurationAspect aspect)
@@ -614,7 +614,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Property = 1 << 6,
             NavigationProperty = 1 << 7,
             ToTable = 1 << 8,
-            HasAnnotation = 1 << 9
+            HasTableAnnotation = 1 << 9
         }
     }
 }

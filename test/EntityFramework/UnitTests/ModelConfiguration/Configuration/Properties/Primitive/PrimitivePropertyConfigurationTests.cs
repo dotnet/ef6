@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
@@ -1445,15 +1445,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(null, null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasColumnAnnotation(null, null)).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(" ", null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasColumnAnnotation(" ", null)).Message);
 
             Assert.Equal(
                 Strings.BadAnnotationName("Cheese:Pickle"),
-                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation("Cheese:Pickle", null)).Message);
+                Assert.Throws<ArgumentException>(() => configuration.HasColumnAnnotation("Cheese:Pickle", null)).Message);
         }
 
         [Fact]
@@ -1463,7 +1463,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var configuration = new PrimitivePropertyConfiguration(mockConfig.Object);
 
-            configuration.HasAnnotation("A", "V");
+            configuration.HasColumnAnnotation("A", "V");
 
             mockConfig.Verify(m => m.SetAnnotation("A", "V"));
         }

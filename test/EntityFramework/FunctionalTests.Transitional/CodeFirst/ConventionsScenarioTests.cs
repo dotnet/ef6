@@ -772,11 +772,11 @@ namespace FunctionalTests
 
                 modelBuilder.Types()
                     .Where(t => t == typeof(LightweightEntity))
-                    .Configure(e => e.HasAnnotation("A1", "V1"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V1"));
 
                 modelBuilder.Types()
                     .Where(t => t == typeof(LightweightEntityWithAnnotations))
-                    .Configure(e => e.HasAnnotation("A2", "V2"));
+                    .Configure(e => e.HasTableAnnotation("A2", "V2"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -797,10 +797,10 @@ namespace FunctionalTests
                 modelBuilder.Entity<LightweightEntityWithAnnotations>();
 
                 modelBuilder.Types<LightweightEntity>()
-                    .Configure(e => e.HasAnnotation("A1", "V1"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V1"));
 
                 modelBuilder.Types<LightweightEntityWithAnnotations>()
-                    .Configure(e => e.HasAnnotation("A2", "V2"));
+                    .Configure(e => e.HasTableAnnotation("A2", "V2"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -817,15 +817,15 @@ namespace FunctionalTests
             public void Annotation_on_entity_types_does_not_get_set_if_annotation_already_set()
             {
                 var modelBuilder = new DbModelBuilder();
-                modelBuilder.Entity<LightweightEntity>().HasAnnotation("A1", "V1A");
-                modelBuilder.Entity<LightweightDerivedEntity>().HasAnnotation("A1", "V1A");
+                modelBuilder.Entity<LightweightEntity>().HasTableAnnotation("A1", "V1A");
+                modelBuilder.Entity<LightweightDerivedEntity>().HasTableAnnotation("A1", "V1A");
                 modelBuilder.Entity<LightweightEntityWithAnnotations>();
 
                 modelBuilder.Types<LightweightEntity>()
-                    .Configure(e => e.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V1B").HasTableAnnotation("A2", "V2"));
 
                 modelBuilder.Types<LightweightEntityWithAnnotations>()
-                    .Configure(e => e.HasAnnotation("A2", "V2"));
+                    .Configure(e => e.HasTableAnnotation("A2", "V2"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -846,7 +846,7 @@ namespace FunctionalTests
                 modelBuilder.ComplexType<LightweightComplexTypeWithId>();
 
                 modelBuilder.Types<LightweightComplexTypeWithId>()
-                    .Configure(e => e.HasAnnotation("A1", "V1"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V1"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -862,12 +862,12 @@ namespace FunctionalTests
                 modelBuilder.ComplexType<LightweightComplexTypeWithId>();
 
                 modelBuilder.Types<LightweightComplexTypeWithId>()
-                    .Configure(e => e.HasAnnotation("A1", "V1").IsComplexType());
+                    .Configure(e => e.HasTableAnnotation("A1", "V1").IsComplexType());
 
                 Assert.Equal(
                     Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                         .Message, Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType(
-                            "HasAnnotation", typeof(LightweightComplexTypeWithId).Name));
+                            "HasTableAnnotation", typeof(LightweightComplexTypeWithId).Name));
             }
 
             [Fact]
@@ -876,12 +876,12 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<RelatedLightweightEntity>();
-                modelBuilder.Types<LightweightComplexTypeWithId>().Configure(c => c.Ignore().HasAnnotation("A1", "V1"));
+                modelBuilder.Types<LightweightComplexTypeWithId>().Configure(c => c.Ignore().HasTableAnnotation("A1", "V1"));
 
                 Assert.Equal(
                     Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder)).Message,
                     Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType(
-                        "HasAnnotation", typeof(LightweightComplexTypeWithId).Name));
+                        "HasTableAnnotation", typeof(LightweightComplexTypeWithId).Name));
             }
 
             [Fact]
@@ -893,11 +893,11 @@ namespace FunctionalTests
 
                 modelBuilder.Types()
                     .Where(t => t == typeof(LightweightEntity))
-                    .Configure(e => e.HasAnnotation("A1", "V1"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V1"));
 
                 modelBuilder.Types()
                     .Where(t => t == typeof(LightweightDerivedEntity))
-                    .Configure(e => e.HasAnnotation("A2", "V2"));
+                    .Configure(e => e.HasTableAnnotation("A2", "V2"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -915,11 +915,11 @@ namespace FunctionalTests
 
                 modelBuilder.Types()
                     .Where(t => t == typeof(LightweightEntity))
-                    .Configure(e => e.HasAnnotation("A1", "V1"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V1"));
 
                 modelBuilder.Types()
                     .Where(t => t == typeof(LightweightDerivedEntity))
-                    .Configure(e => e.HasAnnotation("A1", "V2"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V2"));
 
                 Assert.Throws<InvalidOperationException>(
                      () => BuildMapping(modelBuilder))
@@ -936,7 +936,7 @@ namespace FunctionalTests
 
                 modelBuilder.Types()
                     .Where(t => t == typeof(SplitMeGood))
-                    .Configure(e => e.HasAnnotation("A1", "V1"));
+                    .Configure(e => e.HasTableAnnotation("A1", "V1"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1260,11 +1260,11 @@ namespace FunctionalTests
 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "StringProperty")
-                    .Configure(p => p.HasAnnotation("A1", "V1"));
+                    .Configure(p => p.HasColumnAnnotation("A1", "V1"));
 
                 modelBuilder.Properties()
                     .Where(p => p.Name.StartsWith("IntProperty"))
-                    .Configure(p => p.HasAnnotation("A2", "V2"));
+                    .Configure(p => p.HasColumnAnnotation("A2", "V2"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1291,11 +1291,11 @@ namespace FunctionalTests
 
                 modelBuilder.Entity<LightweightEntity>()
                     .Property(e => e.IntProperty)
-                    .HasAnnotation("A1", "V1");
+                    .HasColumnAnnotation("A1", "V1");
 
                 modelBuilder.Properties()
                     .Where(p => p.Name.StartsWith("IntProperty"))
-                    .Configure(p => p.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2"));
+                    .Configure(p => p.HasColumnAnnotation("A1", "V1B").HasColumnAnnotation("A2", "V2"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1316,7 +1316,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
                 modelBuilder.Entity<LightweightEntity>();
                 modelBuilder.Properties<string>()
-                    .Configure(p => p.HasAnnotation("A1", "V1"));
+                    .Configure(p => p.HasColumnAnnotation("A1", "V1"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1338,11 +1338,11 @@ namespace FunctionalTests
 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "Prop1")
-                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1").HasAnnotation("A2", "V2"));
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasColumnAnnotation("A1", "V1").HasColumnAnnotation("A2", "V2"));
 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "Prop2")
-                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1").HasAnnotation("A3", "V3"));
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasColumnAnnotation("A1", "V1").HasColumnAnnotation("A3", "V3"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1362,11 +1362,11 @@ namespace FunctionalTests
 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "Prop1")
-                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1A"));
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasColumnAnnotation("A1", "V1A"));
 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "Prop2")
-                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1B"));
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasColumnAnnotation("A1", "V1B"));
 
                 var details = Environment.NewLine + "\t" +
                               string.Format(
@@ -1389,15 +1389,15 @@ namespace FunctionalTests
 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "Id")
-                    .Configure(p => p.HasAnnotation("A1", "V1"));
+                    .Configure(p => p.HasColumnAnnotation("A1", "V1"));
 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "Prop1")
-                    .Configure(p => p.HasAnnotation("A2", "V2"));
+                    .Configure(p => p.HasColumnAnnotation("A2", "V2"));
                 
                 modelBuilder.Properties()
                     .Where(p => p.Name == "Prop2")
-                    .Configure(p => p.HasAnnotation("A3", "V3"));
+                    .Configure(p => p.HasColumnAnnotation("A3", "V3"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 

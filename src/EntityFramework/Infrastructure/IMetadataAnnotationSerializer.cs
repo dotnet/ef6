@@ -17,7 +17,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="name">The name of the annotation that is being serialized.</param>
         /// <param name="value">The value to serialize.</param>
         /// <returns>The serialized value.</returns>
-        string SerializeValue(string name, object value);
+        string Serialize(string name, object value);
 
         /// <summary>
         /// Deserializes the given string back into the expected annotation value.
@@ -25,6 +25,6 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="name">The name of the annotation that is being deserialized.</param>
         /// <param name="value">The string to deserialize.</param>
         /// <returns>The deserialized annotation value.</returns>
-        object DeserializeValue(string name, string value);
+        object Deserialize(string name, string value);
     }
 }

@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             config.IsMaxLength();
             config.IsRowVersion();
             config.IsKey();
-            config.HasAnnotation("Fox", "Like an angel in disguise");
+            config.HasColumnAnnotation("Fox", "Like an angel in disguise");
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             innerConfig.SetAnnotation("A1", "V1");
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2");
+            var result = config.HasColumnAnnotation("A1", "V1B").HasColumnAnnotation("A2", "V2");
 
             Assert.Equal("V1", innerConfig.Annotations["A1"]);
             Assert.Equal("V2", innerConfig.Annotations["A2"]);
@@ -116,15 +116,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => config.HasAnnotation(null, null)).Message);
+                Assert.Throws<ArgumentException>(() => config.HasColumnAnnotation(null, null)).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
-                Assert.Throws<ArgumentException>(() => config.HasAnnotation(" ", null)).Message);
+                Assert.Throws<ArgumentException>(() => config.HasColumnAnnotation(" ", null)).Message);
 
             Assert.Equal(
                 Strings.BadAnnotationName("Cheese:Pickle"),
-                Assert.Throws<ArgumentException>(() => config.HasAnnotation("Cheese:Pickle", null)).Message);
+                Assert.Throws<ArgumentException>(() => config.HasColumnAnnotation("Cheese:Pickle", null)).Message);
         }
 
         [Fact]

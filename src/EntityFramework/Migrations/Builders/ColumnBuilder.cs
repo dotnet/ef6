@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations.Builders
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Spatial;
     using System.Diagnostics.CodeAnalysis;
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Migrations.Builders
             bool timestamp = false,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Binary,
@@ -83,7 +84,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Boolean,
@@ -119,7 +120,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Byte,
@@ -156,7 +157,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.DateTime,
@@ -197,7 +198,7 @@ namespace System.Data.Entity.Migrations.Builders
             string name = null,
             string storeType = null,
             bool identity = false,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Decimal,
@@ -234,7 +235,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Double,
@@ -270,7 +271,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Guid,
@@ -305,7 +306,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Single,
@@ -341,7 +342,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Int16,
@@ -378,7 +379,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Int32,
@@ -415,7 +416,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Int64,
@@ -456,7 +457,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.String,
@@ -495,7 +496,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Time,
@@ -532,7 +533,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.DateTimeOffset,
@@ -567,7 +568,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Geography,
@@ -601,7 +602,7 @@ namespace System.Data.Entity.Migrations.Builders
             string defaultValueSql = null,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             return BuildColumn(
                 PrimitiveTypeKind.Geometry,
@@ -627,7 +628,7 @@ namespace System.Data.Entity.Migrations.Builders
             bool timestamp = false,
             string name = null,
             string storeType = null,
-            IDictionary<string, AnnotationPair> annotations = null)
+            IDictionary<string, AnnotationValues> annotations = null)
         {
             var column
                 = new ColumnModel(primitiveTypeKind)

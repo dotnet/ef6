@@ -128,66 +128,46 @@ namespace System.ComponentModel.DataAnnotations.Schema
 
         /// <summary>
         /// Set this property to true to define a clustered index. Set this property to false to define a 
-        /// non-clustered index. Do not get the value of this property; use <see cref="ClusteredConfiguration"/> instead.
+        /// non-clustered index.
         /// </summary>
         /// <remarks>
-        /// This property only has a getter because this is required for use in the C# language
-        /// syntax for attributes since that syntax does not support nullable types or write-only properties.
+        /// The value of this property is only relevant if <see cref="IsClusteredConfigured"/> returns true.
+        /// If <see cref="IsClusteredConfigured"/> returns false, then the value of this property is meaningless.
         /// </remarks>
         public virtual bool IsClustered
         {
-            get
-            {
-                throw new NotSupportedException(Strings.IndexAttributeNonNullableProperty("IsClustered", "ClusteredConfiguration"));
-            }
+            get { return _isClustered.HasValue && _isClustered.Value; }
             set { _isClustered = value; }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not the index is clustered.
+        /// Returns true if <see cref="IsClustered"/> has been set to a value.
         /// </summary>
-        /// <remarks>
-        /// A value of null indicates that the index has not been explicitly configured as either clustered
-        /// or non-clustered and this will therefore be decided at a later time when processing the complete
-        /// configuration. The value ultimately used may come from another attribute that is merged with this
-        /// one or may be determined by convention if no value is specified in any attribute.
-        /// </remarks>
-        public virtual bool? ClusteredConfiguration
+        public virtual bool IsClusteredConfigured
         {
-            get { return _isClustered; }
-            set { _isClustered = value; }
+            get { return _isClustered.HasValue; }
         }
 
         /// <summary>
         /// Set this property to true to define a unique index. Set this property to false to define a 
-        /// non-unique index. Do not get the value of this property; use <see cref="UniqueConfiguration"/> instead.
+        /// non-unique index.
         /// </summary>
         /// <remarks>
-        /// This property only has a getter because this is required for use in the C# language
-        /// syntax for attributes since that syntax does not support nullable types or write-only properties.
+        /// The value of this property is only relevant if <see cref="IsUniqueConfigured"/> returns true.
+        /// If <see cref="IsUniqueConfigured"/> returns false, then the value of this property is meaningless.
         /// </remarks>
         public virtual bool IsUnique
         {
-            get
-            {
-                throw new NotSupportedException(Strings.IndexAttributeNonNullableProperty("IsUnique", "UniqueConfiguration"));
-            }
+            get { return _isUnique.HasValue && _isUnique.Value; }
             set { _isUnique = value; }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not the index is unique.
+        /// Returns true if <see cref="IsUnique"/> has been set to a value.
         /// </summary>
-        /// <remarks>
-        /// A value of null indicates that the index has not been explicitly configured as either unique
-        /// or non-unique and this will therefore be decided at a later time when processing the complete
-        /// configuration. The value ultimately used may come from another attribute that is merged with this
-        /// one or may be determined by convention if no value is specified in any attribute.
-        /// </remarks>
-        public virtual bool? UniqueConfiguration
+        public virtual bool IsUniqueConfigured
         {
-            get { return _isUnique; }
-            set { _isUnique = value; }
+            get { return _isUnique.HasValue; }
         }
 
         /// <summary>
@@ -200,107 +180,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
             {
                 return RuntimeHelpers.GetHashCode(this);
             }
-        }
-
-        /// <summary>
-        /// Returns true if this attribute does not conflict with the given attribute such that
-        /// the two can be combined together using the <see cref="MergeWith(IndexAttribute)"/> method.
-        /// </summary>
-        /// <remarks>
-        /// Two attributes are considered compatible if they have the same name and all other properties
-        /// (<see cref="IsUnique"/>, <see cref="IsClustered"/>, and <see cref="Order"/>) are either not specified
-        /// on this attribute or the other attribute or are specified with the same value on both.
-        /// </remarks>
-        /// <param name="other">The attribute to compare.</param>
-        /// <returns>A CompatibilityResult indicating whether or not this attribute is compatible with the other.</returns>
-        public virtual CompatibilityResult IsCompatibleWith(IndexAttribute other)
-        {
-            return IsCompatibleWith(other, ignoreOrder: false);
-        }
-
-        internal CompatibilityResult IsCompatibleWith(IndexAttribute other, bool ignoreOrder)
-        {
-            if (ReferenceEquals(this, other)
-                || other == null)
-            {
-                return new CompatibilityResult(true, null);
-            }
-
-            string errorMessage = null;
-
-            if (_name != other._name)
-            {
-                errorMessage = Strings.ConflictingIndexAttributeProperty("Name", _name, other._name);
-            }
-
-            if (!ignoreOrder
-                && _order != -1
-                && other._order != -1
-                && _order != other._order)
-            {
-                errorMessage = errorMessage == null ? "" : errorMessage + (Environment.NewLine + "\t");
-                errorMessage += Strings.ConflictingIndexAttributeProperty("Order", _order, other._order);
-            }
-
-            if (_isClustered != null
-                && other._isClustered != null
-                && _isClustered != other._isClustered)
-            {
-                errorMessage = errorMessage == null ? "" : errorMessage + (Environment.NewLine + "\t");
-                errorMessage += Strings.ConflictingIndexAttributeProperty("IsClustered", _isClustered, other._isClustered);
-            }
-
-            if (_isUnique != null
-                && other._isUnique != null
-                && _isUnique != other._isUnique)
-            {
-                errorMessage = errorMessage == null ? "" : errorMessage + (Environment.NewLine + "\t");
-                errorMessage += Strings.ConflictingIndexAttributeProperty("IsUnique", _isUnique, other._isUnique);
-            }
-
-            return new CompatibilityResult(errorMessage == null, errorMessage);
-        }
-
-        /// <summary>
-        /// Merges this attribute with the given attribute and returns a new attribute containing the merged properties.
-        /// </summary>
-        /// <remarks>
-        /// The other attribute must have the same name as this attribute. For other properties, if neither attribute
-        /// specifies a value, then the property on the merged attribute is also unspecified. If one
-        /// attribute but not the other specifies a value, then the property on the merged attribute gets that value.
-        /// If both properties specify a value, then those values must match and the property on the merged
-        /// attribute gets that value.
-        /// </remarks>
-        /// <param name="other">The attribute to merge with this one.</param>
-        /// <returns>A new attribute with properties merged.</returns>
-        /// <exception cref="InvalidOperationException">
-        /// The other attribute is not compatible with this attribute as determined by the <see cref="IsCompatibleWith(IndexAttribute)"/> method.
-        /// </exception>
-        public virtual IndexAttribute MergeWith(IndexAttribute other)
-        {
-            return MergeWith(other, ignoreOrder: false);
-        }
-
-        internal IndexAttribute MergeWith(IndexAttribute other, bool ignoreOrder)
-        {
-            if (ReferenceEquals(this, other)
-                || other == null)
-            {
-                return this;
-            }
-
-            var isCompatible = IsCompatibleWith(other, ignoreOrder);
-            if (!isCompatible)
-            {
-                throw new InvalidOperationException(
-                    Strings.ConflictingIndexAttribute(_name, Environment.NewLine + "\t" + isCompatible.ErrorMessage));
-            }
-
-            return new IndexAttribute(
-                _name ?? other._name,
-                ignoreOrder ? -1 : (_order != -1 ? _order : other._order),
-                _isClustered ?? other._isClustered,
-                _isUnique ?? other._isUnique);
         }
 
         /// <inheritdoc/>

@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Diagnostics;
 
     // <summary>

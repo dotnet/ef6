@@ -11,7 +11,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             Assert.Equal(
                 "System.Random, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                new ClrTypeAnnotationSerializer().SerializeValue("Foo", typeof(Random)));
+                new ClrTypeAnnotationSerializer().Serialize("Foo", typeof(Random)));
         }
 
         [Fact]
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             Assert.Same(
                 typeof(Random),
-                new ClrTypeAnnotationSerializer().DeserializeValue(
+                new ClrTypeAnnotationSerializer().Deserialize(
                     "Foo", "System.Random, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"));
         }
 
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         public void DeserializeValue_returns_null_if_the_specified_type_cannot_be_loaded()
         {
             Assert.Null(
-                new ClrTypeAnnotationSerializer().DeserializeValue(
+                new ClrTypeAnnotationSerializer().Deserialize(
                     "Foo", "System.NotRandom, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"));
         }
     }

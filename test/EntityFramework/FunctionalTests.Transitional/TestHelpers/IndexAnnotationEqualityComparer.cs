@@ -3,7 +3,7 @@
 namespace System.Data.Entity.TestHelpers
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Diagnostics;
     using System.Linq;
 

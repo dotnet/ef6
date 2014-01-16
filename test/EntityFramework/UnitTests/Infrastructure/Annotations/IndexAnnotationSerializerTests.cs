@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Annotations
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Resources;
@@ -67,27 +67,27 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(
-                    () => new IndexAnnotationSerializer().SerializeValue(null, new IndexAnnotation(new IndexAttribute()))).Message);
+                    () => new IndexAnnotationSerializer().Serialize(null, new IndexAnnotation(new IndexAttribute()))).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(
-                    () => new IndexAnnotationSerializer().SerializeValue(" ", new IndexAnnotation(new IndexAttribute()))).Message);
+                    () => new IndexAnnotationSerializer().Serialize(" ", new IndexAnnotation(new IndexAttribute()))).Message);
 
             Assert.Equal(
                 "value",
                 Assert.Throws<ArgumentNullException>(
-                    () => new IndexAnnotationSerializer().SerializeValue("Index", null)).ParamName);
+                    () => new IndexAnnotationSerializer().Serialize("Index", null)).ParamName);
 
             Assert.Equal(
                 Strings.AnnotationSerializeWrongType("Random", "IndexAnnotationSerializer", "IndexAnnotation"),
                 Assert.Throws<ArgumentException>(
-                    () => new IndexAnnotationSerializer().SerializeValue("Index", new Random())).Message);
+                    () => new IndexAnnotationSerializer().Serialize("Index", new Random())).Message);
         }
 
         private static string Serialize(params IndexAttribute[] indexAttributes)
         {
-            return new IndexAnnotationSerializer().SerializeValue("Index", new IndexAnnotation(indexAttributes));
+            return new IndexAnnotationSerializer().Serialize("Index", new IndexAnnotation(indexAttributes));
         }
 
         [Fact]
@@ -172,17 +172,17 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(
-                    () => new IndexAnnotationSerializer().DeserializeValue(null, "{}")).Message);
+                    () => new IndexAnnotationSerializer().Deserialize(null, "{}")).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(
-                    () => new IndexAnnotationSerializer().DeserializeValue(" ", "{}")).Message);
+                    () => new IndexAnnotationSerializer().Deserialize(" ", "{}")).Message);
 
             Assert.Equal(
                 "value",
                 Assert.Throws<ArgumentNullException>(
-                    () => new IndexAnnotationSerializer().DeserializeValue("Index", null)).ParamName);
+                    () => new IndexAnnotationSerializer().Deserialize("Index", null)).ParamName);
         }
 
         [Fact]
@@ -206,17 +206,17 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(
                 Strings.AnnotationSerializeBadFormat(value, "IndexAnnotationSerializer", IndexAnnotationSerializer.FormatExample),
                 Assert.Throws<FormatException>(
-                    () => new IndexAnnotationSerializer().DeserializeValue("Index", value)).Message);
+                    () => new IndexAnnotationSerializer().Deserialize("Index", value)).Message);
         }
 
         private static IndexAnnotation Deserialize(string annotation)
         {
-            return (IndexAnnotation)new IndexAnnotationSerializer().DeserializeValue("Index", annotation);
+            return (IndexAnnotation)new IndexAnnotationSerializer().Deserialize("Index", annotation);
         }
 
         private static string Serialize(IndexAnnotation annotation)
         {
-            return new IndexAnnotationSerializer().SerializeValue("Index", annotation);
+            return new IndexAnnotationSerializer().Serialize("Index", annotation);
         }
     }
 }

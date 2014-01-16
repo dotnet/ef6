@@ -6,12 +6,12 @@ namespace System.Data.Entity.TestHelpers
 
     public class CollationSerializer : IMetadataAnnotationSerializer
     {
-        public string SerializeValue(string name, object value)
+        public string Serialize(string name, object value)
         {
             return ((CollationAttribute)value).CollationName;
         }
 
-        public object DeserializeValue(string name, string value)
+        public object Deserialize(string name, string value)
         {
             return new CollationAttribute(value);
         }

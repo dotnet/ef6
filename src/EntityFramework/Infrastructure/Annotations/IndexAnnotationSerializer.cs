@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Annotations
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="name">The name of the annotation that is being serialized.</param>
         /// <param name="value">The value to serialize which must be an IndexAnnotation object.</param>
         /// <returns>The serialized value.</returns>
-        public virtual string SerializeValue(string name, object value)
+        public virtual string Serialize(string name, object value)
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(value, "value");
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="value">The string to deserialize.</param>
         /// <returns>The deserialized annotation value.</returns>
         /// <exception cref="FormatException">If there is an error reading the serialized value.</exception>
-        public virtual object DeserializeValue(string name, string value)
+        public virtual object Deserialize(string name, string value)
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(value, "value");

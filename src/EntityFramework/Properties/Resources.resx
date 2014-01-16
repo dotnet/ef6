@@ -317,9 +317,6 @@
   <data name="IncompatibleTypes" xml:space="preserve">
     <value>Objects of type '{0}' are not compatible with objects of type '{1}' and cannot be merged.</value>
   </data>
-  <data name="IndexAttributeNonNullableProperty" xml:space="preserve">
-    <value>Getting the value of '{0}' is not supported because C# syntax for attributes does not support nullable types and the value of '{0}' is null if it has not been explicitly set. Use the '{1}' property instead.</value>
-  </data>
   <data name="AnnotationSerializeWrongType" xml:space="preserve">
     <value>An object of type '{0}' cannot be serialized by the {1}. Only '{2}' objects can be serialized.</value>
   </data>
