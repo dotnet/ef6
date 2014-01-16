@@ -188,8 +188,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                         var dependentTable = associationSetMapping.Table;
                         var propertyMappings = associationSetMapping.SourceEndMapping.AssociationEnd == end
-                                                   ? associationSetMapping.SourceEndMapping.Properties
-                                                   : associationSetMapping.TargetEndMapping.Properties;
+                                                   ? associationSetMapping.SourceEndMapping.PropertyMappings
+                                                   : associationSetMapping.TargetEndMapping.PropertyMappings;
                         var dependentColumns = propertyMappings.Select(pm => pm.Column);
 
                         dependentTableInfos = new[]
@@ -584,7 +584,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             var toTable = toSet.ElementType;
 
-            dependentMapping.Properties.Each(
+            dependentMapping.PropertyMappings.Each(
                 pm =>
                     {
                         var oldColumn = pm.Column;
@@ -647,7 +647,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                               ? associationSetMapping.SourceEndMapping
                               : associationSetMapping.TargetEndMapping;
 
-                    principalMapping.Properties.Each(
+                    principalMapping.PropertyMappings.Each(
                         pm =>
                             {
                                 if (pm.Column.DeclaringType != toTable)

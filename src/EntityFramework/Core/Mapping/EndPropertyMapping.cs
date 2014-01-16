@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Mapping
         /// Gets a ReadOnlyCollection of ScalarPropertyMapping that specifies the children 
         /// of this association end property mapping.
         /// </summary>
-        public ReadOnlyCollection<ScalarPropertyMapping> Properties
+        public ReadOnlyCollection<ScalarPropertyMapping> PropertyMappings
         {
             get { return new ReadOnlyCollection<ScalarPropertyMapping>(_properties); }
         }
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         internal IEnumerable<EdmMember> StoreProperties
         {
-            get { return Properties.Select(propertyMap => propertyMap.Column); }
+            get { return PropertyMappings.Select(propertyMap => propertyMap.Column); }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="propertyMapping">A ScalarPropertyMapping that specifies
         /// the property-column mapping to be added.</param>
-        public void AddProperty(ScalarPropertyMapping propertyMapping)
+        public void AddPropertyMapping(ScalarPropertyMapping propertyMapping)
         {
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="propertyMapping">A ScalarPropertyMapping that specifies
         /// the property-column mapping to be removed.</param>
-        public void RemoveProperty(ScalarPropertyMapping propertyMapping)
+        public void RemovePropertyMapping(ScalarPropertyMapping propertyMapping)
         {
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();

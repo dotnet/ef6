@@ -440,7 +440,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     var associationEndNode = new MemberPath(cNode, associationEndPropertypMap.AssociationEnd);
                     // call recursively
                     ExtractProperties(
-                        associationEndPropertypMap.Properties, associationEndNode, cSlots,
+                        associationEndPropertypMap.PropertyMappings, associationEndNode, cSlots,
                         ref cQueryWhereClause, sRootExtent, sSlots, ref sQueryWhereClause);
                 }
 

@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     We currently assume that an Entity Container on the C side
     ///     is mapped to a single Entity Container in the S - space.
     /// </remarks>
-    public class EntityContainerMapping : Map
+    public class EntityContainerMapping : MappingBase
     {
         /// <summary>
         /// Initializes a new EntityContainerMapping instance.

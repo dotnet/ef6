@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <returns> Returns false if no match found. </returns>
-        internal virtual bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
+        internal virtual bool TryGetMap(string identity, DataSpace typeSpace, out MappingBase map)
         {
             //will only be implemented by Mapping Item Collections
             throw Error.NotSupported();
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // Search for a Mapping metadata with the specified type key.
         // </summary>
-        internal virtual Map GetMap(GlobalItem item)
+        internal virtual MappingBase GetMap(GlobalItem item)
         {
             DebugCheck.NotNull(item);
 
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Mapping
         // Search for a Mapping metadata with the specified type key.
         // </summary>
         // <returns> Returns false if no match found. </returns>
-        internal virtual bool TryGetMap(GlobalItem item, out Map map)
+        internal virtual bool TryGetMap(GlobalItem item, out MappingBase map)
         {
             //will only be implemented by Mapping Item Collections
             throw Error.NotSupported();
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal virtual Map GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
+        internal virtual MappingBase GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
         {
             DebugCheck.NotNull(identity);
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <returns> Returns false if no match found. </returns>
-        internal virtual bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
+        internal virtual bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out MappingBase map)
         {
             //will only be implemented by Mapping Item Collections
             throw Error.NotSupported();
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal virtual Map GetMap(string identity, DataSpace typeSpace)
+        internal virtual MappingBase GetMap(string identity, DataSpace typeSpace)
         {
             DebugCheck.NotNull(identity);
 

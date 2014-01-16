@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var associationSetMapping
                 = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), database.GetEntitySet(sourceTable)).Initialize();
-            associationSetMapping.SourceEndMapping.AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
+            associationSetMapping.SourceEndMapping.AddPropertyMapping(new ScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
 
             var independentAssociationMappingConfiguration
                 = new ForeignKeyAssociationMappingConfiguration();
@@ -133,7 +133,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     database.GetEntitySet(dependentTable)).Initialize();
 
-            associationSetMapping.SourceEndMapping.AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
+            associationSetMapping.SourceEndMapping.AddPropertyMapping(new ScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
             
             return associationSetMapping;
         }

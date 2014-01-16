@@ -792,7 +792,7 @@
     <Compile Include="Core\Mapping\FunctionImportStructuralTypeMapping.cs" />
     <Compile Include="Core\Mapping\FunctionImportStructuralTypeMappingKB.cs" />
     <Compile Include="Core\Mapping\LineInfo.cs" />
-    <Compile Include="Core\Mapping\Mapping.cs" />
+    <Compile Include="Core\Mapping\MappingBase.cs" />
     <Compile Include="Core\Mapping\MappingItemCollection.cs" />
     <Compile Include="Core\Mapping\MemberMappingKind.cs" />
     <Compile Include="Core\Mapping\metadatamappinghashervisitor.cs" />

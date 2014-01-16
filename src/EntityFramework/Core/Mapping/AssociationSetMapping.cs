@@ -145,7 +145,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 return 
                     (SingleFragment != null)
-                        ? SingleFragment.Properties.OfType<EndPropertyMapping>().FirstOrDefault()
+                        ? SingleFragment.PropertyMappings.OfType<EndPropertyMapping>().FirstOrDefault()
                         : null;
             }
 
@@ -155,9 +155,9 @@ namespace System.Data.Entity.Core.Mapping
                 ThrowIfReadOnly();
 
                 DebugCheck.NotNull(SingleFragment);
-                Debug.Assert(SingleFragment.Properties.Count == 0);
+                Debug.Assert(SingleFragment.PropertyMappings.Count == 0);
 
-                SingleFragment.AddProperty(value);
+                SingleFragment.AddPropertyMapping(value);
             }
         }
 
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Mapping
             get
             {
                 return (SingleFragment != null)
-                           ? SingleFragment.Properties.OfType<EndPropertyMapping>().ElementAtOrDefault(1)
+                           ? SingleFragment.PropertyMappings.OfType<EndPropertyMapping>().ElementAtOrDefault(1)
                            : null;
             }
 
@@ -179,9 +179,9 @@ namespace System.Data.Entity.Core.Mapping
                 ThrowIfReadOnly();
 
                 DebugCheck.NotNull(SingleFragment);
-                Debug.Assert(SingleFragment.Properties.Count == 1);
+                Debug.Assert(SingleFragment.PropertyMappings.Count == 1);
 
-                SingleFragment.AddProperty(value);
+                SingleFragment.AddPropertyMapping(value);
             }
         }
 

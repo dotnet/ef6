@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Gets a read-only collection of property mappings.
         /// </summary>
-        public abstract ReadOnlyCollection<PropertyMapping> Properties { get; }
+        public abstract ReadOnlyCollection<PropertyMapping> PropertyMappings { get; }
 
         /// <summary>
         /// Gets a read-only collection of property mapping conditions.
@@ -23,13 +23,13 @@ namespace System.Data.Entity.Core.Mapping
         /// Adds a property mapping.
         /// </summary>
         /// <param name="propertyMapping">The property mapping to be added.</param>
-        public abstract void AddProperty(PropertyMapping propertyMapping);
+        public abstract void AddPropertyMapping(PropertyMapping propertyMapping);
 
         /// <summary>
         /// Removes a property mapping.
         /// </summary>
         /// <param name="propertyMapping">The property mapping to be removed.</param>
-        public abstract void RemoveProperty(PropertyMapping propertyMapping);
+        public abstract void RemovePropertyMapping(PropertyMapping propertyMapping);
 
         /// <summary>
         /// Adds a property mapping condition.

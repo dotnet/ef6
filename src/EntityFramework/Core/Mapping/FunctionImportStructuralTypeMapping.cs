@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Gets the property mappings for the result type of a function import.
         /// </summary>
-        public ReadOnlyCollection<FunctionImportReturnTypePropertyMapping> Properties
+        public ReadOnlyCollection<FunctionImportReturnTypePropertyMapping> PropertyMappings
         {
             get { return new ReadOnlyCollection<FunctionImportReturnTypePropertyMapping>(ColumnsRenameList); }
         }

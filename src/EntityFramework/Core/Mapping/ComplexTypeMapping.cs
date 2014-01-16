@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Gets a read-only collection of property mappings.
         /// </summary>
-        public override ReadOnlyCollection<PropertyMapping> Properties
+        public override ReadOnlyCollection<PropertyMapping> PropertyMappings
         {
             get { return new ReadOnlyCollection<PropertyMapping>(new List<PropertyMapping>(m_properties.Values)); }
         }
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Core.Mapping
         /// Adds a property mapping.
         /// </summary>
         /// <param name="propertyMapping">The property mapping to be added.</param>
-        public override void AddProperty(PropertyMapping propertyMapping)
+        public override void AddPropertyMapping(PropertyMapping propertyMapping)
         {
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.Mapping
         /// Removes a property mapping.
         /// </summary>
         /// <param name="propertyMapping">The property mapping to be removed.</param>
-        public override void RemoveProperty(PropertyMapping propertyMapping)
+        public override void RemovePropertyMapping(PropertyMapping propertyMapping)
         {
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();

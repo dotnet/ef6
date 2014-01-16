@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Mapping
 
                 var complexPropertyMapping
                     = structuralTypeMapping
-                        .Properties
+                        .PropertyMappings
                         .OfType<ComplexPropertyMapping>()
                         .SingleOrDefault(pm => ReferenceEquals(pm.Property, property));
 
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Mapping
                     complexPropertyMapping = new ComplexPropertyMapping(property);
                     complexPropertyMapping.AddTypeMapping(complexTypeMapping);
 
-                    structuralTypeMapping.AddProperty(complexPropertyMapping);
+                    structuralTypeMapping.AddPropertyMapping(complexPropertyMapping);
                 }
 
                 structuralTypeMapping
@@ -135,7 +135,7 @@ namespace System.Data.Entity.Core.Mapping
 
             var scalarPropertyMapping
                 = structuralTypeMapping
-                    .Properties
+                    .PropertyMappings
                     .OfType<ScalarPropertyMapping>()
                     .SingleOrDefault(pm => ReferenceEquals(pm.Property, property));
 
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Mapping
                 scalarPropertyMapping
                     = new ScalarPropertyMapping(property, columnMappingBuilder.ColumnProperty);
 
-                structuralTypeMapping.AddProperty(scalarPropertyMapping);
+                structuralTypeMapping.AddPropertyMapping(scalarPropertyMapping);
 
                 columnMappingBuilder.SetTarget(scalarPropertyMapping);
             }
@@ -177,12 +177,12 @@ namespace System.Data.Entity.Core.Mapping
 
             var propertyMapping
                 = structuralTypeMapping
-                    .Properties
+                    .PropertyMappings
                     .Single(pm => ReferenceEquals(pm.Property, propertyPath.First()));
 
             if (propertyMapping is ScalarPropertyMapping)
             {
-                structuralTypeMapping.RemoveProperty(propertyMapping);
+                structuralTypeMapping.RemovePropertyMapping(propertyMapping);
             }
             else
             {
@@ -191,9 +191,9 @@ namespace System.Data.Entity.Core.Mapping
 
                 RemoveColumnMapping(complexTypeMapping, propertyPath.Skip(1));
 
-                if (!complexTypeMapping.Properties.Any())
+                if (!complexTypeMapping.PropertyMappings.Any())
                 {
-                    structuralTypeMapping.RemoveProperty(complexPropertyMapping);
+                    structuralTypeMapping.RemovePropertyMapping(complexPropertyMapping);
                 }
             }
         }
@@ -290,7 +290,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Gets a read-only collection of property mappings.
         /// </summary>
-        public override ReadOnlyCollection<PropertyMapping> Properties
+        public override ReadOnlyCollection<PropertyMapping> PropertyMappings
         {
             get { return new ReadOnlyCollection<PropertyMapping>(m_properties); }
         }
@@ -325,7 +325,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     foreach (var columnMappingBuilder
                         in GetFlattenedProperties(
-                            storageComplexPropertyMapping.TypeMappings.Single().Properties,
+                            storageComplexPropertyMapping.TypeMappings.Single().PropertyMappings,
                             propertyPath))
                     {
                         yield return columnMappingBuilder;
@@ -377,7 +377,7 @@ namespace System.Data.Entity.Core.Mapping
         /// Adds a property mapping.
         /// </summary>
         /// <param name="propertyMapping">The property mapping to be added.</param>
-        public override void AddProperty(PropertyMapping propertyMapping)
+        public override void AddPropertyMapping(PropertyMapping propertyMapping)
         {
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();
@@ -389,7 +389,7 @@ namespace System.Data.Entity.Core.Mapping
         /// Removes a property mapping.
         /// </summary>
         /// <param name="propertyMapping">The property mapping to be removed.</param>
-        public override void RemoveProperty(PropertyMapping propertyMapping)
+        public override void RemovePropertyMapping(PropertyMapping propertyMapping)
         {
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();

@@ -77,17 +77,17 @@ namespace System.Data.Entity.Core.Mapping
                             new EntitySet(),
                             new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
-            Assert.Empty(mappingFragment.Properties);
+            Assert.Empty(mappingFragment.PropertyMappings);
 
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
-            mappingFragment.AddProperty(scalarPropertyMapping);
+            mappingFragment.AddPropertyMapping(scalarPropertyMapping);
 
-            Assert.Same(scalarPropertyMapping, mappingFragment.Properties.Single());
+            Assert.Same(scalarPropertyMapping, mappingFragment.PropertyMappings.Single());
 
-            mappingFragment.RemoveProperty(scalarPropertyMapping);
+            mappingFragment.RemovePropertyMapping(scalarPropertyMapping);
 
-            Assert.Empty(mappingFragment.Properties);
+            Assert.Empty(mappingFragment.PropertyMappings);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Same(columnMappingBuilder, mappingFragment.ColumnMappings.Single());
 
-            var scalarPropertyMapping = (ScalarPropertyMapping)mappingFragment.Properties.Single();
+            var scalarPropertyMapping = (ScalarPropertyMapping)mappingFragment.PropertyMappings.Single();
 
             Assert.Same(columnProperty, scalarPropertyMapping.Column);
             Assert.Same(property, scalarPropertyMapping.Property);
@@ -186,12 +186,12 @@ namespace System.Data.Entity.Core.Mapping
             mappingFragment.AddColumnMapping(columnMappingBuilder);
 
             Assert.Same(columnMappingBuilder, mappingFragment.ColumnMappings.Single());
-            Assert.NotEmpty(mappingFragment.Properties);
+            Assert.NotEmpty(mappingFragment.PropertyMappings);
 
             mappingFragment.RemoveColumnMapping(columnMappingBuilder);
 
             Assert.Empty(mappingFragment.ColumnMappings);
-            Assert.Empty(mappingFragment.Properties);
+            Assert.Empty(mappingFragment.PropertyMappings);
         }
 
         [Fact]
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Mapping
 
             mappingFragment.AddColumnMapping(columnMappingBuilder);
 
-            var scalarPropertyMapping = (ScalarPropertyMapping)mappingFragment.Properties.Single();
+            var scalarPropertyMapping = (ScalarPropertyMapping)mappingFragment.PropertyMappings.Single();
 
             Assert.Same(columnProperty, scalarPropertyMapping.Column);
             Assert.Same(property, scalarPropertyMapping.Property);
@@ -244,11 +244,11 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Same(columnMappingBuilder, mappingFragment.ColumnMappings.Single());
 
-            var complexPropertyMapping = (ComplexPropertyMapping)mappingFragment.Properties.Single();
+            var complexPropertyMapping = (ComplexPropertyMapping)mappingFragment.PropertyMappings.Single();
 
             var typeMapping = complexPropertyMapping.TypeMappings.Single();
 
-            var scalarPropertyMapping = (ScalarPropertyMapping)typeMapping.Properties.Single();
+            var scalarPropertyMapping = (ScalarPropertyMapping)typeMapping.PropertyMappings.Single();
 
             Assert.Same(columnProperty, scalarPropertyMapping.Column);
             Assert.Same(property2, scalarPropertyMapping.Property);
@@ -276,12 +276,12 @@ namespace System.Data.Entity.Core.Mapping
             mappingFragment.AddColumnMapping(columnMappingBuilder);
 
             Assert.Same(columnMappingBuilder, mappingFragment.ColumnMappings.Single());
-            Assert.NotEmpty(mappingFragment.Properties);
+            Assert.NotEmpty(mappingFragment.PropertyMappings);
 
             mappingFragment.RemoveColumnMapping(columnMappingBuilder);
 
             Assert.Empty(mappingFragment.ColumnMappings);
-            Assert.Empty(mappingFragment.Properties);
+            Assert.Empty(mappingFragment.PropertyMappings);
         }
 
         [Fact]
@@ -308,11 +308,11 @@ namespace System.Data.Entity.Core.Mapping
 
             mappingFragment.AddColumnMapping(columnMappingBuilder2);
 
-            var complexPropertyMapping = (ComplexPropertyMapping)mappingFragment.Properties.Single();
+            var complexPropertyMapping = (ComplexPropertyMapping)mappingFragment.PropertyMappings.Single();
 
             var typeMapping = complexPropertyMapping.TypeMappings.Single();
 
-            var scalarPropertyMapping = (ScalarPropertyMapping)typeMapping.Properties.Single();
+            var scalarPropertyMapping = (ScalarPropertyMapping)typeMapping.PropertyMappings.Single();
 
             Assert.Same(columnProperty, scalarPropertyMapping.Column);
             Assert.Same(property2, scalarPropertyMapping.Property);
@@ -401,7 +401,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(
-                    () => mappingFragment.AddProperty(scalarPropertyMapping)).Message);
+                    () => mappingFragment.AddPropertyMapping(scalarPropertyMapping)).Message);
         }
 
         [Fact]
@@ -416,14 +416,14 @@ namespace System.Data.Entity.Core.Mapping
                             new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
-            mappingFragment.AddProperty(scalarPropertyMapping);
+            mappingFragment.AddPropertyMapping(scalarPropertyMapping);
 
             mappingFragment.SetReadOnly();
 
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(
-                    () => mappingFragment.RemoveProperty(scalarPropertyMapping)).Message);
+                    () => mappingFragment.RemovePropertyMapping(scalarPropertyMapping)).Message);
         }
 
         [Fact]
@@ -482,7 +482,7 @@ namespace System.Data.Entity.Core.Mapping
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
             var conditionMapping = new IsNullConditionMapping(new EdmProperty("P"), true);
 
-            mappingFragment.AddProperty(scalarPropertyMapping);
+            mappingFragment.AddPropertyMapping(scalarPropertyMapping);
             mappingFragment.AddCondition(conditionMapping);
 
             Assert.False(scalarPropertyMapping.IsReadOnly);

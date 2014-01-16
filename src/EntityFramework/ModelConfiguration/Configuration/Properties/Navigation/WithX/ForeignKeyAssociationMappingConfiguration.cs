@@ -133,7 +133,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(navigationProperty);
 
             // By convention source end contains the dependent column mappings
-            var propertyMappings = associationSetMapping.SourceEndMapping.Properties.ToList();
+            var propertyMappings = associationSetMapping.SourceEndMapping.PropertyMappings.ToList();
 
             if (_tableName != null)
             {

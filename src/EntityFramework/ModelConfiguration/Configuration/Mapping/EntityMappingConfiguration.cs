@@ -896,8 +896,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 {
                     if (entityFragments.SelectMany(f => f.ColumnMappings).All(pm => pm.ColumnProperty != column)
                         && entityFragments.SelectMany(f => f.ColumnConditions).All(cc => cc.Column != column)
-                        && associationMappings.SelectMany(am => am.SourceEndMapping.Properties).All(pm => pm.Column != column)
-                        && associationMappings.SelectMany(am => am.SourceEndMapping.Properties).All(pm => pm.Column != column))
+                        && associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.Column != column)
+                        && associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.Column != column))
                     {
                         // Remove table FKs that refer to this column, and then remove the column
                         ForeignKeyPrimitiveOperations.RemoveAllForeignKeyConstraintsForColumn(table, column);

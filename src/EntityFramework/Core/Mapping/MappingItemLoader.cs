@@ -2398,7 +2398,7 @@ namespace System.Data.Entity.Core.Mapping
                             if (scalarMap != null)
                             {
                                 //scalarMap can be null in invalid cases
-                                fragment.AddProperty(scalarMap);
+                                fragment.AddPropertyMapping(scalarMap);
                             }
                             break;
                         case MslConstructs.ComplexPropertyElement:
@@ -2407,7 +2407,7 @@ namespace System.Data.Entity.Core.Mapping
                             //Complex Map can be null in case of invalid MSL files.
                             if (complexMap != null)
                             {
-                                fragment.AddProperty(complexMap);
+                                fragment.AddPropertyMapping(complexMap);
                             }
                             break;
                         case MslConstructs.ConditionElement:
@@ -2503,7 +2503,7 @@ namespace System.Data.Entity.Core.Mapping
                                 MappingErrorCode.InvalidEdmMember, m_sourceLocation, navLineInfo, m_parsingErrors);
                             continue;
                         }
-                        fragment.AddProperty((LoadEndPropertyMapping(nav.Clone(), end, tableType)));
+                        fragment.AddPropertyMapping((LoadEndPropertyMapping(nav.Clone(), end, tableType)));
                         break;
                     case MslConstructs.ConditionElement:
                         //Make sure that there was no QueryView specified for this Set
@@ -2821,7 +2821,7 @@ namespace System.Data.Entity.Core.Mapping
                             //ScalarMap can be null in case of invalid MSL files
                             if (scalarMap != null)
                             {
-                                typeMapping.AddProperty(scalarMap);
+                                typeMapping.AddPropertyMapping(scalarMap);
                             }
                             break;
                         case MslConstructs.ComplexPropertyElement:
@@ -2830,7 +2830,7 @@ namespace System.Data.Entity.Core.Mapping
                             //complexMap can be null in case of invalid maps
                             if (complexMap != null)
                             {
-                                typeMapping.AddProperty(complexMap);
+                                typeMapping.AddPropertyMapping(complexMap);
                             }
                             break;
                         case MslConstructs.ConditionElement:
@@ -2898,7 +2898,7 @@ namespace System.Data.Entity.Core.Mapping
                                     MappingErrorCode.InvalidEdmMember, m_sourceLocation, navLineInfo, m_parsingErrors);
                                 return null;
                             }
-                            endMapping.AddProperty(scalarMap);
+                            endMapping.AddPropertyMapping(scalarMap);
                         }
                         break;
                     default:

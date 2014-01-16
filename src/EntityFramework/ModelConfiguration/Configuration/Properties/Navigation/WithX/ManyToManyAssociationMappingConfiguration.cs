@@ -160,11 +160,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             ConfigureColumnNames(
                 sourceEndIsPrimaryConfiguration ? _leftKeyColumnNames : _rightKeyColumnNames,
-                associationSetMapping.SourceEndMapping.Properties.ToList());
+                associationSetMapping.SourceEndMapping.PropertyMappings.ToList());
 
             ConfigureColumnNames(
                 sourceEndIsPrimaryConfiguration ? _rightKeyColumnNames : _leftKeyColumnNames,
-                associationSetMapping.TargetEndMapping.Properties.ToList());
+                associationSetMapping.TargetEndMapping.PropertyMappings.ToList());
 
             foreach (var annotation in _annotations)
             {

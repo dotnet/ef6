@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteStartElement(MslConstructs.EndPropertyMappingElement);
             _xmlWriter.WriteAttributeString(MslConstructs.EndPropertyMappingNameAttribute, endMapping.AssociationEnd.Name);
 
-            foreach (var propertyMapping in endMapping.Properties)
+            foreach (var propertyMapping in endMapping.PropertyMappings)
             {
                 WriteScalarPropertyElement(
                     propertyMapping.Property,
@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 MslConstructs.MappingFragmentStoreEntitySetAttribute, 
                 mappingFragment.TableSet.Name);
 
-            foreach (var propertyMapping in mappingFragment.Properties)
+            foreach (var propertyMapping in mappingFragment.PropertyMappings)
             {
                 WritePropertyMapping(propertyMapping);
             }
@@ -447,7 +447,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 MslConstructs.ComplexPropertyTypeNameAttribute,
                 _entityTypeNamespace + "." + complexPropertyMapping.Property.ComplexType.Name);
 
-            foreach (var propertyMapping in complexPropertyMapping.TypeMappings.Single().Properties)
+            foreach (var propertyMapping in complexPropertyMapping.TypeMappings.Single().PropertyMappings)
             {
                 WritePropertyMapping(propertyMapping);
             }

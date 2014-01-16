@@ -714,13 +714,13 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal override Map GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
+        internal override MappingBase GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
         {
             if (typeSpace != DataSpace.CSpace)
             {
                 throw new InvalidOperationException(Strings.Mapping_Storage_InvalidSpace(typeSpace));
             }
-            return GetItem<Map>(identity, ignoreCase);
+            return GetItem<MappingBase>(identity, ignoreCase);
         }
 
         // <summary>
@@ -730,7 +730,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <returns> Returns false if no match found. </returns>
-        internal override bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
+        internal override bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out MappingBase map)
         {
             if (typeSpace != DataSpace.CSpace)
             {
@@ -745,7 +745,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal override Map GetMap(string identity, DataSpace typeSpace)
+        internal override MappingBase GetMap(string identity, DataSpace typeSpace)
         {
             return GetMap(identity, typeSpace, false /*ignoreCase*/);
         }
@@ -756,7 +756,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <returns> Returns false if no match found. </returns>
-        internal override bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
+        internal override bool TryGetMap(string identity, DataSpace typeSpace, out MappingBase map)
         {
             return TryGetMap(identity, typeSpace, false /*ignoreCase*/, out map);
         }
@@ -764,7 +764,7 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // Search for a Mapping metadata with the specified type key.
         // </summary>
-        internal override Map GetMap(GlobalItem item)
+        internal override MappingBase GetMap(GlobalItem item)
         {
             var typeSpace = item.DataSpace;
             if (typeSpace != DataSpace.CSpace)
@@ -778,7 +778,7 @@ namespace System.Data.Entity.Core.Mapping
         // Search for a Mapping metadata with the specified type key.
         // </summary>
         // <returns> Returns false if no match found. </returns>
-        internal override bool TryGetMap(GlobalItem item, out Map map)
+        internal override bool TryGetMap(GlobalItem item, out MappingBase map)
         {
             if (item == null)
             {
@@ -1088,7 +1088,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         // Add to the cache. If it is already present, then throw an exception
-        private void AddInternal(Map storageMap)
+        private void AddInternal(MappingBase storageMap)
         {
             storageMap.DataSpace = DataSpace.CSSpace;
             try

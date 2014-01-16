@@ -888,7 +888,7 @@ namespace FunctionalTests
             Assert.Equal(
                 "ITOffice_ITOfficeId",
                 databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).SourceEndMapping
-                               .Properties.ElementAt(0).Column.Name);
+                               .PropertyMappings.ElementAt(0).Column.Name);
         }
 
         [Fact]

@@ -279,7 +279,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                 rb => (from esm in _entityContainerMapping.EntitySetMappings
                                     from etm in esm.EntityTypeMappings
                                     from mf in etm.MappingFragments
-                                    from pm in mf.Properties.OfType<ScalarPropertyMapping>()
+                                       from pm in mf.PropertyMappings.OfType<ScalarPropertyMapping>()
                                     where
                                         pm.Column.EdmEquals(propertyExpression.Property)
                                         && pm.Column.DeclaringType.EdmEquals(propertyExpression.Property.DeclaringType)
@@ -321,8 +321,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     = (from asm in _entityContainerMapping.AssociationSetMappings
                         from tm in asm.TypeMappings
                         from mf in tm.MappingFragments
-                        from epm in mf.Properties.OfType<EndPropertyMapping>()
-                       from pm in epm.Properties
+                       from epm in mf.PropertyMappings.OfType<EndPropertyMapping>()
+                       from pm in epm.PropertyMappings
                        where pm.Column.EdmEquals(column)
                               && pm.Column.DeclaringType.EdmEquals(column.DeclaringType)
                         select new EdmMember[]

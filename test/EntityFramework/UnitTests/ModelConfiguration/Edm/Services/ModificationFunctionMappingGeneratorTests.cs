@@ -236,10 +236,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       };
 
             associationSetMapping.SourceEndMapping
-                                 .AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("FooId", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }))));
+                                 .AddPropertyMapping(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("FooId", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }))));
 
             associationSetMapping.TargetEndMapping
-                                 .AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("BarId", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }))));
+                                 .AddPropertyMapping(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("BarId", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }))));
 
             var functionMappingGenerator
                 = new ModificationFunctionMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest);

@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     // <summary>
     // Represents the metadata for OCObjectMapping.
     // </summary>
-    internal class ObjectTypeMapping : Map
+    internal class ObjectTypeMapping : MappingBase
     {
         // <summary>
         // Construct a new ObjectTypeMapping object

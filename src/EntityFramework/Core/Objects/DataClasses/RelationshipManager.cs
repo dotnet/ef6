@@ -745,7 +745,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private bool TryGetOwnerEntityType(out EntityType entityType)
         {
             DefaultObjectMappingItemCollection mappings;
-            Map map;
+            MappingBase map;
             if (TryGetObjectMappingItemCollection(WrappedOwner, out mappings)
                 && mappings.TryGetMap(WrappedOwner.IdentityType.FullNameWithNesting(), DataSpace.OSpace, out map))
             {

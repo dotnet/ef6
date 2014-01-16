@@ -146,7 +146,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
             DebugCheck.NotNull(associationSetMapping);
 
-            foreach (var propertyMapping in associationSetMapping.SourceEndMapping.Properties)
+            foreach (var propertyMapping in associationSetMapping.SourceEndMapping.PropertyMappings)
             {
                 yield return
                     Tuple.Create(
@@ -155,7 +155,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                             associationSetMapping.AssociationSet), propertyMapping.Column);
             }
 
-            foreach (var propertyMapping in associationSetMapping.TargetEndMapping.Properties)
+            foreach (var propertyMapping in associationSetMapping.TargetEndMapping.PropertyMappings)
             {
                 yield return
                     Tuple.Create(
@@ -196,7 +196,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                               ? associationSetMapping.TargetEndMapping
                               : associationSetMapping.SourceEndMapping;
 
-                    foreach (var propertyMapping in endPropertyMapping.Properties)
+                    foreach (var propertyMapping in endPropertyMapping.PropertyMappings)
                     {
                         yield return
                             Tuple.Create(

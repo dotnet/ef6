@@ -231,7 +231,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             // Collect the member paths for edm scalar properties that belong to the target entity key.
             // These will be used as part of WITH RELATIONSHIP.
             // Get the key properties from edm type since the query parser depends on the order of key members
-            var propertyMaps = foreignKeyEndMap.Properties.Cast<ScalarPropertyMapping>();
+            var propertyMaps = foreignKeyEndMap.PropertyMappings.Cast<ScalarPropertyMapping>();
             var toEndEntityKeyMemberPaths = new List<MemberPath>();
             foreach (EdmProperty edmProperty in toEndEntityType.KeyMembers)
             {
@@ -268,13 +268,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             var storeEntitySet = (colocatedAssociationSetMap.StoreEntitySet);
             IEnumerable<EdmMember> keyProperties = storeEntitySet.ElementType.KeyMembers;
             //Find the end that's mapped to primary key
-            foreach (EndPropertyMapping endMap in mapFragment.Properties)
+            foreach (EndPropertyMapping endMap in mapFragment.PropertyMappings)
             {
                 var endStoreMembers = endMap.StoreProperties;
                 if (endStoreMembers.SequenceEqual(keyProperties, EqualityComparer<EdmMember>.Default))
                 {
                     //Return the map for the other end since that is the foreign key end
-                    var otherEnds = mapFragment.Properties.OfType<EndPropertyMapping>().Where(eMap => (!eMap.Equals(endMap)));
+                    var otherEnds = mapFragment.PropertyMappings.OfType<EndPropertyMapping>().Where(eMap => (!eMap.Equals(endMap)));
                     Debug.Assert(otherEnds.Count() == 1);
                     return otherEnds.First();
                 }

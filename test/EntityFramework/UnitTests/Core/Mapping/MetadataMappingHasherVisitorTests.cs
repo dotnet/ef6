@@ -310,8 +310,8 @@ namespace System.Data.Entity.Core.Mapping
             mapping.AddType(complexType1);
             mapping.AddIsOfType(complexType4);
             mapping.AddIsOfType(complexType3);
-            mapping.AddProperty(propertyMapping2);
-            mapping.AddProperty(propertyMapping1);
+            mapping.AddPropertyMapping(propertyMapping2);
+            mapping.AddPropertyMapping(propertyMapping1);
 
             Assert.Equal("ComplexProperty(Identity=A),ComplexProperty(Identity=B),N.CT1,N.CT2,N.CT3,N.CT4",
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));

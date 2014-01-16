@@ -34,15 +34,15 @@ namespace System.Data.Entity.Core.Mapping
             var complexTypeMapping = new ComplexTypeMapping(complexType);
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
-            Assert.Empty(complexTypeMapping.Properties);
+            Assert.Empty(complexTypeMapping.PropertyMappings);
 
-            complexTypeMapping.AddProperty(scalarPropertyMapping);
+            complexTypeMapping.AddPropertyMapping(scalarPropertyMapping);
 
-            Assert.Same(scalarPropertyMapping, complexTypeMapping.Properties.Single());
+            Assert.Same(scalarPropertyMapping, complexTypeMapping.PropertyMappings.Single());
 
-            complexTypeMapping.RemoveProperty(scalarPropertyMapping);
+            complexTypeMapping.RemovePropertyMapping(scalarPropertyMapping);
 
-            Assert.Empty(complexTypeMapping.Properties);
+            Assert.Empty(complexTypeMapping.PropertyMappings);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(
-                    () => complexTypeMapping.AddProperty(scalarPropertyMapping)).Message);
+                    () => complexTypeMapping.AddPropertyMapping(scalarPropertyMapping)).Message);
         }
 
         [Fact]
@@ -86,14 +86,14 @@ namespace System.Data.Entity.Core.Mapping
             var complexTypeMapping = new ComplexTypeMapping(complexType);
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
-            complexTypeMapping.AddProperty(scalarPropertyMapping);
+            complexTypeMapping.AddPropertyMapping(scalarPropertyMapping);
 
             complexTypeMapping.SetReadOnly();
 
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(
-                    () => complexTypeMapping.RemoveProperty(scalarPropertyMapping)).Message);
+                    () => complexTypeMapping.RemovePropertyMapping(scalarPropertyMapping)).Message);
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Core.Mapping
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
             var conditionMapping = new IsNullConditionMapping(new EdmProperty("P"), true);
 
-            complexTypeMapping.AddProperty(scalarPropertyMapping);
+            complexTypeMapping.AddPropertyMapping(scalarPropertyMapping);
             complexTypeMapping.AddCondition(conditionMapping);
 
             Assert.False(scalarPropertyMapping.IsReadOnly);

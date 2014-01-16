@@ -154,7 +154,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             foreach (var property in dependentEnd.GetEntityType().KeyProperties())
             {
                 associationSetMapping.TargetEndMapping
-                                     .AddProperty(
+                                     .AddPropertyMapping(
                                          new ScalarPropertyMapping(
                                              property,
                                              dependentEntityTypeMapping.GetPropertyMapping(property).ColumnProperty));
@@ -274,7 +274,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
                 yield return foreignKeyColumn;
 
-                associationEndMapping.AddProperty(new ScalarPropertyMapping(property, foreignKeyColumn));
+                associationEndMapping.AddPropertyMapping(new ScalarPropertyMapping(property, foreignKeyColumn));
 
                 if (foreignKeyColumn.Nullable)
                 {

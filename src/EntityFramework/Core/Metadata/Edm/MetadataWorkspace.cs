@@ -504,7 +504,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // used by ObjectContext.*GetObjectByKey when the clr type is not available
             // so we check the OCMap to find the clr type else attempt to autoload the OSpace from callingAssembly
             DebugCheck.NotNull(type);
-            Map map;
+            MappingBase map;
             if (!TryGetMap(type, DataSpace.OCSpace, out map))
             {
                 // an OCMap is not exist, attempt to load OSpace to retry
@@ -831,7 +831,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <param name="mappingSpace"> space for which you want to get the mapped type </param>
         // <returns> Returns false if no match found. </returns>
-        internal virtual bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out Map map)
+        internal virtual bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out MappingBase map)
         {
             map = null;
             var collection = GetItemCollection(mappingSpace, required: false);
@@ -845,7 +845,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="dataSpace"> space for which you want to get the mapped type </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal virtual Map GetMap(string identity, DataSpace typeSpace, DataSpace dataSpace)
+        internal virtual MappingBase GetMap(string identity, DataSpace typeSpace, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, required: true);
             return ((MappingItemCollection)collection).GetMap(identity, typeSpace);
@@ -856,7 +856,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // </summary>
         // <param name="dataSpace"> space for which you want to get the mapped type </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal virtual Map GetMap(GlobalItem item, DataSpace dataSpace)
+        internal virtual MappingBase GetMap(GlobalItem item, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, required: true);
             return ((MappingItemCollection)collection).GetMap(item);
@@ -867,7 +867,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // </summary>
         // <param name="dataSpace"> space for which you want to get the mapped type </param>
         // <returns> Returns false if no match found. </returns>
-        internal virtual bool TryGetMap(GlobalItem item, DataSpace dataSpace, out Map map)
+        internal virtual bool TryGetMap(GlobalItem item, DataSpace dataSpace, out MappingBase map)
         {
             map = null;
             var collection = GetItemCollection(dataSpace, required: false);
@@ -1063,7 +1063,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             objectSpaceType = null;
 
-            Map map;
+            MappingBase map;
             if (TryGetMap(edmSpaceType, DataSpace.OCSpace, out map))
             {
                 var ocMap = map as ObjectTypeMapping;
@@ -1207,7 +1207,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             edmSpaceType = null;
 
-            Map map;
+            MappingBase map;
             if (TryGetMap(objectSpaceType, DataSpace.OCSpace, out map))
             {
                 var ocMap = map as ObjectTypeMapping;
@@ -1533,7 +1533,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EdmType objectEdmType;
             if (objectItemCollection.TryGetItem(nonNullableType.FullNameWithNesting(), out objectEdmType))
             {
-                Map map;
+                MappingBase map;
                 if (TryGetMap(objectEdmType, DataSpace.OCSpace, out map))
                 {
                     var objectMapping = (ObjectTypeMapping)map;

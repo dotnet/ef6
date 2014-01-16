@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal override bool TryGetMember(StructuralType type, String memberName, bool ignoreCase, out EdmMember outMember)
         {
             outMember = null;
-            Map map = null;
+            MappingBase map = null;
 
             if (MetadataWorkspace.TryGetMap(type, DataSpace.OCSpace, out map))
             {
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal override bool TryGetTypeByName(string fullName, bool ignoreCase, out TypeUsage typeUsage)
         {
             typeUsage = null;
-            Map map = null;
+            MappingBase map = null;
 
             // From ClrPerspective, we should not allow anything from SSpace. So make sure that the CSpace type does not
             // have the Target attribute
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // </summary>
         // <param name="map"> The OC map to use to get the EdmType </param>
         // <returns> A TypeUsage for the mapped EdmType or null if no EdmType was mapped </returns>
-        private static TypeUsage GetMappedTypeUsage(Map map)
+        private static TypeUsage GetMappedTypeUsage(MappingBase map)
         {
             TypeUsage typeUsage = null;
             if (null != map)

@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet())
                     .Initialize();
             var column = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
-            associationSetMapping.SourceEndMapping.AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), column));
+            associationSetMapping.SourceEndMapping.AddPropertyMapping(new ScalarPropertyMapping(new EdmProperty("PK"), column));
 
             var manyToManyAssociationMappingConfiguration
                 = new ManyToManyAssociationMappingConfiguration();
@@ -77,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             var column = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
-            associationSetMapping.TargetEndMapping.AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), column));
+            associationSetMapping.TargetEndMapping.AddPropertyMapping(new ScalarPropertyMapping(new EdmProperty("PK"), column));
 
             var manyToManyAssociationMappingConfiguration
                 = new ManyToManyAssociationMappingConfiguration();

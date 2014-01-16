@@ -232,7 +232,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                     MarkColumnsAsNonNullableIfNoTableSharing(
                         entitySet, asm.Table, dependentEnd.GetEntityType(),
-                        dependentMapping.Properties.Select(pm => pm.Column));
+                        dependentMapping.PropertyMappings.Select(pm => pm.Column));
                 }
             }
         }

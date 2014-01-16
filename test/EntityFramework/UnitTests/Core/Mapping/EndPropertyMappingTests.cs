@@ -14,14 +14,14 @@ namespace System.Data.Entity.Core.Mapping
         {
             var endPropertyMapping = new EndPropertyMapping();
 
-            Assert.Empty(endPropertyMapping.Properties);
+            Assert.Empty(endPropertyMapping.PropertyMappings);
 
             var scalarPropertyMapping
                 = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
-            endPropertyMapping.AddProperty(scalarPropertyMapping);
+            endPropertyMapping.AddPropertyMapping(scalarPropertyMapping);
 
-            Assert.Same(scalarPropertyMapping, endPropertyMapping.Properties.Single());
+            Assert.Same(scalarPropertyMapping, endPropertyMapping.PropertyMappings.Single());
         }
 
         [Fact]
@@ -29,18 +29,18 @@ namespace System.Data.Entity.Core.Mapping
         {
             var endPropertyMapping = new EndPropertyMapping();
 
-            Assert.Empty(endPropertyMapping.Properties);
+            Assert.Empty(endPropertyMapping.PropertyMappings);
 
             var scalarPropertyMapping
                 = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
-            endPropertyMapping.AddProperty(scalarPropertyMapping);
+            endPropertyMapping.AddPropertyMapping(scalarPropertyMapping);
 
-            Assert.Same(scalarPropertyMapping, endPropertyMapping.Properties.Single());
+            Assert.Same(scalarPropertyMapping, endPropertyMapping.PropertyMappings.Single());
 
-            endPropertyMapping.RemoveProperty(scalarPropertyMapping);
+            endPropertyMapping.RemovePropertyMapping(scalarPropertyMapping);
 
-            Assert.Empty(endPropertyMapping.Properties);
+            Assert.Empty(endPropertyMapping.PropertyMappings);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(
-                    () => mapping.AddProperty(scalarPropertyMapping)).Message);
+                    () => mapping.AddPropertyMapping(scalarPropertyMapping)).Message);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping
             var mapping = new EndPropertyMapping(associationEnd);
             var scalarPropertyMapping
                 = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
-            mapping.AddProperty(scalarPropertyMapping);
+            mapping.AddPropertyMapping(scalarPropertyMapping);
             mapping.SetReadOnly();
 
             Assert.True(mapping.IsReadOnly);
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(
-                    () => mapping.RemoveProperty(scalarPropertyMapping)).Message);
+                    () => mapping.RemovePropertyMapping(scalarPropertyMapping)).Message);
         }
 
         [Fact]
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping
             var mapping = new EndPropertyMapping(associationEnd);
             var scalarPropertyMapping
                 = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
-            mapping.AddProperty(scalarPropertyMapping);
+            mapping.AddPropertyMapping(scalarPropertyMapping);
 
             Assert.False(scalarPropertyMapping.IsReadOnly);
             mapping.SetReadOnly();

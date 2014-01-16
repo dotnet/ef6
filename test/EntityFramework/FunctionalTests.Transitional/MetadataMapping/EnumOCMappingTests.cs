@@ -835,7 +835,7 @@ namespace System.Data.Entity.MetadataMapping
             GetMappedType(oSpaceCsdl, cSpaceCsdl, "Model.MessageType", isPOCO);
         }
 
-        private static Map GetMappedType(XDocument oSpaceCsdl, XDocument cSpaceCsdl, string oSpaceTypeName, bool isPOCO)
+        private static MappingBase GetMappedType(XDocument oSpaceCsdl, XDocument cSpaceCsdl, string oSpaceTypeName, bool isPOCO)
         {
             var workspace = PrepareModel(oSpaceCsdl, cSpaceCsdl, isPOCO);
             return workspace.GetMap(oSpaceTypeName, DataSpace.OSpace, DataSpace.OCSpace);

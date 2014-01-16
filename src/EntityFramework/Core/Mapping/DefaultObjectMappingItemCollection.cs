@@ -72,9 +72,9 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal override Map GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
+        internal override MappingBase GetMap(string identity, DataSpace typeSpace, bool ignoreCase)
         {
-            Map map;
+            MappingBase map;
             if (!TryGetMap(identity, typeSpace, ignoreCase, out map))
             {
                 throw new InvalidOperationException(Strings.Mapping_Object_InvalidType(identity));
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <returns> Returns false if no match found. </returns>
-        internal override bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
+        internal override bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out MappingBase map)
         {
             EdmType cdmType = null;
             EdmType clrType = null;
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.Mapping
                 int index;
                 if (_edmTypeIndexes.TryGetValue(identity, out index))
                 {
-                    map = (Map)this[index];
+                    map = (MappingBase)this[index];
                     return true;
                 }
 
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Mapping
                 int index;
                 if (_clrTypeIndexes.TryGetValue(identity, out index))
                 {
-                    map = (Map)this[index];
+                    map = (MappingBase)this[index];
                     return true;
                 }
 
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        internal override Map GetMap(string identity, DataSpace typeSpace)
+        internal override MappingBase GetMap(string identity, DataSpace typeSpace)
         {
             return GetMap(identity, typeSpace, false /*ignoreCase*/);
         }
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <returns> Returns false if no match found. </returns>
-        internal override bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
+        internal override bool TryGetMap(string identity, DataSpace typeSpace, out MappingBase map)
         {
             return TryGetMap(identity, typeSpace, false /*ignoreCase*/, out map);
         }
@@ -191,9 +191,9 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // Search for a Mapping metadata with the specified type key.
         // </summary>
-        internal override Map GetMap(GlobalItem item)
+        internal override MappingBase GetMap(GlobalItem item)
         {
-            Map map;
+            MappingBase map;
             if (!TryGetMap(item, out map))
             {
                 throw new InvalidOperationException(Strings.Mapping_Object_InvalidType(item.Identity));
@@ -205,7 +205,7 @@ namespace System.Data.Entity.Core.Mapping
         // Search for a Mapping metadata with the specified type key.
         // </summary>
         // <returns> Returns false if no match found. </returns>
-        internal override bool TryGetMap(GlobalItem item, out Map map)
+        internal override bool TryGetMap(GlobalItem item, out MappingBase map)
         {
             if (item == null)
             {
@@ -241,7 +241,7 @@ namespace System.Data.Entity.Core.Mapping
         // the type in Object space contains the members with the same name as those of defined in
         // C space. It is not required the otherway.
         // </summary>
-        private Map GetDefaultMapping(EdmType cdmType, EdmType clrType)
+        private MappingBase GetDefaultMapping(EdmType cdmType, EdmType clrType)
         {
             DebugCheck.NotNull(cdmType);
             DebugCheck.NotNull(clrType);
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Core.Mapping
             return LoadObjectMapping(cdmType, clrType, this);
         }
 
-        private Map GetOCMapForTransientType(EdmType edmType, DataSpace typeSpace)
+        private MappingBase GetOCMapForTransientType(EdmType edmType, DataSpace typeSpace)
         {
             Debug.Assert(
                 typeSpace == DataSpace.CSpace || typeSpace == DataSpace.OSpace || Helper.IsRowType(edmType)
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 if (_edmTypeIndexes.TryGetValue(edmType.Identity, out index))
                 {
-                    return (Map)this[index];
+                    return (MappingBase)this[index];
                 }
                 else
                 {
@@ -273,7 +273,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 if (_clrTypeIndexes.TryGetValue(edmType.Identity, out index))
                 {
-                    return (Map)this[index];
+                    return (MappingBase)this[index];
                 }
                 else
                 {
