@@ -279,10 +279,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             Assert.Equal("modelAT", setMapping.TypeMappings.ElementAt(0).Types[0].Name);
             Assert.Equal("modelEM1", setMapping.SourceEndMapping.AssociationEnd.Name);
             Assert.Equal("modelEM2", setMapping.TargetEndMapping.AssociationEnd.Name);
-            Assert.Equal(1, setMapping.SourceEndMapping.Properties.Count);
-            Assert.Equal(1, setMapping.TargetEndMapping.Properties.Count);
-            Assert.Equal("modelSourceId", setMapping.SourceEndMapping.Properties[0].Property.Name);
-            Assert.Equal("modelTargetId", setMapping.TargetEndMapping.Properties[0].Property.Name);
+            Assert.Equal(1, setMapping.SourceEndMapping.PropertyMappings.Count);
+            Assert.Equal(1, setMapping.TargetEndMapping.PropertyMappings.Count);
+            Assert.Equal("modelSourceId", setMapping.SourceEndMapping.PropertyMappings[0].Property.Name);
+            Assert.Equal("modelTargetId", setMapping.TargetEndMapping.PropertyMappings[0].Property.Name);
             Assert.Equal(1, setMapping.Conditions.Count());
             Assert.Equal("storeTargetId", setMapping.Conditions.First().Column.Name);
             Assert.Equal(false, setMapping.Conditions.First().IsNull);
@@ -452,18 +452,18 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             var mappingFragment = associationSetMapping.TypeMappings.SingleOrDefault();
             Assert.NotNull(mappingFragment);
 
-            var propertyMappings = mappingFragment.MappingFragments.Single().Properties;
+            var propertyMappings = mappingFragment.MappingFragments.Single().PropertyMappings;
             Assert.Equal(2, propertyMappings.Count);
             Assert.Same(conceptualTeachersEndMember, ((EndPropertyMapping)propertyMappings[0]).AssociationEnd);
             Assert.Same(conceptualStudentsEndMember, ((EndPropertyMapping)propertyMappings[1]).AssociationEnd);
 
-            var scalarPropertyMapping = ((EndPropertyMapping)propertyMappings[0]).Properties.Single();
+            var scalarPropertyMapping = ((EndPropertyMapping)propertyMappings[0]).PropertyMappings.Single();
             Assert.Same(conceptualTeacherEntityType.KeyMembers.Single(), scalarPropertyMapping.Property);
             Assert.Same(
                 joinStoreEntityType.KeyMembers.Single(m => m.Name == "JoinTeacherId"),
                 scalarPropertyMapping.Column);
 
-            scalarPropertyMapping = ((EndPropertyMapping)propertyMappings[1]).Properties.Single();
+            scalarPropertyMapping = ((EndPropertyMapping)propertyMappings[1]).PropertyMappings.Single();
             Assert.Same(conceptualStudentEntityType.KeyMembers.Single(), scalarPropertyMapping.Property);
             Assert.Same(
                 joinStoreEntityType.KeyMembers.Single(m => m.Name == "JoinStudentId"),

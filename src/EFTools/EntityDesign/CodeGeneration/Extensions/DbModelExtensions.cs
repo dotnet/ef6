@@ -49,7 +49,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration.Extensions
                 .EntitySetMappings.First(m => m.EntitySet == entitySet)
                 .EntityTypeMappings.First()
                 .Fragments.First()
-                .Properties.OfType<ScalarPropertyMapping>().First(m => m.Property == property)
+                .PropertyMappings.OfType<ScalarPropertyMapping>().First(m => m.Property == property)
                 .Column;
         }
     }

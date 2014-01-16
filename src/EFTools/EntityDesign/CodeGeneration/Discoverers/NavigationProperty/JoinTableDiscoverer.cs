@@ -31,8 +31,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 s => s.ElementType == navigationProperty.RelationshipType);
             var associationSetMapping = model.ConceptualToStoreMapping.AssociationSetMappings.First(
                 m => m.AssociationSet == associationSet);
-            var sourceEndColumnProperties = associationSetMapping.SourceEndMapping.Properties.Select(m => m.Column);
-            var targetEndColumnProperties = associationSetMapping.TargetEndMapping.Properties.Select(m => m.Column);
+            var sourceEndColumnProperties = associationSetMapping.SourceEndMapping.PropertyMappings.Select(m => m.Column);
+            var targetEndColumnProperties = associationSetMapping.TargetEndMapping.PropertyMappings.Select(m => m.Column);
             var storeEntitySet = associationSetMapping.StoreEntitySet;
             var fromEndIsSourceEnd =
                 navigationProperty.RelationshipType.RelationshipEndMembers.First() == fromEndMember;

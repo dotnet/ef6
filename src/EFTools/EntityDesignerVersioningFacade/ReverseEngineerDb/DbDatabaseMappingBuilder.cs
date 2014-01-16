@@ -270,7 +270,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var modelKeyMember = mappingContext[storeKeyMember];
                 var storeFkTableMember = GetAssociatedFkColumn(storeSetEnd, storeKeyMember);
 
-                endPropertyMapping.AddProperty(
+                endPropertyMapping.AddPropertyMapping(
                     new ScalarPropertyMapping(modelKeyMember, storeFkTableMember));
             }
 
