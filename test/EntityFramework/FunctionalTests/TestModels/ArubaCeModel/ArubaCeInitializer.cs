@@ -25,7 +25,7 @@ namespace System.Data.Entity.TestModels.ArubaCeModel
         private ArubaAllCeTypes[] InitializeAllTypes()
         {
             var allTypesList = new ArubaAllCeTypes[EntitiesCount];
-            for (var i = 0; i < EntitiesCount; i++)
+            for (var i = 1; i < EntitiesCount + 1; i++)
             {
                 var allTypes = new ArubaAllCeTypes
                     {
@@ -43,14 +43,14 @@ namespace System.Data.Entity.TestModels.ArubaCeModel
                         c18_image = Enumerable.Repeat<byte>((byte)i, i + 10).ToArray(),
                         c19_nvarchar_512_ = new string((char)(i + 'a'), i),
                         c20_nchar_512_ = new string((char)(i + 'a'), 512),
-                        c21_ntext = new string((char)(i + 'a'), 20 + i),
+                        c21_ntext = new string((char)(i + 'a'), 20 + i) + "unicorn",
                         c22_uniqueidentifier = new Guid(new string((char)((i % 5) + '0'), 32)),
                         c23_bigint = (long)i * 10,
                         c33_enum = (ArubaEnum)(i % 4),
                         c34_byteenum = (ArubaByteEnum)(i % 3)
                     };
 
-                allTypesList[i] = allTypes;
+                allTypesList[i-1] = allTypes;
             }
 
             return allTypesList;

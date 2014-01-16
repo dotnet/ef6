@@ -11,6 +11,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
+    using System.Text;
     using System.Xml;
 
     // <summary>
@@ -54,7 +55,10 @@ namespace System.Data.Entity.SqlServerCompact
 
         private const string storeSchemaDescriptionFileForRDP =
             "Microsoft.SqlServerCe.Client.Resources.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
+        // '~' is the same escape character that L2S uses
 
+        internal const char LikeEscapeChar = '~';
+        internal const string LikeEscapeCharToString = "~";
         #endregion
 
         #region Constructors
@@ -423,6 +427,71 @@ namespace System.Data.Entity.SqlServerCompact
         {
             return XmlReader.Create(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
+        }
+
+        #region Internal Methods
+
+        // <summary>
+        // Function to detect wildcard characters %, _, [ and ^ and escape them with a preceding ~
+        // This escaping is used when StartsWith, EndsWith and Contains canonical and CLR functions
+        // are translated to their equivalent LIKE expression
+        // NOTE: This code has been copied from LinqToSql
+        // </summary>
+        // <param name="text"> Original input as specified by the user </param>
+        // <param name="alwaysEscapeEscapeChar"> escape the escape character ~ regardless whether wildcard characters were encountered </param>
+        // <param name="usedEscapeChar"> true if the escaping was performed, false if no escaping was required </param>
+        // <returns> The escaped string that can be used as pattern in a LIKE expression </returns>
+        internal static string EscapeLikeText(string text, bool alwaysEscapeEscapeChar, out bool usedEscapeChar)
+        {
+            DebugCheck.NotNull(text);
+
+            usedEscapeChar = false;
+            if (!(text.Contains("%") || text.Contains("_") || text.Contains("[")
+                  || text.Contains("^") || alwaysEscapeEscapeChar && text.Contains(LikeEscapeCharToString)))
+            {
+                return text;
+            }
+            var sb = new StringBuilder(text.Length);
+            foreach (var c in text)
+            {
+                if (c == '%'
+                    || c == '_'
+                    || c == '['
+                    || c == '^'
+                    || c == LikeEscapeChar)
+                {
+                    sb.Append(LikeEscapeChar);
+                    usedEscapeChar = true;
+                }
+                sb.Append(c);
+            }
+            return sb.ToString();
+        }
+
+        #endregion
+
+        // <summary>
+        // Returns true, SqlCeClient supports escaping strings to be used as arguments to like
+        // The escape character is '~'
+        // </summary>
+        // <param name="escapeCharacter"> The character '~' </param>
+        // <returns> True </returns>
+        public override bool SupportsEscapingLikeArgument(out char escapeCharacter)
+        {
+            escapeCharacter = LikeEscapeChar;
+            return true;
+        }
+
+        // <summary>
+        // Escapes the wildcard characters and the escape character in the given argument.
+        // </summary>
+        // <returns> Equivalent to the argument, with the wildcard characters and the escape character escaped </returns>
+        public override string EscapeLikeArgument(string argument)
+        {
+            Check.NotNull(argument, "argument");
+
+            bool usedEscapeCharacter;
+            return EscapeLikeText(argument, true, out usedEscapeCharacter);
         }
 
         // <summary>

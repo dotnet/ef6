@@ -12,6 +12,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
 
     // <summary>
@@ -249,6 +250,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         private static readonly Dictionary<string, FunctionHandler> _storeFunctionHandlers = InitializeStoreFunctionHandlers();
         private static readonly Dictionary<string, FunctionHandler> _canonicalFunctionHandlers = InitializeCanonicalFunctionHandlers();
         private static readonly Dictionary<string, string> _functionNameToOperatorDictionary = InitializeFunctionNameToOperatorDictionary();
+        private static readonly Dictionary<string, string> _dateAddFunctionNameToDatepartDictionary = InitializeDateAddFunctionNameToDatepartDictionary();
+        private static readonly Dictionary<string, string> _dateDiffFunctionNameToDatepartDictionary = InitializeDateDiffFunctionNameToDatepartDictionary();
         private static readonly Dictionary<string, object> _datepartKeywords = InitializeDatepartKeywords();
         private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
@@ -263,6 +266,15 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     "Edm.Length"
                 } //,
             /*StringComparer.Ordinal*/);
+
+        private static readonly ISet<string> _functionRequiresReturnTypeCastToSingle =
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    "Edm.Abs",
+                    "Edm.Round",
+                    "Edm.Floor",
+                    "Edm.Ceiling"
+                };
 
         // topElementExpression is used to detect the any occurance of element expression which 
         // is not a child of the top level projectExpression
@@ -296,18 +308,56 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
+        // Initalizes the mapping from names of canonical function for date/time addition
+        // to corresponding dateparts
+        // </summary>
+        private static Dictionary<string, string> InitializeDateAddFunctionNameToDatepartDictionary()
+        {
+            var dateAddFunctionNameToDatepartDictionary = new Dictionary<string, string>(7, StringComparer.Ordinal);
+            dateAddFunctionNameToDatepartDictionary.Add("AddYears", "year");
+            dateAddFunctionNameToDatepartDictionary.Add("AddMonths", "month");
+            dateAddFunctionNameToDatepartDictionary.Add("AddDays", "day");
+            dateAddFunctionNameToDatepartDictionary.Add("AddHours", "hour");
+            dateAddFunctionNameToDatepartDictionary.Add("AddMinutes", "minute");
+            dateAddFunctionNameToDatepartDictionary.Add("AddSeconds", "second");
+            dateAddFunctionNameToDatepartDictionary.Add("AddMilliseconds", "millisecond");
+            return dateAddFunctionNameToDatepartDictionary;
+        }
+
+        // <summary>
+        // Initalizes the mapping from names of canonical function for date/time difference
+        // to corresponding dateparts
+        // </summary>
+        private static Dictionary<string, string> InitializeDateDiffFunctionNameToDatepartDictionary()
+        {
+            var dateDiffFunctionNameToDatepartDictionary = new Dictionary<string, string>(7, StringComparer.Ordinal);
+            dateDiffFunctionNameToDatepartDictionary.Add("DiffYears", "year");
+            dateDiffFunctionNameToDatepartDictionary.Add("DiffMonths", "month");
+            dateDiffFunctionNameToDatepartDictionary.Add("DiffDays", "day");
+            dateDiffFunctionNameToDatepartDictionary.Add("DiffHours", "hour");
+            dateDiffFunctionNameToDatepartDictionary.Add("DiffMinutes", "minute");
+            dateDiffFunctionNameToDatepartDictionary.Add("DiffSeconds", "second");
+            dateDiffFunctionNameToDatepartDictionary.Add("DiffMilliseconds", "millisecond");
+            return dateDiffFunctionNameToDatepartDictionary;
+        }
+
+        // <summary>
         // All special non-aggregate canonical functions and their handlers
         // </summary>
         private static Dictionary<string, FunctionHandler> InitializeCanonicalFunctionHandlers()
         {
             var functionHandlers = new Dictionary<string, FunctionHandler>(16, StringComparer.Ordinal);
+            functionHandlers.Add("Round", HandleCanonicalFunctionRound);
+            functionHandlers.Add("Truncate", HandleCanonicalFunctionTruncate);
             functionHandlers.Add("IndexOf", HandleCanonicalFunctionIndexOf);
             functionHandlers.Add("Length", HandleCanonicalFunctionLength);
-            functionHandlers.Add("NewGuid", HandleCanonicalFunctionNewGuid);
-            functionHandlers.Add("Round", HandleCanonicalFunctionRound);
             functionHandlers.Add("ToLower", HandleCanonicalFunctionToLower);
             functionHandlers.Add("ToUpper", HandleCanonicalFunctionToUpper);
             functionHandlers.Add("Trim", HandleCanonicalFunctionTrim);
+            functionHandlers.Add("Contains", HandleCanonicalFunctionContains);
+            functionHandlers.Add("StartsWith", HandleCanonicalFunctionStartsWith);
+            functionHandlers.Add("EndsWith", HandleCanonicalFunctionEndsWith);
+            functionHandlers.Add("NewGuid", HandleCanonicalFunctionNewGuid);
 
             //DateTime Functions
             functionHandlers.Add("Year", HandleCanonicalFunctionDatepart);
@@ -317,7 +367,24 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             functionHandlers.Add("Minute", HandleCanonicalFunctionDatepart);
             functionHandlers.Add("Second", HandleCanonicalFunctionDatepart);
             functionHandlers.Add("Millisecond", HandleCanonicalFunctionDatepart);
+            functionHandlers.Add("DayOfYear", HandleCanonicalFunctionDatepart);
             functionHandlers.Add("CurrentDateTime", HandleCanonicalFunctionCurrentDateTime);
+            functionHandlers.Add("AddYears", HandleCanonicalFunctionDateAdd);
+            functionHandlers.Add("AddMonths", HandleCanonicalFunctionDateAdd);
+            functionHandlers.Add("AddDays", HandleCanonicalFunctionDateAdd);
+            functionHandlers.Add("AddHours", HandleCanonicalFunctionDateAdd);
+            functionHandlers.Add("AddMinutes", HandleCanonicalFunctionDateAdd);
+            functionHandlers.Add("AddSeconds", HandleCanonicalFunctionDateAdd);
+            functionHandlers.Add("AddMilliseconds", HandleCanonicalFunctionDateAdd);
+            functionHandlers.Add("CreateDateTime", HandleCanonicalFunctionCreateDateTime);
+            functionHandlers.Add("TruncateTime", HandleCanonicalFunctionTruncateTime);
+            functionHandlers.Add("DiffYears", HandleCanonicalFunctionDateDiff);
+            functionHandlers.Add("DiffMonths", HandleCanonicalFunctionDateDiff);
+            functionHandlers.Add("DiffDays", HandleCanonicalFunctionDateDiff);
+            functionHandlers.Add("DiffHours", HandleCanonicalFunctionDateDiff);
+            functionHandlers.Add("DiffMinutes", HandleCanonicalFunctionDateDiff);
+            functionHandlers.Add("DiffSeconds", HandleCanonicalFunctionDateDiff);
+            functionHandlers.Add("DiffMilliseconds", HandleCanonicalFunctionDateDiff);
 
             //Functions that translate to operators
             functionHandlers.Add("Concat", HandleConcatFunction);
@@ -330,10 +397,19 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             functionHandlers.Add("Left", HandleUnsupportedFunction);
             functionHandlers.Add("Right", HandleUnsupportedFunction);
             functionHandlers.Add("StDev", HandleUnsupportedFunction);
+            functionHandlers.Add("StDevP", HandleUnsupportedFunction);
+            functionHandlers.Add("Var", HandleUnsupportedFunction);
+            functionHandlers.Add("VarP", HandleUnsupportedFunction);
             functionHandlers.Add("Reverse", HandleUnsupportedFunction);
             functionHandlers.Add("CurrentUtcDateTime", HandleUnsupportedFunction);
             functionHandlers.Add("CurrentDateTimeOffset", HandleUnsupportedFunction);
             functionHandlers.Add("GetTotalOffsetMinutes", HandleUnsupportedFunction);
+            functionHandlers.Add("AddMicroseconds", HandleUnsupportedFunction);
+            functionHandlers.Add("AddNanoseconds", HandleUnsupportedFunction);
+            functionHandlers.Add("CreateDateTimeOffset", HandleUnsupportedFunction);
+            functionHandlers.Add("CreateTime", HandleUnsupportedFunction);
+            functionHandlers.Add("DiffMicroseconds", HandleUnsupportedFunction);
+            functionHandlers.Add("DiffNanoseconds", HandleUnsupportedFunction);
 
             return functionHandlers;
         }
@@ -2979,6 +3055,135 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
+        // Creates datetime.
+        // The given expression is in general translated into:
+        // CONVERT(@typename, [datePart] + [timePart], 121)
+        // The individual parts are translated as:
+        // Date part:
+        // convert(varchar(255), @year) + '-' + convert(varchar(255), @month) + '-' + convert(varchar(255), @day)
+        // Time part:
+        // convert(varchar(255), @hour)+ ':' + convert(varchar(255), @minute)+ ':' + str(@second, 6, 3)
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionCreateDateTime(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            var args = e.Arguments;
+            Debug.Assert(args.Count == 6, "CreateDateTime should have 6 arguments");
+
+            var result = new SqlBuilder();
+            var currentArgumentIndex = 0;
+
+            result.Append("convert (");
+            result.Append("datetime");
+            result.Append(",");
+
+            //  YEAR
+            AppendConvertToNVarchar(sqlgen, result, args[currentArgumentIndex++]);
+
+            //  MONTH
+            result.Append(" + '-' + ");
+            AppendConvertToNVarchar(sqlgen, result, args[currentArgumentIndex++]);
+
+            //  DAY 
+            result.Append(" + '-' + ");
+            AppendConvertToNVarchar(sqlgen, result, args[currentArgumentIndex++]);
+            result.Append(" + ' ' + ");
+
+            //  HOUR
+            AppendConvertToNVarchar(sqlgen, result, args[currentArgumentIndex++]);
+
+            // MINUTE
+            result.Append(" + ':' + ");
+            AppendConvertToNVarchar(sqlgen, result, args[currentArgumentIndex++]);
+
+            // SECOND
+            result.Append(" + ':' + str(");
+            result.Append(args[currentArgumentIndex++].Accept(sqlgen));
+
+            result.Append(", 6, 3)");
+            result.Append(", 121)");
+
+            return result;
+        }
+
+        // <summary>
+        // Helper method that wraps the given expression with a convert to nvarchar(255)
+        // </summary>
+        private static void AppendConvertToNVarchar(SqlGenerator sqlgen, SqlBuilder result, DbExpression e)
+        {
+            result.Append("convert(nvarchar(255), ");
+            result.Append(e.Accept(sqlgen));
+            result.Append(")");
+        }
+
+        // <summary>
+        // TruncateTime(DateTime X)
+        // TRUNCATETIME(X) => CONVERT(DATETIME, CONVERT(VARCHAR(255), expression, 102),  102)
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionTruncateTime(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            //The type that we need to return is based on the argument type.
+            string typeName = "datetime";
+
+            PrimitiveTypeKind typeKind;
+            TypeHelpers.TryGetPrimitiveTypeKind(e.ResultType, out typeKind);
+
+            if (typeKind != PrimitiveTypeKind.DateTime)
+            {
+                Debug.Assert(true, "Unexpected type to TruncateTime" + typeKind.ToString());
+            }
+
+            var result = new SqlBuilder();
+            result.Append("convert (");
+            result.Append(typeName);
+            result.Append(", convert(nvarchar(255), ");
+            result.Append(e.Arguments[0].Accept(sqlgen));
+            result.Append(", 102) ");
+
+            result.Append(",  102)");
+            return result;
+        }
+
+        // <summary>
+        // Handler for all date/time addition canonical functions.
+        // Translation, e.g.
+        // AddYears(datetime, number) =>  DATEADD(year, number, datetime)
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionDateAdd(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            var result = new SqlBuilder();
+
+            result.Append("DATEADD (");
+            result.Append(_dateAddFunctionNameToDatepartDictionary[e.Function.Name]);
+            result.Append(", ");
+            result.Append(e.Arguments[1].Accept(sqlgen));
+            result.Append(", ");
+            result.Append(e.Arguments[0].Accept(sqlgen));
+            result.Append(")");
+
+            return result;
+        }
+
+        // <summary>
+        // Handler for all date/time addition canonical functions.
+        // Translation, e.g.
+        // DiffYears(datetime, number) =>  DATEDIFF(year, number, datetime)
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionDateDiff(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            var result = new SqlBuilder();
+
+            result.Append("DATEDIFF (");
+            result.Append(_dateDiffFunctionNameToDatepartDictionary[e.Function.Name]);
+            result.Append(", ");
+            result.Append(e.Arguments[0].Accept(sqlgen));
+            result.Append(", ");
+            result.Append(e.Arguments[1].Accept(sqlgen));
+            result.Append(")");
+
+            return result;
+        }
+
+        // <summary>
         // Function rename IndexOf -> CHARINDEX
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionIndexOf(SqlGenerator sqlgen, DbFunctionExpression e)
@@ -3004,18 +3209,68 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         // <summary>
         // Round(numericExpression) -> Round(numericExpression, 0);
+        // Round(numericExpression, digits) -> Round(numericExpression, digits);
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionRound(SqlGenerator sqlgen, DbFunctionExpression e)
         {
+            return HandleCanonicalFunctionRoundOrTruncate(sqlgen, e, true);
+        }
+
+        // <summary>
+        // Truncate(numericExpression) -> Round(numericExpression, 0, 1); (does not exist as canonical function yet)
+        // Truncate(numericExpression, digits) -> Round(numericExpression, digits, 1);
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionTruncate(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            return HandleCanonicalFunctionRoundOrTruncate(sqlgen, e, false);
+        }
+
+        // <summary>
+        // Common handler for the canonical functions ROUND and TRUNCATE
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionRoundOrTruncate(SqlGenerator sqlgen, DbFunctionExpression e, bool round)
+        {
             var result = new SqlBuilder();
 
+            // Do not add the cast for the Round() overload having two arguments. 
+            // Round(Single,Int32) maps to Round(Double,Int32)due to implicit casting. 
+            // We don't need to cast in that case, since the server returned type is same 
+            // as the expected  type. Cast is only required for the overload - Round(Single)
+            var requiresCastToSingle = false;
+            if (e.Arguments.Count == 1)
+            {
+                requiresCastToSingle = CastReturnTypeToSingle(e);
+                if (requiresCastToSingle)
+                {
+                    result.Append(" CAST(");
+                }
+            }
             result.Append("ROUND(");
 
-            Debug.Assert(e.Arguments.Count == 1, "Round should have one argument");
+            Debug.Assert(e.Arguments.Count <= 2, "Round or truncate should have at most 2 arguments");
             result.Append(e.Arguments[0].Accept(sqlgen));
+            result.Append(", ");
 
-            result.Append(", 0)");
+            if (e.Arguments.Count > 1)
+            {
+                result.Append(e.Arguments[1].Accept(sqlgen));
+            }
+            else
+            {
+                result.Append("0");
+            }
 
+            if (!round)
+            {
+                result.Append(", 1");
+            }
+
+            result.Append(")");
+
+            if (requiresCastToSingle)
+            {
+                result.Append(" AS real)");
+            }
             return result;
         }
 
@@ -3050,6 +3305,157 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         private static ISqlFragment HandleCanonicalFunctionToUpper(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return sqlgen.HandleFunctionDefaultGivenName(e, "UPPER");
+        }
+
+        // <summary>
+        // Function to translate the StartsWith, EndsWith and Contains canonical functions to LIKE expression in T-SQL
+        // and also add the trailing ESCAPE '~' when escaping of the search string for the LIKE expression has occurred
+        // </summary>
+        private static void TranslateConstantParameterForLike(
+            SqlGenerator sqlgen, DbExpression targetExpression, DbConstantExpression constSearchParamExpression, SqlBuilder result,
+            bool insertPercentStart, bool insertPercentEnd)
+        {
+            result.Append(targetExpression.Accept(sqlgen));
+            result.Append(" LIKE ");
+
+            // If it's a DbConstantExpression then escape the search parameter if necessary.
+            bool escapingOccurred;
+
+            var searchParamBuilder = new StringBuilder();
+            if (insertPercentStart)
+            {
+                searchParamBuilder.Append("%");
+            }
+            searchParamBuilder.Append(
+                SqlCeProviderManifest.EscapeLikeText(constSearchParamExpression.Value as string, false, out escapingOccurred));
+            if (insertPercentEnd)
+            {
+                searchParamBuilder.Append("%");
+            }
+
+            var escapedSearchParamExpression = constSearchParamExpression.ResultType.Constant(searchParamBuilder.ToString());
+            result.Append(escapedSearchParamExpression.Accept(sqlgen));
+
+            // If escaping did occur (special characters were found), then append the escape character used.
+            if (escapingOccurred)
+            {
+                result.Append(" ESCAPE '" + SqlCeProviderManifest.LikeEscapeChar + "'");
+            }
+        }
+
+        // <summary>
+        // Handler for Contains. Wraps the normal translation with a case statement
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionContains(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            return WrapPredicate(HandleCanonicalFunctionContains, sqlgen, e);
+        }
+
+        // <summary>
+        // CONTAINS(arg0, arg1) => arg0 LIKE '%arg1%'
+        // </summary>
+        private static SqlBuilder HandleCanonicalFunctionContains(SqlGenerator sqlgen, IList<DbExpression> args, SqlBuilder result)
+        {
+            Debug.Assert(args.Count == 2, "Contains should have two arguments");
+            // Check if args[1] is a DbConstantExpression
+            var constSearchParamExpression = args[1] as DbConstantExpression;
+            if ((constSearchParamExpression != null)
+                && (string.IsNullOrEmpty(constSearchParamExpression.Value as string) == false))
+            {
+                TranslateConstantParameterForLike(sqlgen, args[0], constSearchParamExpression, result, true, true);
+            }
+            else
+            {
+                result.Append("CHARINDEX( ");
+                result.Append(args[1].Accept(sqlgen));
+                result.Append(", ");
+                result.Append(args[0].Accept(sqlgen));
+                result.Append(") > 0");
+            }
+            return result;
+        }
+
+        // <summary>
+        // Handler for StartsWith. Wraps the normal translation with a case statement
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionStartsWith(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            return WrapPredicate(HandleCanonicalFunctionStartsWith, sqlgen, e);
+        }
+
+        // <summary>
+        // STARTSWITH(arg0, arg1) => arg0 LIKE 'arg1%'
+        // </summary>
+        private static SqlBuilder HandleCanonicalFunctionStartsWith(SqlGenerator sqlgen, IList<DbExpression> args, SqlBuilder result)
+        {
+            Debug.Assert(args.Count == 2, "StartsWith should have two arguments");
+            // Check if args[1] is a DbConstantExpression
+            var constSearchParamExpression = args[1] as DbConstantExpression;
+            if ((constSearchParamExpression != null)
+                && (string.IsNullOrEmpty(constSearchParamExpression.Value as string) == false))
+            {
+                TranslateConstantParameterForLike(sqlgen, args[0], constSearchParamExpression, result, false, true);
+            }
+            else
+            {
+                result.Append("CHARINDEX( ");
+                result.Append(args[1].Accept(sqlgen));
+                result.Append(", ");
+                result.Append(args[0].Accept(sqlgen));
+                result.Append(") = 1");
+            }
+
+            return result;
+        }
+
+        // <summary>
+        // Handler for EndsWith. Wraps the normal translation with a case statement
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionEndsWith(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            Debug.Assert(e.Arguments.Count == 2, "EndsWith should have two arguments");
+            var constSearchParamExpression = e.Arguments[1] as DbConstantExpression;
+            if ((constSearchParamExpression != null)
+                && (string.IsNullOrEmpty(constSearchParamExpression.Value as string) == false))
+            {
+                return WrapPredicate(HandleCanonicalFunctionEndsWith, sqlgen, e);
+            }
+            else
+            {
+                throw ADP1.NotSupported(EntityRes.GetString(EntityRes.FunctionNotSupported, e.Function.Name));
+            }
+        }
+
+        // <summary>
+        // ENDSWITH(arg0, arg1) => arg0 LIKE '%arg1'
+        // </summary>
+        private static SqlBuilder HandleCanonicalFunctionEndsWith(SqlGenerator sqlgen, IList<DbExpression> args, SqlBuilder result)
+        {
+            // Check if args[1] is a DbConstantExpression
+            var constSearchParamExpression = args[1] as DbConstantExpression;
+            if ((constSearchParamExpression != null)
+                && (string.IsNullOrEmpty(constSearchParamExpression.Value as string) == false))
+            {
+                TranslateConstantParameterForLike(sqlgen, args[0], constSearchParamExpression, result, true, false);
+            }
+            return result;
+        }
+
+        // <summary>
+        // Turns a predicate into a statement returning a bit
+        // PREDICATE => CASE WHEN (PREDICATE) THEN CAST(1 AS BIT) WHEN (NOT (PREDICATE)) CAST (O AS BIT) END
+        // The predicate is produced by the given predicateTranslator.
+        // </summary>
+        private static ISqlFragment WrapPredicate(
+            Func<SqlGenerator, IList<DbExpression>, SqlBuilder, SqlBuilder> predicateTranslator, SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            var result = new SqlBuilder();
+            result.Append("CASE WHEN (");
+            predicateTranslator(sqlgen, e.Arguments, result);
+            result.Append(") THEN cast(1 as bit) WHEN ( NOT (");
+            predicateTranslator(sqlgen, e.Arguments, result);
+            result.Append(")) THEN cast(0 as bit) END");
+            return result;
         }
 
         // <summary>
@@ -4156,6 +4562,37 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return false;
         }
 
+        // <summary>
+        // determines if the function requires the return type be enforeced by use of a cast expression
+        // </summary>
+        internal static bool CastReturnTypeToSingle(DbFunctionExpression e)
+        {
+            //Do not add the cast for the Round() overload having 2 arguments. 
+            //Round(Single,Int32) maps to Round(Double,Int32)due to implicit casting. 
+            //We don't need to cast in that case, since we expect a Double as return type there anyways.
+            return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToSingle, PrimitiveTypeKind.Single);
+        }
+
+        // <summary>
+        // Determines if the function requires the return type be enforced by use of a cast expression
+        // </summary>
+        private static bool CastReturnTypeToGivenType(
+            DbFunctionExpression e, ISet<string> functionsRequiringReturnTypeCast, PrimitiveTypeKind type)
+        {
+            if (!functionsRequiringReturnTypeCast.Contains(e.Function.FullName))
+            {
+                return false;
+            }
+            for (var i = 0; i < e.Arguments.Count; i++)
+            {
+                var storeType = SqlCeProviderManifest.Instance.GetStoreType(e.Arguments[i].ResultType);
+                if (TypeSemantics.IsPrimitiveType(e.Arguments[i].ResultType, type))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
 
         #endregion

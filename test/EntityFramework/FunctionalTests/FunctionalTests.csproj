@@ -249,6 +249,7 @@
     <Compile Include="Query\LinqToEntities\ProjectionTests.cs" />
     <Compile Include="Query\NullSemanticsTests.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />
+    <Compile Include="Query\SqlCeCanonicalFunctionsTests.cs" />
     <Compile Include="TestDoubles\InMemoryDbSetTests.cs" />
     <Compile Include="TestDoubles\InMemoryNonGenericDbSet.cs" />
     <Compile Include="TestDoubles\InMemoryNonGenericDbSetTests.cs" />
