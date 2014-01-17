@@ -181,7 +181,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _propertyKind; }
         }
 
-        internal bool IsAnnotation
+        /// <summary>
+        /// Gets a boolean that indicates whether the metadata property is an annotation.
+        /// </summary>
+        public bool IsAnnotation
         {
             get { return PropertyKind == PropertyKind.Extended && TypeUsage == null; }
         }

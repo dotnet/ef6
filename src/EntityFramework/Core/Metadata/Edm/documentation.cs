@@ -18,6 +18,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
+        /// Initializes a new Documentation instance.
+        /// </summary>
+        /// <param name="summary">A summary string.</param>
+        /// <param name="longDescription">A long description string.</param>
+        public Documentation(string summary, string longDescription)
+        {
+            Summary = summary;
+            LongDescription = longDescription;
+        }
+
+        /// <summary>
         /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
         /// </summary>
         /// <returns>

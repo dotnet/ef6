@@ -202,6 +202,7 @@
     <Compile Include="Core\Metadata\Edm\CsdlSerializerTests.cs" />
     <Compile Include="Core\Metadata\Edm\DataModelValidatorTests.cs" />
     <Compile Include="Core\Metadata\Edm\DbDatabaseMappingTests.cs" />
+    <Compile Include="Core\Metadata\Edm\DocumentationTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmFunctionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmMemberTests.cs" />
