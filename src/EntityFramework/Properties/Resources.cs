@@ -3159,6 +3159,22 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "Values of type '{0}' can not be converted to string."
+        // </summary>
+        internal static string Elinq_ToStringNotSupportedForType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.Elinq_ToStringNotSupportedForType, p0);
+        }
+
+        // <summary>
+        // A string like "Values of enumerated types decorated with the FlagsAttribute can not be converted to string."
+        // </summary>
+        internal static string Elinq_ToStringNotSupportedForEnumsWithFlags
+        {
+            get { return EntityRes.GetString(EntityRes.Elinq_ToStringNotSupportedForEnumsWithFlags); }
+        }
+
+        // <summary>
         // A string like "The specified parameter type '{0}' is not valid. Only scalar parameters (such as Int32, Decimal, and Guid) are supported."
         // </summary>
         internal static string CompiledELinq_UnsupportedParameterTypes(object p0)
@@ -16063,6 +16079,8 @@ namespace System.Data.Entity.Resources
         internal const string ELinq_DbFunctionAttributedFunctionWithWrongReturnType = "ELinq_DbFunctionAttributedFunctionWithWrongReturnType";
         internal const string ELinq_DbFunctionDirectCall = "ELinq_DbFunctionDirectCall";
         internal const string ELinq_HasFlagArgumentAndSourceTypeMismatch = "ELinq_HasFlagArgumentAndSourceTypeMismatch";
+        internal const string Elinq_ToStringNotSupportedForType = "Elinq_ToStringNotSupportedForType";
+        internal const string Elinq_ToStringNotSupportedForEnumsWithFlags = "Elinq_ToStringNotSupportedForEnumsWithFlags";
         internal const string CompiledELinq_UnsupportedParameterTypes = "CompiledELinq_UnsupportedParameterTypes";
         internal const string CompiledELinq_UnsupportedNamedParameterType = "CompiledELinq_UnsupportedNamedParameterType";
         internal const string CompiledELinq_UnsupportedNamedParameterUseAsType = "CompiledELinq_UnsupportedNamedParameterUseAsType";
