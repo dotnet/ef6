@@ -142,7 +142,7 @@
     <value>No, &amp;exclude sensitive data from the connection string. I will set it in my application code.</value>
   </data>
   <data name="EmptyModelOption" xml:space="preserve">
-    <value>Empty model</value>
+    <value>Empty EF Designer model</value>
   </data>
   <data name="EmptyModelCodeFirstOption" xml:space="preserve">
     <value>Empty Code First model</value>
@@ -185,7 +185,7 @@
     <value>Connection string:</value>
   </data>
   <data name="GenerateFromDatabaseOption" xml:space="preserve">
-    <value>Generate from database</value>
+    <value>EF Designer from database</value>
   </data>
   <data name="NewDatabaseConnectionBtn" xml:space="preserve">
     <value>New &amp;Connection...</value>
@@ -222,16 +222,19 @@
     <value>This connection string appears to contain sensitive data (for example, a password) that is required to connect to the database. Storing sensitive data in the connection string can be a security risk. Do you want to include this sensitive data in the connection string?</value>
   </data>
   <data name="StartPage_EmptyModelText" xml:space="preserve">
-    <value>Creates an empty entity model as a starting point for visually designing a conceptual model from the toolbox. Object-layer code is generated from the model. Later, you can either update the model from a database or generate a storage model, mappings, and database script from the model.</value>
+    <value>Creates an empty model in the EF Designer as a starting point for visually designing your model. Later, you can generate a database from your model. The classes your application will interact with are generated from the model.</value>
   </data>
   <data name="StartPage_GenerateFromDBText" xml:space="preserve">
-    <value>Creates an entity model from a database. Object-layer code is generated from the model. This option also lets you specify the database connection, settings for the model, and database objects to include in the model.</value>
+    <value>Creates a model in the EF Designer based on an existing database. You can choose the database connection, settings for the model, and database objects to include in the model. The classes your application will interact with are generated from the model.</value>
   </data>
   <data name="StartPage_EmptyModelCodeFirstText" xml:space="preserve">
-    <value>Empty Model Code First - description placeholder.</value>
+    <value>Creates an empty Code First model as a starting point for designing your model using code. Later, you can generate a database from your model.</value>
   </data>
   <data name="StartPage_CodeFirstFromDatabaseText" xml:space="preserve">
-    <value>Code First From Database - description placeholder.</value>
+    <value>Creates a Code First model based on an existing database. You can choose the database connection, settings for the model, and database objects to include in the model.</value>
+  </data>
+  <data name="StartPage_CodeFirstSupportedOnlyForEF6">
+    <value>Generating a Code First model requires Entity Framework version 6 or newer. You have an older version of Entity Framework installed. To generate a model, exit this wizard, upgrade Entity Framework, then rerun this wizard.</value>
   </data>
   <data name="StartPage_ListViewNoSelectionText" xml:space="preserve">
     <value>Choose model contents from the items above.</value>
@@ -547,5 +550,11 @@ Error message: '{0}'</value>
   <data name="CodeFirstCodeFile_DbSetComment_VB" xml:space="preserve">
     <value>' Add a DbSet for each entity type that you want to include in your model. For more information 
         ' on configuring and using a Code First model, see http:'go.microsoft.com/fwlink/?LinkId=390109.</value>    
+  </data>
+  <data name="ErrorGeneratingCodeFirstModel">
+    <value>An error occurred generating the Code First model. The error occurred generating the contents of {0}.</value>
+  </data>
+  <data name="GeneratingCodeFirstModel">
+    <value>Generating Code First model based on loaded database schema.</value>
   </data>
 </root>

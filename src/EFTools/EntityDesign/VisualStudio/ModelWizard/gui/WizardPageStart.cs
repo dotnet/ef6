@@ -31,18 +31,21 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     /// </remarks>
     internal partial class WizardPageStart : WizardPageBase
     {
-        private static readonly IDictionary<string, string> _templateContent = new Dictionary<string, string>();
-
         internal static readonly int GenerateFromDatabaseIndex = 0;
         internal static readonly int GenerateEmptyModelIndex = 1;
         internal static readonly int GenerateEmptyModelCodeFirstIndex = 2;
         internal static readonly int GenerateCodeFirstFromDatabaseIndex = 3;
+
+        private static readonly IDictionary<string, string> _templateContent = new Dictionary<string, string>();
+        private readonly bool _codeFirstAllowed;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public WizardPageStart(ModelBuilderWizardForm wizard)
             : base(wizard)
         {
             InitializeComponent();
+
+             _codeFirstAllowed = CodeFirstAllowed(Wizard.ModelBuilderSettings);
 
             components = new Container();
 
@@ -320,24 +323,36 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         NetFrameworkVersioningHelper.TargetNetFrameworkVersion(Wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider)
                         > NetFrameworkVersioningHelper.NetFrameworkVersion3_5, "Option should be disabled for .NET Framework 3.5");
 
-                    textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelCodeFirstText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
 
+                    textboxListViewSelectionInfo.Text =
+                        _codeFirstAllowed
+                            ? Resources.StartPage_EmptyModelCodeFirstText
+                            : string.Format(
+                                CultureInfo.InvariantCulture, "{0}\r\n{1}",
+                                Resources.StartPage_CodeFirstSupportedOnlyForEF6, Resources.StartPage_EmptyModelCodeFirstText);
+
                     Wizard.OnValidationStateChanged(this);
-                    Wizard.EnableButton(ButtonType.Finish, CodeFirstAllowed(Wizard.ModelBuilderSettings));
+                    Wizard.EnableButton(ButtonType.Finish, _codeFirstAllowed);
                 }
                 else
                 {
                     Debug.Assert(nSelectedItemIndex == GenerateCodeFirstFromDatabaseIndex, "Unexpected Index");
 
-                    textboxListViewSelectionInfo.Text = Resources.StartPage_CodeFirstFromDatabaseText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.CodeFirstFromDatabase;
+
+                    textboxListViewSelectionInfo.Text = 
+                        _codeFirstAllowed ? 
+                            Resources.StartPage_CodeFirstFromDatabaseText :
+                            string.Format(
+                                CultureInfo.InvariantCulture, "{0}\r\n{1}",
+                                Resources.StartPage_CodeFirstSupportedOnlyForEF6, Resources.StartPage_CodeFirstFromDatabaseText);
 
                     AddPagesForReverseEngineerDb();
 
                     Wizard.OnValidationStateChanged(this);
 
-                    Wizard.EnableButton(ButtonType.Next, CodeFirstAllowed(Wizard.ModelBuilderSettings));
+                    Wizard.EnableButton(ButtonType.Next, _codeFirstAllowed);
                 }
             }
         }
@@ -414,10 +429,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private static bool CodeFirstAllowed(ModelBuilderSettings settings)
         {
             Debug.Assert(settings != null, "settings must not be null");
-            Debug.Assert(
-                settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst || 
-                settings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
-                "unexpected generation option");
 
             // OneEF supported only for EF6 or if the project does not have any references to EF
             var entityFrameworkAssemblyVersion = VsUtils.GetInstalledEntityFrameworkAssemblyVersion(settings.Project);

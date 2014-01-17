@@ -400,7 +400,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Empty model.
+        ///   Looks up a localized string similar to Empty EF Designer model.
         /// </summary>
         internal static string EmptyModelOption {
             get {
@@ -603,6 +603,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred generating the Code First model. The error occurred generating the contents of {0}..
+        /// </summary>
+        internal static string ErrorGeneratingCodeFirstModel {
+            get {
+                return ResourceManager.GetString("ErrorGeneratingCodeFirstModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given DDL file path, &apos;{0}&apos;, does not have a parent directory. Please specify a path that has an existing parent directory before proceeding..
         /// </summary>
         internal static string ErrorNoDdlParentDir {
@@ -630,11 +639,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Generate from database.
+        ///   Looks up a localized string similar to EF Designer from database.
         /// </summary>
         internal static string GenerateFromDatabaseOption {
             get {
                 return ResourceManager.GetString("GenerateFromDatabaseOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating Code First model based on loaded database schema..
+        /// </summary>
+        internal static string GeneratingCodeFirstModel {
+            get {
+                return ResourceManager.GetString("GeneratingCodeFirstModel", resourceCulture);
             }
         }
         
@@ -1093,7 +1111,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Code First From Database - description placeholder..
+        ///   Looks up a localized string similar to Creates a Code First model based on an existing database. You can choose the database connection, settings for the model, and database objects to include in the model..
         /// </summary>
         internal static string StartPage_CodeFirstFromDatabaseText {
             get {
@@ -1102,7 +1120,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Empty Model Code First - description placeholder..
+        ///   Looks up a localized string similar to Generating a Code First model requires Entity Framework version 6 or newer. You have an older version of Entity Framework installed. To generate a model, exit this wizard, upgrade Entity Framework, then rerun this wizard..
+        /// </summary>
+        internal static string StartPage_CodeFirstSupportedOnlyForEF6 {
+            get {
+                return ResourceManager.GetString("StartPage_CodeFirstSupportedOnlyForEF6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creates an empty Code First model as a starting point for designing your model using code. Later, you can generate a database from your model..
         /// </summary>
         internal static string StartPage_EmptyModelCodeFirstText {
             get {
@@ -1111,7 +1138,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Creates an empty entity model as a starting point for visually designing a conceptual model from the toolbox. Object-layer code is generated from the model. Later, you can either update the model from a database or generate a storage model, mappings, and database script from the model..
+        ///   Looks up a localized string similar to Creates an empty model in the EF Designer as a starting point for visually designing your model. Later, you can generate a database from your model. The classes your application will interact with are generated from the model..
         /// </summary>
         internal static string StartPage_EmptyModelText {
             get {
@@ -1120,7 +1147,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Creates an entity model from a database. Object-layer code is generated from the model. This option also lets you specify the database connection, settings for the model, and database objects to include in the model..
+        ///   Looks up a localized string similar to Creates a model in the EF Designer based on an existing database. You can choose the database connection, settings for the model, and database objects to include in the model. The classes your application will interact with are generated from the model..
         /// </summary>
         internal static string StartPage_GenerateFromDBText {
             get {
