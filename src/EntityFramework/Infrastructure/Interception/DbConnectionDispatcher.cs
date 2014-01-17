@@ -45,22 +45,22 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// in the interception context passed into this method since the interception context is cloned before
         /// being passed to interceptors.
         /// </remarks>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual DbTransaction BeginTransaction(
-            DbConnection dbConnection, BeginTransactionInterceptionContext interceptionContext)
+            DbConnection connection, BeginTransactionInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => dbConnection.BeginTransaction(clonedInterceptionContext.IsolationLevel),
+                () => connection.BeginTransaction(clonedInterceptionContext.IsolationLevel),
                 clonedInterceptionContext,
-                i => i.BeginningTransaction(dbConnection, clonedInterceptionContext),
-                i => i.BeganTransaction(dbConnection, clonedInterceptionContext));
+                i => i.BeginningTransaction(connection, clonedInterceptionContext),
+                i => i.BeganTransaction(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -69,21 +69,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbConnection.Close" />.
         /// </summary>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         public virtual void Close(
-            DbConnection dbConnection, DbInterceptionContext interceptionContext)
+            DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
 
             InternalDispatcher.Dispatch(
-                () => dbConnection.Close(),
+                () => connection.Close(),
                 clonedInterceptionContext,
-                i => i.Closing(dbConnection, clonedInterceptionContext),
-                i => i.Closed(dbConnection, clonedInterceptionContext));
+                i => i.Closing(connection, clonedInterceptionContext),
+                i => i.Closed(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -92,12 +92,12 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="Component.Dispose()" />.
         /// </summary>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         public virtual void Dispose(
-            DbConnection dbConnection, DbInterceptionContext interceptionContext)
+            DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
@@ -106,12 +106,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 () =>
                 {
                     // using dynamic here to emulate the behavior of the using statement
-                    dynamic connection = dbConnection;
-                    connection.Dispose();
+                    dynamic dynamicConnection = connection;
+                    dynamicConnection.Dispose();
                 },
                 clonedInterceptionContext,
-                i => i.Disposing(dbConnection, clonedInterceptionContext),
-                i => i.Disposed(dbConnection, clonedInterceptionContext));
+                i => i.Disposing(connection, clonedInterceptionContext),
+                i => i.Disposed(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -125,21 +125,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// in the interception context passed into this method since the interception context is cloned before
         /// being passed to interceptors.
         /// </remarks>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual string GetConnectionString(DbConnection dbConnection, DbInterceptionContext interceptionContext)
+        public virtual string GetConnectionString(DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => dbConnection.ConnectionString,
+                () => connection.ConnectionString,
                 clonedInterceptionContext,
-                i => i.ConnectionStringGetting(dbConnection, clonedInterceptionContext),
-                i => i.ConnectionStringGot(dbConnection, clonedInterceptionContext));
+                i => i.ConnectionStringGetting(connection, clonedInterceptionContext),
+                i => i.ConnectionStringGot(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -148,21 +148,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// registered on <see cref="DbInterception" /> before/after
         /// setting <see cref="DbConnection.ConnectionString" />.
         /// </summary>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Information about the context of the call being made, including the value to be set.</param>
         public virtual void SetConnectionString(
-            DbConnection dbConnection, DbConnectionPropertyInterceptionContext<string> interceptionContext)
+            DbConnection connection, DbConnectionPropertyInterceptionContext<string> interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionPropertyInterceptionContext<string>(interceptionContext);
 
             InternalDispatcher.Dispatch<DbConnectionPropertyInterceptionContext<string>>(
-                () => dbConnection.ConnectionString = clonedInterceptionContext.Value,
+                () => connection.ConnectionString = clonedInterceptionContext.Value,
                 clonedInterceptionContext,
-                i => i.ConnectionStringSetting(dbConnection, clonedInterceptionContext),
-                i => i.ConnectionStringSet(dbConnection, clonedInterceptionContext));
+                i => i.ConnectionStringSetting(connection, clonedInterceptionContext),
+                i => i.ConnectionStringSet(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -176,21 +176,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// in the interception context passed into this method since the interception context is cloned before
         /// being passed to interceptors.
         /// </remarks>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual int GetConnectionTimeout(DbConnection dbConnection, DbInterceptionContext interceptionContext)
+        public virtual int GetConnectionTimeout(DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext<int>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => dbConnection.ConnectionTimeout,
+                () => connection.ConnectionTimeout,
                 clonedInterceptionContext,
-                i => i.ConnectionTimeoutGetting(dbConnection, clonedInterceptionContext),
-                i => i.ConnectionTimeoutGot(dbConnection, clonedInterceptionContext));
+                i => i.ConnectionTimeoutGetting(connection, clonedInterceptionContext),
+                i => i.ConnectionTimeoutGot(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -204,21 +204,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// in the interception context passed into this method since the interception context is cloned before
         /// being passed to interceptors.
         /// </remarks>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual string GetDatabase(DbConnection dbConnection, DbInterceptionContext interceptionContext)
+        public virtual string GetDatabase(DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => dbConnection.Database,
+                () => connection.Database,
                 clonedInterceptionContext,
-                i => i.DatabaseGetting(dbConnection, clonedInterceptionContext),
-                i => i.DatabaseGot(dbConnection, clonedInterceptionContext));
+                i => i.DatabaseGetting(connection, clonedInterceptionContext),
+                i => i.DatabaseGot(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -232,21 +232,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// in the interception context passed into this method since the interception context is cloned before
         /// being passed to interceptors.
         /// </remarks>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual string GetDataSource(DbConnection dbConnection, DbInterceptionContext interceptionContext)
+        public virtual string GetDataSource(DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => dbConnection.DataSource,
+                () => connection.DataSource,
                 clonedInterceptionContext,
-                i => i.DataSourceGetting(dbConnection, clonedInterceptionContext),
-                i => i.DataSourceGot(dbConnection, clonedInterceptionContext));
+                i => i.DataSourceGetting(connection, clonedInterceptionContext),
+                i => i.DataSourceGot(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -255,20 +255,20 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbConnection.EnlistTransaction" />.
         /// </summary>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
-        public virtual void EnlistTransaction(DbConnection dbConnection, EnlistTransactionInterceptionContext interceptionContext)
+        public virtual void EnlistTransaction(DbConnection connection, EnlistTransactionInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new EnlistTransactionInterceptionContext(interceptionContext);
 
             InternalDispatcher.Dispatch(
-                () => dbConnection.EnlistTransaction(clonedInterceptionContext.Transaction),
+                () => connection.EnlistTransaction(clonedInterceptionContext.Transaction),
                 clonedInterceptionContext,
-                i => i.EnlistingTransaction(dbConnection, clonedInterceptionContext),
-                i => i.EnlistedTransaction(dbConnection, clonedInterceptionContext));
+                i => i.EnlistingTransaction(connection, clonedInterceptionContext),
+                i => i.EnlistedTransaction(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -277,21 +277,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbConnection.Open" />.
         /// </summary>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         public virtual void Open(
-            DbConnection dbConnection, DbInterceptionContext interceptionContext)
+            DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
 
             InternalDispatcher.Dispatch(
-                () => dbConnection.Open(),
+                () => connection.Open(),
                 clonedInterceptionContext,
-                i => i.Opening(dbConnection, clonedInterceptionContext),
-                i => i.Opened(dbConnection, clonedInterceptionContext));
+                i => i.Opening(connection, clonedInterceptionContext),
+                i => i.Opened(connection, clonedInterceptionContext));
         }
 
 #if !NET40
@@ -301,14 +301,14 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbConnection.Open" />.
         /// </summary>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         public virtual Task OpenAsync(
-            DbConnection dbConnection, DbInterceptionContext interceptionContext, CancellationToken cancellationToken)
+            DbConnection connection, DbInterceptionContext interceptionContext, CancellationToken cancellationToken)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
@@ -319,10 +319,10 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
 
             return InternalDispatcher.DispatchAsync(
-                () => dbConnection.OpenAsync(cancellationToken),
+                () => connection.OpenAsync(cancellationToken),
                 clonedInterceptionContext,
-                i => i.Opening(dbConnection, clonedInterceptionContext),
-                i => i.Opened(dbConnection, clonedInterceptionContext));
+                i => i.Opening(connection, clonedInterceptionContext),
+                i => i.Opened(connection, clonedInterceptionContext));
         }
 #endif
 
@@ -337,21 +337,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// in the interception context passed into this method since the interception context is cloned before
         /// being passed to interceptors.
         /// </remarks>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual string GetServerVersion(DbConnection dbConnection, DbInterceptionContext interceptionContext)
+        public virtual string GetServerVersion(DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => dbConnection.ServerVersion,
+                () => connection.ServerVersion,
                 clonedInterceptionContext,
-                i => i.ServerVersionGetting(dbConnection, clonedInterceptionContext),
-                i => i.ServerVersionGot(dbConnection, clonedInterceptionContext));
+                i => i.ServerVersionGetting(connection, clonedInterceptionContext),
+                i => i.ServerVersionGot(connection, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -365,21 +365,21 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// in the interception context passed into this method since the interception context is cloned before
         /// being passed to interceptors.
         /// </remarks>
-        /// <param name="dbConnection">The connection on which the operation will be executed.</param>
+        /// <param name="connection">The connection on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual ConnectionState GetState(DbConnection dbConnection, DbInterceptionContext interceptionContext)
+        public virtual ConnectionState GetState(DbConnection connection, DbInterceptionContext interceptionContext)
         {
-            Check.NotNull(dbConnection, "dbConnection");
+            Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbConnectionInterceptionContext<ConnectionState>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => dbConnection.State,
+                () => connection.State,
                 clonedInterceptionContext,
-                i => i.StateGetting(dbConnection, clonedInterceptionContext),
-                i => i.StateGot(dbConnection, clonedInterceptionContext));
+                i => i.StateGetting(connection, clonedInterceptionContext),
+                i => i.StateGot(connection, clonedInterceptionContext));
         }
 
         /// <inheritdoc />
