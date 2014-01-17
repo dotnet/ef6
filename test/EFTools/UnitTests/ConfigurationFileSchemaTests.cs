@@ -22,7 +22,7 @@ namespace UnitTests
         // http://schemas.microsoft.com/XML-Document-Transform namespace
         private static readonly XmlSchema FakeXmlDocumentTransformationSchema;
 
-        private const string EntityFrameworkConfigSchemaName = "EntityFrameworkConfig_6_0_0.xsd";
+        private const string EntityFrameworkConfigSchemaName = "EntityFrameworkConfig_6_1_0.xsd";
         private const string EntityFrameworkCatalogFileName = "EntityFrameworkCatalog.xml";
 
         static ConfigurationFileSchemaTests()
@@ -35,6 +35,8 @@ namespace UnitTests
                 @"    <xs:element name=""provider"" type=""Provider_Type"" />" +
                 @"    <xs:element name=""contexts"" type=""ContextList_Type"" />" +
                 @"    <xs:element name=""context"" type=""Context_Type"" />" +
+                @"    <xs:element name=""interceptors"" type=""InterceptorList_Type"" />" +
+                @"    <xs:element name=""interceptor"" type=""ElementWithTypeAndParameters_Type"" />" +
                 @"    <xs:element name=""parameters"" type=""ParameterList_Type"" />" +
                 @"    <xs:element name=""parameter"" type=""Parameter_Type"" />" +
                 @"    <xs:element name=""elementWithTypeAndParameters"" type=""ElementWithTypeAndParameters_Type"" />" +
@@ -151,18 +153,18 @@ namespace UnitTests
         public void Schema_accepts_elements_under_entityFrameworkConfiguration_element_in_any_order()
         {
             Validate("<entityFramework><defaultConnectionFactory type='MyContext' /><contexts /><providers /></entityFramework>");
-            Validate("<entityFramework><defaultConnectionFactory type='MyContext' /><providers /><contexts /></entityFramework>");
+            Validate("<entityFramework><defaultConnectionFactory type='MyContext' /><providers /><contexts /><interceptors /></entityFramework>");
 
             Validate("<entityFramework><contexts /><providers /><defaultConnectionFactory type='MyContext' /></entityFramework>");
-            Validate("<entityFramework><contexts /><defaultConnectionFactory type='MyContext' /><providers /></entityFramework>");
+            Validate("<entityFramework><contexts /><interceptors /><defaultConnectionFactory type='MyContext' /><providers /></entityFramework>");
 
             Validate("<entityFramework><providers /><defaultConnectionFactory type='MyContext' /><contexts /></entityFramework>");
-            Validate("<entityFramework><providers /><contexts /><defaultConnectionFactory type='MyContext' /></entityFramework>");
+            Validate("<entityFramework><interceptors /><providers /><contexts /><defaultConnectionFactory type='MyContext' /></entityFramework>");
         }
 
         #endregion
 
-        #region defaultConnectionFactory and databaseInitializer elements
+        #region defaultConnectionFactory, databaseInitializer and interceptor elements
 
         // note defaultConnectionFactory and databaseInitializer are instances
         // of the same type so we need just to test an instance of this type.
@@ -473,6 +475,81 @@ namespace UnitTests
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
             Assert.True(validationEvent.Message.Contains("'dummy'"));
+        }
+
+        #endregion
+
+        #region interceptors element
+
+        [Fact]
+        public void Schema_accepts_empty_interceptors_element()
+        {
+            Validate("<interceptors />");
+        }
+
+        [Fact]
+        public void Schema_accepts_interceptors_element_with_xdt_attributes()
+        {
+            Validate(@"<interceptors 
+                            xdt:Transform='Replace'
+                            xmlns:xdt='http://schemas.microsoft.com/XML-Document-Transform' />");
+        }
+
+        [Fact]
+        public void Schema_accepts_interceptors_element_with_many_interceptor_child_elements()
+        {
+            Validate("<interceptors><interceptor type='Interceptor1' /><interceptor type='Interceptor2' /></interceptors>");
+        }
+
+        [Fact]
+        public void Schema_rejects_interceptors_element_child_elements_that_are_not_interceptor_elements()
+        {
+            var validationEvent =
+                ValidateWithExpectedValidationEvents("<interceptors><dummy /></interceptors>")
+                    .Single();
+
+            Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
+            Assert.True(validationEvent.Message.Contains("'dummy'"));
+        }
+
+        #endregion
+
+        #region interceptor element
+
+        [Fact]
+        public void Schema_accepts_empty_interceptor_element()
+        {
+            Validate("<interceptor type='MyInterceptor' />");
+        }
+
+        [Fact]
+        public void Schema_accepts_interceptor_element_with_xdt_attributes()
+        {
+            Validate(@"<interceptor type='MyInterceptor'
+                            xdt:Transform='Replace'
+                            xmlns:xdt='http://schemas.microsoft.com/XML-Document-Transform' />");
+        }
+
+        [Fact]
+        public void Schema_rejects_interceptor_element_without_type_attribute()
+        {
+            var validationEvent =
+                ValidateWithExpectedValidationEvents("<interceptor />")
+                    .Single();
+
+            Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
+            Assert.True(validationEvent.Message.Contains("'type'"));
+        }
+
+        [Fact]
+        public void Schema_rejects_interceptor_element_with_empty_type_attribute()
+        {
+            var validationEvent =
+                ValidateWithExpectedValidationEvents("<interceptor type='' />")
+                    .Single();
+
+            Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
+            Assert.True(validationEvent.Message.Contains("'type'"));
         }
 
         #endregion

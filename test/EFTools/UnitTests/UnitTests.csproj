@@ -236,8 +236,8 @@
     <Compile Include="XmlCore\Model\XmlModelProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(RepositoryRoot)src\EFTools\setup\EFToolsMsi\XmlSchemas\EntityFrameworkConfig_6_0_0.xsd">
-      <Link>EntityFrameworkConfig_6_0_0.xsd</Link>
+    <None Include="$(RepositoryRoot)src\EFTools\setup\EFToolsMsi\XmlSchemas\EntityFrameworkConfig_6_1_0.xsd">
+      <Link>EntityFrameworkConfig_6_1_0.xsd</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
