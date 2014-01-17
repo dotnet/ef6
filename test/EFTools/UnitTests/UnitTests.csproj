@@ -210,6 +210,7 @@
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\ModelGeneratorTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\InitialModelContentsFactoryTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\UpdateModelFromDatabaseModelBuilderEngineTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\ModelBuilderWizardFormHelper.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\ViewModels\RuntimeConfigViewModelTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\ViewModels\EntityFrameworkVersionOptionTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageBaseTests.cs" />

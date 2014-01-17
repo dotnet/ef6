@@ -73,8 +73,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private readonly Stopwatch _stopwatch;
         private Control _controlWithToolTipShown;
 
-        internal WizardPageUpdateFromDatabase(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
-            : base(wizard, serviceProvider)
+        internal WizardPageUpdateFromDatabase(ModelBuilderWizardForm wizard)
+            : base(wizard)
         {
             InitializeComponent();
 

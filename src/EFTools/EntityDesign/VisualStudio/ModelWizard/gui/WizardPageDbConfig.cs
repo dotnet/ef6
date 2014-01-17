@@ -35,12 +35,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     // to view this class in the forms designer, make it temporarily derive from Microsoft.WizardFramework.WizardPage
     internal partial class WizardPageDbConfig : WizardPageBase
     {
-        #region Fields
-
         private bool _isInitialized;
-        // 
+
         //  DDEX Services we use
-        //
         private IVsDataConnectionManager _dataConnectionManager;
         private IVsDataExplorerConnectionManager _dataExplorerConnectionManager;
         private IVsDataProviderManager _dataProviderManager;
@@ -48,13 +45,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         // will be set to true if the focus should not be changed on page activation
         private bool _isFocusSet;
-
-        #endregion Fields
-
-        #region Constructors
-
-        internal WizardPageDbConfig(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
-            : base(wizard, serviceProvider)
+        
+        internal WizardPageDbConfig(ModelBuilderWizardForm wizard)
+            : base(wizard)
         {
             InitializeComponent();
 
@@ -84,7 +77,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
 
             newDBConnectionButton.Text = Resources.NewDatabaseConnectionBtn;
-            lblEntityConnectionString.Text = Resources.EntityConnectionStringLabel;
+            lblEntityConnectionString.Text = Resources.ConnectionStringLabel;
             lblPagePrompt.Text = Resources.WhichDataConnectionLabel;
             lblPagePrompt.Font = LabelFont;
 
@@ -99,6 +92,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             if (_isInitialized)
             {
+                // need to reset settings on the dialog to avoid displaying stale information
+                // especially showing EntityConnectionString for CodeFirst from Database
+                NewDataSourceSelected();
                 return;
             }
 
@@ -107,23 +103,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 // 
                 //  look up the DDEX Service Providers we use in this wizard
                 //
-                var o = ServiceProvider.GetService(typeof(IVsDataConnectionManager));
-                _dataConnectionManager = o as IVsDataConnectionManager;
-
-                o = ServiceProvider.GetService(typeof(IVsDataExplorerConnectionManager));
-                _dataExplorerConnectionManager = o as IVsDataExplorerConnectionManager;
-
-                o = ServiceProvider.GetService(typeof(IVsDataProviderManager));
-                _dataProviderManager = o as IVsDataProviderManager;
-
-                o = ServiceProvider.GetService(typeof(IDTAdoDotNetProviderMapper));
-                var providerMapper = o as IDTAdoDotNetProviderMapper;
+                _dataConnectionManager = ServiceProvider.GetService(typeof(IVsDataConnectionManager)) as IVsDataConnectionManager;
+                _dataExplorerConnectionManager =
+                    ServiceProvider.GetService(typeof(IVsDataExplorerConnectionManager)) as IVsDataExplorerConnectionManager;
+                _dataProviderManager = ServiceProvider.GetService(typeof(IVsDataProviderManager)) as IVsDataProviderManager;
+                
+                var providerMapper = ServiceProvider.GetService(typeof(IDTAdoDotNetProviderMapper)) as IDTAdoDotNetProviderMapper;
                 Debug.Assert(providerMapper != null, "providerMapper == null");
 
                 // populate the combo box with project connections first
-                o = ServiceProvider.GetService(typeof(IGlobalConnectionService));
-                var globalConnectionService = o as IGlobalConnectionService;
-                IDictionary<string, DataConnection> dataConnections = new Dictionary<string, DataConnection>();
+                var globalConnectionService = ServiceProvider.GetService(typeof(IGlobalConnectionService)) as IGlobalConnectionService;
+
+                var dataConnections = new Dictionary<string, DataConnection>();
                 if (null != globalConnectionService)
                 {
                     try
@@ -183,10 +174,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 _isInitialized = true;
             } // restore cursor
         }
-
-        #endregion Constructors
-
-        #region WizardPage overrides
 
         // this will be called by Wizard to check if the Next button can be enabled
         public override bool IsDataValid
@@ -370,10 +357,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             return true;
         }
-
-        #endregion WizardPage overrides
-
-        #region Methods
 
         /// <summary>
         ///     Prompts the user to copy the database file into the project if appropriate
@@ -681,27 +664,38 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 Wizard.Project, invariantName, decryptedConnectionString, appConfigConnectionString, true);
         }
 
-        private string GetTextBoxConnectionStringValue(Guid providerGuid, string maskedConnectionString)
+        // internal for testing
+        internal string GetTextBoxConnectionStringValue(IVsDataProviderManager dataProviderManager, Guid providerGuid, string maskedConnectionString)
         {
             // providerGuid will be the design-time provider guid from DDEX, so we need to translate to the runtime provider invariant name 
-            var designTimeProviderInvariantName = DataConnectionUtils.GetProviderInvariantName(_dataProviderManager, providerGuid);
+            var designTimeProviderInvariantName = DataConnectionUtils.GetProviderInvariantName(dataProviderManager, providerGuid);
             var runtimeProviderInvariantName = ConnectionManager.TranslateInvariantName(
                 ServiceProvider, designTimeProviderInvariantName, maskedConnectionString, true);
 
-            var translatedConnectionString = ConnectionManager.TranslateConnectionString(ServiceProvider,
+            var runtimeConnectionString = ConnectionManager.TranslateConnectionString(ServiceProvider,
                 Wizard.Project, designTimeProviderInvariantName, maskedConnectionString, true);
 
-            var metadataFiles = ConnectionManager.GetMetadataFileNamesFromArtifactFileName(
-                Wizard.ModelBuilderSettings.Project, Wizard.ModelBuilderSettings.ModelPath, ServiceProvider);
+            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
+            {
+                var metadataFiles = ConnectionManager.GetMetadataFileNamesFromArtifactFileName(
+                    Wizard.Project, Wizard.ModelBuilderSettings.ModelPath, ServiceProvider);
 
-            var connStringText = ConnectionManager.CreateEntityConnectionString(
-                Wizard.Project,
-                metadataFiles,
-                translatedConnectionString,
-                runtimeProviderInvariantName,
-                true /* assume true; this is just for display purposes */).Text;
+                return ConnectionManager.CreateEntityConnectionString(
+                    Wizard.Project,
+                    Wizard.ModelBuilderSettings.VSApplicationType,
+                    metadataFiles,
+                    runtimeConnectionString,
+                    runtimeProviderInvariantName).Text;
+            }
+            else
+            {
+                Debug.Assert(
+                    Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
+                    "Unexpected model generation option");
 
-            return connStringText;
+                return ConnectionManager.InjectEFAttributesIntoConnectionString(
+                    runtimeConnectionString, runtimeProviderInvariantName);
+            }
         }
 
         private static bool ContainsSensitiveData(IVsDataConnection dataConnection)
@@ -779,7 +773,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 maskedConnectionString = _dataConnection.SafeConnectionString;
             }
 
-            textBoxConnectionString.Text = GetTextBoxConnectionStringValue(_dataConnection.Provider, maskedConnectionString);
+            textBoxConnectionString.Text = GetTextBoxConnectionStringValue(_dataProviderManager, _dataConnection.Provider, maskedConnectionString);
 
             Wizard.OnValidationStateChanged(this);
         }
@@ -790,16 +784,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             _dataConnection = dataConnection;
 
             textBoxConnectionString.Text = GetTextBoxConnectionStringValue(
-                _dataConnection.Provider, _dataConnection.DisplayConnectionString);
+                _dataProviderManager, _dataConnection.Provider, _dataConnection.DisplayConnectionString);
 
-            if (ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode)
-            {
-                textBoxAppConfigConnectionName.Text = GetDefaultAppConfigEntryName(_dataConnection);
-            }
-            else
-            {
-                textBoxAppConfigConnectionName.Text = Wizard.ModelBuilderSettings.AppConfigConnectionPropertyName;
-            }
+            textBoxAppConfigConnectionName.Text = ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode
+                ? GetDefaultAppConfigEntryName(_dataConnection)
+                : Wizard.ModelBuilderSettings.AppConfigConnectionPropertyName;
 
             if (ContainsSensitiveData(_dataConnection))
             {
@@ -828,8 +817,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             Wizard.OnValidationStateChanged(this);
         }
-
-        #endregion
 
         private void checkBoxSaveInAppConfig_CheckedChanged(object sender, EventArgs e)
         {

@@ -9,7 +9,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using Moq;
     using System;
     using System.Collections.Generic;
-    using System.Data.Common;
     using System.Reflection;
     using UnitTests.TestHelpers;
     using VSLangProj;
@@ -18,59 +17,51 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     public class ConnectionManagerTests
     {
         [Fact]
-        public void
-            InjectEFAttributesIntoConnectionString_does_not_App_attribute_to_connection_string_if_App_attribute_already_exists()
+        public void InjectEFAttributesIntoConnectionString_adds_App_MARS_for_SqlServer()
         {
-            var connectionStringBuilder = new DbConnectionStringBuilder();
-            connectionStringBuilder["MultipleActiveResultSets"] = "True"; // just to skip the code we are not targeting in this test
-            connectionStringBuilder["App"] = "XYZ";
-            ConnectionManager.InjectEFAttributesIntoConnectionString(
-                new Mock<Project>().Object, null, connectionStringBuilder, "System.Data.SqlClient", null, null, null);
-
-            Assert.Equal("XYZ", connectionStringBuilder["App"]);
+            Assert.Equal(
+                "integrated security=SSPI;MultipleActiveResultSets=True;App=EntityFramework",
+                ConnectionManager.InjectEFAttributesIntoConnectionString("Integrated Security=SSPI", "System.Data.SqlClient"));
         }
 
         [Fact]
         public void
-            InjectEFAttributesIntoConnectionString_does_not_App_attribute_to_connection_string_if_Application_Name_attribute_already_exists(
-            )
+            InjectEFAttributesIntoConnectionString_does_not_touch_connection_string_if_not_SqlServer()
         {
-            var connectionStringBuilder = new DbConnectionStringBuilder();
-            connectionStringBuilder["MultipleActiveResultSets"] = "True"; // just to skip the code we are not targeting in this test
-            connectionStringBuilder["Application Name"] = "XYZ";
-            ConnectionManager.InjectEFAttributesIntoConnectionString(
-                new Mock<Project>().Object, null, connectionStringBuilder, "System.Data.SqlClient", null, null, null);
-
-            Assert.Equal("XYZ", connectionStringBuilder["Application Name"]);
-            Assert.False(connectionStringBuilder.ContainsKey("App"));
+            const string connectionString = "dummy";
+            Assert.Same(
+                connectionString,
+                ConnectionManager.InjectEFAttributesIntoConnectionString(connectionString, "fakeProvider"));
         }
 
         [Fact]
-        public void InjectEFAttributesIntoConnectionString_does_not_App_attribute_to_connection_string_for_non_EF_projects()
+        public void
+            InjectEFAttributesIntoConnectionString_does_not_app_App_MARS_to_connection_string_if_they_already_exist()
         {
-            var monikerHelper = new MockDTE("XBox,Version=v4.5");
-
-            var connectionStringBuilder = new DbConnectionStringBuilder();
-            connectionStringBuilder["MultipleActiveResultSets"] = "True"; // just to skip the code we are not targeting in this test
-            ConnectionManager.InjectEFAttributesIntoConnectionString(
-                monikerHelper.Project, monikerHelper.ServiceProvider, connectionStringBuilder, "System.Data.SqlClient",
-                null, null, null);
-
-            Assert.False(connectionStringBuilder.ContainsKey("App"));
+            Assert.Equal(
+                "integrated security=SSPI;multipleactiveresultsets=True;app=XYZ", 
+                ConnectionManager.InjectEFAttributesIntoConnectionString(
+                    "Integrated Security=SSPI;MultipleActiveResultSets=True;App=XYZ", "System.Data.SqlClient"));
         }
 
         [Fact]
-        public void InjectEFAttributesIntoConnectionString_adds_App_attribute_to_connection_string_for_EF_projects_if_needed()
+        public void
+            InjectEFAttributesIntoConnectionString_does_not_add_App_attribute_to_connection_string_if_Application_Name_attribute_already_exists()
         {
-            var monikerHelper = new MockDTE(".NETFramework,Version=v4.5");
+            Assert.Equal(
+                "integrated security=SSPI;multipleactiveresultsets=True;application name=XYZ",
+                ConnectionManager.InjectEFAttributesIntoConnectionString(
+                    "Integrated Security=SSPI;MultipleActiveResultSets=True;Application Name=XYZ", "System.Data.SqlClient"));
+        }
 
-            var connectionStringBuilder = new DbConnectionStringBuilder();
-            connectionStringBuilder["MultipleActiveResultSets"] = "True"; // just to skip the code we are not targeting in this test
-            ConnectionManager.InjectEFAttributesIntoConnectionString(
-                monikerHelper.Project, monikerHelper.ServiceProvider, connectionStringBuilder, "System.Data.SqlClient",
-                null, null, null);
+        [Fact]
+        public void InjectEFAttributesIntoConnectionString_returns_same_connection_string_if_it_is_invalid()
+        {
+            const string connectionString = "dummy";
 
-            Assert.Equal("EntityFramework", connectionStringBuilder["App"]);
+            Assert.Same(
+                connectionString,
+                ConnectionManager.InjectEFAttributesIntoConnectionString(connectionString, "System.Data.SqlClient"));
         }
 
         [Fact]
@@ -79,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
             mockDte.SetProjectProperties(new Dictionary<string, object> { { "FullPath", @"D:\Projects\Project\Folder" } });
             var mockParentProjectItem = new Mock<ProjectItem>();
-            mockParentProjectItem.Setup(p => p.Collection).Returns(new Mock<ProjectItems>().Object);
+            mockParentProjectItem.Setup(p => p.Collection).Returns(Mock.Of<ProjectItems>());
             mockParentProjectItem.Setup(p => p.Name).Returns("Folder");
 
             var mockModelProjectItem = new Mock<ProjectItem>();
@@ -119,12 +110,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             Assert.Same(
                 connString,
                 ConnectionManager.TranslateConnectionString(
-                    new Mock<IServiceProvider>().Object, new Mock<Project>().Object, "invariantName", connString, true));
+                    Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", connString, true));
 
             Assert.Same(
                 connString,
                 ConnectionManager.TranslateConnectionString(
-                    new Mock<IServiceProvider>().Object, new Mock<Project>().Object, "invariantName", connString, false));
+                    Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", connString, false));
 
         }
 
@@ -146,7 +137,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             Assert.Same(
                 runtimeConnString,
                 ConnectionManager.TranslateConnectionString(
-                    mockServiceProvider.Object, new Mock<Project>().Object, "My.Db", "designTimeConnString", true));
+                    mockServiceProvider.Object, Mock.Of<Project>(), "My.Db", "designTimeConnString", true));
         }
 
         [Fact]
@@ -167,7 +158,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             Assert.Same(
                 designTimeConnString,
                 ConnectionManager.TranslateConnectionString(
-                    mockServiceProvider.Object, new Mock<Project>().Object, "My.Db", "runtimeTimeConnString", false));
+                    mockServiceProvider.Object, Mock.Of<Project>(), "My.Db", "runtimeTimeConnString", false));
         }
 
         [Fact]
@@ -209,13 +200,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 string.Format(Resources.CannotTranslateRuntimeConnectionString, string.Empty, "connectionString"),
                 Assert.Throws<ArgumentException>(
                     () => ConnectionManager.TranslateConnectionString(mockServiceProvider.Object,
-                        new Mock<Project>().Object, "My.Db", "connectionString", false)).Message);
+                        Mock.Of<Project>(), "My.Db", "connectionString", false)).Message);
 
             Assert.Equal(
                 string.Format(Resources.CannotTranslateDesignTimeConnectionString, string.Empty, "connectionString"),
                 Assert.Throws<ArgumentException>(
                     () => ConnectionManager.TranslateConnectionString(mockServiceProvider.Object,
-                        new Mock<Project>().Object, "My.Db", "connectionString", true)).Message);
+                        Mock.Of<Project>(), "My.Db", "connectionString", true)).Message);
         }
 
         [Fact]
@@ -264,7 +255,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 string.Format(Resources.CannotTranslateRuntimeConnectionString, ddexNotInstalledMessage, "connectionString"),
                 Assert.Throws<ArgumentException>(
                     () => ConnectionManager.TranslateConnectionString(mockServiceProvider.Object,
-                        new Mock<Project>().Object, "My.Db", "connectionString", false)).Message);
+                        Mock.Of<Project>(), "My.Db", "connectionString", false)).Message);
 
             mockProviderMapper
                 .Verify(
@@ -275,7 +266,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 string.Format(Resources.CannotTranslateDesignTimeConnectionString, ddexNotInstalledMessage, "connectionString"),
                 Assert.Throws<ArgumentException>(
                     () => ConnectionManager.TranslateConnectionString(mockServiceProvider.Object,
-                        new Mock<Project>().Object, "My.Db", "connectionString", true)).Message);
+                        Mock.Of<Project>(), "My.Db", "connectionString", true)).Message);
         }
     }
 }

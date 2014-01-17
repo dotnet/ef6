@@ -79,8 +79,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             set { _appConfigConnectionPropertyName = value; }
         }
 
-        internal bool? IsSql9OrNewer { get; set; }
-
         internal ICollection<EntityStoreSchemaFilterEntry> DatabaseObjectFilters { get; set; }
 
         internal string ModelNamespace

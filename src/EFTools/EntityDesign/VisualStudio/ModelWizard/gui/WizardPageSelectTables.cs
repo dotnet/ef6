@@ -43,8 +43,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         #region Constructors
 
-        internal WizardPageSelectTables(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
-            : base(wizard, serviceProvider)
+        internal WizardPageSelectTables(ModelBuilderWizardForm wizard)
+            : base(wizard)
         {
             InitializeComponent();
 

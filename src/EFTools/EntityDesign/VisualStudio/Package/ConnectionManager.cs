@@ -18,7 +18,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -120,47 +119,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                     return _builder.ConnectionString.GetHashCode();
                 }
                 return base.GetHashCode();
-            }
-
-            // gets the value of a key-value pair from the provider connection string property of the
-            // underlying EntityConnectionStringBuilder. Returns null if not present.
-            internal object GetProviderConnectionStringProperty(string keyword)
-            {
-                Debug.Assert(!string.IsNullOrWhiteSpace(keyword), "cannot get null or whitespace keyword");
-                if (string.IsNullOrWhiteSpace(keyword))
-                {
-                    return null;
-                }
-
-                DbConnectionStringBuilder providerConnectionStringBuilder;
-                if (TryCreateDbConnectionStringBuilder(_builder.ProviderConnectionString, out providerConnectionStringBuilder))
-                {
-                    object value;
-                    if (providerConnectionStringBuilder.TryGetValue(keyword, out value))
-                    {
-                        return value;
-                    }
-                }
-
-                return null;
-            }
-
-            // sets the value of a key-value pair from the provider connection string property of the
-            // underlying EntityConnectionStringBuilder
-            internal void SetProviderConnectionStringProperty(string keyword, object value)
-            {
-                if (string.IsNullOrWhiteSpace(keyword))
-                {
-                    Debug.Fail("cannot set null or whitespace keyword");
-                    return;
-                }
-
-                DbConnectionStringBuilder providerConnectionStringBuilder;
-                if (TryCreateDbConnectionStringBuilder(_builder.ProviderConnectionString, out providerConnectionStringBuilder))
-                {
-                    providerConnectionStringBuilder[keyword] = value;
-                    _builder.ProviderConnectionString = providerConnectionStringBuilder.ConnectionString;
-                }
             }
 
             public override bool Equals(object obj)
@@ -374,21 +332,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
 
             return entityContainerName;
-        }
-
-        internal static bool TryCreateDbConnectionStringBuilder(string connectionString, out DbConnectionStringBuilder builder)
-        {
-            var success = false;
-            builder = new DbConnectionStringBuilder();
-            try
-            {
-                builder.ConnectionString = connectionString;
-                success = true;
-            }
-            catch (ArgumentException)
-            {
-            }
-            return success;
         }
 
         /// <summary>
@@ -906,8 +849,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         ///     Helper function to construct the metadata, depending on what type of application and output path
         /// </summary>
         private static string GetConnectionStringMetadata(
-            IEnumerable<string> metadataFiles, string outputPath, Project project, string metadataProcessingType)
+            IEnumerable<string> metadataFiles, Project project, VisualStudioProjectSystem applicationType, string metadataProcessingType)
         {
+            var outputPath = GetOutputPath(project, applicationType);
+
             // fix up outputPath 
             if (null == outputPath)
             {
@@ -918,8 +863,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 outputPath += "\\";
             }
             outputPath = outputPath.Replace("\\", "/");
-
-            var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, project);
 
             // construct metadata portion of connection string
             if (metadataFiles == null
@@ -1014,7 +957,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         /// <returns>map connection string containing the sql connection string</returns>
         internal static ConnectionString ConstructConnectionStringObject(
             string sqlConnectionString, string providerInvariantName,
-            IEnumerable<string> metadataFiles, Project project, string outputPath)
+            IEnumerable<string> metadataFiles, Project project, VisualStudioProjectSystem applicationType)
         {
             if (null == sqlConnectionString)
             {
@@ -1032,13 +975,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
 
             // Wrap the given sql connection string in a map connection string
-            var builder = new EntityConnectionStringBuilder();
-
-            builder.Provider = providerInvariantName;
-            builder.ProviderConnectionString = sqlConnectionString;
-
-            // we don't want to mess with the model when we are in the process of adding it, so just feed in the default value for metadata artifact processing
-            builder.Metadata = GetConnectionStringMetadata(metadataFiles, outputPath, project, GetMetadataArtifactProcessingDefault());
+            var builder = new EntityConnectionStringBuilder
+            {
+                Provider = providerInvariantName,
+                ProviderConnectionString = sqlConnectionString,
+                // we don't want to mess with the model when we are in the process of adding it, so just feed in the default value for metadata artifact processing
+                Metadata = GetConnectionStringMetadata(
+                    metadataFiles, project, applicationType, GetMetadataArtifactProcessingDefault())
+            };            
 
             return new ConnectionString(builder);
         }
@@ -1185,8 +1129,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         /// <summary>
         ///     Construct a connection string and add it to the hash, pushing the update to the .config file
         /// </summary>
-        internal void AddConnectionString(Project project, ICollection<string> metadataFiles, string connectionStringName,
-            string configFileConnectionStringValue, string designTimeConnectionStringValue, string providerInvariantName, bool? isSql9OrNewer)
+        internal void AddConnectionString(Project project, VisualStudioProjectSystem applicationType, ICollection<string> metadataFiles, string connectionStringName,
+            string configFileConnectionStringValue, string providerInvariantName)
         {
             if (null == project)
             {
@@ -1210,11 +1154,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             var newConfigFileConnString = CreateEntityConnectionString(
                 project,
+                applicationType,
                 metadataFiles,
                 configFileConnectionStringValue,
-                designTimeConnectionStringValue,
-                providerInvariantName,
-                isSql9OrNewer);
+                providerInvariantName);
 
             // add the connection string to the hash and update the .config file
             AddConnectionString(project, connectionStringName, newConfigFileConnString);
@@ -1222,88 +1165,22 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
         internal static ConnectionString CreateEntityConnectionString(
             Project project,
+            VisualStudioProjectSystem applicationType, 
             IEnumerable<string> metadataFiles,
             string configFileConnectionStringValue,
-            string providerInvariantName,
-            bool? isSql90OrNewer)
+            string providerInvariantName)
         {
-            var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, project);
-            var outputPath = (VisualStudioProjectSystem.WebApplication == applicationType)
-                                 ? project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value as string
-                                 : string.Empty;
-
-            // construct the config file connection string object given the separate parameters 
-            // (may correctly not have password info if user has selected not to store sensitive info)
-            var newConfigFileConnString = ConstructConnectionStringObject(
-                configFileConnectionStringValue, providerInvariantName, metadataFiles, project, outputPath);
-
-            DbConnectionStringBuilder tempBuilderForConfigFile;
-            if (TryCreateDbConnectionStringBuilder(newConfigFileConnString.Builder.ProviderConnectionString, out tempBuilderForConfigFile))
-            {
-                InjectEFAttributesIntoConnectionString(
-                    project,
-                    PackageManager.Package,
-                    tempBuilderForConfigFile,
-                    newConfigFileConnString.Builder.Provider,
-                    null,
-                    null,
-                    isSql90OrNewer);
-
-                newConfigFileConnString.Builder.ProviderConnectionString = tempBuilderForConfigFile.ConnectionString;
-            }
-            else
-            {
-                Debug.Fail(
-                    "Unable to create connection string builders for provider connection string. EF Attributes (MARS/App) won't be in the connection string");
-            }
-            return newConfigFileConnString;
+            // note that this connection string may not have credentials if the user chose to not store sensitive info
+            return ConstructConnectionStringObject(
+                InjectEFAttributesIntoConnectionString(configFileConnectionStringValue, providerInvariantName),
+                providerInvariantName, metadataFiles, project, applicationType);
         }
 
-        private static ConnectionString CreateEntityConnectionString(
-            Project project,
-            ICollection<string> metadataFiles,
-            string configFileConnectionStringValue,
-            string designTimeConnectionStringValue,
-            string providerInvariantName,
-            bool? isSql9OrNewer)
+        private static string GetOutputPath(Project project, VisualStudioProjectSystem applicationType)
         {
-            var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, project);
-            var outputPath = (VisualStudioProjectSystem.WebApplication == applicationType)
-                                 ? project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value as string
-                                 : string.Empty;
-
-            // construct the config file connection string object given the separate parameters 
-            // (may correctly not have password info if user has selected not to store sensitive info)
-            var newConfigFileConnString = ConstructConnectionStringObject(
-                configFileConnectionStringValue, providerInvariantName, metadataFiles, project, outputPath);
-
-            // construct design-time connection string (should have password info even if user 
-            // has selected not to store sensitive info)
-            var designTimeConnString = ConstructConnectionStringObject(
-                designTimeConnectionStringValue, providerInvariantName, metadataFiles, project, outputPath);
-
-            DbConnectionStringBuilder tempBuilderForConfigFile, tempBuilderForDesignTime;
-            if (TryCreateDbConnectionStringBuilder(newConfigFileConnString.Builder.ProviderConnectionString, out tempBuilderForConfigFile)
-                && TryCreateDbConnectionStringBuilder(designTimeConnString.Builder.ProviderConnectionString, out tempBuilderForDesignTime))
-            {
-                InjectEFAttributesIntoConnectionString(
-                    project,
-                    PackageManager.Package,
-                    tempBuilderForConfigFile,
-                    newConfigFileConnString.Builder.Provider,
-                    tempBuilderForDesignTime,
-                    designTimeConnString.Builder.Provider,
-                    isSql9OrNewer);
-
-                newConfigFileConnString.Builder.ProviderConnectionString = tempBuilderForConfigFile.ConnectionString;
-                designTimeConnString.Builder.ProviderConnectionString = tempBuilderForDesignTime.ConnectionString;
-            }
-            else
-            {
-                Debug.Fail(
-                    "Unable to create connection string builders for provider connection string. EF Attributes (MARS/App) won't be in the connection string");
-            }
-            return newConfigFileConnString;
+            return (VisualStudioProjectSystem.WebApplication == applicationType)
+                ? project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value as string
+                : string.Empty;
         }
 
         /// <summary>
@@ -1313,72 +1190,43 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        internal static void InjectEFAttributesIntoConnectionString(
-            Project project,
-            IServiceProvider serviceProvider,
-            DbConnectionStringBuilder configFileConnectionBuilder,
-            string newConnStringProviderName,
-            DbConnectionStringBuilder designTimeConnectionBuilder,
-            string designTimeProviderName,
-            bool? isSql9OrNewer)
+        internal static string InjectEFAttributesIntoConnectionString(string sourceConnectionString, string providerInvariantName)
         {
             // if the provider connection string's provider property is "System.Data.SqlClient" then add the 
             // MARS attribute (value is true if SQL Server version >= 9, false otherwise). Also add the App
             // attribute (with fixed value EntityFramework) - which is useful for statistics on server.
-            if (string.Equals(newConnStringProviderName, SqlClientProviderName, StringComparison.Ordinal))
+            if (!string.Equals(providerInvariantName, SqlClientProviderName, StringComparison.Ordinal))
             {
-                // add MARS property if it does not already exist
-                object marsValue;
-                if (false == configFileConnectionBuilder.TryGetValue(XmlAttrNameMultipleActiveResultSets, out marsValue))
-                {
-                    if (!isSql9OrNewer.HasValue)
-                    {
-                        Debug.Assert(designTimeConnectionBuilder != null, "Should have provided a design time connection builder");
-                        Debug.Assert(designTimeProviderName != null, "Should have provided a design time provider name");
-                        if (designTimeConnectionBuilder != null
-                            && designTimeProviderName != null)
-                        {
-                            SqlConnection versionTestConn = null;
-                            try
-                            {
-                                // use designTimeConnString to connect to the DB as it has the password info 
-                                // even if user is not storing that info in the config file
-                                versionTestConn = new SqlConnection(designTimeConnectionBuilder.ConnectionString);
-                                versionTestConn.Open();
-                                isSql9OrNewer = (Int32.Parse(versionTestConn.ServerVersion.Substring(0, 2), CultureInfo.CurrentCulture) >= 9);
-                            }
-                            catch (Exception e)
-                            {
-                                if (CriticalException.IsCriticalException(e))
-                                {
-                                    Debug.Fail(
-                                        "caught exception of type " + e.GetType().FullName + " with message: " + e.Message
-                                        + " and Stack Trace " + e.StackTrace);
-                                }
-                            }
-                            finally
-                            {
-                                VsUtils.SafeCloseDbConnection(
-                                    versionTestConn, designTimeProviderName, designTimeConnectionBuilder.ConnectionString);
-                            }
-                        }
-                    }
-
-                    if (isSql9OrNewer.HasValue)
-                    {
-                        configFileConnectionBuilder[XmlAttrNameMultipleActiveResultSets] = isSql9OrNewer.Value.ToString();
-                    }
-                }
-
-                // add App attribute if neither App nor Application Name property is already set
-                if (!configFileConnectionBuilder.ContainsKey(ProviderConnectionStringPropertyNameApp)
-                    && !configFileConnectionBuilder.ContainsKey(ProviderConnectionStringPropertyNameApplicationName)
-                    && VsUtils.EntityFrameworkSupportedInProject(project, serviceProvider, allowMiscProject: false))
-                {
-                    configFileConnectionBuilder[ProviderConnectionStringPropertyNameApp] = "EntityFramework";
-                    // note: fixed value so no localization;
-                }
+                return sourceConnectionString;
             }
+
+            var configFileConnectionBuilder = new DbConnectionStringBuilder();
+
+            try
+            {
+                configFileConnectionBuilder.ConnectionString = sourceConnectionString;
+            }
+            catch (ArgumentException)
+            {
+                return sourceConnectionString;
+            }
+
+            // add MARS property if it does not already exist
+            object marsValue;
+            if (!configFileConnectionBuilder.TryGetValue(XmlAttrNameMultipleActiveResultSets, out marsValue))
+            {
+                configFileConnectionBuilder[XmlAttrNameMultipleActiveResultSets] = true.ToString();
+            }
+
+            // add App attribute if neither App nor Application Name property is already set
+            if (!configFileConnectionBuilder.ContainsKey(ProviderConnectionStringPropertyNameApp)
+                && !configFileConnectionBuilder.ContainsKey(ProviderConnectionStringPropertyNameApplicationName))
+            {
+                // note: fixed value so no localization;
+                configFileConnectionBuilder[ProviderConnectionStringPropertyNameApp] = "EntityFramework";
+            }
+
+            return configFileConnectionBuilder.ConnectionString;
         }
 
         /// <summary>
@@ -1623,17 +1471,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 return VSConstants.E_INVALIDARG;
             }
 
-            var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, args.ProjectObj);
-
             if (args.Artifact.ConceptualModel() != null
                 && args.Artifact.ConceptualModel().FirstEntityContainer != null
                 && HasConnectionString(args.ProjectObj, args.Artifact.ConceptualModel().FirstEntityContainer.LocalName.Value))
-            {
-                var outputPath = (VisualStudioProjectSystem.WebApplication == applicationType)
-                                     ? args.ProjectObj.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value as
-                                       string
-                                     : string.Empty;
-
+            {                   
                 var metadataFileNames = GetMetadataFileNamesFromArtifactFileName(args.ProjectObj, args.Artifact.Uri.LocalPath, PackageManager.Package);
                 var mapProperty = GetMetadataPropertyFromArtifact(args.Artifact);
                 string mapPropertyValue;
@@ -1646,7 +1487,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                     mapPropertyValue = ConnectionDesignerInfo.MAP_CopyToOutputDirectory;
                 }
 
-                var newMetaData = GetConnectionStringMetadata(metadataFileNames, outputPath, args.ProjectObj, mapPropertyValue);
+                var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, args.ProjectObj);
+                var newMetaData = GetConnectionStringMetadata(metadataFileNames, args.ProjectObj, applicationType, mapPropertyValue);
 
                 UpdateMetadataName(args.ProjectObj, args.Artifact.ConceptualModel().FirstEntityContainer.LocalName.Value, newMetaData);
             }
@@ -1788,21 +1630,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                             {
                                 var metadataFileNames = GetMetadataFileNamesFromArtifactFileName(
                                     args.ProjectObj, args.Artifact.Uri.LocalPath, PackageManager.Package);
-                                var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, args.ProjectObj);
-                                var outputPath = (VisualStudioProjectSystem.WebApplication == applicationType)
-                                                     ? args.ProjectObj.ConfigurationManager.ActiveConfiguration.Properties.Item(
-                                                         "OutputPath")
-                                                           .Value as string
-                                                     : string.Empty;
-
+                                
                                 var currentMetadataArtifactProcessingValue = mapProperty.ValueAttr.Value;
                                 // Compare the new and value of MetadataArtifactProcessingValue, if they are different update the config file.
                                 if (String.Compare(
                                     currentMetadataArtifactProcessingValue, _staleMetadataArtifactProcessing,
                                     StringComparison.OrdinalIgnoreCase) != 0)
                                 {
-                                    var metadata = GetConnectionStringMetadata(
-                                        metadataFileNames, outputPath, args.ProjectObj, currentMetadataArtifactProcessingValue);
+                                    var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, args.ProjectObj);
+                                    var metadata = GetConnectionStringMetadata(metadataFileNames, args.ProjectObj, 
+                                        applicationType, currentMetadataArtifactProcessingValue);
                                     var connectionString = GetConnectionStringObject(args.ProjectObj, entityContainerName, this);
                                     connectionString.Builder.Metadata = metadata;
                                     InsertConnStringsFromHash(args.ProjectObj);
@@ -1979,76 +1816,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
 
             return providerGuid;
-        }
-
-        internal void UpdateProviderConnectionString(
-            Project project, string entityContainerName, string connectionString, bool? isSql90OrNewer)
-        {
-            var existingConnectionStringObj = GetConnectionStringObject(project, entityContainerName);
-            if (existingConnectionStringObj != null)
-            {
-                // Build an EntityConnectionString
-                var ecsb = new EntityConnectionStringBuilder
-                    {
-                        ProviderConnectionString = connectionString
-                    };
-
-                // Inject the existing provider and metadata
-                ecsb.Provider = existingConnectionStringObj.Builder.Provider;
-                ecsb.Metadata = existingConnectionStringObj.Builder.Metadata;
-
-                // Create a new ConnectionString object
-                var newConnectionStringObj = new ConnectionString(ecsb);
-
-                DbConnectionStringBuilder tempBuilder;
-                if (TryCreateDbConnectionStringBuilder(newConnectionStringObj.Builder.ProviderConnectionString, out tempBuilder))
-                {
-                    // Inject the EF metadata as necessary
-                    InjectEFAttributesIntoConnectionString(
-                        project,
-                        PackageManager.Package,
-                        tempBuilder,
-                        newConnectionStringObj.Builder.Provider,
-                        tempBuilder,
-                        newConnectionStringObj.Builder.Provider,
-                        isSql90OrNewer);
-
-                    newConnectionStringObj.Builder.ProviderConnectionString = tempBuilder.ConnectionString;
-                }
-                else
-                {
-                    Debug.Fail("Unable to inject EF attributes (MARS/App) into connection string");
-                }
-
-                // Finally, update the full connection string in the config file.
-                UpdateConnectionString(project, entityContainerName, newConnectionStringObj.Text);
-            }
-        }
-
-        internal static bool ShouldUpdateExistingConnectionString(
-            Project project,
-            ConnectionString existingConnectionStringObj,
-            string providerConnectionString,
-            string providerName,
-            bool isSql90OrNewer)
-        {
-            DbConnectionStringBuilder tempBuilder;
-            if (TryCreateDbConnectionStringBuilder(providerConnectionString, out tempBuilder))
-            {
-                InjectEFAttributesIntoConnectionString(
-                    project,
-                    PackageManager.Package,
-                    tempBuilder,
-                    providerName,
-                    tempBuilder,
-                    providerName,
-                    isSql90OrNewer);
-
-                return
-                    !tempBuilder.ConnectionString.Equals(
-                        existingConnectionStringObj.Builder.ProviderConnectionString, StringComparison.OrdinalIgnoreCase);
-            }
-            return false;
         }
     }
 }

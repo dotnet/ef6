@@ -2,6 +2,7 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using EnvDTE;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Moq;
     using System;
@@ -36,10 +37,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var mockSettings = new Mock<ModelBuilderSettings> { CallBase = true };
             mockSettings.Setup(s => s.DesignTimeConnectionString).Returns("fakeConnString");
             mockSettings.Object.ModelBuilderEngine = mockModelBuilderEngine.Object;
+            mockSettings.Object.Project = Mock.Of<Project>();
 
-            var wizard = new ModelBuilderWizardForm(mockSettings.Object, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
-
-            var mockWizardPageBase = new Mock<WizardPageBase>(wizard, new Mock<IServiceProvider>().Object) { CallBase = true };
+            var mockWizardPageBase = new Mock<WizardPageBase>(
+                ModelBuilderWizardFormHelper.CreateWizard(mockSettings.Object)) { CallBase = true };
             mockWizardPageBase.Setup(p => p.MovingNext).Returns(true);
 
             mockWizardPageBase.Object.OnDeactivate();

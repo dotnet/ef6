@@ -94,12 +94,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     var manager = PackageManager.Package.ConnectionManager;
                     manager.AddConnectionString(
                         settings.Project,
+                        settings.VSApplicationType,
                         metadataFiles,
                         settings.AppConfigConnectionPropertyName,
                         settings.AppConfigConnectionString,
-                        settings.DesignTimeConnectionString,
-                        settings.RuntimeProviderInvariantName,
-                        settings.IsSql9OrNewer);
+                        settings.RuntimeProviderInvariantName);
                     statusMessage = String.Format(
                         CultureInfo.CurrentCulture,
                         Resources.Engine_AppConfigSuccess,
@@ -128,12 +127,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     var manager = PackageManager.Package.ConnectionManager;
                     manager.AddConnectionString(
                         settings.Project,
+                        settings.VSApplicationType,
                         metadataFiles,
                         settings.AppConfigConnectionPropertyName,
                         settings.AppConfigConnectionString,
-                        settings.DesignTimeConnectionString,
-                        settings.RuntimeProviderInvariantName,
-                        settings.IsSql9OrNewer);
+                        settings.RuntimeProviderInvariantName);
                     statusMessage = String.Format(
                         CultureInfo.CurrentCulture,
                         Resources.Engine_WebConfigSuccess,

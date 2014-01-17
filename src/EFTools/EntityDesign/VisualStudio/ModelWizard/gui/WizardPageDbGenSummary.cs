@@ -38,8 +38,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private const string RegKeyNameEdmxOverwriteWarning = "DbGenShowEdmxOverwriteWarning";
         private const string RegKeyNameCustomWorkflowWarning = "DbGenShowCustomWorkflowWarning";
 
-        internal WizardPageDbGenSummary(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
-            : base(wizard, serviceProvider)
+        internal WizardPageDbGenSummary(ModelBuilderWizardForm wizard)
+            : base(wizard)
         {
             InitializeComponent();
 
@@ -92,7 +92,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 if (Wizard.Mode == ModelBuilderWizardForm.WizardMode.PerformDBGenSummaryOnly
                     && _addedDbConfigPage == false)
                 {
-                    Wizard.InsertPageBefore(Id, new WizardPageDbConfig(Wizard, PackageManager.Package));
+                    Wizard.InsertPageBefore(Id, new WizardPageDbConfig(Wizard));
                     _addedDbConfigPage = true;
                 }
 

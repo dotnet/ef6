@@ -39,8 +39,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         internal static readonly int GenerateCodeFirstFromDatabaseIndex = 3;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public WizardPageStart(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
-            : base(wizard, serviceProvider)
+        public WizardPageStart(ModelBuilderWizardForm wizard)
+            : base(wizard)
         {
             InitializeComponent();
 
@@ -84,11 +84,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     new ListViewItem(Resources.EmptyModelOption, "EmptyModel.bmp"),
                 });
 
-            if (NetFrameworkVersioningHelper.TargetNetFrameworkVersion(wizard.ModelBuilderSettings.Project, serviceProvider) >=
+            if (NetFrameworkVersioningHelper.TargetNetFrameworkVersion(wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider) >=
                 NetFrameworkVersioningHelper.NetFrameworkVersion4)
             {
                 listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.bmp"));
-                listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "CodeFirstFromDatabase.bmp"));
+                listViewModelContents.Items.Add(new ListViewItem(Resources.CodeFirstFromDatabaseOption, "CodeFirstFromDatabase.bmp"));
             }
 
             // Always select the first item
@@ -310,13 +310,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     textboxListViewSelectionInfo.Text = Resources.StartPage_GenerateFromDBText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
 
-                    // add in the WizardPageDbConfig and WizardPageSelectTables pages:
-                    // skip first wizard page, since it is still in the collection
-                    // add in the rest
-                    foreach (var page in Wizard.RegisteredPages.Skip(1))
-                    {
-                        Wizard.AddPage(page);
-                    }
+                    AddPagesForReverseEngineerDb();
 
                     Wizard.OnValidationStateChanged(this);
                 }
@@ -330,7 +324,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
 
                     Wizard.OnValidationStateChanged(this);
-                    Wizard.EnableButton(ButtonType.Finish, FinishClickable(Wizard.ModelBuilderSettings));
+                    Wizard.EnableButton(ButtonType.Finish, CodeFirstAllowed(Wizard.ModelBuilderSettings));
                 }
                 else
                 {
@@ -339,12 +333,28 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     textboxListViewSelectionInfo.Text = Resources.StartPage_CodeFirstFromDatabaseText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.CodeFirstFromDatabase;
 
+                    AddPagesForReverseEngineerDb();
+
                     Wizard.OnValidationStateChanged(this);
 
-                    // TODO: CodeFirst from database blocked at the moment
-                    Wizard.EnableButton(ButtonType.Finish, false);
-                    Wizard.EnableButton(ButtonType.Next, false);
+                    Wizard.EnableButton(ButtonType.Next, CodeFirstAllowed(Wizard.ModelBuilderSettings));
                 }
+            }
+        }
+
+        private void AddPagesForReverseEngineerDb()
+        {
+            Debug.Assert(
+                GetSelectedOptionIndex() == GenerateFromDatabaseIndex || 
+                GetSelectedOptionIndex() == GenerateCodeFirstFromDatabaseIndex,
+                "Should be called only for reverse engineer database workflows");
+
+            // add in the WizardPageDbConfig and WizardPageSelectTables pages:
+            // skip first wizard page, since it is still in the collection
+            // add in the rest
+            foreach (var page in Wizard.RegisteredPages.Skip(1))
+            {
+                Wizard.AddPage(page);
             }
         }
 
@@ -366,7 +376,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 }
                 else if(nSelectedItemIndex == GenerateEmptyModelCodeFirstIndex)
                 {
-                    if (FinishClickable(Wizard.ModelBuilderSettings))
+                    if (CodeFirstAllowed(Wizard.ModelBuilderSettings))
                     {
                         Wizard.OnFinish();
                     }
@@ -375,7 +385,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 {
                     Debug.Assert(nSelectedItemIndex == GenerateCodeFirstFromDatabaseIndex, "Unexpected index.");
 
-                    // TODO: NoOp CodeFirst from database blocked at the moment
+                    if (CodeFirstAllowed(Wizard.ModelBuilderSettings))
+                    {
+                        Wizard.OnNext();
+                    }
                 }
             }
         }
@@ -398,7 +411,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return edmxTemplate;
         }
 
-        private static bool FinishClickable(ModelBuilderSettings settings)
+        private static bool CodeFirstAllowed(ModelBuilderSettings settings)
         {
             Debug.Assert(settings != null, "settings must not be null");
             Debug.Assert(

@@ -30,19 +30,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             PerformDatabaseConfigAndDBGenSummary
         }
 
-        // Used for testing only
-        internal ModelBuilderWizardForm(ModelBuilderSettings modelBuilderSettings, WizardMode wizardMode)
-        {
-            _wizardMode = wizardMode;
-            _modelBuilderSettings = modelBuilderSettings;
-        }
-
         /// <summary>
         ///     Constructor to start the wizard in the specified mode
         /// </summary>
         public ModelBuilderWizardForm(
             IServiceProvider serviceProvider,
-            ModelBuilderSettings modelBuilderSettings, WizardMode wizardMode)
+            ModelBuilderSettings modelBuilderSettings, 
+            WizardMode wizardMode)
         {
             _wizardMode = wizardMode;
             _serviceProvider = serviceProvider;
@@ -153,44 +147,45 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         /// <summary>
         ///     Helper to create &amp; initialize wizard pages depending on the mode
         /// </summary>
+        // virtual to allow mocking
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        protected void InitializeWizardPages()
+        protected virtual void InitializeWizardPages()
         {
             switch (_wizardMode)
             {
                 case WizardMode.PerformDatabaseConfigAndSelectTables:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
-                    RegisterStandardPage(new WizardPageDbConfig(this,  PackageManager.Package));
-                    RegisterStandardPage(new WizardPageRuntimeConfig(this, PackageManager.Package));
-                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageDbConfig(this));
+                    RegisterStandardPage(new WizardPageRuntimeConfig(this));
+                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this));
                     break;
 
                 case WizardMode.PerformSelectTablesOnly:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
-                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this));
                     break;
 
                 case WizardMode.PerformDatabaseConfigAndDBGenSummary:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateDatabaseScript;
-                    RegisterStandardPage(new WizardPageDbConfig(this, PackageManager.Package));
-                    RegisterStandardPage(new WizardPageRuntimeConfig(this, PackageManager.Package));
-                    RegisterStandardPage(new WizardPageDbGenSummary(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageDbConfig(this));
+                    RegisterStandardPage(new WizardPageRuntimeConfig(this));
+                    RegisterStandardPage(new WizardPageDbGenSummary(this));
                     break;
 
                 case WizardMode.PerformDBGenSummaryOnly:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateDatabaseScript;
-                    RegisterStandardPage(new WizardPageDbGenSummary(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageDbGenSummary(this));
                     break;
 
                 case WizardMode.PerformAllFunctionality:
                 default:
                     // Add the Start Page
                     // rest of pages will be added by the start page (if needed)
-                    RegisterStandardPage(new WizardPageStart(this, PackageManager.Package));
-                    RegisterStandardPage(new WizardPageDbConfig(this, PackageManager.Package));
-                    RegisterStandardPage(new WizardPageRuntimeConfig(this, PackageManager.Package));
-                    RegisterStandardPage(new WizardPageSelectTables(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageStart(this));
+                    RegisterStandardPage(new WizardPageDbConfig(this));
+                    RegisterStandardPage(new WizardPageRuntimeConfig(this));
+                    RegisterStandardPage(new WizardPageSelectTables(this));
                     break;
             }
 
@@ -336,7 +331,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private void SetFont()
         {
             // Set the default font to VS shell font.
-            var vsFont = VSHelpers.GetVSFont(Services.ServiceProvider);
+            var vsFont = VSHelpers.GetVSFont(ServiceProvider);
             if (vsFont != null)
             {
                 Font = vsFont;

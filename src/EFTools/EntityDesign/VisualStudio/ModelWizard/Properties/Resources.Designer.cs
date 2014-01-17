@@ -146,6 +146,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection string:.
+        /// </summary>
+        internal static string ConnectionStringLabel {
+            get {
+                return ResourceManager.GetString("ConnectionStringLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid property name. Please choose a different name..
         /// </summary>
         internal static string ConnectionStringNonValidIdentifier {
@@ -504,15 +513,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         internal static string Engine_WebConfigSuccess {
             get {
                 return ResourceManager.GetString("Engine_WebConfigSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Entity connection string:.
-        /// </summary>
-        internal static string EntityConnectionStringLabel {
-            get {
-                return ResourceManager.GetString("EntityConnectionStringLabel", resourceCulture);
             }
         }
         

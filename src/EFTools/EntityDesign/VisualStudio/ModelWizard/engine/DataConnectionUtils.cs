@@ -215,9 +215,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             IVsDataProvider dataProvider = null;
 
             Debug.Assert(dataProviderManager != null, "_dataProviderManager is not initialized!");
-            Debug.Assert(provider != null, "invalid null Guid passed into GetProviderInvariantName");
-            if (dataProviderManager != null
-                && provider != null)
+            if (dataProviderManager != null)
             {
                 dataProviderManager.Providers.TryGetValue(provider, out dataProvider);
                 Debug.Assert(dataProvider != null, "Invalid provider Guid");

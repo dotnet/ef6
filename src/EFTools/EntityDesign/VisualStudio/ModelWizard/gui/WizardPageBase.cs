@@ -17,12 +17,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
         }
 
-        public WizardPageBase(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
+        public WizardPageBase(ModelBuilderWizardForm wizard)
             : base(wizard)
         {
             _wizard = wizard;
             // Set the default font to VS shell font.
-            var vsFont = VSHelpers.GetVSFont(serviceProvider);
+            var vsFont = VSHelpers.GetVSFont(wizard.ServiceProvider);
             if (vsFont != null)
             {
                 Font = vsFont;
