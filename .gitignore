@@ -23,3 +23,5 @@ EntityFramework.SqlServerCompact.xml
 *.csproj.DotSettings
 /src/EFTools/EntityDesign/VisualStudio/ItemTemplate/VersionedTemplates/
 /src/EFTools/setup/EFToolsMsi/Resources/EFToolsStrings.wxl
+Index.dat
+Storage.dat

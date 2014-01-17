@@ -654,5 +654,50 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 DependencyResolver.UnregisterProvider("System.Data.SqlClient");
             }
         }
+
+        [Fact]
+        public void GetProjectItemByPath_returns_item()
+        {
+            var projectItem = new Mock<ProjectItem>();
+            var projectItems = new Mock<ProjectItems>();
+            projectItems.Setup(i => i.Item("Class1.cs")).Returns(projectItem.Object);
+            var project = new Mock<Project>();
+            project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
+
+            var result = VsUtils.GetProjectItemByPath(project.Object, "Class1.cs");
+
+            Assert.Same(projectItem.Object, result);
+        }
+
+        [Fact]
+        public void GetProjectItemByPath_returns_item_when_nested()
+        {
+            var fileProjectItem = new Mock<ProjectItem>();
+            var directoryProjectItems = new Mock<ProjectItems>();
+            directoryProjectItems.Setup(i => i.Item("Class1.cs")).Returns(fileProjectItem.Object);
+            var directoryProjectItem = new Mock<ProjectItem>();
+            directoryProjectItem.SetupGet(i => i.ProjectItems).Returns(directoryProjectItems.Object);
+            var projectItems = new Mock<ProjectItems>();
+            projectItems.Setup(i => i.Item("Model")).Returns(directoryProjectItem.Object);
+            var project = new Mock<Project>();
+            project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
+
+            var result = VsUtils.GetProjectItemByPath(project.Object, @"Model\Class1.cs");
+
+            Assert.Same(fileProjectItem.Object, result);
+        }
+
+        [Fact]
+        public void GetProjectItemByPath_returns_null_when_error()
+        {
+            var projectItems = new Mock<ProjectItems>();
+            projectItems.Setup(i => i.Item(It.IsAny<object>())).Throws<Exception>();
+            var project = new Mock<Project>();
+            project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
+
+            var result = VsUtils.GetProjectItemByPath(project.Object, "Class1.cs");
+
+            Assert.Null(result);
+        }
     }
 }

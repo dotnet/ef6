@@ -20,25 +20,23 @@
 Imports System.Data.Entity
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Namespace <#= Namespace #>
+Public Class <#= code.Type(Container) #>
+    Inherits DbContext
 
-    Public Class <#= code.Type(Container) #>
-       Inherits DbContext
-
-        Public Sub New()
-            MyBase.New("Name=<#= code.Type(Container) #>")        
-        End Sub
+    Public Sub New()
+        MyBase.New("Name=<#= code.Type(Container) #>")        
+    End Sub
 
 <#
     foreach (var entitySet in Container.EntitySets)
     {
 #>
-        Public Overridable Property <#= code.Property(entitySet) #> As DbSet(Of <#= code.Type(entitySet.ElementType) #>)
+    Public Overridable Property <#= code.Property(entitySet) #> As DbSet(Of <#= code.Type(entitySet.ElementType) #>)
 <#
     }
 #>
 
-        Protected Override Sub OnModelCreating(Dim modelBuilder As DbModelBuilder)
+    Protected Override Sub OnModelCreating(Dim modelBuilder As DbModelBuilder)
 <#
     var anyConfiguration = false;
 
@@ -64,7 +62,7 @@ Namespace <#= Namespace #>
                 }
 
 #>
-            modelBuilder.Entity<<#= code.Type(entitySet.ElementType) #>>()
+        modelBuilder.Entity<<#= code.Type(entitySet.ElementType) #>>()
 <#
             }
             else
@@ -115,8 +113,8 @@ Namespace <#= Namespace #>
                     }
 
 #>
-            modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)()
-                .Property(Function(e) e.<#= code.Property(property) #>)
+        modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)()
+            .Property(Function(e) e.<#= code.Property(property) #>)
 <#
                 }
                 else
@@ -124,7 +122,7 @@ Namespace <#= Namespace #>
                     WriteLine(string.Empty);
                 }
 
-                Write("                " + code.MethodChain(propertyConfiguration));
+                Write("            " + code.MethodChain(propertyConfiguration));
             }
 
             if (!firstPropertyConfiguration)
@@ -162,7 +160,7 @@ Namespace <#= Namespace #>
                     }
 
 #>
-            modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration)#>
+        modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration)#>
 <#
                 }
                 else
@@ -170,7 +168,7 @@ Namespace <#= Namespace #>
                     WriteLine(string.Empty);
                 }
 
-                Write("                " + code.MethodChain(navigationPropertyConfiguration));
+                Write("            " + code.MethodChain(navigationPropertyConfiguration));
             }
 
             if (!firstNavigationPropertyConfiguration)
@@ -188,12 +186,11 @@ Namespace <#= Namespace #>
                     anyConfiguration = true;
                 }
 #>
-            modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration) #>
+        modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration) #>
 <#
             }
         }
     }
 #>
-        End Sub
-    End Class
-End Namespace
+    End Sub
+End Class

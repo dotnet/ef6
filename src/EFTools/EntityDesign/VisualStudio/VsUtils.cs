@@ -5,7 +5,6 @@ using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
@@ -348,7 +347,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                                 elem.SetAttribute(attributeName, attributeValue);
                                 return elem;
                             }
-                                // else just do normal string comparison
+                            // else just do normal string comparison
                             else if (attribute.Value == attributeValue)
                             {
                                 return elem;
@@ -464,8 +463,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 // Get an existing pane
                 outputWindowPane = outputWindow.OutputWindowPanes.Item(OutputWindowPaneTitle);
             }
-                // Spec says that OutputWindowPanes.Item() can throw ArgumentException, 
-                // but actually it throws NullReferenceException and NotImplementedException (WCF projects)
+            // Spec says that OutputWindowPanes.Item() can throw ArgumentException, 
+            // but actually it throws NullReferenceException and NotImplementedException (WCF projects)
             catch (Exception ex)
             {
                 if (ex is ArgumentException
@@ -672,7 +671,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
                     applicationType = VisualStudioProjectSystem.Website;
                 }
-                    // WebApplication?
+                // WebApplication?
                 else if (guidsString.IndexOf(WebAppProjectGuid, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     applicationType = VisualStudioProjectSystem.WebApplication;
@@ -1091,7 +1090,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 propertyName);
         }
 
-        private static object GetPropertyByName(Properties properties, string propertyName)
+        public static object GetPropertyByName(Properties properties, string propertyName)
         {
             Debug.Assert(properties != null, "properties is null.");
             Debug.Assert(!string.IsNullOrWhiteSpace(propertyName), "propertyName is null or empty.");
@@ -1252,13 +1251,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 filesMap,
                 fileDataObject => ((XmlDocument)fileDataObject).InnerXml,
                 (fileDataObject, filePath) =>
+                {
+                    var xmlWriterSettings = new XmlWriterSettings { Encoding = Encoding.UTF8, Indent = true };
+                    using (var writer = XmlWriter.Create(filePath, xmlWriterSettings))
                     {
-                        var xmlWriterSettings = new XmlWriterSettings { Encoding = Encoding.UTF8, Indent = true };
-                        using (var writer = XmlWriter.Create(filePath, xmlWriterSettings))
-                        {
-                            ((XmlDocument)fileDataObject).Save(writer);
-                        }
-                    });
+                        ((XmlDocument)fileDataObject).Save(writer);
+                    }
+                });
         }
 
         internal static void WriteCheckoutTextFilesInProject(IDictionary<string, object> filesMap)
@@ -1413,11 +1412,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             {
                 return sourceProjectItem.ProjectItems.OfType<ProjectItem>().FirstOrDefault(
                     p =>
-                        {
-                            var extension = Path.GetExtension(p.Name);
-                            return FileExtensions.CsExt.Equals(extension, StringComparison.OrdinalIgnoreCase)
-                                   || FileExtensions.VbExt.Equals(extension, StringComparison.OrdinalIgnoreCase);
-                        });
+                    {
+                        var extension = Path.GetExtension(p.Name);
+                        return FileExtensions.CsExt.Equals(extension, StringComparison.OrdinalIgnoreCase)
+                               || FileExtensions.VbExt.Equals(extension, StringComparison.OrdinalIgnoreCase);
+                    });
             }
 
             // For website projects projectItem.ProjectItems does not return the code-generated dependent files
@@ -2239,6 +2238,38 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
 
             return providerServicesTypeName;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        public static ProjectItem GetProjectItemByPath(Project project, string relativeItemPath)
+        {
+            Debug.Assert(project != null, "project is null.");
+            Debug.Assert(!string.IsNullOrEmpty(relativeItemPath), "relativeItemPath is null or empty.");
+            Debug.Assert(!Path.IsPathRooted(relativeItemPath), "relativeItemPath is rooted.");
+
+            dynamic current = project;
+
+            var parts = relativeItemPath.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
+            {
+                ProjectItem item = null;
+                try
+                {
+                    item = ((ProjectItems)current.ProjectItems).Item(part);
+                }
+                catch
+                {
+                }
+
+                if (item == null)
+                {
+                    return null;
+                }
+
+                current = item;
+            }
+
+            return current;
         }
     }
 }

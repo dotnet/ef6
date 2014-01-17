@@ -131,6 +131,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeGeneration\CodeFirstModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeHelper.cs" />
     <Compile Include="CodeGeneration\Discoverers\NavigationProperty\CascadeDeleteDiscoverer.cs" />
     <Compile Include="CodeGeneration\Discoverers\NavigationProperty\ForeignKeyDiscoverer.cs" />
@@ -173,15 +174,20 @@
     <Compile Include="CodeGeneration\Configuration\Type\KeyConfiguration.cs" />
     <Compile Include="CodeGeneration\Configuration\Type\TableConfiguration.cs" />
     <Compile Include="CodeGeneration\CSharpCodeHelper.cs" />
-    <Compile Include="CodeGeneration\CSharpContextTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\CustomGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultCSharpContextGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultCSharpEntityTypeGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultVBContextGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultVBEntityTypeGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpContextGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CSharpContextTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultCSharpContextGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="CodeGeneration\CSharpEntityTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpEntityTypeGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CSharpEntityTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultCSharpEntityTypeGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="CodeGeneration\EdmHelper.cs" />
     <Compile Include="CodeGeneration\Extensions\DbModelExtensions.cs" />
@@ -189,16 +195,18 @@
     <Compile Include="CodeGeneration\Extensions\IEnumerableExtensions.cs" />
     <Compile Include="CodeGeneration\Extensions\StoreGeneratedPatternExtensions.cs" />
     <Compile Include="CodeGeneration\Extensions\StringExtensions.cs" />
+    <Compile Include="CodeGeneration\Generators\IContextGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\IEntityTypeGenerator.cs" />
     <Compile Include="CodeGeneration\VBCodeHelper.cs" />
-    <Compile Include="CodeGeneration\VBContextTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultVBContextGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VBContextTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultVBContextGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="CodeGeneration\VBEntityTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultVBEntityTypeGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VBEntityTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultVBEntityTypeGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
@@ -315,21 +323,25 @@
     <Compile Include="VisualStudio\TextTemplating\SsdlToDdlActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateCallback.cs" />
-    <None Include="CodeGeneration\CSharpContextTextTransformation.tt">
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpContextGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>CSharpContextTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultCSharpContextGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
-    <None Include="CodeGeneration\CSharpEntityTextTransformation.tt">
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpEntityTypeGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>CSharpEntityTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultCSharpEntityTypeGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
-    <None Include="CodeGeneration\VBContextTextTransformation.tt">
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultVBContextGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>VBContextTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultVBContextGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
-    <None Include="CodeGeneration\VBEntityTextTransformation.tt">
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultVBEntityTypeGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>VBEntityTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultVBEntityTypeGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

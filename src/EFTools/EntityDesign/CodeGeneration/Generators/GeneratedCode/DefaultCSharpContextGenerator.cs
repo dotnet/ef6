@@ -16,7 +16,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal partial class VBContextTextTransformation : VBContextTextTransformationBase
+    internal partial class DefaultCSharpContextGenerator : DefaultCSharpContextGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -24,7 +24,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public virtual string TransformText()
         {
 
-    var code = new VBCodeHelper();
+    var code = new CSharpCodeHelper();
     var edm = new EdmHelper(code);
 
     if (Container == null)
@@ -37,29 +37,30 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         throw new ArgumentNullException("Model");
     }
 
-            this.Write("Imports System.Data.Entity\r\nImports System.ComponentModel.DataAnnotations.Schema\r" +
-                    "\n\r\nNamespace ");
+            this.Write("namespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n\r\n    Public Class ");
+            this.Write("\r\n{\r\n    using System.Data.Entity;\r\n    using System.ComponentModel.DataAnnotatio" +
+                    "ns.Schema;\r\n\r\n    public class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
-            this.Write("\r\n       Inherits DbContext\r\n\r\n        Public Sub New()\r\n            MyBase.New(\"" +
-                    "Name=");
+            this.Write(" : DbContext\r\n    {\r\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
-            this.Write("\")        \r\n        End Sub\r\n\r\n");
+            this.Write("()\r\n            : base(\"Name=");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
+            this.Write("\")\r\n        {\r\n        }\r\n\r\n");
 
     foreach (var entitySet in Container.EntitySets)
     {
 
-            this.Write("        Public Overridable Property ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(entitySet)));
-            this.Write(" As DbSet(Of ");
+            this.Write("        public virtual DbSet<");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
-            this.Write(")\r\n");
+            this.Write("> ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(entitySet)));
+            this.Write(" { get; set; }\r\n");
 
     }
 
-            this.Write("\r\n        Protected Override Sub OnModelCreating(Dim modelBuilder As DbModelBuild" +
-                    "er)\r\n");
+            this.Write("\r\n        protected override void OnModelCreating(DbModelBuilder modelBuilder)\r\n " +
+                    "       {\r\n");
 
     var anyConfiguration = false;
 
@@ -100,7 +101,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
         if (!firstTypeConfiguration)
         {
-            WriteLine(string.Empty);
+            WriteLine(";");
         }
 
         foreach (var property in entitySet.ElementType.Properties)
@@ -138,9 +139,9 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                     }
 
 
-            this.Write("            modelBuilder.Entity(Of ");
+            this.Write("            modelBuilder.Entity<");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
-            this.Write(")()\r\n                .Property(Function(e) e.");
+            this.Write(">()\r\n                .Property(e => e.");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(property)));
             this.Write(")\r\n");
 
@@ -155,7 +156,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             if (!firstPropertyConfiguration)
             {
-                WriteLine(string.Empty);
+                WriteLine(";");
             }
         }
 
@@ -203,7 +204,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             if (!firstNavigationPropertyConfiguration)
             {
-                WriteLine(string.Empty);
+                WriteLine(";");
             }
             else if (!isDefaultMultiplicity)
             {            
@@ -218,13 +219,13 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             this.Write("            modelBuilder");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.MethodChain(navigationPropertyMultiplicityConfiguration)));
-            this.Write("\r\n");
+            this.Write(";\r\n");
 
             }
         }
     }
 
-            this.Write("        End Sub\r\n    End Class\r\nEnd Namespace\r\n");
+            this.Write("        }\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
 
@@ -329,7 +330,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal class VBContextTextTransformationBase
+    internal class DefaultCSharpContextGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

@@ -26,19 +26,17 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Data.Entity.Spatial
 
-Namespace <#= Namespace #>
-
 <#
     var typeConfigurations = edm.GetConfigurations(EntitySet, Model).OfType<IAttributeConfiguration>();
 
     foreach (var typeConfiguration in typeConfigurations)
     {
 #>
-    <#= code.Attribute(typeConfiguration) #>
+<#= code.Attribute(typeConfiguration) #>
 <#
     }
 #>
-    Partial Public Class <#= code.Type(entityType) #>
+Partial Public Class <#= code.Type(entityType) #>
 <#
     var collectionProperties = from p in entityType.NavigationProperties
                                where p.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many
@@ -47,16 +45,16 @@ Namespace <#= Namespace #>
     if (collectionProperties.Any())
     {
 #>
-        Public Sub New()
+    Public Sub New()
 <#
     foreach (var collectionProperty in collectionProperties)
     {
 #>
-            <#= code.Property(collectionProperty) #> = New HashSet(Of <#= code.Type(collectionProperty.ToEndMember.GetEntityType()) #>)()
+        <#= code.Property(collectionProperty) #> = New HashSet(Of <#= code.Type(collectionProperty.ToEndMember.GetEntityType()) #>)()
 <#
     }
 #>
-        End Sub
+    End Sub
 
 <#
     }
@@ -79,11 +77,11 @@ Namespace <#= Namespace #>
         foreach (var propertyConfiguration in propertyConfigurations)
         {
 #>
-        <#= code.Attribute(propertyConfiguration) #>
+    <#= code.Attribute(propertyConfiguration) #>
 <#
         }
 #>
-        Public Property <#= code.Property(property) #> As <#= code.Type(property) #>
+    Public Property <#= code.Property(property) #> As <#= code.Type(property) #>
 <#
     }
 
@@ -99,9 +97,8 @@ Namespace <#= Namespace #>
         }
 
 #>
-        Public Overridable Property <#= code.Property(navigationProperty) #> As <#= code.Type(navigationProperty) #>
+    Public Overridable Property <#= code.Property(navigationProperty) #> As <#= code.Type(navigationProperty) #>
 <#
     }
 #>
-    End Class
-End Namespace
+End Class
