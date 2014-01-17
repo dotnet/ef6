@@ -280,8 +280,7 @@ namespace System.Data.Entity.Query
             }
         }
 
-        // TODO uncomment when functional bug is translation is fixed
-        ////[Fact]
+        [Fact]
         public void Query_with_All_with_predicate_works_with_clr_semantics()
         {
             using (var context = new NullSemanticsContext())
@@ -296,8 +295,7 @@ namespace System.Data.Entity.Query
             }
         }
 
-        // TODO uncomment when functional bug is translation is fixed
-        ////[Fact]
+        [Fact]
         public void Query_with_Any_with_predicate_works_with_clr_semantics()
         {
             using (var context = new NullSemanticsContext())

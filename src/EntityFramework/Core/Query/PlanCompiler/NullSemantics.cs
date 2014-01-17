@@ -9,8 +9,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal class NullSemantics : BasicOpVisitorOfNode
     {
         private Command _command;
+
+        // Flag that indicates whether the expression tree has changed or not.
         private bool _modified;
-        private bool _negated;
+
+        // Flag that indicates whether the expansion of the equality operation 
+        // must take the positive or the negative form.
+        private bool _negated; 
+
         private VariableNullabilityTable _variableNullabilityTable 
             = new VariableNullabilityTable(capacity: 32);
 
@@ -28,29 +34,34 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return processor._modified;
         }
 
-        protected override Node VisitScalarOpDefault(ScalarOp op, Node n)
-        {
-            switch (op.OpType)
-            {
-                case OpType.Not:
-                    return HandleNot(n);
-                case OpType.Or:
-                    return HandleOr(n);
-                case OpType.EQ:
-                    return HandleEQ(n);
-                case OpType.NE:
-                    return HandleNE(n);
-                default:
-                    return base.VisitScalarOpDefault(op, n);
-            }
-        }
-
-        private Node HandleNot(Node n)
+        protected override Node VisitDefault(Node n)
         {
             var negated = _negated;
-            _negated = !_negated;
 
-            n = base.VisitScalarOpDefault((ScalarOp)n.Op, n);
+            switch (n.Op.OpType)
+            {
+                case OpType.Not:
+                    _negated = !_negated;
+                    n = base.VisitDefault(n);
+                    break;
+                case OpType.Or:
+                    n = HandleOr(n);
+                    break;
+                case OpType.And:
+                    n = base.VisitDefault(n);
+                    break;
+                case OpType.EQ:
+                    _negated = false;
+                    n = HandleEQ(n, negated);
+                    break;
+                case OpType.NE:
+                    n = HandleNE(n);
+                    break;
+                default:
+                    _negated = false;
+                    n = base.VisitDefault(n);
+                    break;
+            }
 
             _negated = negated;
 
@@ -68,7 +79,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (isNullNode == null
                 || isNullNode.Child0.Op.OpType != OpType.VarRef)
             {
-                return base.VisitScalarOpDefault((ScalarOp)n.Op, n);
+                return base.VisitDefault(n);
             }
 
             // Mark 'variable' as not nullable while 'expression' is visited.
@@ -84,12 +95,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return n;
         }
 
-        private Node HandleEQ(Node n)
+        private Node HandleEQ(Node n, bool negated)
         {
             _modified |= 
                 !ReferenceEquals(n.Child0, n.Child0 = VisitNode(n.Child0)) ||
                 !ReferenceEquals(n.Child1, n.Child1 = VisitNode(n.Child1)) ||
-                !ReferenceEquals(n, n = ImplementEquality(n));
+                !ReferenceEquals(n, n = ImplementEquality(n, negated));
 
             return n;
         }
@@ -105,7 +116,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             _modified = true;
 
-            return base.VisitScalarOpDefault((ScalarOp)n.Op, n);
+            return base.VisitDefault(n);
         }
 
         private bool IsNullableVarRef(Node n)
@@ -114,7 +125,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 && _variableNullabilityTable[((VarRefOp)n.Op).Var];
         }
 
-        private Node ImplementEquality(Node n)
+        private Node ImplementEquality(Node n, bool negated)
         {
             Debug.Assert(n.Op.OpType == OpType.EQ);
 
@@ -135,7 +146,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         case OpType.Null:
                             return False();
                         default:
-                            return _negated
+                            return negated
                                 ? And(n, Not(IsNull(Clone(y))))
                                 : n;
                     }
@@ -157,13 +168,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         case OpType.Constant:
                         case OpType.InternalConstant:
                         case OpType.NullSentinel:
-                            return _negated && IsNullableVarRef(n)
+                            return negated && IsNullableVarRef(n)
                                 ? And(n, Not(IsNull(Clone(x))))
                                 : n;
                         case OpType.Null:
                             return IsNull(x);
                         default:
-                            return _negated
+                            return negated
                                 ? And(n, NotXor(Clone(x), Clone(y)))
                                 : Or(n, And(IsNull(Clone(x)), IsNull(Clone(y))));
                     }
