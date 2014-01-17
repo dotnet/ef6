@@ -178,11 +178,11 @@ namespace System.Data.Entity
             DiscoverAndInitializeSets();
         }
 
-        /// <summary>
-        /// Initializes the internal context, discovers and initializes sets, and initializes from a model if one is provided.
-        /// </summary>
-        /// <param name="internalConnection"> The internal connection object with which to initialize. </param>
-        /// <param name="model"> An optional <see cref="DbCompiledModel" /> with which to initialize. </param>
+        // <summary>
+        // Initializes the internal context, discovers and initializes sets, and initializes from a model if one is provided.
+        // </summary>
+        // <param name="internalConnection"> The internal connection object with which to initialize. </param>
+        // <param name="model"> An optional <see cref="DbCompiledModel" /> with which to initialize. </param>
         internal virtual void InitializeLazyInternalContext(IInternalConnection internalConnection, DbCompiledModel model = null)
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());

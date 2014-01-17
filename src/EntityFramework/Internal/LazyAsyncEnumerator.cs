@@ -11,11 +11,11 @@ namespace System.Data.Entity.Internal
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// Used to wrap ObjectResult and defer async query execution until first call to MoveNextAsyc is completed. 
-    /// </summary>
-    /// <typeparam name="T">The element type of the wrapped ObjectResult</typeparam>
-    /// <remarks>This class is not thread safe.</remarks>
+    // <summary>
+    // Used to wrap ObjectResult and defer async query execution until first call to MoveNextAsyc is completed. 
+    // </summary>
+    // <typeparam name="T">The element type of the wrapped ObjectResult</typeparam>
+    // <remarks>This class is not thread safe.</remarks>
     internal class LazyAsyncEnumerator<T> : IDbAsyncEnumerator<T>
     {
         private readonly Func<CancellationToken, Task<ObjectResult<T>>> _getObjectResultAsync;

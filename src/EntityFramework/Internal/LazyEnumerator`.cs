@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -8,11 +8,11 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Used to wrap ObjectResult and defer query execution until first call to MoveNext. 
-    /// </summary>
-    /// <typeparam name="T">The element type of the wrapped ObjectResult</typeparam>
-    /// <remarks>This class is not thread safe.</remarks>
+    // <summary>
+    // Used to wrap ObjectResult and defer query execution until first call to MoveNext. 
+    // </summary>
+    // <typeparam name="T">The element type of the wrapped ObjectResult</typeparam>
+    // <remarks>This class is not thread safe.</remarks>
     internal class LazyEnumerator<T> : IEnumerator<T>
     {
         private readonly Func<ObjectResult<T>> _getObjectResult;
