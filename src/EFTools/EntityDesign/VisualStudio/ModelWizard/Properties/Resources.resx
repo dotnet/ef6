@@ -194,11 +194,11 @@
   <data name="PageIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bitmaps\pageicon.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SaveEntityConnectionLabel" xml:space="preserve">
-    <value>&amp;Save entity connection settings in App.Config as:</value>
+  <data name="SaveConnectionLabel" xml:space="preserve">
+    <value>&amp;Save connection settings in App.Config as:</value>
   </data>
-  <data name="SaveEntityConnectionLabelASP" xml:space="preserve">
-    <value>&amp;Save entity connection settings in Web.Config as:</value>
+  <data name="SaveConnectionLabelASP" xml:space="preserve">
+    <value>&amp;Save connection settings in Web.Config as:</value>
   </data>
   <data name="SelectTablesPage_ConfirmNoTables" xml:space="preserve">
     <value>No database objects have been selected. This will result in an empty model. Are you sure you want to create an empty model? </value>

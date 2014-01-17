@@ -61,11 +61,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             allowSensitiveInfoButton.Text = Resources.AllowSensitiveDataInfoText;
             if (wizard.ModelBuilderSettings.SaveToWebConfig)
             {
-                checkBoxSaveInAppConfig.Text = Resources.SaveEntityConnectionLabelASP;
+                checkBoxSaveInAppConfig.Text = Resources.SaveConnectionLabelASP;
             }
             else
             {
-                checkBoxSaveInAppConfig.Text = Resources.SaveEntityConnectionLabel;
+                checkBoxSaveInAppConfig.Text = Resources.SaveConnectionLabel;
             }
 
             // make the App/Web.Config connection name entry non-editable for 'Update Model' and 'Generate Database' scenarios

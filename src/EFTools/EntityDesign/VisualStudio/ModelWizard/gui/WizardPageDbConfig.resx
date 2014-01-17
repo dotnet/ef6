@@ -157,7 +157,7 @@
     <value>7</value>
   </data>
   <data name="checkBoxSaveInAppConfig.Text" xml:space="preserve">
-    <value>&amp;Save entity connection settings in App.Config as:</value>
+    <value>&amp;Save connection settings in App.Config as:</value>
   </data>
   <data name="&gt;&gt;checkBoxSaveInAppConfig.Name" xml:space="preserve">
     <value>checkBoxSaveInAppConfig</value>
@@ -454,7 +454,7 @@
     <value>5</value>
   </data>
   <data name="lblEntityConnectionString.Text" xml:space="preserve">
-    <value>Entity connection string:</value>
+    <value>Connection string:</value>
   </data>
   <data name="&gt;&gt;lblEntityConnectionString.Name" xml:space="preserve">
     <value>lblEntityConnectionString</value>

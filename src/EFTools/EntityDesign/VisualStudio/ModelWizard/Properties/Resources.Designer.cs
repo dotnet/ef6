@@ -848,20 +848,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;Save entity connection settings in App.Config as:.
+        ///   Looks up a localized string similar to &amp;Save connection settings in App.Config as:.
         /// </summary>
-        internal static string SaveEntityConnectionLabel {
+        internal static string SaveConnectionLabel {
             get {
-                return ResourceManager.GetString("SaveEntityConnectionLabel", resourceCulture);
+                return ResourceManager.GetString("SaveConnectionLabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;Save entity connection settings in Web.Config as:.
+        ///   Looks up a localized string similar to &amp;Save connection settings in Web.Config as:.
         /// </summary>
-        internal static string SaveEntityConnectionLabelASP {
+        internal static string SaveConnectionLabelASP {
             get {
-                return ResourceManager.GetString("SaveEntityConnectionLabelASP", resourceCulture);
+                return ResourceManager.GetString("SaveConnectionLabelASP", resourceCulture);
             }
         }
         
