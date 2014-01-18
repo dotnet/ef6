@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels
 {
@@ -9,9 +9,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels
     using System.Windows.Controls;
     using System.Windows.Data;
 
-    /// <summary>
-    ///     A validation rule that makes use of the business objects IDataErrorInfo interface is applied at the property level
-    /// </summary>
+    // <summary>
+    //     A validation rule that makes use of the business objects IDataErrorInfo interface is applied at the property level
+    // </summary>
     internal class CellDataInfoValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

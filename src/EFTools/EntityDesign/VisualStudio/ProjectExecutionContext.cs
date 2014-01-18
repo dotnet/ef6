@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
@@ -6,10 +6,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System.Diagnostics;
     using EnvDTE;
 
-    /// <summary>
-    ///     Creates an <see cref="ExecutorWrapper" /> that can be used to execute the user's code contained
-    ///     in the specified project.
-    /// </summary>
+    // <summary>
+    //     Creates an <see cref="ExecutorWrapper" /> that can be used to execute the user's code contained
+    //     in the specified project.
+    // </summary>
     internal class ProjectExecutionContext : IDisposable
     {
         private readonly AppDomain _domain;

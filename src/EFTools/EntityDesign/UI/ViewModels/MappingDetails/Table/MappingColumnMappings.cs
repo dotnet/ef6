@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
 {
@@ -15,11 +15,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     This class is here to represent the extra node we want into the UI, namely
-    ///     a child of the table, and a sibling of the list of conditions.  It shares a reference
-    ///     to the s-side entity with its parent.
-    /// </summary>
+    // <summary>
+    //     This class is here to represent the extra node we want into the UI, namely
+    //     a child of the table, and a sibling of the list of conditions.  It shares a reference
+    //     to the s-side entity with its parent.
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(ColumnMappingsBranch))]
     [TreeGridDesignerColumn(typeof(ColumnNameColumn), Order = 1)]
     internal class MappingColumnMappings : MappingEntityMappingRoot
@@ -41,11 +41,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
             get { return Resources.MappingDetails_ColumnMappingsName; }
         }
 
-        /// <summary>
-        ///     We override this property because we don't want to use the base setter; otherwise
-        ///     we'll replace the XRef for the storage entity so that it points here and not to the
-        ///     MappingStorageEntityType (our parent).
-        /// </summary>
+        // <summary>
+        //     We override this property because we don't want to use the base setter; otherwise
+        //     we'll replace the XRef for the storage entity so that it points here and not to the
+        //     MappingStorageEntityType (our parent).
+        // </summary>
         internal override EFElement ModelItem
         {
             get { return _modelItem; }

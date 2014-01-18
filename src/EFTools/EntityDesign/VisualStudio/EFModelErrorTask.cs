@@ -1,13 +1,13 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    /// <summary>
-    ///     This is the error task we use when a document is not opened.
-    /// </summary>
+    // <summary>
+    //     This is the error task we use when a document is not opened.
+    // </summary>
     internal class EFModelErrorTask : XmlModelErrorTask
     {
         internal EFModelErrorTask(

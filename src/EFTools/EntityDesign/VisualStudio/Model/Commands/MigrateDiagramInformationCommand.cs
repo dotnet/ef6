@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Model.Commands
 {
@@ -15,9 +15,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model.Commands
     using Microsoft.Data.Tools.VSXmlDesignerBase.Model.VisualStudio;
     using Command = Microsoft.Data.Entity.Design.Model.Commands.Command;
 
-    /// <summary>
-    ///     Migrate diagrams node from EDMX file to a separate file.
-    /// </summary>
+    // <summary>
+    //     Migrate diagrams node from EDMX file to a separate file.
+    // </summary>
     internal class MigrateDiagramInformationCommand : Command
     {
         private readonly EntityDesignArtifact _artifact;

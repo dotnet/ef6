@@ -53,9 +53,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         Website = 2
     }
 
-    /// <summary>
-    ///     Helper class to work with the VS DTE
-    /// </summary>
+    // <summary>
+    //     Helper class to work with the VS DTE
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class VsUtils
     {
@@ -68,12 +68,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         private static readonly string OutputWindowPaneTitle = Resources.EDMOutputWindowPaneTitle;
         internal static readonly string DevEnvDirMacroName = "DevEnvDir";
 
-        /// <summary>
-        ///     Finds the first ProjectItem with the specified name in the given ProjectItems.
-        /// </summary>
-        /// <param name="projectItems">The ProjectItems to search</param>
-        /// <param name="nameToMatch">The name to find.</param>
-        /// <returns>ProjectItem if found, null otherwise</returns>
+        // <summary>
+        //     Finds the first ProjectItem with the specified name in the given ProjectItems.
+        // </summary>
+        // <param name="projectItems">The ProjectItems to search</param>
+        // <param name="nameToMatch">The name to find.</param>
+        // <returns>ProjectItem if found, null otherwise</returns>
         internal static ProjectItem FindFirstProjectItemWithName(ProjectItems projectItems, string nameToMatch)
         {
             if (null == projectItems)
@@ -90,9 +90,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                         StringComparison.Ordinal) == 0);
         }
 
-        /// <summary>
-        ///     get the currently active project
-        /// </summary>
+        // <summary>
+        //     get the currently active project
+        // </summary>
         internal static Project GetActiveProject(DTE2 dte)
         {
             Project project = null;
@@ -148,11 +148,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return ConnectionManager.LoadConfigFile(webConfigFilepath);
         }
 
-        /// <summary>
-        ///     This will resolve a path with a certain macro, such as: "$(DevEnvDir)\devenv.exe" and can
-        ///     also handle custom macros.
-        /// </summary>
-        /// <param name="project">Pass in null to not resolve any project macros</param>
+        // <summary>
+        //     This will resolve a path with a certain macro, such as: "$(DevEnvDir)\devenv.exe" and can
+        //     also handle custom macros.
+        // </summary>
+        // <param name="project">Pass in null to not resolve any project macros</param>
         internal static string ResolvePathWithMacro(Project project, string path, Dictionary<string, string> customMacros)
         {
             var macroMatch = MacroRegex.Match(path);
@@ -185,10 +185,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return path;
         }
 
-        /// <summary>
-        ///     Used to resolve a single macro, such as "DevEnvDir", "ProjectDir", or "TargetDir". A dictionary of custom macros can also be passed in
-        ///     as a 'backup'.
-        /// </summary>
+        // <summary>
+        //     Used to resolve a single macro, such as "DevEnvDir", "ProjectDir", or "TargetDir". A dictionary of custom macros can also be passed in
+        //     as a 'backup'.
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsBuildPropertyStorage.GetPropertyValue(System.String,System.String,System.UInt32,System.String@)")]
         internal static string ResolveMacro(Project project, string macroName, Dictionary<string, string> customMacros)
         {
@@ -276,12 +276,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Helper to finds or create all nodes specified in elementPath
-        /// </summary>
-        /// <param name="parentNode"></param>
-        /// <param name="elementPath">full path to element separated by '/'</param>
-        /// <param name="prependChild"></param>
+        // <summary>
+        //     Helper to finds or create all nodes specified in elementPath
+        // </summary>
+        // <param name="parentNode"></param>
+        // <param name="elementPath">full path to element separated by '/'</param>
+        // <param name="prependChild"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static XmlNode FindOrCreateXmlElement(XmlNode parentNode, string elementPath, bool prependChild = false)
         {
@@ -315,13 +315,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return xmlNode;
         }
 
-        /// <summary>
-        ///     Helper to find first child element with a particular attribute with
-        ///     a particular value (if any attribute value is good use null, but
-        ///     note this is different from an empty string which will require the
-        ///     attribute to have an empty value).
-        ///     If such a child element doesn't exist, create it.
-        /// </summary>
+        // <summary>
+        //     Helper to find first child element with a particular attribute with
+        //     a particular value (if any attribute value is good use null, but
+        //     note this is different from an empty string which will require the
+        //     attribute to have an empty value).
+        //     If such a child element doesn't exist, create it.
+        // </summary>
         private static XmlElement FindOrCreateChildXmlElementWithAttribute(
             XmlNode parentNode, string elementName, string attributeName, string attributeValue, IComparer<string> comparer)
         {
@@ -409,9 +409,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                     });
         }
 
-        /// <summary>
-        ///     Logs a message to the output window pane for ModelGen output
-        /// </summary>
+        // <summary>
+        //     Logs a message to the output window pane for ModelGen output
+        // </summary>
         internal static void LogOutputWindowPaneMessage(Project project, string message, bool activateWindow = true)
         {
             if (null == message)
@@ -426,9 +426,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Returns an output window pane for ModelGen output (creates it if necessary)
-        /// </summary>
+        // <summary>
+        //     Returns an output window pane for ModelGen output (creates it if necessary)
+        // </summary>
         private static OutputWindowPane GetOutputWindowPane(Project project, bool activate)
         {
             Debug.Assert(null != project, "project should not be null");
@@ -490,9 +490,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return outputWindowPane;
         }
 
-        /// <summary>
-        ///     returns the DirectoryInfo for the root of the project
-        /// </summary>
+        // <summary>
+        //     returns the DirectoryInfo for the root of the project
+        // </summary>
         internal static DirectoryInfo GetProjectRoot(Project project, IServiceProvider serviceProvider)
         {
             DirectoryInfo projectRootDirectoryInfo = null;
@@ -617,11 +617,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     This function checks that this is a valid file name. This checks for:
-        ///     1. This file name is not a reserved name, such as 'CON' or 'LPT'
-        ///     2. This file name does not contain any invalid file name characters
-        /// </summary>
+        // <summary>
+        //     This function checks that this is a valid file name. This checks for:
+        //     1. This file name is not a reserved name, such as 'CON' or 'LPT'
+        //     2. This file name does not contain any invalid file name characters
+        // </summary>
         internal static bool IsValidFileName(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
@@ -651,10 +651,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return true;
         }
 
-        /// <summary>
-        ///     Returns application type for given project
-        ///     everything that is not WebSite nor WebApplication is considered to be a WindowsApplication
-        /// </summary>
+        // <summary>
+        //     Returns application type for given project
+        //     everything that is not WebSite nor WebApplication is considered to be a WindowsApplication
+        // </summary>
         internal static VisualStudioProjectSystem GetApplicationType(IServiceProvider serviceProvider, Project project)
         {
             var applicationType = VisualStudioProjectSystem.WindowsApplication;
@@ -772,10 +772,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Changes the current cursor to an hourglass, and restores it
-        ///     when Dispose is called.
-        /// </summary>
+        // <summary>
+        //     Changes the current cursor to an hourglass, and restores it
+        //     when Dispose is called.
+        // </summary>
         internal sealed class HourglassHelper : IDisposable
         {
             private readonly Cursor _previousCursor;
@@ -794,12 +794,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Helper method to show an error message within the shell.  This should be used
-        ///     instead of MessageBox.Show();
-        /// </summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="errorText">Text to display.</param>
+        // <summary>
+        //     Helper method to show an error message within the shell.  This should be used
+        //     instead of MessageBox.Show();
+        // </summary>
+        // <param name="serviceProvider">The service provider.</param>
+        // <param name="errorText">Text to display.</param>
         public static void ShowError(IServiceProvider serviceProvider, string errorText)
         {
             ShowMessageBox(
@@ -807,15 +807,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 OLEMSGICON.OLEMSGICON_CRITICAL);
         }
 
-        /// <summary>
-        ///     Helper method to show a message box within the shell.
-        /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <param name="messageText">Text to show.</param>
-        /// <param name="messageButtons">Buttons which should appear in the dialog.</param>
-        /// <param name="defaultButton">Default button (invoked when user presses return).</param>
-        /// <param name="messageIcon">Icon (warning, error, informational, etc.) to display</param>
-        /// <returns>result corresponding to the button clicked by the user.</returns>
+        // <summary>
+        //     Helper method to show a message box within the shell.
+        // </summary>
+        // <param name="serviceProvider"></param>
+        // <param name="messageText">Text to show.</param>
+        // <param name="messageButtons">Buttons which should appear in the dialog.</param>
+        // <param name="defaultButton">Default button (invoked when user presses return).</param>
+        // <param name="messageIcon">Icon (warning, error, informational, etc.) to display</param>
+        // <returns>result corresponding to the button clicked by the user.</returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static DialogResult ShowMessageBox(
             IServiceProvider serviceProvider, string messageText, OLEMSGBUTTON messageButtons, OLEMSGDEFBUTTON defaultButton,
@@ -824,16 +824,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return ShowMessageBox(serviceProvider, messageText, null, messageButtons, defaultButton, messageIcon);
         }
 
-        /// <summary>
-        ///     Helper method to show a message box within the shell.
-        /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <param name="messageText">Text to show.</param>
-        /// <param name="f1Keyword">F1-keyword.</param>
-        /// <param name="messageButtons">Buttons which should appear in the dialog.</param>
-        /// <param name="defaultButton">Default button (invoked when user presses return).</param>
-        /// <param name="messageIcon">Icon (warning, error, informational, etc.) to display</param>
-        /// <returns>result corresponding to the button clicked by the user.</returns>
+        // <summary>
+        //     Helper method to show a message box within the shell.
+        // </summary>
+        // <param name="serviceProvider"></param>
+        // <param name="messageText">Text to show.</param>
+        // <param name="f1Keyword">F1-keyword.</param>
+        // <param name="messageButtons">Buttons which should appear in the dialog.</param>
+        // <param name="defaultButton">Default button (invoked when user presses return).</param>
+        // <param name="messageIcon">Icon (warning, error, informational, etc.) to display</param>
+        // <returns>result corresponding to the button clicked by the user.</returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static DialogResult ShowMessageBox(
             IServiceProvider serviceProvider, string messageText, string f1Keyword, OLEMSGBUTTON messageButtons,
@@ -1106,9 +1106,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return GetTargetFrameworkMonikerForDocument(project, VSConstants.VSITEMID_ROOT, serviceProvider);
         }
 
-        /// <summary>
-        ///     Gets the text from DocData if it's available, otherwise retreives it from disk.
-        /// </summary>
+        // <summary>
+        //     Gets the text from DocData if it's available, otherwise retreives it from disk.
+        // </summary>
         internal static string GetFileContentsFromBufferOrDisk(string filePath)
         {
             // attempt to construct the text from the doc data if it is available
@@ -1128,9 +1128,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return fileText;
         }
 
-        /// <summary>
-        ///     Return target framework moniker for given document.
-        /// </summary>
+        // <summary>
+        //     Return target framework moniker for given document.
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal static string GetTargetFrameworkMonikerForDocument(Project project, uint itemId, IServiceProvider serviceProvider)
         {
@@ -1159,13 +1159,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return String.Empty;
         }
 
-        /// <summary>
-        ///     Gets the relative path of a given absolute path within a project
-        /// </summary>
-        /// <param name="project">DTE Project</param>
-        /// <param name="path">path that may contain the project path</param>
-        /// <param name="relativePath">relative path in the project</param>
-        /// <returns>true if the path contains the project path or false otherwise</returns>
+        // <summary>
+        //     Gets the relative path of a given absolute path within a project
+        // </summary>
+        // <param name="project">DTE Project</param>
+        // <param name="path">path that may contain the project path</param>
+        // <param name="relativePath">relative path in the project</param>
+        // <returns>true if the path contains the project path or false otherwise</returns>
         internal static bool TryGetRelativePathInProject(Project project, string path, out string relativePath)
         {
             relativePath = String.Empty;
@@ -1201,9 +1201,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return root;
         }
 
-        /// <summary>
-        ///     Read the Visual Studio ApplicationID from the registry.  This should return something like 'VisualStudio' for VS or 'VBExpress' for VB Express.
-        /// </summary>
+        // <summary>
+        //     Read the Visual Studio ApplicationID from the registry.  This should return something like 'VisualStudio' for VS or 'VBExpress' for VB Express.
+        // </summary>
         internal static string GetVisualStudioApplicationID()
         {
             var applicationID = String.Empty;
@@ -1221,9 +1221,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return applicationID;
         }
 
-        /// <summary>
-        ///     Read the Visual Studio Install Dir from the registry.  This should return something like C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\
-        /// </summary>
+        // <summary>
+        //     Read the Visual Studio Install Dir from the registry.  This should return something like C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE\
+        // </summary>
         internal static string GetVisualStudioInstallDir()
         {
             var installDir = String.Empty;
@@ -1273,17 +1273,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         internal delegate void PersistObjectDataDelegate(object fileDataObject, string filePath);
 
-        /// <summary>
-        ///     Update the content of files in the project.
-        ///     The method loops through the file names collection. For each file, it will:
-        ///     - Check whether a doc data exist for the document
-        ///     - If yes, write the content to the doc data and continue.
-        ///     - If No, check whether the document is under source control and is not checked out.
-        ///     - If the document is not under the source control, directly write to the file, save, and continue.
-        ///     - If the document is under source control and not checked out, add the file to temporary collection; at the end, the code will check this
-        ///     temporary collection and do bulk checkout for the files and update.
-        ///     We are currently using this method to write build provider information in web.config as well as to update namespaces in the edmx files.
-        /// </summary>
+        // <summary>
+        //     Update the content of files in the project.
+        //     The method loops through the file names collection. For each file, it will:
+        //     - Check whether a doc data exist for the document
+        //     - If yes, write the content to the doc data and continue.
+        //     - If No, check whether the document is under source control and is not checked out.
+        //     - If the document is not under the source control, directly write to the file, save, and continue.
+        //     - If the document is under source control and not checked out, add the file to temporary collection; at the end, the code will check this
+        //     temporary collection and do bulk checkout for the files and update.
+        //     We are currently using this method to write build provider information in web.config as well as to update namespaces in the edmx files.
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsPersistDocData2.SetDocDataDirty(System.Int32)")]
         internal static void WriteCheckoutFilesInProject(
             IServiceProvider serviceProvider,
@@ -1367,9 +1367,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Check if the project item is a linked item (the item was added as a link file).
-        /// </summary>
+        // <summary>
+        //     Check if the project item is a linked item (the item was added as a link file).
+        // </summary>
         internal static bool IsLinkProjectItem(ProjectItem projectItem)
         {
             // Check whether project item is a  linked item
@@ -1443,12 +1443,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return null;
         }
 
-        /// <summary>
-        ///     Attempts to run the custom tool for the project item
-        ///     Should work with both client and web project items.
-        ///     This will attempt to checkout the file, or not do anything
-        ///     if the file is not editable
-        /// </summary>
+        // <summary>
+        //     Attempts to run the custom tool for the project item
+        //     Should work with both client and web project items.
+        //     This will attempt to checkout the file, or not do anything
+        //     if the file is not editable
+        // </summary>
         internal static void RunCustomTool(ProjectItem projectItem)
         {
             var canEdit = false;
@@ -1494,9 +1494,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Gets the COM object that represents the project item
-        /// </summary>
+        // <summary>
+        //     Gets the COM object that represents the project item
+        // </summary>
         private static object GetProjectItemObject(ProjectItem projectItem)
         {
             var projectItemObj = projectItem.Object;
@@ -1684,10 +1684,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return dbProjectItem;
         }
 
-        /// <summary>
-        ///     Create the file if it does not exist
-        ///     Add the file to the project as a dependent file of the project item.
-        /// </summary>
+        // <summary>
+        //     Create the file if it does not exist
+        //     Add the file to the project as a dependent file of the project item.
+        // </summary>
         internal static ProjectItem AddChildFile(ProjectItems projItems, string childFilePath)
         {
             if (projItems == null)
@@ -1748,16 +1748,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Ensure the UI context DataSourceWizardSuppressed is set.
-        ///     Ordinarily, when a database file is added to a project, the Data Source
-        ///     Wizard will be initiated offering to create a DataSet from the file.
-        ///     Since we are already creating a .EDMX file based on the database file
-        ///     we need to suppress this wizard.
-        ///     Note: when the wizard checks whether it is suppressed it will reset this
-        ///     context back to "unsuppressed" - so this action needs to be repeated
-        ///     every time we copy in a file.
-        /// </summary>
+        // <summary>
+        //     Ensure the UI context DataSourceWizardSuppressed is set.
+        //     Ordinarily, when a database file is added to a project, the Data Source
+        //     Wizard will be initiated offering to create a DataSet from the file.
+        //     Since we are already creating a .EDMX file based on the database file
+        //     we need to suppress this wizard.
+        //     Note: when the wizard checks whether it is suppressed it will reset this
+        //     context back to "unsuppressed" - so this action needs to be repeated
+        //     every time we copy in a file.
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsMonitorSelection.SetCmdUIContext(System.UInt32,System.Int32)")]
         internal static void SetDataSourceWizardSuppressed(IServiceProvider serviceProvider)
         {
@@ -1787,11 +1787,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Helper method to construct an error message containing the messages of inner
-        ///     exceptions if present
-        /// </summary>
-        /// <returns>the error message</returns>
+        // <summary>
+        //     Helper method to construct an error message containing the messages of inner
+        //     exceptions if present
+        // </summary>
+        // <returns>the error message</returns>
         internal static string ConstructInnerExceptionErrorMessage(Exception e)
         {
             if (e == null)
@@ -1817,10 +1817,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return sbErrMsg.ToString();
         }
 
-        /// <summary>
-        ///     This will close the DbConnection (or SQLConnection or EntityConnection) safely, Trace and Debug if it can't.
-        ///     It will also call SqlConnection.ClearAllPools to release any read lock if the connection is pointing to a database file.
-        /// </summary>
+        // <summary>
+        //     This will close the DbConnection (or SQLConnection or EntityConnection) safely, Trace and Debug if it can't.
+        //     It will also call SqlConnection.ClearAllPools to release any read lock if the connection is pointing to a database file.
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal static void SafeCloseDbConnection(
             DbConnection dbConnection, string designTimeProviderName, string designTimeConnectionString)
@@ -1839,10 +1839,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             SafeCloseDbConnectionOnFile(designTimeProviderName, designTimeConnectionString);
         }
 
-        /// <summary>
-        ///     Checks to see if the connection string is pointing to a database file and if so, calls SqlConnection.ClearAllPools()
-        ///     to release any read lock on the database file.
-        /// </summary>
+        // <summary>
+        //     Checks to see if the connection string is pointing to a database file and if so, calls SqlConnection.ClearAllPools()
+        //     to release any read lock on the database file.
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal static void SafeCloseDbConnectionOnFile(string designTimeProviderName, string designTimeConnectionString)
         {
@@ -1921,17 +1921,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Returns the version of EntityFramework.dll or System.Data.Entity.dll referenced by a project or null if none.
-        /// </summary>
-        /// <remarks>
-        ///     Note that:
-        ///     - the method checks for references to both EntityFramework.dll and System.Data.Entity.dll
-        ///     - the version of EntityFramework.dll wins if references to both EntityFramework.dll and System.Data.Entity.dll are present
-        ///     - the assembly versions are not overlapping so it is possible to distinguish the assembly just by the version
-        ///     - the version of System.Data.Entity.dll assembly will be 4.0.0.0 for both .NET Framework 4 and .NET Framework 4.5
-        ///     but the runtime version should be 5.0.0.0 (EF5) when targeting .NET Framework 4.5 and 4.0.0.0 (EF4) otherwise
-        /// </remarks>
+        // <summary>
+        //     Returns the version of EntityFramework.dll or System.Data.Entity.dll referenced by a project or null if none.
+        // </summary>
+        // <remarks>
+        //     Note that:
+        //     - the method checks for references to both EntityFramework.dll and System.Data.Entity.dll
+        //     - the version of EntityFramework.dll wins if references to both EntityFramework.dll and System.Data.Entity.dll are present
+        //     - the assembly versions are not overlapping so it is possible to distinguish the assembly just by the version
+        //     - the version of System.Data.Entity.dll assembly will be 4.0.0.0 for both .NET Framework 4 and .NET Framework 4.5
+        //     but the runtime version should be 5.0.0.0 (EF5) when targeting .NET Framework 4.5 and 4.0.0.0 (EF4) otherwise
+        // </remarks>
         public static Version GetInstalledEntityFrameworkAssemblyVersion(Project project)
         {
             Debug.Assert(project != null, "project is null.");
@@ -1940,23 +1940,23 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return GetInstalledEntityFrameworkAssemblyVersions(project).FirstOrDefault();
         }
 
-        /// <summary>
-        ///     This method checks if the passed <paramref name="schemaVersion" /> is the latest
-        ///     supported in project (or supported at all).
-        /// </summary>
-        /// <returns>
-        ///     True if the schema version matches the latest schema version supported by model, false otherwise.
-        /// </returns>
-        /// <remarks>
-        ///     We use this method to determine if we can open an edmx file of the given <paramref name="schemaVersion" />.
-        ///     In general we want to open only edmx files with the latest version of the schema supported in the project
-        ///     with two exceptions:
-        ///     - Misc project - any version can be opened
-        ///     - A project that targets .NET Framework 4 and contains references to both System.Data.Entity.dll and
-        ///     EF6 EntityFramework.dll in which case we allow opening both v2 and v3 edmx files.
-        ///     If no EF dll is referenced by a project we use 1:1 mapping between schema version and .NET Framework version
-        ///     i.e. v1 - .NET Framework 3.5, v2 - .NET Framework 4, v3 - .NET Framework 4.5 and later
-        /// </remarks>
+        // <summary>
+        //     This method checks if the passed <paramref name="schemaVersion" /> is the latest
+        //     supported in project (or supported at all).
+        // </summary>
+        // <returns>
+        //     True if the schema version matches the latest schema version supported by model, false otherwise.
+        // </returns>
+        // <remarks>
+        //     We use this method to determine if we can open an edmx file of the given <paramref name="schemaVersion" />.
+        //     In general we want to open only edmx files with the latest version of the schema supported in the project
+        //     with two exceptions:
+        //     - Misc project - any version can be opened
+        //     - A project that targets .NET Framework 4 and contains references to both System.Data.Entity.dll and
+        //     EF6 EntityFramework.dll in which case we allow opening both v2 and v3 edmx files.
+        //     If no EF dll is referenced by a project we use 1:1 mapping between schema version and .NET Framework version
+        //     i.e. v1 - .NET Framework 3.5, v2 - .NET Framework 4, v3 - .NET Framework 4.5 and later
+        // </remarks>
         public static bool SchemaVersionSupportedInProject(Project project, Version schemaVersion, IServiceProvider serviceProvider)
         {
             Debug.Assert(project != null, "project != null");
@@ -2099,10 +2099,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return typeResolutionService.GetType(typeName);
         }
 
-        /// <summary>
-        ///     Determines whether a modern (or non-legacy) provider is available for the
-        ///     specified invariant name
-        /// </summary>
+        // <summary>
+        //     Determines whether a modern (or non-legacy) provider is available for the
+        //     specified invariant name
+        // </summary>
         public static bool IsModernProviderAvailable(
             string providerInvariantName,
             Project project,
@@ -2114,10 +2114,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                    || GetModernProviderTypeNameFromProject(providerInvariantName, project, serviceProvider) != null;
         }
 
-        /// <summary>
-        ///     Gets the <see cref="DbProviderServices" /> type of the modern (or non-legacy) provider for the
-        ///     specified invariant name
-        /// </summary>
+        // <summary>
+        //     Gets the <see cref="DbProviderServices" /> type of the modern (or non-legacy) provider for the
+        //     specified invariant name
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private static Type GetModernProvider(string providerInvariantName, Project project, IServiceProvider serviceProvider)
         {

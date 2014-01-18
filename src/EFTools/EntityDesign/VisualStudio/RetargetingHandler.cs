@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
@@ -26,12 +26,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             _serviceProvider = serviceProvider;
         }
 
-        /// <summary>
-        ///     Project retargeting event handler.
-        ///     1. Check the project type, return immediately if project is misc project or a project that does not support EF.
-        ///     2. Find all the EDMX files in the project. Skip Data Services edmx files and linked files.
-        ///     3. Sync all the namespaces based on the new target framework
-        /// </summary>
+        // <summary>
+        //     Project retargeting event handler.
+        //     1. Check the project type, return immediately if project is misc project or a project that does not support EF.
+        //     2. Find all the EDMX files in the project. Skip Data Services edmx files and linked files.
+        //     3. Sync all the namespaces based on the new target framework
+        // </summary>
         public void RetargetFilesInProject()
         {
             var project = VSHelpers.GetProject(_hierarchy);

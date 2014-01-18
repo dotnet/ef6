@@ -22,10 +22,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Xml;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     This is the third page in the ModelGen VS wizard and is invoked if the user wants to generate the model from a database.
-    ///     This page lets the user select tables that should be included in the generated model
-    /// </summary>
+    // <summary>
+    //     This is the third page in the ModelGen VS wizard and is invoked if the user wants to generate the model from a database.
+    //     This page lets the user select tables that should be included in the generated model
+    // </summary>
     // to view this class in the forms designer, make it temporarily derive from Microsoft.WizardFramework.WizardPage
     internal partial class WizardPageSelectTables : WizardPageBase
     {
@@ -140,10 +140,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return base.OnActivate();
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is entered.
-        ///     Starts a background thread to retrieve table information to display
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is entered.
+        //     Starts a background thread to retrieve table information to display
+        // </summary>
         public override void OnActivated()
         {
             base.OnActivated();
@@ -211,10 +211,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
-        ///     Updates ModelBuilderSettings from the GUI
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
+        //     Updates ModelBuilderSettings from the GUI
+        // </summary>
         public override bool OnDeactivate()
         {
             if (Wizard.MovingNext
@@ -342,11 +342,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         #region Methods
 
-        /// <summary>
-        ///     DoWork event handler: Get table names in a background thread.
-        ///     This method is called by background worker component on a different thread than the UI thread.
-        ///     We use the ModelBuilderEngine to get table names to display
-        /// </summary>
+        // <summary>
+        //     DoWork event handler: Get table names in a background thread.
+        //     This method is called by background worker component on a different thread than the UI thread.
+        //     We use the ModelBuilderEngine to get table names to display
+        // </summary>
         private void bgWorkerPopulateTree_DoWork(object sender, DoWorkEventArgs args)
         {
             // This method will run on a thread other than the UI thread.
@@ -384,11 +384,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     RunWorkerCompleted event handler: Populate Treeview here.
-        ///     This method is called by background worker component on the same thread as the UI thread.
-        ///     ModelBuilderEngine gaves us table names to display so we add them to the TreeView
-        /// </summary>
+        // <summary>
+        //     RunWorkerCompleted event handler: Populate Treeview here.
+        //     This method is called by background worker component on the same thread as the UI thread.
+        //     ModelBuilderEngine gaves us table names to display so we add them to the TreeView
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected void bgWorkerPopulateTree_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
@@ -553,25 +553,25 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return existingNamespaces;
         }
 
-        /// <summary>
-        ///     Event handler to display a tooltip over a disabled control
-        /// </summary>
+        // <summary>
+        //     Event handler to display a tooltip over a disabled control
+        // </summary>
         internal void IncludeForeignKeysArea_OnMouseMove(Object sender, MouseEventArgs e)
         {
             ToolTipOnDisabledControl_OnMouseMove(sender, e, chkIncludeForeignKeys, toolTip, ref _controlWithToolTipShown);
         }
 
-        /// <summary>
-        ///     Event handler to display a tooltip over a disabled control
-        /// </summary>
+        // <summary>
+        //     Event handler to display a tooltip over a disabled control
+        // </summary>
         private void IncludeForeignKeysArea_OnMouseLeave(object sender, EventArgs e)
         {
             ToolTipOnDisabledControl_OnMouseLeave(sender, e, toolTip, ref _controlWithToolTipShown);
         }
 
-        /// <summary>
-        ///     Helper method to display a tooltip over a disabled control
-        /// </summary>
+        // <summary>
+        //     Helper method to display a tooltip over a disabled control
+        // </summary>
         internal static void ToolTipOnDisabledControl_OnMouseMove(
             Object sender, MouseEventArgs e, Control disabledControl, ToolTip toolTip, ref Control controlWithToolTipShown)
         {
@@ -600,9 +600,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Helper method to display a tooltip over a disabled control
-        /// </summary>
+        // <summary>
+        //     Helper method to display a tooltip over a disabled control
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "sender")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "e")]
         internal static void ToolTipOnDisabledControl_OnMouseLeave(

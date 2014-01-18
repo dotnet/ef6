@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 
 #if VS12
@@ -84,9 +84,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         private Label _statusLabel;
 
-        /// <summary>
-        ///     Helper to show a status message Label control on top of the client area of the TreeView control
-        /// </summary>
+        // <summary>
+        //     Helper to show a status message Label control on top of the client area of the TreeView control
+        // </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public void ShowStatus(string message)
         {
@@ -110,9 +110,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Controls.SetChildIndex(_statusLabel, 0);
         }
 
-        /// <summary>
-        ///     Helper to hide the status message Label control
-        /// </summary>
+        // <summary>
+        //     Helper to hide the status message Label control
+        // </summary>
         public void HideStatus()
         {
             if (_statusLabel != null)
@@ -246,10 +246,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Once a given node has been checked this method updates the Checked
-        ///     state of various other nodes to match.
-        /// </summary>
+        // <summary>
+        //     Once a given node has been checked this method updates the Checked
+        //     state of various other nodes to match.
+        // </summary>
         private static void UpdateChildrenNodesCheckedState(TreeNode parentNode)
         {
             var nodeChecked = parentNode.Checked;
@@ -300,11 +300,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return nodeDepth;
         }
 
-        /// <summary>
-        ///     Updates a parent node's Checked state recursively up the tree
-        ///     according to the child's new Checked state.
-        ///     Note: childNode could be any kind of node.
-        /// </summary>
+        // <summary>
+        //     Updates a parent node's Checked state recursively up the tree
+        //     according to the child's new Checked state.
+        //     Note: childNode could be any kind of node.
+        // </summary>
         private static void UpdateParentNodeCheckedState(TreeNode childNode)
         {
             // no parent to update

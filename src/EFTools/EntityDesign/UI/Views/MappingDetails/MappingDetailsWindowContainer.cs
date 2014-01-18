@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
 {
@@ -140,9 +140,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Gets/sets the current display mode based on the selection in the drawing surface.
-        /// </summary>
+        // <summary>
+        //     Gets/sets the current display mode based on the selection in the drawing surface.
+        // </summary>
         public bool WatermarkVisible
         {
             get { return watermarkLabel.Visible; }
@@ -268,9 +268,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Event handler when window is being repainted.
-        /// </summary>
+        // <summary>
+        //     Event handler when window is being repainted.
+        // </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             // Draw a bounding rect to make it look better...
@@ -280,18 +280,18 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             base.OnPaint(e);
         }
 
-        /// <summary>
-        ///     Moves initial focus to the concents panel.
-        /// </summary>
+        // <summary>
+        //     Moves initial focus to the concents panel.
+        // </summary>
         protected override void OnGotFocus(EventArgs e)
         {
             contentsPanel.Controls[0].Focus();
             base.OnGotFocus(e);
         }
 
-        /// <summary>
-        ///     Wraps tab navigation around since this control is the top-level one.
-        /// </summary>
+        // <summary>
+        //     Wraps tab navigation around since this control is the top-level one.
+        // </summary>
         protected override bool ProcessTabKey(bool forward)
         {
             if (ActiveControl == _mainControl)
@@ -314,9 +314,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             return true;
         }
 
-        /// <summary>
-        ///     Propagates font to invisible controls.
-        /// </summary>
+        // <summary>
+        //     Propagates font to invisible controls.
+        // </summary>
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
@@ -25,14 +25,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             ExcludedSprocEntries = new List<EntityStoreSchemaFilterEntry>();
         }
 
-        /// <summary>
-        ///     Identifies if we need to explicitly state each schema filter entry or leverage 'wildcard' filter entries
-        ///     so that we don't overload the provider.
-        ///     TODO: There are several interesting possibilities here to improve performance if the language of the
-        ///     EntityStoreSchemaFilterEntry allows it (i.e. identifying patterns in what the user has selected and
-        ///     returning back a minimal set of schema filter entries
-        /// </summary>
-        /// <param name="schemaFilterPolicy">The policy used for optimizing changes. We will store a </param>
+        // <summary>
+        //     Identifies if we need to explicitly state each schema filter entry or leverage 'wildcard' filter entries
+        //     so that we don't overload the provider.
+        //     TODO: There are several interesting possibilities here to improve performance if the language of the
+        //     EntityStoreSchemaFilterEntry allows it (i.e. identifying patterns in what the user has selected and
+        //     returning back a minimal set of schema filter entries
+        // </summary>
+        // <param name="schemaFilterPolicy">The policy used for optimizing changes. We will store a </param>
         internal IList<EntityStoreSchemaFilterEntry> CollapseAndOptimize(SchemaFilterPolicy schemaFilterPolicy)
         {
             var optimizedFilterEntryList = new List<EntityStoreSchemaFilterEntry>();

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
@@ -11,7 +11,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     /// <summary>
     /// Helper methods for generating C# code.
     /// </summary>
-    internal class CSharpCodeHelper : CodeHelper
+    public class CSharpCodeHelper : CodeHelper
     {
         private static readonly CodeDomProvider _codeProvider = new CSharpCodeProvider();
 
@@ -21,7 +21,6 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             get { return _codeProvider; }
         }
 
-        /// <inheritdoc />
         internal override string TypeArgument(string value)
         {
             Debug.Assert(!string.IsNullOrEmpty(value), "value is null or empty.");
@@ -29,7 +28,6 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             return "<" + value + ">";
         }
 
-        /// <inheritdoc />
         internal override string Literal(bool value)
         {
             return value ? "true" : "false";
@@ -43,7 +41,6 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             return "new { " + string.Join(", ", properties) + " }";
         }
 
-        /// <inheritdoc />
         internal override string BeginLambda(string control)
         {
             Debug.Assert(!string.IsNullOrEmpty(control), "control is null or empty.");

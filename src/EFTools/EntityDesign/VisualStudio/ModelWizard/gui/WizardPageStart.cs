@@ -20,15 +20,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.VisualStudio.PlatformUI;
 #endif
 
-    /// <summary>
-    ///     This is the first page in the ModelBuilder VS wizard and lets the user select whether to:
-    ///     - start with an empty model or
-    ///     - generate the model from a database
-    /// </summary>
-    /// <remarks>
-    ///     To view this class in the forms designer, make it temporarily derive from
-    ///     Microsoft.WizardFramework.WizardPage
-    /// </remarks>
+    // <summary>
+    //     This is the first page in the ModelBuilder VS wizard and lets the user select whether to:
+    //     - start with an empty model or
+    //     - generate the model from a database
+    // </summary>
+    // <remarks>
+    //     To view this class in the forms designer, make it temporarily derive from
+    //     Microsoft.WizardFramework.WizardPage
+    // </remarks>
     internal partial class WizardPageStart : WizardPageBase
     {
         internal static readonly int GenerateFromDatabaseIndex = 0;
@@ -116,10 +116,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return base.OnActivate() && !Wizard.FileAlreadyExistsError;
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is entered.
-        ///     Updates GUI from ModelBuilderSettings
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is entered.
+        //     Updates GUI from ModelBuilderSettings
+        // </summary>
         public override void OnActivated()
         {
             base.OnActivated();
@@ -139,10 +139,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             get { return listViewModelContents.SelectedIndices.Count > 0; }
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
-        ///     Updates ModelBuilderSettings from the GUI
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
+        //     Updates ModelBuilderSettings from the GUI
+        // </summary>
         public override bool OnDeactivate()
         {
             var modelPath = 
@@ -189,9 +189,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Helper to update ModelBuilderSettings from listbox selection
-        /// </summary>
+        // <summary>
+        //     Helper to update ModelBuilderSettings from listbox selection
+        // </summary>
         private void UpdateSettingsFromGui(int selectedOptionIndex, string modelPath)
         {
             Wizard.ModelBuilderSettings.ModelPath = modelPath;
@@ -259,9 +259,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return true;
         }
 
-        /// <summary>
-        ///     Helper to update listbox selection from ModelBuilderSettings
-        /// </summary>
+        // <summary>
+        //     Helper to update listbox selection from ModelBuilderSettings
+        // </summary>
         private void UpdateGuiFromSettings()
         {
             switch (Wizard.ModelBuilderSettings.GenerationOption)
@@ -291,9 +291,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     SelectedIndexChanged event: fired by ListBox when the selection changes
-        /// </summary>
+        // <summary>
+        //     SelectedIndexChanged event: fired by ListBox when the selection changes
+        // </summary>
         private void listViewModelContents_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (AnyItemSelected)
@@ -408,10 +408,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Return EDMX template content.
-        ///     The method will return the template cache value if available.
-        /// </summary>
+        // <summary>
+        //     Return EDMX template content.
+        //     The method will return the template cache value if available.
+        // </summary>
         protected virtual string GetEdmxTemplateContent(string vstemplatePath)
         {
             string edmxTemplate;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Util
 {
@@ -21,17 +21,17 @@ namespace Microsoft.Data.Entity.Design.UI.Util
 
     internal static class EntityDesignViewModelHelper
     {
-        /// <summary>
-        ///     Shows the New Function Dialog appropriate to the schemaVersion
-        /// </summary>
-        /// <param name="editingContext">The editing context to use.</param>
-        /// <param name="artifact">The artifact to use.</param>
-        /// <param name="selectedSproc">The selected stored procedure.</param>
-        /// <param name="sModel">The input storage model</param>
-        /// <param name="cModel">The input conceptual model</param>
-        /// <param name="cContainer">The input conceptual EntityContainer</param>
-        /// <param name="entityType">Return item originally selected for this FunctionImport (null means none selected)</param>
-        /// <param name="originatingId">Originating ID used for transaction.</param>
+        // <summary>
+        //     Shows the New Function Dialog appropriate to the schemaVersion
+        // </summary>
+        // <param name="editingContext">The editing context to use.</param>
+        // <param name="artifact">The artifact to use.</param>
+        // <param name="selectedSproc">The selected stored procedure.</param>
+        // <param name="sModel">The input storage model</param>
+        // <param name="cModel">The input conceptual model</param>
+        // <param name="cContainer">The input conceptual EntityContainer</param>
+        // <param name="entityType">Return item originally selected for this FunctionImport (null means none selected)</param>
+        // <param name="originatingId">Originating ID used for transaction.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal static FunctionImport CreateFunctionImport(
             EditingContext editingContext,
@@ -145,16 +145,16 @@ namespace Microsoft.Data.Entity.Design.UI.Util
             return functionImportResult;
         }
 
-        /// <summary>
-        ///     Shows the New Function Dialog appropriate to the schemaVersion in EditMode
-        /// </summary>
-        /// <param name="editingContext">The editing context to use.</param>
-        /// <param name="functionImport">Stored procedure originally selected for this FunctionImport (null means none selected)</param>
-        /// <param name="sModel">The input storage model</param>
-        /// <param name="cModel">The input conceptual model</param>
-        /// <param name="cContainer">The input conceptual EntityContainer</param>
-        /// <param name="selectedObject">Return item originally selected for this FunctionImport (null means none selected)</param>
-        /// <param name="originatingId">Originating ID used for transaction.</param>
+        // <summary>
+        //     Shows the New Function Dialog appropriate to the schemaVersion in EditMode
+        // </summary>
+        // <param name="editingContext">The editing context to use.</param>
+        // <param name="functionImport">Stored procedure originally selected for this FunctionImport (null means none selected)</param>
+        // <param name="sModel">The input storage model</param>
+        // <param name="cModel">The input conceptual model</param>
+        // <param name="cContainer">The input conceptual EntityContainer</param>
+        // <param name="selectedObject">Return item originally selected for this FunctionImport (null means none selected)</param>
+        // <param name="originatingId">Originating ID used for transaction.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static void EditFunctionImport(
@@ -277,9 +277,9 @@ namespace Microsoft.Data.Entity.Design.UI.Util
             }
         }
 
-        /// <summary>
-        ///     Show the dialog to edit an existing enum type.
-        /// </summary>
+        // <summary>
+        //     Show the dialog to edit an existing enum type.
+        // </summary>
         public static void EditEnumType(
             EditingContext editingContext, string originatingId, EnumTypeViewModel enumTypeViewModel, EventHandler onDialogActivated = null)
         {
@@ -333,9 +333,9 @@ namespace Microsoft.Data.Entity.Design.UI.Util
             }
         }
 
-        /// <summary>
-        ///     Show the dialog to create a new enum type.
-        /// </summary>
+        // <summary>
+        //     Show the dialog to create a new enum type.
+        // </summary>
         public static EnumType AddNewEnumType(
             string selectedUnderlyingType, EditingContext editingContext, string originatingId, EventHandler onDialogActivated = null)
         {

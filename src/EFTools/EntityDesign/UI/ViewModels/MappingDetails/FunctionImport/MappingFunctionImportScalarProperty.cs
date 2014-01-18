@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImports
 {
@@ -15,12 +15,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     Class that represents a scalar property in the FunctionImportMapping.  This class has to be creatable without a ModelItem existing
-    ///     since we want to be able to display every Property from the ReturnType of the FunctionImport, even if the Property isn't mapped
-    ///     yet.  So, this class has the ability to store c-side Property information; and this is only used if
-    ///     there isn't an associated ModelItem.
-    /// </summary>
+    // <summary>
+    //     Class that represents a scalar property in the FunctionImportMapping.  This class has to be creatable without a ModelItem existing
+    //     since we want to be able to display every Property from the ReturnType of the FunctionImport, even if the Property isn't mapped
+    //     yet.  So, this class has the ability to store c-side Property information; and this is only used if
+    //     there isn't an associated ModelItem.
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(FunctionImportScalarPropertyBranch))]
     [TreeGridDesignerColumn(typeof(PropertyColumn), Order = 1)]
     [TreeGridDesignerColumn(typeof(OperatorColumn), Order = 2)]
@@ -36,9 +36,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
             Debug.Assert(sp != null, "FunctionImportScalarProperty shouldn't be null");
         }
 
-        /// <summary>
-        ///     Constructor for the dummy node when there is no corresponding ScalarProperty
-        /// </summary>
+        // <summary>
+        //     Constructor for the dummy node when there is no corresponding ScalarProperty
+        // </summary>
         public MappingFunctionImportScalarProperty(EditingContext context, Property property, MappingEFElement parent)
             : base(context, null, parent)
         {

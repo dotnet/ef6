@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.Controls
 {
@@ -7,9 +7,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Controls
     using System.Drawing;
     using System.Windows.Forms;
 
-    /// <summary>
-    ///     This helper class is used to override default behavior of a check-box which tries to fit all contents in 1 line.
-    /// </summary>
+    // <summary>
+    //     This helper class is used to override default behavior of a check-box which tries to fit all contents in 1 line.
+    // </summary>
     internal class AutoWrapCheckBox : CheckBox
     {
         private Size _cachedTextSize = Size.Empty;
@@ -48,10 +48,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Controls
             }
         }
 
-        /// <summary>
-        ///     Retrieves the size of a rectangular area into which a control can be fitted.
-        /// </summary>
-        /// <param name="proposedSize">The constraining size; the size for the control should fit into.</param>
+        // <summary>
+        //     Retrieves the size of a rectangular area into which a control can be fitted.
+        // </summary>
+        // <param name="proposedSize">The constraining size; the size for the control should fit into.</param>
         public override Size GetPreferredSize(Size proposedSize)
         {
             var prefSize = base.GetPreferredSize(proposedSize);

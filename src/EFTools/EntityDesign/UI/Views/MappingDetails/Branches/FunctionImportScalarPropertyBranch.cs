@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
 {
@@ -6,9 +6,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImports;
     using Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid;
 
-    /// <summary>
-    ///     This branch shows the scalar property mappings for a FunctionImportMapping.
-    /// </summary>
+    // <summary>
+    //     This branch shows the scalar property mappings for a FunctionImportMapping.
+    // </summary>
     internal class FunctionImportScalarPropertyBranch : TreeGridDesignerBranch
     {
         private MappingFunctionImport _mappingFunctionImport;

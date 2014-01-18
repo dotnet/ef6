@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
@@ -12,10 +12,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Microsoft.VisualStudio.Data.Services;
     using Microsoft.VisualStudio.Shell;
 
-    /// <summary>
-    ///     A wrapper around IVsDataConnectionDialog to share functionality for
-    ///     filtering against ADO.NET providers, etc.
-    /// </summary>
+    // <summary>
+    //     A wrapper around IVsDataConnectionDialog to share functionality for
+    //     filtering against ADO.NET providers, etc.
+    // </summary>
     internal class EntityDataConnectionDialog
     {
         internal event EventHandler BeforeAddSources;

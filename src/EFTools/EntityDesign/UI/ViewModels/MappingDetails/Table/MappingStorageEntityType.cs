@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
 {
@@ -17,9 +17,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     This class represents a table that has been mapped to an entity.
-    /// </summary>
+    // <summary>
+    //     This class represents a table that has been mapped to an entity.
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(TableBranch))]
     [TreeGridDesignerColumn(typeof(ColumnNameColumn), Order = 1)]
     internal class MappingStorageEntityType : MappingEntityMappingRoot
@@ -189,11 +189,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
             return base.GetListOfValues(type);
         }
 
-        /// <summary>
-        ///     When a new table is mapped, we also set up the MappingColumnMappings view model item.  This is a placeholder that
-        ///     contains the scalar property mappings.  It is separated from the other "children", the conditions, simply because of
-        ///     UI requirements that Conditions be UI peers of a "Column Mappings" node in the Trid.
-        /// </summary>
+        // <summary>
+        //     When a new table is mapped, we also set up the MappingColumnMappings view model item.  This is a placeholder that
+        //     contains the scalar property mappings.  It is separated from the other "children", the conditions, simply because of
+        //     UI requirements that Conditions be UI peers of a "Column Mappings" node in the Trid.
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal override void CreateModelItem(CommandProcessorContext cpc, EditingContext context, EFElement underlyingModelItem)
         {
@@ -275,10 +275,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
             }
         }
 
-        /// <summary>
-        ///     NOTE: We don't call this.Parent.RemoveChild(this) because this is always called from the MappingEFElement.Delete() method
-        ///     which will remove this item from the parent.
-        /// </summary>
+        // <summary>
+        //     NOTE: We don't call this.Parent.RemoveChild(this) because this is always called from the MappingEFElement.Delete() method
+        //     which will remove this item from the parent.
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             Debug.Assert(ModelItem != null, "We are trying to delete a null ModelItem");

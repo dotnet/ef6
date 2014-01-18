@@ -55,10 +55,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator
 
         #endregion
 
-        /// <summary>
-        ///     interface to the VS shell object we use to tell our
-        ///     progress while we are generating.
-        /// </summary>
+        // <summary>
+        //     interface to the VS shell object we use to tell our
+        //     progress while we are generating.
+        // </summary>
         internal IVsGeneratorProgress CodeGeneratorProgress
         {
             [DebuggerStepThrough] get { return _codeGeneratorProgress; }

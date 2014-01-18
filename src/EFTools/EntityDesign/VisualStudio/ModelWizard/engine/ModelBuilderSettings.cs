@@ -17,9 +17,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
 
-    /// <summary>
-    ///     Settings class used by ModelBuilderEngine
-    /// </summary>
+    // <summary>
+    //     Settings class used by ModelBuilderEngine
+    // </summary>
     internal class ModelBuilderSettings
     {
         #region Constructors
@@ -142,12 +142,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
         internal string ProviderManifestToken { get; set; }
 
-        /// <summary>
-        ///     Returns a Dictionary mapping the identity of each _new_ Function to an IDataSchemaProcedure containing
-        ///     info about the return type, params, name etc of the sproc in the database.
-        ///     Any key which is mapped to a null value represents a sproc which was not processed when the
-        ///     ProgressDialog was interrupted.
-        /// </summary>
+        // <summary>
+        //     Returns a Dictionary mapping the identity of each _new_ Function to an IDataSchemaProcedure containing
+        //     info about the return type, params, name etc of the sproc in the database.
+        //     Any key which is mapped to a null value represents a sproc which was not processed when the
+        //     ProgressDialog was interrupted.
+        // </summary>
         internal Dictionary<EntityStoreSchemaFilterEntry, IDataSchemaProcedure> NewFunctionSchemaProcedures
         {
             get
@@ -160,10 +160,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
         }
 
-        /// <summary>
-        ///     This will set up the design-time &amp; runtime invariant name properties &amp; connection string properties.
-        /// </summary>
-        /// <param name="isDesignTime">Indicates if invariant name &amp; connection strings are design-time or runtime.</param>
+        // <summary>
+        //     This will set up the design-time &amp; runtime invariant name properties &amp; connection string properties.
+        // </summary>
+        // <param name="isDesignTime">Indicates if invariant name &amp; connection strings are design-time or runtime.</param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal void SetInvariantNamesAndConnectionStrings(IServiceProvider serviceProvider,
             Project project, string invariantName, string connectionString, string appConfigConnectionString, bool isDesignTime)

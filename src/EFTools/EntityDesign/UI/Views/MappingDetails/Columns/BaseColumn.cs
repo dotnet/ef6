@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
 {
@@ -10,9 +10,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails;
     using Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters;
 
-    /// <summary>
-    ///     Abstract base class for all Mapping XyzColumn classes.
-    /// </summary>
+    // <summary>
+    //     Abstract base class for all Mapping XyzColumn classes.
+    // </summary>
     internal abstract class BaseColumn : TreeGridDesignerColumnDescriptor
     {
         internal TypeConverter _converter;

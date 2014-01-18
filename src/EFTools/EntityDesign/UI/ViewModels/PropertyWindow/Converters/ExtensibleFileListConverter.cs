@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
 {
@@ -8,14 +8,14 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
     using System.IO;
     using Microsoft.Data.Entity.Design.VisualStudio;
 
-    /// <summary>
-    ///     The extensibility of certain features such as Model First may be driven by files in the user's file system.
-    ///     This converter allows displaying lists of files in three separate scopes:
-    ///     1. per-user. i.e. the display will show '(User) MySSDLToSQL10.tt'
-    ///     2. across all users. i.e. the display will show '(VS) SSDLToSQL10.tt'
-    ///     3. within the project: 'ProjectSSDLToSQL10.tt'
-    ///     This converter also allows direct editing of the path in the property window as well.
-    /// </summary>
+    // <summary>
+    //     The extensibility of certain features such as Model First may be driven by files in the user's file system.
+    //     This converter allows displaying lists of files in three separate scopes:
+    //     1. per-user. i.e. the display will show '(User) MySSDLToSQL10.tt'
+    //     2. across all users. i.e. the display will show '(VS) SSDLToSQL10.tt'
+    //     3. within the project: 'ProjectSSDLToSQL10.tt'
+    //     This converter also allows direct editing of the path in the property window as well.
+    // </summary>
     internal abstract class ExtensibleFileListConverter : StringConverter
     {
         protected abstract string SubDirPath { get; }
@@ -95,10 +95,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
             return false;
         }
 
-        /// <summary>
-        ///     We take the full path and create macros out of the user and VS dirs. This allows us to understand where the file is semantically without
-        ///     being bound to a full path that is specific to one user's box.
-        /// </summary>
+        // <summary>
+        //     We take the full path and create macros out of the user and VS dirs. This allows us to understand where the file is semantically without
+        //     being bound to a full path that is specific to one user's box.
+        // </summary>
         protected static string MacroizeFilePath(string fullPath)
         {
             var userEFToolsIndex = fullPath.IndexOf(ExtensibleFileManager.UserEFToolsDir.FullName, StringComparison.OrdinalIgnoreCase);

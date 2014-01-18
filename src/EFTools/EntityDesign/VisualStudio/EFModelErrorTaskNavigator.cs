@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
@@ -20,10 +20,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
     internal delegate void NavigateTo(EFObject efobject);
 
-    /// <summary>
-    ///     This class handles navigation from an ErrorTask/IEFModelErrorTask.  It will set focus to the appropriate
-    ///     location in the design views based on the line/column number in the ErrorTask.
-    /// </summary>
+    // <summary>
+    //     This class handles navigation from an ErrorTask/IEFModelErrorTask.  It will set focus to the appropriate
+    //     location in the design views based on the line/column number in the ErrorTask.
+    // </summary>
     internal static class EFModelErrorTaskNavigator
     {
         private static NavigateTo _dslDesignerOnNavigate;
@@ -35,11 +35,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             get { return _dslDesignerOnNavigate; }
         }
 
-        /// <summary>
-        ///     This will handle navigation for an ErrorTask
-        /// </summary>
-        /// <param name="sender">This should be an instance of ErrorTask and implement IEFErrorTask</param>
-        /// <param name="arguments"></param>
+        // <summary>
+        //     This will handle navigation for an ErrorTask
+        // </summary>
+        // <param name="sender">This should be an instance of ErrorTask and implement IEFErrorTask</param>
+        // <param name="arguments"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static void NavigateTo(Object sender, EventArgs arguments)
         {
@@ -260,9 +260,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Loads document in an temporary model manager to see if it is designer safe.
-        /// </summary>
+        // <summary>
+        //     Loads document in an temporary model manager to see if it is designer safe.
+        // </summary>
         private static bool IsUnloadedDocumentDesignerSafe(Uri uri)
         {
             Debug.Assert(uri != null, "uri is null");

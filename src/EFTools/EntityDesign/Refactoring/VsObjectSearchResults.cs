@@ -149,10 +149,10 @@ namespace Microsoft.Data.Entity.Design.Refactoring
             }
         }
 
-        /// <summary>
-        ///     Parses out the line and column number from text, given line and column number formatting of "... (x,y)" where x is the line number
-        ///     and y is the column number.
-        /// </summary>
+        // <summary>
+        //     Parses out the line and column number from text, given line and column number formatting of "... (x,y)" where x is the line number
+        //     and y is the column number.
+        // </summary>
         private static bool TryParseLineAndColumn(string text, int endLastIndexCount, out int lineNumber, out int columnNumber)
         {
             lineNumber = 0;

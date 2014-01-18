@@ -20,9 +20,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     {
         private static Uri _edmxUri;
 
-        /// <summary>
-        ///     Use this EdmxUri property to pass in the selected EDMX file when the "add new item" dialog is launched from the escher designer
-        /// </summary>
+        // <summary>
+        //     Use this EdmxUri property to pass in the selected EDMX file when the "add new item" dialog is launched from the escher designer
+        // </summary>
         internal static Uri EdmxUri
         {
             get { return _edmxUri; }

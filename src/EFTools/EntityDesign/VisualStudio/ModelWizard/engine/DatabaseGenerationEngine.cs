@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
@@ -506,9 +506,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             private string _notInProject;
             private string _nonExistant;
 
-            /// <summary>
-            ///     Used when the resolved file path is null or empty. Requires 0 FormatItems.
-            /// </summary>
+            // <summary>
+            //     Used when the resolved file path is null or empty. Requires 0 FormatItems.
+            // </summary>
             internal string NullFile
             {
                 get { return _nullFile; }
@@ -521,10 +521,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
             }
 
-            /// <summary>
-            ///     Used if we can't resolve the absolute URI created from the resolved file path or the relative URI,
-            ///     relative to the project. Requires 1 FormatItem: the resolved workflow file path.
-            /// </summary>
+            // <summary>
+            //     Used if we can't resolve the absolute URI created from the resolved file path or the relative URI,
+            //     relative to the project. Requires 1 FormatItem: the resolved workflow file path.
+            // </summary>
             internal string NonValid
             {
                 get { return _nonValid; }
@@ -537,10 +537,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
             }
 
-            /// <summary>
-            ///     Used when an exception occurs while creating the URIs. Requires 2 FormatItems: the unresolved
-            ///     file path and the exception message.
-            /// </summary>
+            // <summary>
+            //     Used when an exception occurs while creating the URIs. Requires 2 FormatItems: the unresolved
+            //     file path and the exception message.
+            // </summary>
             internal string ParseError
             {
                 get { return _parseError; }
@@ -553,10 +553,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
             }
 
-            /// <summary>
-            ///     Used if the given file is a UNC path or one without a file:/// scheme. Requires 1 FormatItem:
-            ///     the resolved file path.
-            /// </summary>
+            // <summary>
+            //     Used if the given file is a UNC path or one without a file:// scheme. Requires 1 FormatItem:
+            //     the resolved file path.
+            // </summary>
             internal string NonFile
             {
                 get { return _nonFile; }
@@ -569,10 +569,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
             }
 
-            /// <summary>
-            ///     Used if the file has not been included in the project. Requires 1 FormatItem: the resolved
-            ///     file path
-            /// </summary>
+            // <summary>
+            //     Used if the file has not been included in the project. Requires 1 FormatItem: the resolved
+            //     file path
+            // </summary>
             internal string NotInProject
             {
                 get { return _notInProject; }
@@ -585,9 +585,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
             }
 
-            /// <summary>
-            ///     Used if the resolved file path does not exist. Requires 1 FormatItem: the resolved file path
-            /// </summary>
+            // <summary>
+            //     Used if the resolved file path does not exist. Requires 1 FormatItem: the resolved file path
+            // </summary>
             internal string NonExistant
             {
                 get { return _nonExistant; }
@@ -642,28 +642,28 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 errorMessages);
         }
 
-        /// <summary>
-        ///     Create the WF workflow application used by the Database Script Generation wizard:
-        ///     1. Deserialize the XAML file specified by the user
-        ///     2. Add inputs
-        ///     3. Add parameters to the EdmParameterBag, added to the workflow via an extension
-        /// </summary>
-        /// <param name="syncContext">SynchronizationContext of VS's UI thread that can be used by the workflow to spawn UIs</param>
-        /// <param name="project"></param>
-        /// <param name="artifactPath"></param>
-        /// <param name="workflowFileInfo"></param>
-        /// <param name="templatePath">DDL template path. We will resolve/validate this at runtime within the appropriate TemplateActivity</param>
-        /// <param name="edmItemCollection"></param>
-        /// <param name="existingSsdl"></param>
-        /// <param name="existingMsl"></param>
-        /// <param name="databaseSchemaName"></param>
-        /// <param name="databaseName"></param>
-        /// <param name="providerInvariantName"></param>
-        /// <param name="providerConnectionString"></param>
-        /// <param name="providerManifestToken"></param>
-        /// <param name="targetVersion"></param>
-        /// <param name="workflowCompletedHandler"></param>
-        /// <param name="unhandledExceptionHandler"></param>
+        // <summary>
+        //     Create the WF workflow application used by the Database Script Generation wizard:
+        //     1. Deserialize the XAML file specified by the user
+        //     2. Add inputs
+        //     3. Add parameters to the EdmParameterBag, added to the workflow via an extension
+        // </summary>
+        // <param name="syncContext">SynchronizationContext of VS's UI thread that can be used by the workflow to spawn UIs</param>
+        // <param name="project"></param>
+        // <param name="artifactPath"></param>
+        // <param name="workflowFileInfo"></param>
+        // <param name="templatePath">DDL template path. We will resolve/validate this at runtime within the appropriate TemplateActivity</param>
+        // <param name="edmItemCollection"></param>
+        // <param name="existingSsdl"></param>
+        // <param name="existingMsl"></param>
+        // <param name="databaseSchemaName"></param>
+        // <param name="databaseName"></param>
+        // <param name="providerInvariantName"></param>
+        // <param name="providerConnectionString"></param>
+        // <param name="providerManifestToken"></param>
+        // <param name="targetVersion"></param>
+        // <param name="workflowCompletedHandler"></param>
+        // <param name="unhandledExceptionHandler"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static WorkflowApplication CreateDatabaseScriptGenerationWorkflow(
             SynchronizationContext syncContext,
@@ -728,14 +728,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             return workflowInstance;
         }
 
-        /// <summary>
-        ///     Resolves the given 'path' with the given project's macros and validates it based on these rules:
-        ///     1. The resolved path should not be null or empty
-        ///     2. We should be able to create a absolute URI from the resolved path OR
-        ///     2.1 We should be able to create a relative URI, relative to the project from the resolved path
-        ///     3. If the path is a custom path, it should be included in the project and should be relative to the project.
-        ///     4. The file must exist.
-        /// </summary>
+        // <summary>
+        //     Resolves the given 'path' with the given project's macros and validates it based on these rules:
+        //     1. The resolved path should not be null or empty
+        //     2. We should be able to create a absolute URI from the resolved path OR
+        //     2.1 We should be able to create a relative URI, relative to the project from the resolved path
+        //     3. If the path is a custom path, it should be included in the project and should be relative to the project.
+        //     4. The file must exist.
+        // </summary>
         internal static FileInfo ResolveAndValidatePath(Project project, string path, PathValidationErrorMessages errorMessages)
         {
 #if DEBUG

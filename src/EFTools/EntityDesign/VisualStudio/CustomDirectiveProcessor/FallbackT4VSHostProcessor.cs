@@ -6,11 +6,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Directives
     using System.Collections.Generic;
     using Microsoft.VisualStudio.TextTemplating;
 
-    /// <summary>
-    ///     This is an empty directive processor only meant to support old versions of the T4
-    ///     processor that did not include the T4VSHost custom directive processor that
-    ///     we use in the ttinclude files.
-    /// </summary>
+    // <summary>
+    //     This is an empty directive processor only meant to support old versions of the T4
+    //     processor that did not include the T4VSHost custom directive processor that
+    //     we use in the ttinclude files.
+    // </summary>
     internal class FallbackT4VSHostProcessor : DirectiveProcessor
     {
         public override void Initialize(ITextTemplatingEngineHost host)

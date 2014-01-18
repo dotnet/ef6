@@ -538,15 +538,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             return null;
         }
 
-        /// <summary>
-        ///     Creates commands to remove function imports and complex types corresponding to results if ones exist.
-        /// </summary>
-        /// <param name="designArtifact">Artifact.</param>
-        /// <returns>IEnumerable of commands for deleting function imports and corresponding complex types.</returns>
-        /// <remarks>
-        ///     This function should be called only from RunFinished() method as we don't check whether complex types we
-        ///     are removing are not used by other function imports or entities.
-        /// </remarks>
+        // <summary>
+        //     Creates commands to remove function imports and complex types corresponding to results if ones exist.
+        // </summary>
+        // <param name="designArtifact">Artifact.</param>
+        // <returns>IEnumerable of commands for deleting function imports and corresponding complex types.</returns>
+        // <remarks>
+        //     This function should be called only from RunFinished() method as we don't check whether complex types we
+        //     are removing are not used by other function imports or entities.
+        // </remarks>
         private static IEnumerable<Command> CreateRemoveFunctionImportCommands(EntityDesignArtifact designArtifact)
         {
             // we were instructed not to create FunctionImports - but runtime has created them automatically so actually need to delete any which have been created
@@ -594,9 +594,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst;
         }
 
-        /// <summary>
-        ///     Returns the folder path for the selected item (project or folder) that we are adding new items into
-        /// </summary>
+        // <summary>
+        //     Returns the folder path for the selected item (project or folder) that we are adding new items into
+        // </summary>
         private static string GetFolderNameForNewItems(DTE2 dte, Project activeProject)
         {
             var selectedItems = dte.SelectedItems;

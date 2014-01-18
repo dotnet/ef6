@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using EdmxModel = Microsoft.Data.Entity.Design.Model;
 
@@ -41,9 +41,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
             }
         }
 
-        /// <summary>
-        ///     Used to determine the shape of the resultset of non-Functions
-        /// </summary>
+        // <summary>
+        //     Used to determine the shape of the resultset of non-Functions
+        // </summary>
         public IList<IDataSchemaColumn> Columns
         {
             get
@@ -66,9 +66,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
             }
         }
 
-        /// <summary>
-        ///     Used to determine the return type of Functions
-        /// </summary>
+        // <summary>
+        //     Used to determine the return type of Functions
+        // </summary>
         public IDataSchemaParameter ReturnValue
         {
             get
@@ -123,17 +123,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
             get { return Parameters.OfType<IRawDataSchemaParameter>().ToList(); }
         }
 
-        /// <summary>
-        ///     Used to determine the shape of the resultset of non-Functions
-        /// </summary>
+        // <summary>
+        //     Used to determine the shape of the resultset of non-Functions
+        // </summary>
         public IList<IRawDataSchemaColumn> RawColumns
         {
             get { return Columns.OfType<IRawDataSchemaColumn>().ToList(); }
         }
 
-        /// <summary>
-        ///     Used to determine the return type of Functions
-        /// </summary>
+        // <summary>
+        //     Used to determine the return type of Functions
+        // </summary>
         public IRawDataSchemaParameter RawReturnValue
         {
             get { return ReturnValue; }

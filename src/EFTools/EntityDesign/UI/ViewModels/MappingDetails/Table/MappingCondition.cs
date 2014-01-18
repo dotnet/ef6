@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
 {
@@ -17,9 +17,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     This class provides the view level information for a condition in a mapping fragment.
-    /// </summary>
+    // <summary>
+    //     This class provides the view level information for a condition in a mapping fragment.
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(ConditionBranch))]
     [TreeGridDesignerColumn(typeof(ColumnNameColumn), Order = 1)]
     [TreeGridDesignerColumn(typeof(OperatorColumn), Order = 2)]
@@ -477,10 +477,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
             }
         }
 
-        /// <summary>
-        ///     NOTE: We don't call this.Parent.RemoveChild(this) because this is always called from the MappingEFElement.Delete() method
-        ///     which will remove this item from the parent.
-        /// </summary>
+        // <summary>
+        //     NOTE: We don't call this.Parent.RemoveChild(this) because this is always called from the MappingEFElement.Delete() method
+        //     which will remove this item from the parent.
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             Debug.Assert(ModelItem != null, "We are trying to delete a null ModelItem");

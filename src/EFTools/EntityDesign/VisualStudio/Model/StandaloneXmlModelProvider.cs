@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Model
 {
@@ -17,12 +17,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone;
 
-    /// <summary>
-    ///     This XmlModelProvider uses a strategy pattern to accept 'Loaders' which
-    ///     define how to build an XDocument from a given URI. In addition, it can discriminate
-    ///     between a parent URI and children URI. For example, the parent URI for the Entity Designer
-    ///     would be an .edmx file while child URIs would include the .edmx.diagram file.
-    /// </summary>
+    // <summary>
+    //     This XmlModelProvider uses a strategy pattern to accept 'Loaders' which
+    //     define how to build an XDocument from a given URI. In addition, it can discriminate
+    //     between a parent URI and children URI. For example, the parent URI for the Entity Designer
+    //     would be an .edmx file while child URIs would include the .edmx.diagram file.
+    // </summary>
     internal class StandaloneXmlModelProvider : VanillaXmlModelProvider
     {
         private readonly IServiceProvider _serviceProvider;

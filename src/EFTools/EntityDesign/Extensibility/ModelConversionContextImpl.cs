@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.Extensibility
 {
@@ -22,9 +22,9 @@ namespace Microsoft.Data.Entity.Design.Extensibility
         private readonly List<ExtensionError> _errors = new List<ExtensionError>();
         private bool _isDisposed;
 
-        /// <summary>
-        ///     Creates a concrete implementation of ModelConversionExtensionContext, use this ctor when saving
-        /// </summary>
+        // <summary>
+        //     Creates a concrete implementation of ModelConversionExtensionContext, use this ctor when saving
+        // </summary>
         internal ModelConversionContextImpl(
             Project project, ProjectItem projectItem, FileInfo fileInfo, Version targetSchemaVersion, XDocument current)
         {
@@ -43,9 +43,9 @@ namespace Microsoft.Data.Entity.Design.Extensibility
             AddEventHandler();
         }
 
-        /// <summary>
-        ///     Creates a concrete implementation of ModelConversionExtensionContext, use this ctor when loading
-        /// </summary>
+        // <summary>
+        //     Creates a concrete implementation of ModelConversionExtensionContext, use this ctor when loading
+        // </summary>
         internal ModelConversionContextImpl(
             Project project, ProjectItem projectItem, FileInfo fileInfo, Version runtimeVersion, string original)
         {

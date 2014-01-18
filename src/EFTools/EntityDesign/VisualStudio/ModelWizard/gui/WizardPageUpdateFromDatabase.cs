@@ -21,11 +21,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.WizardFramework;
     using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
-    /// <summary>
-    ///     This is the page in the ModelGen VS wizard used for selecting
-    ///     tables/views/sprocs to add (and to refresh/delete others as
-    ///     appropriate) when in the Update Model from Database mode
-    /// </summary>
+    // <summary>
+    //     This is the page in the ModelGen VS wizard used for selecting
+    //     tables/views/sprocs to add (and to refresh/delete others as
+    //     appropriate) when in the Update Model from Database mode
+    // </summary>
     // to view this class in the forms designer, make it temporarily derive from Microsoft.WizardFramework.WizardPage
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal partial class WizardPageUpdateFromDatabase : WizardPageBase
@@ -198,10 +198,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return base.OnActivate();
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is entered.
-        ///     Starts a background thread to retrieve table information to display
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is entered.
+        //     Starts a background thread to retrieve table information to display
+        // </summary>
         public override void OnActivated()
         {
             base.OnActivated();
@@ -238,10 +238,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
-        ///     Updates ModelBuilderSettings from the GUI
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
+        //     Updates ModelBuilderSettings from the GUI
+        // </summary>
         public override bool OnDeactivate()
         {
             if (Wizard.MovingNext
@@ -305,11 +305,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return true;
         }
 
-        /// <summary>
-        ///     DoWork event handler: Get database objects in a background thread.
-        ///     This method is called by background worker component on a diffferent thread than the UI thread.
-        ///     We use the ModelBuilderEngine to get database objects to display
-        /// </summary>
+        // <summary>
+        //     DoWork event handler: Get database objects in a background thread.
+        //     This method is called by background worker component on a diffferent thread than the UI thread.
+        //     We use the ModelBuilderEngine to get database objects to display
+        // </summary>
         private void bgWorkerPopulateTree_DoWork(object sender, DoWorkEventArgs args)
         {
             // This method will run on a thread other than the UI thread.
@@ -344,10 +344,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             args.Result = result;
         }
 
-        /// <summary>
-        ///     RunWorkerCompleted event handler: Populate TreeViews here.
-        ///     This method is called by background worker component the same thread as the UI thread.
-        /// </summary>
+        // <summary>
+        //     RunWorkerCompleted event handler: Populate TreeViews here.
+        //     This method is called by background worker component the same thread as the UI thread.
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected void bgWorkerPopulateTree_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
         {
@@ -760,9 +760,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Helper to show a status message Label control on top of the client area of the TreeView control
-        /// </summary>
+        // <summary>
+        //     Helper to show a status message Label control on top of the client area of the TreeView control
+        // </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void ShowStatus(string message)
         {
@@ -791,9 +791,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Helper to hide the status message Label control
-        /// </summary>
+        // <summary>
+        //     Helper to hide the status message Label control
+        // </summary>
         private void HideStatus()
         {
             if (_statusLabel != null)
@@ -834,9 +834,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return defaultValue;
         }
 
-        /// <summary>
-        ///     Display the tooltip if the user hover the mouse on the complex return type controls.
-        /// </summary>
+        // <summary>
+        //     Display the tooltip if the user hover the mouse on the complex return type controls.
+        // </summary>
         private void IncludeForeignKeysArea_OnMouseMove(Object sender, MouseEventArgs e)
         {
             WizardPageSelectTables.ToolTipOnDisabledControl_OnMouseMove(

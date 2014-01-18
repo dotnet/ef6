@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
@@ -6,9 +6,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TextManager.Interop;
 
-    /// <summary>
-    ///     This is the error task we use for open documents.  The DocumentTask will keep text ranges up to date when the buffer changes.
-    /// </summary>
+    // <summary>
+    //     This is the error task we use for open documents.  The DocumentTask will keep text ranges up to date when the buffer changes.
+    // </summary>
     internal class EFModelDocumentTask : XmlModelDocumentTask
     {
         internal EFModelDocumentTask(

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
@@ -297,9 +297,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     This method will log errors to the "Wizard" Multi-doc error list.
-        /// </summary>
+        // <summary>
+        //     This method will log errors to the "Wizard" Multi-doc error list.
+        // </summary>
         internal static void LogUpdateModelWizardErrors(IEnumerable<EdmSchemaError> errors, string projectItemFileName)
         {
             var serviceProvider = Services.ServiceProvider;
@@ -326,9 +326,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     This method will log errors to the "Wizard" Multi-doc error list.
-        /// </summary>
+        // <summary>
+        //     This method will log errors to the "Wizard" Multi-doc error list.
+        // </summary>
         internal static void LogUpdateModelWizardError(ErrorInfo errorInfo, string projectItemFileName)
         {
             var serviceProvider = Services.ServiceProvider;
@@ -360,9 +360,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     This method will log errors to the "Extension" Multi-doc error list.
-        /// </summary>
+        // <summary>
+        //     This method will log errors to the "Extension" Multi-doc error list.
+        // </summary>
         internal static void LogExtensionErrors(IEnumerable<ExtensionError> errors, ProjectItem projectItem)
         {
             if (null == errors)
@@ -425,9 +425,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     This method will log errors to the "Wizard" Multi-doc error list.
-        /// </summary>
+        // <summary>
+        //     This method will log errors to the "Wizard" Multi-doc error list.
+        // </summary>
         private static void LogWizardErrors(IEnumerable<EdmSchemaError> errors, ProjectItem projectItem, MARKERTYPE markerType)
         {
             if (null == errors)
@@ -488,11 +488,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Logs SchemaErrors to the a special provider for wizard errors.  We won't ever clear this provider,
-        ///     because we have no way to get the wizard errors back.  This way, they will persist for the time that
-        ///     the document is open. This will log errors to the 'Wizard' multi-doc error list.
-        /// </summary>
+        // <summary>
+        //     Logs SchemaErrors to the a special provider for wizard errors.  We won't ever clear this provider,
+        //     because we have no way to get the wizard errors back.  This way, they will persist for the time that
+        //     the document is open. This will log errors to the 'Wizard' multi-doc error list.
+        // </summary>
         internal static void LogWizardErrors(IEnumerable<EdmSchemaError> errors, ProjectItem projectItem)
         {
             LogWizardErrors(errors, projectItem, MARKERTYPE.MARKER_COMPILE_ERROR);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
@@ -16,10 +16,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
     internal static class ConfigFileUtils
     {
-        /// <summary>
-        ///     Updates app. or web.config to include connection strings, registers the build provider
-        ///     for WebSite projects and the assembly for WebApp projects
-        /// </summary>
+        // <summary>
+        //     Updates app. or web.config to include connection strings, registers the build provider
+        //     for WebSite projects and the assembly for WebApp projects
+        // </summary>
         internal static void UpdateConfig(ModelBuilderSettings settings)
         {
             var metadataFileNames = 
@@ -79,9 +79,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
         }
 
-        /// <summary>
-        ///     Update App.Config with connection string if specified in ModelBuilderSettings
-        /// </summary>
+        // <summary>
+        //     Update App.Config with connection string if specified in ModelBuilderSettings
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private static void UpdateAppConfig(ICollection<string> metadataFiles, ModelBuilderSettings settings)
         {

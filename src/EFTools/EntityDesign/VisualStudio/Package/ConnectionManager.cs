@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
@@ -29,11 +29,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using Constants = EnvDTE.Constants;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     The Connection Manager allows interaction with App.Config and Web.Config. It stores a "project dictionary" where each bucket corresponds
-    ///     to a dictionary that associates entity container names with their corresponding connection strings, stored as
-    ///     ConnectionString objects. The dictionaries should mirror App.Config exactly.
-    /// </summary>
+    // <summary>
+    //     The Connection Manager allows interaction with App.Config and Web.Config. It stores a "project dictionary" where each bucket corresponds
+    //     to a dictionary that associates entity container names with their corresponding connection strings, stored as
+    //     ConnectionString objects. The dictionaries should mirror App.Config exactly.
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class ConnectionManager : IDisposable
     {
@@ -86,10 +86,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
         #endregion
 
-        /// <summary>
-        ///     A wrapper around EntityConnectionStringBuilder so we can add our own properties
-        ///     or different builders at a later point in time.
-        /// </summary>
+        // <summary>
+        //     A wrapper around EntityConnectionStringBuilder so we can add our own properties
+        //     or different builders at a later point in time.
+        // </summary>
         internal class ConnectionString
         {
             private EntityConnectionStringBuilder _builder;
@@ -265,10 +265,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Takes our Xml .config file and destructively updates our local hash.
-        /// </summary>
-        /// <param name="project">DTE Project that owns App.Config we want to look at.</param>
+        // <summary>
+        //     Takes our Xml .config file and destructively updates our local hash.
+        // </summary>
+        // <param name="project">DTE Project that owns App.Config we want to look at.</param>
         internal void ExtractConnStringsIntoHash(Project project, bool createConfig)
         {
             if (project == null)
@@ -304,10 +304,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Returns an EntityContainer name unique in the app/web.config for the given project
-        ///     given a proposed EntityContainer name
-        /// </summary>
+        // <summary>
+        //     Returns an EntityContainer name unique in the app/web.config for the given project
+        //     given a proposed EntityContainer name
+        // </summary>
         internal string ConstructUniqueEntityContainerName(string proposedEntityContainerName, Project project)
         {
             Debug.Assert(null != project, "Null project in GetUniqueEntityContainerNameForProject()");
@@ -334,10 +334,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return entityContainerName;
         }
 
-        /// <summary>
-        ///     Takes our local hash and destructively updates the .config file.
-        /// </summary>
-        /// <param name="project">DTE Project that owns the .config file we want to look at.</param>
+        // <summary>
+        //     Takes our local hash and destructively updates the .config file.
+        // </summary>
+        // <param name="project">DTE Project that owns the .config file we want to look at.</param>
         private void InsertConnStringsFromHash(Project project)
         {
             if (project == null)
@@ -520,9 +520,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return docUpdated;
         }
 
-        /// <summary>
-        ///     Subscribe to VS events via ModelChangeEventListener's delegates
-        /// </summary>
+        // <summary>
+        //     Subscribe to VS events via ModelChangeEventListener's delegates
+        // </summary>
         private void RegisterModelListenerEvents()
         {
             var listener = PackageManager.Package.ModelChangeEventListener;
@@ -538,9 +538,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Unsubscribe to VS events via ModelChangeEventListener's delegates
-        /// </summary>
+        // <summary>
+        //     Unsubscribe to VS events via ModelChangeEventListener's delegates
+        // </summary>
         private void UnregisterModelListenerEvents()
         {
             var listener = PackageManager.Package.ModelChangeEventListener;
@@ -558,11 +558,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
         #region Methods for resolving config file
 
-        /// <summary>
-        ///     Determine the .config file path by finding or creating the file
-        /// </summary>
-        /// <param name="project">DTE Project that owns the config file</param>
-        /// <returns>string that represents the config's file path.</returns>
+        // <summary>
+        //     Determine the .config file path by finding or creating the file
+        // </summary>
+        // <param name="project">DTE Project that owns the config file</param>
+        // <returns>string that represents the config's file path.</returns>
         internal static string GetConfigFilePath(Project project, bool createConfig)
         {
             if (project == null)
@@ -604,11 +604,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return FindOrCreateAppConfig(project, true);
         }
 
-        /// <summary>
-        ///     Finds or creates a .config file for a windows or web application
-        /// </summary>
-        /// <param name="project">DTE Project that owns the App.Config we want to find/create.</param>
-        /// <returns>DTE ProjectItem that represents the config file.</returns>
+        // <summary>
+        //     Finds or creates a .config file for a windows or web application
+        // </summary>
+        // <param name="project">DTE Project that owns the App.Config we want to find/create.</param>
+        // <returns>DTE ProjectItem that represents the config file.</returns>
         private static ProjectItem FindOrCreateAppConfig(Project project, bool createConfig)
         {
             if (null == project)
@@ -642,22 +642,22 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return FindOrCreateConfig(project, VsUtils.WebConfigFileName, WebConfigItemTemplate, createConfig);
         }
 
-        /// <summary>
-        ///     Finds or creates an Web.Config file in the project based on the built-in VS templates.
-        /// </summary>
-        /// <param name="project">DTE Project that owns the Web.Config we're interested in.</param>
-        /// <returns>DTE ProjectItem that represents the config file.</returns>
+        // <summary>
+        //     Finds or creates an Web.Config file in the project based on the built-in VS templates.
+        // </summary>
+        // <param name="project">DTE Project that owns the Web.Config we're interested in.</param>
+        // <returns>DTE ProjectItem that represents the config file.</returns>
         internal static ProjectItem FindOrCreateWebConfig(Project project)
         {
             return FindOrCreateConfig(project, VsUtils.WebConfigFileName, WebConfigItemTemplate, true);
         }
 
-        /// <summary>
-        ///     Command implementation of finding or creating a .config file for VS projects
-        /// </summary>
-        /// <param name="project">DTE project that owns the .config file</param>
-        /// <param name="configFileName"></param>
-        /// <param name="configItemTemplate"></param>
+        // <summary>
+        //     Command implementation of finding or creating a .config file for VS projects
+        // </summary>
+        // <param name="project">DTE project that owns the .config file</param>
+        // <param name="configFileName"></param>
+        // <param name="configItemTemplate"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ProjectItem FindOrCreateConfig(
             Project project,
@@ -845,9 +845,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return EdmUtils.GetRelativeMetadataPaths(folderPath, project, modelName, EdmUtils.CsdlSsdlMslExtensions, serviceProvider);
         }
 
-        /// <summary>
-        ///     Helper function to construct the metadata, depending on what type of application and output path
-        /// </summary>
+        // <summary>
+        //     Helper function to construct the metadata, depending on what type of application and output path
+        // </summary>
         private static string GetConnectionStringMetadata(
             IEnumerable<string> metadataFiles, Project project, VisualStudioProjectSystem applicationType, string metadataProcessingType)
         {
@@ -950,11 +950,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Helper to wrap the given sql connection string with a entity client connection string and return it
-        /// </summary>
-        /// <param name="sqlConnectionString">sql connection string</param>
-        /// <returns>map connection string containing the sql connection string</returns>
+        // <summary>
+        //     Helper to wrap the given sql connection string with a entity client connection string and return it
+        // </summary>
+        // <param name="sqlConnectionString">sql connection string</param>
+        // <returns>map connection string containing the sql connection string</returns>
         internal static ConnectionString ConstructConnectionStringObject(
             string sqlConnectionString, string providerInvariantName,
             IEnumerable<string> metadataFiles, Project project, VisualStudioProjectSystem applicationType)
@@ -1098,9 +1098,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return false;
         }
 
-        /// <summary>
-        ///     Add a connection string object to the hash and push the updates directly to the .config file
-        /// </summary>
+        // <summary>
+        //     Add a connection string object to the hash and push the updates directly to the .config file
+        // </summary>
         private void AddConnectionString(Project project, string entityContainerName, ConnectionString connStringObj)
         {
             if (null == project)
@@ -1126,9 +1126,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Construct a connection string and add it to the hash, pushing the update to the .config file
-        /// </summary>
+        // <summary>
+        //     Construct a connection string and add it to the hash, pushing the update to the .config file
+        // </summary>
         internal void AddConnectionString(Project project, VisualStudioProjectSystem applicationType, ICollection<string> metadataFiles, string connectionStringName,
             string configFileConnectionStringValue, string providerInvariantName)
         {
@@ -1183,11 +1183,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 : string.Empty;
         }
 
-        /// <summary>
-        ///     Injects the MARS/AppFramework attributes into the provider connection string
-        ///     without pinging the connection to see if the database supports SQL 90 or newer. This
-        ///     does not require a design-time connection.
-        /// </summary>
+        // <summary>
+        //     Injects the MARS/AppFramework attributes into the provider connection string
+        //     without pinging the connection to see if the database supports SQL 90 or newer. This
+        //     does not require a design-time connection.
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal static string InjectEFAttributesIntoConnectionString(string sourceConnectionString, string providerInvariantName)
@@ -1229,13 +1229,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return configFileConnectionBuilder.ConnectionString;
         }
 
-        /// <summary>
-        ///     Given an old metadata name and a new one, find the connection string keyed by the old metadata name in the hash,
-        ///     update its metadata name, then rewrite the .config file.
-        /// </summary>
-        /// <param name="project">DTE Project that owns the .config file</param>
-        /// <param name="entityContainerName"></param>
-        /// <param name="newMetadata"></param>
+        // <summary>
+        //     Given an old metadata name and a new one, find the connection string keyed by the old metadata name in the hash,
+        //     update its metadata name, then rewrite the .config file.
+        // </summary>
+        // <param name="project">DTE Project that owns the .config file</param>
+        // <param name="entityContainerName"></param>
+        // <param name="newMetadata"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal void UpdateMetadataName(Project project, string entityContainerName, string newMetadata)
         {
@@ -1277,12 +1277,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Change the entity container name in the hash, then rewrite the .config file.
-        /// </summary>
-        /// <param name="project">DTE Project that owns the .config file</param>
-        /// <param name="oldName"></param>
-        /// <param name="newName"></param>
+        // <summary>
+        //     Change the entity container name in the hash, then rewrite the .config file.
+        // </summary>
+        // <param name="project">DTE Project that owns the .config file</param>
+        // <param name="oldName"></param>
+        // <param name="newName"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal void UpdateEntityContainerName(Project project, string oldName, string newName)
         {
@@ -1367,9 +1367,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Helper to find or create elements along an XPath expression, under a parent node
-        /// </summary>
+        // <summary>
+        //     Helper to find or create elements along an XPath expression, under a parent node
+        // </summary>
         private static XmlNode FindOrCreateXmlElement(XmlNode parentNode, string elementPath, bool prependChild)
         {
             XmlNode xmlNode = null;
@@ -1399,9 +1399,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
         #region Event handlers
 
-        /// <summary>
-        ///     After removing a *.config file, the connection manager should clear the internal connection string hash table
-        /// </summary>
+        // <summary>
+        //     After removing a *.config file, the connection manager should clear the internal connection string hash table
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private int OnAfterRemoveFile(object sender, ModelChangeEventArgs args)
         {
@@ -1440,10 +1440,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return VSConstants.S_OK;
         }
 
-        /// <summary>
-        ///     After renaming a file, we need to update the metadata portion of the connection string
-        ///     to reflect the new name of the edmx file.
-        /// </summary>
+        // <summary>
+        //     After renaming a file, we need to update the metadata portion of the connection string
+        //     to reflect the new name of the edmx file.
+        // </summary>
         internal int OnAfterRenameFile(object sender, ModelChangeEventArgs args)
         {
             // ignore files that are not edmx
@@ -1496,10 +1496,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return VSConstants.S_OK;
         }
 
-        /// <summary>
-        ///     After opening a project, we want to see if there is a .config file, parse it, and
-        ///     add the connection strings to our hash.
-        /// </summary>
+        // <summary>
+        //     After opening a project, we want to see if there is a .config file, parse it, and
+        //     add the connection strings to our hash.
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private int OnAfterOpenProject(object sender, ModelChangeEventArgs args)
         {
@@ -1534,11 +1534,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return VSConstants.S_OK;
         }
 
-        /// <summary>
-        ///     When a user edits the .config file directly, we want to pull those changes into our local hash so
-        ///     any further changes will be validated against it (if the user edited the entity container name we
-        ///     wouldn't be able to find it until the user changes it back in the .config file)
-        /// </summary>
+        // <summary>
+        //     When a user edits the .config file directly, we want to pull those changes into our local hash so
+        //     any further changes will be validated against it (if the user edited the entity container name we
+        //     wouldn't be able to find it until the user changes it back in the .config file)
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsUIShell.RefreshPropertyBrowser(System.Int32)")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -1665,11 +1665,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return hr;
         }
 
-        /// <summary>
-        ///     If the user changes the entity container name property we just take note of the old entity container name,
-        ///     storing it safely in the connection manager so when we are ready to commit the change we will know what connection string
-        ///     to change based on the old name.
-        /// </summary>
+        // <summary>
+        //     If the user changes the entity container name property we just take note of the old entity container name,
+        //     storing it safely in the connection manager so when we are ready to commit the change we will know what connection string
+        //     to change based on the old name.
+        // </summary>
         private int OnAfterEntityContainerNameChange(object sender, ModelChangeEventArgs args)
         {
             if (_staleEntityContainerName == null)
@@ -1679,10 +1679,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return VSConstants.S_OK;
         }
 
-        /// <summary>
-        ///     If the user changes the artifact metadata processing value, we store the old value.
-        ///     We are going to compare the value with the current value to determine whether we need to commit the value.
-        /// </summary>
+        // <summary>
+        //     If the user changes the artifact metadata processing value, we store the old value.
+        //     We are going to compare the value with the current value to determine whether we need to commit the value.
+        // </summary>
         private int OnAfterMetadataArtifactProcessingChange(object sender, ModelChangeEventArgs args)
         {
             if (String.IsNullOrEmpty(_staleMetadataArtifactProcessing))
@@ -1694,9 +1694,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
         #endregion
 
-        /// <summary>
-        ///     Translate an invariant name from design-time to runtime or vice versa
-        /// </summary>
+        // <summary>
+        //     Translate an invariant name from design-time to runtime or vice versa
+        // </summary>
         internal static string TranslateInvariantName(IServiceProvider serviceProvider, string invariantName, string connectionString, bool isDesignTime)
         {
             if (connectionString == null)
@@ -1732,9 +1732,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return translatedInvariantName;
         }
 
-        /// <summary>
-        ///     Translate a connection string from design-time to runtime or vice versa.
-        /// </summary>
+        // <summary>
+        //     Translate a connection string from design-time to runtime or vice versa.
+        // </summary>
         internal static string TranslateConnectionString(IServiceProvider serviceProvider, Project project, string invariantName, string connectionString, bool isDesignTime)
         {
             Debug.Assert(serviceProvider != null, "serviceProvider must not be null");
@@ -1791,12 +1791,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                     p => invariantName.Equals((string)p.GetProperty("InvariantName"), StringComparison.Ordinal));
         }
 
-        /// <summary>
-        ///     Retrieves the Guid for a particular provider
-        /// </summary>
-        /// <param name="invariantName">The invariant name for the provider</param>
-        /// <param name="connectionString">The connection string being used</param>
-        /// <returns>The associated Guid</returns>
+        // <summary>
+        //     Retrieves the Guid for a particular provider
+        // </summary>
+        // <param name="invariantName">The invariant name for the provider</param>
+        // <param name="connectionString">The connection string being used</param>
+        // <returns>The associated Guid</returns>
         private static Guid TranslateProviderGuid(string invariantName, string connectionString)
         {
             if (connectionString == null)

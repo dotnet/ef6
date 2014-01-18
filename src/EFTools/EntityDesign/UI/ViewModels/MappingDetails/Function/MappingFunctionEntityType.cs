@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
 {
@@ -11,21 +11,21 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches;
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns;
 
-    /// <summary>
-    ///     This class represents the root node of the view model when we are mapping entities to functions,
-    ///     it points to a c-side entity and has a list of the functions that the entity is mapped to.
-    ///     + MappingFunctionEntityType
-    ///     |
-    ///     + MappingModificationFunctionMapping (insert, update, delete)
-    ///     |
-    ///     + MappingFunctionScalarProperties
-    ///     | |
-    ///     | + MappingFunctionScalarProperty
-    ///     |
-    ///     + MappingResultBindings
-    ///     |
-    ///     + MappingResultBinding
-    /// </summary>
+    // <summary>
+    //     This class represents the root node of the view model when we are mapping entities to functions,
+    //     it points to a c-side entity and has a list of the functions that the entity is mapped to.
+    //     + MappingFunctionEntityType
+    //     |
+    //     + MappingModificationFunctionMapping (insert, update, delete)
+    //     |
+    //     + MappingFunctionScalarProperties
+    //     | |
+    //     | + MappingFunctionScalarProperty
+    //     |
+    //     + MappingResultBindings
+    //     |
+    //     + MappingResultBinding
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(FunctionBranch))]
     [TreeGridDesignerColumn(typeof(ParameterColumn), Order = 1)]
     [TreeGridDesignerColumn(typeof(OperatorColumn), Order = 2)]

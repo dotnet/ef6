@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using EntityProperty = Microsoft.Data.Entity.Design.Model.Entity.Property;
 
@@ -73,9 +73,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 
         #endregion
 
-        /// <summary>
-        ///     Function Import
-        /// </summary>
+        // <summary>
+        //     Function Import
+        // </summary>
         private enum DialogMode
         {
             New, // New function import mode.
@@ -270,9 +270,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 
         #region Internal Methods
 
-        /// <summary>
-        ///     Display the tooltip if the user hover the mouse on the complex return type controls.
-        /// </summary>
+        // <summary>
+        //     Display the tooltip if the user hover the mouse on the complex return type controls.
+        // </summary>
         private void ReturnTypeArea_OnMouseMove(Object sender, MouseEventArgs e)
         {
             var parent = sender as Control;
@@ -379,10 +379,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             }
         }
 
-        /// <summary>
-        ///     Determine whether a stored procedure returns columns schemas are available or not.
-        ///     Since we cache the columns schema information in Schema property, we should be able to calculate the value of this property from Schema property.
-        /// </summary>
+        // <summary>
+        //     Determine whether a stored procedure returns columns schemas are available or not.
+        //     Since we cache the columns schema information in Schema property, we should be able to calculate the value of this property from Schema property.
+        // </summary>
         private bool IsResultTypeAvailable
         {
             get { return (Schema != null && Schema.Columns != null && Schema.Columns.Count > 0); }
@@ -477,12 +477,12 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             CheckOkButtonEnabled();
         }
 
-        /// <summary>
-        ///     If we don't override the Up and Down arrow behavior then by default they navigate to the next Tab Stop
-        ///     (which is the corresponding combo-box) and after that arrow keys only select the next/previous combo-box entry.
-        ///     We are overriding this behavior so that the user can use the arrow keys to navigate to the next/previous
-        ///     radio button instead. This addresses Accessibility bug 807144.
-        /// </summary>
+        // <summary>
+        //     If we don't override the Up and Down arrow behavior then by default they navigate to the next Tab Stop
+        //     (which is the corresponding combo-box) and after that arrow keys only select the next/previous combo-box entry.
+        //     We are overriding this behavior so that the user can use the arrow keys to navigate to the next/previous
+        //     radio button instead. This addresses Accessibility bug 807144.
+        // </summary>
         private void returnTypeButton_ArrowPressed(object sender, Keys key)
         {
             if (emptyReturnTypeButton == sender)
@@ -567,9 +567,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             LaunchBackgroundProcessToRetrieveColumnsSchema();
         }
 
-        /// <summary>
-        ///     Create New Complex Type button click event handler
-        /// </summary>
+        // <summary>
+        //     Create New Complex Type button click event handler
+        // </summary>
         private void createNewComplexTypeButton_Click(object sender, EventArgs args)
         {
             // need to reset the return type list view to not show the diff between the columns schema and function import return type properties.
@@ -599,9 +599,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             CheckOkButtonEnabled();
         }
 
-        /// <summary>
-        ///     Update complex type button event handler.
-        /// </summary>
+        // <summary>
+        //     Update complex type button event handler.
+        // </summary>
         private void updateComplexTypeButton_Click(object sender, EventArgs args)
         {
             // Turn on the update selected complex type flag.
@@ -649,9 +649,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             return complexTypeName;
         }
 
-        /// <summary>
-        ///     Set scalar-return-type and entity-return-type combo boxes not enabled/enabled state.
-        /// </summary>
+        // <summary>
+        //     Set scalar-return-type and entity-return-type combo boxes not enabled/enabled state.
+        // </summary>
         private void UpdateReturnTypeComboBoxesState()
         {
             scalarTypeReturnComboBox.Enabled = scalarTypeReturnButton.Checked;
@@ -837,9 +837,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             return (returnTypeShapeListView.Items.Count > 0);
         }
 
-        /// <summary>
-        ///     Helper function to create an item row in return type list view.
-        /// </summary>
+        // <summary>
+        //     Helper function to create an item row in return type list view.
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private ListViewItem CreateReturnTypeShapeListItem(IDataSchemaColumn column, EntityProperty property, string action)
         {
@@ -1000,10 +1000,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             }
         }
 
-        /// <summary>
-        ///     Helper method to determine what should be displayed in the return type view cell.
-        ///     if both source and target text are not null, we display: "source->target".
-        /// </summary>
+        // <summary>
+        //     Helper method to determine what should be displayed in the return type view cell.
+        //     if both source and target text are not null, we display: "source->target".
+        // </summary>
         private static string GetReturnTypeListViewCellText(bool isUpdateMode, string sourceText, string targetText)
         {
             if (String.IsNullOrEmpty(sourceText)
@@ -1414,9 +1414,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             }
         }
 
-        /// <summary>
-        ///     ComplexType combo box can have 2 mode (editable vs non-editable mode).
-        /// </summary>
+        // <summary>
+        //     ComplexType combo box can have 2 mode (editable vs non-editable mode).
+        // </summary>
         private void SetComplexTypeReturnComboBoxStyle(bool isEditable)
         {
             complexTypeReturnComboBox.DropDownStyle = isEditable ? ComboBoxStyle.DropDown : ComboBoxStyle.DropDownList;
@@ -1424,18 +1424,18 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             complexTypeReturnComboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
 
-        /// <summary>
-        ///     Determine whether we need to enable/disable create new complex type button.
-        /// </summary>
+        // <summary>
+        //     Determine whether we need to enable/disable create new complex type button.
+        // </summary>
         private void SetCreateNewComplexTypeButtonProperties()
         {
             // Only enable createNewComplexTypeButton if we could get column information and create function import returning complex type is supported
             createNewComplexTypeButton.Enabled = (Schema != null) && _complexTypeFeatureState.IsEnabled();
         }
 
-        /// <summary>
-        ///     Launch background process to retrieve columns schema info from database.
-        /// </summary>
+        // <summary>
+        //     Launch background process to retrieve columns schema info from database.
+        // </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void LaunchBackgroundProcessToRetrieveColumnsSchema()
         {

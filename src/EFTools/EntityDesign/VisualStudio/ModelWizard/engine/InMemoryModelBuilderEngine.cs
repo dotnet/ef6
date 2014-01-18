@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
@@ -16,7 +16,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         private readonly List<EdmSchemaError> _errors = new List<EdmSchemaError>();
         private readonly IInitialModelContentsFactory _initialModelContentsFactory;
 
-        /// <param name="initialModelContentsFactory">A factory that creates the "basic" contents of an empty edmx file</param>
+        // <param name="initialModelContentsFactory">A factory that creates the "basic" contents of an empty edmx file</param>
         internal InMemoryModelBuilderEngine(IInitialModelContentsFactory initialModelContentsFactory)
         {
             _initialModelContentsFactory = initialModelContentsFactory;
@@ -40,9 +40,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 "Schema version should not change or we should not cache the document");            
         }
 
-        /// <summary>
-        ///     This is the XDocument of the model in memory.  No assumptions should be made that it exists on disk.
-        /// </summary>
+        // <summary>
+        //     This is the XDocument of the model in memory.  No assumptions should be made that it exists on disk.
+        // </summary>
         internal override XDocument Model
         {
             get

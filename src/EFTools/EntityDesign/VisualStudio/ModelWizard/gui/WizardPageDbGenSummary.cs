@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
@@ -247,10 +247,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return UnhandledExceptionAction.Terminate;
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
-        ///     Updates ModelBuilderSettings from the GUI
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
+        //     Updates ModelBuilderSettings from the GUI
+        // </summary>
         public override bool OnDeactivate()
         {
             if (Wizard.MovingPrevious)
@@ -539,9 +539,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Wizard.EnableButton(ButtonType.Cancel, true);
         }
 
-        /// <summary>
-        ///     This method gets called when the workflow completes or gets terminated
-        /// </summary>
+        // <summary>
+        //     This method gets called when the workflow completes or gets terminated
+        // </summary>
         private void _workflowInstance_WorkflowCompleted(WorkflowApplicationCompletedEventArgs e)
         {
             _synchronizationContext.Post(

@@ -16,9 +16,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.WizardFramework;
     using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
-    /// <summary>
-    ///     ModelBuilder Wizard form that contains the wizard pages
-    /// </summary>
+    // <summary>
+    //     ModelBuilder Wizard form that contains the wizard pages
+    // </summary>
     internal partial class ModelBuilderWizardForm : WizardForm
     {
         internal enum WizardMode
@@ -30,9 +30,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             PerformDatabaseConfigAndDBGenSummary
         }
 
-        /// <summary>
-        ///     Constructor to start the wizard in the specified mode
-        /// </summary>
+        // <summary>
+        //     Constructor to start the wizard in the specified mode
+        // </summary>
         public ModelBuilderWizardForm(
             IServiceProvider serviceProvider,
             ModelBuilderSettings modelBuilderSettings, 
@@ -118,9 +118,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             InitializeWizardPages();
         }
 
-        /// <summary>
-        ///     Helper to initialize GUI elements of the form
-        /// </summary>
+        // <summary>
+        //     Helper to initialize GUI elements of the form
+        // </summary>
         protected void InitializeWizardForm()
         {
             ShowOrientationPanel = false;
@@ -144,9 +144,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Helper to create &amp; initialize wizard pages depending on the mode
-        /// </summary>
+        // <summary>
+        //     Helper to create &amp; initialize wizard pages depending on the mode
+        // </summary>
         // virtual to allow mocking
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
@@ -307,10 +307,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     entityContainerName.ToUpper(CultureInfo.CurrentCulture) == modelNamespaceName.ToUpper(CultureInfo.CurrentCulture));
         }
 
-        /// <summary>
-        ///     Helper method to raise a dialog to display the encountered database connection errors
-        /// </summary>
-        /// <returns>the error message</returns>
+        // <summary>
+        //     Helper method to raise a dialog to display the encountered database connection errors
+        // </summary>
+        // <returns>the error message</returns>
         internal static string ShowDatabaseConnectionErrorDialog(Exception e)
         {
             if (null == e)

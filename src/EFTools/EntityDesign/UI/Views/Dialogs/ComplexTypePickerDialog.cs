@@ -37,9 +37,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             okButton.Enabled = ComplexType != null;
         }
 
-        /// <summary>
-        ///     Use this constructor if you want to remove a ComplexType (for example currently selected) from the list
-        /// </summary>
+        // <summary>
+        //     Use this constructor if you want to remove a ComplexType (for example currently selected) from the list
+        // </summary>
         internal ComplexTypePickerDialog(ConceptualEntityModel cModel, ComplexType complexTypeToRemove)
             : this(cModel)
         {

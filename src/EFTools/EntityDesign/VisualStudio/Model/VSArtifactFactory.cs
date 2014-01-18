@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Model
 {
@@ -11,9 +11,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
 
     internal class VSArtifactFactory : IEFArtifactFactory
     {
-        /// <summary>
-        ///     The factory that creates VSArtifact and the corresponding DiagramArtifact if diagram file is available.
-        /// </summary>
+        // <summary>
+        //     The factory that creates VSArtifact and the corresponding DiagramArtifact if diagram file is available.
+        // </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public IList<EFArtifact> Create(ModelManager modelManager, Uri uri, XmlModelProvider xmlModelProvider)
         {

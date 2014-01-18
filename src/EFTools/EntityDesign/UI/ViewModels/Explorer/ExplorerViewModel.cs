@@ -4,10 +4,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
 {
     using Microsoft.Data.Entity.Design.Base.Context;
 
-    /// <summary>
-    ///     contains the ViewModel to support the Explorer View of the
-    ///     conceptual and storage spaces
-    /// </summary>
+    // <summary>
+    //     contains the ViewModel to support the Explorer View of the
+    //     conceptual and storage spaces
+    // </summary>
     internal class ExplorerViewModel : IExplorerViewModel
     {
         public ExplorerViewModel(EditingContext editingContext, ExplorerRootNode edmRootNode)
@@ -30,9 +30,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
         #endregion
     }
 
-    /// <summary>
-    ///     Extension methods for the IExplorerViewModel interface.
-    /// </summary>
+    // <summary>
+    //     Extension methods for the IExplorerViewModel interface.
+    // </summary>
     internal static class IExplorerViewModelExtensions
     {
         internal static ExplorerRootNode EDMRootNode(this IExplorerViewModel viewModel)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using EntityModel = Microsoft.Data.Entity.Design.Model.Entity;
 
@@ -59,10 +59,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         private const string EscherSettingsRegistryPath = "EDMDesigner";
 
-        /// <summary>
-        ///     Returns whether the proposedModelNamespace is valid as a model namespace.
-        /// </summary>
-        /// <param name="proposedModelNamespace">The proposed model namespace</param>
+        // <summary>
+        //     Returns whether the proposedModelNamespace is valid as a model namespace.
+        // </summary>
+        // <param name="proposedModelNamespace">The proposed model namespace</param>
         internal static bool IsValidModelNamespace(string proposedModelNamespace)
         {
             return
@@ -70,12 +70,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 EscherAttributeContentValidator.IsValidCsdlNamespaceName(proposedModelNamespace);
         }
 
-        /// <summary>
-        ///     Returns a string which is valid as a model namespace given the
-        ///     proposedModelNamespace as a starting point.
-        /// </summary>
-        /// <param name="proposedModelNamespace">The proposed model namespace</param>
-        /// <param name="defaultModelNamespace">The model namespace to use if removal of invalid chars results in an empty string</param>
+        // <summary>
+        //     Returns a string which is valid as a model namespace given the
+        //     proposedModelNamespace as a starting point.
+        // </summary>
+        // <param name="proposedModelNamespace">The proposed model namespace</param>
+        // <param name="defaultModelNamespace">The model namespace to use if removal of invalid chars results in an empty string</param>
         internal static string ConstructValidModelNamespace(string proposedModelNamespace, string defaultModelNamespace)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(defaultModelNamespace), "defaultModelNamespace must not be null or empty");
@@ -132,10 +132,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return defaultModelNamespace;
         }
 
-        /// <summary>
-        ///     Using proposedNamespace as a starting point return a namespace which is not in the
-        ///     set of existing namespaces recorded in the existingNamespaces Dictionary.
-        /// </summary>
+        // <summary>
+        //     Using proposedNamespace as a starting point return a namespace which is not in the
+        //     set of existing namespaces recorded in the existingNamespaces Dictionary.
+        // </summary>
         internal static string ConstructUniqueNamespace(string proposedNamespace, HashSet<string> existingNamespaces)
         {
             Debug.Assert(
@@ -179,9 +179,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return relativePathsList.ToArray();
         }
 
-        /// <summary>
-        ///     Returns a path for "directory1" relative to "directory2"
-        /// </summary>
+        // <summary>
+        //     Returns a path for "directory1" relative to "directory2"
+        // </summary>
         internal static string GetRelativePath(DirectoryInfo directory1, DirectoryInfo directory2)
         {
             var d = directory1;
@@ -288,10 +288,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return false;
         }
 
-        /// <summary>
-        ///     Gets the target SCHEMA VERSION of the project's installed runtime, or if none,
-        ///     of the latest runtime available on the project's target framework.
-        /// </summary>
+        // <summary>
+        //     Gets the target SCHEMA VERSION of the project's installed runtime, or if none,
+        //     of the latest runtime available on the project's target framework.
+        // </summary>
         public static Version GetEntityFrameworkVersion(Project project, IServiceProvider serviceProvider, bool useLatestIfNoEF = true)
         {
             Debug.Assert(project != null, "project != null");
@@ -314,9 +314,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return RuntimeVersion.GetTargetSchemaVersion(efAssemblyVersion, netFrameworkVersion);
         }
 
-        /// <summary>
-        ///     Return the EF Runtime assemblies path.
-        /// </summary>
+        // <summary>
+        //     Return the EF Runtime assemblies path.
+        // </summary>
         internal static string GetRuntimeAssemblyPath(Project project, IServiceProvider serviceProvider)
         {
             // Get Project Design Time Assembly Resolution.
@@ -362,15 +362,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         }
 
 #if (!VS12)
-        /// <summary>
-        ///     Called when a SQL CE database is upgraded from 3.5 to 4.0.
-        ///     1. Check the project type, return immediately if project is misc project.
-        ///     2. Find all the EDMX files in the project.
-        ///     3. For each EDMX file in the project replace the SSDL Provider and ProviderManifestToken
-        ///     attributes if needed and update the config file if needed; skip all linked edmx files
-        /// </summary>
-        /// <param name="hierarchy">hierarchy for project</param>
-        /// <param name="logger">log error messages here</param>
+        // <summary>
+        //     Called when a SQL CE database is upgraded from 3.5 to 4.0.
+        //     1. Check the project type, return immediately if project is misc project.
+        //     2. Find all the EDMX files in the project.
+        //     3. For each EDMX file in the project replace the SSDL Provider and ProviderManifestToken
+        //     attributes if needed and update the config file if needed; skip all linked edmx files
+        // </summary>
+        // <param name="hierarchy">hierarchy for project</param>
+        // <param name="logger">log error messages here</param>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsUpgradeLogger.LogMessage(System.UInt32,System.String,System.String,System.String)")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal static void SqlCeUpgradeService_OnUpgradeProject(IVsHierarchy hierarchy, IVsUpgradeLogger logger)
@@ -461,11 +461,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
 #endif
 
-        /// <summary>
-        ///     Called when a MDF database file is upgraded from Dev10 to Dev11
-        ///     1. Check the project type, return immediately if project is misc project.
-        ///     2. Update the config file if needed
-        /// </summary>
+        // <summary>
+        //     Called when a MDF database file is upgraded from Dev10 to Dev11
+        //     1. Check the project type, return immediately if project is misc project.
+        //     2. Update the config file if needed
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsUpgradeLogger.LogMessage(System.UInt32,System.String,System.String,System.String)")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "databaseFile")]
@@ -516,10 +516,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Checks whether a project is using IIS for SQL Database File Upgrade purposes
-        ///     Note: using IISExpress will return false.
-        /// </summary>
+        // <summary>
+        //     Checks whether a project is using IIS for SQL Database File Upgrade purposes
+        //     Note: using IISExpress will return false.
+        // </summary>
         private static bool IsUsingIIS(Project project)
         {
             var webSiteTypeProjectProperty = VsUtils.GetProjectPropertyByName(project, "WebSiteType") as int?;
@@ -549,9 +549,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Enable/Disable custom tool (which reads the code generation property) for an edmx project item.
-        /// </summary>
+        // <summary>
+        //     Enable/Disable custom tool (which reads the code generation property) for an edmx project item.
+        // </summary>
         internal static void ToggleEdmxItemCustomToolProperty(ProjectItem projectItem, bool isEnabled)
         {
             var prop = projectItem.Properties.Item("CustomTool");
@@ -561,9 +561,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
         }
 
-        /// <summary>
-        ///     Enable/Disable code generation for an edmx project item.
-        /// </summary>
+        // <summary>
+        //     Enable/Disable code generation for an edmx project item.
+        // </summary>
         internal static Command SetCodeGenStrategyToNoneCommand(EFArtifact artifact)
         {
             Debug.Assert(artifact != null, "Artifact should not be null");
@@ -585,12 +585,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return null;
         }
 
-        /// <summary>
-        ///     Currently, finds the user setting under CURRENTUSER\Software\Microsoft\VisualStudio\10.0\EDMDesigner.
-        ///     Returns null if the key/value pair cannot be found.
-        ///     TODO: it would be nicer to have an options page that stored this setting as a C# property with appropriate
-        ///     property descriptors.
-        /// </summary>
+        // <summary>
+        //     Currently, finds the user setting under CURRENTUSER\Software\Microsoft\VisualStudio\10.0\EDMDesigner.
+        //     Returns null if the key/value pair cannot be found.
+        //     TODO: it would be nicer to have an options page that stored this setting as a C# property with appropriate
+        //     property descriptors.
+        // </summary>
         internal static string GetUserSetting(string key)
         {
             var valueAsString = String.Empty;
@@ -621,11 +621,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return valueAsString;
         }
 
-        /// <summary>
-        ///     Currently, sets the user setting under CURRENTUSER\Software\Microsoft\VisualStudio\10.0\EDMDesigner.
-        ///     TODO: it would be nicer to have an options page that stored this setting as a C# property with appropriate
-        ///     property descriptors.
-        /// </summary>
+        // <summary>
+        //     Currently, sets the user setting under CURRENTUSER\Software\Microsoft\VisualStudio\10.0\EDMDesigner.
+        //     TODO: it would be nicer to have an options page that stored this setting as a C# property with appropriate
+        //     property descriptors.
+        // </summary>
         internal static void SaveUserSetting(string key, string value)
         {
             var root = VsUtils.GetVisualStudioRegistryPath();
@@ -666,9 +666,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 /* major and minor version. */);
         }
 
-        /// <summary>
-        ///     Return the corresponding FunctionImport's result-column name for a given property.
-        /// </summary>
+        // <summary>
+        //     Return the corresponding FunctionImport's result-column name for a given property.
+        // </summary>
         internal static string GetFunctionImportResultColumnName(EntityModel.FunctionImport functionImport, EntityModel.Property property)
         {
             if (functionImport != null)

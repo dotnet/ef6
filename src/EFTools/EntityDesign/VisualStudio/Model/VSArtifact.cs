@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Model
 {
@@ -44,12 +44,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
             get { return _layerManager; }
         }
 
-        /// <summary>
-        ///     Creates an instance of an EFArtifact for use inside Visual Studio
-        /// </summary>
-        /// <param name="modelManager">A reference of ModelManager</param>
-        /// <param name="uri">The URI to the EDMX file that this artifact will load</param>
-        /// <param name="xmlModelProvider">We are ignoring this parameter, sending null to base class so that it will call CreateModelProvider()</param>
+        // <summary>
+        //     Creates an instance of an EFArtifact for use inside Visual Studio
+        // </summary>
+        // <param name="modelManager">A reference of ModelManager</param>
+        // <param name="uri">The URI to the EDMX file that this artifact will load</param>
+        // <param name="xmlModelProvider">We are ignoring this parameter, sending null to base class so that it will call CreateModelProvider()</param>
         internal VSArtifact(ModelManager modelManager, Uri uri, XmlModelProvider xmlModelProvider)
             : base(modelManager, uri, xmlModelProvider)
         {
@@ -116,19 +116,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
             return _namespaces;
         }
 
-        /// <summary>
-        ///     Ensure we have the correct provider loaded before we reload
-        /// </summary>
+        // <summary>
+        //     Ensure we have the correct provider loaded before we reload
+        // </summary>
         internal override void ReloadArtifact()
         {
             VsUtils.EnsureProvider(this);
             base.ReloadArtifact();
         }
 
-        /// <summary>
-        ///     This will do analysis to determine if a document should be opened
-        ///     only in the XmlEditor.
-        /// </summary>
+        // <summary>
+        //     This will do analysis to determine if a document should be opened
+        //     only in the XmlEditor.
+        // </summary>
         internal override void DetermineIfArtifactIsDesignerSafe()
         {
             VsUtils.EnsureProvider(this);

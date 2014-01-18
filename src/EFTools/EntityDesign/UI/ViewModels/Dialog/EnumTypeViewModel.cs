@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels
 {
@@ -133,10 +133,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels
             }
         }
 
-        /// <summary>
-        ///     The referenced external type name.
-        ///     if IsReferenceExternalType is true, the value will be ignored.
-        /// </summary>
+        // <summary>
+        //     The referenced external type name.
+        //     if IsReferenceExternalType is true, the value will be ignored.
+        // </summary>
         public string ExternalTypeName
         {
             get { return _externalTypeName; }
@@ -264,9 +264,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels
             }
         }
 
-        /// <summary>
-        ///     This method will return validation error for a given property (if there is one).
-        /// </summary>
+        // <summary>
+        //     This method will return validation error for a given property (if there is one).
+        // </summary>
         public string this[string propertyName]
         {
             get

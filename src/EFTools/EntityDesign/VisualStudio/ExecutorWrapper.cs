@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
@@ -9,10 +9,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
-    /// <summary>
-    ///     Used for design-time scenarios where the user's code needs to be executed inside
-    ///     of an isolated, runtime-like <see cref="AppDomain" />.
-    /// </summary>
+    // <summary>
+    //     Used for design-time scenarios where the user's code needs to be executed inside
+    //     of an isolated, runtime-like <see cref="AppDomain" />.
+    // </summary>
     internal class ExecutorWrapper
     {
         private const string EntityFrameworkAssemblyName = "EntityFramework";
@@ -24,14 +24,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         private readonly AppDomain _domain;
         private readonly Lazy<object> _executor;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ExecutorWrapper" /> class.  Consider using
-        ///     <see cref="ProjectExecutionContext" /> instead.
-        /// </summary>
-        /// <param name="domain">
-        ///     A runtime-like <see cref="AppDomain" /> used to execute the user's code.
-        /// </param>
-        /// <param name="assemblyFile">The path for the assembly containing the user's code.</param>
+        // <summary>
+        //     Initializes a new instance of the <see cref="ExecutorWrapper" /> class.  Consider using
+        //     <see cref="ProjectExecutionContext" /> instead.
+        // </summary>
+        // <param name="domain">
+        //     A runtime-like <see cref="AppDomain" /> used to execute the user's code.
+        // </param>
+        // <param name="assemblyFile">The path for the assembly containing the user's code.</param>
         public ExecutorWrapper(AppDomain domain, string assemblyFile)
         {
             Debug.Assert(domain != null, "domain is null.");
@@ -51,11 +51,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                     null));
         }
 
-        /// <summary>
-        ///     Gets the DbProviderServices type name for the specified provider.
-        /// </summary>
-        /// <param name="invariantName">The provider's invariant name.</param>
-        /// <returns>The assembly-qualified name</returns>
+        // <summary>
+        //     Gets the DbProviderServices type name for the specified provider.
+        // </summary>
+        // <param name="invariantName">The provider's invariant name.</param>
+        // <returns>The assembly-qualified name</returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public string GetProviderServices(string invariantName)
         {

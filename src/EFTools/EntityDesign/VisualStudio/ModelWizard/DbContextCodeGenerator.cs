@@ -14,37 +14,37 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Tools.XmlDesignerBase.Base.Util;
 
-    /// <summary>
-    ///     Handles adding the DbContext item templates for code generation automatically if
-    ///     the template VSIX are installed.
-    /// </summary>
+    // <summary>
+    //     Handles adding the DbContext item templates for code generation automatically if
+    //     the template VSIX are installed.
+    // </summary>
     internal class DbContextCodeGenerator
     {
         private readonly string _templatePattern = "DbCtx{0}{1}EF{2}.zip";
 
-        /// <summary>
-        ///     Constructor to use with the default template pattern.
-        /// </summary>
+        // <summary>
+        //     Constructor to use with the default template pattern.
+        // </summary>
         public DbContextCodeGenerator()
         {
         }
 
-        /// <summary>
-        ///     Constructor that allows injection of a different item template zip file pattern
-        ///     for use when testing.
-        /// </summary>
-        /// <param name="templatePattern">The pattern</param>
+        // <summary>
+        //     Constructor that allows injection of a different item template zip file pattern
+        //     for use when testing.
+        // </summary>
+        // <param name="templatePattern">The pattern</param>
         public DbContextCodeGenerator(string templatePattern)
         {
             _templatePattern = templatePattern;
         }
 
-        /// <summary>
-        ///     Adds the DbContext templates for the given EDMX project item if the templates are
-        ///     installed and can be used, otherwise does nothing.
-        /// </summary>
-        /// <param name="edmxItem">The project item representing the EDMX model.</param>
-        /// <param name="useLegacyTemplate">A value indicating whether to use the legacy version of the template.</param>
+        // <summary>
+        //     Adds the DbContext templates for the given EDMX project item if the templates are
+        //     installed and can be used, otherwise does nothing.
+        // </summary>
+        // <param name="edmxItem">The project item representing the EDMX model.</param>
+        // <param name="useLegacyTemplate">A value indicating whether to use the legacy version of the template.</param>
         public void AddDbContextTemplates(ProjectItem edmxItem, bool useLegacyTemplate = true)
         {
             Debug.Assert(edmxItem != null, "edmxItem is null.");
@@ -95,9 +95,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             }
         }
 
-        /// <summary>
-        ///     Gets all the items co-located with the given edmxItem with names ending in ".tt".
-        /// </summary>
+        // <summary>
+        //     Gets all the items co-located with the given edmxItem with names ending in ".tt".
+        // </summary>
         private static IEnumerable<ProjectItem> GetT4Items(ProjectItem edmxItem)
         {
             return edmxItem == null
@@ -108,15 +108,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                              .ToList();
         }
 
-        /// <summary>
-        ///     Finds the DbContext item template path and filename for the given project type.
-        ///     Different paths are returned for C# and VB projects and for normal and Web Site
-        ///     projects. Null is returned if the templates are not installed or the project targets
-        ///     a Framework version without support for T4 code generation.
-        /// </summary>
-        /// <param name="project">The project to which templates will be added.</param>
-        /// <param name="useLegacyTemplate">A value indicating whether to use the legacy version of the template.</param>
-        /// <returns>The template path and file name or null if templates should not be used.</returns>
+        // <summary>
+        //     Finds the DbContext item template path and filename for the given project type.
+        //     Different paths are returned for C# and VB projects and for normal and Web Site
+        //     projects. Null is returned if the templates are not installed or the project targets
+        //     a Framework version without support for T4 code generation.
+        // </summary>
+        // <param name="project">The project to which templates will be added.</param>
+        // <param name="useLegacyTemplate">A value indicating whether to use the legacy version of the template.</param>
+        // <returns>The template path and file name or null if templates should not be used.</returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public string FindDbContextTemplate(Project project, bool useLegacyTemplate = true)
         {

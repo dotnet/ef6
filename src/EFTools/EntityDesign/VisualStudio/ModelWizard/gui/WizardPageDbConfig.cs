@@ -26,12 +26,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.WizardFramework;
 
-    /// <summary>
-    ///     This is the second page in the ModelGen VS wizard and is invoked if the user wants to generate the model from a database.
-    ///     In this page the user can:
-    ///     - select the server and database to generate the model from
-    ///     - choose whether to save the connection string in App.Config
-    /// </summary>
+    // <summary>
+    //     This is the second page in the ModelGen VS wizard and is invoked if the user wants to generate the model from a database.
+    //     In this page the user can:
+    //     - select the server and database to generate the model from
+    //     - choose whether to save the connection string in App.Config
+    // </summary>
     // to view this class in the forms designer, make it temporarily derive from Microsoft.WizardFramework.WizardPage
     internal partial class WizardPageDbConfig : WizardPageBase
     {
@@ -222,10 +222,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked on this page
-        ///     Updates ModelBuilderSettings from the GUI
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked on this page
+        //     Updates ModelBuilderSettings from the GUI
+        // </summary>
         public override bool OnDeactivate()
         {
             if (Wizard.MovingNext
@@ -358,10 +358,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return true;
         }
 
-        /// <summary>
-        ///     Prompts the user to copy the database file into the project if appropriate
-        /// </summary>
-        /// <returns>whether wizard should continue to next page</returns>
+        // <summary>
+        //     Prompts the user to copy the database file into the project if appropriate
+        // </summary>
+        // <returns>whether wizard should continue to next page</returns>
         private bool PromptConvertLocalConnection()
         {
             // first check whether connection is Local
@@ -425,11 +425,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Copies the local file into the project
-        /// </summary>
-        /// <param name="filePath">Path to file to copy</param>
-        /// <returns>whether the copy is successful</returns>
+        // <summary>
+        //     Copies the local file into the project
+        // </summary>
+        // <param name="filePath">Path to file to copy</param>
+        // <returns>whether the copy is successful</returns>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsTrackProjectDocuments3.HandsOffFiles(System.UInt32,System.Int32,System.String[])")]
         private bool CopyFileIntoProjectAndConvertConnectionString(string filePath)
         {
@@ -479,11 +479,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Changes connection string to point to new file path
-        /// </summary>
-        /// <param name="newFilePath">New file path</param>
-        /// <returns>whether successful</returns>
+        // <summary>
+        //     Changes connection string to point to new file path
+        // </summary>
+        // <param name="newFilePath">New file path</param>
+        // <returns>whether successful</returns>
         private bool RetargetConnectionString(string newFilePath)
         {
             // compute the Design and Runtime Connection String values based on the new file path
@@ -619,10 +619,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return connPropertiesSvc.ToString();
         }
 
-        /// <summary>
-        ///     Helper to update ModelBuilderSettings from GUI
-        ///     TODO: validate settings on this page are correct
-        /// </summary>
+        // <summary>
+        //     Helper to update ModelBuilderSettings from GUI
+        //     TODO: validate settings on this page are correct
+        // </summary>
         private void UpdateSettingsFromGui()
         {
             // don't bother saving anything if there isn't a connection; the user isn't allowed to proceed forward in the wizard anyways

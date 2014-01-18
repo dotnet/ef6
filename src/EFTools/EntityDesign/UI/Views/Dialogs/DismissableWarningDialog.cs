@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 {
@@ -8,9 +8,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     using System.Windows.Forms.Design;
     using Microsoft.Data.Entity.Design.VisualStudio;
 
-    /// <summary>
-    ///     Displays a dialog that allows the user to choose to never see it again via a checkbox.
-    /// </summary>
+    // <summary>
+    //     Displays a dialog that allows the user to choose to never see it again via a checkbox.
+    // </summary>
     internal partial class DismissableWarningDialog : Form
     {
         internal enum ButtonMode
@@ -41,14 +41,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             }
         }
 
-        /// <summary>
-        ///     Static method to instantiate a DismissableWarningDialog and persist the user setting to dismiss the dialog.
-        ///     Returns a boolean indicating whether the dialog was cancelled or not.
-        /// </summary>
-        /// <param name="formattedTitle"></param>
-        /// <param name="formattedMessage"></param>
-        /// <param name="regKeyName"></param>
-        /// <param name="buttonMode">Either 'OKCancel' or 'YesNo'. If 'YesNo', 'Yes' will be associated with DialogResult.OK</param>
+        // <summary>
+        //     Static method to instantiate a DismissableWarningDialog and persist the user setting to dismiss the dialog.
+        //     Returns a boolean indicating whether the dialog was cancelled or not.
+        // </summary>
+        // <param name="buttonMode">Either 'OKCancel' or 'YesNo'. If 'YesNo', 'Yes' will be associated with DialogResult.OK</param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static bool ShowWarningDialogAndSaveDismissOption(
             string formattedTitle, string formattedMessage, string regKeyName, ButtonMode buttonMode)

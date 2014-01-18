@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Model
 {
@@ -18,12 +18,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
         private bool _disabledBufferUndo;
         private uint _rdtCookie = VSConstants.VSCOOKIE_NIL;
 
-        /// <summary>
-        ///     Constructs a VSDiagramArtifact for the passed in URI
-        /// </summary>
-        /// <param name="modelManager">A reference of ModelManager</param>
-        /// <param name="uri">The Diagram File URI</param>
-        /// <param name="xmlModelProvider">If you pass null, then you must derive from this class and implement CreateModelProvider().</param>
+        // <summary>
+        //     Constructs a VSDiagramArtifact for the passed in URI
+        // </summary>
+        // <param name="modelManager">A reference of ModelManager</param>
+        // <param name="uri">The Diagram File URI</param>
+        // <param name="xmlModelProvider">If you pass null, then you must derive from this class and implement CreateModelProvider().</param>
         internal VSDiagramArtifact(ModelManager modelManager, Uri uri, XmlModelProvider xmlModelProvider)
             : base(modelManager, uri, xmlModelProvider)
         {

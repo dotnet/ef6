@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
 {
@@ -48,9 +48,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
 
     internal class End1MultiplicityConverter : EndMultiplicityConverter
     {
-        /// <summary>
-        ///     Returns the first End of the given Association
-        /// </summary>
+        // <summary>
+        //     Returns the first End of the given Association
+        // </summary>
         protected override AssociationEnd GetEnd(Association association)
         {
             if (association.AssociationEnds().Count > 0)
@@ -63,9 +63,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Converters
 
     internal class End2MultiplicityConverter : EndMultiplicityConverter
     {
-        /// <summary>
-        ///     Returns the second End of the given Association
-        /// </summary>
+        // <summary>
+        //     Returns the second End of the given Association
+        // </summary>
         protected override AssociationEnd GetEnd(Association association)
         {
             if (association.AssociationEnds().Count > 1)

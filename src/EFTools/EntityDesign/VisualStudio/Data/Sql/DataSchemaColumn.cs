@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
 {
@@ -96,9 +96,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
 
         #region Helper methods
 
-        /// <summary>
-        ///     Return true if the column type support/has size property
-        /// </summary>
+        // <summary>
+        //     Return true if the column type support/has size property
+        // </summary>
         private static bool HasSize(Type type)
         {
             if (type == typeof(string)
@@ -109,9 +109,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
             return false;
         }
 
-        /// <summary>
-        ///     Return true if the column type support/has precision property.
-        /// </summary>
+        // <summary>
+        //     Return true if the column type support/has precision property.
+        // </summary>
         private static bool HasPrecision(Type type)
         {
             if (type == typeof(Decimal)
@@ -122,9 +122,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
             return false;
         }
 
-        /// <summary>
-        ///     Return true if the column type support/has scale property.
-        /// </summary>
+        // <summary>
+        //     Return true if the column type support/has scale property.
+        // </summary>
         private static bool HasScale(Type type)
         {
             if (type == typeof(Decimal))
@@ -134,17 +134,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Data.Sql
             return false;
         }
 
-        /// <summary>
-        ///     The value has to be a positive integer value between 1 - 38
-        /// </summary>
+        // <summary>
+        //     The value has to be a positive integer value between 1 - 38
+        // </summary>
         private static bool IsValidPrecisionValue(int value)
         {
             return (value > 0 && value <= MaxPrecisionValue);
         }
 
-        /// <summary>
-        ///     The value has to be a positive integer value less than or equal to  column precision value (including 0).
-        /// </summary>
+        // <summary>
+        //     The value has to be a positive integer value less than or equal to  column precision value (including 0).
+        // </summary>
         private bool IsValidScaleValue(int value)
         {
             return (value >= 0 && value <= _column.Precision);
