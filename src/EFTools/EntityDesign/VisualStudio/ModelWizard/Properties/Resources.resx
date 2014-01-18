@@ -447,16 +447,16 @@ Error message: '{0}'</value>
     <value>Unable to get the IVsDataProviderManager to launch the data connections dialog</value>
   </data>
   <data name="Database" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bitmaps\database.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\bitmaps\database.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EmptyModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bitmaps\EmptyModel.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\bitmaps\EmptyModel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EmptyModelCodeFirst" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bitmaps\EmptyModelCodeFirst.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\bitmaps\EmptyModelCodeFirst.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CodeFirstFromDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\bitmaps\CodeFirstFromDatabase.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\bitmaps\CodeFirstFromDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="database_schema" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\bitmaps\database_schema.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

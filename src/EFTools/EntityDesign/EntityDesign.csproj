@@ -887,11 +887,11 @@
     <None Include="VisualStudio\ModelWizard\bitmaps\Information.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\StoredProc.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\View.bmp" />
-    <Content Include="VisualStudio\ModelWizard\bitmaps\database.bmp" />
+    <Content Include="VisualStudio\ModelWizard\bitmaps\database.png" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\DbTables.bmp" />
-    <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModel.bmp" />
-    <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModelCodeFirst.bmp" />
-    <Content Include="VisualStudio\ModelWizard\bitmaps\CodeFirstFromDatabase.bmp" />
+    <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModel.png" />
+    <Content Include="VisualStudio\ModelWizard\bitmaps\EmptyModelCodeFirst.png" />
+    <Content Include="VisualStudio\ModelWizard\bitmaps\CodeFirstFromDatabase.png" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\PageIcon.bmp" />
     <Content Include="VisualStudio\ModelWizard\bitmaps\Table.bmp" />
     <Content Include="VisualStudio\ModelWizard\native.rc" />

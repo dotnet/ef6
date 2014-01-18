@@ -65,10 +65,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 TransparentColor = Color.Magenta
             };
 
-            imageList.Images.Add("database.bmp", Resources.Database);
-            imageList.Images.Add("EmptyModel.bmp", Resources.EmptyModel);
-            imageList.Images.Add("EmptyModelCodeFirst.bmp", Resources.EmptyModelCodeFirst);
-            imageList.Images.Add("CodeFirstFromDatabase.bmp", Resources.CodeFirstFromDatabase);
+            imageList.Images.Add("database.png", Resources.Database);
+            imageList.Images.Add("EmptyModel.png", Resources.EmptyModel);
+            imageList.Images.Add("EmptyModelCodeFirst.png", Resources.EmptyModelCodeFirst);
+            imageList.Images.Add("CodeFirstFromDatabase.png", Resources.CodeFirstFromDatabase);
 
 #if VS12
             // scale images as appropriate for screen resolution
@@ -83,15 +83,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             listViewModelContents.Items.AddRange(
                 new[]
                 {
-                    new ListViewItem(Resources.GenerateFromDatabaseOption, "database.bmp"),
-                    new ListViewItem(Resources.EmptyModelOption, "EmptyModel.bmp"),
+                    new ListViewItem(Resources.GenerateFromDatabaseOption, "database.png"),
+                    new ListViewItem(Resources.EmptyModelOption, "EmptyModel.png"),
                 });
 
             if (NetFrameworkVersioningHelper.TargetNetFrameworkVersion(wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider) >=
                 NetFrameworkVersioningHelper.NetFrameworkVersion4)
             {
-                listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.bmp"));
-                listViewModelContents.Items.Add(new ListViewItem(Resources.CodeFirstFromDatabaseOption, "CodeFirstFromDatabase.bmp"));
+                listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.png"));
+                listViewModelContents.Items.Add(new ListViewItem(Resources.CodeFirstFromDatabaseOption, "CodeFirstFromDatabase.png"));
             }
 
             // Always select the first item
