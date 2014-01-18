@@ -351,6 +351,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             functionHandlers.Add("Truncate", HandleCanonicalFunctionTruncate);
             functionHandlers.Add("IndexOf", HandleCanonicalFunctionIndexOf);
             functionHandlers.Add("Length", HandleCanonicalFunctionLength);
+            functionHandlers.Add("Left", HandleCanonicalFunctionLeft);
+            functionHandlers.Add("Right", HandleCanonicalFunctionRight);
             functionHandlers.Add("ToLower", HandleCanonicalFunctionToLower);
             functionHandlers.Add("ToUpper", HandleCanonicalFunctionToUpper);
             functionHandlers.Add("Trim", HandleCanonicalFunctionTrim);
@@ -394,8 +396,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             functionHandlers.Add("BitwiseXor", HandleCanonicalFunctionBitwise);
 
             // Unsupported canonical functions
-            functionHandlers.Add("Left", HandleUnsupportedFunction);
-            functionHandlers.Add("Right", HandleUnsupportedFunction);
             functionHandlers.Add("StDev", HandleUnsupportedFunction);
             functionHandlers.Add("StDevP", HandleUnsupportedFunction);
             functionHandlers.Add("Var", HandleUnsupportedFunction);
@@ -3205,6 +3205,47 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         private static ISqlFragment HandleCanonicalFunctionLength(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return sqlgen.HandleFunctionDefaultGivenName(e, "LEN");
+        }
+
+        // <summary>
+        // Left(string, length) -> SUBSTRING(string, 1, length)
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionLeft(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            Debug.Assert(e.Arguments.Count == 2, "Left should have two arguments");
+
+            var result = new SqlBuilder();
+
+            result.Append("SUBSTRING (");
+            result.Append(e.Arguments[0].Accept(sqlgen));
+            result.Append(", 1, ");
+            result.Append(e.Arguments[1].Accept(sqlgen));
+            result.Append(")");
+
+            return result;
+        }
+
+        // <summary>
+        // Right(string, length) -> SUBSTRING(string, DATALENGHT(CAST(string as NTEXT))/2 + 1 - length, length)
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionRight(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            Debug.Assert(e.Arguments.Count == 2, "Right should have two arguments");
+
+            var result = new SqlBuilder();
+
+            result.Append("SUBSTRING (");
+            result.Append(e.Arguments[0].Accept(sqlgen));
+            result.Append(", ");
+            result.Append("DATALENGTH(CAST(");
+            result.Append(e.Arguments[0].Accept(sqlgen));
+            result.Append("AS ntext))/2 + 1 - ");
+            result.Append(e.Arguments[1].Accept(sqlgen));
+            result.Append(", ");
+            result.Append(e.Arguments[1].Accept(sqlgen));
+            result.Append(")");
+
+            return result;
         }
 
         // <summary>

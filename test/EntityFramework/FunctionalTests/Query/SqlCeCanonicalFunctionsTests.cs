@@ -153,7 +153,7 @@ namespace System.Data.Entity.Query
         }
 
         [Fact]
-        public void CanonicalFunction_endswith_constants_translated_properly_to_sql_function()
+        public void CanonicalFunction_endswith_constants_with_space_translated_properly_to_sql_function()
         {
             using (var context = GetArubaCeContext())
             {
@@ -161,6 +161,18 @@ namespace System.Data.Entity.Query
                 Assert.Contains("LIKE", query.ToTraceString().ToUpperInvariant());
                 Assert.Contains("CASE WHEN", query.ToTraceString().ToUpperInvariant());
                 Assert.Equal(false, query.First());
+            }
+        }
+
+        [Fact]
+        public void CanonicalFunction_endswith_constants_translated_properly_to_sql_function()
+        {
+            using (var context = GetArubaCeContext())
+            {
+                var query = context.CreateQuery<Boolean>(@"SELECT VALUE Edm.EndsWith('abcd', 'cd') FROM ArubaCeContext.AllTypes AS A");
+                Assert.Contains("LIKE", query.ToTraceString().ToUpperInvariant());
+                Assert.Contains("CASE WHEN", query.ToTraceString().ToUpperInvariant());
+                Assert.Equal(true, query.First());
             }
         }
 
@@ -183,6 +195,75 @@ namespace System.Data.Entity.Query
             {
                 var query = context.CreateQuery<Boolean>(@"SELECT VALUE Edm.EndsWith(A.c21_ntext, A.c21_ntext) FROM ArubaCeContext.AllTypes AS A");
                 Assert.Throws<EntityCommandCompilationException>(() => query.First());
+            }
+        }
+
+        [Fact]
+        public void CanonicalFunction_left_translated_properly_to_sql_function()
+        {
+            using (var context = GetArubaCeContext())
+            {
+                var query = context.CreateQuery<String>(@"SELECT VALUE Edm.Left(A.c21_ntext, 4) FROM ArubaCeContext.AllTypes AS A");
+                Assert.Contains("SUBSTRING", query.ToTraceString().ToUpperInvariant());
+                Assert.Equal("bbbb", query.First());
+            }
+        }
+
+        [Fact]
+        public void CanonicalFunction_left_long_length_translated_properly_to_sql_function()
+        {
+            using (var context = GetArubaCeContext())
+            {
+                var query = context.CreateQuery<String>(@"SELECT VALUE Edm.Left(A.c21_ntext, 3999) FROM ArubaCeContext.AllTypes AS A");
+                Assert.Contains("SUBSTRING", query.ToTraceString().ToUpperInvariant());
+                Assert.Equal("bbbbbbbbbbbbbbbbbbbbbunicorn", query.First());
+            }
+        }
+
+        [Fact]
+        public void CanonicalFunction_left_constant_translated_properly_to_sql_function()
+        {
+            using (var context = GetArubaCeContext())
+            {
+                var query = context.CreateQuery<String>(@"SELECT VALUE Edm.Left('unicorn', 4) FROM ArubaCeContext.AllTypes AS A");
+                Assert.Contains("SUBSTRING", query.ToTraceString().ToUpperInvariant());
+                Assert.Equal("unic", query.First());
+            }
+        }
+
+        [Fact]
+        public void CanonicalFunction_right_translated_properly_to_sql_function()
+        {
+            using (var context = GetArubaCeContext())
+            {
+                var query = context.CreateQuery<String>(@"SELECT VALUE Edm.Right(A.c21_ntext, 4) FROM ArubaCeContext.AllTypes AS A");
+                Assert.Contains("SUBSTRING", query.ToTraceString().ToUpperInvariant());
+                Assert.Contains("DATALENGTH", query.ToTraceString().ToUpperInvariant());
+                Assert.Equal("corn", query.First());
+            }
+        }
+
+        [Fact]
+        public void CanonicalFunction_right_long_length_translated_properly_to_sql_function()
+        {
+            using (var context = GetArubaCeContext())
+            {
+                var query = context.CreateQuery<String>(@"SELECT VALUE Edm.Right(A.c21_ntext, 3999) FROM ArubaCeContext.AllTypes AS A");
+                Assert.Contains("SUBSTRING", query.ToTraceString().ToUpperInvariant());
+                Assert.Contains("DATALENGTH", query.ToTraceString().ToUpperInvariant());
+                Assert.Equal("bbbbbbbbbbbbbbbbbbbbbunicorn", query.First());
+            }
+        }
+
+        [Fact]
+        public void CanonicalFunction_right_constant_translated_properly_to_sql_function()
+        {
+            using (var context = GetArubaCeContext())
+            {
+                var query = context.CreateQuery<String>(@"SELECT VALUE Edm.Right('unicorn', 4) FROM ArubaCeContext.AllTypes AS A");
+                Assert.Contains("SUBSTRING", query.ToTraceString().ToUpperInvariant());
+                Assert.Contains("DATALENGTH", query.ToTraceString().ToUpperInvariant());
+                Assert.Equal("corn", query.First());
             }
         }
 
