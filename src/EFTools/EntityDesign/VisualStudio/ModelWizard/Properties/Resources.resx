@@ -242,6 +242,9 @@
   <data name="StartPage_PromptLabelText" xml:space="preserve">
     <value>&amp;What should the model contain?</value>
   </data>
+  <data name="StartPage_PromptLabelText_CodeFirst" xml:space="preserve">
+    <value>What &amp;type of model would you like?</value>
+  </data>
   <data name="StartPage_Title" xml:space="preserve">
     <value>Choose Model Contents</value>
   </data>

@@ -1174,6 +1174,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to What &amp;type of model would you like?.
+        /// </summary>
+        internal static string StartPage_PromptLabelText_CodeFirst {
+            get {
+                return ResourceManager.GetString("StartPage_PromptLabelText_CodeFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose Model Contents.
         /// </summary>
         internal static string StartPage_Title {
