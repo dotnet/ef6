@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
 {
@@ -17,12 +17,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     Class that represents a scalar property.  This class has to be creatable without a ModelItem existing
-    ///     since we want to be able to display every column in the mapped table, even if the column isn't mapped
-    ///     yet.  So, this class has the ability to store s-side column information; and this is only used if
-    ///     there isn't an associated ModelItem.
-    /// </summary>
+    // <summary>
+    //     Class that represents a scalar property.  This class has to be creatable without a ModelItem existing
+    //     since we want to be able to display every column in the mapped table, even if the column isn't mapped
+    //     yet.  So, this class has the ability to store s-side column information; and this is only used if
+    //     there isn't an associated ModelItem.
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(ScalarPropertyBranch))]
     [TreeGridDesignerColumn(typeof(ColumnNameColumn), Order = 1)]
     [TreeGridDesignerColumn(typeof(OperatorColumn), Order = 2)]
@@ -436,12 +436,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
             CreateModelItem(cpc, context, properties);
         }
 
-        /// <summary>
-        ///     The mapping view model contains a MappingScalarProperty for every column in the table.  The user can clear out the
-        ///     underlying scalar property, but that doesn’t remove or add the MappingScalarProperty.  We need the placeholder
-        ///     in the view model to show the nodes in the Trid even if there isn’t a mapping.  Thus, we don't need to call
-        ///     this.Parent.AddChild(this) since its already there.
-        /// </summary>
+        // <summary>
+        //     The mapping view model contains a MappingScalarProperty for every column in the table.  The user can clear out the
+        //     underlying scalar property, but that doesn't remove or add the MappingScalarProperty.  We need the placeholder
+        //     in the view model to show the nodes in the Trid even if there isn't a mapping.  Thus, we don't need to call
+        //     this.Parent.AddChild(this) since its already there.
+        // </summary>
         internal void CreateModelItem(CommandProcessorContext cpc, EditingContext context, List<Property> propertiesChain)
         {
             Debug.Assert(propertiesChain != null, "The propertiesChain cannot be null");
@@ -495,12 +495,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
             }
         }
 
-        /// <summary>
-        ///     The mapping view model contains a MappingScalarProperty for every column in the table.  The user can clear out the
-        ///     underlying scalar property, but that doesn’t remove or add the MappingScalarProperty.  We need the placeholder
-        ///     in the view model to show the nodes in the Trid even if there isn’t a mapping.  Thus, we don't need to call
-        ///     this.Parent.RemoveChild(this) as we want to leave the placeholder.
-        /// </summary>
+        // <summary>
+        //     The mapping view model contains a MappingScalarProperty for every column in the table.  The user can clear out the
+        //     underlying scalar property, but that doesn't remove or add the MappingScalarProperty.  We need the placeholder
+        //     in the view model to show the nodes in the Trid even if there isn't a mapping.  Thus, we don't need to call
+        //     this.Parent.RemoveChild(this) as we want to leave the placeholder.
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             Debug.Assert(ModelItem != null, "We are trying to delete a null ModelItem");

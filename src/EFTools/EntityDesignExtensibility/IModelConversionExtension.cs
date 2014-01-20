@@ -10,6 +10,7 @@ namespace Microsoft.Data.Entity.Design.Extensibility
         void OnAfterFileLoaded(ModelConversionExtensionContext context);
 
         /// <summary>Defines custom functionality for converting an .edmx file to a file with a custom format before the file is saved.</summary>
+        /// <param name="context">Provides file and project information.</param>
         void OnBeforeFileSaved(ModelConversionExtensionContext context);
     }
 }

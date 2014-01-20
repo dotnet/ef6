@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
 {
@@ -441,12 +441,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
             }
         }
 
-        /// <summary>
-        ///     The mapping view model contains a MappingFunctionScalarProperty for every parameter in the function.  The user can clear out the
-        ///     underlying scalar property, but that doesn’t remove or add the MappingFunctionScalarProperty.  We need the placeholder
-        ///     in the view model to show the nodes in the Trid even if there isn’t a mapping.  Thus, we don't need to call
-        ///     this.Parent.AddChild(this) since its already there.
-        /// </summary>
+        // <summary>
+        //     The mapping view model contains a MappingFunctionScalarProperty for every parameter in the function.  The user can clear out the
+        //     underlying scalar property, but that doesn't remove or add the MappingFunctionScalarProperty.  We need the placeholder
+        //     in the view model to show the nodes in the Trid even if there isn't a mapping.  Thus, we don't need to call
+        //     this.Parent.AddChild(this) since its already there.
+        // </summary>
         internal void CreateModelItem(CommandProcessorContext cpc, EditingContext context, List<Property> propertiesChain)
         {
             Debug.Assert(propertiesChain != null, "The propertiesChain cannot be null");
@@ -522,12 +522,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
             }
         }
 
-        /// <summary>
-        ///     The mapping view model contains a MappingFunctionScalarProperty for every parameter in the function.  The user can clear out the
-        ///     underlying scalar property, but that doesn’t remove or add the MappingFunctionScalarProperty.  We need the placeholder
-        ///     in the view model to show the nodes in the Trid even if there isn’t a mapping.  Thus, we don't need to call
-        ///     this.Parent.RemoveChild(this) as we want to leave the placeholder.
-        /// </summary>
+        // <summary>
+        //     The mapping view model contains a MappingFunctionScalarProperty for every parameter in the function.  The user can clear out the
+        //     underlying scalar property, but that doesn't remove or add the MappingFunctionScalarProperty.  We need the placeholder
+        //     in the view model to show the nodes in the Trid even if there isn't a mapping.  Thus, we don't need to call
+        //     this.Parent.RemoveChild(this) as we want to leave the placeholder.
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             Debug.Assert(ModelItem != null, "We are trying to delete a null ModelItem");

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
@@ -43,10 +43,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
         }
 
-        /// <summary>
-        ///     this will be called by the ModelWizard for all remaining pages (starting from active one), when the Finish button is clicked
-        /// </summary>
-        /// <returns>true if wizard can finish, false otherwise</returns>
+        // <summary>
+        //     this will be called by the ModelWizard for all remaining pages (starting from active one), when the Finish button is clicked
+        // </summary>
+        // <returns>true if wizard can finish, false otherwise</returns>
         internal virtual bool OnWizardFinish()
         {
             return true;

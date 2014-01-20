@@ -55,10 +55,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator
 
         #endregion
 
-        /// <summary>
-        ///     interface to the VS shell object we use to tell our
-        ///     progress while we are generating.
-        /// </summary>
+        // <summary>
+        //     interface to the VS shell object we use to tell our
+        //     progress while we are generating.
+        // </summary>
         internal IVsGeneratorProgress CodeGeneratorProgress
         {
             [DebuggerStepThrough] get { return _codeGeneratorProgress; }
@@ -76,6 +76,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator
         /// </summary>
         /// <param name="inputFileName">input file name</param>
         /// <param name="inputFileContent">file contents as a string</param>
+        /// <param name="defaultNamespace">The default namespace.</param>
         /// <returns>the generated code file as a byte-array</returns>
         protected abstract byte[] GenerateCode(string inputFileName, string inputFileContent, string defaultNamespace);
 
@@ -129,6 +130,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator
         /// <param name="rgbOutputFileContents">byte-array of output file contents</param>
         /// <param name="pcbOutput">count of bytes in the output byte-array</param>
         /// <param name="pGenerateProgress">interface to send progress updates to the shell</param>
+        /// <returns>A status code.</returns>
         public int Generate(
             string wszInputFilePath,
             string bstrInputFileContents,

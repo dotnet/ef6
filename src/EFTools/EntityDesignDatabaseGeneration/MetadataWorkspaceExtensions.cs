@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.DatabaseGeneration
 {
@@ -183,23 +183,23 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration
             return property.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.ComplexType;
         }
 
-        /// <summary>
-        ///     A delegate type that is used by the VisitComplexProperty method to allow user-defined control over how
-        ///     CSDL scalar properties within CSDL complex properties are named in the SSDL
-        /// </summary>
-        /// <param name="namePrefix">The prefix of the complex property's name.</param>
-        /// <param name="property">A scalar property within the complex property.</param>
+        // <summary>
+        //     A delegate type that is used by the VisitComplexProperty method to allow user-defined control over how
+        //     CSDL scalar properties within CSDL complex properties are named in the SSDL
+        // </summary>
+        // <param name="namePrefix">The prefix of the complex property's name.</param>
+        // <param name="property">A scalar property within the complex property.</param>
         [SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
         internal delegate void ScalarInComplexPropertyVisitorDelegate(string namePrefix, EdmProperty property);
 
-        /// <summary>
-        ///     If this property is a ComplexProperty, this method will visit all scalar properties within a complex property,
-        ///     leaving the actions performed on that scalar property up to the caller.
-        /// </summary>
-        /// <param name="property">Complex Property</param>
-        /// <param name="visitorDelegate">ScalarInComplexPropertyVisitorDelegate which defines how the user wants to react to the scalar property</param>
-        /// <param name="delimiter">Defines the naming convention for the resulting scalar property (for example, if delimiter = '_', then the scalar property would be: 'complexProp_scalarProp'</param>
-        /// <param name="recursive">Boolean to define whether to step into complex properties contained within the complex property (true) or only visit the declared scalar properties (false)</param>
+        // <summary>
+        //     If this property is a ComplexProperty, this method will visit all scalar properties within a complex property,
+        //     leaving the actions performed on that scalar property up to the caller.
+        // </summary>
+        // <param name="property">Complex Property</param>
+        // <param name="visitorDelegate">ScalarInComplexPropertyVisitorDelegate which defines how the user wants to react to the scalar property</param>
+        // <param name="delimiter">Defines the naming convention for the resulting scalar property (for example, if delimiter = '_', then the scalar property would be: 'complexProp_scalarProp'</param>
+        // <param name="recursive">Boolean to define whether to step into complex properties contained within the complex property (true) or only visit the declared scalar properties (false)</param>
         internal static void VisitComplexProperty(
             this EdmProperty property, ScalarInComplexPropertyVisitorDelegate visitorDelegate, string delimiter, bool recursive)
         {
@@ -672,15 +672,15 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration
             return (entityType.BaseType != null);
         }
 
-        /// <summary>
-        ///     This method will attempt to figure out if the given EntityType is an ancestor. It will return a list of ancestors:
-        ///     1. If the given EntityType is an ancestor, a list of ancestors up to and including the EntityType
-        ///     2. If the given EntityType is not an ancestor, all the ancestors up to the root
-        /// </summary>
-        /// <param name="entityType">The EntityType.</param>
-        /// <param name="rootType">The type of which to check whether this EntityType is an ancestor.</param>
-        /// <param name="selfAndAncestors">The list of ancestors.</param>
-        /// <returns>true if the given EntityType is an ancestor; otherwise, false.</returns>
+        // <summary>
+        //     This method will attempt to figure out if the given EntityType is an ancestor. It will return a list of ancestors:
+        //     1. If the given EntityType is an ancestor, a list of ancestors up to and including the EntityType
+        //     2. If the given EntityType is not an ancestor, all the ancestors up to the root
+        // </summary>
+        // <param name="entityType">The EntityType.</param>
+        // <param name="rootType">The type of which to check whether this EntityType is an ancestor.</param>
+        // <param name="selfAndAncestors">The list of ancestors.</param>
+        // <returns>true if the given EntityType is an ancestor; otherwise, false.</returns>
         private static bool IsDerivedTypeOf(this EntityType entityType, EntityType rootType, out IList<EntityType> selfAndAncestors)
         {
             selfAndAncestors = new List<EntityType>();

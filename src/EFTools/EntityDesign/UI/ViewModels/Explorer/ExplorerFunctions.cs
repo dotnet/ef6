@@ -10,9 +10,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
     using Microsoft.Data.Entity.Design.Model.Entity;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     Dummy element which contains the Functions
-    /// </summary>
+    // <summary>
+    //     Dummy element which contains the Functions
+    // </summary>
     internal class ExplorerFunctions : EntityDesignExplorerEFElement
     {
         private readonly TypedChildList<ExplorerFunction> _functions =

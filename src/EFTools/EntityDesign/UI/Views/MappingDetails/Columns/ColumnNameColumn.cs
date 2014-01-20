@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
 {
@@ -15,9 +15,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImports;
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables;
 
-    /// <summary>
-    ///     Based on the type of item being shown, show the correct text for the Column Name column.
-    /// </summary>
+    // <summary>
+    //     Based on the type of item being shown, show the correct text for the Column Name column.
+    // </summary>
     internal class ColumnNameColumn : BaseColumn
     {
         public ColumnNameColumn()
@@ -70,11 +70,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             return MappingEFElement.LovBlankPlaceHolder;
         }
 
-        /// <summary>
-        ///     Overriding this allows the list-of-values dropdowns to use
-        ///     the converter to convert back from a string to an object (in our
-        ///     case a MappingLovEFElement object)
-        /// </summary>
+        // <summary>
+        //     Overriding this allows the list-of-values dropdowns to use
+        //     the converter to convert back from a string to an object (in our
+        //     case a MappingLovEFElement object)
+        // </summary>
         public override Type /* PropertyDescriptor */ PropertyType
         {
             get { return typeof(ColumnNameColumnConverter); }
@@ -397,10 +397,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
         }
     }
 
-    /// <summary>
-    ///     Used to override conversion for the case where the ColumnNameColumn is representing
-    ///     a MappingFunctionImportScalarProperty
-    /// </summary>
+    // <summary>
+    //     Used to override conversion for the case where the ColumnNameColumn is representing
+    //     a MappingFunctionImportScalarProperty
+    // </summary>
     internal class NoDropDownColumnNameColumnConverter : ColumnNameColumnConverter
     {
         // needs to return false so as to provide ordinary Textbox for editing

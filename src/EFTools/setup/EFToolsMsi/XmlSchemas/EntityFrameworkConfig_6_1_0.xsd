@@ -7,6 +7,7 @@
         <xs:element name="defaultConnectionFactory" type="ElementWithTypeAndParameters_Type" minOccurs="0" maxOccurs="1" />
         <xs:element name="providers" type="ProviderList_Type" minOccurs="0" maxOccurs="1" />
         <xs:element name="contexts" type="ContextList_Type" minOccurs="0" maxOccurs="1" />
+        <xs:element name="interceptors" type="InterceptorList_Type" minOccurs="0" maxOccurs="1" />
       </xs:all>
       <xs:attribute name="codeConfigurationType" type="NonEmptyString_Type" use="optional" />
       <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
@@ -39,6 +40,13 @@
     </xs:choice>
     <xs:attribute name="type" type="NonEmptyString_Type" use="required" />
     <xs:attribute name="disableDatabaseInitialization" type="SmallBoolean_Type" use="optional" />
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+
+  <xs:complexType name="InterceptorList_Type">
+    <xs:sequence>
+      <xs:element name="interceptor" type="ElementWithTypeAndParameters_Type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
     <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
   </xs:complexType>
 

@@ -1,13 +1,13 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
     using Microsoft.VisualStudio.Shell;
 
-    /// <summary>
-    ///     Wrapper around ErrorListProvider
-    /// </summary>
+    // <summary>
+    //     Wrapper around ErrorListProvider
+    // </summary>
     internal class DesignerErrorList : IDisposable
     {
         private readonly ErrorListProvider _provider;

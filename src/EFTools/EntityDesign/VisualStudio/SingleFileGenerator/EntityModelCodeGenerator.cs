@@ -83,6 +83,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator
         /// </summary>
         /// <param name="inputFileName">The full path of the CSDL file; this is fed in from the ProjectItem</param>
         /// <param name="inputFileContent">The contents of the CSDL file - this should always be used so that we can gen off of in memory documents</param>
+        /// <param name="defaultNamespace">The default namespace.</param>
         /// <returns>null implies error, else the contents of the file</returns>
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsErrorList.BringToFront")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]

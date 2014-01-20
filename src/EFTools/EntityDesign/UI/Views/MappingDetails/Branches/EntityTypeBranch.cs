@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
 {
@@ -7,18 +7,18 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables;
     using Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid;
 
-    /// <summary>
-    ///     This is the header branch for the selected Entity Type Mapping.  It displays the
-    ///     tables that are mapped to this entity.
-    /// </summary>
+    // <summary>
+    //     This is the header branch for the selected Entity Type Mapping.  It displays the
+    //     tables that are mapped to this entity.
+    // </summary>
     internal class EntityTypeBranch : HeaderBranch
     {
         private MappingConceptualEntityType _mappingConceptualTypeMapping;
         private TreeGridDesignerColumnDescriptor[] _columns;
 
-        /// <summary>
-        ///     ITreeGridDesignerInitializeBranch
-        /// </summary>
+        // <summary>
+        //     ITreeGridDesignerInitializeBranch
+        // </summary>
         public override bool Initialize(object component, TreeGridDesignerColumnDescriptor[] columns)
         {
             if (!base.Initialize(component, columns))

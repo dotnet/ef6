@@ -22,9 +22,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     {
         private const int AddComplexPropertyCommandMaxCount = 10;
 
-        /// <summary>
-        ///     Standard constructor for the tool window.
-        /// </summary>
+        // <summary>
+        //     Standard constructor for the tool window.
+        // </summary>
         public EntityDesignExplorerWindow()
             : base(PackageManager.Package)
         {
@@ -38,9 +38,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             Caption = Resources.ExplorerWindowCaption;
         }
 
-        /// <summary>
-        ///     Sets the current context on the ExplorerInfo.
-        /// </summary>
+        // <summary>
+        //     Sets the current context on the ExplorerInfo.
+        // </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void SetExplorerInfo()
         {
@@ -48,9 +48,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 new EntityDesignExplorerFrame(EditingContext), new EntityDesignSelectionContainer<ExplorerSelection>(this, EditingContext));
         }
 
-        /// <summary>
-        ///     Gets the identifier of the context menu command.
-        /// </summary>
+        // <summary>
+        //     Gets the identifier of the context menu command.
+        // </summary>
         protected override CommandID GetContextMenuCommandID()
         {
             return new CommandID(PackageConstants.guidEscherCmdSet, PackageConstants.menuidExplorer);

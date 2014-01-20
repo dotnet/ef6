@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
@@ -33,9 +33,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private uint trackRDTEventsCookie;
         private uint trackSolEventsCookie;
 
-        /// <summary>
-        ///     Handlers
-        /// </summary>
+        // <summary>
+        //     Handlers
+        // </summary>
         internal event ModelChangeEventHandler BeforeCloseProject;
 
         internal event ModelChangeEventHandler BeforeGenerateDDL;
@@ -154,10 +154,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        /// <summary>
-        ///     Event handler when we change any properties of the model. For now we'll handle just the renaming
-        ///     the entity container name.
-        /// </summary>
+        // <summary>
+        //     Event handler when we change any properties of the model. For now we'll handle just the renaming
+        //     the entity container name.
+        // </summary>
         private void OnModelChangesCommitted(object sender, EfiChangedEventArgs e)
         {
             var changeEnum = e.ChangeGroup.Changes.GetEnumerator();

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
@@ -8,9 +8,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
 
-    /// <summary>
-    ///     Given a set of TreeViews, this will map EntityStoreSchemaFilterEntries to tree nodes and vice versa.
-    /// </summary>
+    // <summary>
+    //     Given a set of TreeViews, this will map EntityStoreSchemaFilterEntries to tree nodes and vice versa.
+    // </summary>
     internal class TreeViewSchemaFilterMapper
     {
         private readonly IList<TreeView> _treeViews;
@@ -22,18 +22,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             _treeView2Settings = new Dictionary<TreeView, TreeViewSchemaFilterMapperSettings>();
         }
 
-        /// <summary>
-        ///     Instantiate the mapper with a TreeView: pass in null for settings to use the default settings
-        /// </summary>
+        // <summary>
+        //     Instantiate the mapper with a TreeView: pass in null for settings to use the default settings
+        // </summary>
         internal TreeViewSchemaFilterMapper(TreeView treeView, TreeViewSchemaFilterMapperSettings settings = null)
             : this()
         {
             AddTreeView(treeView, settings);
         }
 
-        /// <summary>
-        ///     Add a TreeView with settings; pass in null for settings to use the default settings
-        /// </summary>
+        // <summary>
+        //     Add a TreeView with settings; pass in null for settings to use the default settings
+        // </summary>
         internal void AddTreeView(TreeView treeView, TreeViewSchemaFilterMapperSettings settings)
         {
             _treeViews.Add(treeView);

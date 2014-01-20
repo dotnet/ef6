@@ -1439,6 +1439,12 @@
   <data name="ELinq_HasFlagArgumentAndSourceTypeMismatch" xml:space="preserve">
     <value>The argument type, '{0}', is not the same as the enum type '{1}'."</value>
   </data>
+  <data name="Elinq_ToStringNotSupportedForType">
+    <value>Values of type '{0}' can not be converted to string.</value>
+  </data>
+  <data name="Elinq_ToStringNotSupportedForEnumsWithFlags">
+    <value>Values of enumerated types decorated with the FlagsAttribute can not be converted to string.</value>
+  </data>
   <data name="CompiledELinq_UnsupportedParameterTypes" xml:space="preserve">
     <value>The specified parameter type '{0}' is not valid. Only scalar parameters (such as Int32, Decimal, and Guid) are supported.</value>
   </data>

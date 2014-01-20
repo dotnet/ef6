@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
 {
@@ -28,13 +28,13 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             return propdisplay;
         }
 
-        /// <summary>
-        ///     Add this property to the list-of-values (lov) parameter, but if the Property is a
-        ///     ComplexProperty then expand down to its constituent ScalarProperties
-        /// </summary>
-        /// <param name="lov">list-of-values to be appended to</param>
-        /// <param name="property">property to be added</param>
-        /// <param name="ancestorComplexProperties">any ancestor complex properties (should initially be null or empty)</param>
+        // <summary>
+        //     Add this property to the list-of-values (lov) parameter, but if the Property is a
+        //     ComplexProperty then expand down to its constituent ScalarProperties
+        // </summary>
+        // <param name="lov">list-of-values to be appended to</param>
+        // <param name="property">property to be added</param>
+        // <param name="ancestorComplexProperties">any ancestor complex properties (should initially be null or empty)</param>
         internal static void AddPropertyToListOfValues(
             Dictionary<MappingLovEFElement, string> lov, Property property, List<Property> ancestorComplexProperties)
         {

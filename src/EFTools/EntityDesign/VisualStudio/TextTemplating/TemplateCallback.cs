@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.TextTemplating
 {
@@ -7,13 +7,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.TextTemplating
     using System.Text;
     using Microsoft.VisualStudio.TextTemplating.VSHost;
 
-    /// <summary>
-    ///     TemplateCallback is used by the TextTemplatingService to handle error messages
-    ///     NOTE that this class should avoid any dependencies on any instance types (especially types instantiated by the
-    ///     Entity Designer) in the Microsoft.Data.Entity.Design.* namespace except for
-    ///     Microsoft.Data.Entity.Design.CreateDatabase.
-    ///     This class exists in this project because of VS dependencies.
-    /// </summary>
+    // <summary>
+    //     TemplateCallback is used by the TextTemplatingService to handle error messages
+    //     NOTE that this class should avoid any dependencies on any instance types (especially types instantiated by the
+    //     Entity Designer) in the Microsoft.Data.Entity.Design.* namespace except for
+    //     Microsoft.Data.Entity.Design.CreateDatabase.
+    //     This class exists in this project because of VS dependencies.
+    // </summary>
     internal class TemplateCallback : ITextTemplatingCallback
     {
         internal StringBuilder ErrorStringBuilder { get; private set; }

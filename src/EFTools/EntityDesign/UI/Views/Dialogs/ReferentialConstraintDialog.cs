@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 {
@@ -716,10 +716,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             _shouldDeleteOnly = false;
         }
 
-        /// <summary>
-        ///     shows a warning dialog if a dependent property is used more than once
-        /// </summary>
-        /// <returns>whether all dependent properties are used at most once</returns>
+        // <summary>
+        //     shows a warning dialog if a dependent property is used more than once
+        // </summary>
+        // <returns>whether all dependent properties are used at most once</returns>
         private bool CheckDepPropMappedOnlyOnce()
         {
             var depPropsAlreadyUsed = new HashSet<Symbol>();

@@ -112,6 +112,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Converts a GroupBy(X, Y, Z) => OuterApply(X', GroupBy(Filter(X, key(X') == key(X)), Y, Z))
         // if and only if X is a ScanTableOp, and Z is the upper node of an aggregate function and
         // the group by operation uses all the columns of X as the key.
+        // Additionally, the top-level physical projection must only expose one variable. If it exposes
+        // more than one (more than just the aggregate itself), then this rule must not apply.
         // This is a fix for codeplex workitem 1959. Since now we're supporting NewRecordOp nodes as
         // part of the GroupBy aggregate variable computations, we are also respecting the fact that
         // group by (e => e) means that we're grouping by all columns of entity e. This was not a
@@ -133,6 +135,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool ProcessGroupByOpOnAllInputColumnsWithAggregateOperation(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
+
+            var rootOp = context.Command.Root.Op as PhysicalProjectOp;
+            if (rootOp == null ||
+                rootOp.Outputs.Count > 1)
+            {
+                return false;
+            }
 
             if (n.Child0.Op.OpType != OpType.ScanTable)
             {

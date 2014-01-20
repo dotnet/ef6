@@ -9,11 +9,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System.IO;
     using System.Linq;
 
-    /// <summary>
-    ///     Given a type of file (via the extension) and a subdirectory name, this proffers out the list of files in:
-    ///     1. A 'User' directory
-    ///     2. A 'VS' directory
-    /// </summary>
+    // <summary>
+    //     Given a type of file (via the extension) and a subdirectory name, this proffers out the list of files in:
+    //     1. A 'User' directory
+    //     2. A 'VS' directory
+    // </summary>
     internal class ExtensibleFileManager
     {
         internal enum TypeOfFile

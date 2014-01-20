@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
 {
@@ -172,11 +172,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
             return base.GetListOfValues(type);
         }
 
-        /// <summary>
-        ///     NOTE: The association set mapping view model doesn’t keep a reference to the mapping model item. Instead, it
-        ///     keeps it to the AssociationSet and then it can find the AssociationSetMapping as an anti-dep.  We don’t need to clear
-        ///     or set the ModelItem property.
-        /// </summary>
+        // <summary>
+        //     NOTE: The association set mapping view model doesn't keep a reference to the mapping model item. Instead, it
+        //     keeps it to the AssociationSet and then it can find the AssociationSetMapping as an anti-dep.  We don't need to clear
+        //     or set the ModelItem property.
+        // </summary>
         internal override void CreateModelItem(CommandProcessorContext cpc, EditingContext context, EFElement underlyingModelItem)
         {
             Debug.Assert(context != null, "The context argument cannot be null");
@@ -236,11 +236,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
             cp.Invoke();
         }
 
-        /// <summary>
-        ///     NOTE: The association set mapping view model doesn’t keep a reference to the mapping model item. Instead, it
-        ///     keeps it to the AssociationSet and then it can find the AssociationSetMapping as an anti-dep.  We don’t need to clear
-        ///     or set the ModelItem property.
-        /// </summary>
+        // <summary>
+        //     NOTE: The association set mapping view model doesn't keep a reference to the mapping model item. Instead, it
+        //     keeps it to the AssociationSet and then it can find the AssociationSetMapping as an anti-dep.  We don't need to clear
+        //     or set the ModelItem property.
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             if (IsModelItemDeleted() == false)

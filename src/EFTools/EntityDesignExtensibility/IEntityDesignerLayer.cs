@@ -43,6 +43,7 @@ namespace Microsoft.Data.Entity.Design.Extensibility
         ///     Gets fired when a transaction is committed. A layer extension can take basic actions in this case
         ///     such as reloading an owning tool window.
         /// </summary>
+        /// <param name="xmlChanges">A list of changes made during the transaction.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "Backwards compatibility, it is already part of public API")]
         void OnAfterTransactionCommitted(IEnumerable<Tuple<XObject, XObjectChange>> xmlChanges);

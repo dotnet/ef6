@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
 {
@@ -12,21 +12,21 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches;
     using Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns;
 
-    /// <summary>
-    ///     This class represents the root node of the view model when we are mapping entities, it points to
-    ///     a c-side entity and has a list of 'tables' that the entity is mapped to.
-    ///     + MappingConceptualEntityType             [will resolve to 2 EntityTypeMappings]
-    ///     |
-    ///     + MappingStorageEntityType (0..*)       [will resolve to 2 MappingFragments (one in each ETM)]
-    ///     |
-    ///     + MappingCondition (0..*)             [will resolve to a Condition in either the Default ETM or the IsTypeOf ETM]
-    ///     + MappingColumnMappings (1..1)        [doesn't map to the model, just an extra container node]
-    ///     |
-    ///     + MappingScalarProperty (0..*)      [will resolve to a ScalarProperty in the Default ETM]
-    ///     The reason why this view model is tying itself to the C- &amp; S-side entity types
-    ///     (instead of EntityTypeMappings or MappingFragments) is because we need to be able to
-    ///     keep track of more than one of these per entity.
-    /// </summary>
+    // <summary>
+    //     This class represents the root node of the view model when we are mapping entities, it points to
+    //     a c-side entity and has a list of 'tables' that the entity is mapped to.
+    //     + MappingConceptualEntityType             [will resolve to 2 EntityTypeMappings]
+    //     |
+    //     + MappingStorageEntityType (0..*)       [will resolve to 2 MappingFragments (one in each ETM)]
+    //     |
+    //     + MappingCondition (0..*)             [will resolve to a Condition in either the Default ETM or the IsTypeOf ETM]
+    //     + MappingColumnMappings (1..1)        [doesn't map to the model, just an extra container node]
+    //     |
+    //     + MappingScalarProperty (0..*)      [will resolve to a ScalarProperty in the Default ETM]
+    //     The reason why this view model is tying itself to the C- &amp; S-side entity types
+    //     (instead of EntityTypeMappings or MappingFragments) is because we need to be able to
+    //     keep track of more than one of these per entity.
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(EntityTypeBranch))]
     [TreeGridDesignerColumn(typeof(ColumnNameColumn), Order = 1)]
     [TreeGridDesignerColumn(typeof(OperatorColumn), Order = 2)]

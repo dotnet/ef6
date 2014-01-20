@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 {
@@ -6,9 +6,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     using System.Windows.Forms;
     using Microsoft.Data.Entity.Design.VisualStudio;
 
-    /// <summary>
-    ///     Displays a dialog that allows us to display debug information in modal textbox in debug builds
-    /// </summary>
+    // <summary>
+    //     Displays a dialog that allows us to display debug information in modal textbox in debug builds
+    // </summary>
     internal partial class DebugViewerDialog : Form
     {
         internal enum ButtonMode

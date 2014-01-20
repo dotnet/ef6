@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SchemaCatalog xmlns="http://schemas.microsoft.com/xsd/catalog">
-  <Association extension="config" schema="%InstallRoot%/xml/schemas/EntityFrameworkConfig_6_0_0.xsd" />
+  <Association extension="config" schema="%InstallRoot%/xml/schemas/EntityFrameworkConfig_6_1_0.xsd" />
 </SchemaCatalog>

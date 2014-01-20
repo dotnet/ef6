@@ -33,8 +33,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.TemplateWizard;
     using Command = Microsoft.Data.Entity.Design.Model.Commands.Command;
-    using Resources = Microsoft.Data.Entity.Design.Resources;
     using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+    using Resources = Microsoft.Data.Entity.Design.Resources;
 
     /// <summary>
     ///     Visual Studio invokes this wizard when a new item of type "ADO.NET Entity Data Model" is added
@@ -70,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// </summary>
         public ModelObjectItemWizard()
         {
-            
+
         }
 
         // for testing only
@@ -93,6 +93,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         ///     This method is called after the project has been created
         ///     This lets us run custom wizard logic when a project has finished generating
         /// </summary>
+        /// <param name="project">The project.</param>
         public void ProjectFinishedGenerating(Project project)
         {
             // nothing to do since we are an item template
@@ -101,6 +102,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// <summary>
         ///     This method is only called for item templates, not for project templates
         /// </summary>
+        /// <param name="projectItem">This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.</param>
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
             Debug.Assert(
@@ -119,6 +121,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         ///     This lets us run custom wizard logic before anything is created and is a good place, for example,
         ///     to collect user input that will alter the run in some way
         /// </summary>
+        /// <param name="automationObject">This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.</param>
+        /// <param name="replacementsDictionary">This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.</param>
+        /// <param name="runKind">This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.</param>
+        /// <param name="customParams">This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.</param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void RunStarted(
@@ -156,8 +162,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 NewItemFolder = GetFolderNameForNewItems(dte, project),
                 Project = project,
                 ModelName = modelName,
-                VsTemplatePath = customParams[0] as string, 
-                ReplacementDictionary =  replacementsDictionary
+                VsTemplatePath = customParams[0] as string,
+                ReplacementDictionary = replacementsDictionary
             };
 
             var form = new ModelBuilderWizardForm(
@@ -192,7 +198,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             // the "Add New Item" dialog re-appear which allows the user to enter a different model name.
             if (form.FileAlreadyExistsError)
             {
-                Marshal.ThrowExceptionForHR(VSConstants.E_ABORT);   
+                Marshal.ThrowExceptionForHR(VSConstants.E_ABORT);
             }
 
             // if they cancelled or they didn't cancel, and we didn't log that Finish was pressed, 
@@ -538,15 +544,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             return null;
         }
 
-        /// <summary>
-        ///     Creates commands to remove function imports and complex types corresponding to results if ones exist.
-        /// </summary>
-        /// <param name="designArtifact">Artifact.</param>
-        /// <returns>IEnumerable of commands for deleting function imports and corresponding complex types.</returns>
-        /// <remarks>
-        ///     This function should be called only from RunFinished() method as we don't check whether complex types we
-        ///     are removing are not used by other function imports or entities.
-        /// </remarks>
+        // <summary>
+        //     Creates commands to remove function imports and complex types corresponding to results if ones exist.
+        // </summary>
+        // <param name="designArtifact">Artifact.</param>
+        // <returns>IEnumerable of commands for deleting function imports and corresponding complex types.</returns>
+        // <remarks>
+        //     This function should be called only from RunFinished() method as we don't check whether complex types we
+        //     are removing are not used by other function imports or entities.
+        // </remarks>
         private static IEnumerable<Command> CreateRemoveFunctionImportCommands(EntityDesignArtifact designArtifact)
         {
             // we were instructed not to create FunctionImports - but runtime has created them automatically so actually need to delete any which have been created
@@ -578,7 +584,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             {
                 var webTag = VsUtils.IsWebSiteProject(project) ? "WS" : "";
                 var languageTag = VsUtils.GetLanguageForProject(project) == LangEnum.VisualBasic ? "VB" : "CS";
-        
+
                 var templateName = string.Format(CultureInfo.InvariantCulture, "CF{0}{1}EF6.zip", languageTag, webTag);
                 var template = ((Solution2)project.DTE.Solution).GetProjectItemTemplate(templateName, project.Kind);
 
@@ -589,14 +595,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// <summary>
         ///     Indicates whether the specified project item should be added to the project
         /// </summary>
+        /// <param name="filePath">The path of the project item.</param>
+        /// <returns>true if the item should be added; otherwise, false.</returns>
         public bool ShouldAddProjectItem(string filePath)
         {
             return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst;
         }
 
-        /// <summary>
-        ///     Returns the folder path for the selected item (project or folder) that we are adding new items into
-        /// </summary>
+        // <summary>
+        //     Returns the folder path for the selected item (project or folder) that we are adding new items into
+        // </summary>
         private static string GetFolderNameForNewItems(DTE2 dte, Project activeProject)
         {
             var selectedItems = dte.SelectedItems;

@@ -420,10 +420,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
             }
         }
 
-        /// <summary>
-        ///     Adapter method to match DeferredRequest callback signature.
-        ///     The parameter is created to match callback signature and will be ignored.
-        /// </summary>
+        // <summary>
+        //     Adapter method to match DeferredRequest callback signature.
+        //     The parameter is created to match callback signature and will be ignored.
+        // </summary>
         private void PutSelectedItemInRenameMode(object o)
         {
             var explorerElement = GetSelectedExplorerEFElement();
@@ -486,13 +486,13 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
             CommandBindings.Add(cmd);
         }
 
-        /// <summary>
-        ///     Entity Designer drag and drop support.
-        ///     Given an ExplorerEFElement constructs clipboard data-object containing collection of entity-types.
-        ///     Type:
-        ///     ExplorerEntitySet   -> collection of all entity-types in the entity set.
-        ///     AssociationSet      -> Participating entity-type in the associationset's association.
-        /// </summary>
+        // <summary>
+        //     Entity Designer drag and drop support.
+        //     Given an ExplorerEFElement constructs clipboard data-object containing collection of entity-types.
+        //     Type:
+        //     ExplorerEntitySet   -> collection of all entity-types in the entity set.
+        //     AssociationSet      -> Participating entity-type in the associationset's association.
+        // </summary>
         protected override DataObject GetClipboardObjectForExplorerItem(ExplorerEFElement explorerEFElement)
         {
             DataObject dataObject = null;

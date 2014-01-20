@@ -209,6 +209,7 @@
     <Compile Include="Interception\BlogContextNoInit.cs" />
     <Compile Include="Interception\CommitFailureTests.cs" />
     <Compile Include="Interception\DatabaseLogFormatterTests.cs" />
+    <Compile Include="Interception\DatabaseLoggerTests.cs" />
     <Compile Include="Metadata\MetadataAnnotationTests.cs" />
     <Compile Include="Metadata\MetadataCachingTests.cs" />
     <Compile Include="Metadata\MetadataCollectionTests.cs" />

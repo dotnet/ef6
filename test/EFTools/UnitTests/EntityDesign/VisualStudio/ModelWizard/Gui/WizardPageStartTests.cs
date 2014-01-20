@@ -13,6 +13,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Linq;
     using UnitTests.TestHelpers;
     using VSLangProj;
+    using VsWebSite;
     using Xunit;
 
     public class WizardPageStartTests
@@ -71,8 +72,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                             properties: new Dictionary<string, object>
                             {
                                 { "CurrentWebsiteLanguage", language == LangEnum.CSharp ? "C#" : "VB" }
-                            })
-                        : MockDTE.CreateProject(kind: language == LangEnum.CSharp ? MockDTE.CSharpProjectKind : MockDTE.VBProjectKind));
+                            }, 
+                            assemblyReferences: new AssemblyReference[0])
+                        : MockDTE.CreateProject(
+                            kind: language == LangEnum.CSharp ? MockDTE.CSharpProjectKind : MockDTE.VBProjectKind, 
+                            assemblyReferences: new Reference[0]));
 
             var modelBuilderSettings = new ModelBuilderSettings
             {
@@ -101,7 +105,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_does_not_update_settings_if_model_file_already_exists()
         {
-            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
 
             var modelBuilderSettings = new ModelBuilderSettings
             {
@@ -126,7 +130,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_empty_model()
         {
-            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5" , references: new Reference[0]);
 
             var modelBuilderSettings = new ModelBuilderSettings
             {
@@ -162,7 +166,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_generate_from_database()
         {
-            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
 
             var modelBuilderSettings = new ModelBuilderSettings
             {
@@ -206,7 +210,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnActivate_result_depends_on_FileAlreadyExistsError()
         {
-            var mockDte = new MockDTE(".NETFramework, Version=v4.5");
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
 
             var wizard = 
                 ModelBuilderWizardFormHelper.CreateWizard(project : mockDte.Project, serviceProvider: mockDte.ServiceProvider);

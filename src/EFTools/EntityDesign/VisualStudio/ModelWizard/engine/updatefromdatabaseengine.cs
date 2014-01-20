@@ -28,9 +28,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class UpdateFromDatabaseEngine
     {
-        /// <summary>
-        ///     Updates the EDMX file based on the Database changes
-        /// </summary>
+        // <summary>
+        //     Updates the EDMX file based on the Database changes
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -328,10 +328,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             return false;
         }
 
-        /// <summary>
-        ///     Will validate the passed in artifact and throw an exception if validation fails
-        ///     TODO: figure out what to do with the actual errors (write to a log?)
-        /// </summary>
+        // <summary>
+        //     Will validate the passed in artifact and throw an exception if validation fails
+        //     TODO: figure out what to do with the actual errors (write to a log?)
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal static void ValidateArtifact(EntityDesignModelManager modelManager, EFArtifact artifact, WizardKind kind)
         {
@@ -385,9 +385,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
         }
 
-        /// <summary>
-        ///     Returns a Command to update a value of a designer property
-        /// </summary>
+        // <summary>
+        //     Returns a Command to update a value of a designer property
+        // </summary>
         private static void AddUpdateDesignerPropertyCommand(
             DesignerProperty property, string propertyName, bool checkBoxValue, OptionsDesignerInfo optionsDesignerInfo,
             List<Command> commands)

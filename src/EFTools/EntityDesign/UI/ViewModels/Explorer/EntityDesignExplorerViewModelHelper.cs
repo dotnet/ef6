@@ -16,11 +16,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
     using Microsoft.Data.Entity.Design.UI.Util;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     This class provides a wrapper around ExplorerViewModel so as to provide
-    ///     a layer of indirection which can be utilized for e.g. testing the ViewModel
-    ///     without the necessity of creating the View objects
-    /// </summary>
+    // <summary>
+    //     This class provides a wrapper around ExplorerViewModel so as to provide
+    //     a layer of indirection which can be utilized for e.g. testing the ViewModel
+    //     without the necessity of creating the View objects
+    // </summary>
     internal class EntityDesignExplorerViewModelHelper : ExplorerViewModelHelper
     {
         // constructor expects ViewModel to be set later (which will then 
@@ -422,9 +422,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
                 EfiTransactionOriginator.ExplorerWindowOriginatorId);
         }
 
-        /// <summary>
-        ///     Launch edit function import dialog box.
-        /// </summary>
+        // <summary>
+        //     Launch edit function import dialog box.
+        // </summary>
         public void EditFunctionImport(FunctionImport functionImport)
         {
             Debug.Assert(functionImport != null, "The functionImport passed in to EditFunctionImport is null.");

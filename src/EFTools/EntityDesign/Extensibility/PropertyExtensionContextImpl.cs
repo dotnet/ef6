@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.Extensibility
 {
@@ -9,9 +9,9 @@ namespace Microsoft.Data.Entity.Design.Extensibility
     using Microsoft.Data.Entity.Design.Base.Context;
     using Microsoft.Data.Entity.Design.Model.Eventing;
 
-    /// <summary>
-    ///     This class is used by Escher extensions to update annotation values in the EDMX.
-    /// </summary>
+    // <summary>
+    //     This class is used by Escher extensions to update annotation values in the EDMX.
+    // </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal class PropertyExtensionContextImpl : PropertyExtensionContext, IChangeScopeContainer
     {

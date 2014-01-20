@@ -106,9 +106,9 @@ namespace System.Data.Entity.Core.Mapping
             get { return _parameterBindings; }
         }
 
-        /// <summary>
-        /// Gets all association set ends collocated in this mapping.
-        /// </summary>
+        // <summary>
+        // Gets all association set ends collocated in this mapping.
+        // </summary>
         internal ReadOnlyCollection<AssociationSetEnd> CollocatedAssociationSetEnds
         {
             get { return _collocatedAssociationSetEnds; }

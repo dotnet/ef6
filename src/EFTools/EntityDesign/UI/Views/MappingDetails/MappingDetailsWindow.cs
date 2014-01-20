@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using VsErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 using VsShell = Microsoft.VisualStudio.Shell.Interop;
@@ -32,9 +32,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
     using Microsoft.VisualStudio.Modeling.Shell;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     Mapping details window
-    /// </summary>
+    // <summary>
+    //     Mapping details window
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [Guid("CDBDEE54-B399-484b-B763-DB2C3393D646")]
     internal class MappingDetailsWindow : TreeGridDesignerToolWindow
@@ -46,9 +46,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
         private TreeGridDesignerWatermarkInfo _defaultWatermarkInfo;
         private EFObject _lastPrimarySelection;
 
-        /// <summary>
-        ///     Construct the Mapping Details window.
-        /// </summary>
+        // <summary>
+        //     Construct the Mapping Details window.
+        // </summary>
         public MappingDetailsWindow(IServiceProvider sp)
             : base(sp)
         {
@@ -66,9 +66,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             get { return _currentMappingDetailsInfo; }
         }
 
-        /// <summary>
-        ///     Initialize the Mapping Details window.
-        /// </summary>
+        // <summary>
+        //     Initialize the Mapping Details window.
+        // </summary>
         protected override void OnToolWindowCreate()
         {
             base.OnToolWindowCreate();
@@ -104,17 +104,17 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             _watermarkInfo = _defaultWatermarkInfo;
         }
 
-        /// <summary>
-        ///     Override the base version and provide our own customized container (this adds the toolbar on the left)
-        /// </summary>
+        // <summary>
+        //     Override the base version and provide our own customized container (this adds the toolbar on the left)
+        // </summary>
         protected override ITreeGridDesignerToolWindowContainer CreateContainer()
         {
             return new MappingDetailsWindowContainer(this, TreeControl);
         }
 
-        /// <summary>
-        ///     Get or Set the EditingContext into this object
-        /// </summary>
+        // <summary>
+        //     Get or Set the EditingContext into this object
+        // </summary>
         public override EditingContext Context
         {
             get { return _editingContext; }
@@ -158,34 +158,34 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Easy way to access the type-safe reference to our container
-        /// </summary>
+        // <summary>
+        //     Easy way to access the type-safe reference to our container
+        // </summary>
         private MappingDetailsWindowContainer MappingDetailsWindowContainer
         {
             get { return ContainerControl as MappingDetailsWindowContainer; }
         }
 
-        /// <summary>
-        ///     If the EditingContext is going away, use our local setter
-        /// </summary>
+        // <summary>
+        //     If the EditingContext is going away, use our local setter
+        // </summary>
         private void OnEditingContextDisposing(object sender, EventArgs e)
         {
             Debug.Assert(Context == sender, "incorrect context");
             Context = null;
         }
 
-        /// <summary>
-        ///     If the context is reloaded, just clear the screen
-        /// </summary>
+        // <summary>
+        //     If the context is reloaded, just clear the screen
+        // </summary>
         private void OnEditingContextReloaded(object sender, EventArgs e)
         {
             ClearToolWindowContents(true);
         }
 
-        /// <summary>
-        ///     This is our handler to watch for model changes
-        /// </summary>
+        // <summary>
+        //     This is our handler to watch for model changes
+        // </summary>
         private void OnModelChangesCommitted(object sender, EfiChangedEventArgs e)
         {
             if (e.ChangeGroup.Transaction.OriginatorId != EfiTransactionOriginator.MappingDetailsOriginatorId)
@@ -215,9 +215,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             UpdateSelection();
         }
 
-        /// <summary>
-        ///     Set ourselves back to what one of the controlling views is currently selecting
-        /// </summary>
+        // <summary>
+        //     Set ourselves back to what one of the controlling views is currently selecting
+        // </summary>
         internal void RefreshCurrentSelection()
         {
             Debug.Assert(Context != null, "You cannot refresh selection until you have an EditingContext");
@@ -252,9 +252,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     As long as we have an EditingContext, we can create our MappingDetailsInfo instance
-        /// </summary>
+        // <summary>
+        //     As long as we have an EditingContext, we can create our MappingDetailsInfo instance
+        // </summary>
         private void InitializeView()
         {
             if (_editingContext == null)
@@ -329,9 +329,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Proxy method to provide access to VS global services, such as ITrackSelection
-        /// </summary>
+        // <summary>
+        //     Proxy method to provide access to VS global services, such as ITrackSelection
+        // </summary>
         protected override object GetService(Type serviceType)
         {
             var serviceProvider = ServiceProvider;
@@ -343,9 +343,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             return base.GetService(serviceType);
         }
 
-        /// <summary>
-        ///     Dispose the window
-        /// </summary>
+        // <summary>
+        //     Dispose the window
+        // </summary>
         protected override void Dispose(bool disposing)
         {
             try
@@ -371,9 +371,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     This will work with an item selected in either the Designer or the Explorer.
-        /// </summary>
+        // <summary>
+        //     This will work with an item selected in either the Designer or the Explorer.
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ProcessSelectionFromOtherWindows(Selection selection)
         {
@@ -584,9 +584,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Clear our state and revert back the default watermark
-        /// </summary>
+        // <summary>
+        //     Clear our state and revert back the default watermark
+        // </summary>
         private void ClearToolWindowContents(bool resetWatermark)
         {
             // clear any names from title bar
@@ -615,9 +615,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Calls a validation method to check if this entity's MSL is editable by the designer
-        /// </summary>
+        // <summary>
+        //     Calls a validation method to check if this entity's MSL is editable by the designer
+        // </summary>
         private bool CanEditMappingsForEntityType(ConceptualEntityType entityType)
         {
             var errorMessage = string.Empty;
@@ -632,9 +632,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Calls a validation method to check if this association's MSL is editable by the designer
-        /// </summary>
+        // <summary>
+        //     Calls a validation method to check if this association's MSL is editable by the designer
+        // </summary>
         internal bool CanEditMappingsForAssociation(Association association, bool allowAssociationMappingEditWithFKs)
         {
             if (association == null)
@@ -660,9 +660,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Calls a validation method to check if this association's MSL is editable by the designer
-        /// </summary>
+        // <summary>
+        //     Calls a validation method to check if this association's MSL is editable by the designer
+        // </summary>
         private bool CanEditMappingsForFunctionImport(FunctionImport fi)
         {
             var errorMessage = string.Empty;
@@ -683,9 +683,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Redirects to our command selection handler
-        /// </summary>
+        // <summary>
+        //     Redirects to our command selection handler
+        // </summary>
         private void OnExplorerSelectionChanged(ExplorerSelection selection)
         {
             if (_currentMappingDetailsInfo != null)
@@ -695,9 +695,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             ProcessSelectionFromOtherWindows(selection);
         }
 
-        /// <summary>
-        ///     Redirects to our command selection handler
-        /// </summary>
+        // <summary>
+        //     Redirects to our command selection handler
+        // </summary>
         private void OnEntityDesignerSelectionChanged(EntityDesignerSelection selection)
         {
             if (_currentMappingDetailsInfo != null)
@@ -707,25 +707,25 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             ProcessSelectionFromOtherWindows(selection);
         }
 
-        /// <summary>
-        ///     This toolwindow is only usable when one of our documents is shown
-        /// </summary>
+        // <summary>
+        //     This toolwindow is only usable when one of our documents is shown
+        // </summary>
         protected override bool IsDocumentSupported(DocData docData)
         {
             return docData is IEntityDesignDocData;
         }
 
-        /// <summary>
-        ///     Caption displayed in the title bar of the window
-        /// </summary>
+        // <summary>
+        //     Caption displayed in the title bar of the window
+        // </summary>
         public override string WindowTitle
         {
             get { return Resources.MappingDetails_WindowTitle; }
         }
 
-        /// <summary>
-        ///     Does the work of actually showing the view model in the Trid.
-        /// </summary>
+        // <summary>
+        //     Does the work of actually showing the view model in the Trid.
+        // </summary>
         private void DoShowMappingDetailsForElement(EFElement element)
         {
             Debug.Assert(element != null, "A null element was passed to DoShowMappingDetailsForElement()");
@@ -880,9 +880,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Updates the title bar to include the item's name that we are editing
-        /// </summary>
+        // <summary>
+        //     Updates the title bar to include the item's name that we are editing
+        // </summary>
         private void UpdateTitleBar(string name)
         {
             var fullName = Resources.MappingDetails_WindowTitle;
@@ -901,25 +901,25 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Returns the window's AccessibilityName
-        /// </summary>
+        // <summary>
+        //     Returns the window's AccessibilityName
+        // </summary>
         protected override string AccessibilityName
         {
             get { return Resources.MappingDetails_WindowTitle; }
         }
 
-        /// <summary>
-        ///     Returns the CommandID of the context menu to be shown for this tool window.
-        /// </summary>
+        // <summary>
+        //     Returns the CommandID of the context menu to be shown for this tool window.
+        // </summary>
         protected override CommandID ContextMenuId
         {
             get { return null; }
         }
 
-        /// <summary>
-        ///     Allows derived classes to specify default watermark text
-        /// </summary>
+        // <summary>
+        //     Allows derived classes to specify default watermark text
+        // </summary>
         protected override TreeGridDesignerWatermarkInfo WatermarkInfo
         {
             get { return _watermarkInfo; }
@@ -947,25 +947,25 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Returns the collection of columns that the Trid will show
-        /// </summary>
+        // <summary>
+        //     Returns the collection of columns that the Trid will show
+        // </summary>
         protected override ICollection DefaultColumns
         {
             get { return _defaultColumns; }
         }
 
-        /// <summary>
-        ///     Mapping details window bitmap resource id
-        /// </summary>
+        // <summary>
+        //     Mapping details window bitmap resource id
+        // </summary>
         protected override int BitmapResource
         {
             get { return 104; }
         }
 
-        /// <summary>
-        ///     Mapping details window bitmap index
-        /// </summary>
+        // <summary>
+        //     Mapping details window bitmap index
+        // </summary>
         protected override int BitmapIndex
         {
             get { return 0; }

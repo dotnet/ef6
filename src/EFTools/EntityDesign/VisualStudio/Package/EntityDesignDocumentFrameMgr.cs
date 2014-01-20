@@ -12,10 +12,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    /// <summary>
-    ///     The EntityDesignDocumentFrameMgr class manages all document window frames that
-    ///     are associated to an EDMX file document if they were loaded in Escher or in the XML editor
-    /// </summary>
+    // <summary>
+    //     The EntityDesignDocumentFrameMgr class manages all document window frames that
+    //     are associated to an EDMX file document if they were loaded in Escher or in the XML editor
+    // </summary>
     internal class EntityDesignDocumentFrameMgr : DocumentFrameMgr
     {
         private readonly HashSet<Uri> _dirtyArtifactsOnClose = null;
@@ -30,10 +30,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return new EntityDesignFrameWrapper(frame);
         }
 
-        /// <summary>
-        ///     This method will set the editing context for the mapping details and model browser. This will
-        ///     also show/hide these tool windows.
-        /// </summary>
+        // <summary>
+        //     This method will set the editing context for the mapping details and model browser. This will
+        //     also show/hide these tool windows.
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected internal override void SetCurrentContext(EditingContext context)
         {

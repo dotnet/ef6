@@ -311,6 +311,18 @@ namespace System.Data.Entity.Query
         }
 
         [Fact]
+        public void Negation_counting_does_not_get_propagated_over_unnecessary_operators()
+        {
+            using (var context = new NullSemanticsContext())
+            {
+                var query1 = context.Entities.Where(e => (e.Foo == e.Bar ? 3 : 4) + (!(e.Foo == e.Bar) ? 4 : 3) != 6).Count();
+                var expected1 = context.Entities.ToList().Where(e => (e.Foo == e.Bar ? 3 : 4) + (!(e.Foo == e.Bar) ? 4 : 3) != 6).Count();
+
+                Assert.Equal(query1, expected1);
+            }
+        }
+
+        [Fact]
         public void Query_with_comparison_in_subquery_works_with_clr_semantics()
         {
             using (var context = new NullSemanticsContext())

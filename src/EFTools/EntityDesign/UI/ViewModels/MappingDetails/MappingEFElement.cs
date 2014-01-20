@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
 {
@@ -11,30 +11,30 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
     using Microsoft.Data.Entity.Design.Model.Commands;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     An enum that is passed to the GetListOfValues() method.
-    /// </summary>
+    // <summary>
+    //     An enum that is passed to the GetListOfValues() method.
+    // </summary>
     internal enum ListOfValuesCollection
     {
-        /// <summary>
-        ///     This is the collection for the first column in the Trid
-        /// </summary>
+        // <summary>
+        //     This is the collection for the first column in the Trid
+        // </summary>
         FirstColumn,
 
-        /// <summary>
-        ///     This is the collection for the second column in the Trid
-        /// </summary>
+        // <summary>
+        //     This is the collection for the second column in the Trid
+        // </summary>
         SecondColumn,
 
-        /// <summary>
-        ///     This is the collection for the third column in the Trid
-        /// </summary>
+        // <summary>
+        //     This is the collection for the third column in the Trid
+        // </summary>
         ThirdColumn
     }
 
-    /// <summary>
-    ///     Base class for all of our mapping view model items.
-    /// </summary>
+    // <summary>
+    //     Base class for all of our mapping view model items.
+    // </summary>
     internal abstract class MappingEFElement : IDisposable
     {
         internal static readonly MappingLovEFElement LovBlankPlaceHolder = new MappingLovEFElement(string.Empty);
@@ -49,12 +49,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
         protected bool _isDeleting = false;
         protected bool _isDisposed = false;
 
-        /// <summary>
-        ///     Creates a new item.
-        /// </summary>
-        /// <param name="context">The current EditingContext; can be null</param>
-        /// <param name="modelItem">The underlying model item; can be null for view model items that don't have an underlying model item yet.</param>
-        /// <param name="parent">This item's parent; this should only be null for root level items</param>
+        // <summary>
+        //     Creates a new item.
+        // </summary>
+        // <param name="context">The current EditingContext; can be null</param>
+        // <param name="modelItem">The underlying model item; can be null for view model items that don't have an underlying model item yet.</param>
+        // <param name="parent">This item's parent; this should only be null for root level items</param>
         protected MappingEFElement(EditingContext context, EFElement modelItem, MappingEFElement parent)
         {
             _context = context;
@@ -88,19 +88,19 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the EditingContext.
-        /// </summary>
+        // <summary>
+        //     Gets or sets the EditingContext.
+        // </summary>
         internal EditingContext Context
         {
             get { return _context; }
             set { _context = value; }
         }
 
-        /// <summary>
-        ///     If a name has been set explicitly, then this will return that.  Otherwise, this will return the
-        ///     DisplayName of the underlying model item (if any).  Override to change this behavior.
-        /// </summary>
+        // <summary>
+        //     If a name has been set explicitly, then this will return that.  Otherwise, this will return the
+        //     DisplayName of the underlying model item (if any).  Override to change this behavior.
+        // </summary>
         internal virtual string Name
         {
             get
@@ -120,9 +120,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             set { _name = value; }
         }
 
-        /// <summary>
-        ///     Gets or sets the underlying ModelItem.
-        /// </summary>
+        // <summary>
+        //     Gets or sets the underlying ModelItem.
+        // </summary>
         internal virtual EFElement ModelItem
         {
             get { return _modelItem; }
@@ -154,19 +154,19 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Gets or sets this view model item's Parent.
-        /// </summary>
+        // <summary>
+        //     Gets or sets this view model item's Parent.
+        // </summary>
         internal MappingEFElement Parent
         {
             get { return _parent; }
             set { _parent = value; }
         }
 
-        /// <summary>
-        ///     Returns this item's Children collection.  The first time this is called, the LoadChildrenCollection() method is called
-        ///     and the collection is populated by the derived class's override (if any).
-        /// </summary>
+        // <summary>
+        //     Returns this item's Children collection.  The first time this is called, the LoadChildrenCollection() method is called
+        //     and the collection is populated by the derived class's override (if any).
+        // </summary>
         internal IList<MappingEFElement> Children
         {
             get
@@ -180,9 +180,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Adds a child to the children collection.
-        /// </summary>
+        // <summary>
+        //     Adds a child to the children collection.
+        // </summary>
         internal void AddChild(MappingEFElement newChild)
         {
             if (Children.Contains(newChild) == false)
@@ -191,9 +191,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Removes a child from the children collection.
-        /// </summary>
+        // <summary>
+        //     Removes a child from the children collection.
+        // </summary>
         internal void RemoveChild(MappingEFElement child)
         {
             if (Children.Contains(child))
@@ -202,16 +202,16 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     This must be implemented by derived clases who have children.
-        /// </summary>
+        // <summary>
+        //     This must be implemented by derived clases who have children.
+        // </summary>
         protected virtual void LoadChildrenCollection()
         {
         }
 
-        /// <summary>
-        ///     This must be implemented by derived clases who have lists of values.
-        /// </summary>
+        // <summary>
+        //     This must be implemented by derived clases who have lists of values.
+        // </summary>
         internal virtual Dictionary<MappingLovEFElement, string> GetListOfValues(ListOfValuesCollection type)
         {
             var lov = new Dictionary<MappingLovEFElement, string>();
@@ -219,12 +219,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             return lov;
         }
 
-        /// <summary>
-        ///     Looks for an LOV Element in this item's list of values.
-        /// </summary>
-        /// <param name="lovDisplayName">What to look for</param>
-        /// <param name="lovType">Which LOV collection to search</param>
-        /// <returns>If none are found it will return a null item.</returns>
+        // <summary>
+        //     Looks for an LOV Element in this item's list of values.
+        // </summary>
+        // <param name="lovDisplayName">What to look for</param>
+        // <param name="lovType">Which LOV collection to search</param>
+        // <returns>If none are found it will return a null item.</returns>
         internal MappingLovEFElement FindMappingLovElement(string lovDisplayName, ListOfValuesCollection lovType)
         {
             MappingLovEFElement mappingLovElement = null;
@@ -249,12 +249,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             return mappingLovElement;
         }
 
-        /// <summary>
-        ///     Utility method. If already have a MappingLovEFElement just return it. If not
-        ///     then lookup the MappingLovEFElement using the string and ListOfValuesType.
-        ///     This latter situation means that a user has used the keyboard to select
-        ///     a value from a drop-down which has come through to here as text.
-        /// </summary>
+        // <summary>
+        //     Utility method. If already have a MappingLovEFElement just return it. If not
+        //     then lookup the MappingLovEFElement using the string and ListOfValuesType.
+        //     This latter situation means that a user has used the keyboard to select
+        //     a value from a drop-down which has come through to here as text.
+        // </summary>
         internal MappingLovEFElement GetLovElementFromLovElementOrString(
             MappingLovEFElement lovElement, string lovDisplayName, ListOfValuesCollection lovType)
         {
@@ -266,9 +266,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             return FindMappingLovElement(lovDisplayName, lovType);
         }
 
-        /// <summary>
-        ///     Returns the index of the passed in child in this item's Children collection, returns -1 if it isn't found
-        /// </summary>
+        // <summary>
+        //     Returns the index of the passed in child in this item's Children collection, returns -1 if it isn't found
+        // </summary>
         internal int IndexOfChild(MappingEFElement childToFind)
         {
             if (childToFind != null)
@@ -285,10 +285,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             return -1;
         }
 
-        /// <summary>
-        ///     Walks up the tree and returns the first parent that is of the Type passed in.
-        /// </summary>
-        /// <param name="type">The type of parent to find.</param>
+        // <summary>
+        //     Walks up the tree and returns the first parent that is of the Type passed in.
+        // </summary>
+        // <param name="type">The type of parent to find.</param>
         internal MappingEFElement GetParentOfType(Type type)
         {
             if (GetType() == type)
@@ -309,33 +309,33 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             return null;
         }
 
-        /// <summary>
-        ///     Derived classes need to override this and implement their own creation logic.
-        /// </summary>
-        /// <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
-        /// <param name="context"></param>
-        /// <param name="underlyingModelItem"></param>
+        // <summary>
+        //     Derived classes need to override this and implement their own creation logic.
+        // </summary>
+        // <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
+        // <param name="context"></param>
+        // <param name="underlyingModelItem"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual void CreateModelItem(CommandProcessorContext cpc, EditingContext context, EFElement underlyingModelItem)
         {
         }
 
-        /// <summary>
-        ///     Derived classes need to override this and implement their own deletion logic; note that this is not the same as Delete().  This
-        ///     method just deletes the model item that underlies this view model item.
-        /// </summary>
-        /// <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
+        // <summary>
+        //     Derived classes need to override this and implement their own deletion logic; note that this is not the same as Delete().  This
+        //     method just deletes the model item that underlies this view model item.
+        // </summary>
+        // <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
         internal virtual void DeleteModelItem(CommandProcessorContext cpc)
         {
         }
 
-        /// <summary>
-        ///     This lets you switch the underlyingModelItem.
-        /// </summary>
-        /// <param name="cpc">The transaction to use for this entire process, cannot be null</param>
-        /// <param name="context">The current EditingContext</param>
-        /// <param name="newUnderlyingModelItem">The new model item to switch to</param>
-        /// <param name="deleteModelItemOnly">If 'true' then the MappingEFElement will just have its model item switched, if 'false' then a new MappingEFElement will be create and this one will be deleted</param>
+        // <summary>
+        //     This lets you switch the underlyingModelItem.
+        // </summary>
+        // <param name="cpc">The transaction to use for this entire process, cannot be null</param>
+        // <param name="context">The current EditingContext</param>
+        // <param name="newUnderlyingModelItem">The new model item to switch to</param>
+        // <param name="deleteModelItemOnly">If 'true' then the MappingEFElement will just have its model item switched, if 'false' then a new MappingEFElement will be create and this one will be deleted</param>
         internal void SwitchModelItem(
             CommandProcessorContext cpc, EditingContext context, EFElement newUnderlyingModelItem, bool deleteModelItemOnly)
         {
@@ -361,20 +361,20 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             cp.Invoke();
         }
 
-        /// <summary>
-        ///     Used to support the SwitchModelItem() method when the user passed false to 'deleteModelItemOnly'; derived classes
-        ///     should override to provide their own creation logic if needed.
-        /// </summary>
+        // <summary>
+        //     Used to support the SwitchModelItem() method when the user passed false to 'deleteModelItemOnly'; derived classes
+        //     should override to provide their own creation logic if needed.
+        // </summary>
         protected virtual MappingEFElement CreateCreatorNodeCopy()
         {
             // by default just create a new one passing typical contructor arguments
             return Activator.CreateInstance(GetType(), Context, null, Parent) as MappingEFElement;
         }
 
-        /// <summary>
-        ///     Return 'true' if the ModelItem is not null and the ModelItem's XObject is null.  This means that this view model item's
-        ///     underlying model item exists, but its been deleted in the XLinq tree.
-        /// </summary>
+        // <summary>
+        //     Return 'true' if the ModelItem is not null and the ModelItem's XObject is null.  This means that this view model item's
+        //     underlying model item exists, but its been deleted in the XLinq tree.
+        // </summary>
         internal bool IsModelItemDeleted()
         {
             if (ModelItem != null
@@ -388,10 +388,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Deletes this view model item's underlying model item, its children and finally removes it from the view model.
-        /// </summary>
-        /// <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
+        // <summary>
+        //     Deletes this view model item's underlying model item, its children and finally removes it from the view model.
+        // </summary>
+        // <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
         internal void Delete(CommandProcessorContext cpc)
         {
             if (!_isDeleting)
@@ -403,10 +403,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Private helper method to delete a view model item.
-        /// </summary>
-        /// <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
+        // <summary>
+        //     Private helper method to delete a view model item.
+        // </summary>
+        // <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
         private void OnDelete(CommandProcessorContext cpc)
         {
             if (ModelItem != null)
@@ -430,19 +430,19 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
             }
         }
 
-        /// <summary>
-        ///     Derived classes should override this and implement their own logic for removing an item from
-        ///     their children collection.
-        /// </summary>
+        // <summary>
+        //     Derived classes should override this and implement their own logic for removing an item from
+        //     their children collection.
+        // </summary>
         protected virtual void OnChildDeleted(MappingEFElement melem)
         {
         }
 
-        /// <summary>
-        ///     Recurses this item's children and calls DeleteModelItem() (not Delete) on them, then calls this on itself.
-        /// </summary>
-        /// <param name="melem"></param>
-        /// <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
+        // <summary>
+        //     Recurses this item's children and calls DeleteModelItem() (not Delete) on them, then calls this on itself.
+        // </summary>
+        // <param name="melem"></param>
+        // <param name="cpc">If 'null' is passed then a cpc and transaction will be created for this call, pass a non-null cpc to include this in a larger transaction</param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void DeleteModelItemsRecursive(MappingEFElement melem, CommandProcessorContext cpc)
         {

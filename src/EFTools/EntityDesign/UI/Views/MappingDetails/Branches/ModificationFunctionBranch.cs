@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
 {
@@ -9,9 +9,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions;
     using Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid;
 
-    /// <summary>
-    ///     This branch shows 3 lines, one each for an Insert, Update and Delete function.
-    /// </summary>
+    // <summary>
+    //     This branch shows 3 lines, one each for an Insert, Update and Delete function.
+    // </summary>
     internal class ModificationFunctionBranch : TreeGridDesignerBranch
     {
         private MappingFunctionEntityType _mappingFunctionTypeMapping;

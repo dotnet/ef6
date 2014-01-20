@@ -10,9 +10,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
     using Microsoft.Data.Entity.Design.Model.Entity;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     Dummy element which contains the EntityTypes, EnumTypes and ComplexTypes
-    /// </summary>
+    // <summary>
+    //     Dummy element which contains the EntityTypes, EnumTypes and ComplexTypes
+    // </summary>
     internal class ExplorerComplexTypes : EntityDesignExplorerEFElement
     {
         private readonly TypedChildList<ExplorerComplexType> _complexTypes =

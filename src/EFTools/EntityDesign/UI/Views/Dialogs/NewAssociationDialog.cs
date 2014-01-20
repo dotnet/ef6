@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 {
@@ -449,9 +449,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             return supported;
         }
 
-        /// <summary>
-        ///     Attempts to determing the principal and dependent ends. Can return null for principal/dependent values.
-        /// </summary>
+        // <summary>
+        //     Attempts to determing the principal and dependent ends. Can return null for principal/dependent values.
+        // </summary>
         private void TryGetPrincipalAndDependentEntities(out EntityType principal, out EntityType dependent)
         {
             // NOTE: this needs to match the logic in ModelHelper.DeterminePrincipalDependentAssociationEnds()

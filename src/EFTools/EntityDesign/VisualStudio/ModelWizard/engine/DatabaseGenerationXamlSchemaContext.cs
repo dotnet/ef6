@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
@@ -6,10 +6,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using System.Globalization;
     using System.Xaml;
 
-    /// <summary>
-    ///     This class helps the database generation workflow resolve assemblies that contain
-    ///     activities that are referenced in the owning project of the artifact.
-    /// </summary>
+    // <summary>
+    //     This class helps the database generation workflow resolve assemblies that contain
+    //     activities that are referenced in the owning project of the artifact.
+    // </summary>
     internal class DatabaseGenerationXamlSchemaContext : XamlSchemaContext
     {
         private string _clrNamespacePrefix = "clr-namespace:";

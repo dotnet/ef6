@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
 {
@@ -266,12 +266,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
             return base.GetListOfValues(type);
         }
 
-        /// <summary>
-        ///     The mapping view model contains a MappingEndScalarProperty for every key in each end.  The user can clear out the
-        ///     underlying scalar property, but that doesn’t remove or add the MappingEndScalarProperty.  We need the placeholder
-        ///     in the view model to show the nodes in the Trid even if there isn’t a mapping.  Thus, we don't need to call
-        ///     this.Parent.AddChild(this) since its already there.
-        /// </summary>
+        // <summary>
+        //     The mapping view model contains a MappingEndScalarProperty for every key in each end.  The user can clear out the
+        //     underlying scalar property, but that doesn't remove or add the MappingEndScalarProperty.  We need the placeholder
+        //     in the view model to show the nodes in the Trid even if there isn't a mapping.  Thus, we don't need to call
+        //     this.Parent.AddChild(this) since its already there.
+        // </summary>
         internal override void CreateModelItem(CommandProcessorContext cpc, EditingContext context, EFElement underlyingModelItem)
         {
             Debug.Assert(underlyingModelItem != null, "The underlyingModelItem cannot be null");
@@ -347,12 +347,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
             }
         }
 
-        /// <summary>
-        ///     The mapping view model contains a MappingEndScalarProperty for every key in each end.  The user can clear out the
-        ///     underlying scalar property, but that doesn’t remove or add the MappingEndScalarProperty.  We need the placeholder
-        ///     in the view model to show the nodes in the Trid even if there isn’t a mapping.  Thus, we don't need to call
-        ///     this.Parent.RemoveChild(this) as we want to leave the placeholder.
-        /// </summary>
+        // <summary>
+        //     The mapping view model contains a MappingEndScalarProperty for every key in each end.  The user can clear out the
+        //     underlying scalar property, but that doesn't remove or add the MappingEndScalarProperty.  We need the placeholder
+        //     in the view model to show the nodes in the Trid even if there isn't a mapping.  Thus, we don't need to call
+        //     this.Parent.RemoveChild(this) as we want to leave the placeholder.
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             Debug.Assert(ModelItem != null, "We are trying to delete a null ModelItem");

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
 {
@@ -236,12 +236,12 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
             return base.GetListOfValues(type);
         }
 
-        /// <summary>
-        ///     The parent item for the function mapping view model always has 3 children; insert, update and delete items.  If there isn’t
-        ///     a function mapped for any of these, then there is still a view model item since we want to display the ‘creator node’ text.
-        ///     Calling this.Parent.AddChild(this) here would make the parent think it had a new child instead of updating the existing one -
-        ///     so it is correct to _not_ call it here.
-        /// </summary>
+        // <summary>
+        //     The parent item for the function mapping view model always has 3 children; insert, update and delete items.  If there isn’t
+        //     a function mapped for any of these, then there is still a view model item since we want to display the ‘creator node’ text.
+        //     Calling this.Parent.AddChild(this) here would make the parent think it had a new child instead of updating the existing one -
+        //     so it is correct to _not_ call it here.
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal override void CreateModelItem(CommandProcessorContext cpc, EditingContext context, EFElement underlyingModelItem)
         {
@@ -276,8 +276,8 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
 
                     // fix up our view model
                     ModelItem = mf;
-                    // The parent item for the function mapping view model always has 3 children; insert, update and delete items.  If there isn’t 
-                    // a function mapped for any of these, then there is still a view model item since we want to display the ‘creator node’ text.
+                    // The parent item for the function mapping view model always has 3 children; insert, update and delete items.  If there isn�t 
+                    // a function mapped for any of these, then there is still a view model item since we want to display the �creator node� text.
                     // Calling this.Parent.AddChild(this) here would make the parent think it had a new child instead of updating the existing one - 
                     // so it is correct to _not_ call it here.
                 };
@@ -366,11 +366,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
             }
         }
 
-        /// <summary>
-        ///     The parent item for the function mapping view model always has 3 children; insert, update and delete.  If there isn’t
-        ///     a function mapped for any of these, then there is still a view model item since we want to display the ‘creator node’ text.
-        ///     Thus, we don't call this.Parent.RemoveChild(this).
-        /// </summary>
+        // <summary>
+        //     The parent item for the function mapping view model always has 3 children; insert, update and delete.  If there isn’t
+        //     a function mapped for any of these, then there is still a view model item since we want to display the ‘creator node’ text.
+        //     Thus, we don't call this.Parent.RemoveChild(this).
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             Debug.Assert(ModelItem != null, "We are trying to delete a null ModelItem");

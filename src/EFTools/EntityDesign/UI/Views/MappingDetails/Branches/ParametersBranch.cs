@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
 {
@@ -6,10 +6,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions;
     using Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid;
 
-    /// <summary>
-    ///     The purpose of this class is to create the container node for the parameters.  So,
-    ///     there is only ever one item, one row.
-    /// </summary>
+    // <summary>
+    //     The purpose of this class is to create the container node for the parameters.  So,
+    //     there is only ever one item, one row.
+    // </summary>
     internal class ParametersBranch : TreeGridDesignerBranch
     {
         private MappingModificationFunctionMapping _mappingModificationFunctionMapping;

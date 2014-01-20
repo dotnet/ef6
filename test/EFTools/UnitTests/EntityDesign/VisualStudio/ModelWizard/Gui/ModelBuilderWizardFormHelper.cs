@@ -28,7 +28,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         public static ModelBuilderWizardForm CreateWizard(ModelBuilderSettings modelBuilderSettings, IServiceProvider serviceProvider = null)
         {
             var mockWizard = new Mock<ModelBuilderWizardForm>(
-                serviceProvider ?? new Mock<IServiceProvider>().Object,
+                serviceProvider ?? Mock.Of<IServiceProvider>(),
                 modelBuilderSettings,
                 ModelBuilderWizardForm.WizardMode.PerformAllFunctionality)
             {

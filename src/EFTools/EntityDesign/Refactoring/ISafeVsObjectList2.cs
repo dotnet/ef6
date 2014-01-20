@@ -8,17 +8,17 @@ namespace Microsoft.Data.Entity.Design.Refactoring
     using Microsoft.VisualStudio.OLE.Interop;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    /// <summary>
-    ///     Implements a safer version of IVsObjectList for types that do no implement IVsCoTaskMemFreeMyStrings. Types that do not implement IVsCoTaskMemFreeMyStrings will
-    ///     cause an exception when marshalling strings from native code to the CLR, because the native code will pass its own reference to the string instead of a
-    ///     reference to a copy of the string thus causing bad things to happen when the CLR marshaller frees the memory for the native string after it converts the value
-    ///     to a CLR string. Therefore this interface changes the PInvoke for GetText() to return an out param of type IntPtr instead of string, which avoids the issue
-    ///     of the CLR marshaller causing memory exceptions since IntPtr's (unlike strings) aren't freed automatically.
-    ///     This however makes things more complicated for the callers who choose to use this interface (ISafeVsObjectList). They will now have to manually check their
-    ///     type to see if it implements IVsCoTaskMemFreeMyStrings, and if it does the caller will be responsible for freeing the memory at the returned IntPtr as
-    ///     implementers of IVsCoTaskMemFreeMyStrings will have passed a copy of their string and are no longer responsible for its memory management once it reaches
-    ///     the marshaller.
-    /// </summary>
+    // <summary>
+    //     Implements a safer version of IVsObjectList for types that do no implement IVsCoTaskMemFreeMyStrings. Types that do not implement IVsCoTaskMemFreeMyStrings will
+    //     cause an exception when marshalling strings from native code to the CLR, because the native code will pass its own reference to the string instead of a
+    //     reference to a copy of the string thus causing bad things to happen when the CLR marshaller frees the memory for the native string after it converts the value
+    //     to a CLR string. Therefore this interface changes the PInvoke for GetText() to return an out param of type IntPtr instead of string, which avoids the issue
+    //     of the CLR marshaller causing memory exceptions since IntPtr's (unlike strings) aren't freed automatically.
+    //     This however makes things more complicated for the callers who choose to use this interface (ISafeVsObjectList). They will now have to manually check their
+    //     type to see if it implements IVsCoTaskMemFreeMyStrings, and if it does the caller will be responsible for freeing the memory at the returned IntPtr as
+    //     implementers of IVsCoTaskMemFreeMyStrings will have passed a copy of their string and are no longer responsible for its memory management once it reaches
+    //     the marshaller.
+    // </summary>
     [ComImport]
     [InterfaceType((short)1)]
     [Guid("E37F46C4-C627-4D88-A091-2992EE33B51D")]

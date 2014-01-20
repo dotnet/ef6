@@ -6,10 +6,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
     using Microsoft.Data.Entity.Design.Base.Context;
     using Microsoft.Data.Entity.Design.Model;
 
-    /// <summary>
-    ///     dummy node - has no equivalent in the Model project
-    ///     used for the root node of the tree in the tree view
-    /// </summary>
+    // <summary>
+    //     dummy node - has no equivalent in the Model project
+    //     used for the root node of the tree in the tree view
+    // </summary>
     internal class ExplorerRootNode : EntityDesignExplorerEFElement
     {
         private ExplorerConceptualEntityModel _conceptualModel;

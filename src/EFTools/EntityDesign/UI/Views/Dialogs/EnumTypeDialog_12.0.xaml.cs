@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using System;
 using System.ComponentModel;
@@ -12,9 +12,9 @@ using EntityDesignerResources = Microsoft.Data.Entity.Design.Resources;
 
 namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 {
-    /// <summary>
-    /// Interaction logic for EnumTypeDialog.xaml
-    /// </summary>
+    // <summary>
+    // Interaction logic for EnumTypeDialog.xaml
+    // </summary>
     internal partial class EnumTypeDialog : DialogWindow
     {
         private bool _isManualEditCommit = false;

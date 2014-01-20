@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
 {
@@ -32,11 +32,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             return base.GetInPlaceEdit(component, ref alternateText);
         }
 
-        /// <summary>
-        ///     Overriding this allows the list-of-values dropdowns to use
-        ///     the converter to convert back from a string to an object (in our
-        ///     case a MappingLovEFElement object)
-        /// </summary>
+        // <summary>
+        //     Overriding this allows the list-of-values dropdowns to use
+        //     the converter to convert back from a string to an object (in our
+        //     case a MappingLovEFElement object)
+        // </summary>
         public override Type /* PropertyDescriptor */ PropertyType
         {
             get { return typeof(PropertyColumnConverter); }

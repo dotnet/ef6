@@ -12,10 +12,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow
     using Microsoft.Data.Entity.Design.Model.Entity;
     using Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow.Descriptors;
 
-    /// <summary>
-    ///     provides the information required for displaying
-    ///     and editing properties of EFElement items
-    /// </summary>
+    // <summary>
+    //     provides the information required for displaying
+    //     and editing properties of EFElement items
+    // </summary>
     internal static class PropertyWindowViewModel
     {
         private static Dictionary<Type, Type> _objectDescriptorTypes;
@@ -54,11 +54,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.PropertyWindow
             }
         }
 
-        /// <summary>
-        ///     Returns a wrapper for the specified EFObject. The wrapper is the type descriptor
-        ///     that describes the properties that should be displayed for the EFObject.
-        ///     The returned wrapper should be handed to a property window control
-        /// </summary>
+        // <summary>
+        //     Returns a wrapper for the specified EFObject. The wrapper is the type descriptor
+        //     that describes the properties that should be displayed for the EFObject.
+        //     The returned wrapper should be handed to a property window control
+        // </summary>
         public static ObjectDescriptor GetObjectDescriptor(EFObject obj, EditingContext editingContext, bool runningInVS)
         {
             if (obj != null)

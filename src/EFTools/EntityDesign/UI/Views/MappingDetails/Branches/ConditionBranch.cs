@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
 {
@@ -9,10 +9,10 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables;
     using Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid;
 
-    /// <summary>
-    ///     This branch displays all of the conditions in for a table/entity mapping.  It also displays a
-    ///     creator node so that users can add new conditions.
-    /// </summary>
+    // <summary>
+    //     This branch displays all of the conditions in for a table/entity mapping.  It also displays a
+    //     creator node so that users can add new conditions.
+    // </summary>
     internal class ConditionBranch : TreeGridDesignerBranch
     {
         private MappingStorageEntityType _mappingStorageEntityType;

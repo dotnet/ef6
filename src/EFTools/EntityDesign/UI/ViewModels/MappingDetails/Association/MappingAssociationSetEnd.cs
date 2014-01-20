@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
 {
@@ -104,11 +104,11 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Associations
             }
         }
 
-        /// <summary>
-        ///     A private class for doing intelli-match with association set ends.  If the builder calls BuildNew(), we create a
-        ///     "dummy node" in our view model for this column.  If the builder calls BuildExisting() then create a view model item
-        ///     that has a connection to the existing model item.
-        /// </summary>
+        // <summary>
+        //     A private class for doing intelli-match with association set ends.  If the builder calls BuildNew(), we create a
+        //     "dummy node" in our view model for this column.  If the builder calls BuildExisting() then create a view model item
+        //     that has a connection to the existing model item.
+        // </summary>
         private class AssociationSetEndMappingBuilderForViewModel : AssociationSetEndMappingBuilder
         {
             private readonly MappingAssociationSetEnd _mase;

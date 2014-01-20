@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.Extensibility
 {
@@ -6,9 +6,9 @@ namespace Microsoft.Data.Entity.Design.Extensibility
 
     internal interface IEntityDesignerCommandFactory
     {
-        /// <summary>
-        ///     Commands that will be surfaced in the Entity Designer
-        /// </summary>
+        // <summary>
+        //     Commands that will be surfaced in the Entity Designer
+        // </summary>
         IList<EntityDesignerCommand> Commands { get; }
     }
 }

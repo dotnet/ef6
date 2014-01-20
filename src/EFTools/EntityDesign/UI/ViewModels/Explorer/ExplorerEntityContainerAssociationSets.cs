@@ -10,9 +10,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
     using Microsoft.Data.Entity.Design.Model.Entity;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
-    /// <summary>
-    ///     Dummy element which contains the AssociationSets inside the EntityContainer
-    /// </summary>
+    // <summary>
+    //     Dummy element which contains the AssociationSets inside the EntityContainer
+    // </summary>
     internal class ExplorerEntityContainerAssociationSets : EntityDesignExplorerEFElement
     {
         private readonly TypedChildList<ExplorerAssociationSet> _associationSets =

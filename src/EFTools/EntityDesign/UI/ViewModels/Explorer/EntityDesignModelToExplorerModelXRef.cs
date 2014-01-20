@@ -39,9 +39,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
             _modelType2ExplorerViewModelType.Add(typeof(StorageProperty), typeof(ExplorerStorageProperty));
         }
 
-        /// <summary>
-        ///     Helper method that determine whether an EFElement is represented in model browser.
-        /// </summary>
+        // <summary>
+        //     Helper method that determine whether an EFElement is represented in model browser.
+        // </summary>
         internal static bool IsDisplayedInExplorer(EFElement efElement)
         {
             // If efElement type is StorageEntityContainer or EFDesignerInfoRoot, don't display it in Model Browser.

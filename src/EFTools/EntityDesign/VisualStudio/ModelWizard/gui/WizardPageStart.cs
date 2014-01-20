@@ -20,29 +20,32 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.VisualStudio.PlatformUI;
 #endif
 
-    /// <summary>
-    ///     This is the first page in the ModelBuilder VS wizard and lets the user select whether to:
-    ///     - start with an empty model or
-    ///     - generate the model from a database
-    /// </summary>
-    /// <remarks>
-    ///     To view this class in the forms designer, make it temporarily derive from
-    ///     Microsoft.WizardFramework.WizardPage
-    /// </remarks>
+    // <summary>
+    //     This is the first page in the ModelBuilder VS wizard and lets the user select whether to:
+    //     - start with an empty model or
+    //     - generate the model from a database
+    // </summary>
+    // <remarks>
+    //     To view this class in the forms designer, make it temporarily derive from
+    //     Microsoft.WizardFramework.WizardPage
+    // </remarks>
     internal partial class WizardPageStart : WizardPageBase
     {
-        private static readonly IDictionary<string, string> _templateContent = new Dictionary<string, string>();
-
         internal static readonly int GenerateFromDatabaseIndex = 0;
         internal static readonly int GenerateEmptyModelIndex = 1;
         internal static readonly int GenerateEmptyModelCodeFirstIndex = 2;
         internal static readonly int GenerateCodeFirstFromDatabaseIndex = 3;
+
+        private static readonly IDictionary<string, string> _templateContent = new Dictionary<string, string>();
+        private readonly bool _codeFirstAllowed;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public WizardPageStart(ModelBuilderWizardForm wizard)
             : base(wizard)
         {
             InitializeComponent();
+
+             _codeFirstAllowed = CodeFirstAllowed(Wizard.ModelBuilderSettings);
 
             components = new Container();
 
@@ -62,10 +65,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 TransparentColor = Color.Magenta
             };
 
-            imageList.Images.Add("database.bmp", Resources.Database);
-            imageList.Images.Add("EmptyModel.bmp", Resources.EmptyModel);
-            imageList.Images.Add("EmptyModelCodeFirst.bmp", Resources.EmptyModelCodeFirst);
-            imageList.Images.Add("CodeFirstFromDatabase.bmp", Resources.CodeFirstFromDatabase);
+            imageList.Images.Add("database.png", Resources.Database);
+            imageList.Images.Add("EmptyModel.png", Resources.EmptyModel);
+            imageList.Images.Add("EmptyModelCodeFirst.png", Resources.EmptyModelCodeFirst);
+            imageList.Images.Add("CodeFirstFromDatabase.png", Resources.CodeFirstFromDatabase);
 
 #if VS12
             // scale images as appropriate for screen resolution
@@ -80,15 +83,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             listViewModelContents.Items.AddRange(
                 new[]
                 {
-                    new ListViewItem(Resources.GenerateFromDatabaseOption, "database.bmp"),
-                    new ListViewItem(Resources.EmptyModelOption, "EmptyModel.bmp"),
+                    new ListViewItem(Resources.GenerateFromDatabaseOption, "database.png"),
+                    new ListViewItem(Resources.EmptyModelOption, "EmptyModel.png"),
                 });
 
             if (NetFrameworkVersioningHelper.TargetNetFrameworkVersion(wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider) >=
                 NetFrameworkVersioningHelper.NetFrameworkVersion4)
             {
-                listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.bmp"));
-                listViewModelContents.Items.Add(new ListViewItem(Resources.CodeFirstFromDatabaseOption, "CodeFirstFromDatabase.bmp"));
+                listViewModelContents.Items.Add(new ListViewItem(Resources.EmptyModelCodeFirstOption, "EmptyModelCodeFirst.png"));
+                listViewModelContents.Items.Add(new ListViewItem(Resources.CodeFirstFromDatabaseOption, "CodeFirstFromDatabase.png"));
             }
 
             // Always select the first item
@@ -113,10 +116,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return base.OnActivate() && !Wizard.FileAlreadyExistsError;
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is entered.
-        ///     Updates GUI from ModelBuilderSettings
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is entered.
+        //     Updates GUI from ModelBuilderSettings
+        // </summary>
         public override void OnActivated()
         {
             base.OnActivated();
@@ -136,10 +139,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             get { return listViewModelContents.SelectedIndices.Count > 0; }
         }
 
-        /// <summary>
-        ///     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
-        ///     Updates ModelBuilderSettings from the GUI
-        /// </summary>
+        // <summary>
+        //     Invoked by the VS Wizard framework when this page is exited or when the "Finish" button is clicked.
+        //     Updates ModelBuilderSettings from the GUI
+        // </summary>
         public override bool OnDeactivate()
         {
             var modelPath = 
@@ -186,9 +189,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Helper to update ModelBuilderSettings from listbox selection
-        /// </summary>
+        // <summary>
+        //     Helper to update ModelBuilderSettings from listbox selection
+        // </summary>
         private void UpdateSettingsFromGui(int selectedOptionIndex, string modelPath)
         {
             Wizard.ModelBuilderSettings.ModelPath = modelPath;
@@ -256,9 +259,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return true;
         }
 
-        /// <summary>
-        ///     Helper to update listbox selection from ModelBuilderSettings
-        /// </summary>
+        // <summary>
+        //     Helper to update listbox selection from ModelBuilderSettings
+        // </summary>
         private void UpdateGuiFromSettings()
         {
             switch (Wizard.ModelBuilderSettings.GenerationOption)
@@ -288,9 +291,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     SelectedIndexChanged event: fired by ListBox when the selection changes
-        /// </summary>
+        // <summary>
+        //     SelectedIndexChanged event: fired by ListBox when the selection changes
+        // </summary>
         private void listViewModelContents_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (AnyItemSelected)
@@ -320,24 +323,36 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         NetFrameworkVersioningHelper.TargetNetFrameworkVersion(Wizard.ModelBuilderSettings.Project, Wizard.ServiceProvider)
                         > NetFrameworkVersioningHelper.NetFrameworkVersion3_5, "Option should be disabled for .NET Framework 3.5");
 
-                    textboxListViewSelectionInfo.Text = Resources.StartPage_EmptyModelCodeFirstText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.EmptyModelCodeFirst;
 
+                    textboxListViewSelectionInfo.Text =
+                        _codeFirstAllowed
+                            ? Resources.StartPage_EmptyModelCodeFirstText
+                            : string.Format(
+                                CultureInfo.InvariantCulture, "{0}\r\n{1}",
+                                Resources.StartPage_CodeFirstSupportedOnlyForEF6, Resources.StartPage_EmptyModelCodeFirstText);
+
                     Wizard.OnValidationStateChanged(this);
-                    Wizard.EnableButton(ButtonType.Finish, CodeFirstAllowed(Wizard.ModelBuilderSettings));
+                    Wizard.EnableButton(ButtonType.Finish, _codeFirstAllowed);
                 }
                 else
                 {
                     Debug.Assert(nSelectedItemIndex == GenerateCodeFirstFromDatabaseIndex, "Unexpected Index");
 
-                    textboxListViewSelectionInfo.Text = Resources.StartPage_CodeFirstFromDatabaseText;
                     Wizard.ModelBuilderSettings.GenerationOption = ModelGenerationOption.CodeFirstFromDatabase;
+
+                    textboxListViewSelectionInfo.Text = 
+                        _codeFirstAllowed ? 
+                            Resources.StartPage_CodeFirstFromDatabaseText :
+                            string.Format(
+                                CultureInfo.InvariantCulture, "{0}\r\n{1}",
+                                Resources.StartPage_CodeFirstSupportedOnlyForEF6, Resources.StartPage_CodeFirstFromDatabaseText);
 
                     AddPagesForReverseEngineerDb();
 
                     Wizard.OnValidationStateChanged(this);
 
-                    Wizard.EnableButton(ButtonType.Next, CodeFirstAllowed(Wizard.ModelBuilderSettings));
+                    Wizard.EnableButton(ButtonType.Next, _codeFirstAllowed);
                 }
             }
         }
@@ -393,10 +408,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
-        /// <summary>
-        ///     Return EDMX template content.
-        ///     The method will return the template cache value if available.
-        /// </summary>
+        // <summary>
+        //     Return EDMX template content.
+        //     The method will return the template cache value if available.
+        // </summary>
         protected virtual string GetEdmxTemplateContent(string vstemplatePath)
         {
             string edmxTemplate;
@@ -414,10 +429,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private static bool CodeFirstAllowed(ModelBuilderSettings settings)
         {
             Debug.Assert(settings != null, "settings must not be null");
-            Debug.Assert(
-                settings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst || 
-                settings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
-                "unexpected generation option");
 
             // OneEF supported only for EF6 or if the project does not have any references to EF
             var entityFrameworkAssemblyVersion = VsUtils.GetInstalledEntityFrameworkAssemblyVersion(settings.Project);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
 {
@@ -284,10 +284,10 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Functions
             return true;
         }
 
-        /// <summary>
-        ///     NOTE: We don't call this.Parent.RemoveChild(this) here because this is always called from the MappingEFElement.Delete() method
-        ///     which will remove this item from the parent.
-        /// </summary>
+        // <summary>
+        //     NOTE: We don't call this.Parent.RemoveChild(this) here because this is always called from the MappingEFElement.Delete() method
+        //     which will remove this item from the parent.
+        // </summary>
         internal override void DeleteModelItem(CommandProcessorContext cpc)
         {
             Debug.Assert(ModelItem != null, "We are trying to delete a null ModelItem");

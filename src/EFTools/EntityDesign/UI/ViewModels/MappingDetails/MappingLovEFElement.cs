@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
 {
@@ -7,19 +7,19 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Entity;
 
-    /// <summary>
-    ///     This class is used to hold on object to display in a list-of-values (LOV).
-    ///     It contains the name by which we want a given underlying object displayed
-    ///     and, optionally, the underlying object itself.
-    ///     The underlying object is usually an EFElement, but there are cases
-    ///     (in particular see the comments in MappingScalarProperty) where
-    ///     we need to store the MappingEFElement because the EFElement does
-    ///     not yet exist.
-    ///     Another exception is when we need to store a list of Properties for MappingScalarProperty.
-    ///     Lastly it is possible to store "dummy" elements which do
-    ///     not map to any underlying object (e.g. the "&lt;Delete&gt;" element in a
-    ///     drop-down, or the "=" sign in a Condition).
-    /// </summary>
+    // <summary>
+    //     This class is used to hold on object to display in a list-of-values (LOV).
+    //     It contains the name by which we want a given underlying object displayed
+    //     and, optionally, the underlying object itself.
+    //     The underlying object is usually an EFElement, but there are cases
+    //     (in particular see the comments in MappingScalarProperty) where
+    //     we need to store the MappingEFElement because the EFElement does
+    //     not yet exist.
+    //     Another exception is when we need to store a list of Properties for MappingScalarProperty.
+    //     Lastly it is possible to store "dummy" elements which do
+    //     not map to any underlying object (e.g. the "&lt;Delete&gt;" element in a
+    //     drop-down, or the "=" sign in a Condition).
+    // </summary>
     internal class MappingLovEFElement
     {
         private readonly object _object;

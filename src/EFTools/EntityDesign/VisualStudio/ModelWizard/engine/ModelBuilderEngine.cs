@@ -50,16 +50,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         protected abstract void AddErrors(IEnumerable<EdmSchemaError> errors);
         internal abstract IEnumerable<EdmSchemaError> Errors { get; }
 
-        /// <summary>
-        ///     This is the XDocument of the model in memory.  No assumptions should be made that it exists on disk.
-        /// </summary>
+        // <summary>
+        //     This is the XDocument of the model in memory.  No assumptions should be made that it exists on disk.
+        // </summary>
         internal abstract XDocument Model { get; }
 
         protected abstract void InitializeModelContents(Version targetSchemaVersion);
 
-        /// <summary>
-        ///     Generates EDMX file.
-        /// </summary>
+        // <summary>
+        //     Generates EDMX file.
+        // </summary>
         public void GenerateModel(ModelBuilderSettings settings)
         {
             if (settings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
@@ -340,12 +340,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             return true;
         }
 
-        /// <summary>
-        ///     Helper method used to show the ProgressDialog and collect return type information about sprocs
-        /// </summary>
-        /// <param name="owner">Window that owns the dialog</param>
-        /// <param name="newFunctionEntries">list of Functions for which we should collect information</param>
-        /// <param name="modelBuilderSettings">ModelBuilderSettings where collected information will be stored</param>
+        // <summary>
+        //     Helper method used to show the ProgressDialog and collect return type information about sprocs
+        // </summary>
+        // <param name="owner">Window that owns the dialog</param>
+        // <param name="newFunctionEntries">list of Functions for which we should collect information</param>
+        // <param name="modelBuilderSettings">ModelBuilderSettings where collected information will be stored</param>
         internal static DialogResult ShowProgressDialog(
             IWin32Window owner, IList<EntityStoreSchemaFilterEntry> newFunctionEntries, ModelBuilderSettings modelBuilderSettings)
         {
@@ -359,11 +359,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
         }
 
-        /// <summary>
-        ///     This method run on the background thread behind a ProgressDialog.
-        ///     For each filter entry in newFunctionFilterEntries log on to the database, gather the return type
-        ///     information and store the result in ModelBuilderSettings
-        /// </summary>
+        // <summary>
+        //     This method run on the background thread behind a ProgressDialog.
+        //     For each filter entry in newFunctionFilterEntries log on to the database, gather the return type
+        //     information and store the result in ModelBuilderSettings
+        // </summary>
         internal static object GatherAndStoreSchemaProcedureInformation(BackgroundWorker worker, DoWorkEventArgs e)
         {
             if (null == worker)
@@ -508,18 +508,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
         }
 
-        /// <summary>
-        ///     Processes the sproc return type information stored in newFunctionSchemaProceduresMap to
-        ///     add commands which create matching FunctionImports or delete Functions as necessary
-        /// </summary>
-        /// <param name="artifact"></param>
-        /// <param name="newFunctionSchemaProceduresMap">
-        ///     map of all processed EntityStoreSchemaFilterEntry for Functions to
-        ///     their IDataSchemaProcedure (where data was collected) or null (where data was not collected because the data
-        ///     collection process was interrupted)
-        /// </param>
-        /// <param name="commands">list of commands to which to add the create or delete commands</param>
-        /// <param name="shouldCreateComposableFunctionImports">whether to create FunctionImports for composable Functions</param>
+        // <summary>
+        //     Processes the sproc return type information stored in newFunctionSchemaProceduresMap to
+        //     add commands which create matching FunctionImports or delete Functions as necessary
+        // </summary>
+        // <param name="artifact"></param>
+        // <param name="newFunctionSchemaProceduresMap">
+        //     map of all processed EntityStoreSchemaFilterEntry for Functions to
+        //     their IDataSchemaProcedure (where data was collected) or null (where data was not collected because the data
+        //     collection process was interrupted)
+        // </param>
+        // <param name="commands">list of commands to which to add the create or delete commands</param>
+        // <param name="shouldCreateComposableFunctionImports">whether to create FunctionImports for composable Functions</param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static void ProcessStoredProcedureReturnTypeInformation(
             EFArtifact artifact,
@@ -580,9 +580,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         }
     }
 
-    /// <summary>
-    ///     Helper class to pass information to background thread in ProgressDialog
-    /// </summary>
+    // <summary>
+    //     Helper class to pass information to background thread in ProgressDialog
+    // </summary>
     internal class GatherAndReturnSprocInfo
     {
         private readonly IList<EntityStoreSchemaFilterEntry> _newFunctionEntries;

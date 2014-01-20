@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImports
 {
@@ -17,9 +17,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
     using Microsoft.Data.Entity.Design.VisualStudio;
     using EFExtensions = Microsoft.Data.Entity.Design.Model.EFExtensions;
 
-    /// <summary>
-    ///     This class represents FunctionImportMapping and it's result mappings
-    /// </summary>
+    // <summary>
+    //     This class represents FunctionImportMapping and it's result mappings
+    // </summary>
     [TreeGridDesignerRootBranch(typeof(FunctionImportBranch))]
     [TreeGridDesignerColumn(typeof(PropertyColumn), Order = 1)]
     [TreeGridDesignerColumn(typeof(OperatorColumn), Order = 2)]
@@ -41,9 +41,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
             get { return FunctionImportMapping.FunctionImportName.Target; }
         }
 
-        /// <summary>
-        ///     Name of the c-side FunctionImport
-        /// </summary>
+        // <summary>
+        //     Name of the c-side FunctionImport
+        // </summary>
         internal override string Name
         {
             get
@@ -61,9 +61,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
             }
         }
 
-        /// <summary>
-        ///     Name of the s-side Function
-        /// </summary>
+        // <summary>
+        //     Name of the s-side Function
+        // </summary>
         internal string FunctionName
         {
             get
@@ -82,9 +82,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
             }
         }
 
-        /// <summary>
-        ///     Returns list of all s-side functions
-        /// </summary>
+        // <summary>
+        //     Returns list of all s-side functions
+        // </summary>
         internal override Dictionary<MappingLovEFElement, string> GetListOfValues(ListOfValuesCollection type)
         {
             var lov = new Dictionary<MappingLovEFElement, string>();
@@ -112,9 +112,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
             return base.GetListOfValues(type);
         }
 
-        /// <summary>
-        ///     Returns list of MappingFunctionImportScalarProperty for each Property from the ReturnType of the FunctionImport
-        /// </summary>
+        // <summary>
+        //     Returns list of MappingFunctionImportScalarProperty for each Property from the ReturnType of the FunctionImport
+        // </summary>
         internal IList<MappingFunctionImportScalarProperty> GetScalarProperties()
         {
             var mappingScalarProperties = new List<MappingFunctionImportScalarProperty>();
@@ -170,9 +170,9 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.FunctionImpo
             return mappingScalarProperties;
         }
 
-        /// <summary>
-        ///     Changes the s-side Function in the FunctionImportMapping
-        /// </summary>
+        // <summary>
+        //     Changes the s-side Function in the FunctionImportMapping
+        // </summary>
         internal void ChangeModelItem(EditingContext context, Function newFunction)
         {
             var fi = FunctionImportMapping.FunctionImportName.Target;
