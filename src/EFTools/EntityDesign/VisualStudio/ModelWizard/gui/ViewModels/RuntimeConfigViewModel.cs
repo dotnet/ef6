@@ -3,6 +3,7 @@
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
 {
     using System;
+    using System.CodeDom;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -18,10 +19,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
         public RuntimeConfigViewModel(
             Version targetNetFrameworkVersion,
             Version installedEntityFrameworkVersion,
-            bool isModernProviderAvailable)
+            bool isModernProviderAvailable, 
+            bool isCodeFirst)
         {
             if (targetNetFrameworkVersion == NetFrameworkVersioningHelper.NetFrameworkVersion3_5)
             {
+                Debug.Assert(!isCodeFirst, "CodeFirst not supported on .NET Framework 3.5");
+
                 _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Latest) { Disabled = true });
                 _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Version1) { IsDefault = true });
 
@@ -33,6 +37,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
                 {
                     if (installedEntityFrameworkVersion < RuntimeVersion.Version6)
                     {
+                        Debug.Assert(!isCodeFirst, "CodeFirst only valid for no EF or EF6");
+
                         _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Latest) { Disabled = true });
                         if (installedEntityFrameworkVersion == RuntimeVersion.Version4)
                         {
@@ -77,19 +83,39 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
                     if (isModernProviderAvailable)
                     {
                         _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Latest) { IsDefault = true });
-                        _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Version5(targetNetFrameworkVersion)));
 
-                        _message = Resources.RuntimeConfig_TargetingHint;
-                        _helpUrl = Resources.RuntimeConfig_LearnTargetingUrl;
+                        if (!isCodeFirst)
+                        {
+                            _entityFrameworkVersions.Add(
+                                new EntityFrameworkVersionOption(RuntimeVersion.Version5(targetNetFrameworkVersion)));
+                            _message = Resources.RuntimeConfig_TargetingHint;
+                            _helpUrl = Resources.RuntimeConfig_LearnTargetingUrl;
+                        }
+                        else
+                        {
+                            _state = RuntimeConfigState.Skip;
+                        }
                     }
                     else
                     {
-                        _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Latest) { Disabled = true });
-                        _entityFrameworkVersions.Add(
-                            new EntityFrameworkVersionOption(RuntimeVersion.Version5(targetNetFrameworkVersion))
+                        if (isCodeFirst)
+                        {
+                            _state = RuntimeConfigState.Error;
+                            _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Latest)
+                            {
+                                Disabled = true, 
+                                IsDefault = true
+                            });
+                        }
+                        else
+                        {
+                            _entityFrameworkVersions.Add(new EntityFrameworkVersionOption(RuntimeVersion.Latest) { Disabled = true });
+                            _entityFrameworkVersions.Add(
+                                new EntityFrameworkVersionOption(RuntimeVersion.Version5(targetNetFrameworkVersion))
                                 {
                                     IsDefault = true
-                                });
+                                });                            
+                        }
 
                         _message = Resources.RuntimeConfig_NoProvider;
                         _helpUrl = Resources.RuntimeConfig_LearnProvidersUrl;

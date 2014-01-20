@@ -138,7 +138,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var viewModel = new RuntimeConfigViewModel(
                 targetFrameworkVersion,
                 installedEntityFrameworkVersion,
-                isModernProviderAvailable);
+                isModernProviderAvailable, 
+                Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase);
 
             versionsPanel.Controls.Clear();
             versionsPanel.Controls.AddRange(viewModel.EntityFrameworkVersions.Select(CreateRadioButton).ToArray());
