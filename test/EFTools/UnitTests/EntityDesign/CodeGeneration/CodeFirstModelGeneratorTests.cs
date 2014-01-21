@@ -14,6 +14,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     using Moq;
     using UnitTests.TestHelpers;
     using Xunit;
+    using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
     public class CodeFirstModelGeneratorTests
     {
@@ -96,7 +97,60 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             }
         }
 
-        private static object GetTextTemplatingService()
+        [Fact]
+        public void Generate_throws_when_error_in_context_template()
+        {
+            var project = MockDTE.CreateProject();
+            var exception = new Exception();
+            var textTemplatingService = GetTextTemplatingService();
+            Mock.Get(textTemplatingService)
+                .Setup(s => s.ProcessTemplate(It.IsAny<string>(), It.IsAny<string>(), null, null))
+                .Throws(exception);
+            var serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.Setup(p => p.GetService(typeof(STextTemplating))).Returns(textTemplatingService);
+
+            using (AddCustomizedTemplates(project))
+            {
+                var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
+
+                var ex = Assert.Throws<CodeFirstModelGenerationException>(
+                    () => generator.Generate(Model, "WebApplication1.Models").ToArray());
+
+                Assert.Equal(
+                    string.Format(Resources.ErrorGeneratingCodeFirstModel, "CodeFirstContainer.cs"),
+                    ex.Message);
+                Assert.Same(exception, ex.InnerException);
+            }
+        }
+
+        [Fact]
+        public void Generate_throws_when_error_in_entity_type_template()
+        {
+            var project = MockDTE.CreateProject();
+            var i = 0;
+            var exception = new Exception();
+            var textTemplatingService = GetTextTemplatingService();
+            Mock.Get(textTemplatingService)
+                .Setup(s => s.ProcessTemplate(It.IsAny<string>(), It.IsAny<string>(), null, null))
+                .Callback(() => { if (i++ > 0) throw exception; });
+            var serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.Setup(p => p.GetService(typeof(STextTemplating))).Returns(textTemplatingService);
+
+            using (AddCustomizedTemplates(project))
+            {
+                var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
+
+                var ex = Assert.Throws<CodeFirstModelGenerationException>(
+                    () => generator.Generate(Model, "WebApplication1.Models").ToArray());
+
+                Assert.Equal(
+                    string.Format(Resources.ErrorGeneratingCodeFirstModel, "Entity.cs"),
+                    ex.Message);
+                Assert.Same(exception, ex.InnerException);
+            }
+        }
+
+        private static ITextTemplating GetTextTemplatingService()
         {
             var textTemplating = new Mock<ITextTemplating>();
             textTemplating.Setup(t => t.ProcessTemplate(It.IsAny<string>(), It.IsAny<string>(), null, null))
@@ -109,7 +163,6 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             sessionHost.SetupGet(h => h.Session).Returns(session);
 
             return textTemplating.Object;
-
         }
 
         private static IDisposable AddCustomizedTemplates(Project project)

@@ -9,6 +9,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.VisualStudio;
+    using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
     internal class CodeFirstModelGenerator
     {
@@ -42,16 +43,40 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 ? FileExtensions.VbExt
                 : FileExtensions.CsExt;
 
-            yield return new KeyValuePair<string, string>(
-                container.Name + extension,
-                GetContextGenerator().Generate(container, model, codeNamespace));
+            var contextFileName = container.Name + extension;
+
+            string contextFileContents;
+            try
+            {
+                contextFileContents = GetContextGenerator().Generate(container, model, codeNamespace);
+            }
+            catch (Exception ex)
+            {
+                throw new CodeFirstModelGenerationException(
+                    string.Format(Resources.ErrorGeneratingCodeFirstModel, contextFileName),
+                    ex);
+            }
+
+            yield return new KeyValuePair<string, string>(contextFileName, contextFileContents);
 
             var entityTypeGenerator = GetEntityTypeGenerator();
             foreach (var entitySet in model.ConceptualModel.Container.EntitySets)
             {
-                yield return new KeyValuePair<string, string>(
-                    entitySet.ElementType.Name + extension,
-                    entityTypeGenerator.Generate(entitySet, model, codeNamespace));
+                var entityTypeFileName = entitySet.ElementType.Name + extension;
+
+                string entityTypeFileContents;
+                try
+                {
+                    entityTypeFileContents = entityTypeGenerator.Generate(entitySet, model, codeNamespace);
+                }
+                catch (Exception ex)
+                {
+                    throw new CodeFirstModelGenerationException(
+                        string.Format(Resources.ErrorGeneratingCodeFirstModel, entityTypeFileName),
+                        ex);
+                }
+
+                yield return new KeyValuePair<string, string>(entityTypeFileName, entityTypeFileContents);
             }
         }
 

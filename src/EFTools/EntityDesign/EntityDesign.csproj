@@ -131,6 +131,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeGeneration\CodeFirstModelGenerationException.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeHelper.cs" />
     <Compile Include="CodeGeneration\Discoverers\NavigationProperty\CascadeDeleteDiscoverer.cs" />
