@@ -10,9 +10,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
     using System.Xml;
     using System.Xml.Linq;
 
-    /// <summary>
-    ///     Translate System.Version to XNamespaces used by the Entity Framework.
-    /// </summary>
+    // <summary>
+    //     Translate System.Version to XNamespaces used by the Entity Framework.
+    // </summary>
     internal static class SchemaManager
     {
         private static readonly IDictionary<Version, XNamespace> CsdlNamespaces;
@@ -69,11 +69,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
             }
         }
 
-        /// <summary>
-        ///     Get CSDL namespace name for a schema version
-        /// </summary>
-        /// <param name="schemaVersion"></param>
-        /// <returns></returns>
+        // <summary>
+        //     Get CSDL namespace name for a schema version
+        // </summary>
         internal static string GetCSDLNamespaceName(Version schemaVersion)
         {
             Debug.Assert(schemaVersion != null, "schemaVersion != null");
@@ -81,20 +79,17 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
             return GetNamespaceName(schemaVersion, CsdlNamespaces);
         }
 
-        /// <summary>
-        ///     Return all CSDL Namespace names
-        /// </summary>
-        /// <returns></returns>
+        // <summary>
+        //     Return all CSDL Namespace names
+        // </summary>
         internal static string[] GetCSDLNamespaceNames()
         {
             return CsdlNamespaceNames;
         }
 
-        /// <summary>
-        ///     Return MSDL namespace name for a schema version
-        /// </summary>
-        /// <param name="schemaVersion"></param>
-        /// <returns></returns>
+        // <summary>
+        //     Return MSL namespace name for a schema version
+        // </summary>
         internal static string GetMSLNamespaceName(Version schemaVersion)
         {
             Debug.Assert(schemaVersion != null, "schemaVersion != null");
@@ -102,20 +97,17 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
             return GetNamespaceName(schemaVersion, MslNamespaces);
         }
 
-        /// <summary>
-        ///     Return all MSDL Namespace names
-        /// </summary>
-        /// <returns></returns>
+        // <summary>
+        //     Return all MSL Namespace names
+        // </summary>
         internal static string[] GetMSLNamespaceNames()
         {
             return MslNamespaceNames;
         }
 
-        /// <summary>
-        ///     Return SSDL namespace name for a schema version
-        /// </summary>
-        /// <param name="schemaVersion"></param>
-        /// <returns></returns>
+        // <summary>
+        //     Return SSDL namespace name for a schema version
+        // </summary>
         internal static string GetSSDLNamespaceName(Version schemaVersion)
         {
             Debug.Assert(schemaVersion != null, "schemaVersion != null");
@@ -123,16 +115,17 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
             return GetNamespaceName(schemaVersion, SsdlNamespaces);
         }
 
+        // <summary>
+        //     Return all SSDL Namespace names
+        // </summary>
         internal static string[] GetSSDLNamespaceNames()
         {
             return SsdlNamespaceNames;
         }
 
-        /// <summary>
-        ///     Return EDMX namespace name for a schema version
-        /// </summary>
-        /// <param name="schemaVersion"></param>
-        /// <returns></returns>
+        // <summary>
+        //     Return EDMX namespace name for a schema version
+        // </summary>
         internal static string GetEDMXNamespaceName(Version schemaVersion)
         {
             Debug.Assert(schemaVersion != null, "schemaVersion != null");
@@ -140,51 +133,49 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
             return GetNamespaceName(schemaVersion, EdmxNamespaces);
         }
 
-        /// <summary>
-        ///     Return all EDMX Namespace names
-        /// </summary>
-        /// <returns></returns>
+        // <summary>
+        //     Return all EDMX Namespace names
+        // </summary>
         internal static string[] GetEDMXNamespaceNames()
         {
             return EdmxNamespaceNames;
         }
 
-        /// <summary>
-        ///     Return Entity Store namespace name for a schema version
-        /// </summary>
+        // <summary>
+        //     Return Entity Store namespace name for a schema version
+        // </summary>
         internal static string GetEntityStoreSchemaGeneratorNamespaceName()
         {
             return EntityStoreSchemaGeneratorNamespace;
         }
 
-        /// <summary>
-        ///     Return Code generation namespace name for a schema version
-        /// </summary>
+        // <summary>
+        //     Return Code generation namespace name for a schema version
+        // </summary>
         internal static string GetCodeGenerationNamespaceName()
         {
             return CodeGenerationNamespace;
         }
 
-        /// <summary>
-        ///     Return Annotation namespace name for a schema version
-        /// </summary>
+        // <summary>
+        //     Return Annotation namespace name for a schema version
+        // </summary>
         internal static string GetAnnotationNamespaceName()
         {
             return AnnotationNamespace;
         }
 
-        /// <summary>
-        ///     Return Provider namespace name for a schema version
-        /// </summary>
+        // <summary>
+        //     Return Provider namespace name for a schema version
+        // </summary>
         internal static string GetProviderManifestNamespaceName()
         {
             return ProviderManifestNamespace;
         }
 
-        /// <summary>
-        ///     Get All namespaces used for the specific version EDMX files
-        /// </summary>
-        /// <returns></returns>
+        // <summary>
+        //     Get All namespaces used for the specific version EDMX files
+        // </summary>
         internal static string[] GetAllNamespacesForVersion(Version schemaVersion)
         {
             return new[]
@@ -199,11 +190,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
                 };
         }
 
-        /// <summary>
-        ///     Given a namespace, determine the schema version
-        /// </summary>
-        /// <param name="xNamespace"></param>
-        /// <returns></returns>
+        // <summary>
+        //     Given a namespace, determine the schema version
+        // </summary>
         internal static Version GetSchemaVersion(XNamespace xNamespace)
         {
             // TODO: Returing V1 if the namespace not found feels wrong. Investigate where it is used and return null (or throw?)
