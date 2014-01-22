@@ -51,12 +51,11 @@ Project global post-settings and targets.
            so there we must override it. Should come up with a fix in version.targets. -->
       <NuGetPackageVersion Condition="'$(BuildingToolingProject)' == 'true' Or '$(NuGetPackageVersion)' == ''">$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>
       <EF6NuGetPackageVersion>$(NuGetPackageVersion)</EF6NuGetPackageVersion>
-      <EFPackageVersion>$(EF6NuGetPackageVersion)</EFPackageVersion>
       <EF6NuGetPackageWixId>$(NuGetPackageVersion)</EF6NuGetPackageWixId>
       <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
       <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">386835</ProjectUrlFwLinkID>
       <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">386836</LicenseUrlFwLinkID>
-      <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EFPackageVersion=$(EFPackageVersion)</NuSpecProperties>
+      <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</NuSpecProperties>
       <NuSpecProperties>$(NuSpecProperties);ProjectUrlFwLinkID=$(ProjectUrlFwLinkID);LicenseUrlFwLinkID=$(LicenseUrlFwLinkID)</NuSpecProperties>
     </PropertyGroup>
     <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.wixproj'" Label="Properties used in setup">
