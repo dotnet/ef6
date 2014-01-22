@@ -543,7 +543,7 @@ namespace System.Data.Entity
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            InternalContext.Dispose();
+            _internalContext.Dispose();
         }
 
         #endregion

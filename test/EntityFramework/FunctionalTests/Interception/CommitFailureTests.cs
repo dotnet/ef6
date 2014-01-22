@@ -12,6 +12,7 @@ namespace System.Data.Entity.Interception
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Threading;
     using Moq;
     using Xunit;
 
@@ -420,6 +421,31 @@ namespace System.Data.Entity.Interception
             {
                 MutableResolver.ClearResolvers();
             }
+        }
+
+        [Fact]
+        public void TransactionHandler_is_disposed_even_if_the_context_is_not()
+        {
+            var context = new BlogContextCommit();
+            context.Database.Delete();
+            Assert.Equal(1, context.Blogs.Count());
+
+            var weakDbContext = new WeakReference(context);
+            var weakObjectContext = new WeakReference(((IObjectContextAdapter)context).ObjectContext);
+            var weakTransactionHandler = new WeakReference(((IObjectContextAdapter)context).ObjectContext.TransactionHandler);
+            context = null;
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.False(weakDbContext.IsAlive);
+            Assert.False(weakObjectContext.IsAlive);
+            DbDispatchersHelpers.AssertNoInterceptors();
+
+            // Need a second pass as the TransactionHandler is removed from the interceptors in the ObjectContext finalizer
+            GC.Collect();
+
+            Assert.False(weakTransactionHandler.IsAlive);
         }
 
         public class TransactionContextNoInit : TransactionContext

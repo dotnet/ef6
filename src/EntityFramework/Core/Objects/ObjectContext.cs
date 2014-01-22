@@ -2086,13 +2086,18 @@ namespace System.Data.Entity.Core.Objects
             cacheEntry.Detach();
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ObjectContext"/> class.
+        /// </summary>
+        ~ObjectContext()
+        {
+            Dispose(false);
+        }
+
         /// <summary>Releases the resources used by the object context.</summary>
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
         public void Dispose()
         {
-            // Technically, calling GC.SuppressFinalize is not required because the class does not
-            // have a finalizer, but it does no harm, protects against the case where a finalizer is added
-            // in the future, and prevents an FxCop warning.
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -2107,13 +2112,14 @@ namespace System.Data.Entity.Core.Objects
         {
             if (!_disposed)
             {
+                // Need to dispose _transactionHandler even if being finalized
+                if (_transactionHandler != null)
+                {
+                    _transactionHandler.Dispose();
+                }
+
                 if (disposing)
                 {
-                    if (_transactionHandler != null)
-                    {
-                        _transactionHandler.Dispose();
-                    }
-
                     // Release managed resources here.
                     if (_connection != null)
                     {

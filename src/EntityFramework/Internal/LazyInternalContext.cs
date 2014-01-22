@@ -212,21 +212,24 @@ namespace System.Data.Entity.Internal
         // The connection to the database (<see cref="DbConnection" /> object) is also disposed if it was created by
         // the context, otherwise it is not disposed.
         // </summary>
-        public override void DisposeContext()
+        public override void DisposeContext(bool disposing)
         {
-            base.DisposeContext();
-
             if (!IsDisposed)
             {
-                // Note: issue 1805 - it is important that the ObjectContext be disposed before the InternalConnection.
-                // If the ObjectContext is responsible for calling Dispose() on the EntityConnection (which is
-                // the case for non-EF connection strings) then the EntityConnection needs the chance to unsubscribe
-                // itself from the underlying connection's StateChange event _before_ that underlying connection is disposed.
-                if (_objectContext != null)
+                base.DisposeContext(disposing);
+
+                if (disposing)
                 {
-                    _objectContext.Dispose();
+                    // Note: issue 1805 - it is important that the ObjectContext be disposed before the InternalConnection.
+                    // If the ObjectContext is responsible for calling Dispose() on the EntityConnection (which is
+                    // the case for non-EF connection strings) then the EntityConnection needs the chance to unsubscribe
+                    // itself from the underlying connection's StateChange event _before_ that underlying connection is disposed.
+                    if (_objectContext != null)
+                    {
+                        _objectContext.Dispose();
+                    }
+                    _internalConnection.Dispose();
                 }
-                _internalConnection.Dispose();
             }
         }
 

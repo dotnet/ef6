@@ -152,13 +152,17 @@ namespace System.Data.Entity.Internal
         // <summary>
         // Disposes the context. The underlying <see cref="ObjectContext" /> is also disposed if it is owned.
         // </summary>
-        public override void DisposeContext()
+        public override void DisposeContext(bool disposing)
         {
-            base.DisposeContext();
-
-            if (_objectContextOwned && !IsDisposed)
+            if (!IsDisposed)
             {
-                _objectContext.Dispose();
+                base.DisposeContext(disposing);
+
+                if (disposing
+                    && _objectContextOwned)
+                {
+                    _objectContext.Dispose();
+                }
             }
         }
 

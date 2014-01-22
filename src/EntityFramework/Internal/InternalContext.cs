@@ -32,7 +32,6 @@ namespace System.Data.Entity.Internal
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml.Linq;
     using SaveOptions = System.Data.Entity.Core.Objects.SaveOptions;
 
     // <summary>
@@ -46,7 +45,7 @@ namespace System.Data.Entity.Internal
     // </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal abstract class InternalContext
+    internal abstract class InternalContext : IDisposable
     {
         #region Fields and constructors
 
@@ -600,30 +599,42 @@ namespace System.Data.Entity.Internal
 
         #region Dispose
 
+        ~InternalContext()
+        {
+            DisposeContext(false);
+        }
+
         // <summary>
         // Disposes the context. Override the DisposeContext method to perform
         // additional work when disposing.
         // </summary>
         public void Dispose()
         {
-            DisposeContext();
-            IsDisposed = true;
+            DisposeContext(true);
+            GC.SuppressFinalize(this);
         }
 
         // <summary>
         // Performs additional work to dispose a context.
         // </summary>
-        public virtual void DisposeContext()
+        public virtual void DisposeContext(bool disposing)
         {
             if (!IsDisposed)
             {
-                if (OnDisposing != null)
+                if (disposing
+                    && OnDisposing != null)
                 {
                     OnDisposing(this, new EventArgs());
                     OnDisposing = null;
                 }
 
+                if (_tempObjectContext != null)
+                {
+                    _tempObjectContext.Dispose();
+                }
+
                 Log = null;
+                IsDisposed = true;
             }
         }
 

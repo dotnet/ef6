@@ -107,6 +107,30 @@ namespace System.Data.Entity.Interception
             _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[3], new AnyValueParameter(), exception.Message, "");
         }
 
+        [Fact]
+        public void DatabaseLogFormatter_is_disposed_even_if_the_context_is_not()
+        {
+            var log = new StringWriter();
+            var context = new BlogContextNoInit();
+
+            context.Database.Log = log.Write;
+            var weakDbContext = new WeakReference(context);
+            var weakStringWriter = new WeakReference(log);
+            log = null;
+            context = null;
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.False(weakDbContext.IsAlive);
+            DbDispatchersHelpers.AssertNoInterceptors();
+
+            // Need a second pass as the DatabaseLogFormatter is removed from the interceptors in the InternalContext finalizer
+            GC.Collect();
+
+            Assert.False(weakStringWriter.IsAlive);
+        }
+
 #if !NET40
         [Fact]
         public void Async_commands_that_result_in_exceptions_are_still_logged()
