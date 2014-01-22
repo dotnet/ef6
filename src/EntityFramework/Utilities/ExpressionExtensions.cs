@@ -186,11 +186,10 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(expression);
 
-            while ((expression != null)
-                   && (expression.NodeType == ExpressionType.Convert
-                       || expression.NodeType == ExpressionType.ConvertChecked))
+            while (expression.NodeType == ExpressionType.Convert
+                   || expression.NodeType == ExpressionType.ConvertChecked)
             {
-                expression = RemoveConvert(((UnaryExpression)expression).Operand);
+                expression = ((UnaryExpression)expression).Operand;
             }
 
             return expression;
@@ -202,24 +201,29 @@ namespace System.Data.Entity.Utilities
             expression = expression.RemoveConvert();
 
             // check if the unwrapped expression is a null constant
-            if (ExpressionType.Constant
-                != expression.NodeType)
+            if (expression.NodeType != ExpressionType.Constant)
             {
                 return false;
             }
-            var constant = (ConstantExpression)expression;
-            return null == constant.Value;
+
+            return ((ConstantExpression)expression).Value == null;
         }
 
         public static bool IsStringAddExpression(this Expression expression)
         {
             var linq = expression as BinaryExpression;
-            if (null == linq)
+            if (linq == null)
+            {
                 return false;
-            if (null == linq.Method && linq.NodeType == ExpressionType.Add)
-                return false;
+            }
 
-            return linq.Method.DeclaringType == typeof(string) && linq.Method.Name == "Concat";
+            if (linq.Method == null || linq.NodeType != ExpressionType.Add)
+            {
+                return false;
+            }
+
+            return linq.Method.DeclaringType == typeof(string) &&
+                   string.Equals(linq.Method.Name, "Concat", StringComparison.Ordinal);
         }
     }
 }

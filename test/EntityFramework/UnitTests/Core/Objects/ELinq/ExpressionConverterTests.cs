@@ -310,6 +310,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public void ToStringTranslator_finds_all_expected_types()
         {
             var types = new ExpressionConverter.MethodCallTranslator.ToStringTranslator().Methods.Select(m => m.DeclaringType).ToArray();
+
             Assert.Contains(typeof(bool), types);
             Assert.Contains(typeof(byte), types);
             Assert.Contains(typeof(sbyte), types);
@@ -321,7 +322,33 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Assert.Contains(typeof(decimal), types);
             Assert.Contains(typeof(string), types);
             Assert.Contains(typeof(Guid), types);
+            Assert.Contains(typeof(TimeSpan), types);
             Assert.Contains(typeof(DateTime), types);
+            Assert.Contains(typeof(DateTimeOffset), types);
+            Assert.Contains(typeof(object), types);
+
+            Assert.Equal(15, types.Length);
+        }
+
+        [Fact]
+        public void RemoveConvert_removes_nested_casts()
+        {
+            var sourceExpression = Expression.Constant(42);
+
+            var wrappedExpression =
+                Expression.Convert(
+                    Expression.ConvertChecked(
+                        Expression.Convert(sourceExpression, typeof(int)), typeof(int)), typeof(int));
+
+            Assert.Same(sourceExpression, wrappedExpression.RemoveConvert());
+        }
+
+        [Fact]
+        public void RemoveConvert_returns_epxression_if_no_casts()
+        {
+            var expression = Expression.Constant(42);
+
+            Assert.Same(expression, expression.RemoveConvert());
         }
     }
 }

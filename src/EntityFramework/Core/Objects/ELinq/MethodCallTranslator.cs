@@ -1469,21 +1469,36 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 //      Concat (arg1, arg2, arg3, arg4)     -> Concat(Concat(Concat(arg1, arg2), arg3), arg4)
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
+                    Expression[] args;
+
                     if (call.Arguments.Count == 1 && call.Arguments.First().Type == typeof(object[]))
                     {
-                        var args = ((NewArrayExpression)call.Arguments[0]).Expressions.ToArray();
-                        return StringTranslatorUtil.ConcatArgs(parent, call, args );
+                        var newArrayExpression = call.Arguments[0] as NewArrayExpression;
+                        if (newArrayExpression != null)
+                        {
+                            args = ((NewArrayExpression)call.Arguments[0]).Expressions.ToArray();    
+                        }
+                        else
+                        {
+                            Debug.Assert(call.Arguments[0] is ConstantExpression);
+
+                            args = ((object[])((ConstantExpression)call.Arguments[0]).Value)
+                                .Select(v => Expression.Constant(v)).ToArray();
+                        }
                     }
                     else
                     {
-                        return StringTranslatorUtil.ConcatArgs(parent, call, call.Arguments.ToArray());
+                        args = call.Arguments.ToArray();
                     }
+
+                    return StringTranslatorUtil.ConcatArgs(parent, call, args);
                 }
             }
 
             internal sealed class ToStringTranslator : CallTranslator
             {
-                private static readonly MethodInfo[] methods = new[]{
+                private static readonly MethodInfo[] _methods = 
+                {
                         typeof(string).GetDeclaredMethod("ToString"),
                         typeof(byte).GetDeclaredMethod("ToString"),
                         typeof(sbyte).GetDeclaredMethod("ToString"),
@@ -1495,13 +1510,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         typeof(Guid).GetDeclaredMethod("ToString"),
                         typeof(DateTime).GetDeclaredMethod("ToString"),
                         typeof(DateTimeOffset).GetDeclaredMethod("ToString"),
+                        typeof(TimeSpan).GetDeclaredMethod("ToString"),
                         typeof(decimal).GetDeclaredMethod("ToString"),
                         typeof(bool).GetDeclaredMethod("ToString"),
                         typeof(object).GetDeclaredMethod("ToString"),
                 };
 
                 internal ToStringTranslator()
-                    : base(methods)
+                    : base(_methods)
                 {
                 }
 

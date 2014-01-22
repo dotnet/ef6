@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -43,32 +42,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             public override string ToString()
             {
                 return GetType().Name;
-            }
-
-            internal static Expression UnwrapConvert(Expression input)
-            {
-                // unwrap all converts
-                while (ExpressionType.Convert
-                       == input.NodeType)
-                {
-                    input = ((UnaryExpression)input).Operand;
-                }
-                return input;
-            }
-
-            internal static bool ExpressionIsNullConstant(Expression expression)
-            {
-                // convert statements introduced by compiler should not affect nullness
-                expression = UnwrapConvert(expression);
-
-                // check if the unwrapped expression is a null constant
-                if (ExpressionType.Constant
-                    != expression.NodeType)
-                {
-                    return false;
-                }
-                var constant = (ConstantExpression)expression;
-                return null == constant.Value;
             }
         }
 
@@ -1013,14 +986,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 DbExpression thenExpression;
                 DbExpression elseExpression;
 
-                if (!ExpressionIsNullConstant(linq.IfTrue))
+                if (!linq.IfTrue.IsNullConstant())
                 {
                     thenExpression = parent.TranslateExpression(linq.IfTrue);
-                    elseExpression = !ExpressionIsNullConstant(linq.IfFalse)
+                    elseExpression = !linq.IfFalse.IsNullConstant()
                         ? parent.TranslateExpression(linq.IfFalse)
                         : thenExpression.ResultType.Null();
                 }
-                else if (!ExpressionIsNullConstant(linq.IfFalse))
+                else if (!linq.IfFalse.IsNullConstant())
                 {
                     elseExpression = parent.TranslateExpression(linq.IfFalse);
                     thenExpression = elseExpression.ResultType.Null();
@@ -1308,7 +1281,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             protected override DbExpression TypedTranslate(ExpressionConverter parent, BinaryExpression linq)
             {
                 if (linq.IsStringAddExpression())
+                {
                     return StringTranslatorUtil.ConcatArgs(parent, linq);
+                }
 
                 return TranslateBinary(parent, parent.TranslateExpression(linq.Left), parent.TranslateExpression(linq.Right),linq);
             }
@@ -1546,11 +1521,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 var toClrType = unary.Type;
                 var fromClrType = unary.Operand.Type;
-
-                //ignore cast to object
-                if (toClrType == typeof(System.Object))
-                    return operand;
-
                 var cast = parent.CreateCastExpression(operand, toClrType, fromClrType);
                 return cast;
             }
