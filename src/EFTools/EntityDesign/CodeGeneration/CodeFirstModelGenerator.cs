@@ -21,6 +21,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         private readonly Project _project;
         private readonly IServiceProvider _serviceProvider;
         private readonly LangEnum _language;
+        private readonly IDictionary<string, string> _templatePathCache = new Dictionary<string, string>();
 
         public CodeFirstModelGenerator(Project project, IServiceProvider serviceProvider)
         {
@@ -59,9 +60,9 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             yield return new KeyValuePair<string, string>(contextFileName, contextFileContents);
 
-            var entityTypeGenerator = GetEntityTypeGenerator();
             foreach (var entitySet in model.ConceptualModel.Container.EntitySets)
             {
+                var entityTypeGenerator = GetEntityTypeGenerator();
                 var entityTypeFileName = entitySet.ElementType.Name + extension;
 
                 string entityTypeFileContents;
@@ -108,21 +109,22 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         {
             Debug.Assert(!string.IsNullOrEmpty(path), "path is null or empty.");
 
-            var templateItem = VsUtils.GetProjectItemByPath(_project, path);
-
-            if (templateItem == null)
+            if (!_templatePathCache.ContainsKey(path))
             {
-                return null;
+                string templatePath = null;
+
+                var templateItem = VsUtils.GetProjectItemByPath(_project, path);
+                if (templateItem != null)
+                {
+                    templatePath = VsUtils.GetPropertyByName(templateItem.Properties, "FullPath") as string;
+                }
+
+                _templatePathCache.Add(path, templatePath);
             }
 
-            var templatePath = VsUtils.GetPropertyByName(templateItem.Properties, "FullPath") as string;
-
-            if (templatePath == null)
-            {
-                return null;
-            }
-
-            return new CustomGenerator(_serviceProvider, templatePath);
+            return _templatePathCache[path] != null
+                ? new CustomGenerator(_serviceProvider, _templatePathCache[path])
+                : null;
         }
     }
 }
