@@ -37,10 +37,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         throw new ArgumentNullException("Model");
     }
 
-            this.Write("Imports System.Data.Entity\r\nImports System.ComponentModel.DataAnnotations.Schema\r" +
-                    "\n\r\nPublic Class ");
+            this.Write("Imports System\r\nImports System.Data.Entity\r\nImports System.ComponentModel.DataAnn" +
+                    "otations.Schema\r\nImports System.Linq\r\n\r\nPartial Public Class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
-            this.Write("\r\n    Inherits DbContext\r\n\r\n    Public Sub New()\r\n        MyBase.New(\"Name=");
+            this.Write("\r\n    Inherits DbContext\r\n\r\n    Public Sub New()\r\n        MyBase.New(\"name=");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
             this.Write("\")        \r\n    End Sub\r\n\r\n");
 

@@ -19,13 +19,15 @@
 #>
 namespace <#= Namespace #>
 {
+    using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
 
-    public class <#= code.Type(Container) #> : DbContext
+    public partial class <#= code.Type(Container) #> : DbContext
     {
         public <#= code.Type(Container) #>()
-            : base("Name=<#= code.Type(Container) #>")
+            : base("name=<#= code.Type(Container) #>")
         {
         }
 

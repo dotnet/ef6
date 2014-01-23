@@ -39,12 +39,13 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             this.Write("namespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n{\r\n    using System.Data.Entity;\r\n    using System.ComponentModel.DataAnnotatio" +
-                    "ns.Schema;\r\n\r\n    public class ");
+            this.Write("\r\n{\r\n    using System;\r\n    using System.Data.Entity;\r\n    using System.Component" +
+                    "Model.DataAnnotations.Schema;\r\n    using System.Linq;\r\n\r\n    public partial clas" +
+                    "s ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
             this.Write(" : DbContext\r\n    {\r\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
-            this.Write("()\r\n            : base(\"Name=");
+            this.Write("()\r\n            : base(\"name=");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
             this.Write("\")\r\n        {\r\n        }\r\n\r\n");
 

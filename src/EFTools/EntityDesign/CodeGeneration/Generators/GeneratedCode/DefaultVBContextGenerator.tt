@@ -17,14 +17,16 @@
         throw new ArgumentNullException("Model");
     }
 #>
+Imports System
 Imports System.Data.Entity
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Linq
 
-Public Class <#= code.Type(Container) #>
+Partial Public Class <#= code.Type(Container) #>
     Inherits DbContext
 
     Public Sub New()
-        MyBase.New("Name=<#= code.Type(Container) #>")        
+        MyBase.New("name=<#= code.Type(Container) #>")        
     End Sub
 
 <#

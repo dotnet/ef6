@@ -15,13 +15,15 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             Assert.Equal(
                 @"namespace WebApplication1.Models
 {
+    using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
 
-    public class CodeFirstContainer : DbContext
+    public partial class CodeFirstContainer : DbContext
     {
         public CodeFirstContainer()
-            : base(""Name=CodeFirstContainer"")
+            : base(""name=CodeFirstContainer"")
         {
         }
 

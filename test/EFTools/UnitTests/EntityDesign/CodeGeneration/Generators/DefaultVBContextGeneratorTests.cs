@@ -13,14 +13,16 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             var result = generator.Generate(Model.ConceptualModel.Container, Model, "WebApplication1.Models");
 
             Assert.Equal(
-                @"Imports System.Data.Entity
+                @"Imports System
+Imports System.Data.Entity
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Linq
 
-Public Class CodeFirstContainer
+Partial Public Class CodeFirstContainer
     Inherits DbContext
 
     Public Sub New()
-        MyBase.New(""Name=CodeFirstContainer"")        
+        MyBase.New(""name=CodeFirstContainer"")        
     End Sub
 
     Public Overridable Property Entities As DbSet(Of Entity)
