@@ -96,7 +96,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     ServiceProvider);
 
                 Wizard.ModelBuilderSettings.ProviderManifestToken =
-                    DatabaseGenerationEngine.GetProviderManifestTokenConnected(
+                    VsUtils.GetProviderManifestTokenConnected(
                         DependencyResolver.Instance,
                         Wizard.ModelBuilderSettings.RuntimeProviderInvariantName,
                         Wizard.ModelBuilderSettings.DesignTimeConnectionString);

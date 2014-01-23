@@ -8,6 +8,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.Diagnostics;
@@ -2239,6 +2240,32 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
             return providerServicesTypeName;
         }
+
+        internal static string GetProviderManifestTokenConnected(
+            IDbDependencyResolver resolver, string providerInvariantName, string providerConnectionString)
+        {
+            DbConnection connection = null;
+            try
+            {
+                var factory = DbProviderFactories.GetFactory(providerInvariantName);
+                Debug.Assert(factory != null, "failed because DbProviderFactory is null");
+
+                connection = factory.CreateConnection();
+
+                Debug.Assert(connection != null, "failed because DbConnection is null");
+                connection.ConnectionString = providerConnectionString;
+
+                var providerServices = resolver.GetService<DbProviderServices>(providerInvariantName);
+                Debug.Assert(providerServices != null, "failed because DbProviderServices is null");
+
+                return providerServices.GetProviderManifestToken(connection);
+            }
+            finally
+            {
+                VsUtils.SafeCloseDbConnection(connection, providerInvariantName, providerConnectionString);
+            }
+        }
+
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static ProjectItem GetProjectItemByPath(Project project, string relativeItemPath)

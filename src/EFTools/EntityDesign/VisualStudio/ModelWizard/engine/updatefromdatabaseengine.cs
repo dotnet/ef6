@@ -26,7 +26,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal static class UpdateFromDatabaseEngine
+    internal class UpdateFromDatabaseEngine : DatabaseEngineBase
     {
         // <summary>
         //     Updates the EDMX file based on the Database changes
@@ -43,11 +43,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
             // set up ModelBuilderSettings for startMode=PerformDatabaseConfigAndSelectTables
             ModelBuilderWizardForm.WizardMode startMode;
-            ModelBuilderSettings settings;
-            ModelBuilderEngine.SetupSettingsAndModeForDbPages(
-                serviceProvider, project, artifact, true,
-                ModelBuilderWizardForm.WizardMode.PerformDatabaseConfigAndSelectTables,
-                ModelBuilderWizardForm.WizardMode.PerformSelectTablesOnly, out startMode, out settings);
+            var settings =
+                SetupSettingsAndModeForDbPages(
+                    serviceProvider, project, artifact, true,
+                    ModelBuilderWizardForm.WizardMode.PerformDatabaseConfigAndSelectTables,
+                    ModelBuilderWizardForm.WizardMode.PerformSelectTablesOnly, out startMode);
             settings.WizardKind = WizardKind.UpdateModel;
 
             // use existing storage namespace as new storage namespace
@@ -130,7 +130,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        internal static bool ProcessAccumulatedInfo(
+        private static bool ProcessAccumulatedInfo(
             EditingContext editingContext, EntityDesignArtifact existingArtifact, ModelBuilderSettings settings)
         {
             var schemaVersionChanged = existingArtifact.SchemaVersion != settings.TargetSchemaVersion;
@@ -253,7 +253,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     () =>
                         {
                             var functionImportCommands = new List<Command>();
-                            ModelBuilderEngine.ProcessStoredProcedureReturnTypeInformation(
+                            ProgressDialogHelper.ProcessStoredProcedureReturnTypeInformation(
                                 existingArtifact, settings.NewFunctionSchemaProcedures, functionImportCommands, true);
 
                             if (functionImportCommands.Count > 0)
@@ -333,7 +333,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         //     TODO: figure out what to do with the actual errors (write to a log?)
         // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        internal static void ValidateArtifact(EntityDesignModelManager modelManager, EFArtifact artifact, WizardKind kind)
+        private static void ValidateArtifact(EntityDesignModelManager modelManager, EFArtifact artifact, WizardKind kind)
         {
             var errorsFound = false;
             Exception caughtException = null;

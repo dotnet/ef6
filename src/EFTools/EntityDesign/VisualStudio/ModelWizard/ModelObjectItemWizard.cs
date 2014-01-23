@@ -508,7 +508,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 && modelBuilderSettings.NewFunctionSchemaProcedures.Count > 0)
             {
                 // user selected to create new FunctionImports, but don't create the composable ones as these have already been created by the runtime
-                ModelBuilderEngine.ProcessStoredProcedureReturnTypeInformation(
+                ProgressDialogHelper.ProcessStoredProcedureReturnTypeInformation(
                     designArtifact,
                     modelBuilderSettings.NewFunctionSchemaProcedures,
                     commands,

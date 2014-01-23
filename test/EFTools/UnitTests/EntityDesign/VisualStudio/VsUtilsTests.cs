@@ -5,7 +5,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Design;
-    using System.Data.Entity.Core.Common;
+    using System.Data.Common;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using System.IO;
     using System.Linq;
@@ -15,11 +16,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using Microsoft.VisualStudio.Shell.Design;
     using Microsoft.VisualStudio.Shell.Interop;
     using Moq;
+    using Moq.Protected;
     using UnitTests.TestHelpers;
     using VSLangProj;
     using VSLangProj80;
     using VsWebSite;
     using Xunit;
+    using DbProviderServices = System.Data.Entity.Core.Common.DbProviderServices;
 
     public class VsUtilsTests
     {
@@ -698,6 +701,29 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             var result = VsUtils.GetProjectItemByPath(project.Object, "Class1.cs");
 
             Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetProviderManifestTokenConnected_returns_provider_manifest_token()
+        {
+            var providerServicesMock = new Mock<DbProviderServices>();
+            providerServicesMock
+                .Protected()
+                .Setup<string>("GetDbProviderManifestToken", ItExpr.IsAny<DbConnection>())
+                .Returns("FakeProviderManifestToken");
+
+            var mockResolver = new Mock<IDbDependencyResolver>();
+            mockResolver.Setup(
+                r => r.GetService(
+                    It.Is<Type>(t => t == typeof(DbProviderServices)),
+                    It.IsAny<string>())).Returns(providerServicesMock.Object);
+
+            Assert.Equal(
+                "FakeProviderManifestToken",
+                VsUtils.GetProviderManifestTokenConnected(
+                    mockResolver.Object,
+                    "System.Data.SqlClient",
+                    providerConnectionString: string.Empty));
         }
     }
 }

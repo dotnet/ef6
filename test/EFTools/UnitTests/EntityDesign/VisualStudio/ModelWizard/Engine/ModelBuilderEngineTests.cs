@@ -2,23 +2,19 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Infrastructure.DependencyResolution;
-    using System.IO;
-    using System.Linq;
-    using System.Xml.Linq;
     using Microsoft.Data.Entity.Design.Model.Designer;
-    using Microsoft.Data.Entity.Design.VersioningFacade;
-    using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Moq;
     using Moq.Protected;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
+    using System.IO;
+    using System.Linq;
+    using System.Xml.Linq;
     using Xunit;
 
     public class ModelBuilderEngineTests
@@ -275,73 +271,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                         h => h.UpdateDesignerOptionProperty(
                             OptionsDesignerInfo.AttributeUseLegacyProvider, It.IsAny<bool>()), Times.Once());
             }
-        }
-
-        [Fact]
-        public void CanCreateAndOpenConnection_returns_true_for_valid_connection()
-        {
-            var mockEntityConnection = new Mock<EntityConnection>();
-            var mockConnectionFactory = new Mock<StoreSchemaConnectionFactory>();
-
-            Version version;
-            mockConnectionFactory
-                .Setup(
-                    f => f.Create(
-                        It.IsAny<IDbDependencyResolver>(), It.IsAny<string>(), It.IsAny<string>(),
-                        It.IsAny<Version>(), out version))
-                .Returns(mockEntityConnection.Object);
-
-            Assert.True(
-                ModelBuilderEngine.CanCreateAndOpenConnection(
-                    mockConnectionFactory.Object, "fakeInvariantName", "fakeInvariantName", "fakeConnectionString"));
-        }
-
-        [Fact]
-        public void CanCreateAndOpenConnection_returns_true_for_invalid_connection()
-        {
-            var mockEntityConnection = new Mock<EntityConnection>();
-            mockEntityConnection.Setup(c => c.Open()).Throws<InvalidOperationException>();
-
-            var mockConnectionFactory = new Mock<StoreSchemaConnectionFactory>();
-
-            Version version;
-            mockConnectionFactory
-                .Setup(
-                    f => f.Create(
-                        It.IsAny<IDbDependencyResolver>(), It.IsAny<string>(), It.IsAny<string>(),
-                        It.IsAny<Version>(), out version))
-                .Returns(mockEntityConnection.Object);
-
-            Assert.False(
-                ModelBuilderEngine.CanCreateAndOpenConnection(
-                    mockConnectionFactory.Object, "fakeInvariantName", "fakeInvariantName", "fakeConnectionString"));
-        }
-
-        [Fact]
-        public void CanCreateAndOpenConnection_passes_the_latest_EF_version_as_the_max_version()
-        {
-            var mockEntityConnection = new Mock<EntityConnection>();
-            var mockConnectionFactory = new Mock<StoreSchemaConnectionFactory>();
-
-            Version version;
-            mockConnectionFactory
-                .Setup(
-                    f => f.Create(
-                        It.IsAny<IDbDependencyResolver>(), It.IsAny<string>(), It.IsAny<string>(),
-                        It.IsAny<Version>(), out version))
-                .Returns(mockEntityConnection.Object);
-
-            ModelBuilderEngine.CanCreateAndOpenConnection(
-                mockConnectionFactory.Object, "fakeInvariantName", "fakeInvariantName", "fakeConnectionString");
-
-            mockConnectionFactory.Verify(
-                f => f.Create(
-                    It.IsAny<IDbDependencyResolver>(),
-                    It.Is<string>(s => s == "fakeInvariantName"),
-                    It.Is<string>(s => s == "fakeConnectionString"),
-                    It.Is<Version>(v => v == EntityFrameworkVersion.Latest),
-                    out version),
-                Times.Once());
         }
     }
 }

@@ -16,7 +16,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Xaml;
@@ -35,7 +34,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal static class DatabaseGenerationEngine
+    internal class DatabaseGenerationEngine : DatabaseEngineBase
     {
         private static string _defaultWorkflowPath;
         private static string _defaultTemplatePath;
@@ -133,10 +132,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
 
                 // set up ModelBuilderSettings
-                ModelBuilderEngine.SetupSettingsAndModeForDbPages(
+                settings = SetupSettingsAndModeForDbPages(
                     sp, project, artifact, false,
                     ModelBuilderWizardForm.WizardMode.PerformDatabaseConfigAndDBGenSummary,
-                    ModelBuilderWizardForm.WizardMode.PerformDBGenSummaryOnly, out startMode, out settings);
+                    ModelBuilderWizardForm.WizardMode.PerformDBGenSummaryOnly, out startMode);
 
                 form = new ModelBuilderWizardForm(sp, settings, startMode);
             }
@@ -350,109 +349,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 project.ProjectItems.AddFromFile(ddlFileName);
             }
-        }
-
-        internal static string GetProviderManifestTokenDisconnected(EFArtifact artifact)
-        {
-            var storageModel = artifact.StorageModel();
-            if (storageModel != null
-                && storageModel.ProviderManifestToken != null)
-            {
-                return storageModel.ProviderManifestToken.Value;
-            }
-
-            Debug.Fail("Unable to determine the provider manifest token for the SSDL");
-
-            return String.Empty;
-        }
-
-        internal static string GetProviderManifestTokenConnected(
-            IDbDependencyResolver resolver, string providerInvariantName, string providerConnectionString)
-        {
-            DbConnection connection = null;
-            try
-            {
-                var factory = DbProviderFactories.GetFactory(providerInvariantName);
-                Debug.Assert(factory != null, "failed because DbProviderFactory is null");
-
-                connection = factory.CreateConnection();
-
-                Debug.Assert(connection != null, "failed because DbConnection is null");
-                connection.ConnectionString = providerConnectionString;
-
-                var providerServices = resolver.GetService<DbProviderServices>(providerInvariantName);
-                Debug.Assert(providerServices != null, "failed because DbProviderServices is null");
-
-                return providerServices.GetProviderManifestToken(connection);
-            }
-            finally
-            {
-                VsUtils.SafeCloseDbConnection(connection, providerInvariantName, providerConnectionString);
-            }
-        }
-
-        private static string GetSchemaFromRuntimeModelRoot(EFRuntimeModelRoot modelRoot)
-        {
-            Debug.Assert(modelRoot != null, "EFRuntimeModelROot is null ");
-            var sb = new StringBuilder();
-
-            Debug.Assert(
-                modelRoot != null && modelRoot.XElement != null,
-                "Could not find the runtime model root or its XElement in GetSchemaFromRuntimeModelRoot");
-            if (modelRoot != null
-                && modelRoot.XElement != null)
-            {
-                using (var writer = new StringWriter(sb, CultureInfo.CurrentCulture))
-                {
-                    modelRoot.XElement.Save(writer);
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        internal static string GetSsdlFromArtifact(EFArtifact artifact)
-        {
-            Debug.Assert(artifact != null, "Artifact is null ");
-            if (artifact != null)
-            {
-                return GetSchemaFromRuntimeModelRoot(artifact.StorageModel());
-            }
-
-            return String.Empty;
-        }
-
-        internal static string GetMslFromArtifact(EFArtifact artifact)
-        {
-            Debug.Assert(artifact != null, "Artifact is null ");
-            if (artifact != null)
-            {
-                return GetSchemaFromRuntimeModelRoot(artifact.MappingModel());
-            }
-
-            return String.Empty;
-        }
-
-        internal static EdmItemCollection GetEdmItemCollectionFromArtifact(EFArtifact artifact, out IList<EdmSchemaError> schemaErrors)
-        {
-            Debug.Assert(artifact != null, "Artifact is null ");
-            EdmItemCollection edmItemCollection = null;
-            schemaErrors = new List<EdmSchemaError>();
-
-            var conceptualModel = artifact.ConceptualModel();
-            Debug.Assert(
-                conceptualModel != null && conceptualModel.XElement != null,
-                "Could not find the conceptual model or its XElement in GetEdmItemCollectionFromArtifact");
-            if (conceptualModel != null
-                && conceptualModel.XElement != null)
-            {
-                using (var xmlReader = conceptualModel.XElement.CreateReader())
-                {
-                    edmItemCollection = EdmItemCollection.Create(new[] { xmlReader }, null, out schemaErrors);
-                }
-            }
-
-            return edmItemCollection;
         }
 
         internal static string GetWorkflowPathFromArtifact(EFArtifact artifact)

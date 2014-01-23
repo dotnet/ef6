@@ -267,12 +267,15 @@
     <Compile Include="UI\ViewModels\PropertyWindow\Converters\ToRoleListConverter.cs" />
     <Compile Include="UI\Views\Explorer\IViewDiagram.cs" />
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseEngineBase.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\EdmxHelper.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\GatherAndReturnSprocInfo.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\IInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerationOption.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerator.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\InitialModelContentsFactory.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\ProgressDialogHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\OneEFWizard.cs" />
     <Compile Include="VisualStudio\ModelWizard\Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -514,7 +514,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             if (newFunctionEntries.Count > 0
                 && chkCreateFunctionImports.Checked)
             {
-                var result = ModelBuilderEngine.ShowProgressDialog(this, newFunctionEntries, Wizard.ModelBuilderSettings);
+                var result = ProgressDialogHelper.ShowProgressDialog(this, newFunctionEntries, Wizard.ModelBuilderSettings);
             }
         }
 
