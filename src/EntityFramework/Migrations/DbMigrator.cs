@@ -1014,7 +1014,10 @@ namespace System.Data.Entity.Migrations
                 }
                 finally
                 {
-                    DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
+                    if (transaction != null)
+                    {
+                        DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
+                    }
                 }
             }
             finally
