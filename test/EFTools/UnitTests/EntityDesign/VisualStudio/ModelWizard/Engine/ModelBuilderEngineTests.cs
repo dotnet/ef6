@@ -219,16 +219,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 {
                 }
 
-                protected override void AddErrors(IEnumerable<EdmSchemaError> errors)
-                {
-                    throw new NotImplementedException();
-                }
-
-                internal override IEnumerable<EdmSchemaError> Errors
-                {
-                    get { throw new NotImplementedException(); }
-                }
-
                 internal override XDocument Model
                 {
                     get { throw new NotImplementedException(); }

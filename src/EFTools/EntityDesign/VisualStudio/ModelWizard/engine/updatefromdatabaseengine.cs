@@ -99,12 +99,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             // Update the app. or web.config, register build providers etc
             ConfigFileUtils.UpdateConfig(settings);
 
-            // clear all previous errors for this document first
-            ErrorListHelper.ClearErrorsForDocAcrossLists(settings.Artifact.Uri);
-
-            // log any errors that occurred during model-gen to the error list
-            ErrorListHelper.LogUpdateModelWizardErrors(settings.ModelBuilderEngine.Errors, settings.Artifact.Uri.LocalPath);
-
             // use form.ModelBuilderSettings to look at accumulated info and
             // take appropriate action
             var editingContext = PackageManager.Package.DocumentFrameMgr.EditingContextManager.GetNewOrExistingContext(artifact.Uri);

@@ -31,9 +31,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             WriterSettings.NewLineChars += "      ";
         }
 
-        protected abstract void AddErrors(IEnumerable<EdmSchemaError> errors);
-        internal abstract IEnumerable<EdmSchemaError> Errors { get; }
-
         // <summary>
         //     This is the XDocument of the model in memory.  No assumptions should be made that it exists on disk.
         // </summary>

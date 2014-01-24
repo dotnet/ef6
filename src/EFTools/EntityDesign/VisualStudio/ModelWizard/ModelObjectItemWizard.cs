@@ -364,9 +364,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 CultureInfo.CurrentCulture,
                                 Properties.Resources.WritingModelTimeMsg,
                                 writingModelWatch.Elapsed));
-
-                        // now add errors
-                        ErrorListHelper.LogWizardErrors(mbe.Errors, _edmxItem);
                     }
 
                     // set the ItemType for the generated .edmx file

@@ -8,23 +8,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using System.Diagnostics;
     using System.Xml.Linq;
     using Microsoft.Data.Entity.Design.VersioningFacade;
-    using Microsoft.VisualStudio.OLE.Interop;
 
     internal class InMemoryModelBuilderEngine : ModelBuilderEngine
     {
         private XDocument _model;
-        private readonly List<EdmSchemaError> _errors = new List<EdmSchemaError>();
         private readonly IInitialModelContentsFactory _initialModelContentsFactory;
 
         // <param name="initialModelContentsFactory">A factory that creates the "basic" contents of an empty edmx file</param>
         internal InMemoryModelBuilderEngine(IInitialModelContentsFactory initialModelContentsFactory)
         {
             _initialModelContentsFactory = initialModelContentsFactory;
-        }
-
-        protected override void AddErrors(IEnumerable<EdmSchemaError> errors)
-        {
-            _errors.AddRange(errors);
         }
 
         protected override void InitializeModelContents(Version targetSchemaVersion)
@@ -50,11 +43,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 Debug.Assert(_model != null, "Model document has not been initialized.");
                 return _model;
             }
-        }
-
-        internal override IEnumerable<EdmSchemaError> Errors
-        {
-            get { return _errors; }
         }
     }
 }

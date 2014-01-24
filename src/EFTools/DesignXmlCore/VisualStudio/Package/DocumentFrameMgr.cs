@@ -216,9 +216,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         /// <summary>
         ///     Updates artifact URI and error list when a document is renamed/moved/save-as'd WHEN IT IS OPEN
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="cpc"></param>
-        /// <returns></returns>
         private int OnAfterFileNameChanged(object sender, ModelChangeEventArgs args)
         {
             // after a file name change we have to rename the artifact
@@ -228,12 +225,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 // if the user renamed the extension of the file, we will still take it
                 var oldUri = Utils.FileName2Uri(args.OldFileName);
                 if (oldUri != null
-                    &&
-                    _package != null
-                    &&
-                    _package.ModelManager != null
-                    &&
-                    _package.ModelManager.GetArtifact(oldUri) != null)
+                    && _package != null
+                    && _package.ModelManager != null
+                    &&_package.ModelManager.GetArtifact(oldUri) != null)
                 {
                     var newUri = Utils.FileName2Uri(args.NewFileName);
 
