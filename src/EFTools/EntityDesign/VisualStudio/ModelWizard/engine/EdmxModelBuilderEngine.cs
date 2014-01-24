@@ -18,12 +18,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal abstract class ModelBuilderEngine
+    internal abstract class EdmxModelBuilderEngine
     {
         private static readonly XmlWriterSettings WriterSettings = new XmlWriterSettings();
 
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
-        static ModelBuilderEngine()
+        static EdmxModelBuilderEngine()
         {
             WriterSettings.Indent = true;
             WriterSettings.ConformanceLevel = ConformanceLevel.Fragment;

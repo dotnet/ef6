@@ -31,7 +31,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_generates_model()
         {
-            var mockModelBuilderEngine = new Mock<ModelBuilderEngine>();
+            var mockModelBuilderEngine = new Mock<EdmxModelBuilderEngine>();
             mockModelBuilderEngine.Setup(e => e.Model).Returns(new XDocument());
 
             var mockSettings = new Mock<ModelBuilderSettings> { CallBase = true };

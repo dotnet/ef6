@@ -2,14 +2,12 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
+    using Microsoft.Data.Entity.Design.VersioningFacade;
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Xml.Linq;
-    using Microsoft.Data.Entity.Design.VersioningFacade;
 
-    internal class InMemoryModelBuilderEngine : ModelBuilderEngine
+    internal class InMemoryModelBuilderEngine : EdmxModelBuilderEngine
     {
         private XDocument _model;
         private readonly IInitialModelContentsFactory _initialModelContentsFactory;
