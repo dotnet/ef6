@@ -18,6 +18,7 @@ namespace System.Data.Entity
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
     {
         private readonly DbMigrationsConfiguration _config;
+        private readonly bool _useSuppliedContext;
 
         static MigrateDatabaseToLatestVersion()
         {
@@ -25,11 +26,30 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Initializes a new instance of the MigrateDatabaseToLatestVersion class.
+        /// Initializes a new instance of the MigrateDatabaseToLatestVersion class that will use
+        /// the context passed to InitializeDatabase to perform the migration.
         /// </summary>
         public MigrateDatabaseToLatestVersion()
+            : this(true)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MigrateDatabaseToLatestVersion class specifying whether to
+        /// use the context passed to InitializeDatabase to perform the migration.
+        /// </summary>
+        /// <param name="useSuppliedContext">
+        /// Whether the context being initialized should be used or if a context should be constructed.
+        /// </param>
+        /// <remarks>
+        /// If useSuppliedContext is true, the connection information of the context being initialized is ignored.
+        /// The context will be constructed using the default constructor or registered factory if applicable.
+        /// </remarks>
+        public MigrateDatabaseToLatestVersion(bool useSuppliedContext)
         {
             _config = new TMigrationsConfiguration();
+            _useSuppliedContext = useSuppliedContext;
         }
 
         /// <summary>
@@ -46,6 +66,7 @@ namespace System.Data.Entity
                 {
                     TargetDatabase = new DbConnectionInfo(connectionStringName)
                 };
+            _useSuppliedContext = false;
         }
 
         /// <inheritdoc />
@@ -53,7 +74,7 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            var migrator = new DbMigrator(_config);
+            var migrator = new DbMigrator(_config, _useSuppliedContext ? context : null);
             migrator.Update();
         }
     }

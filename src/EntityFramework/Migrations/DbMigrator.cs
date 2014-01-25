@@ -87,7 +87,7 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         /// <param name="configuration"> Configuration to be used for the migration process. </param>
         public DbMigrator(DbMigrationsConfiguration configuration)
-            : this(configuration, null, DatabaseExistenceState.Unknown)
+            : this(configuration, null, DatabaseExistenceState.Unknown, false)
         {
             Check.NotNull(configuration, "configuration");
             Check.NotNull(configuration.ContextType, "configuration.ContextType");
@@ -95,17 +95,24 @@ namespace System.Data.Entity.Migrations
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext, DatabaseExistenceState existenceState)
+        internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext)
+            : this(configuration, usersContext, DatabaseExistenceState.Unknown, false)
+        {
+        }
+
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext, DatabaseExistenceState existenceState, bool calledByCreateDatabase)
             : base(null)
         {
             Check.NotNull(configuration, "configuration");
             Check.NotNull(configuration.ContextType, "configuration.ContextType");
 
             _configuration = configuration;
-            _calledByCreateDatabase = usersContext != null;
+            _calledByCreateDatabase = calledByCreateDatabase;
             _existenceState = existenceState;
 
-            if (_calledByCreateDatabase)
+            if (usersContext != null)
             {
                 _usersContextInfo = new DbContextInfo(usersContext);
             }
@@ -407,7 +414,9 @@ namespace System.Data.Entity.Migrations
             if (!_calledByCreateDatabase
                 && !_historyRepository.Exists())
             {
-                using (var context = _usersContextInfo.CreateInstance())
+                var context = _contextForInterception ?? _usersContextInfo.CreateInstance();
+
+                try
                 {
                     bool compatibleWithModel;
 
@@ -428,6 +437,13 @@ namespace System.Data.Entity.Migrations
                     }
 
                     onCompatible();
+                }
+                finally
+                {
+                    if (_contextForInterception == null)
+                    {
+                        context.Dispose();
+                    }
                 }
             }
         }
@@ -594,11 +610,20 @@ namespace System.Data.Entity.Migrations
         {
             Debug.Assert(!_calledByCreateDatabase);
 
-            using (var context = _usersContextInfo.CreateInstance())
+            var context = _contextForInterception ?? _usersContextInfo.CreateInstance();
+
+            try
             {
                 _configuration.OnSeed(context);
 
                 context.SaveChanges();
+            }
+            finally
+            {
+                if (_contextForInterception == null)
+                {
+                    context.Dispose();
+                }
             }
         }
 

@@ -329,9 +329,18 @@ namespace System.Data.Entity
 
         public class EmptyContext : DbContext
         {
+            public EmptyContext() : base() { }
+
+            public EmptyContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
         }
 
-        private class TestMigrationsConfiguration : DbMigrationsConfiguration<EmptyContext>
+        public class EmptyNonConstructableContext : EmptyContext
+        {
+            public EmptyNonConstructableContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
+        }
+
+        private class TestMigrationsConfiguration<ContextT> : DbMigrationsConfiguration<ContextT>
+            where ContextT : EmptyContext
         {
             public TestMigrationsConfiguration()
             {
@@ -339,7 +348,7 @@ namespace System.Data.Entity
                 AutomaticMigrationsEnabled = true;
             }
 
-            protected override void Seed(EmptyContext context)
+            protected override void Seed(ContextT context)
             {
                 SeedCalled = true;
                 SeedDatabase = context.Database.Connection.Database;
@@ -347,6 +356,16 @@ namespace System.Data.Entity
 
             public static bool SeedCalled { get; set; }
             public static string SeedDatabase { get; set; }
+        }
+
+        private class TestMigrationsConfiguration : TestMigrationsConfiguration<EmptyContext>
+        {
+
+        }
+
+        private class TestNonConstructableMigrationsConfiguration : TestMigrationsConfiguration<EmptyNonConstructableContext>
+        {
+
         }
 
         [Fact]
@@ -360,6 +379,44 @@ namespace System.Data.Entity
 
             // If seed gets called we know the migrations pipeline was invoked to update to the latest version
             Assert.True(TestMigrationsConfiguration.SeedCalled);
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_uses_passed_context()
+        {
+            var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(true);
+
+            TestMigrationsConfiguration.SeedDatabase = null;
+
+            init.InitializeDatabase(new EmptyContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
+
+            Assert.Equal("MigrationInitFromConfig", TestMigrationsConfiguration.SeedDatabase);
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_uses_passed_nonconstructable_context()
+        {
+            var init = new MigrateDatabaseToLatestVersion<EmptyNonConstructableContext, TestNonConstructableMigrationsConfiguration>(true);
+
+            TestMigrationsConfiguration.SeedDatabase = null;
+            TestNonConstructableMigrationsConfiguration.SeedDatabase = null;
+
+            init.InitializeDatabase(new EmptyNonConstructableContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
+
+            Assert.Null(TestMigrationsConfiguration.SeedDatabase);
+            Assert.Equal("MigrationInitFromConfig", TestNonConstructableMigrationsConfiguration.SeedDatabase);
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_uses_own_context()
+        {
+            var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(false);
+
+            TestMigrationsConfiguration.SeedDatabase = null;
+
+            init.InitializeDatabase(new EmptyContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
+
+            Assert.NotEqual("MigrationInitFromConfig", TestMigrationsConfiguration.SeedDatabase);
         }
 
         [Fact]
