@@ -14,15 +14,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             private class UpdateModelFromDatabaseModelBuilderEngineFake
                 : UpdateModelFromDatabaseModelBuilderEngine
             {
-                #region not important
-
-                internal override XDocument Model
-                {
-                    get { throw new NotImplementedException(); }
-                }
-
-                #endregion
-
                 internal void UpdateDesignerInfoInvoker(EdmxHelper edmxHelper, ModelBuilderSettings settings)
                 {
                     UpdateDesignerInfo(edmxHelper, settings);

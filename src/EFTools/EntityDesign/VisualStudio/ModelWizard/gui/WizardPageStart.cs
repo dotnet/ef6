@@ -214,7 +214,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 Debug.Assert(Wizard.ModelBuilderSettings.VsTemplatePath != null, "Invalid vstemplate path.");
 
                 Wizard.ModelBuilderSettings.ModelBuilderEngine =
-                    new InMemoryModelBuilderEngine(
+                    new EdmxModelBuilderEngine(
                         new LazyInitialModelContentsFactory(
                             GetEdmxTemplateContent(Wizard.ModelBuilderSettings.VsTemplatePath),
                             Wizard.ModelBuilderSettings.ReplacementDictionary));

@@ -272,6 +272,7 @@
     <Compile Include="VisualStudio\ModelWizard\Engine\GatherAndReturnSprocInfo.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\IInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactory.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerationOption.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerator.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\InitialModelContentsFactory.cs" />
@@ -619,7 +620,6 @@
       <DependentUpon>MappingDetailsWindowContainer.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensibility\EscherExtensionPointManager.cs" />
-    <Compile Include="VisualStudio\ModelWizard\Engine\InMemoryModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderEngineHostContext.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerationExtensionDispatcher.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ObjectFilterPolicy.cs" />
@@ -687,7 +687,7 @@
     <Compile Include="VisualStudio\VsUtils.cs" />
     <Compile Include="VisualStudio\ModelWizard\ModelObjectItemWizard.cs" />
     <Compile Include="VisualStudio\ModelWizard\DbContextCodeGenerator.cs" />
-    <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderEngine.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\EdmxModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderSettings.cs" />
     <Compile Include="VisualStudio\ModelWizard\Gui\ModelBuilderWizardForm.cs">
       <SubType>Form</SubType>

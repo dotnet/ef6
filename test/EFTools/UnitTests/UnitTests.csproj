@@ -212,8 +212,8 @@
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DatabaseGenerationAssemblyLoaderTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DataConnectionUtilsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\EdmxHelperTests.cs" />
-    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\InMemoryModelBuilerEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactoryTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\EdmxModelBuilderEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\ModelBuilderEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\ModelGeneratorTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\InitialModelContentsFactoryTests.cs" />

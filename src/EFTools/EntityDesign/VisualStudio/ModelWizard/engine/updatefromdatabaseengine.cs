@@ -404,7 +404,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 using (var sw = new StreamWriter(fs, Encoding.UTF8))
                 {
-                    sw.Write(settings.ModelBuilderEngine.Model.ToString());
+                    sw.Write(settings.ModelBuilderEngine.Edmx.ToString());
                 }
             }
             return new FileInfo(tempFilePath);
@@ -422,7 +422,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 _settings = settings;
                 _artifact = settings.Artifact;
-                _fromDbDocument = settings.ModelBuilderEngine.Model;
+                _fromDbDocument = settings.ModelBuilderEngine.Edmx;
                 _projectItem = VsUtils.GetProjectItemForDocument(_artifact.Uri.LocalPath, PackageManager.Package);
 
                 // make a copy of the artifact before any chagnes are done to it.  This is the "original document" that will be passed to extensions

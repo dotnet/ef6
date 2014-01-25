@@ -338,7 +338,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem,
                                 edmxFileInfo,
                                 _modelBuilderSettings.TargetSchemaVersion,
-                                mbe.Model);
+                                mbe.Edmx);
                             VSArtifact.DispatchToConversionExtensions(
                                 EscherExtensionPointManager.LoadModelConversionExtensions(),
                                 fileExtension,
@@ -353,7 +353,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem.FileNames[1],
                                 new XmlWriterSettings { Indent = true }))
                             {
-                                mbe.Model.WriteTo(modelWriter);
+                                mbe.Edmx.WriteTo(modelWriter);
                             }
                         }
 
