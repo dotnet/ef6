@@ -260,7 +260,8 @@ namespace System.Data.Entity
         /// </remarks>
         /// <typeparam name="TEntity"> The type entity for which a set should be returned. </typeparam>
         /// <returns> A set for the given entity type. </returns>
-        public DbSet<TEntity> Set<TEntity>() where TEntity : class
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Set")]
+        public virtual DbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             return (DbSet<TEntity>)InternalContext.Set<TEntity>();
         }
@@ -274,7 +275,8 @@ namespace System.Data.Entity
         /// <remarks>
         /// See the DbSet class for more details.
         /// </remarks>
-        public DbSet Set(Type entityType)
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Set")]
+        public virtual DbSet Set(Type entityType)
         {
             Check.NotNull(entityType, "entityType");
 
