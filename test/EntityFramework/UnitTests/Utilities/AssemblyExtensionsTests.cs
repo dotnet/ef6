@@ -11,15 +11,6 @@ namespace System.Data.Entity.Utilities
 
     public class AssemblyExtensionsTests
     {
-        public class GetInformationalVersion : TestBase
-        {
-            [Fact]
-            public void GetInformationalVersion_returns_the_informational_version()
-            {
-                Assert.True(typeof(DbMigrator).Assembly().GetInformationalVersion().StartsWith("6.1.0-alpha1"));
-            }
-        }
-
         [Fact]
         public void Can_return_attributes_from_assembly()
         {
