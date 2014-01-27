@@ -237,7 +237,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
         internal bool UsePluralizationService { get; set; }
 
-        internal EdmxModelBuilderEngine ModelBuilderEngine { get; set; }
+        internal ModelBuilderEngine ModelBuilderEngine { get; set; }
 
         internal bool IncludeForeignKeysInModel { get; set; }
 

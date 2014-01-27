@@ -327,7 +327,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     {
                         var writingModelWatch = new Stopwatch();
                         writingModelWatch.Start();
-                        var mbe = _modelBuilderSettings.ModelBuilderEngine;
+                        var modelEdmx = ((EdmxModelBuilderEngine)_modelBuilderSettings.ModelBuilderEngine).Edmx;
 
                         if (!string.Equals(fileExtension, EntityDesignArtifact.ExtensionEdmx, StringComparison.OrdinalIgnoreCase))
                         {
@@ -338,7 +338,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem,
                                 edmxFileInfo,
                                 _modelBuilderSettings.TargetSchemaVersion,
-                                mbe.Edmx);
+                                modelEdmx);
                             VSArtifact.DispatchToConversionExtensions(
                                 EscherExtensionPointManager.LoadModelConversionExtensions(),
                                 fileExtension,
@@ -353,7 +353,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem.FileNames[1],
                                 new XmlWriterSettings { Indent = true }))
                             {
-                                mbe.Edmx.WriteTo(modelWriter);
+                                modelEdmx.WriteTo(modelWriter);
                             }
                         }
 
