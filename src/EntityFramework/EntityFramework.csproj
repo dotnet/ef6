@@ -136,6 +136,7 @@
     <Compile Include="Core\Metadata\Edm\EdmSerializationVisitor.cs" />
     <Compile Include="Core\Metadata\Edm\EdmXmlSchemaWriter.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemHelper.cs" />
+    <Compile Include="Core\Metadata\Edm\MetadataOptimization.cs" />
     <Compile Include="Core\Metadata\Edm\MslSerializer.cs" />
     <Compile Include="Core\Metadata\Edm\MslXmlSchemaWriter.cs" />
     <Compile Include="Core\Metadata\Edm\SsdlSerializer.cs" />

@@ -2561,16 +2561,35 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         internal void FindRelationshipSet(
-            ObjectContext context, EntitySet entitySet, out EdmType relationshipType, out RelationshipSet relationshipSet)
+            ObjectContext context, EntitySet entitySet, out EdmType relationshipType,
+            out RelationshipSet relationshipSet)
+        {
+            if (_navigation.AssociationType == null || _navigation.AssociationType.Index < 0)
+            {
+                FindRelationshipSet(context, _navigation, entitySet, out relationshipType, out relationshipSet);
+                return;
+            }
+
+            var metadataOptimization = context.MetadataWorkspace.MetadataOptimization;
+
+            var associationType = metadataOptimization.GetCSpaceAssociationType(_navigation.AssociationType);
+
+            relationshipType = associationType;
+            relationshipSet = metadataOptimization.FindCSpaceAssociationSet(associationType,
+                associationSet => associationSet.AssociationSetEnds[_navigation.From].EntitySet == entitySet);
+        }
+
+        internal static void FindRelationshipSet(ObjectContext context, RelationshipNavigation navigation,
+            EntitySet entitySet, out EdmType relationshipType, out RelationshipSet relationshipSet)
         {
             // find the relationship set
             DebugCheck.NotNull(context.MetadataWorkspace);
 
             // find the TypeMetadata for the given relationship
-            relationshipType = context.MetadataWorkspace.GetItem<EdmType>(_navigation.RelationshipName, DataSpace.CSpace);
+            relationshipType = context.MetadataWorkspace.GetItem<EdmType>(navigation.RelationshipName, DataSpace.CSpace);
             if (relationshipType == null)
             {
-                var relationshipName = _navigation.RelationshipName;
+                var relationshipName = navigation.RelationshipName;
                 Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
                 throw Error.Collections_NoRelationshipSetMatched(relationshipName);
             }
@@ -2580,7 +2599,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (entitySetBase.ElementType == relationshipType)
                 {
-                    if (((AssociationSet)entitySetBase).AssociationSetEnds[_navigation.From].EntitySet == entitySet)
+                    if (((AssociationSet)entitySetBase).AssociationSetEnds[navigation.From].EntitySet == entitySet)
                     {
                         relationshipSet = (RelationshipSet)entitySetBase;
                         return;

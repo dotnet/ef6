@@ -214,27 +214,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        // <summary>
-        // Get the collection of entities related to the current entity using the specified
-        // combination of relationship name, source role name, and target role name
-        // </summary>
-        // <typeparam name="TSourceEntity"> Type of the entity in the source role (same as the type of this) </typeparam>
-        // <typeparam name="TTargetEntity"> Type of the entity in the target role </typeparam>
-        // <param name="relationshipName"> CSpace-qualified name of the relationship to navigate </param>
-        // <param name="sourceRoleName"> Name of the source role for the navigation. Indicates the direction of navigation across the relationship. </param>
-        // <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
-        // <param name="sourceAccessor"> Accessor of the property on the source of the navigation. </param>
-        // <param name="targetAccessor"> Accessor of the property on the target of the navigation. </param>
-        // <param name="sourceRoleMultiplicity"> Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection </param>
-        // <returns> Collection of related entities of type TTargetEntity </returns>
         internal EntityCollection<TTargetEntity> GetRelatedCollection<TSourceEntity, TTargetEntity>(
-            string relationshipName,
-            string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,
-            NavigationPropertyAccessor targetAccessor,
-            RelationshipMultiplicity sourceRoleMultiplicity, RelatedEnd existingRelatedEnd)
+            AssociationEndMember sourceMember, AssociationEndMember targetMember, NavigationPropertyAccessor sourceAccessor,
+            NavigationPropertyAccessor targetAccessor, RelatedEnd existingRelatedEnd)
             where TSourceEntity : class
             where TTargetEntity : class
         {
+            var relationshipName = sourceMember.DeclaringType.FullName;
+            var targetRoleName = targetMember.Name;
+            var sourceRoleMultiplicity = sourceMember.RelationshipMultiplicity;
+
             RelatedEnd relatedEnd;
             TryGetCachedRelatedEnd(relationshipName, targetRoleName, out relatedEnd);
 
@@ -253,7 +242,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 else
                 {
                     var navigation = new RelationshipNavigation(
-                        relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
+                        (AssociationType) sourceMember.DeclaringType, sourceMember.Name, targetMember.Name, 
+                        sourceAccessor, targetAccessor);
                     return
                         CreateRelatedEnd<TSourceEntity, TTargetEntity>(
                             navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as
@@ -273,7 +263,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
 
                 var navigation = new RelationshipNavigation(
-                    relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
+                    (AssociationType)sourceMember.DeclaringType, sourceMember.Name, targetMember.Name,
+                    sourceAccessor, targetAccessor);
                 var collection =
                     CreateRelatedEnd<TSourceEntity, TTargetEntity>(
                         navigation, sourceRoleMultiplicity, RelationshipMultiplicity.Many, existingRelatedEnd) as
@@ -361,25 +352,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        // <summary>
-        // Get the entity reference of a related entity using the specified
-        // combination of relationship name, source role name, and target role name
-        // </summary>
-        // <param name="relationshipName"> CSpace-qualified name of the relationship to navigate </param>
-        // <param name="sourceRoleName"> Name of the source role for the navigation. Indicates the direction of navigation across the relationship. </param>
-        // <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
-        // <param name="sourceAccessor"> Accessor of the property on the source of the navigation. </param>
-        // <param name="targetAccessor"> Accessor of the property on the target of the navigation. </param>
-        // <param name="sourceRoleMultiplicity"> Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection </param>
-        // <returns> Reference for related entity of type TTargetEntity </returns>
         internal EntityReference<TTargetEntity> GetRelatedReference<TSourceEntity, TTargetEntity>(
-            string relationshipName,
-            string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,
-            NavigationPropertyAccessor targetAccessor,
-            RelationshipMultiplicity sourceRoleMultiplicity, RelatedEnd existingRelatedEnd)
+            AssociationEndMember sourceMember, AssociationEndMember targetMember, NavigationPropertyAccessor sourceAccessor,
+            NavigationPropertyAccessor targetAccessor, RelatedEnd existingRelatedEnd)
             where TSourceEntity : class
             where TTargetEntity : class
         {
+            var relationshipName = sourceMember.DeclaringType.FullName;
+            var targetRoleName = targetMember.Name;
+            var sourceRoleMultiplicity = sourceMember.RelationshipMultiplicity;
+
             EntityReference<TTargetEntity> entityRef;
             RelatedEnd relatedEnd;
 
@@ -396,7 +378,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             else
             {
                 var navigation = new RelationshipNavigation(
-                    relationshipName, sourceRoleName, targetRoleName, sourceAccessor, targetAccessor);
+                    (AssociationType)sourceMember.DeclaringType, sourceMember.Name, targetMember.Name,
+                    sourceAccessor, targetAccessor);
                 return
                     CreateRelatedEnd<TSourceEntity, TTargetEntity>(
                         navigation, sourceRoleMultiplicity, RelationshipMultiplicity.One, existingRelatedEnd) as
@@ -480,12 +463,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private RelatedEnd GetRelatedEndInternal(
             string relationshipName, string targetRoleName, RelatedEnd existingRelatedEnd, AssociationType relationship)
         {
-            return GetRelatedEndInternal(relationshipName, targetRoleName, existingRelatedEnd, relationship, true);
-        }
-
-        private RelatedEnd GetRelatedEndInternal(
-            string relationshipName, string targetRoleName, RelatedEnd existingRelatedEnd, AssociationType relationship, bool throwOnError)
-        {
             DebugCheck.NotNull(relationshipName);
             DebugCheck.NotNull(targetRoleName);
             // existingRelatedEnd can be null if we are not trying to initialize an existing end
@@ -494,33 +471,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             AssociationEndMember sourceEnd;
             AssociationEndMember targetEnd;
             Debug.Assert(relationship.AssociationEndMembers.Count == 2, "Only 2-way relationships are currently supported");
-
-            RelatedEnd result = null;
-
-            // There can only be two ends because we don't support n-way relationships -- figure out which end is the target and which is the source
-            // If we want to support n-way relationships in the future, we will need a different overload of GetRelatedEnd that takes the source role name as well
-            targetEnd = relationship.AssociationEndMembers[1];
-            if (targetEnd.Identity != targetRoleName)
-            {
-                sourceEnd = targetEnd;
-                targetEnd = relationship.AssociationEndMembers[0];
-                if (targetEnd.Identity != targetRoleName)
-                {
-                    if (throwOnError)
-                    {
-                        throw new ArgumentException(
-                            Strings.RelationshipManager_InvalidTargetRole(relationshipName, targetRoleName), "targetRoleName");
-                    }
-                    else
-                    {
-                        return result;
-                    }
-                }
-            }
-            else
-            {
-                sourceEnd = relationship.AssociationEndMembers[0];
-            }
+            GetAssociationEnds(relationship, targetRoleName, out sourceEnd, out targetEnd);
 
             // Validate that the source type matches the type of the owner
             var sourceEntityType = MetadataHelper.GetEntityTypeForEnd(sourceEnd);
@@ -531,19 +482,69 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var wrappedOwner = WrappedOwner;
             if (!(sourceType.IsAssignableFrom(wrappedOwner.IdentityType)))
             {
-                if (throwOnError)
+                throw new InvalidOperationException(
+                    Strings.RelationshipManager_OwnerIsNotSourceType(
+                        wrappedOwner.IdentityType.FullName, sourceType.FullName, sourceEnd.Name, relationshipName));
+            }
+            
+            return VerifyRelationship(relationship, sourceEnd.Name)
+                // Call a dynamic method that will call either GetRelatedCollection<T, T> or GetRelatedReference<T, T> for this relationship
+                ? DelegateFactory.GetRelatedEnd(this, sourceEnd, targetEnd, existingRelatedEnd) 
+                : null;
+        }
+
+        internal RelatedEnd GetRelatedEndInternal(AssociationType csAssociationType, AssociationEndMember csTargetEnd)
+        {
+            var wrappedOwner = WrappedOwner;
+            if (wrappedOwner.Context == null
+                && wrappedOwner.RequiresRelationshipChangeTracking)
+            {
+                throw new InvalidOperationException(Strings.RelationshipManager_CannotGetRelatEndForDetachedPocoEntity);
+            }
+
+            var osAssociationType = GetRelationshipType(csAssociationType);
+            Debug.Assert(osAssociationType != null);
+            Debug.Assert(osAssociationType.DataSpace == DataSpace.OSpace);
+
+            AssociationEndMember osSourceEnd;
+            AssociationEndMember osTargetEnd;
+            GetAssociationEnds(osAssociationType, csTargetEnd.Name, out osSourceEnd, out osTargetEnd);
+
+            var sourceEntityType = MetadataHelper.GetEntityTypeForEnd(osSourceEnd);
+            var sourceType = sourceEntityType.ClrType;
+
+            if (!(sourceType.IsAssignableFrom(wrappedOwner.IdentityType)))
+            {
+                throw new InvalidOperationException(
+                    Strings.RelationshipManager_OwnerIsNotSourceType(wrappedOwner.IdentityType.FullName,
+                        sourceType.FullName, osSourceEnd.Name, csAssociationType.FullName));
+            }
+
+            return VerifyRelationship(osAssociationType, csAssociationType, osSourceEnd.Name)
+                ? DelegateFactory.GetRelatedEnd(this, osSourceEnd, osTargetEnd, null)
+                : null;
+        }
+
+        private static void GetAssociationEnds(AssociationType associationType, string targetRoleName, 
+            out AssociationEndMember sourceEnd, out AssociationEndMember targetEnd)
+        {
+            targetEnd = associationType.TargetEnd;
+
+            if (targetEnd.Identity != targetRoleName)
+            {
+                sourceEnd = targetEnd;
+                targetEnd = associationType.SourceEnd;
+
+                if (targetEnd.Identity != targetRoleName)
                 {
                     throw new InvalidOperationException(
-                        Strings.RelationshipManager_OwnerIsNotSourceType(
-                            wrappedOwner.IdentityType.FullName, sourceType.FullName, sourceEnd.Name, relationshipName));
+                        Strings.RelationshipManager_InvalidTargetRole(associationType.FullName, targetRoleName));
                 }
             }
-            else if (VerifyRelationship(relationship, sourceEnd.Name, throwOnError))
+            else
             {
-                // Call a dynamic method that will call either GetRelatedCollection<T, T> or GetRelatedReference<T, T> for this relationship
-                result = DelegateFactory.GetRelatedEnd(this, sourceEnd, targetEnd, existingRelatedEnd);
-            }
-            return result;
+                sourceEnd = associationType.SourceEnd;
+            }            
         }
 
         /// <summary>
@@ -778,6 +779,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
+        internal AssociationType GetRelationshipType(AssociationType csAssociationType)
+        {
+            var metadataWorkspace = WrappedOwner.Context.MetadataWorkspace;
+            if (metadataWorkspace != null)
+            {
+                return metadataWorkspace.MetadataOptimization.GetOSpaceAssociationType(
+                    csAssociationType, () => GetRelationshipType(csAssociationType.FullName));
+            }
+
+            return GetRelationshipType(csAssociationType.FullName);
+        }
+
         internal AssociationType GetRelationshipType(string relationshipName)
         {
             DebugCheck.NotEmpty(relationshipName);
@@ -902,7 +915,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        private bool VerifyRelationship(AssociationType relationship, string sourceEndName, bool throwOnError)
+        private bool VerifyRelationship(AssociationType relationship, string sourceEndName)
         {
             var wrappedOwner = WrappedOwner;
             if (wrappedOwner.Context == null)
@@ -910,17 +923,60 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 return true; // if not added to cache, can not decide- for now
             }
 
-            EntityKey ownerKey = null;
-            ownerKey = wrappedOwner.EntityKey;
-
-            if (null == (object)ownerKey)
+            var ownerKey = wrappedOwner.EntityKey;
+            if (ownerKey == null)
             {
                 return true; // if not added to cache, can not decide- for now
             }
 
+            return VerifyRelationship(wrappedOwner, ownerKey, relationship, sourceEndName);
+        }
+
+        private bool VerifyRelationship(AssociationType osAssociationType, AssociationType csAssociationType, string sourceEndName)
+        {
+            var wrappedOwner = WrappedOwner;
+            if (wrappedOwner.Context == null)
+            {
+                return true;
+            }
+
+            var ownerKey = wrappedOwner.EntityKey;
+            if (ownerKey == null)
+            {
+                return true;
+            }
+
+            if (osAssociationType.Index < 0)
+            {
+                return VerifyRelationship(wrappedOwner, ownerKey, osAssociationType, sourceEndName);
+            }
+
+            Debug.Assert(osAssociationType.Index == csAssociationType.Index);
+
+            var metadataWorkspace = wrappedOwner.Context.MetadataWorkspace;
+            Debug.Assert(metadataWorkspace != null);
+
+            var csAssociationSet = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                csAssociationType,
+                associationSet =>
+                {
+                    var entitySet = associationSet.AssociationSetEnds[sourceEndName].EntitySet;
+                    return entitySet.Name == ownerKey.EntitySetName
+                           && entitySet.EntityContainer.Name == ownerKey.EntityContainerName;
+                });
+
+            if (csAssociationSet == null)
+            {
+                throw Error.Collections_NoRelationshipSetMatched(osAssociationType.FullName);
+            }
+
+            return true;
+        }
+
+        private static bool VerifyRelationship(IEntityWrapper wrappedOwner, EntityKey ownerKey,
+            AssociationType relationship, string sourceEndName)
+        {
             TypeUsage associationTypeUsage;
-            AssociationSet association = null;
-            var isVerified = true;
 
             // First, get the CSpace association type from the relationship name, since the helper method looks up
             // association set in the CSpace, since there is no Entity Container in the OSpace
@@ -933,31 +989,23 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 // Get the association set from the entity container, given the association type it refers to, and the entity set
                 // name that the source end refers to
-                association = MetadataHelper.GetAssociationsForEntitySetAndAssociationType(
+                var association = MetadataHelper.GetAssociationsForEntitySetAndAssociationType(
                     entityContainer, ownerKey.EntitySetName,
                     (AssociationType)associationTypeUsage.EdmType, sourceEndName, out entitySet);
 
                 if (association == null)
                 {
-                    if (throwOnError)
-                    {
-                        var relationshipName = relationship.FullName;
-                        Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
-                        throw Error.Collections_NoRelationshipSetMatched(relationshipName);
-                    }
-                    else
-                    {
-                        isVerified = false;
-                    }
+                    var relationshipName = relationship.FullName;
+                    Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
+                    throw Error.Collections_NoRelationshipSetMatched(relationshipName);
                 }
-                else
-                {
-                    Debug.Assert(
-                        association.AssociationSetEnds[sourceEndName].EntitySet == entitySet,
-                        "AssociationSetEnd does have the matching EntitySet");
-                }
+
+                Debug.Assert(
+                    association.AssociationSetEnds[sourceEndName].EntitySet == entitySet,
+                    "AssociationSetEnd does have the matching EntitySet");
             }
-            return isVerified;
+
+            return true;
         }
 
         /// <summary>

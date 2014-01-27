@@ -3543,7 +3543,7 @@ namespace System.Data.Entity.Core.Objects
                         || t.Item1.TargetSet.Identity == restrictTo.Identity))
                 {
                     var relatedEnd = WrappedEntity.RelationshipManager.GetRelatedEndInternal(
-                        dependent.Item1.ElementType.FullName, dependent.Item2.FromRole.Name) as EntityReference;
+                        dependent.Item1.ElementType, (AssociationEndMember)dependent.Item2.FromRole) as EntityReference;
 
                     Debug.Assert(relatedEnd != null, "Expected non-null EntityReference to principal.");
 
@@ -4003,7 +4003,7 @@ namespace System.Data.Entity.Core.Objects
                 if (foreignKey != null) // Implies no value is null or CreateKeyFromForeignKeyValues would have returned null
                 {
                     var reference = RelationshipManager.GetRelatedEndInternal(
-                        associationSet.ElementType.FullName, constraint.FromRole.Name) as EntityReference;
+                        associationSet.ElementType, (AssociationEndMember)constraint.FromRole) as EntityReference;
 
                     // only for deleted relationships the hashset can have > 1 elements
                     HashSet<EntityKey> entityKeys;
