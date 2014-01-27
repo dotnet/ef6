@@ -267,6 +267,7 @@
     <Compile Include="UI\ViewModels\PropertyWindow\Converters\ToRoleListConverter.cs" />
     <Compile Include="UI\Views\Explorer\IViewDiagram.cs" />
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseEngineBase.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\EdmxHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\GatherAndReturnSprocInfo.cs" />

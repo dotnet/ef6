@@ -208,6 +208,7 @@
     <Compile Include="EntityDesign\VisualStudio\EdmUtilsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ExecutorWrapperTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\DbContextGeneratorTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DatabaseEngineBaseTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DatabaseGenerationAssemblyLoaderTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DataConnectionUtilsTests.cs" />
