@@ -33,7 +33,7 @@
 
         <DirectoryRef Id="$(var.ItemTemplateRoot)_$(var.qualifier1)">
           <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
-            <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = True?>
+            <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = true?>
               <Directory Id="_$(var.ItemTemplateRoot)_$(var.qualifier1)_$(var.ItemTemplateLCID)"
                          Name="$(var.ItemTemplateLCID)">
                 <?foreach ItemTemplateVersion in $(var.ItemTemplateVersions)?>
@@ -109,7 +109,7 @@
           <?endif?>
 
           <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
-            <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = True?>
+            <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = true?>
               <?foreach ItemTemplateVersion in $(var.ItemTemplateVersions)?>
                 <ComponentRef Id="$(var.qualifier)dbcontextcontexttt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
                 <ComponentRef Id="$(var.qualifier)dbcontexttypestt_$(var.ItemTemplateVersion)_$(var.ItemTemplateRoot)_$(var.ItemTemplateLCID)" />
