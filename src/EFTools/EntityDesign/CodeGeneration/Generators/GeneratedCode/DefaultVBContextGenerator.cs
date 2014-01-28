@@ -55,8 +55,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
     }
 
-            this.Write("\r\n    Protected Override Sub OnModelCreating(Dim modelBuilder As DbModelBuilder)\r" +
-                    "\n");
+            this.Write("\r\n    Protected Overrides Sub OnModelCreating(ByVal modelBuilder As DbModelBuilde" +
+                    "r)\r\n");
 
     var anyConfiguration = false;
 
@@ -82,17 +82,17 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 }
 
 
-            this.Write("        modelBuilder.Entity<");
+            this.Write("        modelBuilder.Entity(Of ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
-            this.Write(">()\r\n");
+            this.Write(")() _\r\n");
 
             }
             else
             {
-                WriteLine(string.Empty);
+                WriteLine(" _");
             }
 
-            Write("                " + code.MethodChain(typeConfiguration));
+            Write("            " + code.MethodChain(typeConfiguration));
         }
 
         if (!firstTypeConfiguration)
@@ -137,14 +137,14 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             this.Write("        modelBuilder.Entity(Of ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
-            this.Write(")()\r\n            .Property(Function(e) e.");
+            this.Write(")() _\r\n            .Property(Function(e) e.");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(property)));
-            this.Write(")\r\n");
+            this.Write(") _\r\n");
 
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
                 Write("            " + code.MethodChain(propertyConfiguration));
@@ -186,13 +186,13 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
 
             this.Write("        modelBuilder");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.MethodChain(navigationPropertyMultiplicityConfiguration)));
-            this.Write("\r\n");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration))));
+            this.Write(" _\r\n");
 
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
                 Write("            " + code.MethodChain(navigationPropertyConfiguration));
@@ -214,7 +214,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 }
 
             this.Write("        modelBuilder");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.MethodChain(navigationPropertyMultiplicityConfiguration)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration))));
             this.Write("\r\n");
 
             }
@@ -224,6 +224,13 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             this.Write("    End Sub\r\nEnd Class\r\n");
             return this.GenerationEnvironment.ToString();
         }
+
+    private static string ApplyVBFixup(string methodChain)
+    {
+        return methodChain.Replace("                ", "            ")
+            .Replace(Environment.NewLine, " _" + Environment.NewLine);
+    }
+
 
 private global::System.Data.Entity.Core.Metadata.Edm.EntityContainer _ContainerField;
 

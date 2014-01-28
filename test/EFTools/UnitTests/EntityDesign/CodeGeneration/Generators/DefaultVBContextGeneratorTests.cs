@@ -27,7 +27,7 @@ Partial Public Class CodeFirstContainer
 
     Public Overridable Property Entities As DbSet(Of Entity)
 
-    Protected Override Sub OnModelCreating(Dim modelBuilder As DbModelBuilder)
+    Protected Overrides Sub OnModelCreating(ByVal modelBuilder As DbModelBuilder)
     End Sub
 End Class
 ",

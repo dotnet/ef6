@@ -38,7 +38,7 @@ Partial Public Class <#= code.Type(Container) #>
     }
 #>
 
-    Protected Override Sub OnModelCreating(Dim modelBuilder As DbModelBuilder)
+    Protected Overrides Sub OnModelCreating(ByVal modelBuilder As DbModelBuilder)
 <#
     var anyConfiguration = false;
 
@@ -64,15 +64,15 @@ Partial Public Class <#= code.Type(Container) #>
                 }
 
 #>
-        modelBuilder.Entity<<#= code.Type(entitySet.ElementType) #>>()
+        modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)() _
 <#
             }
             else
             {
-                WriteLine(string.Empty);
+                WriteLine(" _");
             }
 
-            Write("                " + code.MethodChain(typeConfiguration));
+            Write("            " + code.MethodChain(typeConfiguration));
         }
 
         if (!firstTypeConfiguration)
@@ -115,13 +115,13 @@ Partial Public Class <#= code.Type(Container) #>
                     }
 
 #>
-        modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)()
-            .Property(Function(e) e.<#= code.Property(property) #>)
+        modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)() _
+            .Property(Function(e) e.<#= code.Property(property) #>) _
 <#
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
                 Write("            " + code.MethodChain(propertyConfiguration));
@@ -162,12 +162,12 @@ Partial Public Class <#= code.Type(Container) #>
                     }
 
 #>
-        modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration)#>
+        modelBuilder<#= ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration)) #> _
 <#
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
                 Write("            " + code.MethodChain(navigationPropertyConfiguration));
@@ -188,7 +188,7 @@ Partial Public Class <#= code.Type(Container) #>
                     anyConfiguration = true;
                 }
 #>
-        modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration) #>
+        modelBuilder<#= ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration)) #>
 <#
             }
         }
@@ -196,3 +196,10 @@ Partial Public Class <#= code.Type(Container) #>
 #>
     End Sub
 End Class
+<#+
+    private static string ApplyVBFixup(string methodChain)
+    {
+        return methodChain.Replace("                ", "            ")
+            .Replace(Environment.NewLine, " _" + Environment.NewLine);
+    }
+#>

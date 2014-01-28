@@ -29,6 +29,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         /// </summary>
         protected abstract CodeDomProvider CodeProvider { get; }
 
+        internal abstract string NamedParameterSetter { get; }
+
         /// <summary>
         /// Gets the type identifier for the specified container.
         /// </summary>
