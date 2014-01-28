@@ -133,7 +133,6 @@ namespace System.Data.Entity.Core.Objects
 
         #region ITypedList Members
 
-        /// <inheritdoc />
         PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
         {
             PropertyDescriptorCollection propertyDescriptors;
@@ -172,7 +171,6 @@ namespace System.Data.Entity.Core.Objects
             return propertyDescriptors;
         }
 
-        /// <inheritdoc />
         string ITypedList.GetListName(PropertyDescriptor[] listAccessors)
         {
             return _rowType.Name;
