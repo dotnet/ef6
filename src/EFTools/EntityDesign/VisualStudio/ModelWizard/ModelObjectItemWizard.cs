@@ -596,7 +596,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// <returns>true if the item should be added; otherwise, false.</returns>
         public bool ShouldAddProjectItem(string filePath)
         {
-            return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst;
+            return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst &&
+                   _modelBuilderSettings.GenerationOption != ModelGenerationOption.CodeFirstFromDatabase;
         }
 
         // <summary>

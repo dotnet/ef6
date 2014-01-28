@@ -202,6 +202,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModel, 
                     "Generation option not updated correctly");
 
+                Wizard.ModelBuilderSettings.ModelBuilderEngine = null;
+
                 LazyInitialModelContentsFactory.AddSchemaSpecificReplacements(
                     Wizard.ModelBuilderSettings.ReplacementDictionary,
                     Wizard.ModelBuilderSettings.TargetSchemaVersion);
@@ -219,19 +221,24 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                             GetEdmxTemplateContent(Wizard.ModelBuilderSettings.VsTemplatePath),
                             Wizard.ModelBuilderSettings.ReplacementDictionary));
             }
-            else
+            else if (selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex)
             {
                 Debug.Assert(
-                    selectedOptionIndex == GenerateEmptyModelCodeFirstIndex ||
-                    selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex,
-                    "Unexpected index.");
+                    Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
+                    "Generation option not updated correctly");
+
+                Wizard.ModelBuilderSettings.ModelBuilderEngine = new CodeFirstModelBuilderEngine();
+            }
+            else
+            {
+                Debug.Assert(selectedOptionIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected index.");
 
                 Debug.Assert(
                     (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst
-                     && selectedOptionIndex == GenerateEmptyModelCodeFirstIndex) ||
-                    (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase
-                     && selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex),
+                     && selectedOptionIndex == GenerateEmptyModelCodeFirstIndex),
                     "Generation option not updated correctly");
+
+                Wizard.ModelBuilderSettings.ModelBuilderEngine = null;
             }
         }
 

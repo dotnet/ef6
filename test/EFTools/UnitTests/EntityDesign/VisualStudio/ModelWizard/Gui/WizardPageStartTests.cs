@@ -8,7 +8,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Moq;
     using Moq.Protected;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using UnitTests.TestHelpers;
@@ -130,31 +129,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_empty_model()
         {
-            var mockDte = new MockDTE(".NETFramework, Version=v4.5" , references: new Reference[0]);
+            var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.EmptyModel);
+            CreateWizardPageStart(wizard, WizardPageStart.GenerateEmptyModelIndex)
+                .OnDeactivate();
 
-            var modelBuilderSettings = new ModelBuilderSettings
-            {
-                NewItemFolder = @"C:\temp",
-                ModelName = "myModel",
-                ReplacementDictionary = new Dictionary<string, string>(),
-                TargetSchemaVersion = EntityFrameworkVersion.Version3,
-                Project = mockDte.Project,
-                GenerationOption = ModelGenerationOption.EmptyModel
-
-            };
-
-            var wizard = ModelBuilderWizardFormHelper.CreateWizard(modelBuilderSettings, mockDte.ServiceProvider);
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard) { CallBase = true };
-            mockWizardPageStart
-                .Protected()
-                .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
-                .Returns(true);
-            mockWizardPageStart
-                .Protected()
-                .Setup<int>("GetSelectedOptionIndex")
-                .Returns(WizardPageStart.GenerateEmptyModelIndex);
-
-            mockWizardPageStart.Object.OnDeactivate();
+            var modelBuilderSettings = wizard.ModelBuilderSettings;
 
             Assert.Equal(ModelGenerationOption.EmptyModel, modelBuilderSettings.GenerationOption);
             Assert.False(wizard.FileAlreadyExistsError);
@@ -166,6 +145,79 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_generate_from_database()
         {
+            
+            var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.GenerateFromDatabase);
+
+            var wizardPage = CreateWizardPageStart(wizard, WizardPageStart.GenerateFromDatabaseIndex);
+            var mockWizardPageStart = Mock.Get(wizardPage);
+            mockWizardPageStart
+                .Protected()
+                .Setup<string>("GetEdmxTemplateContent", ItExpr.IsAny<string>())
+                .Returns("vstemplate contents");
+
+            wizardPage.OnDeactivate();
+
+            var modelBuilderSettings = wizard.ModelBuilderSettings;
+
+            Assert.Equal(ModelGenerationOption.GenerateFromDatabase, modelBuilderSettings.GenerationOption);
+            Assert.False(wizard.FileAlreadyExistsError);
+            Assert.Equal(@"C:\temp\myModel.edmx", modelBuilderSettings.ModelPath);
+            // replacement dictionary updated lazily
+            Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
+            Assert.IsType<EdmxModelBuilderEngine>(modelBuilderSettings.ModelBuilderEngine);
+
+            mockWizardPageStart
+                .Protected()
+                .Verify("GetEdmxTemplateContent", Times.Once(), "fake.vstemplate");   
+        }
+
+        [Fact]
+        public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_CodeFirst_empty_model()
+        {
+            var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.EmptyModelCodeFirst);
+            CreateWizardPageStart(wizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex)
+                .OnDeactivate();
+
+            var modelBuilderSettings = wizard.ModelBuilderSettings;
+            Assert.Equal(ModelGenerationOption.EmptyModelCodeFirst, modelBuilderSettings.GenerationOption);
+            Assert.False(wizard.FileAlreadyExistsError);
+            Assert.Equal(@"C:\temp\myModel.cs", modelBuilderSettings.ModelPath);
+            Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
+            Assert.Null(modelBuilderSettings.ModelBuilderEngine);
+        }
+
+        [Fact]
+        public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_CodeFirst_from_database()
+        {
+            var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.CodeFirstFromDatabase);
+
+            CreateWizardPageStart(wizard, WizardPageStart.GenerateCodeFirstFromDatabaseIndex)
+                .OnDeactivate();
+
+            var modelBuilderSettings = wizard.ModelBuilderSettings;
+            Assert.Equal(ModelGenerationOption.CodeFirstFromDatabase, modelBuilderSettings.GenerationOption);
+            Assert.False(wizard.FileAlreadyExistsError);
+            Assert.Equal(@"C:\temp\myModel.cs", modelBuilderSettings.ModelPath);
+            Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
+            Assert.IsType<CodeFirstModelBuilderEngine>(modelBuilderSettings.ModelBuilderEngine);
+        }
+
+        private static WizardPageStart CreateWizardPageStart(ModelBuilderWizardForm wizard, int selectedOptionIndex)
+        {
+            var mockWizardPageStart = new Mock<WizardPageStart>(wizard) { CallBase = true };
+            mockWizardPageStart
+                .Protected()
+                .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
+                .Returns(true);
+            mockWizardPageStart
+                .Protected()
+                .Setup<int>("GetSelectedOptionIndex")
+                .Returns(selectedOptionIndex);
+            return mockWizardPageStart.Object;
+        }
+
+        private static ModelBuilderWizardForm CreateModelBuilderWizardForm(ModelGenerationOption modelGenerationOption)
+        {
             var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
 
             var modelBuilderSettings = new ModelBuilderSettings
@@ -175,36 +227,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 ReplacementDictionary = new Dictionary<string, string>(),
                 TargetSchemaVersion = EntityFrameworkVersion.Version3,
                 VsTemplatePath = "fake.vstemplate",
-                Project = mockDte.Project
+                Project = mockDte.Project,
+                GenerationOption = modelGenerationOption
             };
 
             var wizard = ModelBuilderWizardFormHelper.CreateWizard(modelBuilderSettings, mockDte.ServiceProvider);
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard) { CallBase = true };
-            mockWizardPageStart
-                .Protected()
-                .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
-                .Returns(true);
-            mockWizardPageStart
-                .Protected()
-                .Setup<int>("GetSelectedOptionIndex")
-                .Returns(WizardPageStart.GenerateFromDatabaseIndex);
-            mockWizardPageStart
-                .Protected()
-                .Setup<string>("GetEdmxTemplateContent", ItExpr.IsAny<string>())
-                .Returns("vstemplate contents");
-
-            mockWizardPageStart.Object.OnDeactivate();
-
-            Assert.Equal(ModelGenerationOption.GenerateFromDatabase, modelBuilderSettings.GenerationOption);
-            Assert.False(wizard.FileAlreadyExistsError);
-            Assert.Equal(@"C:\temp\myModel.edmx", modelBuilderSettings.ModelPath);
-            // replacement dictionary updated lazily
-            Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
-            Assert.NotNull(modelBuilderSettings.ModelBuilderEngine);
-
-            mockWizardPageStart
-                .Protected()
-                .Verify("GetEdmxTemplateContent", Times.Once(), "fake.vstemplate");   
+            return wizard;
         }
 
         [Fact]
