@@ -200,6 +200,23 @@ namespace System.Data.Entity.Utilities
                 Assert.Null(typeof(Random).TryGetElementType(typeof(Collection<>)));
             }
 
+            // CodePlex 2014
+            [Fact]
+            public void TryGetElementType_returns_null_when_ICollection_implemented_more_than_once()
+            {
+                Assert.Null(typeof(RoleCollection2014).TryGetElementType(typeof(ICollection<>)));
+            }
+
+            // CodePlex 2014
+            [Fact]
+            public void GetCollectionElementType_throws_reasonable_exception_when_ICollection_implemented_more_than_once()
+            {
+                Assert.Equal(
+                    Strings.PocoEntityWrapper_UnexpectedTypeForNavigationProperty(
+                        typeof(RoleCollection2014).FullName, typeof(ICollection<>)),
+                    Assert.Throws<InvalidOperationException>(() => EntityUtil.GetCollectionElementType(typeof(RoleCollection2014))).Message);
+            }
+
             public class MultipleImplementor<TContext, TElement> : IDatabaseInitializer<TContext>, IEnumerable<TElement>
                 where TContext : DbContext
             {
@@ -216,6 +233,51 @@ namespace System.Data.Entity.Utilities
                 {
                     return GetEnumerator();
                 }
+            }
+
+            public interface IRole2014
+            {
+                string Permissions { get; set; }
+            }
+
+            public interface IRoleCollection2014 : ICollection<IRole2014>
+            {
+            }
+
+            public class RoleCollection2014 : List<Role2014>, IRoleCollection2014
+            {
+                public new IEnumerator<IRole2014> GetEnumerator()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Add(IRole2014 item)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public bool Contains(IRole2014 item)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void CopyTo(IRole2014[] array, int arrayIndex)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public bool Remove(IRole2014 item)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public bool IsReadOnly { get; private set; }
+            }
+
+            public class Role2014 : IRole2014
+            {
+                public int RoleId { get; set; }
+                public string Permissions { get; set; }
             }
         }
 
