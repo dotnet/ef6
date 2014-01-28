@@ -13,9 +13,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Runtime.Serialization;
     using System.Windows.Forms;
     using EnvDTE;
+    using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Validation;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Microsoft.VSDesigner.Data;
     using Microsoft.VSDesigner.VSDesignerPackage;
@@ -25,6 +25,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.VisualStudio.DataTools.Interop;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.WizardFramework;
+    using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
     // <summary>
     //     This is the second page in the ModelGen VS wizard and is invoked if the user wants to generate the model from a database.
@@ -752,7 +753,47 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Wizard.ModelBuilderSettings.InitialCatalog = initialCatalog;
 
             // compute the connection string name
-            return Wizard.GetUniqueConnectionStringName(initialCatalog);
+            return GetUniqueConnectionStringName(
+                Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase
+                    ? Wizard.ModelBuilderSettings.ModelName
+                    : GetBaseEdmxConnectionStringName(initialCatalog));
+        }
+
+        private string GetBaseEdmxConnectionStringName(string baseName)
+        {
+            if (String.IsNullOrEmpty(baseName))
+            {
+                baseName = ModelConstants.DefaultEntityContainerName;
+            }
+            else
+            {
+                // replace spaces with underscores
+                baseName = baseName.Replace(" ", "_");
+                baseName = baseName.Replace("\t", "_");
+                baseName = baseName + ModelConstants.DefaultEntityContainerName;
+
+                if (!VsUtils.IsValidIdentifier(baseName, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
+                {
+                    baseName = ModelConstants.DefaultEntityContainerName;
+                }
+            }
+
+            return baseName;
+        }
+
+        // computes a unique connection string name based on the input base name
+        private string GetUniqueConnectionStringName(string baseConnectionStringName)
+        {
+            var connectionStringNames = PackageManager.Package.ConnectionManager.GetExistingConnectionStringNames(Wizard.Project);
+
+            var i = 1;
+            var uniqueConnectionStringName = baseConnectionStringName;
+            while (connectionStringNames.Contains(uniqueConnectionStringName))
+            {
+                uniqueConnectionStringName = baseConnectionStringName + i++;
+            }
+
+            return uniqueConnectionStringName;
         }
 
         private void disallowSensitiveInfoButton_CheckedChanged(object sender, EventArgs e)

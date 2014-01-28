@@ -131,6 +131,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeGeneration\Generators\CSharpCodeFirstEmptyModelGenarator.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerationException.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeHelper.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="CodeGeneration\Extensions\StringExtensions.cs" />
     <Compile Include="CodeGeneration\Generators\IContextGenerator.cs" />
     <Compile Include="CodeGeneration\Generators\IEntityTypeGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\VBCodeFirstEmptyModelGenerator.cs" />
     <Compile Include="CodeGeneration\VBCodeHelper.cs" />
     <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultVBContextGenerator.cs">
       <AutoGen>True</AutoGen>
@@ -760,9 +762,9 @@
     <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_CS_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_CS_WS_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_V6.0.vstemplate" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_WS_V6.0.vstemplate" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\ProjectItem.cs.template" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\ProjectItem.vb.template" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_WS_V6.0.vstemplate">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS_ASPNET.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB.vstemplate" />

@@ -316,7 +316,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
 
 
-            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
+            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase ||
+                Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase)
             {
                 GenerateModel(Wizard.ModelBuilderSettings);
             }

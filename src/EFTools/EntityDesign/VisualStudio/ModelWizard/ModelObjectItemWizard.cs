@@ -4,6 +4,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -300,9 +301,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         {
             if (_edmxItem == null)
             {
-                if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
+                if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst
+                    || _modelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase)
                 {
-                    AddOneEFItems(_modelBuilderSettings.Project, _modelBuilderSettings.ModelName);
+                    Debug.Assert(
+                        _modelBuilderSettings.ModelBuilderEngine == null ^ 
+                        _modelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
+                        "Model should be null for Empty Model and not null CodeFirst from database");
+
+                    AddCodeFirstItems(
+                        _modelBuilderSettings.Project,
+                        _modelBuilderSettings.ModelName,
+                        _modelBuilderSettings.ModelBuilderEngine != null
+                            ? _modelBuilderSettings.ModelBuilderEngine.Model 
+                            : null);
                 }
 
                 return;
@@ -575,7 +587,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 }
             }
         }
-        private static void AddOneEFItems(Project project, string modelName)
+        private static void AddCodeFirstItems(Project project, string modelName, DbModel model)
         {
             using (new VsUtils.HourglassHelper())
             {
@@ -585,7 +597,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 var templateName = string.Format(CultureInfo.InvariantCulture, "CF{0}{1}EF6.zip", languageTag, webTag);
                 var template = ((Solution2)project.DTE.Solution).GetProjectItemTemplate(templateName, project.Kind);
 
-                project.ProjectItems.AddFromTemplate(template, modelName);
+                try
+                {
+                    OneEFWizard.Model = model;
+                    project.ProjectItems.AddFromTemplate(template, modelName);
+                }
+                finally
+                {
+                    OneEFWizard.Model = null;
+                }
             }
         }
 

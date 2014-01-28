@@ -1725,6 +1725,24 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return childProjItem;
         }
 
+        public static ProjectItem AddNewFile(Project project, string path, string contents)
+        {
+            Debug.Assert(project != null, "project is null");
+            Debug.Assert(!string.IsNullOrWhiteSpace(path), "invalid path");
+
+            if (string.IsNullOrWhiteSpace(contents))
+            {
+                return null;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+            // TODO: Source control?
+            File.WriteAllText(path, contents);
+
+            return project.ProjectItems.AddFromFile(path);
+        }
+
         internal static void CreateEmptyFile(string filePath, Encoding encoding)
         {
             try
