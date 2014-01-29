@@ -1628,12 +1628,16 @@ namespace System.Data.Entity.Core.Objects
         // Ensures that the connection is opened for an operation that requires an open connection to the store.
         // Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         // </summary>
+        // <param name="shouldMonitorTransactions"> Whether there will be a transaction started on the connection that should be monitored. </param>
         // <exception cref="ObjectDisposedException">
         // If the <see cref="ObjectContext" /> instance has been disposed.
         // </exception>
-        internal virtual void EnsureConnection()
+        internal virtual void EnsureConnection(bool shouldMonitorTransactions)
         {
-            EnsureTransactionHandlerRegistered();
+            if (shouldMonitorTransactions)
+            {
+                EnsureTransactionHandlerRegistered();
+            }
 
             if (Connection.State == ConnectionState.Broken)
             {
@@ -1684,13 +1688,18 @@ namespace System.Data.Entity.Core.Objects
         // Ensures that the connection is opened for an operation that requires an open connection to the store.
         // Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         // </summary>
+        // <param name="shouldMonitorTransactions"> Whether there will be a transaction started on the connection that should be monitored. </param>
+        // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <exception cref="ObjectDisposedException">
         // If the <see cref="ObjectContext" /> instance has been disposed.
         // </exception>
-        internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
+        internal virtual async Task EnsureConnectionAsync(bool shouldMonitorTransactions, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            EnsureTransactionHandlerRegistered();
+            if (shouldMonitorTransactions)
+            {
+                EnsureTransactionHandlerRegistered();
+            }
 
             if (Connection.State == ConnectionState.Broken)
             {
@@ -2516,7 +2525,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (refreshKeys.Count > 0)
                 {
-                    EnsureConnection();
+                    EnsureConnection(shouldMonitorTransactions: false);
                     openedConnection = true;
 
                     // All entities from a single set can potentially be refreshed in the same query.
@@ -2661,7 +2670,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (refreshKeys.Count > 0)
                 {
-                    await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    await EnsureConnectionAsync(/*shouldMonitorTransactions:*/ false, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     openedConnection = true;
 
                     // All entities from a single set can potentially be refreshed in the same query.
@@ -3215,7 +3224,7 @@ namespace System.Data.Entity.Core.Objects
         internal virtual T ExecuteInTransaction<T>(
             Func<T> func, IDbExecutionStrategy executionStrategy, bool startLocalTransaction, bool releaseConnectionOnSuccess)
         {
-            EnsureConnection();
+            EnsureConnection(startLocalTransaction);
 
             var needLocalTransaction = false;
             var connection = (EntityConnection)Connection;
@@ -3298,7 +3307,7 @@ namespace System.Data.Entity.Core.Objects
             Func<Task<T>> func, IDbExecutionStrategy executionStrategy,
             bool startLocalTransaction, bool releaseConnectionOnSuccess, CancellationToken cancellationToken)
         {
-            await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await EnsureConnectionAsync(startLocalTransaction, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             var needLocalTransaction = false;
             var connection = (EntityConnection)Connection;

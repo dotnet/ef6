@@ -85,6 +85,7 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var transactionMock = new Mock<DbTransaction>();
                 transactionMock.Setup(m => m.Commit()).Throws<CommitFailedException>();
+                transactionMock.Protected().Setup<DbConnection>("DbConnection").Returns(new Mock<DbConnection>().Object);
                 var transaction = new EntityTransaction(new EntityConnection(), transactionMock.Object);
 
                 Assert.Throws<CommitFailedException>(() => transaction.Commit());
@@ -94,6 +95,7 @@ namespace System.Data.Entity.Core.EntityClient
             public void Uses_interception()
             {
                 var transactionMock = new Mock<DbTransaction>();
+                transactionMock.Protected().Setup<DbConnection>("DbConnection").Returns(new Mock<DbConnection>().Object);
                 var transaction = new EntityTransaction(new EntityConnection(), transactionMock.Object);
                 var transactionInterceptorMock = new Mock<IDbTransactionInterceptor>();
                 DbInterception.Add(transactionInterceptorMock.Object);
@@ -122,6 +124,7 @@ namespace System.Data.Entity.Core.EntityClient
             public void Uses_interception()
             {
                 var transactionMock = new Mock<DbTransaction>();
+                transactionMock.Protected().Setup<DbConnection>("DbConnection").Returns(new Mock<DbConnection>().Object);
                 var transaction = new EntityTransaction(new EntityConnection(), transactionMock.Object);
                 var transactionInterceptorMock = new Mock<IDbTransactionInterceptor>();
                 DbInterception.Add(transactionInterceptorMock.Object);
