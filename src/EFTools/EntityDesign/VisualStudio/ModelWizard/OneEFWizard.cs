@@ -26,7 +26,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         private List<KeyValuePair<string, string>> _generatedCode;
         private Project _project;
         private string _contextFilePath;
-        
 
         /// <inheritdoc />
         public void BeforeOpeningFile(ProjectItem projectItem)
@@ -47,8 +46,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// <inheritdoc />
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
+            var dte = (DTE2)automationObject;
+            _project = VsUtils.GetActiveProject(dte);
+
             _generatedCode = GenerateCode(
-                (DTE2)automationObject, 
+                dte,
                 replacementsDictionary["$rootnamespace$"], 
                 replacementsDictionary["$safeitemname$"]).ToList();
 
@@ -82,8 +84,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
         private IEnumerable<KeyValuePair<string, string>> GenerateCode(DTE2 dte, string codeNamespace, string contextClassName)
         {
-            _project = VsUtils.GetActiveProject(dte);
-
             if (Model != null)
             {
                 return new CodeFirstModelGenerator(

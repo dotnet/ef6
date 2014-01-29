@@ -600,7 +600,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 try
                 {
                     OneEFWizard.Model = model;
-                    project.ProjectItems.AddFromTemplate(template, modelName);
+
+                    var parentItems =
+                        project.DTE.SelectedItems.Count > 0 && project.DTE.SelectedItems.Item(1).ProjectItem != null
+                            ? project.DTE.SelectedItems.Item(1).ProjectItem.ProjectItems
+                            : project.ProjectItems;
+
+                    parentItems.AddFromTemplate(template, modelName);
                 }
                 finally
                 {
