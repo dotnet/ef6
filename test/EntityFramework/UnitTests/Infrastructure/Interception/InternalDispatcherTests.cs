@@ -168,10 +168,11 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Equal(
                     "0123",
                     dispatcher.Dispatch(
-                        () => "0",
+                        new object(),
+                        (t, c) => "0",
                         interceptionContext,
-                        i => i.CallMeFirst(interceptionContext),
-                        i => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext)));
+                        (i, t, c) => i.CallMeFirst(interceptionContext),
+                        (i, t, c) => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext)));
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(interceptionContext), Times.Once()));
@@ -209,11 +210,12 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 Assert.Equal(
                     "N123",
-                    dispatcher.Dispatch(
-                        (Func<string>)(() => { throw new Exception("Bang!"); }),
+                    dispatcher.Dispatch<Object, DbCommandInterceptionContext<string>, string>(
+                        new object(),
+                        (t, c) => { throw new Exception("Bang!"); },
                         interceptionContext,
-                        i => i.CallMeFirst(interceptionContext),
-                        i => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext)));
+                        (i, t, c) => i.CallMeFirst(c),
+                        (i, t, c) => c.Result = c.Result + i.CallMe(c)));
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(interceptionContext), Times.Once()));
@@ -250,11 +252,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
 
                 var exception = Assert.Throws<Exception>(
-                    () => dispatcher.Dispatch(
-                        (Func<string>)(() => { throw new Exception("Bang!"); }),
+                    () => dispatcher.Dispatch<Object, DbCommandInterceptionContext<string>, string>(
+                        new object(), 
+                        (t, c) => { throw new Exception("Bang!"); },
                         interceptionContext,
-                        i => i.CallMeFirst(interceptionContext),
-                        i => i.CallMe(interceptionContext)));
+                        (i, t, c) => i.CallMeFirst(c),
+                        (i, t, c) => i.CallMe(c)));
 
                 Assert.Equal("Bing!", exception.Message);
 
@@ -291,11 +294,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
 
                 Assert.Null(
-                    dispatcher.Dispatch(
-                        (Func<string>)(() => { throw new Exception("Bang!"); }),
+                    dispatcher.Dispatch<Object, DbCommandInterceptionContext<string>, string>(
+                        new object(),
+                        (t, c) => { throw new Exception("Bang!"); },
                         interceptionContext,
-                        i => i.CallMeFirst(interceptionContext),
-                        i => i.CallMe(interceptionContext)));
+                        (i, t, c) => i.CallMeFirst(interceptionContext),
+                        (i, t, c) => i.CallMe(interceptionContext)));
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(interceptionContext), Times.Once()));
@@ -308,10 +312,11 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Equal(
                     "0",
                     new InternalDispatcher<IFakeInterceptor1>().Dispatch(
-                        () => "0", 
-                        interceptionContext, 
-                        i => i.CallMeFirst(interceptionContext),
-                        i => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext)));
+                        new object(),
+                        (t, c) => "0",
+                        interceptionContext,
+                        (i, t, c) => i.CallMeFirst(interceptionContext),
+                        (i, t, c) => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext)));
             }
 
             [Fact]
@@ -342,11 +347,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
 
                 var exception = Assert.Throws<Exception>(
-                    () => dispatcher.Dispatch(
-                        (Func<string>)(() => { throw new Exception("Bang!"); }),
+                    () => dispatcher.Dispatch<Object, DbCommandInterceptionContext<string>, string>(
+                        new object(),
+                        (t, c) => { throw new Exception("Bang!"); },
                         interceptionContext,
-                        i => i.CallMeFirst(interceptionContext),
-                        i => i.CallMe(interceptionContext)));
+                        (i, t, c) => i.CallMeFirst(c),
+                        (i, t, c) => i.CallMe(c)));
 
                 Assert.Equal("Bang!", exception.Message);
 
@@ -383,11 +389,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
 
                 var exception = Assert.Throws<Exception>(
-                    () => dispatcher.Dispatch(
-                        (Func<string>)(() => { throw new Exception("Bang!"); }),
+                    () => dispatcher.Dispatch<Object, DbCommandInterceptionContext<string>, string>(
+                        new object(),
+                        (t, c) => { throw new Exception("Bang!"); },
                         interceptionContext,
-                        i => i.CallMeFirst(interceptionContext),
-                        i => i.CallMe(interceptionContext)));
+                        (i, t, c) => i.CallMeFirst(c),
+                        (i, t, c) => i.CallMe(c)));
 
                 Assert.Equal("Bing!", exception.Message);
 
@@ -424,11 +431,12 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 Assert.Equal(
                     "N",
-                    dispatcher.Dispatch(
-                        (Func<string>)(() => { throw new Exception("Bang!"); }),
+                    dispatcher.Dispatch<Object, DbCommandInterceptionContext<string>, string>(
+                        new object(),
+                        (t, c) => { throw new Exception("Bang!"); },
                         interceptionContext,
-                        i => i.CallMeFirst(interceptionContext),
-                        i => i.CallMe(interceptionContext)));
+                        (i, t, c) => i.CallMeFirst(c),
+                        (i, t, c) => i.CallMe(c)));
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(interceptionContext), Times.Once()));
@@ -449,10 +457,11 @@ namespace System.Data.Entity.Infrastructure.Interception
                     "Ba-da-bing!",
                     Assert.Throws<Exception>(
                         () => dispatcher.Dispatch(
-                            () => "N",
+                            new object(),
+                            (t, c) => "N",
                             interceptionContext,
-                            i => i.CallMeFirst(interceptionContext),
-                            i => i.CallMe(interceptionContext))).Message);
+                            (i, t, c) => i.CallMeFirst(interceptionContext),
+                            (i, t, c) => i.CallMe(interceptionContext))).Message);
 
                 mockInterceptors.First().Verify(m => m.CallMeFirst(interceptionContext), Times.Once());
                 mockInterceptors.Skip(1).Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Never()));
@@ -474,10 +483,11 @@ namespace System.Data.Entity.Infrastructure.Interception
                     "Ba-da-bing!",
                     Assert.Throws<Exception>(
                         () => dispatcher.Dispatch(
-                            () => "N",
+                            new object(),
+                            (t, c) => "N",
                             interceptionContext,
-                            i => i.CallMeFirst(interceptionContext),
-                            i => i.CallMe(interceptionContext))).Message);
+                            (i, t, c) => i.CallMeFirst(c),
+                            (i, t, c) => i.CallMe(c))).Message);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.First().Verify(m => m.CallMe(interceptionContext), Times.Once());
@@ -515,10 +525,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => "0");
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, ct) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => c.Result = c.Result + i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.IsAny<DbCommandInterceptionContext<string>>()), Times.Never()));
@@ -564,10 +576,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => "0");
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, ct) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => c.Result = c.Result + i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(interceptionContext), Times.Once()));
@@ -610,10 +624,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => "0");
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(interceptionContext), Times.Once()));
@@ -654,10 +670,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => "0");
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(interceptionContext), Times.Once()));
@@ -675,10 +693,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => "0");
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => interceptionContext.Result = interceptionContext.Result + i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => c.Result = c.Result + i.CallMe(c),
+                    CancellationToken.None);
 
                 operation.Start();
                 interceptTask.Wait();
@@ -717,10 +737,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => { throw new Exception("Bang!"); });
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.IsAny<DbCommandInterceptionContext<string>>()), Times.Never()));
@@ -764,10 +786,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => { throw new Exception("Bang!"); });
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.IsAny<DbCommandInterceptionContext<string>>()), Times.Never()));
@@ -810,10 +834,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var operation = new Task<string>(() => { throw new Exception("Bang!"); });
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.IsAny<DbCommandInterceptionContext<string>>()), Times.Never()));
@@ -859,10 +885,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var interceptionContext = new DbCommandInterceptionContext<string>().AsAsync();
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => i.CallMe(c),
+                    CancellationToken.None);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.IsAny<DbCommandInterceptionContext<string>>()), Times.Never()));
@@ -890,10 +918,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                     "Ba-da-bing!",
                     Assert.Throws<Exception>(
                         () => dispatcher.DispatchAsync(
-                            () => operation,
+                            new object(),
+                            (t, c, tc) => operation,
                             interceptionContext,
-                            i => i.CallMeFirst(interceptionContext),
-                            i => i.CallMe(interceptionContext))).Message);
+                            (i, t, c) => i.CallMeFirst(c),
+                            (i, t, c) => i.CallMe(c),
+                            CancellationToken.None)).Message);
 
                 mockInterceptors.First().Verify(m => m.CallMeFirst(interceptionContext), Times.Once());
                 mockInterceptors.Skip(1).Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Never()));
@@ -914,10 +944,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
 
                 var interceptTask = dispatcher.DispatchAsync(
-                    () => operation,
+                    new object(),
+                    (t, c, tc) => operation,
                     interceptionContext,
-                    i => i.CallMeFirst(interceptionContext),
-                    i => i.CallMe(interceptionContext));
+                    (i, t, c) => i.CallMeFirst(c),
+                    (i, t, c) => i.CallMe(c),
+                    CancellationToken.None);
 
                 operation.Start();
 

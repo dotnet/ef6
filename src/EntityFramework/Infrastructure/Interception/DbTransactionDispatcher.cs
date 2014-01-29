@@ -51,13 +51,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(transaction, "transaction");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbTransactionInterceptionContext<DbConnection>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => transaction.Connection,
-                clonedInterceptionContext,
-                i => i.ConnectionGetting(transaction, clonedInterceptionContext),
-                i => i.ConnectionGot(transaction, clonedInterceptionContext));
+                transaction,
+                (t, c) => t.Connection,
+                new DbTransactionInterceptionContext<DbConnection>(interceptionContext),
+                (i, t, c) => i.ConnectionGetting(t, c),
+                (i, t, c) => i.ConnectionGot(t, c));
         }
 
         /// <summary>
@@ -79,13 +78,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(transaction, "transaction");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbTransactionInterceptionContext<IsolationLevel>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => transaction.IsolationLevel,
-                clonedInterceptionContext,
-                i => i.IsolationLevelGetting(transaction, clonedInterceptionContext),
-                i => i.IsolationLevelGot(transaction, clonedInterceptionContext));
+                transaction,
+                (t, c) => t.IsolationLevel,
+                new DbTransactionInterceptionContext<IsolationLevel>(interceptionContext),
+                (i, t, c) => i.IsolationLevelGetting(t, c),
+                (i, t, c) => i.IsolationLevelGot(t, c));
         }
 
         /// <summary>
@@ -101,13 +99,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(transaction, "transaction");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbTransactionInterceptionContext(interceptionContext);
-
             InternalDispatcher.Dispatch(
-                transaction.Commit,
-                clonedInterceptionContext,
-                i => i.Committing(transaction, clonedInterceptionContext),
-                i => i.Committed(transaction, clonedInterceptionContext));
+                transaction,
+                (t, c) => t.Commit(),
+                new DbTransactionInterceptionContext(interceptionContext).WithConnection(transaction.Connection),
+                (i, t, c) => i.Committing(t, c),
+                (i, t, c) => i.Committed(t, c));
         }
 
         /// <summary>
@@ -125,11 +122,17 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             var clonedInterceptionContext = new DbTransactionInterceptionContext(interceptionContext);
 
+            if (transaction.Connection != null)
+            {
+                clonedInterceptionContext = clonedInterceptionContext.WithConnection(transaction.Connection);
+            }
+
             InternalDispatcher.Dispatch(
-                transaction.Dispose,
+                transaction,
+                (t, c) => t.Dispose(),
                 clonedInterceptionContext,
-                i => i.Disposing(transaction, clonedInterceptionContext),
-                i => i.Disposed(transaction, clonedInterceptionContext));
+                (i, t, c) => i.Disposing(t, c),
+                (i, t, c) => i.Disposed(t, c));
         }
 
         /// <summary>
@@ -145,13 +148,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(transaction, "transaction");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbTransactionInterceptionContext(interceptionContext);
-
             InternalDispatcher.Dispatch(
-                transaction.Rollback,
-                clonedInterceptionContext,
-                i => i.RollingBack(transaction, clonedInterceptionContext),
-                i => i.RolledBack(transaction, clonedInterceptionContext));
+                transaction,
+                (t, c) => t.Rollback(),
+                new DbTransactionInterceptionContext(interceptionContext).WithConnection(transaction.Connection),
+                (i, t, c) => i.RollingBack(t, c),
+                (i, t, c) => i.RolledBack(t, c));
         }
 
         /// <inheritdoc />

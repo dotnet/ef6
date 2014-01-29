@@ -20,10 +20,10 @@ namespace System.Data.Entity.Infrastructure.Interception
             DebugCheck.NotNull(commandTree);
             DebugCheck.NotNull(interceptionContext);
 
-            var clonedInterceptionContext = new DbCommandTreeInterceptionContext(interceptionContext);
-
             return _internalDispatcher.Dispatch(
-                commandTree, clonedInterceptionContext, i => i.TreeCreated(clonedInterceptionContext));
+                commandTree,
+                new DbCommandTreeInterceptionContext(interceptionContext),
+                (i, c) => i.TreeCreated(c));
         }
     }
 }

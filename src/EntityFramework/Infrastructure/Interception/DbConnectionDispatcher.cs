@@ -54,13 +54,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => connection.BeginTransaction(clonedInterceptionContext.IsolationLevel),
-                clonedInterceptionContext,
-                i => i.BeginningTransaction(connection, clonedInterceptionContext),
-                i => i.BeganTransaction(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.BeginTransaction(c.IsolationLevel),
+                new BeginTransactionInterceptionContext(interceptionContext),
+                (i, t, c) => i.BeginningTransaction(t, c),
+                (i, t, c) => i.BeganTransaction(t, c));
         }
 
         /// <summary>
@@ -77,13 +76,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
-
             InternalDispatcher.Dispatch(
-                () => connection.Close(),
-                clonedInterceptionContext,
-                i => i.Closing(connection, clonedInterceptionContext),
-                i => i.Closed(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.Close(),
+                new DbConnectionInterceptionContext(interceptionContext),
+                (i, t, c) => i.Closing(t, c),
+                (i, t, c) => i.Closed(t, c));
         }
 
         /// <summary>
@@ -100,18 +98,17 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
-
             InternalDispatcher.Dispatch(
-                () =>
+                connection,
+                (t, c) =>
                 {
                     // using dynamic here to emulate the behavior of the using statement
-                    dynamic dynamicConnection = connection;
+                    dynamic dynamicConnection = t;
                     dynamicConnection.Dispose();
                 },
-                clonedInterceptionContext,
-                i => i.Disposing(connection, clonedInterceptionContext),
-                i => i.Disposed(connection, clonedInterceptionContext));
+                new DbConnectionInterceptionContext(interceptionContext),
+                (i, t, c) => i.Disposing(t, c),
+                (i, t, c) => i.Disposed(t, c));
         }
 
         /// <summary>
@@ -133,13 +130,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => connection.ConnectionString,
-                clonedInterceptionContext,
-                i => i.ConnectionStringGetting(connection, clonedInterceptionContext),
-                i => i.ConnectionStringGot(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.ConnectionString,
+                new DbConnectionInterceptionContext<string>(interceptionContext),
+                (i, t, c) => i.ConnectionStringGetting(t, c),
+                (i, t, c) => i.ConnectionStringGot(t, c));
         }
 
         /// <summary>
@@ -156,13 +152,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionPropertyInterceptionContext<string>(interceptionContext);
-
-            InternalDispatcher.Dispatch<DbConnectionPropertyInterceptionContext<string>>(
-                () => connection.ConnectionString = clonedInterceptionContext.Value,
-                clonedInterceptionContext,
-                i => i.ConnectionStringSetting(connection, clonedInterceptionContext),
-                i => i.ConnectionStringSet(connection, clonedInterceptionContext));
+            InternalDispatcher.Dispatch<DbConnection, DbConnectionPropertyInterceptionContext<string>>(
+                connection,
+                (t, c) => t.ConnectionString = c.Value,
+                new DbConnectionPropertyInterceptionContext<string>(interceptionContext),
+                (i, t, c) => i.ConnectionStringSetting(t, c),
+                (i, t, c) => i.ConnectionStringSet(t, c));
         }
 
         /// <summary>
@@ -184,13 +179,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext<int>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => connection.ConnectionTimeout,
-                clonedInterceptionContext,
-                i => i.ConnectionTimeoutGetting(connection, clonedInterceptionContext),
-                i => i.ConnectionTimeoutGot(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.ConnectionTimeout,
+                new DbConnectionInterceptionContext<int>(interceptionContext),
+                (i, t, c) => i.ConnectionTimeoutGetting(t, c),
+                (i, t, c) => i.ConnectionTimeoutGot(t, c));
         }
 
         /// <summary>
@@ -212,13 +206,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => connection.Database,
-                clonedInterceptionContext,
-                i => i.DatabaseGetting(connection, clonedInterceptionContext),
-                i => i.DatabaseGot(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.Database,
+                new DbConnectionInterceptionContext<string>(interceptionContext),
+                (i, t, c) => i.DatabaseGetting(t, c),
+                (i, t, c) => i.DatabaseGot(t, c));
         }
 
         /// <summary>
@@ -240,13 +233,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => connection.DataSource,
-                clonedInterceptionContext,
-                i => i.DataSourceGetting(connection, clonedInterceptionContext),
-                i => i.DataSourceGot(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.DataSource,
+                new DbConnectionInterceptionContext<string>(interceptionContext),
+                (i, t, c) => i.DataSourceGetting(t, c),
+                (i, t, c) => i.DataSourceGot(t, c));
         }
 
         /// <summary>
@@ -262,13 +254,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new EnlistTransactionInterceptionContext(interceptionContext);
-
             InternalDispatcher.Dispatch(
-                () => connection.EnlistTransaction(clonedInterceptionContext.Transaction),
-                clonedInterceptionContext,
-                i => i.EnlistingTransaction(connection, clonedInterceptionContext),
-                i => i.EnlistedTransaction(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.EnlistTransaction(c.Transaction),
+                new EnlistTransactionInterceptionContext(interceptionContext),
+                (i, t, c) => i.EnlistingTransaction(t, c),
+                (i, t, c) => i.EnlistedTransaction(t, c));
         }
 
         /// <summary>
@@ -285,13 +276,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
-
             InternalDispatcher.Dispatch(
-                () => connection.Open(),
-                clonedInterceptionContext,
-                i => i.Opening(connection, clonedInterceptionContext),
-                i => i.Opened(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.Open(),
+                new DbConnectionInterceptionContext(interceptionContext),
+                (i, t, c) => i.Opening(t, c),
+                (i, t, c) => i.Opened(t, c));
         }
 
 #if !NET40
@@ -311,18 +301,13 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext(interceptionContext);
-
-            if (!clonedInterceptionContext.IsAsync)
-            {
-                clonedInterceptionContext = clonedInterceptionContext.AsAsync();
-            }
-
             return InternalDispatcher.DispatchAsync(
-                () => connection.OpenAsync(cancellationToken),
-                clonedInterceptionContext,
-                i => i.Opening(connection, clonedInterceptionContext),
-                i => i.Opened(connection, clonedInterceptionContext));
+                connection,
+                (t, c, ct) => t.OpenAsync(ct),
+                new DbConnectionInterceptionContext(interceptionContext).AsAsync(),
+                (i, t, c) => i.Opening(t, c),
+                (i, t, c) => i.Opened(t, c),
+                cancellationToken);
         }
 #endif
 
@@ -345,13 +330,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext<string>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => connection.ServerVersion,
-                clonedInterceptionContext,
-                i => i.ServerVersionGetting(connection, clonedInterceptionContext),
-                i => i.ServerVersionGot(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.ServerVersion,
+                new DbConnectionInterceptionContext<string>(interceptionContext),
+                (i, t, c) => i.ServerVersionGetting(t, c),
+                (i, t, c) => i.ServerVersionGot(t, c));
         }
 
         /// <summary>
@@ -373,13 +357,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(connection, "connection");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            var clonedInterceptionContext = new DbConnectionInterceptionContext<ConnectionState>(interceptionContext);
-
             return InternalDispatcher.Dispatch(
-                () => connection.State,
-                clonedInterceptionContext,
-                i => i.StateGetting(connection, clonedInterceptionContext),
-                i => i.StateGot(connection, clonedInterceptionContext));
+                connection,
+                (t, c) => t.State,
+                new DbConnectionInterceptionContext<ConnectionState>(interceptionContext),
+                (i, t, c) => i.StateGetting(t, c),
+                (i, t, c) => i.StateGot(t, c));
         }
 
         /// <inheritdoc />
