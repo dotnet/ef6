@@ -2,17 +2,15 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
-    using System.IO;
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.Data.Entity.Design.CodeGeneration;
-    using Microsoft.Data.Entity.Design.CodeGeneration.Generators;
-    using Microsoft.Data.Entity.Design.Common;
     using Microsoft.VisualStudio.Data.Framework;
     using Microsoft.VisualStudio.TemplateWizard;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
@@ -52,6 +50,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             _generatedCode = GenerateCode(
                 dte,
                 replacementsDictionary["$rootnamespace$"], 
+                replacementsDictionary["$safeitemname$"],
+
+                //TODO: needs to be replaced with the actual value
                 replacementsDictionary["$safeitemname$"]).ToList();
 
             Debug.Assert(_generatedCode.Count > 0, "code has not been generated");
@@ -82,28 +83,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             return true;
         }
 
-        private IEnumerable<KeyValuePair<string, string>> GenerateCode(DTE2 dte, string codeNamespace, string contextClassName)
+        private IEnumerable<KeyValuePair<string, string>> GenerateCode(DTE2 dte, string codeNamespace, string contextClassName, string connectionStringName)
         {
-            if (Model != null)
-            {
-                return new CodeFirstModelGenerator(
+            return new CodeFirstModelGenerator(
                     _project,
                     new ServiceProvider((IOleServiceProvider)dte))
-                        .Generate(Model, codeNamespace);
-            }
-            else
-            {
-                if (VsUtils.GetLanguageForProject(_project) == LangEnum.VisualBasic)
-                {
-                    return new VBCodeFirstEmptyModelGenerator()
-                        .Generate(codeNamespace, contextClassName);
-                }
-                else
-                {
-                    return new CSharpCodeFirstEmptyModelGenarator()
-                        .Generate(codeNamespace, contextClassName);
-                }
-            }              
+                        .Generate(Model, codeNamespace, contextClassName, connectionStringName);
         }
     }
 }

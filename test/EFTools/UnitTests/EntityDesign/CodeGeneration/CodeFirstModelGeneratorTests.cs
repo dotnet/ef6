@@ -40,10 +40,22 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         {
             var generator = new CodeFirstModelGenerator(MockDTE.CreateProject(), Mock.Of<IServiceProvider>());
 
-            var files = generator.Generate(Model, "WebApplication1.Models").ToArray();
+            var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
             Assert.Equal(2, files.Length);
-            Assert.Equal(new[] { "CodeFirstContainer.cs", "Entity.cs" }, files.Select(p => p.Key));
+            Assert.Equal(new[] { "MyContext.cs", "Entity.cs" }, files.Select(p => p.Key));
+        }
+
+        [Fact]
+        public void Generate_returns_code_when_cs_and_empty_model()
+        {
+            var generator = new CodeFirstModelGenerator(MockDTE.CreateProject(), Mock.Of<IServiceProvider>());
+
+            var files = generator.Generate(null, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
+
+            Assert.Equal(1, files.Length);
+            Assert.Equal("MyContext.cs", files[0].Key);
+            Assert.Contains(Resources.CodeFirstCodeFile_DbSetComment_CS, files[0].Value);
         }
 
         [Fact]
@@ -53,10 +65,24 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 MockDTE.CreateProject(kind: MockDTE.VBProjectKind),
                 Mock.Of<IServiceProvider>());
 
-            var files = generator.Generate(Model, "WebApplication1.Models").ToArray();
+            var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
             Assert.Equal(2, files.Length);
-            Assert.Equal(new[] { "CodeFirstContainer.vb", "Entity.vb" }, files.Select(p => p.Key));
+            Assert.Equal(new[] { "MyContext.vb", "Entity.vb" }, files.Select(p => p.Key));
+        }
+
+        [Fact]
+        public void Generate_returns_code_when_vb_and_empty_model()
+        {
+            var generator = new CodeFirstModelGenerator(
+                MockDTE.CreateProject(kind: MockDTE.VBProjectKind),
+                Mock.Of<IServiceProvider>());
+
+            var files = generator.Generate(null, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
+
+            Assert.Equal(1, files.Length);
+            Assert.Equal("MyContext.vb", files[0].Key);
+            Assert.Contains(Resources.CodeFirstCodeFile_DbSetComment_VB, files[0].Value);
         }
 
         [Fact]
@@ -70,10 +96,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             {
                 var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
 
-                var files = generator.Generate(Model, "WebApplication1.Models").ToArray();
+                var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
                 Assert.Equal(2, files.Length);
-                Assert.Equal(new[] { "CodeFirstContainer.cs", "Entity.cs" }, files.Select(p => p.Key));
+                Assert.Equal(new[] { "MyContext.cs", "Entity.cs" }, files.Select(p => p.Key));
                 Assert.True(files.All(p => p.Value == "Customized"));
             }
         }
@@ -89,10 +115,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             {
                 var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
 
-                var files = generator.Generate(Model, "WebApplication1.Models").ToArray();
+                var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
                 Assert.Equal(2, files.Length);
-                Assert.Equal(new[] { "CodeFirstContainer.vb", "Entity.vb" }, files.Select(p => p.Key));
+                Assert.Equal(new[] { "MyContext.vb", "Entity.vb" }, files.Select(p => p.Key));
                 Assert.True(files.All(p => p.Value == "Customized"));
             }
         }
@@ -114,10 +140,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
 
                 var ex = Assert.Throws<CodeFirstModelGenerationException>(
-                    () => generator.Generate(Model, "WebApplication1.Models").ToArray());
+                    () => generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray());
 
                 Assert.Equal(
-                    string.Format(Resources.ErrorGeneratingCodeFirstModel, "CodeFirstContainer.cs"),
+                    string.Format(Resources.ErrorGeneratingCodeFirstModel, "MyContext.cs"),
                     ex.Message);
                 Assert.Same(exception, ex.InnerException);
             }
@@ -141,7 +167,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
 
                 var ex = Assert.Throws<CodeFirstModelGenerationException>(
-                    () => generator.Generate(Model, "WebApplication1.Models").ToArray());
+                    () => generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray());
 
                 Assert.Equal(
                     string.Format(Resources.ErrorGeneratingCodeFirstModel, "Entity.cs"),

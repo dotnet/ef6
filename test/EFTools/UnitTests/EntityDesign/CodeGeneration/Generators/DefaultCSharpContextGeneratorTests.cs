@@ -10,7 +10,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public void Generate_returns_code()
         {
             var generator = new DefaultCSharpContextGenerator();
-            var result = generator.Generate(Model.ConceptualModel.Container, Model, "WebApplication1.Models");
+            var result = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString");
 
             Assert.Equal(
                 @"namespace WebApplication1.Models
@@ -20,10 +20,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class CodeFirstContainer : DbContext
+    public partial class MyContext : DbContext
     {
-        public CodeFirstContainer()
-            : base(""name=CodeFirstContainer"")
+        public MyContext()
+            : base(""name=MyContextConnString"")
         {
         }
 

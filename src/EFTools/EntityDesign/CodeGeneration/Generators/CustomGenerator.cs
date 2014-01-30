@@ -24,16 +24,19 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             _templatePath = templatePath;
         }
 
-        public string Generate(EntityContainer container, DbModel model, string codeNamespace)
+        public string Generate(DbModel model, string codeNamespace, string contextClassName, string connectionStringName)
         {
-            Debug.Assert(container != null, "container is null.");
             Debug.Assert(model != null, "model is null.");
+            Debug.Assert(!string.IsNullOrWhiteSpace(codeNamespace), "invalid namespace");
+            Debug.Assert(!string.IsNullOrWhiteSpace(contextClassName), "contextClassName");
+            Debug.Assert(!string.IsNullOrWhiteSpace(connectionStringName), "connectionStringName");
 
             var sessionHost = (ITextTemplatingSessionHost)_textTemplating;
             sessionHost.Session = sessionHost.CreateSession();
-            sessionHost.Session.Add("Container", container);
             sessionHost.Session.Add("Model", model);
             sessionHost.Session.Add("Namespace", codeNamespace);
+            sessionHost.Session.Add("ContextClassName", contextClassName);
+            sessionHost.Session.Add("ConnectionStringName", connectionStringName);
 
             return _textTemplating.ProcessTemplate(_templatePath, File.ReadAllText(_templatePath));
         }

@@ -27,24 +27,34 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     var code = new VBCodeHelper();
     var edm = new EdmHelper(code);
 
-    if (Container == null)
-    {
-        throw new ArgumentNullException("Container");
-    }
-
     if (Model == null)
     {
         throw new ArgumentNullException("Model");
     }
 
+    if (Namespace == null)
+    {
+        throw new ArgumentNullException("Namespace");
+    }
+
+    if (ContextClassName == null)
+    {
+        throw new ArgumentNullException("ContextClassName");
+    }
+
+    if (ConnectionStringName == null)
+    {
+        throw new ArgumentNullException("ConnectionStringName");
+    }
+
             this.Write("Imports System\r\nImports System.Data.Entity\r\nImports System.ComponentModel.DataAnn" +
                     "otations.Schema\r\nImports System.Linq\r\n\r\nPartial Public Class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContextClassName));
             this.Write("\r\n    Inherits DbContext\r\n\r\n    Public Sub New()\r\n        MyBase.New(\"name=");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(ConnectionStringName));
             this.Write("\")        \r\n    End Sub\r\n\r\n");
 
-    foreach (var entitySet in Container.EntitySets)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
 
             this.Write("    Public Overridable Property ");
@@ -60,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
     var anyConfiguration = false;
 
-    foreach (var entitySet in Container.EntitySets)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
         var typeConfigurations = edm.GetConfigurations(entitySet, Model).OfType<IFluentConfiguration>()
             .Where(c => !(c is IAttributeConfiguration || c is KeyConfiguration));
@@ -232,19 +242,6 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     }
 
 
-private global::System.Data.Entity.Core.Metadata.Edm.EntityContainer _ContainerField;
-
-/// <summary>
-/// Access the Container parameter of the template.
-/// </summary>
-private global::System.Data.Entity.Core.Metadata.Edm.EntityContainer Container
-{
-    get
-    {
-        return this._ContainerField;
-    }
-}
-
 private global::System.Data.Entity.Infrastructure.DbModel _ModelField;
 
 /// <summary>
@@ -271,6 +268,32 @@ private string Namespace
     }
 }
 
+private string _ContextClassNameField;
+
+/// <summary>
+/// Access the ContextClassName parameter of the template.
+/// </summary>
+private string ContextClassName
+{
+    get
+    {
+        return this._ContextClassNameField;
+    }
+}
+
+private string _ConnectionStringNameField;
+
+/// <summary>
+/// Access the ConnectionStringName parameter of the template.
+/// </summary>
+private string ConnectionStringName
+{
+    get
+    {
+        return this._ConnectionStringNameField;
+    }
+}
+
 
 /// <summary>
 /// Initialize the template
@@ -279,20 +302,6 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool ContainerValueAcquired = false;
-if (this.Session.ContainsKey("Container"))
-{
-    this._ContainerField = ((global::System.Data.Entity.Core.Metadata.Edm.EntityContainer)(this.Session["Container"]));
-    ContainerValueAcquired = true;
-}
-if ((ContainerValueAcquired == false))
-{
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Container");
-    if ((data != null))
-    {
-        this._ContainerField = ((global::System.Data.Entity.Core.Metadata.Edm.EntityContainer)(data));
-    }
-}
 bool ModelValueAcquired = false;
 if (this.Session.ContainsKey("Model"))
 {
@@ -319,6 +328,34 @@ if ((NamespaceValueAcquired == false))
     if ((data != null))
     {
         this._NamespaceField = ((string)(data));
+    }
+}
+bool ContextClassNameValueAcquired = false;
+if (this.Session.ContainsKey("ContextClassName"))
+{
+    this._ContextClassNameField = ((string)(this.Session["ContextClassName"]));
+    ContextClassNameValueAcquired = true;
+}
+if ((ContextClassNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ContextClassName");
+    if ((data != null))
+    {
+        this._ContextClassNameField = ((string)(data));
+    }
+}
+bool ConnectionStringNameValueAcquired = false;
+if (this.Session.ContainsKey("ConnectionStringName"))
+{
+    this._ConnectionStringNameField = ((string)(this.Session["ConnectionStringName"]));
+    ConnectionStringNameValueAcquired = true;
+}
+if ((ConnectionStringNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ConnectionStringName");
+    if ((data != null))
+    {
+        this._ConnectionStringNameField = ((string)(data));
     }
 }
 

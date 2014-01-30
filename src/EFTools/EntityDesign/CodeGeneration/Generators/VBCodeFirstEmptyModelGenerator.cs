@@ -2,11 +2,11 @@
 
 namespace Microsoft.Data.Entity.Design.CodeGeneration.Generators
 {
+    using System.Data.Entity.Infrastructure;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
-    using System.Collections.Generic;
     using System.Globalization;
 
-    internal class VBCodeFirstEmptyModelGenerator
+    internal class VBCodeFirstEmptyModelGenerator : IContextGenerator
     {
         private const string VBCodeFileTemplate =
 @"Imports System
@@ -16,24 +16,24 @@ Imports System.Linq
 Public Class {0}
     Inherits DbContext
 
-	{1}
-	Public Sub New()
-		MyBase.New(""name={0}"")
+    {1}
+    Public Sub New()
+        MyBase.New(""name={2}"")
 
-		{2}
+        {3}
 
-       ' Public Property MyEntities() As DbSet(Of MyEntity)
+       ' Public Overridable Property MyEntities() As DbSet(Of MyEntity)
 
     End Sub
 
 End Class
 
-' Public Class MyEntity
-'     Public Property Id() As Int
-'	Public Property Name() As String
-' End Class
+'Public Class MyEntity
+'    Public Property Id() As Int
+'    Public Property Name() As String
+'End Class
 ";
-        public IEnumerable<KeyValuePair<string, string>> Generate(string codeNamespace, string contextClassName)
+        public string Generate(DbModel model, string codeNamespace, string contextClassName, string connectionStringName)
         {
             var ctorComment = 
                 string.Format(
@@ -42,14 +42,14 @@ End Class
                     contextClassName,
                     codeNamespace);
 
-            yield return new KeyValuePair<string, string>(
-                contextClassName,
+            return
                 string.Format(
                     CultureInfo.CurrentCulture, 
                     VBCodeFileTemplate,  
                     contextClassName,
                     ctorComment,
-                    Resources.CodeFirstCodeFile_DbSetComment_VB));
+                    connectionStringName,
+                    Resources.CodeFirstCodeFile_DbSetComment_VB);
         }
     }
 }

@@ -158,6 +158,7 @@
     <Compile Include="EntityDesignModel\Validation\RuntimeMetadataValidatorTests.cs" />
     <Compile Include="EntityDesignPackage\CustomCode\MicrosoftDataEntityDesignDocDataTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\CodeFirstModelGeneratorTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\CodeGeneratorFactoryTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\CascadeDeleteConfigurationTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\ForeignKeyConfigurationTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\JoinTableConfigurationTests.cs" />
@@ -192,11 +193,13 @@
     <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\DatabaseGeneratedDiscovererTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Discoverers\Type\KeyDiscovererTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Discoverers\Type\TableDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\CSharpCodeFirstEmptyModelGeneratorTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultCSharpContextGeneratorTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultCSharpEntityTypeGeneratorTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultVBContextGeneratorTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultVBEntityTypeGeneratorTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Generators\GeneratorTestBase.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\VBCodeFirstEmptyModelGeneratorTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\VBCodeHelperTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Extensions\DbModelExtensionsTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Extensions\EdmMemberExtensionsTests.cs" />
