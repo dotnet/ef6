@@ -53,8 +53,8 @@ Project global post-settings and targets.
       <EF6NuGetPackageVersion>$(NuGetPackageVersion)</EF6NuGetPackageVersion>
       <EF6NuGetPackageWixId>$(NuGetPackageVersion)</EF6NuGetPackageWixId>
       <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
-      <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">386835</ProjectUrlFwLinkID>
-      <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">386836</LicenseUrlFwLinkID>
+      <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">391060</ProjectUrlFwLinkID>
+      <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">391059</LicenseUrlFwLinkID>
       <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</NuSpecProperties>
       <NuSpecProperties>$(NuSpecProperties);ProjectUrlFwLinkID=$(ProjectUrlFwLinkID);LicenseUrlFwLinkID=$(LicenseUrlFwLinkID)</NuSpecProperties>
     </PropertyGroup>
