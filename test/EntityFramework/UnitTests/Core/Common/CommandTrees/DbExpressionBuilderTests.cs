@@ -374,12 +374,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         [Fact]
-        public void IsNull_RowType()
+        public void IsNull_RowType_does_not_throw()
         {
             var argument = new Row(((DbExpression)"columnValue").As("C1"));
-            var message = Assert.Throws<ArgumentException>(() => DbExpressionBuilder.IsNull(argument)).Message;
-
-            Assert.True(message.Contains(Strings.Cqt_IsNull_InvalidType));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.IsNull(argument));
         }
 
         private void VerifyIsNull(DbIsNullExpression expression, DbExpression argument)
