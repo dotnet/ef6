@@ -179,29 +179,45 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void All_interceptors_are_added_and_Loaded_interceptors_are_called_when_config_is_locked()
             {
                 var mockAppConfigChain = new Mock<ResolverChain>();
-                var mockNormalChain = new Mock<ResolverChain>();
+
                 var interceptor1 = new Mock<IDbInterceptor>().Object;
                 var interceptor2 = new Mock<IDbConfigurationInterceptor>().Object;
-                mockNormalChain
+                var mockNormalResolver = new Mock<IDbDependencyResolver>();
+                mockNormalResolver
                     .Setup(m => m.GetServices(typeof(IDbInterceptor), null))
                     .Returns(new[] { interceptor1, interceptor2 });
+
+                var normalChain = new ResolverChain();
+                normalChain.Add(mockNormalResolver.Object);
+
+                var interceptor3 = new Mock<IDbConfigurationInterceptor>().Object;
+                var mockLoadedResolver = new Mock<IDbDependencyResolver>();
+                mockLoadedResolver
+                    .Setup(m => m.GetServices(typeof(IDbInterceptor), null))
+                    .Returns(new[] { interceptor3 });
 
                 var mockDispatchers = new Mock<DbDispatchers>();
                 var mockDispatcher = new Mock<DbConfigurationDispatcher>();
                 mockDispatchers.Setup(m => m.Configuration).Returns(mockDispatcher.Object);
+                mockDispatcher
+                    .Setup(m => m.Loaded(It.IsAny<DbConfigurationLoadedEventArgs>(), It.IsAny<DbInterceptionContext>()))
+                    .Callback<DbConfigurationLoadedEventArgs, DbInterceptionContext>(
+                        (a, _) => a.AddDependencyResolver(mockLoadedResolver.Object, false));
 
                 var config = new InternalConfiguration(
-                    mockAppConfigChain.Object, mockNormalChain.Object,
+                    mockAppConfigChain.Object, normalChain,
                     new RootDependencyResolver(),
                     new Mock<AppConfigDependencyResolver>().Object,
                     () => mockDispatchers.Object);
 
                 config.Lock();
 
-                mockNormalChain.Verify(m => m.GetServices(typeof(IDbInterceptor), null));
-                mockDispatchers.Verify(m => m.AddInterceptor(interceptor1));
-                mockDispatchers.Verify(m => m.AddInterceptor(interceptor2));
-             
+                mockNormalResolver.Verify(m => m.GetServices(typeof(IDbInterceptor), null), Times.Exactly(2));
+                mockLoadedResolver.Verify(m => m.GetServices(typeof(IDbInterceptor), null), Times.Once());
+                mockDispatchers.Verify(m => m.AddInterceptor(interceptor1), Times.Once());
+                mockDispatchers.Verify(m => m.AddInterceptor(interceptor2), Times.Once());
+                mockDispatchers.Verify(m => m.AddInterceptor(interceptor3), Times.Once());
+
                 mockDispatcher.Verify(
                     m => m.Loaded(It.IsAny<DbConfigurationLoadedEventArgs>(), It.IsAny<DbInterceptionContext>()));
             }
