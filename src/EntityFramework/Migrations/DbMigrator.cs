@@ -933,19 +933,24 @@ namespace System.Data.Entity.Migrations
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
         {
+            ExecuteStatements(migrationStatements, null);
+        }
+
+        internal void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements, DbConnection existingConnection)
+        {
             DebugCheck.NotNull(migrationStatements);
 
             DbConnection connection = null;
             try
             {
-                connection = CreateConnection();
+                connection = existingConnection ?? CreateConnection();
 
                 DbProviderServices.GetExecutionStrategy(connection).Execute(
                     () => ExecuteStatementsInternal(migrationStatements, connection));
             }
             finally
             {
-                if (connection != null)
+                if (existingConnection == null && connection != null)
                 {
                     DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }

@@ -382,6 +382,7 @@
     <Compile Include="Infrastructure\Transactions\CommitFailedExceptionTests.cs" />
     <Compile Include="Infrastructure\Transactions\DefaultTransactionHandlerTests.cs" />
     <Compile Include="Infrastructure\Transactions\CommitFailureHandlerTests.cs" />
+    <Compile Include="Infrastructure\Transactions\TransactionContextInitializerTests.cs" />
     <Compile Include="Internal\CommandTracerTests.cs" />
     <Compile Include="Internal\ConfigFile\InterceptorsCollectionTests.cs" />
     <Compile Include="Internal\ConfigFile\InterceptorElementTests.cs" />

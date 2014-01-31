@@ -384,6 +384,21 @@ namespace System.Data.Entity.Infrastructure.Transactions
         }
 #endif
 
+        public class BeganTransaction
+        {
+            [Fact]
+            public void BeganTransaction_does_not_fail_if_exception_thrown_such_that_there_is_no_transaction()
+            {
+                var context = MockHelper.CreateMockObjectContext<object>();
+                var handler = new CommitFailureHandler();
+                handler.Initialize(context);
+
+                var interceptionContext = new BeginTransactionInterceptionContext().WithObjectContext(context);
+
+                Assert.DoesNotThrow(() => handler.BeganTransaction(new Mock<DbConnection>().Object, interceptionContext));
+            }
+        }
+
         private static DbConnection CreateMockConnection()
         {
             var connectionMock = new Mock<DbConnection>();

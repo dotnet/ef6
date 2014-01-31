@@ -146,7 +146,8 @@ namespace System.Data.Entity.Infrastructure
         public override void BeganTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext)
         {
             if (TransactionContext == null
-                || !MatchesParentContext(connection, interceptionContext))
+                || !MatchesParentContext(connection, interceptionContext)
+                || interceptionContext.Result == null)
             {
                 return;
             }
