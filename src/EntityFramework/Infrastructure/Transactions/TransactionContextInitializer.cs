@@ -35,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
                     var migrator = new DbMigrator(context.InternalContext.MigrationsConfiguration, context, DatabaseExistenceState.Exists);
                     using (new TransactionScope(TransactionScopeOption.Suppress))
                     {
-                        migrator.ExecuteStatements(sqlStatements);
+                        migrator.ExecuteStatements(sqlStatements, context.Database.Connection);
                     }
                 }
             }
