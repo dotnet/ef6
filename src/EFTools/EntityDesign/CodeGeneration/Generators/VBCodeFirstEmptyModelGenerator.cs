@@ -19,17 +19,15 @@ Public Class {0}
     {1}
     Public Sub New()
         MyBase.New(""name={2}"")
-
-        {3}
-
-       ' Public Overridable Property MyEntities() As DbSet(Of MyEntity)
-
     End Sub
+
+    {3}
+    ' Public Overridable Property MyEntities() As DbSet(Of MyEntity)
 
 End Class
 
 'Public Class MyEntity
-'    Public Property Id() As Int
+'    Public Property Id() As Int32
 '    Public Property Name() As String
 'End Class
 ";

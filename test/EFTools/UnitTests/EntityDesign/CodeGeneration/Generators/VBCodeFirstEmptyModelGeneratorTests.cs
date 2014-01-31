@@ -33,17 +33,15 @@ Public Class MyContext
     " + ctorComment + @"
     Public Sub New()
         MyBase.New(""name=MyContextConnString"")
-
-        " + Resources.CodeFirstCodeFile_DbSetComment_VB + @"
-
-       ' Public Overridable Property MyEntities() As DbSet(Of MyEntity)
-
     End Sub
+
+    " + Resources.CodeFirstCodeFile_DbSetComment_VB + @"
+    ' Public Overridable Property MyEntities() As DbSet(Of MyEntity)
 
 End Class
 
 'Public Class MyEntity
-'    Public Property Id() As Int
+'    Public Property Id() As Int32
 '    Public Property Name() As String
 'End Class
 ", generatedCode);
