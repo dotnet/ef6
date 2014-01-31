@@ -246,6 +246,7 @@
     <Compile Include="ProductivityApi\DeadlockTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForSqlCe35.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
+    <Compile Include="Query\ConditionalTranslatorTests.cs" />
     <Compile Include="Query\LinqToEntities\HasFlagTests.cs" />
     <Compile Include="Query\LinqToEntities\ProjectionTests.cs" />
     <Compile Include="Query\NullSemanticsTests.cs" />

@@ -149,7 +149,8 @@ namespace System.Data.Entity.Core.Common
         {
             return TypeSemantics.IsReferenceType(typeUsage) ||
                    TypeSemantics.IsEntityType(typeUsage) ||
-                   TypeSemantics.IsScalarType(typeUsage);
+                   TypeSemantics.IsScalarType(typeUsage) ||
+                   TypeSemantics.IsRowType(typeUsage);
         }
 
         internal static bool IsValidInOpType(TypeUsage typeUsage)

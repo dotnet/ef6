@@ -665,12 +665,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
             Check.NotNull(expression, "expression");
 
-            return VisitUnary(
-                expression,
-                exp =>
-                TypeSemantics.IsRowType(exp.ResultType)
-                    ? CqtBuilder.CreateIsNullExpressionAllowingRowTypeArgument(exp)
-                    : CqtBuilder.IsNull(exp));
+            return VisitUnary(expression, CqtBuilder.IsNull);
         }
 
         /// <summary>Implements the visitor pattern for the arithmetic operation applied to numeric arguments.</summary>

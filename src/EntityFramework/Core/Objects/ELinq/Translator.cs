@@ -44,6 +44,32 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 return GetType().Name;
             }
+
+            internal static Expression UnwrapConvert(Expression input)
+            {
+                // unwrap all converts
+                while (ExpressionType.Convert
+                       == input.NodeType)
+                {
+                    input = ((UnaryExpression)input).Operand;
+                }
+                return input;
+            }
+
+            internal static bool ExpressionIsNullConstant(Expression expression)
+            {
+                // convert statements introduced by compiler should not affect nullness
+                expression = UnwrapConvert(expression);
+
+                // check if the unwrapped expression is a null constant
+                if (ExpressionType.Constant
+                    != expression.NodeType)
+                {
+                    return false;
+                }
+                var constant = (ConstantExpression)expression;
+                return null == constant.Value;
+            }
         }
 
         #region Misc
@@ -982,12 +1008,31 @@ namespace System.Data.Entity.Core.Objects.ELinq
             protected override DbExpression TypedTranslate(ExpressionConverter parent, ConditionalExpression linq)
             {
                 // translate Test ? IfTrue : IfFalse --> CASE WHEN Test THEN IfTrue ELSE IfFalse
-                var whenExpressions = new List<DbExpression>(1);
-                whenExpressions.Add(parent.TranslateExpression(linq.Test));
-                var thenExpressions = new List<DbExpression>(1);
-                thenExpressions.Add(parent.TranslateExpression(linq.IfTrue));
-                var elseExpression = parent.TranslateExpression(linq.IfFalse);
-                return DbExpressionBuilder.Case(whenExpressions, thenExpressions, elseExpression);
+                var whenExpression = parent.TranslateExpression(linq.Test);
+                DbExpression thenExpression;
+                DbExpression elseExpression;
+
+                if (!ExpressionIsNullConstant(linq.IfTrue))
+                {
+                    thenExpression = parent.TranslateExpression(linq.IfTrue);
+                    elseExpression = !ExpressionIsNullConstant(linq.IfFalse)
+                        ? parent.TranslateExpression(linq.IfFalse)
+                        : thenExpression.ResultType.Null();
+                }
+                else if (!ExpressionIsNullConstant(linq.IfFalse))
+                {
+                    elseExpression = parent.TranslateExpression(linq.IfFalse);
+                    thenExpression = elseExpression.ResultType.Null();
+                }
+                else
+                {
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedNullConstant(DescribeClrType(linq.Type)));
+                }
+
+                return DbExpressionBuilder.Case(
+                    new List<DbExpression> {whenExpression},
+                    new List<DbExpression> {thenExpression},
+                    elseExpression);
             }
         }
 
@@ -1209,32 +1254,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 // create IsNull expression
                 return ExpressionConverter.CreateIsNullExpression(inputCqt, input.Type);
-            }
-
-            private static bool ExpressionIsNullConstant(Expression expression)
-            {
-                // convert statements introduced by compiler should not affect nullness
-                expression = UnwrapConvert(expression);
-
-                // check if the unwrapped expression is a null constant
-                if (ExpressionType.Constant
-                    != expression.NodeType)
-                {
-                    return false;
-                }
-                var constant = (ConstantExpression)expression;
-                return null == constant.Value;
-            }
-
-            private static Expression UnwrapConvert(Expression input)
-            {
-                // unwrap all converts
-                while (ExpressionType.Convert
-                       == input.NodeType)
-                {
-                    input = ((UnaryExpression)input).Operand;
-                }
-                return input;
             }
         }
 

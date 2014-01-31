@@ -251,6 +251,63 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return true;
         }
 
+        internal static readonly PatternMatchRule Rule_IsNullOverCase =
+            new PatternMatchRule(
+                new Node(
+                    ConditionalOp.PatternIsNull,
+                    new Node(
+                        CaseOp.Pattern,
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern),
+                        new Node(LeafOp.Pattern))),
+                ProcessIsNullOverCase);
+
+        // Simplifies the following two cases:
+        // (CASE WHEN condition THEN NULL ELSE constant END) IS NULL => condition
+        // (CASE WHEN condition THEN constant ELSE NULL END) IS NULL => NOT condition
+        private static bool ProcessIsNullOverCase(RuleProcessingContext context, Node isNullOpNode, out Node newNode)
+        {
+            var caseOpNode = isNullOpNode.Child0;
+
+            if (caseOpNode.Children.Count != 3)
+            {
+                newNode = isNullOpNode;
+                return false;
+            }
+
+            var whenNode = caseOpNode.Child0;
+            var thenNode = caseOpNode.Child1;
+            var elseNode = caseOpNode.Child2;
+
+            switch (thenNode.Op.OpType)
+            {
+                case OpType.Null:
+                    switch (elseNode.Op.OpType)
+                    {
+                        case OpType.Constant:
+                        case OpType.InternalConstant:
+                        case OpType.NullSentinel:
+                            newNode = whenNode;
+                            return true;
+                    }
+                    break;
+                case OpType.Constant:
+                case OpType.InternalConstant:
+                case OpType.NullSentinel:
+                    if (elseNode.Op.OpType == OpType.Null)
+                    {
+                        newNode = context.Command.CreateNode(
+                            context.Command.CreateConditionalOp(OpType.Not),
+                            whenNode);
+                        return true;
+                    }
+                    break;
+            }
+
+            newNode = isNullOpNode;
+            return false;
+        }
+
         #endregion
 
         #region EqualsOverConstant Rules
@@ -640,6 +697,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         internal static readonly Rule[] Rules = new Rule[]
             {
+                Rule_IsNullOverCase,
                 Rule_SimplifyCase,
                 Rule_FlattenCase,
                 Rule_LikeOverConstants,

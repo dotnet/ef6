@@ -454,7 +454,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 // Thus, given an input X, we rewritte it as:  if (X is null) then NULL else rewritten.
                 if (newRow == null)
                 {
-                    DbExpression condition = DbExpressionBuilder.CreateIsNullExpressionAllowingRowTypeArgument(expression);
+                    DbExpression condition = expression.IsNull();
                     DbExpression nullExpression = rewrittenRowTypeUsage.Null();
                     rewritten = DbExpressionBuilder.Case(
                         new List<DbExpression>(new[] { condition }),
