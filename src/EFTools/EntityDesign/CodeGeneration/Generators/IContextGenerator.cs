@@ -2,11 +2,10 @@
 
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
 
     internal interface IContextGenerator
     {
-        string Generate(EntityContainer container, DbModel model, string codeNamespace);
+        string Generate(DbModel model, string codeNamespace, string contextClassName, string connectionStringName);
     }
 }

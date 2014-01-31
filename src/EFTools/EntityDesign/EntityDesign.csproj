@@ -131,7 +131,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CodeGeneration\Generators\CSharpCodeFirstEmptyModelGenarator.cs" />
+    <Compile Include="CodeGeneration\CodeGeneratorFactory.cs" />
+    <Compile Include="CodeGeneration\Generators\CSharpCodeFirstEmptyModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerationException.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeHelper.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="CodeGeneration\Extensions\IEnumerableExtensions.cs" />
     <Compile Include="CodeGeneration\Extensions\StoreGeneratedPatternExtensions.cs" />
     <Compile Include="CodeGeneration\Extensions\StringExtensions.cs" />
+    <Compile Include="CodeGeneration\ICodeGeneratorFactory.cs" />
     <Compile Include="CodeGeneration\Generators\IContextGenerator.cs" />
     <Compile Include="CodeGeneration\Generators\IEntityTypeGenerator.cs" />
     <Compile Include="CodeGeneration\Generators\VBCodeFirstEmptyModelGenerator.cs" />

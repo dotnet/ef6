@@ -10,7 +10,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public void Generate_returns_code()
         {
             var generator = new DefaultVBContextGenerator();
-            var result = generator.Generate(Model.ConceptualModel.Container, Model, "WebApplication1.Models");
+            var result = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString");
 
             Assert.Equal(
                 @"Imports System
@@ -18,11 +18,11 @@ Imports System.Data.Entity
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Linq
 
-Partial Public Class CodeFirstContainer
+Partial Public Class MyContext
     Inherits DbContext
 
     Public Sub New()
-        MyBase.New(""name=CodeFirstContainer"")        
+        MyBase.New(""name=MyContextConnString"")        
     End Sub
 
     Public Overridable Property Entities As DbSet(Of Entity)

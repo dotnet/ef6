@@ -1,12 +1,13 @@
 ﻿<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
 
   <TemplateData>
-    <Name>EF NuGet Package</Name>
-    <Description>EF NuGet Package.</Description>
+    <Name>OneEF CodeFirst</Name>
+    <Description>OneEF CodeFirst.</Description>
     <ProjectType>VisualBasic</ProjectType>
     <Icon />
     <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
     <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_VB_V6.0</TemplateID>
+    <Hidden>true</Hidden>
   </TemplateData>
 
   <TemplateContent>

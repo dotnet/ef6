@@ -3,29 +3,29 @@
 namespace Microsoft.Data.Entity.Design.CodeGeneration.Generators
 {
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
-    using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Globalization;
 
-    internal class CSharpCodeFirstEmptyModelGenarator
+    internal class CSharpCodeFirstEmptyModelGenerator : IContextGenerator
     {
         private const string CSharpCodeFileTemplate = 
 @"namespace {0}
 {{
-	using System;
+    using System;
     using System.Data.Entity;
     using System.Linq;
 
     public class {1} : DbContext
     {{
-		{2}
+        {2}
         public {1}()
-            : base(""name={1}"")
+            : base(""name={3}"")
         {{
         }}
 
-		{3}
+        {4}
 
-        // public DbSet<MyEntity> MyEntities {{ get; set; }}
+        // public virtual DbSet<MyEntity> MyEntities {{ get; set; }}
     }}
 
     //public class MyEntity
@@ -35,7 +35,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration.Generators
     //}}
 }}";
 
-        public IEnumerable<KeyValuePair<string, string>> Generate(string codeNamespace, string contextClassName)
+        public string Generate(DbModel model, string codeNamespace, string contextClassName, string connectionStringName)
         {
             var ctorComment = 
                 string.Format(
@@ -44,15 +44,15 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration.Generators
                     contextClassName,
                     codeNamespace);
 
-            yield return new KeyValuePair<string, string>(
-                contextClassName,
+            return
                 string.Format(
                     CultureInfo.CurrentCulture, 
                     CSharpCodeFileTemplate, 
                     codeNamespace, 
                     contextClassName,
                     ctorComment,
-                    Resources.CodeFirstCodeFile_DbSetComment_CS));
+                    connectionStringName,
+                    Resources.CodeFirstCodeFile_DbSetComment_CS);
         }
     }
 }
