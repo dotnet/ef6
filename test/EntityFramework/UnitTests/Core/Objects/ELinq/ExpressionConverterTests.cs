@@ -180,7 +180,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             var methods = new ExpressionConverter.MethodCallTranslator.StringConcatTranslator().Methods;
 
-            Assert.Equal(3, methods.Count());
+            Assert.Equal(7, methods.Count());
             Assert.True(methods.All(m => m != null));
         }
 
@@ -294,6 +294,61 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             Assert.Equal(1, properties.Count());
             Assert.True(properties.All(p => p != null));
+        }
+
+        [Fact]
+        public void StringTranslatorUtils_GetConcatArgs_finds_all_args()
+        {
+            Expression<Func<string>> twoArgs = () => "a" + 1;
+            Assert.Equal(2, ExpressionConverter.StringTranslatorUtil.GetConcatArgs(twoArgs.Body as BinaryExpression).Count());        
+
+            Expression<Func<string>> multiArgs = () => "a" + 1 + "b" + 2 + "c" + 3 + "d";
+            Assert.Equal(7, ExpressionConverter.StringTranslatorUtil.GetConcatArgs(multiArgs.Body as BinaryExpression).Count());
+        }
+
+        [Fact]
+        public void ToStringTranslator_finds_all_expected_types()
+        {
+            var types = new ExpressionConverter.MethodCallTranslator.ToStringTranslator().Methods.Select(m => m.DeclaringType).ToArray();
+
+            Assert.Contains(typeof(bool), types);
+            Assert.Contains(typeof(byte), types);
+            Assert.Contains(typeof(sbyte), types);
+            Assert.Contains(typeof(short), types);
+            Assert.Contains(typeof(int), types);
+            Assert.Contains(typeof(long), types);
+            Assert.Contains(typeof(float), types);
+            Assert.Contains(typeof(double), types);
+            Assert.Contains(typeof(decimal), types);
+            Assert.Contains(typeof(string), types);
+            Assert.Contains(typeof(Guid), types);
+            Assert.Contains(typeof(TimeSpan), types);
+            Assert.Contains(typeof(DateTime), types);
+            Assert.Contains(typeof(DateTimeOffset), types);
+            Assert.Contains(typeof(object), types);
+
+            Assert.Equal(15, types.Length);
+        }
+
+        [Fact]
+        public void RemoveConvert_removes_nested_casts()
+        {
+            var sourceExpression = Expression.Constant(42);
+
+            var wrappedExpression =
+                Expression.Convert(
+                    Expression.ConvertChecked(
+                        Expression.Convert(sourceExpression, typeof(int)), typeof(int)), typeof(int));
+
+            Assert.Same(sourceExpression, wrappedExpression.RemoveConvert());
+        }
+
+        [Fact]
+        public void RemoveConvert_returns_epxression_if_no_casts()
+        {
+            var expression = Expression.Constant(42);
+
+            Assert.Same(expression, expression.RemoveConvert());
         }
     }
 }

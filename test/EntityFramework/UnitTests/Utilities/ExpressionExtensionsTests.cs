@@ -216,5 +216,84 @@ namespace System.Data.Entity.Utilities
                 Strings.InvalidComplexPropertiesExpression(expression),
                 Assert.Throws<InvalidOperationException>(() => expression.GetComplexPropertyAccessList()).Message);
         }
+
+        [Fact]
+        public void IsNullConstant_returns_true_for_null_ConstantExpression()
+        {
+            Assert.True(Expression.Constant(null).IsNullConstant());
+        }
+
+        [Fact]
+        public void IsNullConstant_returns_true_for_cast_null_ConstantExpression()
+        {
+            Assert.True(Expression.Convert(Expression.Constant(null), typeof(string)).IsNullConstant());
+            Assert.True(Expression.ConvertChecked(Expression.Constant(null), typeof(string)).IsNullConstant());
+        }
+
+        [Fact]
+        public void IsNullConstant_returns_false_for_non_null_ConstantExpression()
+        {
+            Assert.False(Expression.Constant(5).IsNullConstant());
+        }
+
+        [Fact]
+        public void IsNullConstant_returns_false_for_cast_non_null_ConstantExpression()
+        {
+            Assert.False(Expression.Convert(Expression.Constant(5), typeof(object)).IsNullConstant());
+            Assert.False(Expression.ConvertChecked(Expression.Constant(5), typeof(object)).IsNullConstant());
+        }
+
+        [Fact]
+        public void IsNullConstant_returns_false_for_non_ConstantExpression()
+        {
+            Assert.False(Expression.IsTrue(Expression.Constant(true)).IsNullConstant());
+        }
+
+        [Fact]
+        public void IsNullConstant_returns_false_for_cast_non_ConstantExpression()
+        {
+            Assert.False(Expression.IsTrue(Expression.Convert(Expression.Constant(true), typeof(bool))).IsNullConstant());
+            Assert.False(Expression.IsTrue(Expression.ConvertChecked(Expression.Constant(false), typeof(bool))).IsNullConstant());
+        }
+
+        [Fact]
+        public void IsStringAddExpression_returns_true_for_string_Add_expression()
+        {
+            Assert.True(
+                Expression.Add(
+                    Expression.Convert(Expression.Constant(3), typeof(object)), 
+                    Expression.Convert(Expression.Constant("b"), typeof(object)),
+                    typeof(string).GetMethod("Concat", new[] {typeof(object), typeof(object)}))
+                    .IsStringAddExpression());
+        }
+
+        [Fact]
+        public void IsStringAddExpression_returns_false_if_expression_is_not_binary()
+        {
+            Assert.False(Expression.Constant(42).IsStringAddExpression());
+        }
+
+        [Fact]
+        public void IsStringAddExpression_returns_false_regular_Add()
+        {
+            Assert.False(Expression.Add(Expression.Constant(42), Expression.Constant(-42)).IsStringAddExpression());
+        }
+
+        [Fact]
+        public void IsStringAddExpression_returns_false_if_expression_is_binary_but_not_Add()
+        {
+            Assert.False(Expression.Subtract(Expression.Constant(42), Expression.Constant(-42)).IsStringAddExpression());
+        }
+
+        [Fact]
+        public void IsStringAddExpression_returns_false_for_Add_expression_if_method_is_not_Concat()
+        {
+            Assert.False(
+                Expression.Add(
+                    Expression.Constant("abc"),
+                    Expression.Constant("xyz"),
+                    typeof(string).GetMethod("Compare", new[] { typeof(string), typeof(string) }))
+                    .IsStringAddExpression());
+        }
     }
 }
