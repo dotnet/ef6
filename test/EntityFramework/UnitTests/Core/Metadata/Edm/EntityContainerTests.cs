@@ -111,5 +111,71 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     () =>
                     EntityContainer.Create("Foo", DataSpace.SSpace, null, new[] { function }, null)).Message);
         }
+
+        [Fact]
+        public void Can_add_function_import_to_container()
+        {
+            var container = new EntityContainer("container", DataSpace.CSpace);
+            var function = new EdmFunction(
+                "foo",
+                "bar",
+                DataSpace.CSpace,
+                new EdmFunctionPayload()
+                {
+                    IsFunctionImport = true
+                });
+
+            container.AddFunctionImport(function);
+
+            Assert.Equal(1, container.FunctionImports.Count);
+            Assert.Same(function, container.FunctionImports.Single());
+        }
+
+        [Fact]
+        public void Cannot_add_null_function_import_to_container()
+        {
+            Assert.Equal(
+                "function",
+                Assert.Throws<ArgumentNullException>(
+                () => new EntityContainer("container", DataSpace.CSpace).AddFunctionImport(null)).ParamName);
+        }
+
+        [Fact]
+        public void Cannot_add_non_function_import_to_container()
+        {
+            var container = new EntityContainer("container", DataSpace.CSpace);
+            var function = new EdmFunction(
+                "foo",
+                "bar",
+                DataSpace.CSpace,
+                new EdmFunctionPayload()
+                {
+                    IsFunctionImport = false
+                });
+
+            Assert.Equal(
+                Resources.Strings.OnlyFunctionImportsCanBeAddedToEntityContainer("foo"),
+                Assert.Throws<ArgumentException>(() => container.AddFunctionImport(function)).Message);
+        }
+
+        [Fact]
+        public void Cannot_add_function_to_readonly_container()
+        {
+            var container = new EntityContainer("container", DataSpace.CSpace);
+            container.SetReadOnly();
+
+            var function = new EdmFunction(
+                "foo",
+                "bar",
+                DataSpace.CSpace,
+                new EdmFunctionPayload()
+                {
+                    IsFunctionImport = false
+                });
+
+            Assert.Equal(
+                Resources.Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(() => container.AddFunctionImport(function)).Message);
+        }
     }
 }

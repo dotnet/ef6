@@ -263,10 +263,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entitySetBase.ChangeEntityContainerWithoutCollectionFixup(null);
         }
 
-        internal void AddFunctionImport(EdmFunction function)
+        /// <summary>
+        /// Adds a function import to the container.
+        /// </summary>
+        /// <param name="function">The function import to add.</param>
+        public void AddFunctionImport(EdmFunction function)
         {
-            DebugCheck.NotNull(function);
-            Debug.Assert(function.IsFunctionImport, "function.IsFunctionImport");
+            Check.NotNull(function, "function");
+            Util.ThrowIfReadOnly(this);
+            if (!function.IsFunctionImport)
+            {
+                throw new ArgumentException(Strings.OnlyFunctionImportsCanBeAddedToEntityContainer(function.Name));
+            }
+
             _functionImports.Source.Add(function);
         }
 

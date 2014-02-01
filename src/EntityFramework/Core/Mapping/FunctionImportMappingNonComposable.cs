@@ -42,14 +42,22 @@ namespace System.Data.Entity.Core.Mapping
             Debug.Assert(!functionImport.IsComposableAttribute);
             Debug.Assert(!targetFunction.IsComposableAttribute);
 
+ 
             if (!resultMappings.Any())
             {
+                // when this method is invoked when a CodeFirst model is being built (e.g. from a custom convention) the
+                // StorageMappingItemCollection will be null. In this case we can provide an empty EdmItemCollection which
+                // will allow inferring implicit result mapping
+                var edmItemCollection = containerMapping.StorageMappingItemCollection != null
+                    ? containerMapping.StorageMappingItemCollection.EdmItemCollection
+                    : new EdmItemCollection(new EdmModel(DataSpace.CSpace));
+
                 _internalResultMappings = new ReadOnlyCollection<FunctionImportStructuralTypeMappingKB>(
                     new[]
                         {
                             new FunctionImportStructuralTypeMappingKB(
                                 new List<FunctionImportStructuralTypeMapping>(), 
-                                containerMapping.StorageMappingItemCollection.EdmItemCollection)
+                                edmItemCollection)
                         });
                 noExplicitResultMappings = true;
             }

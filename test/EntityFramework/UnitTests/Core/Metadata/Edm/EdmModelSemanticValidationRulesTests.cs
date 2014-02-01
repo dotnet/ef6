@@ -154,6 +154,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void EdmType_SystemNamespaceEncountered_not_triggered_for_Edm_primitive_types()
+        {
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSemanticValidationRules
+                .EdmType_SystemNamespaceEncountered
+                .Evaluate(validationContext, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+
+            Assert.Null(errorEventArgs);
+        }
+
+        [Fact]
         public void EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2()
         {
             var errorEventArgs = EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2_runner(1.0);

@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
     using System.Linq;
     using System.Xml;
+    using System.Xml.Serialization;
 
     internal class MslXmlSchemaWriter : XmlSchemaWriter
     {
@@ -69,6 +70,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             foreach (var functionMapping in containerMapping.FunctionImportMappings.OfType<FunctionImportMappingComposable>())
+            {
+                WriteFunctionImportMappingElement(functionMapping);
+            }
+
+            foreach (var functionMapping in containerMapping.FunctionImportMappings.OfType<FunctionImportMappingNonComposable>())
             {
                 WriteFunctionImportMappingElement(functionMapping);
             }
@@ -194,6 +200,45 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(functionImportMapping);
 
+            WriteFunctionImportMappingStartElement(functionImportMapping);
+
+            // no mapping written when mapping to a scalar or entity type
+            if (functionImportMapping.StructuralTypeMappings != null && functionImportMapping.StructuralTypeMappings.First().Item1.BuiltInTypeKind == BuiltInTypeKind.ComplexType)
+            {
+                _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingResultMapping);
+
+                Debug.Assert(
+                    functionImportMapping.StructuralTypeMappings.Count == 1,
+                    "multiple result sets not supported.");
+                Debug.Assert(
+                    functionImportMapping.StructuralTypeMappings.First().Item1.BuiltInTypeKind == BuiltInTypeKind.ComplexType,
+                    "mapping to entity sets not supported.");
+
+                var structuralMapping = functionImportMapping.StructuralTypeMappings.Single();
+                _xmlWriter.WriteStartElement(MslConstructs.ComplexTypeMappingElement);
+                _xmlWriter.WriteAttributeString(MslConstructs.ComplexTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
+                foreach (ScalarPropertyMapping propertyMapping in structuralMapping.Item3)
+                {
+                    WritePropertyMapping(propertyMapping);
+                }
+
+                _xmlWriter.WriteEndElement();
+                _xmlWriter.WriteEndElement();
+            }
+
+            WriteFunctionImportEndElement();
+        }
+
+        public void WriteFunctionImportMappingElement(FunctionImportMappingNonComposable functionImportMapping)
+        {
+            DebugCheck.NotNull(functionImportMapping);
+
+            WriteFunctionImportMappingStartElement(functionImportMapping);
+            WriteFunctionImportEndElement();
+        }
+
+        private void WriteFunctionImportMappingStartElement(FunctionImportMapping functionImportMapping)
+        {
             _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingElement);
             _xmlWriter.WriteAttributeString(
                 MslConstructs.FunctionImportMappingFunctionNameAttribute,
@@ -201,27 +246,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteAttributeString(
                 MslConstructs.FunctionImportMappingFunctionImportNameAttribute,
                 functionImportMapping.FunctionImport.Name);
-            _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingResultMapping);
+        }
 
-            Debug.Assert(
-                functionImportMapping.StructuralTypeMappings.Count == 1,
-                "multiple result sets not supported.");
-            Debug.Assert(
-                functionImportMapping.StructuralTypeMappings.First().Item1.BuiltInTypeKind == BuiltInTypeKind.ComplexType,
-                "mapping to entity sets not supported.");
-
-            var structuralMapping = functionImportMapping.StructuralTypeMappings.Single();
-            _xmlWriter.WriteStartElement(MslConstructs.ComplexTypeMappingElement);
-            _xmlWriter.WriteAttributeString(MslConstructs.ComplexTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
-            foreach (ScalarPropertyMapping propertyMapping in structuralMapping.Item3)
-            {
-                WritePropertyMapping(propertyMapping);
-            }
-
-            _xmlWriter.WriteEndElement();
-            _xmlWriter.WriteEndElement();
+        private void WriteFunctionImportEndElement()
+        {
             _xmlWriter.WriteEndElement();
         }
+
 
         private void WriteModificationFunctionMapping(EntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
