@@ -42,16 +42,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             foreach (var type in new EdmType[] { rowType, rowType.GetCollectionType() })
             {
-                var validationContext
-                    = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
-                DataModelErrorEventArgs errorEventArgs = null;
-                validationContext.OnError += (_, e) => errorEventArgs = e;
+                foreach (var dataSpace in new[] { DataSpace.CSpace, DataSpace.SSpace })
+                {
+                    var validationContext
+                        = new EdmModelValidationContext(new EdmModel(dataSpace), true);
+                    DataModelErrorEventArgs errorEventArgs = null;
+                    validationContext.OnError += (_, e) => errorEventArgs = e;
 
-                EdmModelSyntacticValidationRules
-                    .EdmModel_NameIsNotAllowed
-                    .Evaluate(validationContext, type);
+                    EdmModelSyntacticValidationRules
+                        .EdmModel_NameIsNotAllowed
+                        .Evaluate(validationContext, type);
 
-                Assert.Null(errorEventArgs);
+                    Assert.Null(errorEventArgs);
+                }
             }
         }
 

@@ -216,7 +216,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void WriteFunctionImportHeader_IsComposable_attribute_if_it_is_false()
+        public void WriteFunctionImportHeader_writes_IsComposable_attribute_if_it_is_false()
         {
             var fixture = new Fixture();
 
@@ -240,6 +240,36 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal(
                 "<FunctionImport Name=\"foo\" ReturnType=\"Int32\"",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionImportHeader_EntitySet_attribute_if_function_import_mapped_to_entity_set()
+        {
+            var fixture = new Fixture();
+
+            var entityType = new EntityType("type", "ns", DataSpace.CSpace);
+            var entitySet = new EntitySet("set", "ns", null, null, entityType);
+
+            var functionPayload =
+                new EdmFunctionPayload
+                {
+                    IsComposable = false,
+                    ReturnParameters = new[] {
+                        FunctionParameter.Create(
+                            "ReturnValue",
+                            entityType.GetCollectionType(),
+                            ParameterMode.ReturnValue)},
+                    EntitySets = new[] { entitySet }
+                };
+
+            var functionImport
+                = new EdmFunction("foo", "nction", DataSpace.CSpace, functionPayload);
+
+            fixture.Writer.WriteFunctionImportElementHeader(functionImport);
+
+            Assert.Equal(
+                "<FunctionImport Name=\"foo\" ReturnType=\"Collection(ns.type)\" EntitySet=\"set\"",
                 fixture.ToString());
         }
 

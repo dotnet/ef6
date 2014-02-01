@@ -436,6 +436,127 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 fixture.ToString());
         }
 
+        [Fact]
+        public void WriteFunctionImportMappingElement_does_not_write_result_mapping_when_result_mapped_to_primitive_type()
+        {
+            var typeUsage =
+                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+
+            var functionImport =
+                new EdmFunction(
+                    "f_c", "Ns", DataSpace.CSpace,
+                    new EdmFunctionPayload
+                    {
+                        IsComposable = true,
+                        IsFunctionImport = true,
+                        ReturnParameters =
+                            new[]
+                                    {
+                                        new FunctionParameter(
+                                            "ReturnValue",
+                                            TypeUsage.CreateDefaultTypeUsage(typeUsage.EdmType.GetCollectionType()),
+                                            ParameterMode.ReturnValue)
+                                    },
+                    });
+
+            var rowTypeProperty = 
+                new EdmProperty("RTProperty1", ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(typeUsage));
+            var rowType = new RowType(new[] { rowTypeProperty });
+
+            var storeFunction =
+                new EdmFunction(
+                    "f_s", "Ns.Store", DataSpace.SSpace,
+                    new EdmFunctionPayload
+                    {
+                        ReturnParameters =
+                            new[]
+                                    {
+                                        new FunctionParameter(
+                                            "Return",
+                                            TypeUsage.CreateDefaultTypeUsage(rowType.GetCollectionType()),
+                                            ParameterMode.ReturnValue)
+                                    },
+                    });
+            
+            var functionImportMapping = new FunctionImportMappingComposable(
+                functionImport,
+                storeFunction,
+                new FunctionImportResultMapping(),
+                new EntityContainerMapping(new EntityContainer("C", DataSpace.SSpace)));
+
+            var fixture = new Fixture();
+            fixture.Writer.WriteFunctionImportMappingElement(functionImportMapping);
+
+            Assert.Equal(
+                @"<FunctionImportMapping FunctionName=""Ns.Store.f_s"" FunctionImportName=""f_c"" />",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionImportMappingElement_does_not_write_result_mapping_for_non_composable_functions_mapped_implicitly()
+        {
+            var typeUsage =
+                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+
+            var complexTypeProperty1 = new EdmProperty("CTProperty1", typeUsage);
+            var complexTypeProperty2 = new EdmProperty("CTProperty2", typeUsage);
+
+            var complexType = new ComplexType("CT", "Ns", DataSpace.CSpace);
+            complexType.AddMember(complexTypeProperty1);
+            complexType.AddMember(complexTypeProperty2);
+
+            var functionImport =
+                new EdmFunction(
+                    "f_c", "Ns", DataSpace.CSpace,
+                    new EdmFunctionPayload
+                    {
+                        IsComposable = false,
+                        IsFunctionImport = true,
+                        ReturnParameters =
+                            new[]
+                                    {
+                                        new FunctionParameter(
+                                            "ReturnValue",
+                                            TypeUsage.CreateDefaultTypeUsage(complexType.GetCollectionType()),
+                                            ParameterMode.ReturnValue)
+                                    },
+                    });
+
+            typeUsage = ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(typeUsage);
+            var rowTypeProperty1 = new EdmProperty("RTProperty1", typeUsage);
+            var rowTypeProperty2 = new EdmProperty("RTProperty2", typeUsage);
+            var rowType = new RowType(new[] { rowTypeProperty1, rowTypeProperty2 });
+
+            var storeFunction =
+                new EdmFunction(
+                    "f_s", "Ns.Store", DataSpace.SSpace,
+                    new EdmFunctionPayload
+                    {
+                        IsComposable = false,
+                        ReturnParameters =
+                            new[]
+                                    {
+                                        new FunctionParameter(
+                                            "Return",
+                                            TypeUsage.CreateDefaultTypeUsage(rowType),
+                                            ParameterMode.ReturnValue)
+                                    },
+                    });
+
+            var functionImportMapping = 
+                new FunctionImportMappingNonComposable(
+                   functionImport,
+                   storeFunction,
+                   new FunctionImportResultMapping[0],
+                   new EntityContainerMapping(new EntityContainer("C", DataSpace.SSpace)));
+
+            var fixture = new Fixture();
+            fixture.Writer.WriteFunctionImportMappingElement(functionImportMapping);
+            Assert.Equal(
+                @"<FunctionImportMapping FunctionName=""Ns.Store.f_s"" FunctionImportName=""f_c"" />",
+                fixture.ToString());
+        }
+
         private class Fixture
         {
             public readonly MslXmlSchemaWriter Writer;

@@ -133,8 +133,8 @@ namespace System.Data.Entity.Core.Mapping
                         });
 
             Assert.Equal(
-                Strings.ComposableFunctionImportsReturningEntitiesNotSupported,
-                Assert.Throws<NotSupportedException>(
+                Strings.InvalidReturnTypeForComposableFunction,
+                Assert.Throws<ArgumentException>(
                     () => new FunctionImportMappingComposable(
                               functionImport,
                               new EdmFunction(
@@ -143,8 +143,8 @@ namespace System.Data.Entity.Core.Mapping
                               new EntityContainerMapping())).Message);
 
             Assert.Equal(
-                Strings.ComposableFunctionImportsReturningEntitiesNotSupported,
-                Assert.Throws<NotSupportedException>(
+                Strings.InvalidReturnTypeForComposableFunction,
+                Assert.Throws<ArgumentException>(
                     () => new FunctionImportMappingComposable(
                               functionImport,
                               new EdmFunction(

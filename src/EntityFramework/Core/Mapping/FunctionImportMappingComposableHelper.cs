@@ -81,8 +81,17 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
 
+
+            // when this method is invoked when a CodeFirst model is being built (e.g. from a custom convention) the
+            // StorageMappingItemCollection will be null. In this case we can provide an empty EdmItemCollection which
+            // will allow inferring implicit result mapping
+            var edmItemCollection =
+                _entityContainerMapping.StorageMappingItemCollection != null
+                    ? _entityContainerMapping.StorageMappingItemCollection.EdmItemCollection
+                    : new EdmItemCollection(new EdmModel(DataSpace.CSpace));
+
             // Validate and convert FunctionImportEntityTypeMapping elements into structure suitable for composable function import mapping.
-            var functionImportKB = new FunctionImportStructuralTypeMappingKB(typeMappings, EdmItemCollection);
+            var functionImportKB = new FunctionImportStructuralTypeMappingKB(typeMappings, edmItemCollection);
 
             var structuralTypeMappings =
                 new List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>();
@@ -485,11 +494,6 @@ namespace System.Data.Entity.Core.Mapping
             // We could require precisely s-type to be promotable to c-type, but in this case it won't be possible to reuse the same 
             // c-types for mapped functions and entity sets, because entity sets (read-write) require c-types to be promotable to s-types.
             return directlyPromotable || inverselyPromotable;
-        }
-
-        private EdmItemCollection EdmItemCollection
-        {
-            get { return _entityContainerMapping.StorageMappingItemCollection.EdmItemCollection; }
         }
 
         private static TypeUsage ResolveTypeUsageForEnums(TypeUsage typeUsage)
