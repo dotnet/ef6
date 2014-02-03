@@ -46,6 +46,8 @@ Project global post-settings and targets.
       <AssemblyVersion Condition="'$(BuildingRuntimeProject)' == 'true'">$(VersionMajor).$(RuntimeAssemblyVersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
+      <AssemblyInfoVersion Condition="'$(VersionRelease)' != ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)-$(VersionBuild)</AssemblyInfoVersion>
+      <AssemblyInfoVersion Condition="'$(AssemblyInfoVersion)' == ''">$(AssemblyFileVersion)</AssemblyInfoVersion>
       <!-- TODO: NuGetPackageVersion is set by versions.targets, so when it is being used for runtime dated builds it's important
            not to override it, but for tooling builds it gives the wrong answer (based on the tooling VersionMajor and VersionMinor)
            so there we must override it. Should come up with a fix in version.targets. -->

@@ -28,66 +28,45 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             if (settings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
                 || settings.GenerationOption == ModelGenerationOption.GenerateDatabaseScript)
             {
-                if (settings.SaveConnectionStringInAppConfig
-                    && !settings.SaveToWebConfig)
+                if (settings.SaveConnectionStringInAppConfig)
                 {
-                    // save connection string in App Config
-                    UpdateAppConfig(metadataFileNames, settings);
-                }
-                else if (settings.SaveConnectionStringInAppConfig
-                         && settings.SaveToWebConfig)
-                {
-                    // save connection string in Web Config
-                    UpdateWebConfig(metadataFileNames, settings);
+                    UpdateConfig(metadataFileNames, settings);
                 }
             }
-
-            var containingProject = settings.Project;
 
             // regardless of GenerationOption we always need to register the build
             // provider for web site projects and the assembly for web app projects
             if (settings.VSApplicationType == VisualStudioProjectSystem.Website)
             {
-                RegisterBuildProvidersInWebConfig(containingProject);
-            }
+                var containingProject = settings.Project;
 
-            // Ensure that System.Data.Entity.Design reference assemblies are added in the web.config.
-            if (settings.VSApplicationType == VisualStudioProjectSystem.WebApplication
-                || settings.VSApplicationType == VisualStudioProjectSystem.Website)
-            {
+                RegisterBuildProvidersInWebConfig(containingProject);
+            
+                // Ensure that System.Data.Entity.Design reference assemblies are added in the web.config.
                 // Get the correct assembly name based on target framework
-                var projectHierarchy = VsUtils.GetVsHierarchy(containingProject, Services.ServiceProvider);
-                Debug.Assert(projectHierarchy != null, "Could not get the IVsHierarchy from the EnvDTE.Project");
-                if (projectHierarchy != null)
+                var targetInfo = PackageManager.Package.GetService(typeof(SVsFrameworkMultiTargeting)) as IVsFrameworkMultiTargeting;
+                var openScope = PackageManager.Package.GetService(typeof(SVsSmartOpenScope)) as IVsSmartOpenScope;
+                Debug.Assert(targetInfo != null, "Unable to get IVsFrameworkMultiTargeting from service provider");
+                if (targetInfo != null && openScope != null)
                 {
-                    var targetInfo = PackageManager.Package.GetService(typeof(SVsFrameworkMultiTargeting)) as IVsFrameworkMultiTargeting;
-                    var openScope = PackageManager.Package.GetService(typeof(SVsSmartOpenScope)) as IVsSmartOpenScope;
-                    Debug.Assert(targetInfo != null, "Unable to get IVsFrameworkMultiTargeting from service provider");
                     var targetFrameworkMoniker = VsUtils.GetTargetFrameworkMonikerForProject(containingProject, PackageManager.Package);
-                    if ((targetInfo != null)
-                        && (openScope != null)
-                        && settings.VSApplicationType == VisualStudioProjectSystem.Website)
+                    var provider = new VsTargetFrameworkProvider(targetInfo, targetFrameworkMoniker, openScope);
+                    var dataEntityDesignAssembly = provider.GetReflectionAssembly(new AssemblyName("System.Data.Entity.Design"));
+                    if (dataEntityDesignAssembly != null)
                     {
-                        var provider = new VsTargetFrameworkProvider(targetInfo, targetFrameworkMoniker, openScope);
-                        var dataEntityDesignAssembly = provider.GetReflectionAssembly(new AssemblyName("System.Data.Entity.Design"));
-                        if (dataEntityDesignAssembly != null)
-                        {
-                            RegisterAssemblyInWebConfig(containingProject, dataEntityDesignAssembly.FullName);
-                        }
+                        RegisterAssemblyInWebConfig(containingProject, dataEntityDesignAssembly.FullName);
                     }
                 }
             }
         }
 
-        // <summary>
-        //     Update App.Config with connection string if specified in ModelBuilderSettings
-        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private static void UpdateAppConfig(ICollection<string> metadataFiles, ModelBuilderSettings settings)
+        private static void UpdateConfig(ICollection<string> metadataFiles, ModelBuilderSettings settings)
         {
-            if (settings.SaveConnectionStringInAppConfig)
-            {
-                var statusMessage = string.Empty;
+            var statusMessage =
+                settings.SaveToWebConfig
+                    ? String.Format(CultureInfo.CurrentCulture, Resources.Engine_WebConfigSuccess, VsUtils.WebConfigFileName)
+                    : String.Format(CultureInfo.CurrentCulture, Resources.Engine_AppConfigSuccess, VsUtils.AppConfigFileName);
 
                 try
                 {
@@ -99,72 +78,31 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                         settings.AppConfigConnectionPropertyName,
                         settings.AppConfigConnectionString,
                         settings.RuntimeProviderInvariantName);
-                    statusMessage = String.Format(
-                        CultureInfo.CurrentCulture,
-                        Resources.Engine_AppConfigSuccess,
-                        VsUtils.AppConfigFileName);
                 }
                 catch (Exception e)
                 {
-                    statusMessage = String.Format(
+                    statusMessage = 
+                        String.Format(
                         CultureInfo.CurrentCulture,
-                        Resources.Engine_AppConfigException,
+                        settings.SaveToWebConfig ? Resources.Engine_WebConfigException : Resources.Engine_AppConfigException, 
                         e.Message);
                 }
                 VsUtils.LogOutputWindowPaneMessage(settings.Project, statusMessage);
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private static void UpdateWebConfig(ICollection<string> metadataFiles, ModelBuilderSettings settings)
-        {
-            if (settings.SaveConnectionStringInAppConfig)
-            {
-                var statusMessage = string.Empty;
-
-                try
-                {
-                    var manager = PackageManager.Package.ConnectionManager;
-                    manager.AddConnectionString(
-                        settings.Project,
-                        settings.VSApplicationType,
-                        metadataFiles,
-                        settings.AppConfigConnectionPropertyName,
-                        settings.AppConfigConnectionString,
-                        settings.RuntimeProviderInvariantName);
-                    statusMessage = String.Format(
-                        CultureInfo.CurrentCulture,
-                        Resources.Engine_WebConfigSuccess,
-                        VsUtils.WebConfigFileName);
-                }
-                catch (Exception e)
-                {
-                    statusMessage = String.Format(
-                        CultureInfo.CurrentCulture,
-                        Resources.Engine_WebConfigException,
-                        e.Message);
-                }
-                VsUtils.LogOutputWindowPaneMessage(settings.Project, statusMessage);
-            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private static void RegisterBuildProvidersInWebConfig(Project project)
         {
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
+            Debug.Assert(project != null, "project is null");
 
-            var statusMessage = string.Empty;
+            var statusMessage = String.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.Engine_WebConfigBPSuccess,
+                    VsUtils.WebConfigFileName);
 
             try
             {
                 VsUtils.RegisterBuildProviders(project);
-                statusMessage = String.Format(
-                    CultureInfo.CurrentCulture,
-                    Resources.Engine_WebConfigBPSuccess,
-                    VsUtils.WebConfigFileName);
             }
             catch (Exception e)
             {
@@ -173,26 +111,24 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     Resources.Engine_WebConfigBPException,
                     e.Message);
             }
+
             VsUtils.LogOutputWindowPaneMessage(project, statusMessage);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private static void RegisterAssemblyInWebConfig(Project project, string assemblyFullName)
         {
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
+            Debug.Assert(project != null, "project is null");
+            Debug.Assert(!string.IsNullOrWhiteSpace(assemblyFullName), "invalid assembly name");
 
-            var statusMessage = string.Empty;
+            var statusMessage = String.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.Engine_WebConfigAssemblySuccess,
+                    assemblyFullName);
 
             try
             {
                 VsUtils.RegisterAssembly(project, assemblyFullName);
-                statusMessage = String.Format(
-                    CultureInfo.CurrentCulture,
-                    Resources.Engine_WebConfigAssemblySuccess,
-                    assemblyFullName);
             }
             catch (Exception e)
             {
@@ -201,6 +137,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     Resources.Engine_WebConfigAssemblyException,
                     assemblyFullName, e.Message);
             }
+
             VsUtils.LogOutputWindowPaneMessage(project, statusMessage);
         }
     }

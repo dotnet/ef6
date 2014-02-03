@@ -131,6 +131,8 @@
         <RegistryKey Root="HKLM" Key="Software\!(loc.CompanyName)\!(loc.ShortProductName)\$(var.AssemblyVersion)">
           <RegistryValue Type="string" Name="InstallDir" Value="[DSTDIR]" KeyPath="yes" />
           <RegistryValue Type="string" Name="VersionNumber" Value="$(var.AssemblyVersion)" />
+          <RegistryValue Type="string" Name="FileVersion" Value="$(var.AssemblyFileVersion)" />
+          <RegistryValue Type="string" Name="InfoVersion" Value="$(var.AssemblyInfoVersion)" />
           <RegistryValue Type="string" Name="LCID" Value="$(var.LCID)" />
         </RegistryKey>
       </Component>
