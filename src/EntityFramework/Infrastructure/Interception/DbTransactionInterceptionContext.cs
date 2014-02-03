@@ -13,6 +13,8 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// </summary>
     public class DbTransactionInterceptionContext : MutableInterceptionContext
     {
+        private DbConnection _connection;
+
         /// <summary>
         /// Constructs a new <see cref="DbTransactionInterceptionContext" /> with no state.
         /// </summary>
@@ -28,7 +30,37 @@ namespace System.Data.Entity.Infrastructure.Interception
         public DbTransactionInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
+            var transactionInterceptionContext = copyFrom as DbTransactionInterceptionContext;
+            if (transactionInterceptionContext != null)
+            {
+                _connection = transactionInterceptionContext.Connection;
+            }
+
             Check.NotNull(copyFrom, "copyFrom");
+        }
+
+        /// <summary>
+        /// The connection on which the transaction was started
+        /// </summary>
+        public DbConnection Connection
+        {
+            get { return _connection; }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DbTransactionInterceptionContext" /> that contains all the contextual information in this
+        /// interception context with the addition of the given <see cref="DbConnection" />.
+        /// </summary>
+        /// <param name="connection">The connection on which the transaction was started.</param>
+        /// <returns>A new interception context that also contains the connection on which the transaction was started.</returns>
+        public DbTransactionInterceptionContext WithConnection(DbConnection connection)
+        {
+            Check.NotNull(connection, "connection");
+
+            var transactionInterceptionContext = TypedClone();
+            transactionInterceptionContext._connection = connection;
+
+            return transactionInterceptionContext;
         }
 
         /// <summary>
@@ -65,6 +97,11 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(context, "context");
 
             return (DbTransactionInterceptionContext)base.WithObjectContext(context);
+        }
+
+        private DbTransactionInterceptionContext TypedClone()
+        {
+            return (DbTransactionInterceptionContext)Clone();
         }
 
         /// <inheritdoc />

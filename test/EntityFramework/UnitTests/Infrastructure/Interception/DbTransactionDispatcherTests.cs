@@ -13,6 +13,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         public void Commit_executes_operation_and_dispatches_to_interceptors()
         {
             var transactionMock = new Mock<DbTransaction>();
+            transactionMock.Protected().Setup<DbConnection>("DbConnection").Returns(new Mock<DbConnection>().Object);
             var interceptorMock = new Mock<IDbTransactionInterceptor>();
             var dispatcher = new DbTransactionDispatcher();
             var internalDispatcher = dispatcher.InternalDispatcher;
@@ -86,6 +87,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         public void Rollback_executes_operation_and_dispatches_to_interceptors()
         {
             var transactionMock = new Mock<DbTransaction>();
+            transactionMock.Protected().Setup<DbConnection>("DbConnection").Returns(new Mock<DbConnection>().Object);
             var interceptorMock = new Mock<IDbTransactionInterceptor>();
             var dispatcher = new DbTransactionDispatcher();
             var internalDispatcher = dispatcher.InternalDispatcher;

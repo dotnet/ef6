@@ -224,8 +224,7 @@ namespace System.Data.Entity.Infrastructure
         {
             TransactionRow transactionRow;
             if (TransactionContext == null
-                || (transaction.Connection != null
-                    && !MatchesParentContext(transaction.Connection, interceptionContext))
+                || (interceptionContext.Connection != null && !MatchesParentContext(interceptionContext.Connection, interceptionContext))
                 || !_transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;
@@ -267,7 +266,7 @@ namespace System.Data.Entity.Infrastructure
         {
             TransactionRow transactionRow;
             if (TransactionContext == null
-                || (transaction.Connection != null && !MatchesParentContext(transaction.Connection, interceptionContext))
+                || (interceptionContext.Connection != null && !MatchesParentContext(interceptionContext.Connection, interceptionContext))
                 || !_transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;

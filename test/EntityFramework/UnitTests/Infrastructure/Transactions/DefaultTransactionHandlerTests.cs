@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure.Transactions
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.Interception;
     using Moq;
+    using Moq.Protected;
     using Xunit;
 
     public class DefaultTransactionHandlerTests
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Infrastructure.Transactions
 
             handler.BeganTransaction(handler.Connection, beginTransactionInterceptionContext);
 
-            var interceptionContext = new DbTransactionInterceptionContext();
+            var interceptionContext = new DbTransactionInterceptionContext().WithConnection(handler.Connection);
             interceptionContext.Exception = new Exception();
             handler.Committed(mockTransaction, interceptionContext);
 
@@ -36,14 +37,14 @@ namespace System.Data.Entity.Infrastructure.Transactions
         }
 
         [Fact]
-        public void Committed_does_not_wrap_exception_if_unknown_transaction()
+        public void Committed_does_not_wrap_exception_if_unknown_connection()
         {
             var context = Core.Objects.MockHelper.CreateMockObjectContext<object>();
             var handler = new DefaultTransactionHandler();
             handler.Initialize(context);
             var mockTransaction = new Mock<DbTransaction>().Object;
 
-            var interceptionContext = new DbTransactionInterceptionContext();
+            var interceptionContext = new DbTransactionInterceptionContext().WithConnection(new Mock<DbConnection>().Object);
             interceptionContext.Exception = new Exception();
             handler.Committed(mockTransaction, interceptionContext);
 

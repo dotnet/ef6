@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Threading.Tasks;
+    using Moq;
     using Xunit;
 
     public class DbTransactionInterceptionContextTests : TestBase
@@ -91,6 +93,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 Assert.Empty(interceptionContext.DbContexts);
                 Assert.Null(interceptionContext.Exception);
+                Assert.Null(interceptionContext.Connection);
                 Assert.False(interceptionContext.IsAsync);
                 Assert.False(interceptionContext.IsExecutionSuppressed);
                 Assert.Empty(interceptionContext.ObjectContexts);
@@ -103,6 +106,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             {
                 var objectContext = new ObjectContext();
                 var dbContext = DbContextMockHelper.CreateDbContext(objectContext);
+                var mockConnection = new Mock<DbConnection>().Object;
 
                 var interceptionContext = new DbTransactionInterceptionContext();
 
@@ -112,10 +116,12 @@ namespace System.Data.Entity.Infrastructure.Interception
                 interceptionContext = interceptionContext
                     .WithDbContext(dbContext)
                     .WithObjectContext(objectContext)
+                    .WithConnection(mockConnection)
                     .AsAsync();
 
                 Assert.Equal(new[] { objectContext }, interceptionContext.ObjectContexts);
                 Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
+                Assert.Same(mockConnection, interceptionContext.Connection);
                 Assert.True(interceptionContext.IsAsync);
 
                 Assert.Null(interceptionContext.Exception);
