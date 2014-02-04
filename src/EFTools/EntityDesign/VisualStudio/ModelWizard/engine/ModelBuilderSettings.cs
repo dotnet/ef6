@@ -5,6 +5,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using System;
     using System.Activities;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -267,6 +268,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         public string VsTemplatePath { get; set; }
 
         public IDictionary<string, string> ReplacementDictionary { get; set; }
+
+        public DbModel Model
+        {
+            get
+            {
+                return ModelBuilderEngine != null
+                    ? ModelBuilderEngine.Model
+                    : null;
+            }
+        }
 
         #endregion Properties
     }
