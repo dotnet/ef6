@@ -1,7 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
-
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
@@ -45,6 +43,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using Constants = EnvDTE.Constants;
     using PrjKind = VSLangProj.PrjKind;
     using Resources = Microsoft.Data.Entity.Design.Resources;
+    using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 
     internal enum VisualStudioProjectSystem
     {
@@ -136,7 +135,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 throw new ArgumentNullException("project");
             }
 
-            var webItemConfig = ConnectionManager.FindOrCreateWebConfig(project);
+            var webItemConfig = ConnectionManager.FindOrCreateConfig(project, true);
             if (null == webItemConfig)
             {
                 return null;
@@ -691,6 +690,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
 
             return applicationType;
+        }
+
+        internal static bool IsWebProject(Project project, IServiceProvider serviceProvider)
+        {
+            Debug.Assert(project != null, "project is null");
+            Debug.Assert(serviceProvider != null, "serviceProvider is null");
+
+            return IsWebProject(GetApplicationType(serviceProvider, project));
+        }
+
+        internal static bool IsWebProject(VisualStudioProjectSystem applicationType)
+        {
+            return applicationType == VisualStudioProjectSystem.WebApplication
+                   || applicationType == VisualStudioProjectSystem.Website;
         }
 
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsAggregatableProject.GetAggregateProjectTypeGuids(System.String@)")]

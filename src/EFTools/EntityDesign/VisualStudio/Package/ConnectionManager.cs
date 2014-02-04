@@ -43,9 +43,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private static readonly object _hashSyncRoot = new object();
 
         private const string Provider = "System.Data.EntityClient";
-        private const string AppConfigItemTemplateCs = "AppConfigInternal.zip";
-        private const string AppConfigItemTemplateVb = "AppConfigurationInternal.zip";
-        private const string WebConfigItemTemplate = "WebConfig.zip";
 
         internal static readonly string SqlClientProviderName = "System.Data.SqlClient";
         internal static readonly string SqlCe35ConnectionStringProvider = "provider=System.Data.SqlServerCe.3.5";
@@ -78,8 +75,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private string _staleEntityContainerName;
         private string _staleMetadataArtifactProcessing;
 
-        private const string CsWebApplicationKind = "{349C5853-65DF-11DA-9384-00065B846F21}";
-        private const string VbWebApplicationKind = "{349C5854-65DF-11DA-9384-00065B846F21}";
 
         private const string ProviderConnectionStringPropertyNameApp = "App";
         private const string ProviderConnectionStringPropertyNameApplicationName = "Application Name";
@@ -245,15 +240,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        #endregion
 
         private void Dispose(bool disposing)
         {
@@ -310,9 +301,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         // </summary>
         internal string ConstructUniqueEntityContainerName(string proposedEntityContainerName, Project project)
         {
-            Debug.Assert(null != project, "Null project in GetUniqueEntityContainerNameForProject()");
+            Debug.Assert(null != project, "project in ConstructUniqueEntityContainerName()");
             Debug.Assert(
-                null != proposedEntityContainerName, "Null proposedEntityContainerName in GetUniqueEntityContainerNameForProject()");
+                null != proposedEntityContainerName, "Null proposedEntityContainerName in ConstructUniqueEntityContainerName()");
 
             var entityContainerName = proposedEntityContainerName;
             var suffix = 1;
@@ -422,6 +413,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
+#if (!VS12)
         // Update the .config file if the nodes have a SQL CE 3.5 provider to use 4.0 instead
         internal static bool UpdateSqlCeProviderInConnectionStrings(string configFilePath, out XmlDocument configXmlDoc)
         {
@@ -450,6 +442,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             return docUpdated;
         }
+#endif
 
         // Update the .config file if the nodes have an old style SQL Database File Data Source to have the new style instead
         internal static bool UpdateSqlDatabaseFileDataSourceInConnectionStrings(string configFilePath, out XmlDocument configXmlDoc)
@@ -565,182 +558,59 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         // <returns>string that represents the config's file path.</returns>
         internal static string GetConfigFilePath(Project project, bool createConfig)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            ProjectItem projectItemConfig = null;
-
-            var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, project);
-            try
-            {
-                if (applicationType == VisualStudioProjectSystem.WebApplication
-                    ||
-                    applicationType == VisualStudioProjectSystem.Website)
-                {
-                    projectItemConfig = FindOrCreateWebConfig(project, createConfig);
-                }
-                else
-                {
-                    projectItemConfig = FindOrCreateAppConfig(project, createConfig);
-                }
-            }
-            catch (NotSupportedException)
-            {
-                return null;
-            }
-
-            if (projectItemConfig == null)
-            {
-                return null;
-            }
-
-            return projectItemConfig.get_FileNames(1);
-        }
-
-        internal static ProjectItem FindOrCreateAppConfig(Project project)
-        {
-            return FindOrCreateAppConfig(project, true);
-        }
-
-        // <summary>
-        //     Finds or creates a .config file for a windows or web application
-        // </summary>
-        // <param name="project">DTE Project that owns the App.Config we want to find/create.</param>
-        // <returns>DTE ProjectItem that represents the config file.</returns>
-        private static ProjectItem FindOrCreateAppConfig(Project project, bool createConfig)
-        {
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            // Get the right item template name for the .config based on the project type (C# or VB)
-            var itemTemplateName = string.Empty;
-
-            var langEnum = VsUtils.GetLanguageForProject(project);
-
-            if (langEnum == LangEnum.CSharp)
-            {
-                itemTemplateName = AppConfigItemTemplateCs;
-            }
-            else if (langEnum == LangEnum.VisualBasic)
-            {
-                itemTemplateName = AppConfigItemTemplateVb;
-            }
-            else
-            {
-                throw new NotSupportedException(Resources.UnsupportedProjectLanguage);
-            }
-
-            return FindOrCreateConfig(project, VsUtils.AppConfigFileName, itemTemplateName, createConfig);
-        }
-
-        private static ProjectItem FindOrCreateWebConfig(Project project, bool createConfig)
-        {
-            return FindOrCreateConfig(project, VsUtils.WebConfigFileName, WebConfigItemTemplate, createConfig);
-        }
-
-        // <summary>
-        //     Finds or creates an Web.Config file in the project based on the built-in VS templates.
-        // </summary>
-        // <param name="project">DTE Project that owns the Web.Config we're interested in.</param>
-        // <returns>DTE ProjectItem that represents the config file.</returns>
-        internal static ProjectItem FindOrCreateWebConfig(Project project)
-        {
-            return FindOrCreateConfig(project, VsUtils.WebConfigFileName, WebConfigItemTemplate, true);
+            var projectItemConfig = FindOrCreateConfig(project, createConfig);
+            return projectItemConfig == null
+                ? null
+                : projectItemConfig.get_FileNames(1);
         }
 
         // <summary>
         //     Command implementation of finding or creating a .config file for VS projects
         // </summary>
         // <param name="project">DTE project that owns the .config file</param>
-        // <param name="configFileName"></param>
-        // <param name="configItemTemplate"></param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
-        private static ProjectItem FindOrCreateConfig(
-            Project project,
-            string configFileName,
-            string configItemTemplate,
-            bool createConfig)
+        internal static ProjectItem FindOrCreateConfig(Project project, bool createConfig)
         {
-            if (null == project)
+            var configFileUtil = new ConfigFileUtils(project, PackageManager.Package);
+
+            var projectItemConfig = configFileUtil.GetConfigProjectItem();
+            if (projectItemConfig != null)
             {
-                throw new ArgumentNullException("project");
+                return projectItemConfig;
             }
 
-            var projectItemConfig = VsUtils.FindFirstProjectItemWithName(project.ProjectItems, configFileName);
-            var projectDirectoryInfo = VsUtils.GetProjectRoot(project, Services.ServiceProvider);
-            var configFileInfo = new FileInfo(projectDirectoryInfo.FullName + "\\" + configFileName);
-
-            if ((null == projectItemConfig || !configFileInfo.Exists) && createConfig)
+            if(createConfig)
             {
-                // first we'll try to add .config file if it already exists in the project directory but is not included in the project
-                if (configFileInfo.Exists)
+                projectItemConfig = 
+                    configFileUtil.AddFromFile()
+                        ?? configFileUtil.CreateConfigFile();
+
+                // projects from previous VS versions might contain .exe.config (or .dll.config) file
+                // if so, we should warn the user
+                try
                 {
-                    project.ProjectItems.AddFromFile(configFileInfo.FullName);
-                }
-                else
-                {
-                    // Project doesn't have this .config so create it & add it to the project
-                    var solution2 = project.DTE.Solution as Solution2;
-                    if (null != solution2)
+                    var outputFileName = (string)project.Properties.Item("OutputFileName").Value;
+                    var fi = new FileInfo(
+                        VsUtils.GetProjectRoot(project, PackageManager.Package).FullName + "\\" + outputFileName + ".config");
+
+                    if (fi.Exists)
                     {
-                        // get the path to the standard VS template
-                        string itemTemplatePath = null;
-                        if (VsUtils.GetApplicationType(Services.ServiceProvider, project) == VisualStudioProjectSystem.WebApplication)
-                        {
-                            // in this case project.Kind does not indicate the language, so use fixed Guids instead
-                            var projectLanguage = VsUtils.GetLanguageForProject(project);
-                            if (projectLanguage == LangEnum.CSharp)
-                            {
-                                itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, CsWebApplicationKind);
-                            }
-                            else if (projectLanguage == LangEnum.VisualBasic)
-                            {
-                                itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, VbWebApplicationKind);
-                            }
-                            else
-                            {
-                                // could not find project language
-                                throw new NotSupportedException(Resources.UnsupportedProjectLanguage);
-                            }
-                        }
-                        else
-                        {
-                            itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, project.Kind);
-                        }
-
-                        Debug.Assert(itemTemplatePath != null, "Config template path is null");
-
-                        // create it
-                        project.ProjectItems.AddFromTemplate(itemTemplatePath, configFileName); // always returns null
-
-                        // projects from previous VS versions might contain .exe.config (or .dll.config) file
-                        // if so, we should warn the user
-                        try
-                        {
-                            var outputFileName = (string)project.Properties.Item("OutputFileName").Value;
-                            var fi = new FileInfo(projectDirectoryInfo.FullName + "\\" + outputFileName + ".config");
-                            if (fi.Exists)
-                            {
-                                VsUtils.LogStandardWarning(String.Format(
-                                    CultureInfo.CurrentCulture, Resources.ExistingConfigurationFileWarning, fi.Name, configFileName),
-                                    fi.FullName, 0, 0);
-                            }
-                        }
-                        catch (ArgumentException)
-                        {
-                        }
+                        VsUtils.LogStandardWarning(String.Format(
+                            CultureInfo.CurrentCulture, 
+                            Resources.ExistingConfigurationFileWarning, 
+                            fi.Name, 
+                            configFileUtil.ConfigFileName),
+                            fi.FullName, 0, 0);
                     }
                 }
+                catch (ArgumentException)
+                {
+                }
 
-                // now go look for it - we should find it now that we've created it
-                projectItemConfig = VsUtils.FindFirstProjectItemWithName(project.ProjectItems, configFileName);
+                return projectItemConfig;
             }
 
-            return projectItemConfig;
+            return null;
         }
 
         internal static XmlDocument LoadConfigFile(string configFilePath)

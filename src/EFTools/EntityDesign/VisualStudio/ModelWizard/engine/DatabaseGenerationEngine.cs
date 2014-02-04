@@ -192,7 +192,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
 
             // Update the app. or web.config, register build providers etc
-            ConfigFileUtils.UpdateConfig(settings);
+            ConfigFileHelper.UpdateConfig(settings);
 
             if (settings.SsdlStringReader != null
                 && settings.MslStringReader != null)

@@ -97,7 +97,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
 
             // Update the app. or web.config, register build providers etc
-            ConfigFileUtils.UpdateConfig(settings);
+            ConfigFileHelper.UpdateConfig(settings);
 
             // use form.ModelBuilderSettings to look at accumulated info and
             // take appropriate action

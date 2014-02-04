@@ -60,7 +60,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             sensitiveInfoTextBox.Text = Resources.SensitiveDataInfoText;
             disallowSensitiveInfoButton.Text = Resources.DisallowSensitiveDataInfoText;
             allowSensitiveInfoButton.Text = Resources.AllowSensitiveDataInfoText;
-            if (wizard.ModelBuilderSettings.SaveToWebConfig)
+            if (VsUtils.IsWebProject(wizard.ModelBuilderSettings.VSApplicationType))
             {
                 checkBoxSaveInAppConfig.Text = Resources.SaveConnectionLabelASP;
             }
