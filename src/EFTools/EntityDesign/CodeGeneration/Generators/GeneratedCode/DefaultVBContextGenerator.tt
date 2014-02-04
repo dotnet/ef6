@@ -1,5 +1,9 @@
 ﻿<#@ template visibility="internal" linePragmas="false" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.Data.Entity.Design" #>
+<#@ assembly name="EntityFramework" #>
 <#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.CodeGeneration" #>
 <#@ parameter type="System.Data.Entity.Infrastructure.DbModel" name="Model" #>
 <#@ parameter type="System.String" name="Namespace" #>
 <#@ parameter type="System.String" name="ContextClassName" #>

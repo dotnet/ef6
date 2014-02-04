@@ -1,6 +1,10 @@
 ﻿<#@ template visibility="internal" linePragmas="false" #>
-<#@ import namespace="System.Linq" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.Data.Entity.Design" #>
+<#@ assembly name="EntityFramework" #>
 <#@ import namespace="System.Data.Entity.Core.Metadata.Edm" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.CodeGeneration" #>
 <#@ parameter type="System.Data.Entity.Core.Metadata.Edm.EntitySet" name="EntitySet" #>
 <#@ parameter type="System.Data.Entity.Infrastructure.DbModel" name="Model" #>
 <#@ parameter type="System.String" name="Namespace" #>

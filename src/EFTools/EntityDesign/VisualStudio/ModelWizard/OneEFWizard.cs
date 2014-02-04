@@ -5,14 +5,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.Data.Entity.Design.CodeGeneration;
-    using Microsoft.VisualStudio.Data.Framework;
     using Microsoft.VisualStudio.TemplateWizard;
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
     /// <summary>
     /// This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.
@@ -48,8 +46,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             _project = VsUtils.GetActiveProject(dte);
 
             _generatedCode = GenerateCode(
-                dte,
-                replacementsDictionary["$rootnamespace$"], 
+                replacementsDictionary["$rootnamespace$"],
                 replacementsDictionary["$safeitemname$"],
 
                 //TODO: needs to be replaced with the actual value
@@ -71,8 +68,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             foreach (var generatedItem in _generatedCode.Skip(1))
             {
                 VsUtils.AddNewFile(
-                    _project, 
-                    Path.Combine(targetDirectory, generatedItem.Key), 
+                    _project,
+                    Path.Combine(targetDirectory, generatedItem.Key),
                     generatedItem.Value);
             }
         }
@@ -83,12 +80,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             return true;
         }
 
-        private IEnumerable<KeyValuePair<string, string>> GenerateCode(DTE2 dte, string codeNamespace, string contextClassName, string connectionStringName)
+        private IEnumerable<KeyValuePair<string, string>> GenerateCode(string codeNamespace, string contextClassName, string connectionStringName)
         {
-            return new CodeFirstModelGenerator(
-                    _project,
-                    new ServiceProvider((IOleServiceProvider)dte))
-                        .Generate(Model, codeNamespace, contextClassName, connectionStringName);
+            return new CodeFirstModelGenerator(_project)
+                .Generate(Model, codeNamespace, contextClassName, connectionStringName);
         }
     }
 }

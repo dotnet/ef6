@@ -1,13 +1,12 @@
 ﻿namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.CodeGeneration.Generators;
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.VisualStudio;
-    
+
     internal class CodeGeneratorFactory : ICodeGeneratorFactory
     {
         private const string CSharpContextTemplatePath = @"CodeTemplates\EFModelFromDatabase\Context.cs.t4";
@@ -17,15 +16,12 @@
 
         private readonly IDictionary<string, string> _templatePathCache = new Dictionary<string, string>();
         private readonly Project _project;
-        private readonly IServiceProvider _serviceProvider;
 
-        public CodeGeneratorFactory(Project project, IServiceProvider serviceProvider)
+        public CodeGeneratorFactory(Project project)
         {
             Debug.Assert(project != null, "project is null.");
-            Debug.Assert(serviceProvider != null, "serviceProvider is null.");
 
             _project = project;
-            _serviceProvider = serviceProvider;
         }
 
         public IContextGenerator GetContextGenerator(LangEnum language, bool isEmptyModel)
@@ -34,7 +30,7 @@
             {
                 if (isEmptyModel)
                 {
-                    return new VBCodeFirstEmptyModelGenerator();    
+                    return new VBCodeFirstEmptyModelGenerator();
                 }
 
                 return (IContextGenerator)TryGetCustomizedTemplate(VBContextTemplatePath)
@@ -80,7 +76,7 @@
             }
 
             return _templatePathCache[path] != null
-                ? new CustomGenerator(_serviceProvider, _templatePathCache[path])
+                ? new CustomGenerator(_templatePathCache[path])
                 : null;
         }
     }

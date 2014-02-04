@@ -201,6 +201,7 @@
     <Compile Include="CodeGeneration\ICodeGeneratorFactory.cs" />
     <Compile Include="CodeGeneration\Generators\IContextGenerator.cs" />
     <Compile Include="CodeGeneration\Generators\IEntityTypeGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\TextTemplatingHost.cs" />
     <Compile Include="CodeGeneration\Generators\VBCodeFirstEmptyModelGenerator.cs" />
     <Compile Include="CodeGeneration\VBCodeHelper.cs" />
     <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultVBContextGenerator.cs">

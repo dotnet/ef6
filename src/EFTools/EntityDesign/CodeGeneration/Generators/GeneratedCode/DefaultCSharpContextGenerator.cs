@@ -10,6 +10,7 @@
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
     using System.Linq;
+    using Microsoft.Data.Entity.Design.CodeGeneration;
     using System;
     
     /// <summary>
