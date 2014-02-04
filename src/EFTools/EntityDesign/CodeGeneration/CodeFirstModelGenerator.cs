@@ -16,12 +16,11 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         private readonly LangEnum _language;
         private readonly CodeGeneratorFactory _codeGeneratorFactory;
 
-        public CodeFirstModelGenerator(Project project, IServiceProvider serviceProvider)
+        public CodeFirstModelGenerator(Project project)
         {
             Debug.Assert(project != null, "project is null.");
-            Debug.Assert(serviceProvider != null, "serviceProvider is null.");
 
-            _codeGeneratorFactory = new CodeGeneratorFactory(project, serviceProvider);
+            _codeGeneratorFactory = new CodeGeneratorFactory(project);
             _language = VsUtils.GetLanguageForProject(project);
             Debug.Assert(_language != LangEnum.Unknown, "_language is Unknown.");
         }
@@ -37,7 +36,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             string contextFileContents;
             try
             {
-                contextFileContents = 
+                contextFileContents =
                     _codeGeneratorFactory
                         .GetContextGenerator(_language, isEmptyModel: model == null)
                         .Generate(model, codeNamespace, contextClassName, connectionStringName);

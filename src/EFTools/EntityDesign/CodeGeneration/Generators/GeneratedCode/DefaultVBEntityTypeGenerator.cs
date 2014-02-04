@@ -9,8 +9,9 @@
 // ------------------------------------------------------------------------------
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
-    using System.Linq;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
+    using Microsoft.Data.Entity.Design.CodeGeneration;
     using System;
     
     /// <summary>

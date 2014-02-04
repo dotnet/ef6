@@ -3,25 +3,26 @@
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.VisualStudio.TextTemplating;
+    using System.Linq;
+    using System.Text;
     using Microsoft.VisualStudio.TextTemplating.VSHost;
 
     internal class CustomGenerator : IContextGenerator, IEntityTypeGenerator
     {
-        private readonly ITextTemplating _textTemplating;
+        private readonly TextTemplatingHost _host;
         private readonly string _templatePath;
 
-        public CustomGenerator(IServiceProvider serviceProvider, string templatePath)
+        public CustomGenerator(string templatePath)
         {
-            Debug.Assert(serviceProvider != null, "serviceProvider is null.");
             Debug.Assert(!string.IsNullOrEmpty(templatePath), "templatePath is null or empty.");
 
-            _textTemplating = (ITextTemplating)serviceProvider.GetService(typeof(STextTemplating));
             _templatePath = templatePath;
+            _host = new TextTemplatingHost();
         }
 
         public string Generate(DbModel model, string codeNamespace, string contextClassName, string connectionStringName)
@@ -31,14 +32,13 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             Debug.Assert(!string.IsNullOrWhiteSpace(contextClassName), "contextClassName");
             Debug.Assert(!string.IsNullOrWhiteSpace(connectionStringName), "connectionStringName");
 
-            var sessionHost = (ITextTemplatingSessionHost)_textTemplating;
-            sessionHost.Session = sessionHost.CreateSession();
-            sessionHost.Session.Add("Model", model);
-            sessionHost.Session.Add("Namespace", codeNamespace);
-            sessionHost.Session.Add("ContextClassName", contextClassName);
-            sessionHost.Session.Add("ConnectionStringName", connectionStringName);
+            _host.Session = _host.CreateSession();
+            _host.Session.Add("Model", model);
+            _host.Session.Add("Namespace", codeNamespace);
+            _host.Session.Add("ContextClassName", contextClassName);
+            _host.Session.Add("ConnectionStringName", connectionStringName);
 
-            return _textTemplating.ProcessTemplate(_templatePath, File.ReadAllText(_templatePath));
+            return ProcessTemplate();
         }
 
         public string Generate(EntitySet entitySet, DbModel model, string codeNamespace)
@@ -46,13 +46,54 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             Debug.Assert(entitySet != null, "entitySet is null.");
             Debug.Assert(model != null, "model is null.");
 
-            var sessionHost = (ITextTemplatingSessionHost)_textTemplating;
-            sessionHost.Session = sessionHost.CreateSession();
-            sessionHost.Session.Add("EntitySet", entitySet);
-            sessionHost.Session.Add("Model", model);
-            sessionHost.Session.Add("Namespace", codeNamespace);
+            _host.Session = _host.CreateSession();
+            _host.Session.Add("EntitySet", entitySet);
+            _host.Session.Add("Model", model);
+            _host.Session.Add("Namespace", codeNamespace);
 
-            return _textTemplating.ProcessTemplate(_templatePath, File.ReadAllText(_templatePath));
+            return ProcessTemplate();
+        }
+
+        private string ProcessTemplate()
+        {
+            var callback = new Callback();
+
+            var result = _host.ProcessTemplate(_templatePath, File.ReadAllText(_templatePath), callback);
+
+            if (callback.Errors.Any())
+            {
+                throw new InvalidOperationException(callback.Errors.First());
+            }
+
+            return result;
+        }
+
+        private class Callback : ITextTemplatingCallback
+        {
+            private readonly ICollection<string> _errors = new List<string>();
+
+            public IEnumerable<string> Errors
+            {
+                get { return _errors; }
+            }
+
+            public void ErrorCallback(bool warning, string message, int line, int column)
+            {
+                Debug.Assert(!string.IsNullOrEmpty(message), "message is null or empty.");
+
+                if (!warning)
+                {
+                    _errors.Add(message);
+                }
+            }
+
+            public void SetFileExtension(string extension)
+            {
+            }
+
+            public void SetOutputEncoding(Encoding encoding, bool fromOutputDirective)
+            {
+            }
         }
     }
 }

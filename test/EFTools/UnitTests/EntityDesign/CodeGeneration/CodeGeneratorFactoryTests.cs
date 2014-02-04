@@ -17,7 +17,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void GetContextGenerator_returns_correct_context_generator_for_empty_model()
         {
-            var generatorFactory = new CodeGeneratorFactory(Mock.Of<Project>(), Mock.Of<IServiceProvider>());
+            var generatorFactory = new CodeGeneratorFactory(Mock.Of<Project>());
 
             Assert.IsType<CSharpCodeFirstEmptyModelGenerator>(
                 generatorFactory.GetContextGenerator(LangEnum.CSharp, isEmptyModel: true));
@@ -28,7 +28,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void GetContextGenerator_returns_correct_non_customized_context_generator_if_model_not_emtpy()
         {
-            var generatorFactory = new CodeGeneratorFactory(Mock.Of<Project>(), Mock.Of<IServiceProvider>());
+            var generatorFactory = new CodeGeneratorFactory(Mock.Of<Project>());
 
             Assert.IsType<DefaultCSharpContextGenerator>(
                 generatorFactory.GetContextGenerator(LangEnum.CSharp, isEmptyModel: false));
@@ -41,7 +41,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         {
             var mockDte = SetupMockProjectWithCustomizedTemplate(@"CodeTemplates\EFModelFromDatabase\Context.cs.t4");
 
-            var generatorFactory = new CodeGeneratorFactory(mockDte.Project, mockDte.ServiceProvider);
+            var generatorFactory = new CodeGeneratorFactory(mockDte.Project);
 
             Assert.IsType<CustomGenerator>(generatorFactory.GetContextGenerator(LangEnum.CSharp, isEmptyModel: false));
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         {
             var mockDte = SetupMockProjectWithCustomizedTemplate(@"CodeTemplates\EFModelFromDatabase\Context.vb.t4");
 
-            var generatorFactory = new CodeGeneratorFactory(mockDte.Project, mockDte.ServiceProvider);
+            var generatorFactory = new CodeGeneratorFactory(mockDte.Project);
 
             Assert.IsType<CustomGenerator>(generatorFactory.GetContextGenerator(LangEnum.VisualBasic, isEmptyModel: false));
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void GetEntityTypeGenerator_returns_correct_non_customized_entity_type_generator()
         {
-            var generatorFactory = new CodeGeneratorFactory(Mock.Of<Project>(), Mock.Of<IServiceProvider>());
+            var generatorFactory = new CodeGeneratorFactory(Mock.Of<Project>());
 
             Assert.IsType<DefaultCSharpEntityTypeGenerator>(
                 generatorFactory.GetEntityTypeGenerator(LangEnum.CSharp));
@@ -72,7 +72,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         {
             var mockDte = SetupMockProjectWithCustomizedTemplate(@"CodeTemplates\EFModelFromDatabase\Entity.cs.t4");
 
-            var generatorFactory = new CodeGeneratorFactory(mockDte.Project, mockDte.ServiceProvider);
+            var generatorFactory = new CodeGeneratorFactory(mockDte.Project);
 
             Assert.IsType<CustomGenerator>(generatorFactory.GetEntityTypeGenerator(LangEnum.CSharp));
         }
@@ -82,7 +82,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         {
             var mockDte = SetupMockProjectWithCustomizedTemplate(@"CodeTemplates\EFModelFromDatabase\Entity.vb.t4");
 
-            var generatorFactory = new CodeGeneratorFactory(mockDte.Project, mockDte.ServiceProvider);
+            var generatorFactory = new CodeGeneratorFactory(mockDte.Project);
 
             Assert.IsType<CustomGenerator>(generatorFactory.GetEntityTypeGenerator(LangEnum.CSharp));
         }

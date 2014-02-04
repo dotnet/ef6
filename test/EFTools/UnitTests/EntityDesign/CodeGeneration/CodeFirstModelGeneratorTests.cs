@@ -9,8 +9,6 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     using System.IO;
     using System.Linq;
     using EnvDTE;
-    using Microsoft.VisualStudio.TextTemplating;
-    using Microsoft.VisualStudio.TextTemplating.VSHost;
     using Moq;
     using UnitTests.TestHelpers;
     using Xunit;
@@ -38,7 +36,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_returns_code_when_cs()
         {
-            var generator = new CodeFirstModelGenerator(MockDTE.CreateProject(), Mock.Of<IServiceProvider>());
+            var generator = new CodeFirstModelGenerator(MockDTE.CreateProject());
 
             var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
@@ -49,7 +47,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_returns_code_when_cs_and_empty_model()
         {
-            var generator = new CodeFirstModelGenerator(MockDTE.CreateProject(), Mock.Of<IServiceProvider>());
+            var generator = new CodeFirstModelGenerator(MockDTE.CreateProject());
 
             var files = generator.Generate(null, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
@@ -61,9 +59,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_returns_code_when_vb()
         {
-            var generator = new CodeFirstModelGenerator(
-                MockDTE.CreateProject(kind: MockDTE.VBProjectKind),
-                Mock.Of<IServiceProvider>());
+            var generator = new CodeFirstModelGenerator(MockDTE.CreateProject(kind: MockDTE.VBProjectKind));
 
             var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
@@ -74,9 +70,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_returns_code_when_vb_and_empty_model()
         {
-            var generator = new CodeFirstModelGenerator(
-                MockDTE.CreateProject(kind: MockDTE.VBProjectKind),
-                Mock.Of<IServiceProvider>());
+            var generator = new CodeFirstModelGenerator(MockDTE.CreateProject(kind: MockDTE.VBProjectKind));
 
             var files = generator.Generate(null, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
@@ -89,12 +83,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public void Generate_returns_code_when_cs_and_customized()
         {
             var project = MockDTE.CreateProject();
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(p => p.GetService(typeof(STextTemplating))).Returns(GetTextTemplatingService());
 
             using (AddCustomizedTemplates(project))
             {
-                var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
+                var generator = new CodeFirstModelGenerator(project);
 
                 var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
@@ -108,12 +100,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public void Generate_returns_code_when_vb_and_customized()
         {
             var project = MockDTE.CreateProject(kind: MockDTE.VBProjectKind);
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(p => p.GetService(typeof(STextTemplating))).Returns(GetTextTemplatingService());
 
             using (AddCustomizedTemplates(project))
             {
-                var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
+                var generator = new CodeFirstModelGenerator(project);
 
                 var files = generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray();
 
@@ -127,25 +117,35 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public void Generate_throws_when_error_in_context_template()
         {
             var project = MockDTE.CreateProject();
-            var exception = new Exception();
-            var textTemplatingService = GetTextTemplatingService();
-            Mock.Get(textTemplatingService)
-                .Setup(s => s.ProcessTemplate(It.IsAny<string>(), It.IsAny<string>(), null, null))
-                .Throws(exception);
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(p => p.GetService(typeof(STextTemplating))).Returns(textTemplatingService);
+            var token = Guid.NewGuid().ToString();
 
             using (AddCustomizedTemplates(project))
             {
-                var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
+                var templatePath = Path.GetTempFileName();
+                try
+                {
+                    File.WriteAllText(templatePath, "<# throw new Exception(\"" + token + "\"); #>");
 
-                var ex = Assert.Throws<CodeFirstModelGenerationException>(
-                    () => generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray());
+                    var fullPathProperty = project.ProjectItems.Item("CodeTemplates").ProjectItems
+                        .Item("EFModelFromDatabase").ProjectItems.Item("Context.cs.t4").Properties.Cast<Property>()
+                        .First(i => i.Name == "FullPath");
+                    Mock.Get(fullPathProperty).SetupGet(p => p.Value).Returns(templatePath);
 
-                Assert.Equal(
-                    string.Format(Resources.ErrorGeneratingCodeFirstModel, "MyContext.cs"),
-                    ex.Message);
-                Assert.Same(exception, ex.InnerException);
+                    var generator = new CodeFirstModelGenerator(project);
+
+                    var ex = Assert.Throws<CodeFirstModelGenerationException>(
+                        () => generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString")
+                            .ToArray());
+
+                    Assert.Equal(
+                        string.Format(Resources.ErrorGeneratingCodeFirstModel, "MyContext.cs"),
+                        ex.Message);
+                    Assert.Contains(token, ex.InnerException.Message);
+                }
+                finally
+                {
+                    File.Delete(templatePath);
+                }
             }
         }
 
@@ -153,57 +153,42 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public void Generate_throws_when_error_in_entity_type_template()
         {
             var project = MockDTE.CreateProject();
-            var i = 0;
-            var exception = new Exception();
-            var textTemplatingService = GetTextTemplatingService();
-            Mock.Get(textTemplatingService)
-                .Setup(s => s.ProcessTemplate(It.IsAny<string>(), It.IsAny<string>(), null, null))
-                .Callback(() => { if (i++ > 0) throw exception; });
-            var serviceProvider = new Mock<IServiceProvider>();
-            serviceProvider.Setup(p => p.GetService(typeof(STextTemplating))).Returns(textTemplatingService);
+            var token = Guid.NewGuid().ToString();
 
             using (AddCustomizedTemplates(project))
             {
-                var generator = new CodeFirstModelGenerator(project, serviceProvider.Object);
+                var templatePath = Path.GetTempFileName();
+                try
+                {
+                    File.WriteAllText(templatePath, "<# throw new Exception(\"" + token + "\"); #>");
 
-                var ex = Assert.Throws<CodeFirstModelGenerationException>(
-                    () => generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString").ToArray());
+                    var fullPathProperty = project.ProjectItems.Item("CodeTemplates").ProjectItems
+                        .Item("EFModelFromDatabase").ProjectItems.Item("EntityType.cs.t4").Properties.Cast<Property>()
+                        .First(i => i.Name == "FullPath");
+                    Mock.Get(fullPathProperty).SetupGet(p => p.Value).Returns(templatePath);
 
-                Assert.Equal(
-                    string.Format(Resources.ErrorGeneratingCodeFirstModel, "Entity.cs"),
-                    ex.Message);
-                Assert.Same(exception, ex.InnerException);
+                    var generator = new CodeFirstModelGenerator(project);
+
+                    var ex = Assert.Throws<CodeFirstModelGenerationException>(
+                        () => generator.Generate(Model, "WebApplication1.Models", "MyContext", "MyContextConnString")
+                            .ToArray());
+
+                    Assert.Equal(
+                        string.Format(Resources.ErrorGeneratingCodeFirstModel, "Entity.cs"),
+                        ex.Message);
+                    Assert.Contains(token, ex.InnerException.Message);
+                }
+                finally
+                {
+                    File.Delete(templatePath);
+                }
             }
-        }
-
-        private static ITextTemplating GetTextTemplatingService()
-        {
-            var textTemplating = new Mock<ITextTemplating>();
-            textTemplating.Setup(t => t.ProcessTemplate(It.IsAny<string>(), It.IsAny<string>(), null, null))
-                .Returns((object _, string content, object __, object ___) => content);
-
-            var session = Mock.Of<ITextTemplatingSession>();
-
-            var sessionHost = textTemplating.As<ITextTemplatingSessionHost>();
-            sessionHost.Setup(h => h.CreateSession()).Returns(session);
-            sessionHost.SetupGet(h => h.Session).Returns(session);
-
-            return textTemplating.Object;
         }
 
         private static IDisposable AddCustomizedTemplates(Project project)
         {
             var templatePath = Path.GetTempFileName();
             File.WriteAllText(templatePath, "Customized");
-
-            var property = new Mock<Property>();
-            property.SetupGet(p => p.Name).Returns("FullPath");
-            property.SetupGet(p => p.Value).Returns(templatePath);
-
-            var propertyArray = new[] { property.Object };
-
-            var properties = new Mock<Properties>();
-            properties.As<IEnumerable>().Setup(p => p.GetEnumerator()).Returns(() => propertyArray.GetEnumerator());
 
             var contextCSharpItem = new Mock<ProjectItem>();
             var contextVBItem = new Mock<ProjectItem>();
@@ -212,6 +197,15 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             foreach (var projectItem in new[] { contextCSharpItem, contextVBItem, entityCSharpItem, entityVBItem })
             {
+                var property = new Mock<Property>();
+                property.SetupGet(p => p.Name).Returns("FullPath");
+                property.SetupGet(p => p.Value).Returns(templatePath);
+
+                var propertyArray = new[] { property.Object };
+
+                var properties = new Mock<Properties>();
+                properties.As<IEnumerable>().Setup(p => p.GetEnumerator()).Returns(() => propertyArray.GetEnumerator());
+
                 projectItem.SetupGet(i => i.Properties).Returns(properties.Object);
             }
 
