@@ -125,28 +125,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return project;
         }
 
-        // load web.config as an XML document (also output name of file to be used for saving)
-        private static XmlDocument LoadWebConfig(Project project, out string webConfigFilepath)
-        {
-            webConfigFilepath = null;
-
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            var webItemConfig = ConnectionManager.FindOrCreateConfig(project, true);
-            if (null == webItemConfig)
-            {
-                return null;
-            }
-
-            // pass 1 to get_FileNames because it asserts if we pass 0
-            webConfigFilepath = webItemConfig.FileNames[1];
-
-            return ConnectionManager.LoadConfigFile(webConfigFilepath);
-        }
-
         // <summary>
         //     This will resolve a path with a certain macro, such as: "$(DevEnvDir)\devenv.exe" and can
         //     also handle custom macros.
@@ -231,48 +209,47 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         internal static void RegisterAssembly(Project project, string assemblyFullName)
         {
-            string webConfigFilepath;
-            var webConfigDocument = LoadWebConfig(project, out webConfigFilepath);
-            if (null == webConfigDocument)
-            {
-                return;
-            }
+            UpdateConfig(
+                project, configXml =>
+                {
+                    // <assemblies>
+                    var assembliesElement = FindOrCreateXmlElement(configXml, "configuration/system.web/compilation/assemblies");
 
-            var compilation = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation");
-            if (null != compilation)
-            {
-                // <assemblies>
-                var assembliesElement = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation/assemblies");
-
-                // <add> for System.Data.Entity assembly
-                FindOrCreateChildXmlElementWithAttribute(assembliesElement, "add", "assembly", assemblyFullName, new AssemblyNameComparer());
-                ConnectionManager.UpdateConfigFile(webConfigDocument, webConfigFilepath);
-            }
+                    // <add> for System.Data.Entity assembly
+                    FindOrCreateChildXmlElementWithAttribute(
+                        assembliesElement, "add", "assembly", assemblyFullName, new AssemblyNameComparer());
+                });
         }
 
         internal static void RegisterBuildProviders(Project project)
         {
-            string webConfigFilepath;
-            var webConfigDocument = LoadWebConfig(project, out webConfigFilepath);
-            if (null == webConfigDocument)
+            UpdateConfig(
+                project, (configXml) =>
+                {
+                    // <buildProviders>
+                    var buildProviders = FindOrCreateXmlElement(configXml, "configuration/system.web/compilation/buildProviders");
+
+                    // <add> for edmx
+                    var add = FindOrCreateChildXmlElementWithAttribute(buildProviders, "add", "extension", ".edmx", null);
+
+                    // Hardcode the build provider full type name to avoid the dependency on System.Data.Entity.Design.
+                    add.SetAttribute("type", "System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider");
+                });
+        }
+
+        private static void UpdateConfig(Project project, Action<XmlDocument> updateAction)
+        {
+            var configFileUtils = new ConfigFileUtils(project, PackageManager.Package);
+            configFileUtils.GetOrCreateConfigFile();
+            var configXml = configFileUtils.LoadConfig();
+            if (null == configXml)
             {
                 return;
             }
 
-            var compilation = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation");
-            if (null != compilation)
-            {
-                // <buildProviders>
-                var buildProviders = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation/buildProviders");
+            updateAction(configXml);
 
-                // <add> for edmx
-                var add = FindOrCreateChildXmlElementWithAttribute(buildProviders, "add", "extension", ".edmx", null);
-
-                // Hardcode the build provider full type name to avoid the dependency on System.Data.Entity.Design.
-                add.SetAttribute("type", "System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider");
-
-                ConnectionManager.UpdateConfigFile(webConfigDocument, webConfigFilepath);
-            }
+            configFileUtils.SaveConfig(configXml);
         }
 
         // <summary>

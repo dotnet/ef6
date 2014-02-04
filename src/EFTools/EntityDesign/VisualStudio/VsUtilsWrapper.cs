@@ -3,6 +3,7 @@
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Common;
@@ -26,7 +27,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         public LangEnum GetLanguageForProject(Project project)
         {
-            return GetLanguageForProject(project);
+            return VsUtils.GetLanguageForProject(project);
+        }
+
+        public void WriteCheckoutXmlFilesInProject(IDictionary<string, object> filesMap)
+        {
+            VsUtils.WriteCheckoutXmlFilesInProject(filesMap);
         }
     }
 }

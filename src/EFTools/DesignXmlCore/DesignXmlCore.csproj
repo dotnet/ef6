@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -228,6 +228,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="VirtualTreeGrid\UI\VirtualTreeStrings.cs" />
+    <Compile Include="VisualStudio\IVsHelpers.cs" />
     <Compile Include="VisualStudio\IXmlModelErrorTask.cs" />
     <Compile Include="VisualStudio\Modeling\ModelChanges.cs" />
     <Compile Include="VisualStudio\NativeMethods.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="VisualStudio\VSEventBroadcaster.cs" />
     <Compile Include="VisualStudio\VSFileFinder.cs" />
     <Compile Include="VisualStudio\VSHelpers.cs" />
+    <Compile Include="VisualStudio\VsHelpersWrapper.cs" />
     <Compile Include="VisualStudio\XmlModelDocumentTask.cs" />
     <Compile Include="VisualStudio\XmlModelErrorTask.cs" />
   </ItemGroup>

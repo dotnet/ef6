@@ -233,7 +233,7 @@
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\ModelObjectItemWizardTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\OneEFWizardTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Model\StandaloneXmlModelProviderTests.cs" />
-    <Compile Include="EntityDesign\VisualStudio\Package\ConfigFilesUtilsTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\Package\ConfigFileUtilsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\ConnectionManagerTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\EntityDesignDocumentFrameMgrTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\RetargetingHandlerTests.cs" />
