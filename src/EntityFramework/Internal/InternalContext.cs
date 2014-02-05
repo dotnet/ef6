@@ -538,12 +538,18 @@ namespace System.Data.Entity.Internal
 
             try
             {
-                UseTempObjectContext();
+                if (!(Owner is TransactionContext))
+                {
+                    UseTempObjectContext();
+                }
                 PerformInitializationAction(initializerAction);
             }
             finally
             {
-                DisposeTempObjectContext();
+                if (!(Owner is TransactionContext))
+                {
+                    DisposeTempObjectContext();
+                }
 
                 AutoDetectChangesEnabled = autoDetectChangesEnabled;
                 ValidateOnSaveEnabled = validateOnSaveEnabled;

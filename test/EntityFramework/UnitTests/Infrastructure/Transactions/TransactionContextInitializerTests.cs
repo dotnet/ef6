@@ -24,7 +24,10 @@ namespace System.Data.Entity.Infrastructure.Transactions
                     DbInterception.Add(recorder);
                     try
                     {
-                        initializer.InitializeDatabase(transactionContext);
+                        using (transactionContext.Database.BeginTransaction())
+                        {
+                            initializer.InitializeDatabase(transactionContext);
+                        }
 
                         Assert.Equal(1, recorder.Connections.Count);
                     }

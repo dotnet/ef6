@@ -155,15 +155,15 @@ namespace System.Data.Entity.Infrastructure
             var transactionId = Guid.NewGuid();
             var savedSuccesfully = false;
             var reinitializedDatabase = false;
+            var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
+            ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
             while (!savedSuccesfully)
             {
                 Debug.Assert(!_transactions.ContainsKey(interceptionContext.Result), "The transaction has already been registered");
                 var transactionRow = new TransactionRow { Id = transactionId, CreationTime = DateTime.Now };
                 _transactions.Add(interceptionContext.Result, transactionRow);
-                TransactionContext.Transactions.Add(transactionRow);
 
-                var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
-                ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
+                TransactionContext.Transactions.Add(transactionRow);
                 try
                 {
                     objectContext.SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
@@ -206,9 +206,6 @@ namespace System.Data.Entity.Infrastructure
 
                         reinitializedDatabase = true;
                     }
-
-                    interceptionContext.Result.Rollback();
-                    interceptionContext.Result = connection.BeginTransaction(interceptionContext.IsolationLevel);
                 }
             }
         }
@@ -233,10 +230,18 @@ namespace System.Data.Entity.Infrastructure
             _transactions.Remove(transaction);
             if (interceptionContext.Exception != null)
             {
-                var existingTransactionRow = TransactionContext.Transactions
-                    .AsNoTracking()
-                    .WithExecutionStrategy(new DefaultExecutionStrategy())
-                    .SingleOrDefault(t => t.Id == transactionRow.Id);
+                TransactionRow existingTransactionRow = null;
+                try
+                {
+                    existingTransactionRow = TransactionContext.Transactions
+                        .AsNoTracking()
+                        .WithExecutionStrategy(new DefaultExecutionStrategy())
+                        .SingleOrDefault(t => t.Id == transactionRow.Id);
+                }
+                catch (EntityCommandExecutionException)
+                {
+                    // Transaction table doesn't exist
+                }
 
                 if (existingTransactionRow != null)
                 {
