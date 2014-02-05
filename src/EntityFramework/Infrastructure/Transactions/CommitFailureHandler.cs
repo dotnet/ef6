@@ -166,7 +166,7 @@ namespace System.Data.Entity.Infrastructure
                 ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
                 try
                 {
-                    objectContext.SaveChanges(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
+                    objectContext.SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
                     savedSuccesfully = true;
                 }
                 catch (UpdateException)
@@ -396,7 +396,8 @@ namespace System.Data.Entity.Infrastructure
 
                 try
                 {
-                    TransactionContext.SaveChanges();
+                    ((IObjectContextAdapter)TransactionContext).ObjectContext
+                        .SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
                 }
                 catch (EntityException)
                 {
@@ -426,7 +427,11 @@ namespace System.Data.Entity.Infrastructure
 
                 try
                 {
-                    await TransactionContext.SaveChangesAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    await
+                        ((IObjectContextAdapter)TransactionContext).ObjectContext
+                            .SaveChangesInternalAsync(
+                                SaveOptions.AcceptAllChangesAfterSave, /*executeInExistingTransaction:*/ true, cancellationToken)
+                            .ConfigureAwait(continueOnCapturedContext: false);
                 }
                 catch (EntityException)
                 {
