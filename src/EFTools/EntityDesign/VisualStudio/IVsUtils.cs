@@ -3,6 +3,7 @@
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Common;
@@ -13,5 +14,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         DirectoryInfo GetProjectRoot(Project project, IServiceProvider serviceProvider);
         VisualStudioProjectSystem GetApplicationType(IServiceProvider serviceProvider, Project project);
         LangEnum GetLanguageForProject(Project project);
+        void WriteCheckoutXmlFilesInProject(IDictionary<string, object> filesMap);
     }
 }

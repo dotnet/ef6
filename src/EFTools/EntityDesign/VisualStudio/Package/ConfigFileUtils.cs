@@ -3,11 +3,15 @@
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Xml;
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.Data.Entity.Design.Common;
     using System.IO;
+    using Microsoft.VisualStudio.TextManager.Interop;
+    using System.Globalization;
 
     internal class ConfigFileUtils
     {
@@ -18,18 +22,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private const string VbWebApplicationKind = "{349C5854-65DF-11DA-9384-00065B846F21}";
 
         private readonly IVsUtils _vsUtils;
+        private readonly IVsHelpers _vsHelpers;
 
         private readonly Project _project;
         private readonly IServiceProvider _serviceProvider;
         private readonly VisualStudioProjectSystem _applicationType;
         private readonly string _configFileName;
 
-        public ConfigFileUtils(Project project, IServiceProvider serviceProvider, IVsUtils vsUtils = null)
+        public ConfigFileUtils(Project project, IServiceProvider serviceProvider, IVsUtils vsUtils = null, IVsHelpers vsHelpers = null)
         {
             Debug.Assert(project != null, "project is null");
             Debug.Assert(serviceProvider != null, "serviceProvider is null");
 
             _vsUtils = vsUtils ?? new VsUtilsWrapper();
+            _vsHelpers = vsHelpers ?? new VsHelpersWrapper();
 
             _project = project;
             _serviceProvider = serviceProvider;
@@ -39,19 +45,37 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 : VsUtils.AppConfigFileName;
         }
 
+        public ProjectItem GetOrCreateConfigFile()
+        {
+            if (!ConfigFileExists())
+            {
+                CreateConfigFile();
+            }
+
+            return GetConfigProjectItem();
+        }
+
         public string ConfigFileName
         {
             get { return _configFileName; }
         }
 
-        public ProjectItem CreateConfigFile()
+        // virtual for testing
+        public virtual ProjectItem CreateConfigFile()
         {
-            _project.ProjectItems.AddFromTemplate(GetConfigItempTemplatePath(), _configFileName);
+            Debug.Assert(GetConfigProjectItem() == null, "Config file already exists");
 
+            var configProjectItem = AddFromFile();
+            if (configProjectItem != null)
+            {
+                return configProjectItem;
+            }
+
+            _project.ProjectItems.AddFromTemplate(GetConfigItempTemplatePath(), _configFileName);
             return GetConfigProjectItem();
         }
 
-        public ProjectItem AddFromFile()
+        private ProjectItem AddFromFile()
         {
             var projectDirectoryInfo = _vsUtils.GetProjectRoot(_project, _serviceProvider);
             var configFileInfo = new FileInfo(Path.Combine(projectDirectoryInfo.FullName, _configFileName));
@@ -64,9 +88,80 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return null;
         }
 
+        // virtual for testing
+        public virtual XmlDocument LoadConfig()
+        {
+            var configFilePath = GetConfigPath();
+            if (configFilePath != null)
+            {
+                // attempt to construct the config xml from the doc data if it is available
+                try
+                {
+                    var textLines = _vsHelpers.GetDocData(_serviceProvider, configFilePath) as IVsTextLines;
+                    return textLines != null
+                        ? EdmUtils.SafeLoadXmlFromString(
+                            VSHelpers.GetTextFromVsTextLines(textLines), preserveWhitespace: true)
+                        : EdmUtils.SafeLoadXmlFromPath(configFilePath);
+                }
+                catch (XmlException e)
+                {
+                    VsUtils.LogStandardError(
+                        String.Format(
+                            CultureInfo.CurrentCulture,
+                            Resources.VSUtils_ExceptionParsingXml,
+                            configFilePath,
+                            e.Message),
+                        configFilePath,
+                        e.LineNumber,
+                        e.LinePosition);
+
+                    throw;
+                }
+            }
+
+            return null;
+        }
+
+        // virtual for testing
+        public virtual void SaveConfig(XmlDocument contents)
+        {
+            Debug.Assert(contents != null, "contents is null");
+
+            var configFilePath = GetConfigPath();
+
+            Debug.Assert(configFilePath != null, "config project item does not exist");
+
+            try
+            {
+                _vsUtils.WriteCheckoutXmlFilesInProject(new Dictionary<string, object> { { configFilePath, contents } });
+            }
+            catch (Exception e)
+            {
+                VsUtils.LogOutputWindowPaneMessage(
+                    _project,
+                    string.Format(
+                        CultureInfo.CurrentCulture, 
+                        Resources.ConnectionManager_SaveXmlError, 
+                        configFilePath, 
+                        e.Message));
+                throw;
+            }
+        }
+
+        public bool ConfigFileExists()
+        {
+            return GetConfigProjectItem() != null;
+        }
+
         public ProjectItem GetConfigProjectItem()
         {
             return _vsUtils.FindFirstProjectItemWithName(_project.ProjectItems, _configFileName);
+        }
+
+        public string GetConfigPath()
+        {
+            var configProjectItem = GetConfigProjectItem();
+            return configProjectItem != null ? configProjectItem.FileNames[1] : null;
         }
 
         private string GetConfigItempTemplatePath()
