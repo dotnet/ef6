@@ -14,7 +14,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Microsoft.VisualStudio.Shell.Design;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    internal static class ConfigFileUtils
+    internal static class ConfigFileHelper
     {
         // <summary>
         //     Updates app. or web.config to include connection strings, registers the build provider
@@ -64,7 +64,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         private static void UpdateConfig(ICollection<string> metadataFiles, ModelBuilderSettings settings)
         {
             var statusMessage =
-                settings.SaveToWebConfig
+                VsUtils.IsWebProject(settings.VSApplicationType)
                     ? String.Format(CultureInfo.CurrentCulture, Resources.Engine_WebConfigSuccess, VsUtils.WebConfigFileName)
                     : String.Format(CultureInfo.CurrentCulture, Resources.Engine_AppConfigSuccess, VsUtils.AppConfigFileName);
 
@@ -81,11 +81,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 }
                 catch (Exception e)
                 {
-                    statusMessage = 
+                    statusMessage =
                         String.Format(
-                        CultureInfo.CurrentCulture,
-                        settings.SaveToWebConfig ? Resources.Engine_WebConfigException : Resources.Engine_AppConfigException, 
-                        e.Message);
+                            CultureInfo.CurrentCulture,
+                            VsUtils.IsWebProject(settings.VSApplicationType)
+                                ? Resources.Engine_WebConfigException
+                                : Resources.Engine_AppConfigException,
+                            e.Message);
                 }
                 VsUtils.LogOutputWindowPaneMessage(settings.Project, statusMessage);
         }

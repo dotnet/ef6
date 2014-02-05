@@ -129,15 +129,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             set { _applicationType = value; }
         }
 
-        internal bool SaveToWebConfig
-        {
-            get
-            {
-                return (_applicationType == VisualStudioProjectSystem.WebApplication ||
-                        _applicationType == VisualStudioProjectSystem.Website);
-            }
-        }
-
         internal WorkflowApplication WorkflowInstance { get; set; }
 
         internal string ProviderManifestToken { get; set; }

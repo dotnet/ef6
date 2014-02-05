@@ -272,6 +272,7 @@
     <Compile Include="UI\ViewModels\PropertyWindow\Converters\ToRoleListConverter.cs" />
     <Compile Include="UI\Views\Explorer\IViewDiagram.cs" />
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
+    <Compile Include="VisualStudio\IVsUtils.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseEngineBase.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\EdmxHelper.cs" />
@@ -289,6 +290,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="VisualStudio\Package\ConfigFileUtils.cs" />
     <Compile Include="VisualStudio\ProjectExecutionContext.cs" />
     <Compile Include="VisualStudio\RetargetingHandler.cs" />
     <Compile Include="VisualStudio\RuntimeVersion.cs" />
@@ -334,6 +336,7 @@
     <Compile Include="VisualStudio\TextTemplating\SsdlToDdlActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateCallback.cs" />
+    <Compile Include="VisualStudio\VsUtilsWrapper.cs" />
     <None Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpContextGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>DefaultCSharpContextGenerator.cs</LastGenOutput>
@@ -468,7 +471,7 @@
     <Compile Include="VisualStudio\AggregateProjectTypeGuidCache.cs" />
     <Compile Include="VisualStudio\ExtensibleFileManager.cs" />
     <Compile Include="VisualStudio\ModelWizard\AddArtifactGeneratorWizard.cs" />
-    <Compile Include="VisualStudio\ModelWizard\Engine\ConfigFileUtils.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\ConfigFileHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseGenerationAssemblyLoader.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseGenerationEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseGenerationXamlSchemaContext.cs" />

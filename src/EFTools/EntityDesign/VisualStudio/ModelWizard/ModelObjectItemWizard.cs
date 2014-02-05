@@ -332,7 +332,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
                 try
                 {
-                    ConfigFileUtils.UpdateConfig(_modelBuilderSettings);
+                    ConfigFileHelper.UpdateConfig(_modelBuilderSettings);
 
                     // save the model generated in the wizard UI.
                     if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)

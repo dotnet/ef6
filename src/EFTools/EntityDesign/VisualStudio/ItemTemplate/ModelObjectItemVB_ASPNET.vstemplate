@@ -12,6 +12,7 @@
     <SupportsMasterPage>false</SupportsMasterPage>
     <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
     <TemplateID>Microsoft.Data.Entity.Design.VSTemplate.VB_ASPNET</TemplateID>  <!-- Template ID max length is 63 characters -->
+    <AppendDefaultFileExtension>false</AppendDefaultFileExtension>
   </TemplateData>
   <TemplateContent>
     <References>
