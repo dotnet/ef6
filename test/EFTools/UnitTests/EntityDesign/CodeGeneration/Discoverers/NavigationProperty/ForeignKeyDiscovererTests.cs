@@ -11,13 +11,26 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     public class ForeignKeyDiscovererTests
     {
         [Fact]
-        public void Discover_returns_null_when_inapplicable()
+        public void Discover_returns_null_when_non_fk()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<Entity1>();
             var model = modelBuilder.Build(new DbProviderInfo("System.Data.SqlClient", "2012"));
             var entityType = model.ConceptualModel.EntityTypes.First(t => t.Name == "Entity1");
             var navigationProperty = entityType.NavigationProperties.First(p => p.Name == "Entity2s");
+
+            Assert.Null(new ForeignKeyDiscoverer().Discover(navigationProperty, model));
+        }
+
+        [Fact]
+        public void Discover_returns_null_when_required_to_optional()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Entity1>().HasRequired(e => e.Two).WithOptional();
+            modelBuilder.Entity<Entity1>().Ignore(e => e.Entity2s);
+            var model = modelBuilder.Build(new DbProviderInfo("System.Data.SqlClient", "2012"));
+            var entityType = model.ConceptualModel.EntityTypes.First(e => e.Name == "Entity1");
+            var navigationProperty = entityType.NavigationProperties.First(p => p.Name == "Two");
 
             Assert.Null(new ForeignKeyDiscoverer().Discover(navigationProperty, model));
         }
