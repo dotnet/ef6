@@ -9,9 +9,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Windows.Forms;
+    using System.Xml;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Validation;
@@ -36,6 +38,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     // to view this class in the forms designer, make it temporarily derive from Microsoft.WizardFramework.WizardPage
     internal partial class WizardPageDbConfig : WizardPageBase
     {
+        private readonly ConfigFileUtils _configFileUtils;
         private bool _isInitialized;
 
         //  DDEX Services we use
@@ -47,9 +50,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         // will be set to true if the focus should not be changed on page activation
         private bool _isFocusSet;
         
-        internal WizardPageDbConfig(ModelBuilderWizardForm wizard)
+        internal WizardPageDbConfig(ModelBuilderWizardForm wizard, ConfigFileUtils configFileUtils = null)
             : base(wizard)
         {
+            _configFileUtils = configFileUtils ?? new ConfigFileUtils(wizard.Project, wizard.ServiceProvider);
             InitializeComponent();
 
             Headline = Resources.DbConfigPage_Title;
@@ -280,7 +284,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 // only check that the connection string name is new if started in
                 // 'PerformAllFunctionality' mode
                 if (ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode
-                    && PackageManager.Package.ConnectionManager.GetExistingConnectionStringNames(Wizard.Project).Contains(id))
+                    && GetExistingConnectionStringNames().Contains(id))
                 {
                     var s = Resources.ConnectionStringDuplicateIdentifer;
                     VsUtils.ShowErrorDialog(String.Format(CultureInfo.CurrentCulture, s, id));
@@ -782,9 +786,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         }
 
         // computes a unique connection string name based on the input base name
-        private string GetUniqueConnectionStringName(string baseConnectionStringName)
+        internal string GetUniqueConnectionStringName(string baseConnectionStringName)
         {
-            var connectionStringNames = PackageManager.Package.ConnectionManager.GetExistingConnectionStringNames(Wizard.Project);
+            var connectionStringNames = GetExistingConnectionStringNames();
 
             var i = 1;
             var uniqueConnectionStringName = baseConnectionStringName;
@@ -794,6 +798,24 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
 
             return uniqueConnectionStringName;
+        }
+
+        private HashSet<string> GetExistingConnectionStringNames()
+        {
+            var configXml = _configFileUtils.LoadConfig();
+
+            if (configXml == null)
+            {
+                // can be null if config does not exist in which case there are no connection strings
+                return new HashSet<string>();
+            }
+
+            // note we return all the connection string names to support CodeFirst scenarios
+            return
+                new HashSet<string>(
+                    configXml.SelectNodes(ConnectionManager.XpathConnectionStringsAdd).OfType<XmlElement>()
+                    .Select(addElement => addElement.GetAttribute("name"))
+                    .Where(connectionStringName => !string.IsNullOrEmpty(connectionStringName)));
         }
 
         private void disallowSensitiveInfoButton_CheckedChanged(object sender, EventArgs e)

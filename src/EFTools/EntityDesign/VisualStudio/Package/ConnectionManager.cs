@@ -10,7 +10,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using Microsoft.VisualStudio.Data.Core;
     using Microsoft.VisualStudio.DataTools.Interop;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.TextManager.Interop;
     using Microsoft.VSDesigner.Data.Local;
     using System;
     using System.Collections.Generic;
@@ -66,7 +65,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private const string XpathConnectionStringsAddEntity = 
             "configuration/connectionStrings/add[@providerName='" + Provider + "']";
 
-        private const string XpathConnectionStringsAdd = "configuration/connectionStrings/add";
+        internal static readonly string XpathConnectionStringsAdd = "configuration/connectionStrings/add";
 
         internal static readonly string EmbedAsResourcePrefix = "res://*";
 
@@ -749,37 +748,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         {
             // for now all projects have "Embed in Output Assembly" as their default
             return ConnectionDesignerInfo.MAP_EmbedInOutputAssembly;
-        }
-
-        internal HashSet<string> GetExistingConnectionStringNames(Project project)
-        {
-            if (!ConnStringsByProjectHash.ContainsKey(project))
-            {
-                return new HashSet<string>();
-            }
-            return new HashSet<string>(ConnStringsByProjectHash[project].Keys);
-        }
-
-        internal ConnectionString GetConnectionStringByMetadataFileName(Project project, string filePath)
-        {
-            var fileName = Path.GetFileNameWithoutExtension(filePath);
-            var connStringsInProject = ConnStringsByProjectHash[project];
-            if (connStringsInProject != null)
-            {
-                var enumerator = connStringsInProject.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    var connString = enumerator.Current.Value;
-                    var metadata = connString.Builder.Metadata;
-                    if (metadata.Contains(fileName + EntityDesignArtifact.ExtensionCsdl)
-                        && metadata.Contains(fileName + EntityDesignArtifact.ExtensionMsl)
-                        && metadata.Contains(fileName + EntityDesignArtifact.ExtensionSsdl))
-                    {
-                        return connString;
-                    }
-                }
-            }
-            return null;
         }
 
         internal static ConnectionString GetConnectionStringObject(Project project, string entityContainerName)
