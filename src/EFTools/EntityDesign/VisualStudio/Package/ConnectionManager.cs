@@ -403,27 +403,25 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
 #if (!VS12)
         // Update the .config file if the nodes have a SQL CE 3.5 provider to use 4.0 instead
-        internal static bool UpdateSqlCeProviderInConnectionStrings(string configFilePath, out XmlDocument configXmlDoc)
+        internal static bool UpdateSqlCeProviderInConnectionStrings(XmlDocument configXmlDoc)
         {
-            configXmlDoc = LoadConfigFile(configFilePath);
+            Debug.Assert(configXmlDoc != null, "configXml is null");
+
             var docUpdated = false;
-            if (configXmlDoc != null)
+            // update all nodes that have SQL CE 3.5 provider
+            var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAdd);
+            foreach (XmlNode node in xmlNodeList)
             {
-                // update all nodes that have SQL CE 3.5 provider
-                var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAdd);
-                foreach (XmlNode node in xmlNodeList)
+                var e = node as XmlElement;
+                if (e != null)
                 {
-                    var e = node as XmlElement;
-                    if (e != null)
+                    var connectionString = e.GetAttribute(XmlAttrNameConnectionString);
+                    if (null != connectionString
+                        && connectionString.Contains(SqlCe35ConnectionStringProvider))
                     {
-                        var connectionString = e.GetAttribute(XmlAttrNameConnectionString);
-                        if (null != connectionString
-                            && connectionString.Contains(SqlCe35ConnectionStringProvider))
-                        {
-                            var newConnString = connectionString.Replace(SqlCe35ConnectionStringProvider, SqlCe40ConnectionStringProvider);
-                            e.SetAttribute(XmlAttrNameConnectionString, newConnString);
-                            docUpdated = true;
-                        }
+                        var newConnString = connectionString.Replace(SqlCe35ConnectionStringProvider, SqlCe40ConnectionStringProvider);
+                        e.SetAttribute(XmlAttrNameConnectionString, newConnString);
+                        docUpdated = true;
                     }
                 }
             }

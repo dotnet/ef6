@@ -389,7 +389,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 if (project != null
                     && !VsUtils.IsMiscellaneousProject(project))
                 {
-                    var hadErrors = false;
                     IDictionary<string, object> documentMap = new Dictionary<string, object>();
                     foreach (var vsFileInfo in fileFinder.MatchingFiles)
                     {
@@ -403,7 +402,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                                 continue;
                             }
 
-                            // Check whether project item is a  linked item
+                            // Check whether project item is a linked item
                             var isLinkItem = VsUtils.IsLinkProjectItem(projectItem);
 
                             if (!isLinkItem)
@@ -420,41 +419,33 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                             var errMsg = String.Format(
                                 CultureInfo.CurrentCulture, Resources.ErrorDuringSqlCeUpgrade, vsFileInfo.Path, ex.Message);
                             logger.LogMessage((uint)__VSUL_ERRORLEVEL.VSUL_ERROR, project.Name, vsFileInfo.Path, errMsg);
-                            hadErrors = true;
+                            return;
                         }
                     }
 
+                    if (documentMap.Count > 0)
+                    {
+                        VsUtils.WriteCheckoutXmlFilesInProject(documentMap);
+                    }
+
                     // now update the config file as needed
-                    var configFilePath = ConnectionManager.GetConfigFilePath(project, false);
+                    var configFileUtils = new ConfigFileUtils(project, PackageManager.Package);
                     try
                     {
-                        if (false == string.IsNullOrWhiteSpace(configFilePath)) // check config file exists
+                        var configXmlDoc = configFileUtils.LoadConfig();
+                        if (configXmlDoc != null) // check config file exists
                         {
-                            XmlDocument configXmlDoc;
-                            if (ConnectionManager.UpdateSqlCeProviderInConnectionStrings(configFilePath, out configXmlDoc))
+                            if (ConnectionManager.UpdateSqlCeProviderInConnectionStrings(configXmlDoc))
                             {
-                                documentMap.Add(configFilePath, configXmlDoc);
+                                configFileUtils.SaveConfig(configXmlDoc);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
                         var errMsg = String.Format(
-                            CultureInfo.CurrentCulture, Resources.ErrorDuringSqlCeUpgrade, configFilePath, ex.Message);
-                        logger.LogMessage((uint)__VSUL_ERRORLEVEL.VSUL_ERROR, project.Name, configFilePath, errMsg);
-                        hadErrors = true;
-                    }
-
-                    if (hadErrors)
-                    {
-                        // if there were errors above then do not try to change the files on disk
-                        return;
-                    }
-
-                    // Do bulk update here
-                    if (documentMap.Count > 0)
-                    {
-                        VsUtils.WriteCheckoutXmlFilesInProject(documentMap);
+                            CultureInfo.CurrentCulture, Resources.ErrorDuringSqlCeUpgrade, configFileUtils.GetConfigPath(), ex.Message);
+                        logger.LogMessage((uint)__VSUL_ERRORLEVEL.VSUL_ERROR, project.Name, configFileUtils.GetConfigPath(), errMsg);
                     }
                 }
             }
