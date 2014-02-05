@@ -215,8 +215,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             // create entity command (just do this to snarf store command)
             var commandDefinition = (EntityCommandDefinition)CommandDefinition;
+            var connection = (EntityConnection)context.Connection;
             var entityCommand = new EntityCommand(
-                (EntityConnection)context.Connection, commandDefinition, context.InterceptionContext);
+                connection, commandDefinition, context.InterceptionContext);
 
             // pass through parameters and timeout values
             if (context.CommandTimeout.HasValue)
@@ -235,6 +236,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                         entityCommand.Parameters[index].Value = parameter.Value ?? DBNull.Value;
                     }
                 }
+            }
+
+            if (connection.CurrentTransaction != null)
+            {
+                entityCommand.Transaction = connection.CurrentTransaction;
             }
 
             return entityCommand;

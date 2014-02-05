@@ -5,7 +5,6 @@ namespace System.Data.Entity.Interception
     using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
@@ -64,9 +63,7 @@ namespace System.Data.Entity.Interception
         public void TransactionHandler_and_no_ExecutionStrategy_does_not_throw_on_false_commit_fail()
         {
             Execute_commit_failure_test(
-                // During the initialization of the CommitFailure the exception will not be handled
-                // as this should be a rare case
-                c => Assert.Throws<TimeoutException>(() => c()),
+                c => c(),
                 c => c(),
                 expectedBlogs: 2,
                 useTransactionHandler: true,
@@ -149,8 +146,10 @@ namespace System.Data.Entity.Interception
                         Times.Exactly(
                             useTransactionHandler
                                 ? useExecutionStrategy
-                                    ? 8
-                                    : 5
+                                    ? 6
+                                    : rollbackOnFail
+                                        ? 4
+                                        : 3
                                 : 4));
                 }
 
@@ -205,7 +204,6 @@ namespace System.Data.Entity.Interception
         {
             MutableResolver.AddResolver<Func<TransactionHandler>>(
                 new TransactionHandlerResolver(() => new CommitFailureHandler(c => new MyTransactionContext(c)), null, null));
-
             TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_implementation(
                 context =>
                 {
@@ -263,7 +261,7 @@ namespace System.Data.Entity.Interception
                     runAndVerify(context);
 
                     failingTransactionInterceptorMock.Verify(
-                        m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()), Times.Exactly(4));
+                        m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()), Times.Exactly(3));
                 }
 
                 using (var context = new BlogContextCommit())
