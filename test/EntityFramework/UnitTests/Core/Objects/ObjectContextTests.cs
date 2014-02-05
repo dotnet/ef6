@@ -129,8 +129,7 @@ namespace System.Data.Entity.Core.Objects
                 entityAdapterMock.Verify(m => m.Update(), Times.Never());
                 Assert.Equal(0, entriesAffected);
             }
-
-
+            
             [Fact]
             public void If_local_transaction_is_necessary_it_gets_created_commited()
             {
@@ -174,7 +173,7 @@ namespace System.Data.Entity.Core.Objects
                                      Returns(enlistedInUserTransactionCallCount == 1);
 
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
-                objectContext.SaveChanges(SaveOptions.None, !transactionNecessary);
+                objectContext.SaveChangesInternal(SaveOptions.None, !transactionNecessary);
 
                 entityConnectionMock.Verify(m => m.BeginTransaction(), transactionNecessary ? Times.Once():Times.Never());
                 entityTransactionMock.Verify(m => m.Commit(), transactionNecessary ? Times.Once() : Times.Never());
@@ -1842,8 +1841,20 @@ namespace System.Data.Entity.Core.Objects
                 Assert.Equal(0, entriesAffected);
             }
 
+
             [Fact]
             public void If_local_transaction_is_necessary_it_gets_created_commited()
+            {
+                If_local_transaction_is_necessary_it_gets_created(transactionNecessary: true);
+            }
+
+            [Fact]
+            public void If_executeInExistingTransaction_is_true_no_local_transaction_is_created()
+            {
+                If_local_transaction_is_necessary_it_gets_created(transactionNecessary: false);
+            }
+
+            public void If_local_transaction_is_necessary_it_gets_created(bool transactionNecessary)
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
                 var hasChangesCount = 0;
@@ -1879,10 +1890,10 @@ namespace System.Data.Entity.Core.Objects
                                      Returns(enlistedInUserTransactionCallCount == 1);
 
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
-                objectContext.SaveChangesAsync(SaveOptions.None).Wait();
+                objectContext.SaveChangesInternalAsync(SaveOptions.None,!transactionNecessary, CancellationToken.None).Wait();
 
-                entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
-                entityTransactionMock.Verify(m => m.Commit(), Times.Once());
+                entityConnectionMock.Verify(m => m.BeginTransaction(), transactionNecessary ? Times.Once() : Times.Never());
+                entityTransactionMock.Verify(m => m.Commit(), transactionNecessary ? Times.Once() : Times.Never());
             }
 
             [Fact]

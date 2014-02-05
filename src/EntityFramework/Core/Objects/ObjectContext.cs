@@ -3005,10 +3005,10 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges(SaveOptions options)
         {
-            return SaveChanges(options, executeInExistingTransaction: false);
+            return SaveChangesInternal(options, executeInExistingTransaction: false);
         }
 
-        internal int SaveChanges(SaveOptions options, bool executeInExistingTransaction)
+        internal int SaveChangesInternal(SaveOptions options, bool executeInExistingTransaction)
         {
             AsyncMonitor.EnsureNotEntered();
 
@@ -3083,10 +3083,10 @@ namespace System.Data.Entity.Core.Objects
 
             AsyncMonitor.EnsureNotEntered();
 
-            return SaveChangesInternalAsync(options, cancellationToken);
+            return SaveChangesInternalAsync(options, /*executeInExistingTransaction:*/ false, cancellationToken);
         }
 
-        private async Task<Int32> SaveChangesInternalAsync(SaveOptions options, CancellationToken cancellationToken)
+        internal async Task<Int32> SaveChangesInternalAsync(SaveOptions options, bool executeInExistingTransaction, CancellationToken cancellationToken)
         {
             AsyncMonitor.Enter();
             try
@@ -3098,10 +3098,20 @@ namespace System.Data.Entity.Core.Objects
                 // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
                 if (ObjectStateManager.HasChanges())
                 {
-                    var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
-                    entriesAffected = await executionStrategy.ExecuteAsync(
-                        () => SaveChangesToStoreAsync(options, executionStrategy, cancellationToken),
-                        cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    if (executeInExistingTransaction)
+                    {
+                        entriesAffected =
+                            await SaveChangesToStoreAsync(
+                                options, /*executionStrategy:*/ null, /*startLocalTransaction:*/ false,
+                                cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    }
+                    else
+                    {
+                        var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
+                        entriesAffected = await executionStrategy.ExecuteAsync(
+                            () => SaveChangesToStoreAsync(options, executionStrategy, /*startLocalTransaction:*/ true, cancellationToken),
+                            cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    }
                 }
 
                 ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -3171,7 +3181,7 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         private async Task<int> SaveChangesToStoreAsync(
-            SaveOptions options, IDbExecutionStrategy executionStrategy, CancellationToken cancellationToken)
+            SaveOptions options, IDbExecutionStrategy executionStrategy, bool startLocalTransaction, CancellationToken cancellationToken)
         {
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
@@ -3180,7 +3190,7 @@ namespace System.Data.Entity.Core.Objects
 
             var entriesAffected = await ExecuteInTransactionAsync(
                 () => _adapter.UpdateAsync(cancellationToken), executionStrategy,
-                /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
+                startLocalTransaction, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
                                             .ConfigureAwait(continueOnCapturedContext: false);
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
