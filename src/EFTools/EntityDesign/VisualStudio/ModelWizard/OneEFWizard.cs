@@ -82,7 +82,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         private IEnumerable<KeyValuePair<string, string>> GenerateCode(string codeNamespace, string contextClassName, string connectionStringName)
         {
             return new CodeFirstModelGenerator(_project)
-                .Generate(ModelBuilderSettings.Model, codeNamespace, contextClassName, connectionStringName);
+                .Generate(
+                    ModelBuilderSettings.ModelBuilderEngine != null
+                        ? ModelBuilderSettings.ModelBuilderEngine.Model
+                        : null,
+                    codeNamespace,
+                    contextClassName,
+                    connectionStringName);
         }
     }
 }
