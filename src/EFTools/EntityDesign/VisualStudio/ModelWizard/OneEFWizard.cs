@@ -5,9 +5,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.Data.Entity.Design.CodeGeneration;
+    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.VisualStudio.TemplateWizard;
     using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -17,7 +17,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     /// </summary>
     public class OneEFWizard : IWizard
     {
-        internal static DbModel Model { set; private get; }
+        internal static ModelBuilderSettings ModelBuilderSettings { set; private get; }
 
         private List<KeyValuePair<string, string>> _generatedCode;
         private Project _project;
@@ -48,9 +48,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             _generatedCode = GenerateCode(
                 replacementsDictionary["$rootnamespace$"],
                 replacementsDictionary["$safeitemname$"],
-
-                //TODO: needs to be replaced with the actual value
-                replacementsDictionary["$safeitemname$"]).ToList();
+                ModelBuilderSettings.AppConfigConnectionPropertyName
+                    ?? ModelBuilderSettings.ModelName).ToList();
 
             Debug.Assert(_generatedCode.Count > 0, "code has not been generated");
 
@@ -83,7 +82,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         private IEnumerable<KeyValuePair<string, string>> GenerateCode(string codeNamespace, string contextClassName, string connectionStringName)
         {
             return new CodeFirstModelGenerator(_project)
-                .Generate(Model, codeNamespace, contextClassName, connectionStringName);
+                .Generate(
+                    ModelBuilderSettings.ModelBuilderEngine != null
+                        ? ModelBuilderSettings.ModelBuilderEngine.Model
+                        : null,
+                    codeNamespace,
+                    contextClassName,
+                    connectionStringName);
         }
     }
 }

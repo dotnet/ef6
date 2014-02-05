@@ -4,7 +4,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -305,16 +304,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     || _modelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase)
                 {
                     Debug.Assert(
-                        _modelBuilderSettings.ModelBuilderEngine == null ^ 
+                        _modelBuilderSettings.ModelBuilderEngine == null ^
                         _modelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
                         "Model should be null for Empty Model and not null CodeFirst from database");
 
-                    AddCodeFirstItems(
-                        _modelBuilderSettings.Project,
-                        _modelBuilderSettings.ModelName,
-                        _modelBuilderSettings.ModelBuilderEngine != null
-                            ? _modelBuilderSettings.ModelBuilderEngine.Model 
-                            : null);
+                    AddCodeFirstItems();
                 }
 
                 return;
@@ -587,10 +581,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 }
             }
         }
-        private static void AddCodeFirstItems(Project project, string modelName, DbModel model)
+
+        private void AddCodeFirstItems()
         {
             using (new VsUtils.HourglassHelper())
             {
+                var project = _modelBuilderSettings.Project;
                 var webTag = VsUtils.IsWebSiteProject(project) ? "WS" : "";
                 var languageTag = VsUtils.GetLanguageForProject(project) == LangEnum.VisualBasic ? "VB" : "CS";
 
@@ -599,18 +595,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
                 try
                 {
-                    OneEFWizard.Model = model;
+                    OneEFWizard.ModelBuilderSettings = _modelBuilderSettings;
 
                     var parentItems =
                         project.DTE.SelectedItems.Count > 0 && project.DTE.SelectedItems.Item(1).ProjectItem != null
                             ? project.DTE.SelectedItems.Item(1).ProjectItem.ProjectItems
                             : project.ProjectItems;
 
-                    parentItems.AddFromTemplate(template, modelName);
+                    parentItems.AddFromTemplate(template, _modelBuilderSettings.ModelName);
                 }
                 finally
                 {
-                    OneEFWizard.Model = null;
+                    OneEFWizard.ModelBuilderSettings = null;
                 }
             }
         }
