@@ -223,9 +223,7 @@ namespace System.Data.Entity.Internal
                 DbInterception.Add(dbConnectionInterceptorMock.Object);
                 try
                 {
-                    Assert.Equal(
-                        @"System.Data.SqlClient.SqlConnection;Data Source=.\SQLEXPRESS;Initial Catalog=NameNotInAppConfig;Integrated Security=True",
-                        internalConnection.ConnectionKey);
+                    Assert.False(String.IsNullOrWhiteSpace(internalConnection.ConnectionKey));
                 }
                 finally
                 {
@@ -250,9 +248,7 @@ namespace System.Data.Entity.Internal
                 DbInterception.Add(dbConnectionInterceptorMock.Object);
                 try
                 {
-                    Assert.Equal(
-                        @"Data Source=.\SQLEXPRESS;Initial Catalog=NameNotInAppConfig;Integrated Security=True",
-                        internalConnection.OriginalConnectionString);
+                    Assert.False(String.IsNullOrWhiteSpace(internalConnection.OriginalConnectionString));
                 }
                 finally
                 {
