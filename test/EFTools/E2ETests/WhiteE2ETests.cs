@@ -6,7 +6,6 @@ namespace EFDesigner.E2ETests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
@@ -20,6 +19,7 @@ namespace EFDesigner.E2ETests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.VisualStudio.TestTools.VsIdeTesting;
     using TestStack.White;
+    using TestStack.White.Configuration;
     using TestStack.White.Factory;
     using TestStack.White.InputDevices;
     using TestStack.White.UIItems;
@@ -220,7 +220,7 @@ namespace EFDesigner.E2ETests
                         _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option
-                        CreateModelFromDB("School", false);
+                        CreateModelFromDB("School", codeFirst: false);
                     }
                     catch (Exception ex)
                     {
@@ -378,7 +378,7 @@ namespace EFDesigner.E2ETests
                         _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option
-                        CreateModelFromDB("School", false);
+                        CreateModelFromDB("School", codeFirst: false);
                     }
                     catch (Exception ex)
                     {
@@ -515,7 +515,7 @@ namespace EFDesigner.E2ETests
                         _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option, code first
-                        CreateModelFromDB("School", true);
+                        CreateModelFromDB("School", codeFirst: true);
                     }
                     catch (Exception ex)
                     {
@@ -734,17 +734,12 @@ namespace EFDesigner.E2ETests
         {
             using (var mycon = new SqlConnection(connectionString))
             {
-                try
+                using (var mycomm = mycon.CreateCommand())
                 {
-                    var mycomm = new SqlCommand { CommandType = CommandType.Text, CommandText = commandString, Connection = mycon };
-
+                    mycomm.CommandText = commandString;
                     mycon.Open();
                     SqlConnection.ClearAllPools();
                     mycomm.ExecuteNonQuery();
-                }
-                finally
-                {
-                    mycon.Close();
                 }
             }
         }
@@ -770,7 +765,6 @@ namespace EFDesigner.E2ETests
             var wizard = _visualStudio.Find(
                 x => x.Equals(_resourceHelper.GetEntityDesignResourceString(wizardName)),
                 InitializeOption.NoCache);
-            Trace.WriteLine(wizard.AutomationElement);
             return wizard;
         }
 
@@ -798,17 +792,13 @@ namespace EFDesigner.E2ETests
 
             ClickNextButton();
 
-            var appconfig = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("textBoxAppConfigConnectionName"));
-            if (appconfig.Text != (codeFirst ? "Model1" : "SchoolEntities"))
-            {
-                var newConnectionButton =
-                    _wizard.Get<Button>(
-                        SearchCriteria.ByText(_resourceHelper.GetEntityDesignResourceString("NewDatabaseConnectionBtn")));
+            var newConnectionButton =
+                _wizard.Get<Button>(
+                    SearchCriteria.ByText(_resourceHelper.GetEntityDesignResourceString("NewDatabaseConnectionBtn")));
 
-                newConnectionButton.Click();
-                HandleConnectionDialog(dbName);
-                _wizard.WaitTill(WaitTillNewDBSettingsLoaded);
-            }
+            newConnectionButton.Click();
+            HandleConnectionDialog(dbName);
+            _wizard.WaitTill(WaitTillNewDBSettingsLoaded);
 
             ClickNextButton();
 
@@ -916,6 +906,9 @@ namespace EFDesigner.E2ETests
         // Handles the new connection dialog
         private void HandleConnectionDialog(string dbName)
         {
+            // Set button response timeout to longer than it takes for connection string to load
+            CoreAppXmlConfiguration.Instance.BusyTimeout = 20000;
+
             var serverNameText = _wizard.Get<TextBox>(
                 SearchCriteria.ByText(
                     _resourceHelper.GetConnectionUIDialogResourceString("serverLabel.Text")));
@@ -960,7 +953,7 @@ namespace EFDesigner.E2ETests
         private bool WaitTillNewDBSettingsLoaded()
         {
             var appconfig = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("textBoxAppConfigConnectionName"));
-            return appconfig.Text.Equals("SchoolEntities");
+            return appconfig.Text.Equals("Model1") || appconfig.Text.Equals("SchoolEntities");
         }
 
         private bool WaitTillDBTablesLoaded()
