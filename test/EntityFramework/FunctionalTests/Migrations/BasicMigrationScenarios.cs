@@ -434,7 +434,7 @@ namespace System.Data.Entity.Migrations
 
             ResetDatabase();
 
-            CreateMigrator<ShopContext_v4>(
+            CreateMigrator<ShopContext_v6>(
                 automaticDataLossEnabled: true,
                 scaffoldedMigrations: generatedMigration).Update();
 
