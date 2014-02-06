@@ -2,6 +2,19 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using EnvDTE;
+    using Microsoft.Data.Entity.Design.Model;
+    using Microsoft.Data.Entity.Design.Model.Validation;
+    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Data.Core;
+    using Microsoft.VisualStudio.Data.Services;
+    using Microsoft.VisualStudio.DataTools.Interop;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VSDesigner.Data;
+    using Microsoft.VSDesigner.VSDesignerPackage;
+    using Microsoft.WizardFramework;
     using System;
     using System.Collections.Generic;
     using System.Data.Common;
@@ -9,24 +22,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Windows.Forms;
-    using System.Xml;
-    using EnvDTE;
-    using Microsoft.Data.Entity.Design.Model;
-    using Microsoft.Data.Entity.Design.Model.Validation;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
-    using Microsoft.Data.Entity.Design.VisualStudio.Package;
-    using Microsoft.VSDesigner.Data;
-    using Microsoft.VSDesigner.VSDesignerPackage;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Data.Core;
-    using Microsoft.VisualStudio.Data.Services;
-    using Microsoft.VisualStudio.DataTools.Interop;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.WizardFramework;
     using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
     // <summary>
@@ -50,11 +48,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         // will be set to true if the focus should not be changed on page activation
         private bool _isFocusSet;
         
-        internal WizardPageDbConfig(ModelBuilderWizardForm wizard, ConfigFileUtils configFileUtils = null)
+        internal WizardPageDbConfig(ModelBuilderWizardForm wizard)
             : base(wizard)
         {
-            _configFileUtils = configFileUtils ?? new ConfigFileUtils(wizard.Project, wizard.ServiceProvider);
             InitializeComponent();
+
+            _configFileUtils =
+                new ConfigFileUtils(wizard.Project, wizard.ServiceProvider, wizard.ModelBuilderSettings.VSApplicationType);
 
             Headline = Resources.DbConfigPage_Title;
             Logo = Resources.PageIcon;
@@ -284,10 +284,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 // only check that the connection string name is new if started in
                 // 'PerformAllFunctionality' mode
                 if (ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode
-                    && GetExistingConnectionStringNames().Contains(id))
+                    && ConnectionManager.GetExistingConnectionStringNames(_configFileUtils).Contains(id))
                 {
-                    var s = Resources.ConnectionStringDuplicateIdentifer;
-                    VsUtils.ShowErrorDialog(String.Format(CultureInfo.CurrentCulture, s, id));
+                    VsUtils.ShowErrorDialog(
+                        string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringDuplicateIdentifer, id));
                     textBoxAppConfigConnectionName.Focus();
                     _isFocusSet = true;
                     return false;
@@ -757,7 +757,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Wizard.ModelBuilderSettings.InitialCatalog = initialCatalog;
 
             // compute the connection string name
-            return GetUniqueConnectionStringName(
+            return ConnectionManager.GetUniqueConnectionStringName(
+                _configFileUtils,
                 Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase
                     ? Wizard.ModelBuilderSettings.ModelName
                     : GetBaseEdmxConnectionStringName(initialCatalog));
@@ -783,39 +784,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
 
             return baseName;
-        }
-
-        // computes a unique connection string name based on the input base name
-        internal string GetUniqueConnectionStringName(string baseConnectionStringName)
-        {
-            var connectionStringNames = GetExistingConnectionStringNames();
-
-            var i = 1;
-            var uniqueConnectionStringName = baseConnectionStringName;
-            while (connectionStringNames.Contains(uniqueConnectionStringName))
-            {
-                uniqueConnectionStringName = baseConnectionStringName + i++;
-            }
-
-            return uniqueConnectionStringName;
-        }
-
-        private HashSet<string> GetExistingConnectionStringNames()
-        {
-            var configXml = _configFileUtils.LoadConfig();
-
-            if (configXml == null)
-            {
-                // can be null if config does not exist in which case there are no connection strings
-                return new HashSet<string>();
-            }
-
-            // note we return all the connection string names to support CodeFirst scenarios
-            return
-                new HashSet<string>(
-                    configXml.SelectNodes(ConnectionManager.XpathConnectionStringsAdd).OfType<XmlElement>()
-                    .Select(addElement => addElement.GetAttribute("name"))
-                    .Where(connectionStringName => !string.IsNullOrEmpty(connectionStringName)));
         }
 
         private void disallowSensitiveInfoButton_CheckedChanged(object sender, EventArgs e)

@@ -369,7 +369,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 "</configuration>");
 
             var mockConfigFileUtils = 
-                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), Mock.Of<IVsUtils>(), null);
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
             mockConfigFileUtils
                 .Setup(u => u.LoadConfig())
                 .Returns(xmlDoc);
@@ -386,7 +386,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         public void UpdateConfigForSqlDbFileUpgrade_does_not_save_config_if_content_not_loaded()
         {
             var mockConfigFileUtils = new Mock<ConfigFileUtils>(
-                Mock.Of<Project>(), Mock.Of<IServiceProvider>(), Mock.Of<IVsUtils>(), null);
+                Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
 
             EdmUtils.UpdateConfigForSqlDbFileUpgrade(
                 mockConfigFileUtils.Object,
@@ -400,7 +400,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         public void UpdateConfigForSqlDbFileUpgrade_logs_exceptions()
         {
             var mockConfigFileUtils = new Mock<ConfigFileUtils>(
-                Mock.Of<Project>(), Mock.Of<IServiceProvider>(), Mock.Of<IVsUtils>(), null);
+                Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
 
             mockConfigFileUtils
                 .Setup(u => u.LoadConfig())

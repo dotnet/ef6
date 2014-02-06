@@ -5,6 +5,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Microsoft.WizardFramework;
     using System;
     using System.Collections.Generic;
@@ -38,14 +39,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         private static readonly IDictionary<string, string> _templateContent = new Dictionary<string, string>();
         private readonly bool _codeFirstAllowed;
+        private readonly ConfigFileUtils _configFileUtils;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public WizardPageStart(ModelBuilderWizardForm wizard)
+        public WizardPageStart(ModelBuilderWizardForm wizard, ConfigFileUtils configFileUtils = null)
             : base(wizard)
         {
             InitializeComponent();
 
              _codeFirstAllowed = CodeFirstAllowed(Wizard.ModelBuilderSettings);
+            _configFileUtils = configFileUtils
+                               ?? new ConfigFileUtils(wizard.Project, wizard.ServiceProvider, wizard.ModelBuilderSettings.VSApplicationType);
 
             components = new Container();
 
@@ -239,6 +243,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     "Generation option not updated correctly");
 
                 Wizard.ModelBuilderSettings.ModelBuilderEngine = null;
+                Wizard.ModelBuilderSettings.AppConfigConnectionPropertyName =
+                    ConnectionManager.GetUniqueConnectionStringName(
+                        _configFileUtils, Wizard.ModelBuilderSettings.ModelName);
             }
         }
 

@@ -48,8 +48,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             _generatedCode = GenerateCode(
                 replacementsDictionary["$rootnamespace$"],
                 replacementsDictionary["$safeitemname$"],
-                ModelBuilderSettings.AppConfigConnectionPropertyName
-                    ?? ModelBuilderSettings.ModelName).ToList();
+                ModelBuilderSettings.AppConfigConnectionPropertyName).ToList();
 
             Debug.Assert(_generatedCode.Count > 0, "code has not been generated");
 

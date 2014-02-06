@@ -2,6 +2,7 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
+    using System.Xml;
     using EnvDTE;
     using Microsoft.VisualStudio.Data.Core;
     using Microsoft.VisualStudio.DataTools.Interop;
@@ -268,5 +269,35 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                     () => ConnectionManager.TranslateConnectionString(mockServiceProvider.Object,
                         Mock.Of<Project>(), "My.Db", "connectionString", true)).Message);
         }
+
+        [Fact]
+        public void GetUniqueConnectionStringName_returns_candidate_connection_string_name_if_config_does_not_exist()
+        {
+            Assert.Equal("myModel", ConnectionManager.GetUniqueConnectionStringName(
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null).Object,
+                "myModel"));
+        }
+
+        [Fact]
+        public void GetUniqueConnectionStringName_uniquifies_proposed_connection_string_name()
+        {
+            var configXml = new XmlDocument();
+            configXml.LoadXml(@"<configuration>
+  <connectionStrings>    
+    <add name=""myModel"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.SqlClient"" />
+    <add name=""myModel1"" connectionString=""metadata=res://*;"" providerName=""System.Data.EntityClient"" />
+    <add name=""myModel2"" connectionString=""metadata=res://*;"" providerName=""System.Data.SqlCe"" />
+  </connectionStrings>
+</configuration>");
+
+            var mockConfig =
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
+            mockConfig
+                .Setup(c => c.LoadConfig())
+                .Returns(configXml);
+
+            Assert.Equal("myModel3", ConnectionManager.GetUniqueConnectionStringName(mockConfig.Object, "myModel"));
+        }
+
     }
 }
