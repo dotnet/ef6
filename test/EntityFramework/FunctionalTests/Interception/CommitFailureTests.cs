@@ -5,6 +5,8 @@ namespace System.Data.Entity.Interception
     using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
@@ -291,20 +293,64 @@ namespace System.Data.Entity.Interception
         public void CommitFailureHandler_PruneTransactionHistory_does_not_use_ExecutionStrategy()
         {
             CommitFailureHandler_PruneTransactionHistory_does_not_use_ExecutionStrategy_implementation(
-                h => h.PruneTransactionHistory());
+                c => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistory());
+        }
+
+        [Fact]
+        public void CommitFailureHandler_PruneTransactionHistory_does_not_throw_exceptions()
+        {
+            CommitFailureHandler_PruneTransactionHistory_does_not_use_ExecutionStrategy_implementation(
+                c =>
+                {
+                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                        key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
+
+                    using (var transactionContext = new TransactionContext(((EntityConnection)c.Connection).StoreConnection))
+                    {
+                        foreach (var tran in transactionContext.Set<TransactionRow>().ToList())
+                        {
+                            transactionContext.Transactions.Remove(tran);
+                        }
+                        transactionContext.SaveChanges();
+                    }
+
+                    ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistory();
+                });
         }
 
 #if !NET40
         [Fact]
-        public void CommitFailureHandler_PruneTransactionHistory_does_not_use_ExecutionStrategy_async()
+        public void CommitFailureHandlerAsync_PruneTransactionHistory_does_not_use_ExecutionStrategy()
         {
             CommitFailureHandler_PruneTransactionHistory_does_not_use_ExecutionStrategy_implementation(
-                h => h.PruneTransactionHistoryAsync().Wait());
+                c => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait());
+        }
+
+        [Fact]
+        public void CommitFailureHandlerAsync_PruneTransactionHistory_does_not_throw_exceptions()
+        {
+            CommitFailureHandler_PruneTransactionHistory_does_not_use_ExecutionStrategy_implementation(
+                c =>
+                {
+                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                        key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
+
+                    using (var transactionContext = new TransactionContext(((EntityConnection)c.Connection).StoreConnection))
+                    {
+                        foreach (var tran in transactionContext.Set<TransactionRow>().ToList())
+                        {
+                            transactionContext.Transactions.Remove(tran);
+                        }
+                        transactionContext.SaveChanges();
+                    }
+
+                    ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait();
+                });
         }
 #endif
 
         private void CommitFailureHandler_PruneTransactionHistory_does_not_use_ExecutionStrategy_implementation(
-            Action<MyCommitFailureHandler> prune)
+            Action<ObjectContext> prune)
         {
             MutableResolver.AddResolver<Func<TransactionHandler>>(
                 new TransactionHandlerResolver(() => new MyCommitFailureHandler(c => new TransactionContext(c)), null, null));
@@ -334,8 +380,8 @@ namespace System.Data.Entity.Interception
                     executionStrategyMock.Verify(
                         e => e.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Never());
 
-                    var handler = (MyCommitFailureHandler)((IObjectContextAdapter)context).ObjectContext.TransactionHandler;
-                    prune(handler);
+                    var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+                    prune(objectContext);
 
                     executionStrategyMock.Verify(e => e.Execute(It.IsAny<Func<int>>()), Times.Exactly(3));
                     executionStrategyMock.Verify(

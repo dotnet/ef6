@@ -404,7 +404,7 @@ namespace System.Data.Entity.Infrastructure
                     ((IObjectContextAdapter)TransactionContext).ObjectContext
                         .SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
                 }
-                catch (EntityException)
+                catch (DataException)
                 {
                 }
             }
@@ -438,7 +438,7 @@ namespace System.Data.Entity.Infrastructure
                                 SaveOptions.AcceptAllChangesAfterSave, /*executeInExistingTransaction:*/ true, cancellationToken)
                             .ConfigureAwait(continueOnCapturedContext: false);
                 }
-                catch (EntityException)
+                catch (DataException)
                 {
                 }
             }
