@@ -2,11 +2,12 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
+    using Microsoft.WizardFramework;
     using System;
     using System.Drawing;
     using System.Windows.Forms;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
-    using Microsoft.WizardFramework;
 
     internal class WizardPageBase : WizardPage
     {
@@ -21,6 +22,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             : base(wizard)
         {
             _wizard = wizard;
+
             // Set the default font to VS shell font.
             var vsFont = VSHelpers.GetVSFont(wizard.ServiceProvider);
             if (vsFont != null)

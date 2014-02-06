@@ -2,14 +2,17 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using System;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.VersioningFacade;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Moq;
     using Moq.Protected;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Xml;
     using UnitTests.TestHelpers;
     using VSLangProj;
     using VsWebSite;
@@ -86,7 +89,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             };
 
             var mockWizardPageStart = 
-                new Mock<WizardPageStart>(ModelBuilderWizardFormHelper.CreateWizard(modelBuilderSettings, mockDte.ServiceProvider)) 
+                new Mock<WizardPageStart>(ModelBuilderWizardFormHelper.CreateWizard(modelBuilderSettings, mockDte.ServiceProvider), null) 
                 { CallBase = true };
 
             mockWizardPageStart
@@ -114,7 +117,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             };
 
             var wizard = ModelBuilderWizardFormHelper.CreateWizard(modelBuilderSettings, mockDte.ServiceProvider);
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard) { CallBase = true };
+            var mockWizardPageStart = new Mock<WizardPageStart>(wizard, null) { CallBase = true };
             mockWizardPageStart
                 .Protected()
                 .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
@@ -130,7 +133,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_empty_model()
         {
             var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.EmptyModel);
-            CreateWizardPageStart(wizard, WizardPageStart.GenerateEmptyModelIndex)
+            CreateMockWizardPageStart(wizard, WizardPageStart.GenerateEmptyModelIndex).Object
                 .OnDeactivate();
 
             var modelBuilderSettings = wizard.ModelBuilderSettings;
@@ -148,14 +151,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             
             var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.GenerateFromDatabase);
 
-            var wizardPage = CreateWizardPageStart(wizard, WizardPageStart.GenerateFromDatabaseIndex);
-            var mockWizardPageStart = Mock.Get(wizardPage);
+            var mockWizardPageStart = CreateMockWizardPageStart(wizard, WizardPageStart.GenerateFromDatabaseIndex);
             mockWizardPageStart
                 .Protected()
                 .Setup<string>("GetEdmxTemplateContent", ItExpr.IsAny<string>())
                 .Returns("vstemplate contents");
 
-            wizardPage.OnDeactivate();
+            mockWizardPageStart.Object.OnDeactivate();
 
             var modelBuilderSettings = wizard.ModelBuilderSettings;
 
@@ -174,8 +176,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_CodeFirst_empty_model()
         {
+            var configXml = new XmlDocument();
+            configXml.LoadXml(@"<configuration>
+  <connectionStrings>    
+    <add name=""myModel"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.SqlClient"" />
+  </connectionStrings>
+</configuration>");
+
+            var mockConfig = new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
+            mockConfig.Setup(u => u.LoadConfig()).Returns(configXml);
+
             var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.EmptyModelCodeFirst);
-            CreateWizardPageStart(wizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex)
+            CreateMockWizardPageStart(wizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex, mockConfig.Object).Object
                 .OnDeactivate();
 
             var modelBuilderSettings = wizard.ModelBuilderSettings;
@@ -184,6 +196,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Assert.Equal(@"C:\temp\myModel.cs", modelBuilderSettings.ModelPath);
             Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
             Assert.Null(modelBuilderSettings.ModelBuilderEngine);
+            Assert.Equal(@"myModel1", modelBuilderSettings.AppConfigConnectionPropertyName);
         }
 
         [Fact]
@@ -191,7 +204,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.CodeFirstFromDatabase);
 
-            CreateWizardPageStart(wizard, WizardPageStart.GenerateCodeFirstFromDatabaseIndex)
+            CreateMockWizardPageStart(wizard, WizardPageStart.GenerateCodeFirstFromDatabaseIndex).Object
                 .OnDeactivate();
 
             var modelBuilderSettings = wizard.ModelBuilderSettings;
@@ -200,20 +213,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Assert.Equal(@"C:\temp\myModel.cs", modelBuilderSettings.ModelPath);
             Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
             Assert.IsType<CodeFirstModelBuilderEngine>(modelBuilderSettings.ModelBuilderEngine);
-        }
-
-        private static WizardPageStart CreateWizardPageStart(ModelBuilderWizardForm wizard, int selectedOptionIndex)
-        {
-            var mockWizardPageStart = new Mock<WizardPageStart>(wizard) { CallBase = true };
-            mockWizardPageStart
-                .Protected()
-                .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
-                .Returns(true);
-            mockWizardPageStart
-                .Protected()
-                .Setup<int>("GetSelectedOptionIndex")
-                .Returns(selectedOptionIndex);
-            return mockWizardPageStart.Object;
         }
 
         private static ModelBuilderWizardForm CreateModelBuilderWizardForm(ModelGenerationOption modelGenerationOption)
@@ -266,7 +265,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         serviceProvider: mockDte.ServiceProvider));
 
             var mockWizardPageStart =
-                SetupMockWizardPageStart(mockWizard, WizardPageStart.GenerateEmptyModelIndex);
+                CreateMockWizardPageStart(mockWizard.Object, WizardPageStart.GenerateEmptyModelIndex);
 
             mockWizard.Setup(w => w.OnFinish());
 
@@ -295,7 +294,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                             serviceProvider: mockDte.ServiceProvider));
                     
                 var mockWizardPageStart =
-                    SetupMockWizardPageStart(mockWizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex);
+                    CreateMockWizardPageStart(mockWizard.Object, WizardPageStart.GenerateEmptyModelCodeFirstIndex);
 
                 mockWizard.Setup(w => w.OnFinish());
 
@@ -321,7 +320,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                             serviceProvider: mockDte.ServiceProvider));
 
             var mockWizardPageStart = 
-                SetupMockWizardPageStart(mockWizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex);
+                CreateMockWizardPageStart(mockWizard.Object, WizardPageStart.GenerateEmptyModelCodeFirstIndex);
 
             mockWizard.Setup(w => w.OnFinish());
 
@@ -330,28 +329,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             mockWizard.Verify(w => w.OnFinish(), Times.Never());
         }
 
-        private static Mock<ModelBuilderWizardForm> SetupMockWizard(Project project, ModelGenerationOption generationOption)
+        private static Mock<WizardPageStart> CreateMockWizardPageStart(ModelBuilderWizardForm mockWizard, int itemIndex, 
+            ConfigFileUtils configFileUtils = null)
         {
-            var modelBuilderSettings = new ModelBuilderSettings
-            {
-                Project = project,
-                GenerationOption = generationOption
-            };
-
-            var mockWizard =
-                new Mock<ModelBuilderWizardForm>(modelBuilderSettings, ModelBuilderWizardForm.WizardMode.PerformAllFunctionality)
-                {
-                    CallBase = true
-                };
-            return mockWizard;
-        }
-
-        private static Mock<WizardPageStart> SetupMockWizardPageStart(Mock<ModelBuilderWizardForm> mockWizard, int itemIndex)
-        {
-            var mockWizardPageStart = new Mock<WizardPageStart>(mockWizard.Object) { CallBase = true };
+            var mockWizardPageStart = new Mock<WizardPageStart>(mockWizard, configFileUtils) { CallBase = true };
             mockWizardPageStart
                 .Protected()
                 .Setup<bool>("AnyItemSelected")
+                .Returns(true);
+
+            mockWizardPageStart
+                .Protected()
+                .Setup<bool>("VerifyModelFilePath", ItExpr.IsAny<string>())
                 .Returns(true);
 
             mockWizardPageStart

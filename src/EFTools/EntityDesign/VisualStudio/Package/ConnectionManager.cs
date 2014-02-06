@@ -909,6 +909,39 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 : string.Empty;
         }
 
+        // computes a unique connection string name based on the input base name
+        internal static string GetUniqueConnectionStringName(ConfigFileUtils configFileUtils, string baseConnectionStringName)
+        {
+            var connectionStringNames = GetExistingConnectionStringNames(configFileUtils);
+
+            var i = 1;
+            var uniqueConnectionStringName = baseConnectionStringName;
+            while (connectionStringNames.Contains(uniqueConnectionStringName))
+            {
+                uniqueConnectionStringName = baseConnectionStringName + i++;
+            }
+
+            return uniqueConnectionStringName;
+        }
+
+        internal static HashSet<string> GetExistingConnectionStringNames(ConfigFileUtils configFileUtils)
+        {
+            var configXml = configFileUtils.LoadConfig();
+
+            if (configXml == null)
+            {
+                // can be null if config does not exist in which case there are no connection strings
+                return new HashSet<string>();
+            }
+
+            // note we return all the connection string names to support CodeFirst scenarios
+            return
+                new HashSet<string>(
+                    configXml.SelectNodes(ConnectionManager.XpathConnectionStringsAdd).OfType<XmlElement>()
+                    .Select(addElement => addElement.GetAttribute("name"))
+                    .Where(connectionStringName => !string.IsNullOrEmpty(connectionStringName)));
+        }
+
         // <summary>
         //     Injects the MARS/AppFramework attributes into the provider connection string
         //     without pinging the connection to see if the database supports SQL 90 or newer. This

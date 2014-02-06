@@ -37,7 +37,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         public void OnActivate_result_depends_on_FileAlreadyExistsError()
         {
             var wizard = ModelBuilderWizardFormHelper.CreateWizard();
-            var wizardPageDbConfig = new WizardPageDbConfig(wizard, CreateConfigFileUtils());
+            var wizardPageDbConfig = new WizardPageDbConfig(wizard);
 
             wizard.FileAlreadyExistsError = true;
             Assert.False(wizardPageDbConfig.OnActivate());
@@ -64,8 +64,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             var wizardPageDbConfig =
                 new WizardPageDbConfig(
-                    ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.GenerateFromDatabase, mockDte.Project, @"C:\Project\myModel.edmx"),
-                    CreateConfigFileUtils());
+                    ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.GenerateFromDatabase, mockDte.Project, @"C:\Project\myModel.edmx"));
 
             Assert.Equal(
                 "metadata=res://*/myModel.csdl|res://*/myModel.ssdl|res://*/myModel.msl;provider=System.Data.SqlClient;" +
@@ -81,8 +80,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             var guid = new Guid("42424242-4242-4242-4242-424242424242");
             var wizardPageDbConfig = new WizardPageDbConfig(
-                ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.CodeFirstFromDatabase),
-                CreateConfigFileUtils());
+                ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.CodeFirstFromDatabase));
 
             Assert.Equal(
                 "integrated security=SSPI;MultipleActiveResultSets=True;App=EntityFramework",
@@ -106,49 +104,5 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             return mockProviderManager.Object;
         }
-
-        [Fact]
-        public void GetUniqueConnectionStringName_returns_candidate_connection_string_name_if_config_does_not_exist()
-        {
-            var wizard = ModelBuilderWizardFormHelper.CreateWizard(
-                project: Mock.Of<Project>(), serviceProvider: Mock.Of<IServiceProvider>());
-
-            var wizardPageDbConfig =
-                new WizardPageDbConfig(wizard, CreateConfigFileUtils());
-
-            Assert.Equal("myModel", wizardPageDbConfig.GetUniqueConnectionStringName("myModel"));
-        }
-
-        [Fact]
-        public void GetUniqueConnectionStringName_uniquifies_proposed_connection_string_name()
-        {
-            var configXml = new XmlDocument();
-            configXml.LoadXml(@"<configuration>
-  <connectionStrings>    
-    <add name=""myModel"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.SqlClient"" />
-    <add name=""myModel1"" connectionString=""metadata=res://*;"" providerName=""System.Data.EntityClient"" />
-    <add name=""myModel2"" connectionString=""metadata=res://*;"" providerName=""System.Data.SqlCe"" />
-  </connectionStrings>
-</configuration>");
-
-            var wizard = ModelBuilderWizardFormHelper.CreateWizard(
-                project: Mock.Of<Project>(), serviceProvider: Mock.Of<IServiceProvider>());
-
-            var mockConfig =
-                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), Mock.Of<IVsUtils>(), null);
-            mockConfig
-                .Setup(c => c.LoadConfig())
-                .Returns(configXml);
-
-            var wizardPageDbConfig = new WizardPageDbConfig(wizard, mockConfig.Object);
-
-            Assert.Equal("myModel3", wizardPageDbConfig.GetUniqueConnectionStringName("myModel"));
-        }
-
-        private static ConfigFileUtils CreateConfigFileUtils()
-        {
-            return new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), Mock.Of<IVsUtils>(), null).Object;
-        }
-
     }
 }

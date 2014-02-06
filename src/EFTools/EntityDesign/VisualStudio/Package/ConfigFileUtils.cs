@@ -29,7 +29,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private readonly VisualStudioProjectSystem _applicationType;
         private readonly string _configFileName;
 
-        public ConfigFileUtils(Project project, IServiceProvider serviceProvider, IVsUtils vsUtils = null, IVsHelpers vsHelpers = null)
+        public ConfigFileUtils(Project project, IServiceProvider serviceProvider, VisualStudioProjectSystem? applicationType = null, IVsUtils vsUtils = null, IVsHelpers vsHelpers = null)
         {
             Debug.Assert(project != null, "project is null");
             Debug.Assert(serviceProvider != null, "serviceProvider is null");
@@ -39,7 +39,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             _project = project;
             _serviceProvider = serviceProvider;
-            _applicationType = _vsUtils.GetApplicationType(_serviceProvider, _project);
+            _applicationType = applicationType ?? _vsUtils.GetApplicationType(_serviceProvider, _project);
             _configFileName = VsUtils.IsWebProject(_applicationType)
                 ? VsUtils.WebConfigFileName
                 : VsUtils.AppConfigFileName;

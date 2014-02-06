@@ -39,13 +39,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             foreach (var testCase in cases)
             {
-                var mockVsUtils = new Mock<IVsUtils>();
-                mockVsUtils
-                    .Setup(u => u.GetApplicationType(It.IsAny<IServiceProvider>(), It.IsAny<Project>()))
-                    .Returns(testCase.ApplicationType);
-
-                var configFileUtils = 
-                    new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), mockVsUtils.Object);
+                var configFileUtils =
+                    new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), testCase.ApplicationType);
 
                 Assert.Equal(testCase.ConfigFileName, configFileUtils.ConfigFileName);
             }
@@ -56,7 +51,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         {
             var mockVsUtils = new Mock<IVsUtils>();
 
-            new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), mockVsUtils.Object)
+            new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), vsUtils: mockVsUtils.Object)
                 .GetConfigProjectItem();
 
             mockVsUtils.Verify(
@@ -75,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 .Returns(projectItem);
 
             var mockConfigFileUtils =
-                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), mockVsUtils.Object, null) 
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, mockVsUtils.Object, null) 
                 { CallBase = true };
 
             Assert.Same(
@@ -96,7 +91,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 .Returns(projectItem);
 
             var mockConfigFileUtils =
-                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), mockVsUtils.Object, null) 
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, mockVsUtils.Object, null) 
                 { CallBase = true };
 
             mockConfigFileUtils
@@ -166,7 +161,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 var project = CreateMockProject(testCase.ProjectLanguage).Object;
 
                 var configFileUtils =
-                    new ConfigFileUtils(project, Mock.Of<IServiceProvider>(), mockVsUtils.Object);
+                    new ConfigFileUtils(project, Mock.Of<IServiceProvider>(), vsUtils: mockVsUtils.Object);
 
                 configFileUtils.CreateConfigFile();
 
@@ -181,7 +176,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             var configFileUtils = new ConfigFileUtils(
                 CreateMockProject(LangEnum.CSharp).Object,
                 Mock.Of<IServiceProvider>(),
-                CreateMockVsUtils(LangEnum.CSharp, VisualStudioProjectSystem.WebApplication).Object);
+                vsUtils: CreateMockVsUtils(LangEnum.CSharp, VisualStudioProjectSystem.WebApplication).Object);
 
             Assert.Null(configFileUtils.LoadConfig());
         }
@@ -211,6 +206,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             var configFileUtils = new ConfigFileUtils(
                 CreateMockProject(LangEnum.CSharp).Object,
                 Mock.Of<IServiceProvider>(),
+                null,
                 mockVsUtils.Object,
                 mockVsHelpers.Object);
 
@@ -236,7 +232,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             new ConfigFileUtils(
                 CreateMockProject(LangEnum.CSharp).Object,
                 Mock.Of<IServiceProvider>(),
-                mockVsUtils.Object).SaveConfig(configXml);
+                vsUtils: mockVsUtils.Object).SaveConfig(configXml);
 
             mockVsUtils.Verify(
                 u => u.WriteCheckoutXmlFilesInProject(
@@ -256,7 +252,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 .Returns(Mock.Of<ProjectItem>());
 
             Assert.True(
-                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), mockVsUtils.Object)
+                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), vsUtils: mockVsUtils.Object)
                     .ConfigFileExists());
         }
 
@@ -264,7 +260,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         public void ConfigFileExists_returns_false_if_config_project_item_does_not_exisit()
         {
             Assert.False(
-                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), Mock.Of<IVsUtils>())
+                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), vsUtils: Mock.Of<IVsUtils>())
                     .ConfigFileExists());
         }
 
@@ -282,7 +278,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             Assert.Equal(
                 "configfilepath",
-                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), mockVsUtils.Object)
+                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), vsUtils: mockVsUtils.Object)
                     .GetConfigPath());
         }
 
@@ -290,7 +286,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         public void GetConfigPath_returns_null_if_config_project_item_does_not_exisit()
         {
             Assert.Null(
-                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), Mock.Of<IVsUtils>())
+                new ConfigFileUtils(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), vsUtils: Mock.Of<IVsUtils>())
                     .GetConfigPath());
         }
 
