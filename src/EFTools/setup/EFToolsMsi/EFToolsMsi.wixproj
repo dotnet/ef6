@@ -134,6 +134,12 @@
                      Exclude="$(LocalPackageSourceDir)\EntityFramework*.symbols.nupkg;@(DatedLocalPackages)" />
     </ItemGroup>
     
+    <!-- TODO: Remove Message tasks below - inserted for DEBUG only -->
+    <Message Importance="High" Text="DEBUG: build_branch_name=$(build_branch_name)" />
+    <Message Importance="High" Text="DEBUG: FrozenRuntimeBranch=$(FrozenRuntimeBranch)" />
+    <Message Importance="High" Text="DEBUG: FrozenRuntimeDir=$(FrozenRuntimeDir)" />
+    <Message Importance="High" Text="DEBUG: ShouldUseFrozenRuntime=$(ShouldUseFrozenRuntime)" />
+
     <Error Condition="'@(LocalPackages)' == ''" Text="LocalPackages is empty and must not be.  It should contain the list of non-dated, non-symbols EntityFramework .nupkg's from directory $(LocalPackageSourceDir)" />
     
     <!-- Restore the EF6 packages from $(LocalPackageSourceDir) -->
