@@ -443,6 +443,7 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void CommitFailureHandler_supports_nested_transactions()
         {
             MutableResolver.AddResolver<Func<TransactionHandler>>(
