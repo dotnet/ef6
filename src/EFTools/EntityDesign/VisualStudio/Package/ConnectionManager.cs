@@ -2,6 +2,7 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
+    using System.Web.UI.WebControls;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Designer;
@@ -59,8 +60,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         internal static readonly string XmlAttrNameEntityContainerName = "name";
         internal static readonly string XmlAttrNameProviderName = "providerName";
         internal static readonly string XmlAttrNameMultipleActiveResultSets = "MultipleActiveResultSets";
-
-        private const string XpathConnectionStrings = "configuration/connectionStrings";
 
         private const string XpathConnectionStringsAddEntity = 
             "configuration/connectionStrings/add[@providerName='" + Provider + "']";
@@ -341,63 +340,97 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             configFileUtils.GetOrCreateConfigFile();
             var configXmlDoc = configFileUtils.LoadConfig();
 
-            if (configXmlDoc != null)
+            Dictionary<string, ConnectionString> hash;
+            if (!ConnStringsByProjectHash.TryGetValue(project, out hash))
             {
-                var connStringsNode = FindOrCreateXmlElement(configXmlDoc, XpathConnectionStrings, false);
-                if (connStringsNode == null)
+                var s = String.Format(CultureInfo.CurrentCulture, Resources.ConnectionManager_GetConfigError);
+                VsUtils.LogOutputWindowPaneMessage(project, s);
+                return;
+            }
+
+            if (hash.Any())
+            {
+                UpdateEntityConnectionStringsInConfig(configXmlDoc, hash);
+                configFileUtils.SaveConfig(configXmlDoc);
+            }
+        }
+
+        // internal for testing
+        internal static void UpdateEntityConnectionStringsInConfig(XmlDocument configXmlDoc, Dictionary<string, ConnectionString> entityConnectionStrings)
+        {
+            Debug.Assert(configXmlDoc != null, "configXmlDoc is null");
+            Debug.Assert(entityConnectionStrings != null, "entityConnectionStrings is null");
+
+            // delete all previous System.Data.Entity connection strings that are in the hash
+            var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAddEntity);
+            foreach (XmlNode node in xmlNodeList)
+            {
+                var prevSibling = node.PreviousSibling;
+                var nextSibling = node.NextSibling;
+                node.ParentNode.RemoveChild(node);
+                if (prevSibling != null
+                    && prevSibling.NodeType == XmlNodeType.Whitespace)
                 {
-                    throw new XmlException(Resources.ConnectionManager_CorruptConfig);
+                    prevSibling.ParentNode.RemoveChild(prevSibling);
                 }
-
-                // delete all previous System.Data.Entity connection strings that are in the hash
-                var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAddEntity);
-                foreach (XmlNode node in xmlNodeList)
+                if (nextSibling != null
+                    && nextSibling.NodeType == XmlNodeType.Whitespace)
                 {
-                    var prevSibling = node.PreviousSibling;
-                    var nextSibling = node.NextSibling;
-                    node.ParentNode.RemoveChild(node);
-                    if (prevSibling != null
-                        && prevSibling.NodeType == XmlNodeType.Whitespace)
-                    {
-                        prevSibling.ParentNode.RemoveChild(prevSibling);
-                    }
-                    if (nextSibling != null
-                        && nextSibling.NodeType == XmlNodeType.Whitespace)
-                    {
-                        nextSibling.ParentNode.RemoveChild(nextSibling);
-                    }
-                }
-
-                Dictionary<string, ConnectionString> hash;
-                if (!ConnStringsByProjectHash.TryGetValue(project, out hash))
-                {
-                    var s = String.Format(CultureInfo.CurrentCulture, Resources.ConnectionManager_GetConfigError);
-                    VsUtils.LogOutputWindowPaneMessage(project, s);
-                    return;
-                }
-
-                var hashEnum = hash.GetEnumerator();
-
-                var needToUpdate = false;
-
-                // iterate through the hash, using the keys/values to populate an XmlElement
-                while (hashEnum.MoveNext())
-                {
-                    var addNode = configXmlDoc.CreateElement("add");
-
-                    addNode.SetAttribute(XmlAttrNameEntityContainerName, hashEnum.Current.Key);
-                    addNode.SetAttribute(XmlAttrNameConnectionString, hashEnum.Current.Value.Text);
-                    addNode.SetAttribute(XmlAttrNameProviderName, Provider);
-
-                    connStringsNode.AppendChild(addNode);
-                    needToUpdate = true;
-                }
-
-                if (needToUpdate)
-                {
-                    configFileUtils.SaveConfig(configXmlDoc);
+                    nextSibling.ParentNode.RemoveChild(nextSibling);
                 }
             }
+
+            var connStringsElement = GetConnectionStringsElement(configXmlDoc);
+            if (connStringsElement == null)
+            {
+                throw new XmlException(Resources.ConnectionManager_CorruptConfig);
+            }
+
+            foreach (var nameToConnString in entityConnectionStrings)
+            {
+                AddConnectionStringElement(connStringsElement, nameToConnString.Key, nameToConnString.Value.Text, Provider);
+            }
+        }
+
+        public static void AddConnectionStringElement(XmlDocument configXmlDoc, string connStringName, string connString, string providerName)
+        {
+            var connStringsElement = GetConnectionStringsElement(configXmlDoc); 
+            if (connStringsElement == null)
+            {
+                // can happen if the document element is not "configuration"
+                throw new XmlException(Resources.ConnectionManager_CorruptConfig);
+            }
+
+            AddConnectionStringElement(connStringsElement, connStringName, connString, providerName);
+        }
+
+        private static void AddConnectionStringElement(XmlNode connStringsElement, string connStringName, string connString, string providerName)
+        {
+            var addNode = connStringsElement.OwnerDocument.CreateElement("add");
+
+            addNode.SetAttribute(XmlAttrNameEntityContainerName, connStringName);
+            addNode.SetAttribute(XmlAttrNameConnectionString, connString);
+            addNode.SetAttribute(XmlAttrNameProviderName, providerName);
+
+            connStringsElement.AppendChild(addNode);
+        }
+
+        private static XmlElement GetConnectionStringsElement(XmlDocument configXml)
+        {
+            if (!"configuration".Equals(configXml.DocumentElement.Name, StringComparison.Ordinal)
+                || !string.IsNullOrEmpty(configXml.DocumentElement.NamespaceURI))
+            {
+                return null;
+            }
+
+            var connStringsElement = (XmlElement)configXml.DocumentElement.SelectSingleNode("connectionStrings");
+            if (connStringsElement == null)
+            {
+                connStringsElement = configXml.CreateElement("connectionStrings");
+                configXml.DocumentElement.AppendChild(connStringsElement);
+            }
+
+            return connStringsElement;
         }
 
 #if (!VS12)
@@ -937,9 +970,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             // note we return all the connection string names to support CodeFirst scenarios
             return
                 new HashSet<string>(
-                    configXml.SelectNodes(ConnectionManager.XpathConnectionStringsAdd).OfType<XmlElement>()
+                    configXml.SelectNodes(XpathConnectionStringsAdd).OfType<XmlElement>()
                     .Select(addElement => addElement.GetAttribute("name"))
                     .Where(connectionStringName => !string.IsNullOrEmpty(connectionStringName)));
+        }
+
+        public static string CreateDefaultLocalDbConnectionString(string initialCatalog)
+        {
+            Debug.Assert(!string.IsNullOrWhiteSpace(initialCatalog), "invalid initial catalog name");
+
+            return
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    @"Data Source=(LocalDb)\v11.0;Initial Catalog={0};Integrated Security=True",
+                    initialCatalog);
         }
 
         // <summary>
@@ -1124,36 +1168,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                     InsertConnStringsFromHash(project);
                 }
             }
-        }
-
-        // <summary>
-        //     Helper to find or create elements along an XPath expression, under a parent node
-        // </summary>
-        private static XmlNode FindOrCreateXmlElement(XmlNode parentNode, string elementPath, bool prependChild)
-        {
-            XmlNode xmlNode = null;
-
-            var elementNames = elementPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var elementName in elementNames)
-            {
-                xmlNode = parentNode.SelectSingleNode(elementName);
-                if (null == xmlNode)
-                {
-                    xmlNode = parentNode.OwnerDocument.CreateElement(elementName);
-                    if (prependChild)
-                    {
-                        parentNode.PrependChild(xmlNode);
-                    }
-                    else
-                    {
-                        parentNode.AppendChild(xmlNode);
-                    }
-                }
-
-                parentNode = xmlNode;
-            }
-
-            return xmlNode;
         }
 
         #region Event handlers

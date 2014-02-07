@@ -246,6 +246,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 Wizard.ModelBuilderSettings.AppConfigConnectionPropertyName =
                     ConnectionManager.GetUniqueConnectionStringName(
                         _configFileUtils, Wizard.ModelBuilderSettings.ModelName);
+
+                // for CodeFirst empty model we always add a localdb connection
+                Wizard.ModelBuilderSettings.SaveConnectionStringInAppConfig = true;
+                var defaultConnectionString = 
+                    ConnectionManager.CreateDefaultLocalDbConnectionString(Wizard.ModelBuilderSettings.ModelName);
+
+                Wizard.ModelBuilderSettings.SetInvariantNamesAndConnectionStrings(
+                    ServiceProvider, Wizard.Project, ConnectionManager.SqlClientProviderName,
+                    defaultConnectionString, defaultConnectionString, isDesignTime: false);
             }
         }
 

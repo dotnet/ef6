@@ -197,6 +197,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
             Assert.Null(modelBuilderSettings.ModelBuilderEngine);
             Assert.Equal(@"myModel1", modelBuilderSettings.AppConfigConnectionPropertyName);
+            Assert.True(modelBuilderSettings.SaveConnectionStringInAppConfig);
+            Assert.Equal(
+                @"Data Source=(LocalDb)\v11.0;Initial Catalog=myModel;Integrated Security=True",
+                modelBuilderSettings.AppConfigConnectionString);
         }
 
         [Fact]
