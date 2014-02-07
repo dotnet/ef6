@@ -197,7 +197,7 @@ namespace System.Data.Entity.Core.Objects
         // <param name="entitySet"> the entity set of the given object </param>
         internal virtual EntityEntry AddKeyEntry(EntityKey entityKey, EntitySet entitySet)
         {
-            DebugCheck.NotNull((object)entityKey);
+            DebugCheck.NotNull(entityKey);
             DebugCheck.NotNull(entitySet);
 
             // We need to determine if an equivalent entry already exists;
@@ -209,11 +209,30 @@ namespace System.Data.Entity.Core.Objects
                     Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey(entitySet.ElementType.Name));
             }
 
+            return InternalAddEntityEntry(entityKey, entitySet);
+        }
+
+        internal EntityEntry GetOrAddKeyEntry(EntityKey entityKey, EntitySet entitySet)
+        {
+            DebugCheck.NotNull(entityKey);
+            DebugCheck.NotNull(entitySet);
+
+            EntityEntry entry;
+            if (TryGetEntityEntry(entityKey, out entry))
+            {
+                return entry;
+            }
+
+            return InternalAddEntityEntry(entityKey, entitySet);
+        }
+
+        private EntityEntry InternalAddEntityEntry(EntityKey entityKey, EntitySet entitySet)
+        {
             // Get a StateManagerTypeMetadata for the entity type.
             var typeMetadata = GetOrAddStateManagerTypeMetadata(entitySet.ElementType);
 
             // Create a cache entry.
-            entry = new EntityEntry(entityKey, entitySet, this, typeMetadata);
+            var entry = new EntityEntry(entityKey, entitySet, this, typeMetadata);
 
             // A new entity is being added.
             AddEntityEntryToDictionary(entry, entry.State);

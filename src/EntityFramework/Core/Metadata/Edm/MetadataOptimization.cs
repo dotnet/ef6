@@ -31,9 +31,90 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _csAssociationTypes[osAssociationType.Index];
         }
 
-        internal AssociationSet FindCSpaceAssociationSet(AssociationType csAsociationType, Predicate<AssociationSet> predicate)
+        internal AssociationSet FindCSpaceAssociationSet(AssociationType associationType, string endName, EntitySet endEntitySet)
         {
-            return GetItemAtIndex(GetCSpaceAssociationTypeToSetsMap(), csAsociationType.Index, predicate);
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotEmpty(endName);
+            DebugCheck.NotNull(endEntitySet);
+            Debug.Assert(associationType.DataSpace == DataSpace.CSpace);
+
+            var array = GetCSpaceAssociationTypeToSetsMap();
+            var index = associationType.Index;
+
+            var objectAtIndex = array[index];
+            if (objectAtIndex == null)
+            {
+                return null;
+            }
+
+            var associationSet = objectAtIndex as AssociationSet;
+            if (associationSet != null)
+            {
+                return associationSet.AssociationSetEnds[endName].EntitySet == endEntitySet ? associationSet : null;
+            }
+
+            var items = (AssociationSet[])objectAtIndex;
+            for (var i = 0; i < items.Length; i++)
+            {
+                associationSet = items[i];
+                if (associationSet.AssociationSetEnds[endName].EntitySet == endEntitySet)
+                {
+                    return associationSet;
+                }
+            }
+
+            return null;
+        }
+
+        internal AssociationSet FindCSpaceAssociationSet(AssociationType associationType, string endName,
+            string entitySetName, string entityContainerName, out EntitySet endEntitySet)
+        {
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotEmpty(endName);
+            DebugCheck.NotEmpty(entitySetName);
+            DebugCheck.NotEmpty(entityContainerName);
+            Debug.Assert(associationType.DataSpace == DataSpace.CSpace);
+
+            var array = GetCSpaceAssociationTypeToSetsMap();
+            var index = associationType.Index;
+
+            var objectAtIndex = array[index];
+            if (objectAtIndex == null)
+            {
+                endEntitySet = null;
+                return null;
+            }
+
+            var associationSet = objectAtIndex as AssociationSet;
+            if (associationSet != null)
+            {
+                var entitySet = associationSet.AssociationSetEnds[endName].EntitySet;
+                if (entitySet.Name == entitySetName &&
+                    entitySet.EntityContainer.Name == entityContainerName)
+                {
+                    endEntitySet = entitySet;
+                    return associationSet;
+                }
+
+                endEntitySet = null;
+                return null;
+            }
+
+            var items = (AssociationSet[])objectAtIndex;
+            for (var i = 0; i < items.Length; i++)
+            {
+                associationSet = items[i];
+                var entitySet = associationSet.AssociationSetEnds[endName].EntitySet;
+                if (entitySet.Name == entitySetName && 
+                    entitySet.EntityContainer.Name == entityContainerName)
+                {
+                    endEntitySet = entitySet;
+                    return associationSet;
+                }
+            }
+
+            endEntitySet = null;
+            return null;
         }
 
         // Internal for testing only.
@@ -166,34 +247,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Array.Resize(ref items, count + 1);
             items[count] = newItem;
             array[index] = items;
-        }
-
-        private static T GetItemAtIndex<T>(object[] array, int index, Predicate<T> predicate)
-            where T : class
-        {
-            var objectAtIndex = array[index];
-            if (objectAtIndex == null)
-            {
-                return null;
-            }
-
-            var item = objectAtIndex as T;
-            if (item != null)
-            {
-                return predicate(item) ? item : null;
-            }
-
-            var items = (T[])objectAtIndex;
-            for (var i = 0; i < items.Length; i++)
-            {
-                item = items[i];
-                if (predicate(item))
-                {
-                    return item;
-                }
-            }
-
-            return null;
         }
 
         #endregion
