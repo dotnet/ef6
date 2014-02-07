@@ -99,8 +99,12 @@
     <!-- Now align PackagesDir with PackagesInputDir so that the local framework and the EF5 framework end up in the same directory -->
     <PackagesDir>$(PackagesInputDir)\packages</PackagesDir>
     
-    <!-- Allow the source of local packages to be overridden for a frozen runtime -->
-    <LocalPackageSourceDir Condition="'$(FrozenRuntimeDir)' != ''">$(FrozenRuntimeDir)</LocalPackageSourceDir>
+    <!-- Allow the source of local packages to be overridden for a frozen runtime
+         If running locally $(build_branch_name) will not be set - so override if only $(FrozenRuntimeDir) is set.
+         But if $(build_branch_name) is set (CI builds) require that $(FrozenRuntimeBranch) exists and is equal to $(build_branch_name). -->
+    <ShouldUseFrozenRuntime Condition="'$(FrozenRuntimeDir)' != '' AND ('$(build_branch_name)' == '' OR '$(build_branch_name)' == '$(FrozenRuntimeBranch)')">True</ShouldUseFrozenRuntime>
+    <ShouldUseFrozenRuntime Condition="'$(ShouldUseFrozenRuntime)' == ''">False</ShouldUseFrozenRuntime>
+    <LocalPackageSourceDir Condition="'$(ShouldUseFrozenRuntime)' == 'True'">$(FrozenRuntimeDir)</LocalPackageSourceDir>
     <LocalPackageSourceDir Condition="'$(LocalPackageSourceDir)' == ''">$(PackagesInputDir)</LocalPackageSourceDir>
     
     <!-- Ensure SetComputedProperties comes before RestoreLocalPackages so that EF6NuGetPackageVersion is set -->
@@ -159,7 +163,9 @@
       <DefineConstants>$(DefineConstants);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
       <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath=$(AssemblyPath)</DefineConstants>
       <DefineConstants>$(DefineConstants);SatelliteAssemblyPath=$(SatelliteAssemblyPath);LocOutputPath=$(LocOutputPath)</DefineConstants>
-      <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts);FrozenRuntimeDir=$(FrozenRuntimeDir)</DefineConstants>
+      <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts)</DefineConstants>
+      <DefineConstants Condition="'$(ShouldUseFrozenRuntime)' == 'True'">$(DefineConstants);FrozenRuntimeDir=$(FrozenRuntimeDir)</DefineConstants>
+      <DefineConstants Condition="'$(ShouldUseFrozenRuntime)' != 'True'">$(DefineConstants);FrozenRuntimeDir=</DefineConstants>
     </PropertyGroup>
   </Target>
   <Target Name="AfterBuild">
