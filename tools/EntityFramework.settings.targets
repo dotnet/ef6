@@ -14,8 +14,9 @@ Project global pre-settings.
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '12.0'">12</ToolingVersionMajor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '11.0'">2</ToolingVersionMinor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '12.0'">0</ToolingVersionMinor>
-    <VersionRelease>0</VersionRelease>
-    <VersionReleaseName></VersionReleaseName>
+    <VersionReleasePrefix>1</VersionReleasePrefix>
+    <VersionRelease>$(VersionReleasePrefix)-alpha1</VersionRelease>
+    <VersionReleaseName>Alpha 1</VersionReleaseName>
   </PropertyGroup>
 
   <!-- Default properties -->
@@ -36,8 +37,8 @@ Project global pre-settings.
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
-    <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRevision) Tools $(VersionReleaseName) for Visual Studio 2012</WixFullProductName_Dev11>
-    <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRevision) Tools $(VersionReleaseName) for Visual Studio 2013</WixFullProductName_Dev12>
+    <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2012</WixFullProductName_Dev11>
+    <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2013</WixFullProductName_Dev12>
     <WixProductDescription_Dev11>$(WixFullProductName_Dev11)</WixProductDescription_Dev11>
     <WixProductDescription_Dev12>$(WixFullProductName_Dev12)</WixProductDescription_Dev12>
   </PropertyGroup>
