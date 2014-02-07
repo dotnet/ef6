@@ -2575,8 +2575,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var associationType = metadataOptimization.GetCSpaceAssociationType(_navigation.AssociationType);
 
             relationshipType = associationType;
-            relationshipSet = metadataOptimization.FindCSpaceAssociationSet(associationType,
-                associationSet => associationSet.AssociationSetEnds[_navigation.From].EntitySet == entitySet);
+            relationshipSet = metadataOptimization.FindCSpaceAssociationSet(associationType, _navigation.From, entitySet);
         }
 
         internal static void FindRelationshipSet(ObjectContext context, RelationshipNavigation navigation,

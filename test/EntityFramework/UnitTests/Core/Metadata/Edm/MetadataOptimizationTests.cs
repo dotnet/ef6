@@ -138,7 +138,48 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void FindCSpaceAssociationSet_returns_set_at_coresponding_index_and_matching_predicate()
+        public void FindCSpaceAssociationSet_returns_matching_set_SEST()
+        {
+            var conceptualModel = CreateConceptualModel();
+
+            var index = Count / 2;
+            var associationType = conceptualModel.AssociationTypes.ElementAt(index);
+            var associationSet = conceptualModel.GetAssociationSet(associationType);
+            var sourceSet = associationSet.SourceSet;
+            var targetSet = associationSet.TargetSet;
+
+            var metadataWorkspace = new MetadataWorkspace(() => new EdmItemCollection(conceptualModel), () => null, () => null);
+
+            Assert.NotNull(metadataWorkspace.MetadataOptimization);
+
+            var associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                associationType, "SourceEnd" + index, sourceSet);
+            Assert.Same(associationSet, associationSetFound);
+
+            associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                associationType, "TargetEnd" + index, targetSet);
+            Assert.Same(associationSet, associationSetFound);
+
+            EntitySet endEntitySet;
+            associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                associationType, "SourceEnd" + index, sourceSet.Name, sourceSet.EntityContainer.Name, out endEntitySet);
+            Assert.Same(associationSet, associationSetFound);
+            Assert.Same(sourceSet, endEntitySet);
+
+            associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                associationType, "TargetEnd" + index, targetSet.Name, targetSet.EntityContainer.Name, out endEntitySet);
+            Assert.Same(associationSet, associationSetFound);
+            Assert.Same(targetSet, endEntitySet);
+
+            associationSet = metadataWorkspace.MetadataOptimization
+                .GetCSpaceAssociationTypeToSetsMap()[index] as AssociationSet;
+
+            Assert.NotNull(associationSet);
+            Assert.Same(associationSetFound, associationSet);
+        }
+
+        [Fact]
+        public void FindCSpaceAssociationSet_returns_matching_set_MEST()
         {
             var conceptualModel = CreateConceptualModel();
 
@@ -167,10 +208,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.NotNull(metadataWorkspace.MetadataOptimization);
 
             var associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
-                associationType,
-                set => ReferenceEquals(set, associationSet));
-
+                associationType, "SourceEnd" + index, sourceSet);
             Assert.Same(associationSet, associationSetFound);
+
+            associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                associationType, "TargetEnd" + index, targetSet);
+            Assert.Same(associationSet, associationSetFound);
+
+            EntitySet endEntitySet;
+            associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                associationType, "SourceEnd" + index, sourceSet.Name, sourceSet.EntityContainer.Name, out endEntitySet);
+            Assert.Same(associationSet, associationSetFound);
+            Assert.Same(sourceSet, endEntitySet);
+
+            associationSetFound = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                associationType, "TargetEnd" + index, targetSet.Name, targetSet.EntityContainer.Name, out endEntitySet);
+            Assert.Same(associationSet, associationSetFound);
+            Assert.Same(targetSet, endEntitySet);
 
             var associationSets = metadataWorkspace.MetadataOptimization
                 .GetCSpaceAssociationTypeToSetsMap()[index] as AssociationSet[];

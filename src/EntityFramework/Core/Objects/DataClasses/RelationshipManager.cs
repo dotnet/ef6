@@ -956,14 +956,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             var metadataWorkspace = wrappedOwner.Context.MetadataWorkspace;
             Debug.Assert(metadataWorkspace != null);
 
+            EntitySet sourceEntitySet;
             var csAssociationSet = metadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
-                csAssociationType,
-                associationSet =>
-                {
-                    var entitySet = associationSet.AssociationSetEnds[sourceEndName].EntitySet;
-                    return entitySet.Name == ownerKey.EntitySetName
-                           && entitySet.EntityContainer.Name == ownerKey.EntityContainerName;
-                });
+                csAssociationType, sourceEndName, ownerKey.EntitySetName, ownerKey.EntityContainerName,
+                out sourceEntitySet);
 
             if (csAssociationSet == null)
             {
@@ -982,18 +978,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // association set in the CSpace, since there is no Entity Container in the OSpace
             if (wrappedOwner.Context.Perspective.TryGetTypeByName(relationship.FullName, false /*ignoreCase*/, out associationTypeUsage))
             {
-                //Get the entity container first
-                var entityContainer = wrappedOwner.Context.MetadataWorkspace.GetEntityContainer(
-                    ownerKey.EntityContainerName, DataSpace.CSpace);
-                EntitySet entitySet;
+                EntitySet sourceEntitySet;
+                var associationSet = wrappedOwner.Context.MetadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                    (AssociationType)associationTypeUsage.EdmType, sourceEndName, 
+                    ownerKey.EntitySetName, ownerKey.EntityContainerName, out sourceEntitySet);
 
-                // Get the association set from the entity container, given the association type it refers to, and the entity set
-                // name that the source end refers to
-                var association = MetadataHelper.GetAssociationsForEntitySetAndAssociationType(
-                    entityContainer, ownerKey.EntitySetName,
-                    (AssociationType)associationTypeUsage.EdmType, sourceEndName, out entitySet);
-
-                if (association == null)
+                if (associationSet == null)
                 {
                     var relationshipName = relationship.FullName;
                     Debug.Assert(!String.IsNullOrEmpty(relationshipName), "empty relationshipName");
@@ -1001,7 +991,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
 
                 Debug.Assert(
-                    association.AssociationSetEnds[sourceEndName].EntitySet == entitySet,
+                    associationSet.AssociationSetEnds[sourceEndName].EntitySet == sourceEntitySet,
                     "AssociationSetEnd does have the matching EntitySet");
             }
 
