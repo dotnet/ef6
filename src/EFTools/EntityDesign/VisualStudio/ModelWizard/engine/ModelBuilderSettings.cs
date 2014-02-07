@@ -66,7 +66,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             get { return _designTimeConnectionString; }
         }
 
-        internal string AppConfigConnectionString
+        // virtual for testing
+        internal virtual string AppConfigConnectionString
         {
             get { return _appConfigConnectionString; }
         }

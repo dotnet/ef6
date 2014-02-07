@@ -45,7 +45,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 : VsUtils.AppConfigFileName;
         }
 
-        public ProjectItem GetOrCreateConfigFile()
+        public virtual ProjectItem GetOrCreateConfigFile()
         {
             if (!ConfigFileExists())
             {
