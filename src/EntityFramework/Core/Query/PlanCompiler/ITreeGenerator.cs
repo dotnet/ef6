@@ -501,10 +501,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             //
             // If the current expression is a boolean, and it is really a predicate, then
-            // scalarize the predicate (ie) convert it into a "case when <predicate> then 'true' else 'false' end" expression
-            // SQLBUDT #431406: handle 3-valued logic for all predicates except IsNull
-            // Convert boolean predicate p into
-            //    case when p then true when not(p) then false else null end
+            // scalarize the predicate.
             //
             else if (IsPredicate(expr))
             {
@@ -535,14 +532,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Scalarize the predicate (x = y) by converting it into a "case when x = y then 'true' else 'false' end" expression.
+        // Scalarize the predicate by converting it into:
+        // "case when p then true when not(p) then false else null end" or
+        // "case when p then true else false"
+        // depending on whether it can be evaluated to null (3-valued logic).
         // </summary>
         private Node ConvertPredicateToScalarOpTree(Node node, DbExpression expr)
         {
             var caseOp = _iqtCommand.CreateCaseOp(_iqtCommand.BooleanType);
 
+            var isNullable = IsNullable(expr); 
+            
             //For 2-valued logic there are 3 arguments, for 3-valued there are 5
-            var arguments = new List<Node>((expr.ExpressionKind == DbExpressionKind.IsNull) ? 3 : 5);
+            var arguments = new List<Node>(isNullable ? 5 : 3);
 
             //Add the original as the first when
             arguments.Add(node);
@@ -550,9 +552,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //Add the first then, the true node
             arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, true)));
 
-            //If the expression has 3-valued logic, add a second when
-            if (expr.ExpressionKind
-                != DbExpressionKind.IsNull)
+            //If the expression can be evaluated to null (3-valued logic), add a second when
+            if (isNullable)
             {
                 var predCopy = VisitExpr(expr);
                 arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateConditionalOp(OpType.Not), predCopy));
@@ -561,15 +562,48 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //Add the false node: for 3 valued logic this is the second then, for 2 valued the else
             arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateInternalConstantOp(_iqtCommand.BooleanType, false)));
 
-            //The null node, it is the else-clause for 3-valued logic
-            if (expr.ExpressionKind
-                != DbExpressionKind.IsNull)
+            //The null node is the else-clause for 3-valued logic
+            if (isNullable)
             {
                 arguments.Add(_iqtCommand.CreateNode(_iqtCommand.CreateNullOp(_iqtCommand.BooleanType)));
             }
 
             node = _iqtCommand.CreateNode(caseOp, arguments);
             return node;
+        }
+
+        // <summary>
+        // Determines whether the given boolean expression can be evaluated to NULL.
+        // This implementation is conservative (it may return true for some expressions that can only return true and false).
+        // </summary>
+        private bool IsNullable(DbExpression expression)
+        {
+            switch (expression.ExpressionKind)
+            {
+                // ISNULL () cannot return null since it explicitly acts on NULLs
+                case DbExpressionKind.IsNull:
+
+                // EXISTS () cannot return null. This is important for the performance of Any() in queries
+                // see https://entityframework.codeplex.com/workitem/192
+                case DbExpressionKind.IsEmpty:
+                case DbExpressionKind.Any:
+                case DbExpressionKind.All:
+                    return false;
+
+                // NOT (X) is nullable only if X is nullable, so we recurse here
+                case DbExpressionKind.Not:
+                    return IsNullable(((DbNotExpression)expression).Argument);
+
+                // AND/OR (X, Y) is nullable only if X or Y are nullable
+                case DbExpressionKind.And:
+                case DbExpressionKind.Or:
+                    var binaryExpression = (DbBinaryExpression)expression;
+                    return IsNullable(binaryExpression.Left)
+                        || IsNullable(binaryExpression.Right);
+
+                default:
+                    return true;
+            }
         }
 
         // <summary>
