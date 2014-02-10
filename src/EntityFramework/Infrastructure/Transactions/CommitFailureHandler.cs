@@ -11,6 +11,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Threading;
@@ -105,6 +106,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <inheritdoc/>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override void Dispose(bool disposing)
         {
             if (!IsDisposed
@@ -113,7 +115,13 @@ namespace System.Data.Entity.Infrastructure
             {
                 if (_rowsToDelete.Any())
                 {
-                    PruneTransactionHistory(force: true);
+                    try
+                    {
+                        PruneTransactionHistory(force: true, useExecutionStrategy: false);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
                 TransactionContext.Dispose();
             }
@@ -305,7 +313,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 MarkTransactionForPruning(transactionRow);
             }
-            PruneTransactionHistory(force: true);
+            PruneTransactionHistory(force: true, useExecutionStrategy: true);
         }
 
 #if !NET40
@@ -335,7 +343,7 @@ namespace System.Data.Entity.Infrastructure
         {
             await TransactionContext.Transactions.ForEachAsync(MarkTransactionForPruning, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
-            await PruneTransactionHistoryAsync( /*force:*/ true, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await PruneTransactionHistoryAsync( /*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 #endif
 
@@ -358,7 +366,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         public void PruneTransactionHistory()
         {
-            PruneTransactionHistory(force: true);
+            PruneTransactionHistory(force: true, useExecutionStrategy: true);
         }
 
 #if !NET40
@@ -368,7 +376,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>A task that represents the asynchronous operation.</returns>
         public Task PruneTransactionHistoryAsync()
         {
-            return PruneTransactionHistoryAsync( /*force:*/ true, CancellationToken.None);
+            return PruneTransactionHistoryAsync(CancellationToken.None);
         }
 
         /// <summary>
@@ -378,7 +386,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>A task that represents the asynchronous operation.</returns>
         public Task PruneTransactionHistoryAsync(CancellationToken cancellationToken)
         {
-            return PruneTransactionHistoryAsync( /*force:*/ true, cancellationToken);
+            return PruneTransactionHistoryAsync(/*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken);
         }
 #endif
 
@@ -388,7 +396,10 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="force">
         /// if set to <c>true</c> will remove all the old transactions even if their number does not exceed <see cref="PruningLimit"/>.
         /// </param>
-        protected virtual void PruneTransactionHistory(bool force)
+        /// <param name="useExecutionStrategy">
+        /// if set to <c>true</c> the operation will be executed using the associated execution strategy
+        /// </param>
+        protected virtual void PruneTransactionHistory(bool force, bool useExecutionStrategy)
         {
             if (force || _rowsToDelete.Count > PruningLimit)
             {
@@ -399,14 +410,8 @@ namespace System.Data.Entity.Infrastructure
 
                 _rowsToDelete.Clear();
 
-                try
-                {
-                    ((IObjectContextAdapter)TransactionContext).ObjectContext
-                        .SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
-                }
-                catch (DataException)
-                {
-                }
+                ((IObjectContextAdapter)TransactionContext).ObjectContext
+                    .SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: !useExecutionStrategy);
             }
         }
 
@@ -417,9 +422,13 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="force">
         /// if set to <c>true</c> will remove all the old transactions even if their number does not exceed <see cref="PruningLimit"/>.
         /// </param>
+        /// <param name="useExecutionStrategy">
+        /// if set to <c>true</c> the operation will be executed using the associated execution strategy
+        /// </param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual async Task PruneTransactionHistoryAsync(bool force, CancellationToken cancellationToken)
+        protected virtual async Task PruneTransactionHistoryAsync(
+            bool force, bool useExecutionStrategy, CancellationToken cancellationToken)
         {
             if (force || _rowsToDelete.Count > PruningLimit)
             {
@@ -430,17 +439,10 @@ namespace System.Data.Entity.Infrastructure
 
                 _rowsToDelete.Clear();
 
-                try
-                {
-                    await
-                        ((IObjectContextAdapter)TransactionContext).ObjectContext
-                            .SaveChangesInternalAsync(
-                                SaveOptions.AcceptAllChangesAfterSave, /*executeInExistingTransaction:*/ true, cancellationToken)
-                            .ConfigureAwait(continueOnCapturedContext: false);
-                }
-                catch (DataException)
-                {
-                }
+                await ((IObjectContextAdapter)TransactionContext).ObjectContext
+                    .SaveChangesInternalAsync(
+                        SaveOptions.AcceptAllChangesAfterSave, /*executeInExistingTransaction:*/ !useExecutionStrategy, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 #endif
@@ -448,7 +450,14 @@ namespace System.Data.Entity.Infrastructure
         private void PruneTransactionHistory(TransactionRow transaction)
         {
             MarkTransactionForPruning(transaction);
-            PruneTransactionHistory(force: false);
+
+            try
+            {
+                PruneTransactionHistory(force: false, useExecutionStrategy: false);
+            }
+            catch (DataException)
+            {
+            }
         }
 
         /// <summary>

@@ -861,6 +861,114 @@ namespace System.Data.Entity.Objects
             }
         }
 
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Verify_Database_BeginTransaction_works_with_queries()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    using (var txn = ctx.Database.BeginTransaction())
+                    {
+                        ctx.LogEntries.ToList();
+                        txn.Commit();
+                    }
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Verify_Database_UseTransaction_works_with_queries()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.Connection.Open();
+                    var txn = ctx.Database.Connection.BeginTransaction();
+                    ctx.Database.UseTransaction(txn);
+                    ctx.LogEntries.ToList();
+                    txn.Commit();
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Verify_EntityConnection_BeginTransaction_works_with_queries()
+        {
+            try
+            {
+                using (var ctx = CreateObjectContext())
+                {
+                    ctx.Connection.Open();
+                    using (var txn = ctx.Connection.BeginTransaction())
+                    {
+                        var qu = ctx.CreateQuery<TransactionLogEntry>("Entities.TransactionLog").ToList();
+                        txn.Commit();
+                    }
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+        
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Can_share_transaction_between_DbContexts()
+        {
+            using (var ctx = new SimpleModelContext())
+            {
+                ctx.Database.Initialize(force: true);
+            }
+
+            using (var ctx1 = new SimpleModelContext())
+            {
+                ctx1.Database.Log = Console.WriteLine;
+                ctx1.Database.Connection.Open();
+                using (var txn = ctx1.Database.Connection.BeginTransaction())
+                {
+                    using (var ctx2 = new SimpleModelContext(ctx1.Database.Connection, false))
+                    {
+                        ctx2.Database.Log = Console.WriteLine;
+                        ctx2.Database.UseTransaction(txn);
+                        ctx2.Categories.ToList();
+                        txn.Commit();
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Can_not_share_transaction_between_DbContext_and_ObjectContext()
+        {
+            using (var ctx1 = CreateObjectContext())
+            {
+                ctx1.Connection.Open();
+                using (var txn = ctx1.Connection.BeginTransaction())
+                {
+                    using (var ctx2 = new TransactionDbContext((EntityConnection)ctx1.Connection, false))
+                    {
+                        Assert.Throws<InvalidOperationException>(() => ctx2.Database.UseTransaction(txn))
+                              .ValidateMessage("DbContext_TransactionAlreadyStarted");
+                    }
+                }
+            }
+        }
+
         #endregion
 
         [Fact]
@@ -917,32 +1025,6 @@ namespace System.Data.Entity.Objects
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
-
-        // What should be the correct behavior for this? See Issue #777 for details
-        ////[Fact]
-        ////public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_outside_transaction_scope()
-        ////{
-        ////    try
-        ////    {
-        ////    var entityConnection = new EntityConnection(connectionString);
-        ////    entityConnection.Open();
-        ////    using (var transactionScope = new TransactionScope())
-        ////    {
-        ////        using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: true))
-        ////        {
-        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////        }
-        ////    }
-
-        ////    // "Transaction not commited. No entities should be saved to the database."
-        ////    Assert.Equal(0, LogEntriesCount());
-        ////    }
-        ////    finally
-        ////    {
-        ////    ResetTables();
-        ////    }
-        ////}
 
         [Fact]
         public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_closed()
@@ -1210,100 +1292,6 @@ namespace System.Data.Entity.Objects
             Assert.Equal(0, LogEntriesCount());
         }
 
-        // What should be the correct behavior for this? See Issue #777 for details
-        ////[Fact]
-        ////public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_and_opened_outside_transaction_scope()
-        ////{
-        ////    try
-        ////    {
-        ////    var connection = new EntityConnection(connectionString);
-        ////    connection.Open();
-        ////    using (var transactionScope = new TransactionScope())
-        ////    {
-        ////        using (var ctx = CreateTransactionContext(connection))
-        ////        {
-        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////        }
-        ////    }
-
-        ////    // Transaction not commited. No entities should be saved to the database.
-        ////    Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
-        ////    }
-        ////    finally
-        ////    {
-        ////    ResetTables();
-        ////    }
-        ////}
-
-        // What should be the correct behavior for this? See Issue #777 for details
-        ////[Fact]
-        ////public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_and_opened_outside_transaction_scope_plus_AdoNet_calls()
-        ////{
-        ////    try
-        ////    {
-        ////    var connection = new EntityConnection(connectionString);
-        ////    connection.Open();
-        ////    using (var transactionScope = new TransactionScope())
-        ////    {
-        ////        // need to enlist store connection so that AdoNet calls execute inside a transaction
-        ////        connection.StoreConnection.EnlistTransaction(Transaction.Current);
-        ////        AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
-        ////        using (var ctx = CreateTransactionContext(connection))
-        ////        {
-        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////        }
-        ////    }
-
-        ////    // Transaction not commited. No entities should be saved to the database.
-        ////    Assert.Equal(0, LogEntriesCount());
-        ////    }
-        ////    finally
-        ////    {
-        ////    ResetTables();
-        ////    }
-        ////}
-
-        // What should be the correct behavior for this? See Issue #777 for details
-        ////[Fact]
-        ////public void Verify_only_one_transaction_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_open_plus_AdoNet_calls_and_transaction_is_completed()
-        ////{
-        ////    try
-        ////    {
-        ////    var connection = new EntityConnection(connectionString);
-        ////    connection.Open();
-        ////    using (var transactionScope = new TransactionScope())
-        ////    {
-        ////        // need to enlist store connection so that AdoNet calls execute inside a transaction
-        ////        connection.StoreConnection.EnlistTransaction(Transaction.Current);
-        ////        AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
-        ////        using (var ctx = CreateTransactionContext(connection))
-        ////        {
-        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////            transactionScope.Complete();
-        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////        }
-        ////    }
-
-        ////    // verify that there are two entries (one for AdoNet and one for EF, but only one transaction
-        ////    using (var ctx = CreateTransactionContext())
-        ////    {
-        ////        var transactionCountEntries = ctx.LogEntries.Select(e => e.TransactionCount).OrderBy(c => c).ToList();
-        ////        Assert.Equal(2, transactionCountEntries.Count());
-        ////        Assert.Equal(-1, transactionCountEntries[0]);
-        ////        Assert.Equal(1, transactionCountEntries[1]);
-        ////    }
-        ////    }
-        ////    finally
-        ////    {
-        ////    ResetTables();
-        ////    }
-        ////}
-
         [Fact]
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_executing_multiple_operations_in_the_same_TransactionScope()
@@ -1327,37 +1315,6 @@ namespace System.Data.Entity.Objects
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
-
-        // What should be the correct behavior for this? See Issue #777 for details
-        ////[Fact]
-        ////public void Verify_implicit_transaction_is_not_created_when_executing_multiple_operations_in_the_same_TransactionScope_and_connection_is_opened_outside_transaction_scope()
-        ////{
-        ////    try
-        ////    {
-        ////    var connection = new EntityConnection(connectionString);
-        ////    connection.Open();
-        ////    using (var transactionScope = new TransactionScope())
-        ////    {
-        ////        using (var ctx = CreateTransactionContext(connection))
-        ////        {
-        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-
-        ////            transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////        }
-        ////    }
-
-        ////    // "Transaction not commited. No entities should be saved to the database."
-        ////    Assert.Equal(0, LogEntriesCount());
-        ////    }
-        ////    finally
-        ////    {
-        ////    ResetTables();
-        ////    }
-        ////}
 
         [Fact]
         [UseDefaultExecutionStrategy]
@@ -1525,38 +1482,6 @@ namespace System.Data.Entity.Objects
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
         }
-
-        // What should be the correct behavior for this? See Issue #777 for details
-        ////[Fact]
-        ////public void Verify_using_TransactionScope_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created_when_using_context_with_already_opened_connection()
-        ////{
-        ////    try
-        ////    {
-        ////    var connection = new EntityConnection(connectionString);
-        ////    connection.Open();
-        ////    using (var ctx = CreateTransactionContext(connection))
-        ////    {
-        ////        using (var transactionScope = new TransactionScope())
-        ////        {
-        ////            // need to enlist connection here, otherwise test will fail
-        ////            ctx.Connection.EnlistTransaction(Transaction.Current);
-        ////            using (var dbTransaction = ctx.Connection.BeginTransaction())
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(2, transactionLogEntry.TransactionCount);
-        ////                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////            }
-        ////        }
-        ////    }
-
-        ////    // "Transaction not commited. No entities should be saved to the database."
-        ////    Assert.Equal(0, LogEntriesCount());
-        ////    }
-        ////    finally
-        ////    {
-        ////    ResetTables();
-        ////    }
-        ////}
 
         [Fact]
         [UseDefaultExecutionStrategy]

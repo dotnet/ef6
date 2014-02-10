@@ -471,7 +471,15 @@ namespace System.Data.Entity.Core.Objects
         /// <value>
         /// The transaction handler.
         /// </value>
-        public TransactionHandler TransactionHandler { get { return _transactionHandler; } }
+        public TransactionHandler TransactionHandler
+        {
+            get
+            {
+                EnsureTransactionHandlerRegistered();
+
+                return _transactionHandler;
+            }
+        }
 
         internal DbInterceptionContext InterceptionContext
         {

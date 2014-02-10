@@ -1745,7 +1745,6 @@ namespace System.Data.Entity.Core.Objects
                 {
                     var objectContext = CreateObjectContext();
 
-                    Assert.Null(objectContext.TransactionHandler);
                     objectContext.EnsureConnection(shouldMonitorTransactions: true);
                     Assert.NotNull(objectContext.TransactionHandler);
 
