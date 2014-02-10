@@ -187,19 +187,21 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             mockConfig.Setup(u => u.LoadConfig()).Returns(configXml);
 
             var wizard = CreateModelBuilderWizardForm(ModelGenerationOption.EmptyModelCodeFirst);
+            var modelBuilderSettings = wizard.ModelBuilderSettings;
+            modelBuilderSettings.ReplacementDictionary["$rootnamespace$"] = "modelNamespace";
             CreateMockWizardPageStart(wizard, WizardPageStart.GenerateEmptyModelCodeFirstIndex, mockConfig.Object).Object
                 .OnDeactivate();
 
-            var modelBuilderSettings = wizard.ModelBuilderSettings;
             Assert.Equal(ModelGenerationOption.EmptyModelCodeFirst, modelBuilderSettings.GenerationOption);
             Assert.False(wizard.FileAlreadyExistsError);
             Assert.Equal(@"C:\temp\myModel.cs", modelBuilderSettings.ModelPath);
-            Assert.False(modelBuilderSettings.ReplacementDictionary.Any());
+            Assert.Equal(1, modelBuilderSettings.ReplacementDictionary.Count);
+            Assert.Equal("modelNamespace", modelBuilderSettings.ReplacementDictionary["$rootnamespace$"]);
             Assert.Null(modelBuilderSettings.ModelBuilderEngine);
             Assert.Equal(@"myModel1", modelBuilderSettings.AppConfigConnectionPropertyName);
             Assert.True(modelBuilderSettings.SaveConnectionStringInAppConfig);
             Assert.Equal(
-                @"Data Source=(LocalDb)\v11.0;Initial Catalog=myModel;Integrated Security=True",
+                @"Data Source=(LocalDb)\v11.0;Initial Catalog=modelNamespace.myModel;Integrated Security=True",
                 modelBuilderSettings.AppConfigConnectionString);
         }
 

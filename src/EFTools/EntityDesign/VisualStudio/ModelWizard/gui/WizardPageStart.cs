@@ -248,9 +248,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         _configFileUtils, Wizard.ModelBuilderSettings.ModelName);
 
                 // for CodeFirst empty model we always add a localdb connection
+                var initialCatalog = string.Format(
+                    CultureInfo.CurrentCulture,
+                    "{0}.{1}", 
+                    Wizard.ModelBuilderSettings.ReplacementDictionary["$rootnamespace$"], 
+                    Wizard.ModelBuilderSettings.ModelName);
+
                 Wizard.ModelBuilderSettings.SaveConnectionStringInAppConfig = true;
-                var defaultConnectionString = 
-                    ConnectionManager.CreateDefaultLocalDbConnectionString(Wizard.ModelBuilderSettings.ModelName);
+                var defaultConnectionString =
+                    ConnectionManager.CreateDefaultLocalDbConnectionString(initialCatalog);
 
                 Wizard.ModelBuilderSettings.SetInvariantNamesAndConnectionStrings(
                     ServiceProvider, Wizard.Project, ConnectionManager.SqlClientProviderName,
