@@ -50,9 +50,13 @@ namespace System.Data.Entity.SqlServerCompact
         private const string storeSchemaMappingFile =
             "System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaMapping.msl";
 
+#if SQLSERVERCOMPACT35
+		private const string storeSchemaDescriptionFile =
+			"System.Data.Resources.SqlServerCe.Entity.Legacy.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
+#else
         private const string storeSchemaDescriptionFile =
             "System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
-
+#endif
         private const string storeSchemaDescriptionFileForRDP =
             "Microsoft.SqlServerCe.Client.Resources.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
         // '~' is the same escape character that L2S uses
