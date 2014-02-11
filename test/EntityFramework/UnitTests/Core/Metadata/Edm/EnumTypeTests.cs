@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void Can_create_enumeration_type()
         {
             var stringTypeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
-            var metadataProperty = new MetadataProperty("MetadataProperty", stringTypeUsage, "Value");
+            var metadataProperty = MetadataProperty.Create("MetadataProperty", stringTypeUsage, "Value");
             var underlyingType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
             var members
                 = new[]

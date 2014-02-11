@@ -53,10 +53,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Create_throws_if_name_is_null_or_empty()
         {
+            var stringTypeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var metadataProperty = new MetadataProperty("MetadataProperty", stringTypeUsage, "Value");
+
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"), 
                 Assert.Throws<ArgumentException>(
-                    () => EnumMember.Create(null, (sbyte)5, null))
+                    () => EnumMember.Create(null, (sbyte)5, new [] { metadataProperty }))
                     .Message);
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
@@ -72,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(
-                    () => EnumMember.Create(String.Empty, (byte)5, null))
+                    () => EnumMember.Create(String.Empty, (byte)5, new[] { metadataProperty }))
                     .Message);
 
             Assert.Equal(
@@ -94,7 +97,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(
-                    () => EnumMember.Create(String.Empty, (int)5, null))
+                    () => EnumMember.Create(String.Empty, (int)5, new[] { metadataProperty }))
                     .Message);
 
             Assert.Equal(
