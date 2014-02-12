@@ -155,7 +155,7 @@ namespace RefactorRenameProperty
             var dte = VsIdeTestHostContext.Dte;
             var serviceProvider = VsIdeTestHostContext.ServiceProvider;
 
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         EntityDesignArtifact entityDesignArtifact = null;

@@ -269,7 +269,7 @@ namespace EFDesigner.InProcTests
         {
             var isArtifactDesignerSafe = true;
 
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var artifactUri = TestUtils.FileName2Uri(fileName);

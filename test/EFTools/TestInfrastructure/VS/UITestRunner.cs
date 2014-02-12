@@ -2,6 +2,7 @@
 
 namespace EFDesignerTestInfrastructure.VS
 {
+    using EFDesignerTestInfrastructure;
     using System;
     using System.Threading;
     using Microsoft.VisualStudio.TestTools.VsIdeTesting;
@@ -22,7 +23,7 @@ namespace EFDesignerTestInfrastructure.VS
             }
         }
 
-        public static void Execute(Action action)
+        public static void Execute(string testName, Action action)
         {
             if (caughtException != null)
             {
@@ -41,7 +42,7 @@ namespace EFDesignerTestInfrastructure.VS
                             }
                             catch (Exception)
                             {
-                                // TODO: Screen capture ?
+                                TestUtils.TakeScreenShot(@"\TeamCity_TestFailure_Screenshots", testName);
                                 throw;
                             }
                             finally
