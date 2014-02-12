@@ -118,7 +118,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 connString,
                 ConnectionManager.TranslateConnectionString(
                     Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", connString, false));
+        }
 
+        [Fact]
+        public void TranslateConnectionString_returns_connection_string_if_connection_string_null_or_empty()
+        {
+            Assert.Null(
+                ConnectionManager.TranslateConnectionString(
+                    Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", null, true));
+
+            Assert.Same(
+                string.Empty,
+                ConnectionManager.TranslateConnectionString(
+                    Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", string.Empty, false));
         }
 
         [Fact]

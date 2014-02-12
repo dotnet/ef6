@@ -3,11 +3,16 @@
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
     using System;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Query.PlanCompiler;
+    using System.Data.Entity.Infrastructure;
     using System.Xml;
     using EnvDTE;
+    using Microsoft.Data.Entity.Design.CodeGeneration;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Moq;
+    using UnitTests.TestHelpers;
     using Xunit;
 
     public class OneEFWizardTests
@@ -55,6 +60,78 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 It.Is<XmlDocument>(config => config.SelectSingleNode("/configuration/connectionStrings/add[@name='myConnStr']/@connectionString").Value ==
                 @"data source=(localdb)\v11.0;initial catalog=App.MyContext;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework")), 
                 Times.Once());
+        }
+
+        [Fact]
+        public void RunStarted_saves_context_generated_code_replacementsDictionary_as_contextfilecontents()
+        {
+            var mockCodeGenerator = new Mock<CodeFirstModelGenerator>(MockDTE.CreateProject());
+            mockCodeGenerator
+                .Setup(g => g.Generate(It.IsAny<DbModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new[] { new KeyValuePair<string, string>("MyContext", "context code") });
+
+            var modelBuilderSettings =
+                new ModelBuilderSettings { SaveConnectionStringInAppConfig = true, AppConfigConnectionPropertyName = "ConnString" };
+
+            var replacementsDictionary =
+                new Dictionary<string, string>
+                {
+                    { "$safeitemname$", "MyContext" },
+                    { "$rootnamespace$", "Project.Data" }
+                };
+
+            new OneEFWizard()
+                .RunStarted(modelBuilderSettings, mockCodeGenerator.Object, replacementsDictionary);
+
+            Assert.Equal("context code", replacementsDictionary["$contextfilecontents$"]);
+        }
+
+        [Fact]
+        public void RunStarted_uses_AppConfigConnectionPropertyName_if_SaveConnectionStringInAppConfig_true()
+        {
+            var mockCodeGenerator = new Mock<CodeFirstModelGenerator>(MockDTE.CreateProject());
+            mockCodeGenerator
+                .Setup(g => g.Generate(It.IsAny<DbModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new[] { new KeyValuePair<string, string>() });
+
+            var modelBuilderSettings = 
+                new ModelBuilderSettings { SaveConnectionStringInAppConfig = true, AppConfigConnectionPropertyName = "ConnString"};
+
+            var replacementsDictionary =
+                new Dictionary<string, string>
+                {
+                    { "$safeitemname$", "MyContext" },
+                    { "$rootnamespace$", "Project.Data" }
+                };
+
+            new OneEFWizard()
+                .RunStarted(modelBuilderSettings, mockCodeGenerator.Object, replacementsDictionary);
+
+            mockCodeGenerator.Verify(g => g.Generate(It.IsAny<DbModel>(), "Project.Data", "MyContext", "ConnString"), Times.Once());
+        }
+
+        [Fact]
+        public void RunStarted_uses_context_class_name_if_SaveConnectionStringInAppConfig_false()
+        {
+            var mockCodeGenerator = new Mock<CodeFirstModelGenerator>(MockDTE.CreateProject());
+            mockCodeGenerator
+                .Setup(g => g.Generate(It.IsAny<DbModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new[] { new KeyValuePair<string, string>() });
+
+            var modelBuilderSettings =
+                new ModelBuilderSettings { SaveConnectionStringInAppConfig = false, AppConfigConnectionPropertyName = "ConnString" };
+
+            var replacementsDictionary =
+                new Dictionary<string, string>
+                {
+                    { "$safeitemname$", "MyContext" },
+                    { "$rootnamespace$", "Project.Data" }
+                };
+
+            new OneEFWizard()
+                .RunStarted(modelBuilderSettings, mockCodeGenerator.Object, replacementsDictionary);
+
+            mockCodeGenerator.Verify(g => g.Generate(It.IsAny<DbModel>(), "Project.Data", "MyContext", "MyContext"), Times.Once());
         }
     }
 }

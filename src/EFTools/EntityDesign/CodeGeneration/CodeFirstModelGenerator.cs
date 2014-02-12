@@ -25,7 +25,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             Debug.Assert(_language != LangEnum.Unknown, "_language is Unknown.");
         }
 
-        public IEnumerable<KeyValuePair<string, string>> Generate(DbModel model, string codeNamespace, string contextClassName, string connectionStringName)
+        // virtual for testing
+        public virtual IEnumerable<KeyValuePair<string, string>> Generate(DbModel model, string codeNamespace, string contextClassName, string connectionStringName)
         {
             var extension = _language == LangEnum.VisualBasic
                 ? FileExtensions.VbExt
