@@ -1513,7 +1513,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             Debug.Assert(serviceProvider != null, "serviceProvider must not be null");
             Debug.Assert(project != null, "project must not be null");
             Debug.Assert(!string.IsNullOrWhiteSpace(invariantName), "invalid invariantName");
-            Debug.Assert(!string.IsNullOrWhiteSpace(connectionString), "invalid connectionString");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                return connectionString;
+            }
 
             var converter = (IConnectionStringConverterService)serviceProvider.GetService(typeof(IConnectionStringConverterService));
             if (converter == null)

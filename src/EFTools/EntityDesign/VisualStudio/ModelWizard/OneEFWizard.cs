@@ -24,6 +24,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         private List<KeyValuePair<string, string>> _generatedCode;
         private string _contextFilePath;
 
+        /// <summary>
+        /// This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.
+        /// </summary>
         public OneEFWizard()
         {
         }
@@ -54,10 +57,22 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// <inheritdoc />
         public void RunStarted(object automationObject, Dictionary<string, string> replacementsDictionary, WizardRunKind runKind, object[] customParams)
         {
-            _generatedCode = GenerateCode(
+            RunStarted(ModelBuilderSettings, new CodeFirstModelGenerator(ModelBuilderSettings.Project), replacementsDictionary);
+        }
+
+        internal void RunStarted(ModelBuilderSettings modelBuilderSettings, CodeFirstModelGenerator codeFirstModelGenerator, Dictionary<string, string> replacementsDictionary)
+        {
+            var contextClassName = replacementsDictionary["$safeitemname$"];
+
+            _generatedCode = codeFirstModelGenerator.Generate(
+                modelBuilderSettings.ModelBuilderEngine != null
+                        ? modelBuilderSettings.ModelBuilderEngine.Model
+                        : null,
                 replacementsDictionary["$rootnamespace$"],
-                replacementsDictionary["$safeitemname$"],
-                ModelBuilderSettings.AppConfigConnectionPropertyName).ToList();
+                contextClassName,
+                modelBuilderSettings.SaveConnectionStringInAppConfig 
+                    ? modelBuilderSettings.AppConfigConnectionPropertyName 
+                    : contextClassName).ToList();
 
             Debug.Assert(_generatedCode.Count > 0, "code has not been generated");
 
@@ -120,17 +135,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         public bool ShouldAddProjectItem(string filePath)
         {
             return true;
-        }
-        private static IEnumerable<KeyValuePair<string, string>> GenerateCode(string codeNamespace, string contextClassName, string connectionStringName)
-        {
-            return new CodeFirstModelGenerator(ModelBuilderSettings.Project)
-                .Generate(
-                    ModelBuilderSettings.ModelBuilderEngine != null
-                        ? ModelBuilderSettings.ModelBuilderEngine.Model
-                        : null,
-                    codeNamespace,
-                    contextClassName,
-                    connectionStringName);
         }
     }
 }
