@@ -299,9 +299,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // Determine whether the given CLR type is legal for an ObjectParameter or constant
         // DbExpression.
         // </summary>
-        private bool TryGetTypeUsageForTerminal(Type type, out TypeUsage typeUsage)
+        private bool TryGetTypeUsageForTerminal(Expression expression, out TypeUsage typeUsage)
         {
-            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(expression);
+
+            var type = expression.Type;
 
             if (_rootContext.Perspective.TryGetTypeByName(
                 TypeSystem.GetNonNullableType(type).FullNameWithNesting(),
@@ -310,6 +312,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 &&
                 (TypeSemantics.IsScalarType(typeUsage)))
             {
+                if (expression.NodeType == ExpressionType.Convert)
+                {
+                    type = ((UnaryExpression)expression).Operand.Type;
+                }
+
                 if (type.IsValueType
                     && Nullable.GetUnderlyingType(type) == null
                     && TypeSemantics.IsNullable(typeUsage))
@@ -398,7 +405,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         else if (_isClientVariable(exp))
                         {
                             TypeUsage queryParameterType;
-                            if (_funcletizer.TryGetTypeUsageForTerminal(exp.Type, out queryParameterType))
+                            if (_funcletizer.TryGetTypeUsageForTerminal(exp, out queryParameterType))
                             {
                                 var parameterReference = queryParameterType.Parameter(_funcletizer.GenerateParameterName());
                                 return new QueryParameterExpression(parameterReference, exp, _funcletizer._compiledQueryParameters);

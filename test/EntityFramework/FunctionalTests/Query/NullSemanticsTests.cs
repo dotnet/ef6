@@ -7,12 +7,9 @@ namespace System.Data.Entity.Query
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
-    using SimpleModel;
     using Xunit;
-    using Xunit.Extensions;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -387,6 +384,7 @@ namespace System.Data.Entity.Query
         public class A
         {
             public int Id { get; set; }
+            public int? NullableId { get; set; }
             public string Name { get; set; }
         }
 
@@ -414,36 +412,76 @@ namespace System.Data.Entity.Query
         }
 
         [Fact]
-        public void Null_checks_for_non_nullable_parameters_are_eliminated()
+        public void Null_checks_for_non_nullable_parameters_are_eliminated_when_other_operand_is_not_nullable()
         {
             using (var context = new ABContext())
             {
                 var aId = 1;
-                var query = context.As.Where(a => a.Id != aId);
+                var query = context.As.Where(a => a.Id == aId);
                 var expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id], 
+    [Extent1].[NullableId] AS [NullableId], 
     [Extent1].[Name] AS [Name]
     FROM [dbo].[A] AS [Extent1]
-    WHERE [Extent1].[Id] <> @p__linq__0";
+    WHERE [Extent1].[Id] = @p__linq__0";
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
         [Fact]
-        public void Null_checks_for_nullable_parameters_are_not_eliminated()
+        public void Null_checks_for_non_nullable_parameters_are_eliminated_when_other_operand_is_nullable()
+        {
+            using (var context = new ABContext())
+            {
+                var aId = 1;
+                var query = context.As.Where(a => a.NullableId == aId);
+                var expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[NullableId] AS [NullableId], 
+    [Extent1].[Name] AS [Name]
+    FROM [dbo].[A] AS [Extent1]
+    WHERE [Extent1].[NullableId] = @p__linq__0";
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
+        [Fact]
+        public void Null_checks_for_nullable_parameters_are_eliminated_when_other_operand_is_not_nullable()
         {
             using (var context = new ABContext())
             {
                 int? aId = 1;
-                var query = context.As.Where(a => a.Id != aId);
+                var query = context.As.Where(a => a.Id == aId);
                 var expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id], 
+    [Extent1].[NullableId] AS [NullableId], 
     [Extent1].[Name] AS [Name]
     FROM [dbo].[A] AS [Extent1]
-    WHERE  NOT (([Extent1].[Id] = @p__linq__0) AND (0 = (CASE WHEN (@p__linq__0 IS NULL) THEN cast(1 as bit) ELSE cast(0 as bit) END)))";
+    WHERE [Extent1].[Id] = @p__linq__0";
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
+        [Fact]
+        public void Null_checks_for_nullable_parameters_are_not_eliminated_when_other_operand_is_nullable()
+        {
+            using (var context = new ABContext())
+            {
+                int? aId = 1;
+                var query = context.As.Where(a => a.NullableId == aId);
+                var expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[NullableId] AS [NullableId], 
+    [Extent1].[Name] AS [Name]
+    FROM [dbo].[A] AS [Extent1]
+    WHERE ([Extent1].[NullableId] = @p__linq__0) OR (([Extent1].[NullableId] IS NULL) AND (@p__linq__0 IS NULL))";
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
@@ -462,6 +500,7 @@ namespace System.Data.Entity.Query
                 var expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id], 
+    [Extent1].[NullableId] AS [NullableId], 
     [Extent1].[Name] AS [Name]
     FROM  [dbo].[A] AS [Extent1]
     INNER JOIN  (SELECT TOP (1) [c].[Name] AS [Name]
@@ -486,6 +525,7 @@ namespace System.Data.Entity.Query
                 var expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id], 
+    [Extent1].[NullableId] AS [NullableId], 
     [Extent1].[Name] AS [Name]
     FROM [dbo].[A] AS [Extent1]
     WHERE  NOT (
