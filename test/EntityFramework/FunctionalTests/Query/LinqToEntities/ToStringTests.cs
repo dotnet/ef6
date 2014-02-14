@@ -339,11 +339,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
      CAST( cast(4 as real) AS nvarchar(max)) AS [C6], 
      CAST( cast(5 as float(53)) AS nvarchar(max)) AS [C7], 
      CAST( cast(6 as decimal(18)) AS nvarchar(max)) AS [C8], 
-    CASE WHEN (@p__linq__0 IS NULL) THEN N'' ELSE  CAST( @p__linq__0 AS nvarchar(max)) END AS [C9], 
-    CASE WHEN (@p__linq__1 IS NULL) THEN N'' ELSE  CAST( @p__linq__1 AS nvarchar(max)) END AS [C10], 
-    CASE WHEN (@p__linq__2 IS NULL) THEN N'' ELSE LOWER( CAST( @p__linq__2 AS nvarchar(max))) END AS [C11], 
-    N'SomeA' AS [C12],
-    N'-42' AS [C13],
+     CAST( @p__linq__0 AS nvarchar(max)) AS [C9], 
+     CAST( @p__linq__1 AS nvarchar(max)) AS [C10], 
+    LOWER( CAST( @p__linq__2 AS nvarchar(max))) AS [C11], 
+    N'SomeA' AS [C12], 
+    N'-42' AS [C13], 
     N'abc' AS [C14]
     FROM [dbo].[SomeEntities] AS [Extent1]
     WHERE [Extent1].[NullableBoolProp] IS NULL";
