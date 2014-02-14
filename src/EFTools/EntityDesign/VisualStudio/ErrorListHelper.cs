@@ -300,35 +300,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         // <summary>
         //     This method will log errors to the "Wizard" Multi-doc error list.
         // </summary>
-        internal static void LogUpdateModelWizardErrors(IEnumerable<EdmSchemaError> errors, string projectItemFileName)
-        {
-            var serviceProvider = Services.ServiceProvider;
-
-            Debug.Assert(serviceProvider != null, "ServiceProvider does not exist");
-            if (null != serviceProvider)
-            {
-                var solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
-                if (null == solution)
-                {
-                    // If the serviceProvider cannot provide a solution we are being called outside
-                    // of VS - so there is no Error List window in which to log the errors. This can 
-                    // happen in e.g. Model.Tests and is not an error.
-                    return;
-                }
-                var projectItem = VsUtils.GetProjectItemForDocument(projectItemFileName, serviceProvider);
-                Debug.Assert(
-                    projectItem != null,
-                    "The filename you passed in, " + projectItemFileName + ", does not have a corresponding ProjectItem");
-                if (projectItem != null)
-                {
-                    LogWizardErrors(errors, projectItem, MARKERTYPE.MARKER_OTHER_ERROR);
-                }
-            }
-        }
-
-        // <summary>
-        //     This method will log errors to the "Wizard" Multi-doc error list.
-        // </summary>
         internal static void LogUpdateModelWizardError(ErrorInfo errorInfo, string projectItemFileName)
         {
             var serviceProvider = Services.ServiceProvider;

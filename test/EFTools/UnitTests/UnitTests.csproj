@@ -246,6 +246,7 @@
     <Compile Include="TestHelpers\MockDTE.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="XmlCore\Model\EFArtifactServiceTests.cs" />
+    <Compile Include="XmlCore\Model\Validation\ErrorInfoTests.cs" />
     <Compile Include="XmlCore\Model\Validation\XmlReaderProxyTests.cs" />
     <Compile Include="XmlCore\Model\Validation\XNodeReaderLineNumberServiceTests.cs" />
     <Compile Include="XmlCore\Model\Validation\XObjectLineNumberServiceTests.cs" />
