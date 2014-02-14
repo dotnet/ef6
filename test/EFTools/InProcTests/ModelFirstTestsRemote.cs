@@ -29,6 +29,8 @@ namespace EFDesigner.InProcTests
             PackageManager.LoadEDMPackage(VsIdeTestHostContext.ServiceProvider);
         }
 
+        public TestContext TestContext { get; set; }
+
         internal void TestPipeline(
             string testName,
             EdmItemCollection csdlInput,
@@ -126,7 +128,7 @@ namespace EFDesigner.InProcTests
 
         internal void ModelFirstVerifierRunner(string csdlArtifactName, Version versionOfCsdl)
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var workflowFilePath = Path.Combine(

@@ -22,6 +22,8 @@ namespace EFDesigner.InProcTests
             PackageManager.LoadEDMPackage(VsIdeTestHostContext.ServiceProvider);
         }
 
+        public TestContext TestContext { get; set; }
+
         private IDictionary<string, object> InvokeWorkflowActivity<A>(Dictionary<string, object> inputs, EdmParameterBag parameterBag)
             where A : Activity, new()
         {
@@ -38,7 +40,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void SQLCETest()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var sqlCeInputs = new Dictionary<string, object>
