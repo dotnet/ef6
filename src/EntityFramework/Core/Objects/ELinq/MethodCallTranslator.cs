@@ -1461,6 +1461,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         typeof(String).GetDeclaredMethod("Concat", typeof(object), typeof(object), typeof(object), typeof(object));
                     yield return
                         typeof(String).GetDeclaredMethod("Concat", typeof(object[]));
+                    yield return
+                        typeof(String).GetDeclaredMethod("Concat", typeof(string[]));
                 }
 
                 // Translation:
@@ -1471,7 +1473,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     Expression[] args;
 
-                    if (call.Arguments.Count == 1 && call.Arguments.First().Type == typeof(object[]))
+                    if (call.Arguments.Count == 1 && (call.Arguments.First().Type == typeof(object[]) || call.Arguments.First().Type == typeof(string[])))
                     {
                         var newArrayExpression = call.Arguments[0] as NewArrayExpression;
                         if (newArrayExpression != null)
@@ -1482,7 +1484,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         {
                             Debug.Assert(call.Arguments[0] is ConstantExpression);
 
-                            args = ((object[])((ConstantExpression)call.Arguments[0]).Value)
+                            var valueExpression = ((ConstantExpression)call.Arguments[0]);
+
+                            if (valueExpression.Value == null)
+                            {
+                                throw new ArgumentNullException(
+                                    valueExpression.Type == typeof(object[]) ? "args" : "values");
+                            }
+
+                            // note: array convariance - valueExpression.Value can be string[]
+                            args = ((object[])valueExpression.Value)
                                 .Select(v => Expression.Constant(v)).ToArray();
                         }
                     }

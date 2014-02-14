@@ -578,6 +578,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         [Fact]
+        public void Issue2075_StringConcatMethod_can_handle_constant_values_of_string_type()
+        {
+            using (var db = new StringConcatContext())
+            {
+                var actualSql = db.Entities.Select(
+                    e => string.Concat("3", "SomeEnum.SomeA", "xyz", e.StringProp, "abc", e.StringProp)).ToString();
+
+                Assert.Equal(@"SELECT 
+    N'3' + N'SomeEnum.SomeA' + N'xyz' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + N'abc' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END AS [C1]
+    FROM [dbo].[SomeEntities] AS [Extent1]", actualSql);
+            }
+        }
+
+        [Fact]
         public void Issue1904_StringConcatMethod_can_handle_arguments_created_explicitly_as_object_array()
         {          
             using (var db = new StringConcatContext())
@@ -587,6 +601,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 Assert.Equal(@"SELECT 
      CAST( 3 AS nvarchar(max)) + N'SomeA' + N'xyz' +  CAST( cast(42 as smallint) AS nvarchar(max)) AS [C1]
+    FROM [dbo].[SomeEntities] AS [Extent1]", actualSql);
+            }
+        }
+
+        [Fact]
+        public void Issue2073_StringConcatMethod_can_handle_arguments_created_explicitly_as_string_array()
+        {
+            using (var db = new StringConcatContext())
+            {
+                var args = new [] { "3", "SomeEnum.SomeA", "xyz", "42" };
+                var actualSql = db.Entities.Select(e => string.Concat(args)).ToString();
+
+                Assert.Equal(@"SELECT 
+    N'3' + N'SomeEnum.SomeA' + N'xyz' + N'42' AS [C1]
     FROM [dbo].[SomeEntities] AS [Extent1]", actualSql);
             }
         }
@@ -628,6 +656,46 @@ namespace System.Data.Entity.Core.Objects.ELinq
     CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + CASE WHEN ([Extent1].[BoolProp] = 1) THEN N'True' WHEN ([Extent1].[BoolProp] = 0) THEN N'False' ELSE N'' END + CASE WHEN ( CAST( [Extent1].[EnumProp] AS int) = 0) THEN N'SomeA' WHEN ( CAST( [Extent1].[EnumProp] AS int) = 1) THEN N'SomeB' WHEN ( CAST( [Extent1].[EnumProp] AS int) = 2) THEN N'SomeC' WHEN ( CAST( [Extent1].[EnumProp] AS int) IS NULL) THEN N'' ELSE  CAST(  CAST( [Extent1].[EnumProp] AS int) AS nvarchar(max)) END + LOWER( CAST( [Extent1].[GuidProp] AS nvarchar(max))) AS [C2]
     FROM [dbo].[SomeEntities] AS [Extent1]";
                 QueryTestHelpers.VerifyDbQuery(actualSql, expectedSql);
+            }
+        }
+
+        [Fact]
+        public void Issue2075_StringConcat_generates_correct_sql_for_string_only_args()
+        {
+            using (var db = new StringConcatContext())
+            {
+                var actualSql = db.Entities
+                    .Select(
+                        b => new
+                        {
+                            ConcatMethod = string.Concat(b.StringProp, b.StringProp, b.StringProp, "x", b.StringProp),
+                            ConcatPlus = b.StringProp + b.StringProp + b.StringProp + "x" + b.StringProp,
+                        });
+
+                const string expectedSql = @"SELECT 
+    1 AS [C1], 
+    CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + N'x' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END AS [C2], 
+    CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END + N'x' + CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END AS [C3]
+    FROM [dbo].[SomeEntities] AS [Extent1]";
+
+                QueryTestHelpers.VerifyDbQuery(actualSql, expectedSql);
+            }
+        }
+
+        [Fact]
+        public void Issue2075_StringConcat_throws_for_null_array_arg()
+        {
+            using (var db = new StringConcatContext())
+            {
+                Assert.Equal(
+                    "args",
+                    Assert.Throws<ArgumentNullException>(
+                        () => db.Entities.Select(b => string.Concat((object[])null)).ToString()).ParamName);
+
+                Assert.Equal(
+                    "values",
+                    Assert.Throws<ArgumentNullException>(
+                        () => db.Entities.Select(b => string.Concat((string[])null)).ToString()).ParamName);
             }
         }
     }

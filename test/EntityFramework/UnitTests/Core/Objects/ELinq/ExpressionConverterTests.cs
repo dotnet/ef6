@@ -180,7 +180,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             var methods = new ExpressionConverter.MethodCallTranslator.StringConcatTranslator().Methods;
 
-            Assert.Equal(7, methods.Count());
+            Assert.Equal(8, methods.Count());
             Assert.True(methods.All(m => m != null));
         }
 
