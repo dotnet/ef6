@@ -7,6 +7,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System.IO;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.Common;
+    using Microsoft.VisualStudio.Shell.Interop;
 
     internal class VsUtilsWrapper : IVsUtils
     {
@@ -33,6 +34,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         public void WriteCheckoutXmlFilesInProject(IDictionary<string, object> filesMap)
         {
             VsUtils.WriteCheckoutXmlFilesInProject(filesMap);
+        }
+
+        public uint GetProjectItemId(IVsHierarchy hierarchy, ProjectItem projectItem)
+        {
+            return VsUtils.GetProjectItemId(hierarchy, projectItem);
+        }
+
+        public IVsHierarchy GetVsHierarchy(Project project, IServiceProvider serviceProvider)
+        {
+            return VsUtils.GetVsHierarchy(project, serviceProvider);
         }
     }
 }

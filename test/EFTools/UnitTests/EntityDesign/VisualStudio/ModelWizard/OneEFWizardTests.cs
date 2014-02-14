@@ -2,18 +2,23 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Infrastructure;
-    using System.Xml;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.CodeGeneration;
+    using Microsoft.Data.Entity.Design.Model.Validation;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
+    using Microsoft.Data.Tools.XmlDesignerBase;
+    using Microsoft.VisualStudio.Shell.Interop;
     using Moq;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
+    using System.Xml;
     using UnitTests.TestHelpers;
     using Xunit;
+    using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
     public class OneEFWizardTests
     {
@@ -132,6 +137,95 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 .RunStarted(modelBuilderSettings, mockCodeGenerator.Object, replacementsDictionary);
 
             mockCodeGenerator.Verify(g => g.Generate(It.IsAny<DbModel>(), "Project.Data", "MyContext", "MyContext"), Times.Once());
+        }
+
+        [Fact]
+        public void ProjectItemFinishedGenerating_adds_errors_to_error_pane_if_any()
+        {
+            Mock<IErrorListHelper> mockErrorListHelper;
+            Mock<ProjectItem> mockProjectItem;
+
+            const string itemPath = @"C:\Project\MyContext.cs";
+
+            CreateOneEFWizard(
+                itemPath, 
+                new[]
+                {
+                    new EdmSchemaError("error", 20, EdmSchemaErrorSeverity.Error),
+                    new EdmSchemaError("warning", 10, EdmSchemaErrorSeverity.Warning)
+                },
+                out mockErrorListHelper, 
+                out mockProjectItem)
+                    .ProjectItemFinishedGenerating(mockProjectItem.Object);
+
+            Func<ICollection<ErrorInfo>, bool> errorInfoCollectionVerification = c =>
+            {
+                if (c.Count != 2)
+                {
+                    return false;
+                }
+
+                var first = c.First();
+                var second = c.Last();
+
+                return c.All(i => i.ItemPath == itemPath && i.ErrorClass == ErrorClass.Runtime_All) &&
+                    first.IsError() && first.Message == string.Format(Resources.Error_Message_With_Error_Code_Prefix, 20, "error") && first.ErrorCode == 20 &&
+                    second.IsWarning() && second.Message == string.Format(Resources.Error_Message_With_Error_Code_Prefix, 10, "warning") && second.ErrorCode == 10;
+            };
+
+            mockErrorListHelper.Verify(
+                h => h.AddErrorInfosToErrorList(
+                    It.Is<ICollection<ErrorInfo>>(c => errorInfoCollectionVerification(c)),
+                    It.IsAny<IVsHierarchy>(),
+                    It.IsAny<uint>(),
+                    false),
+                Times.Once());
+        }
+
+        [Fact]
+        public void ProjectItemFinishedGenerating_does_not_add_errors_to_error_pane_if_no_errors()
+        {
+            const string itemPath = @"C:\Project\MyContext.cs";
+
+            Mock<IErrorListHelper> mockErrorListHelper;
+            Mock<ProjectItem> mockProjectItem;
+
+            CreateOneEFWizard(itemPath, null, out mockErrorListHelper, out mockProjectItem)
+                .ProjectItemFinishedGenerating(mockProjectItem.Object);
+
+            mockErrorListHelper.Verify(
+                h => h.AddErrorInfosToErrorList(
+                    It.IsAny<ICollection<ErrorInfo>>(),
+                    It.IsAny<IVsHierarchy>(),
+                    It.IsAny<uint>(),
+                    false),
+                Times.Never());
+        }
+
+        private static OneEFWizard CreateOneEFWizard(string itemPath, IEnumerable<EdmSchemaError> edmSchemaErrors, out Mock<IErrorListHelper> mockErrorListHelper, out Mock<ProjectItem> mockProjectItem)
+        {
+            var mockDte = new Mock<DTE>();
+            mockDte.As<IOleServiceProvider>();
+            var mockProject = new Mock<Project>();
+            mockProject.Setup(p => p.DTE).Returns(mockDte.Object);
+
+            var mockVsUtils = new Mock<IVsUtils>();
+            mockErrorListHelper = new Mock<IErrorListHelper>();
+            var errorCache = new ModelGenErrorCache();
+
+            if (edmSchemaErrors != null)
+            {
+                errorCache.AddErrors(
+                    itemPath,
+                    edmSchemaErrors.ToList());
+            }
+
+            mockProjectItem = new Mock<ProjectItem>();
+            mockProjectItem.Setup(p => p.get_FileNames(1)).Returns(itemPath);
+            mockProjectItem.Setup(p => p.ContainingProject).Returns(mockProject.Object);
+
+            return new OneEFWizard(
+                vsUtils: mockVsUtils.Object, errorListHelper: mockErrorListHelper.Object, errorCache: errorCache);
         }
     }
 }

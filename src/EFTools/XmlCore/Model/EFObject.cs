@@ -57,6 +57,11 @@ namespace Microsoft.Data.Entity.Design.Model
             SetState(IS_CONSTRUCTION_COMPLETED);
         }
 
+        // testing only
+        internal EFObject()
+        {
+        }
+
         [SuppressMessage("Microsoft.Performance", "CA1821:RemoveEmptyFinalizers")]
         ~EFObject()
         {
@@ -372,13 +377,15 @@ namespace Microsoft.Data.Entity.Design.Model
             }
         }
 
-        internal int GetLineNumber()
+        // virtual for testing
+        internal virtual int GetLineNumber()
         {
             var textSpan = GetTextSpan();
             return textSpan.iStartLine;
         }
 
-        internal int GetColumnNumber()
+        // virtual for testing
+        internal virtual int GetColumnNumber()
         {
             var textSpan = GetTextSpan();
             return textSpan.iStartIndex;

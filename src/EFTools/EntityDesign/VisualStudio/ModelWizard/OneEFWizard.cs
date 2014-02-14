@@ -4,10 +4,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
     using EnvDTE;
     using Microsoft.Data.Entity.Design.CodeGeneration;
+    using Microsoft.Data.Entity.Design.Model.Validation;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
+    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.TemplateWizard;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -23,19 +26,28 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
         private List<KeyValuePair<string, string>> _generatedCode;
         private string _contextFilePath;
+        private readonly IVsUtils _vsUtils;
+        private readonly IErrorListHelper _errorListHelper;
+        private readonly ModelGenErrorCache _errorCache;
 
         /// <summary>
         /// This API supports the Entity Framework infrastructure and is not intended to be used directly from your code.
         /// </summary>
         public OneEFWizard()
         {
+            _vsUtils = new VsUtilsWrapper();
+            _errorListHelper = new ErrorListHelperWrapper();
+            _errorCache = PackageManager.Package.ModelGenErrorCache;
         }
 
         // testing only
-        internal OneEFWizard(ConfigFileUtils configFileUtils)
+        internal OneEFWizard(ConfigFileUtils configFileUtils = null, IVsUtils vsUtils = null, IErrorListHelper errorListHelper = null, ModelGenErrorCache errorCache = null)
         {
             _configFileUtils = configFileUtils;
             _generatedCode = new List<KeyValuePair<string, string>>();
+            _vsUtils = vsUtils;
+            _errorListHelper = errorListHelper;
+            _errorCache = errorCache;
         }
 
         /// <inheritdoc />
@@ -52,6 +64,33 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
             _contextFilePath = projectItem.get_FileNames(1);
+
+            AddErrors(projectItem);
+        }
+
+        private void AddErrors(ProjectItem projectItem)
+        {
+            var edmSchemaErrors = _errorCache.GetErrors(_contextFilePath);
+
+            if(edmSchemaErrors != null && edmSchemaErrors.Any())
+            {
+                using (var serviceProvider = new ServiceProvider((IOleServiceProvider)projectItem.ContainingProject.DTE))
+                {
+                    var hierarchy = _vsUtils.GetVsHierarchy(projectItem.ContainingProject, serviceProvider);
+                    var itemId = _vsUtils.GetProjectItemId(hierarchy, projectItem);
+
+                    _errorListHelper.AddErrorInfosToErrorList(
+                        edmSchemaErrors.Select(
+                            e => new ErrorInfo(
+                                e.Severity == EdmSchemaErrorSeverity.Error ? ErrorInfo.Severity.ERROR : ErrorInfo.Severity.WARNING,
+                                e.Message,
+                                _contextFilePath,
+                                e.ErrorCode,
+                                ErrorClass.Runtime_All)).ToList(),
+                        hierarchy,
+                        itemId);
+                }
+            }
         }
 
         /// <inheritdoc />

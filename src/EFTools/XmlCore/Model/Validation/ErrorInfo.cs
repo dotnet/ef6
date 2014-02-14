@@ -2,10 +2,10 @@
 
 namespace Microsoft.Data.Entity.Design.Model.Validation
 {
+    using Microsoft.Data.Tools.XmlDesignerBase;
     using System;
     using System.Diagnostics;
     using System.Globalization;
-    using Microsoft.Data.Tools.XmlDesignerBase;
 
     [DebuggerDisplay("{_errorClass.ToString()} | {_message}")]
     internal class ErrorInfo
@@ -13,14 +13,32 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
         private readonly Severity _severity;
         private readonly string _message;
         private readonly EFObject _item;
+        private readonly string _itemPath;
         private readonly int _errorCode;
         private readonly ErrorClass _errorClass;
 
-        internal ErrorInfo(Severity severity, string message, EFObject item, int errorCode, ErrorClass errorClass)
-        {
-            Debug.Assert(item != null, "item != null");
-            _severity = severity;
 
+        // should be used for edmx errors 
+        public ErrorInfo(Severity severity, string message, EFObject item, int errorCode, ErrorClass errorClass)
+            : this(severity, message, item, null, errorCode, errorClass)
+        {
+            Debug.Assert(item != null, "item is null");
+        }
+
+        // should be used for code first errors
+        public ErrorInfo(Severity severity, string message, string itemPath, int errorCode, ErrorClass errorClass)
+            : this(severity, message, null, itemPath, errorCode, errorClass)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(itemPath), "invalid item path");
+        }
+
+        private ErrorInfo(Severity severity, string message, EFObject item, string itemPath, int errorCode, ErrorClass errorClass)
+        {
+            Debug.Assert(item == null ^ itemPath == null, "item and itemPath are mutually exclusive");
+
+            _severity = severity;
+            _item = item;
+            _itemPath = itemPath;
             // prefix the error code in front of the error message.  This is here to help identify runtime errors that cause safe-mode
             _message = String.Format(CultureInfo.CurrentCulture, Resources.Error_Message_With_Error_Code_Prefix, errorCode, message);
             _item = item;
@@ -38,12 +56,12 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
 
         internal int GetLineNumber()
         {
-            return _item.GetLineNumber();
+            return _item == null ? 0 : _item.GetLineNumber();
         }
 
         internal int GetColumnNumber()
         {
-            return _item.GetColumnNumber();
+            return _item == null ? 0 : _item.GetColumnNumber();
         }
 
         internal bool IsError()
@@ -74,6 +92,11 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
         internal EFObject Item
         {
             get { return _item; }
+        }
+
+        public string ItemPath
+        {
+            get { return _item != null ? _item.Uri.LocalPath : _itemPath; }
         }
 
         internal int ErrorCode
