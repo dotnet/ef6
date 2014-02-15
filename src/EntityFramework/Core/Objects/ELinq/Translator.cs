@@ -1337,6 +1337,21 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
+
+        private sealed class PowerTranslator : BinaryTranslator
+        {
+            internal PowerTranslator()
+                : base(ExpressionType.Power)
+            {
+            }
+
+            protected override DbExpression TranslateBinary(
+                ExpressionConverter parent, DbExpression left, DbExpression right, BinaryExpression linq)
+            {
+                return left.Power(right);
+            }
+        }
+
         private sealed class SubtractTranslator : BinaryTranslator
         {
             internal SubtractTranslator()

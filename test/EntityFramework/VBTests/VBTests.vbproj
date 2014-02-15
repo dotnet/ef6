@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TemplateTests.vb" />
+    <Compile Include="TranslatorTests.vb" />
     <Compile Include="VbAdvancedPatterns\AddressMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>

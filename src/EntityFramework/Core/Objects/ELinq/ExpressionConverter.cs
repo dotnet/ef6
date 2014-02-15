@@ -177,6 +177,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             yield return new ModuloTranslator();
             yield return new SubtractTranslator();
             yield return new MultiplyTranslator();
+            yield return new PowerTranslator();
             yield return new NegateTranslator();
             yield return new UnaryPlusTranslator();
             yield return new MethodCallTranslator();
@@ -197,8 +198,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 ExpressionType.ArrayIndex,
                 ExpressionType.Invoke,
                 ExpressionType.Lambda,
-                ExpressionType.NewArrayBounds,
-                ExpressionType.Power);
+                ExpressionType.NewArrayBounds);
         }
 
         #endregion
