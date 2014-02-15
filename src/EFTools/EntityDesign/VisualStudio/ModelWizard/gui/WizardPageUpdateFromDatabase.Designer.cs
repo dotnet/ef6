@@ -79,6 +79,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             this.DescriptionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.DescriptionTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DescriptionTextBox.Location = new System.Drawing.Point(3, 281);
+            this.DescriptionTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.DescriptionTextBox.Multiline = true;
             this.DescriptionTextBox.Name = "DescriptionTextBox";
             this.DescriptionTextBox.ReadOnly = true;

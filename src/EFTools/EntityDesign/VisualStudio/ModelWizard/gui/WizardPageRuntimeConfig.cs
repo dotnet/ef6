@@ -200,7 +200,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 };
         }
 
-        private static Bitmap GetNotificationBitmap(RuntimeConfigState state)
+        private Bitmap GetNotificationBitmap(RuntimeConfigState state)
         {
             Bitmap bitmap;
 
@@ -217,10 +217,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 default:
                     return null;
             }
-
-            bitmap.MakeTransparent(Color.FromArgb(255, 0, 255));
-
-            return bitmap;
+            return ThemeUtils.GetThemedButtonImage(bitmap, BackColor);
         }
     }
 }
