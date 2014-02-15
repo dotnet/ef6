@@ -47,7 +47,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             InitializeComponent();
 
-             _codeFirstAllowed = CodeFirstAllowed(Wizard.ModelBuilderSettings);
+            _codeFirstAllowed = CodeFirstAllowed(Wizard.ModelBuilderSettings);
             _configFileUtils = configFileUtils
                                ?? new ConfigFileUtils(wizard.Project, wizard.ServiceProvider, wizard.ModelBuilderSettings.VSApplicationType);
 
@@ -463,6 +463,31 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var entityFrameworkAssemblyVersion = VsUtils.GetInstalledEntityFrameworkAssemblyVersion(settings.Project);
             return entityFrameworkAssemblyVersion == null
                    || entityFrameworkAssemblyVersion >= RuntimeVersion.Version6;
+        }
+
+        private void listViewModelContents_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if (e.Item.Selected)
+            {
+                e.DrawDefault = true;
+                return;
+            }
+            // custom drawing performed to avoid truncated text on non-selected items
+            // see http://entityframework.codeplex.com/workitem/2046 for more details
+            e.DrawBackground();
+            var image = e.Item.ImageList.Images[e.Item.ImageKey];
+            Debug.Assert(image!=null, "Images shouldn't be null");
+            e.Graphics.DrawImage(
+                image, 
+                e.Bounds.X + (e.Bounds.Width - image.Width) / 2, 
+                e.Bounds.Y + 2);
+            var textBounds = e.Bounds;
+            textBounds.Y = e.Bounds.Y + image.Height + 5;
+            TextRenderer.DrawText(
+                e.Graphics, e.Item.Text, e.Item.Font, textBounds, e.Item.ForeColor,
+                TextFormatFlags.WordBreak |
+                TextFormatFlags.HorizontalCenter |
+                TextFormatFlags.NoPadding);
         }
     }
 }

@@ -60,10 +60,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             this.listViewModelContents.Location = new System.Drawing.Point(0, 18);
             this.listViewModelContents.MultiSelect = false;
             this.listViewModelContents.Name = "listViewModelContents";
+            this.listViewModelContents.OwnerDraw = true;
             this.listViewModelContents.Size = new System.Drawing.Size(500, 93);
             this.listViewModelContents.TabIndex = 1;
             this.listViewModelContents.UseCompatibleStateImageBehavior = false;
             this.textboxListViewSelectionInfo.AccessibleName = ModelWizard.Properties.Resources.StartPage_AccessibleSelectionExplanation;
+            this.listViewModelContents.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listViewModelContents_DrawItem);
             this.listViewModelContents.SelectedIndexChanged += new System.EventHandler(this.listViewModelContents_SelectedIndexChanged);
             this.listViewModelContents.DoubleClick += new System.EventHandler(this.listViewModelContents_DoubleClick);
             // 

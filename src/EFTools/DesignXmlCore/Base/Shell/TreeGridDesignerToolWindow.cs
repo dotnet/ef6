@@ -166,7 +166,11 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
             _treeControl.DisabledItemForeColor = VSColorTheme.GetThemedColor(EnvironmentColors.SystemGrayTextColorKey);
             _treeControl.BackColor = VSColorTheme.GetThemedColor(TreeViewColors.BackgroundColorKey);
             _treeControl.ForeColor = VSColorTheme.GetThemedColor(TreeViewColors.BackgroundTextColorKey);
+#if VS11
             _treeControl.GridLinesColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTabBorderColorKey);
+#elif VS12
+            _treeControl.GridLinesColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowContentGridColorKey);
+#endif
         }
 
         /// <summary>
