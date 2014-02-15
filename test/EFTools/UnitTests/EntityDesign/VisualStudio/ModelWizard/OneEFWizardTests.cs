@@ -40,6 +40,40 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         }
 
         [Fact]
+        public void RunFinished_should_not_add_connection_string_to_config_file_if_config_file_already_contains_same_connection()
+        {
+            var mockConfig = new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(),
+                VisualStudioProjectSystem.WindowsApplication, null, null);
+
+            var configXml = new XmlDocument();
+            configXml.LoadXml(
+                @"<configuration>" + Environment.NewLine +
+                @"  <connectionStrings>" + Environment.NewLine +
+                @"    <add name=""myConnStr"" connectionString=""data source=(localdb)\v11.0;initial catalog=App.MyContext;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework"" providerName=""System.Data.SqlClient"" />" + Environment.NewLine +
+                @"  </connectionStrings>" + Environment.NewLine +
+                @"</configuration>"
+            );
+            mockConfig.Setup(u => u.LoadConfig()).Returns(configXml);
+
+            var mockSettings = new Mock<ModelBuilderSettings> { CallBase = true };
+            mockSettings
+                .Setup(s => s.AppConfigConnectionString)
+                .Returns(@"data source=(localdb)\v11.0;initial catalog=App.MyContext;integrated security=True");
+            mockSettings.Setup(s => s.RuntimeProviderInvariantName).Returns("System.Data.SqlClient");
+
+            var settings = mockSettings.Object;
+            settings.SaveConnectionStringInAppConfig = true;
+            settings.AppConfigConnectionPropertyName = "myConnStr";
+
+            new OneEFWizard(mockConfig.Object, new Mock<IVsUtils>().Object)
+                .RunFinished(settings, null);
+
+            mockConfig.Verify(m => m.GetOrCreateConfigFile(), Times.Once());
+            mockConfig.Verify(m => m.LoadConfig(), Times.Once());
+            mockConfig.Verify(m => m.SaveConfig(It.IsAny<XmlDocument>()), Times.Never());
+        }
+
+        [Fact]
         public void RunFinished_adds_EF_attributes_and_saves_connection_string_to_config_file()
         {
             var mockConfig = new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(),
@@ -63,7 +97,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 .RunFinished(settings, null);
 
             mockConfig.Verify(m => m.GetOrCreateConfigFile(), Times.Once());
-            mockConfig.Verify(m => m.LoadConfig(), Times.Once());
+            mockConfig.Verify(m => m.LoadConfig(), Times.Exactly(2));
             mockConfig.Verify(m => m.SaveConfig(
                 It.Is<XmlDocument>(config => config.SelectSingleNode("/configuration/connectionStrings/add[@name='myConnStr']/@connectionString").Value ==
                 @"data source=(localdb)\v11.0;initial catalog=App.MyContext;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework")), 
