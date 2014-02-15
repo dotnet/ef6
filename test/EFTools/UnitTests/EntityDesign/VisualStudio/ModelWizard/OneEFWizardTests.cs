@@ -2,7 +2,9 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
+    using System.CodeDom.Compiler;
     using System.Data.Entity.Infrastructure;
+    using System.IO;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.CodeGeneration;
     using Microsoft.Data.Entity.Design.Model.Validation;
@@ -19,6 +21,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using UnitTests.TestHelpers;
     using Xunit;
     using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+    using System.Reflection;
 
     public class OneEFWizardTests
     {
@@ -28,7 +31,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             var mockConfig = new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), 
                 VisualStudioProjectSystem.WindowsApplication, null, null);
 
-            new OneEFWizard(mockConfig.Object)
+            new OneEFWizard(mockConfig.Object, Mock.Of<IVsUtils>())
                 .RunFinished(new ModelBuilderSettings { SaveConnectionStringInAppConfig = false}, null);
 
             mockConfig.Verify(m => m.GetOrCreateConfigFile(), Times.Never());
@@ -56,7 +59,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             settings.SaveConnectionStringInAppConfig = true;
             settings.AppConfigConnectionPropertyName = "myConnStr";
 
-            new OneEFWizard(mockConfig.Object)
+            new OneEFWizard(mockConfig.Object, Mock.Of<IVsUtils>())
                 .RunFinished(settings, null);
 
             mockConfig.Verify(m => m.GetOrCreateConfigFile(), Times.Once());
@@ -65,6 +68,42 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 It.Is<XmlDocument>(config => config.SelectSingleNode("/configuration/connectionStrings/add[@name='myConnStr']/@connectionString").Value ==
                 @"data source=(localdb)\v11.0;initial catalog=App.MyContext;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework")), 
                 Times.Once());
+        }
+
+        [Fact]
+        public void RunFinished_checks_out_files_and_creates_project_items()
+        {
+            var mockProjectItems = new Mock<ProjectItems>();
+            var mockProject = new Mock<Project>();
+            mockProject.Setup(p => p.ProjectItems).Returns(mockProjectItems.Object);
+
+            var mockVsUtils = new Mock<IVsUtils>();
+            var settings = new ModelBuilderSettings {Project = mockProject.Object };
+            var mockConfig = new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(),
+                VisualStudioProjectSystem.WindowsApplication, null, null);
+
+            var generatedCode = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("context", string.Empty),
+                new KeyValuePair<string, string>(Path.GetFileName(Assembly.GetExecutingAssembly().Location), string.Empty),
+                new KeyValuePair<string, string>(Path.GetRandomFileName(), string.Empty)
+            };
+
+            new OneEFWizard(configFileUtils: mockConfig.Object, vsUtils: mockVsUtils.Object, generatedCode: generatedCode)
+                .RunFinished(settings, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+
+            // need to Skip(1) since the first item is the DbContext file which is being added as a project item
+            mockVsUtils.Verify(
+                u => u.WriteCheckoutTextFilesInProject(
+                    It.Is<Dictionary<string, object>>(
+                        fileMap => fileMap.Keys.Select(Path.GetFileName)
+                            .SequenceEqual(generatedCode.Skip(1).Select(i => i.Key)))));
+
+            var existingFilePath = Assembly.GetExecutingAssembly().Location;
+            mockProjectItems.Verify(i => i.AddFromFile(existingFilePath), Times.Once());
+
+            // verify we only added the file that existed 
+            mockProjectItems.Verify(i => i.AddFromFile(It.IsAny<string>()), Times.Once());
         }
 
         [Fact]
@@ -85,7 +124,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     { "$rootnamespace$", "Project.Data" }
                 };
 
-            new OneEFWizard()
+            new OneEFWizard(vsUtils:Mock.Of<IVsUtils>())
                 .RunStarted(modelBuilderSettings, mockCodeGenerator.Object, replacementsDictionary);
 
             Assert.Equal("context code", replacementsDictionary["$contextfilecontents$"]);
@@ -109,7 +148,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     { "$rootnamespace$", "Project.Data" }
                 };
 
-            new OneEFWizard()
+            new OneEFWizard(vsUtils: Mock.Of<IVsUtils>())
                 .RunStarted(modelBuilderSettings, mockCodeGenerator.Object, replacementsDictionary);
 
             mockCodeGenerator.Verify(g => g.Generate(It.IsAny<DbModel>(), "Project.Data", "MyContext", "ConnString"), Times.Once());
@@ -133,7 +172,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     { "$rootnamespace$", "Project.Data" }
                 };
 
-            new OneEFWizard()
+            new OneEFWizard(vsUtils: Mock.Of<IVsUtils>())
                 .RunStarted(modelBuilderSettings, mockCodeGenerator.Object, replacementsDictionary);
 
             mockCodeGenerator.Verify(g => g.Generate(It.IsAny<DbModel>(), "Project.Data", "MyContext", "MyContext"), Times.Once());

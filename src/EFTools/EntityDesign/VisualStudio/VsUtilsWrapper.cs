@@ -31,11 +31,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return VsUtils.GetLanguageForProject(project);
         }
 
-        public void WriteCheckoutXmlFilesInProject(IDictionary<string, object> filesMap)
-        {
-            VsUtils.WriteCheckoutXmlFilesInProject(filesMap);
-        }
-
         public uint GetProjectItemId(IVsHierarchy hierarchy, ProjectItem projectItem)
         {
             return VsUtils.GetProjectItemId(hierarchy, projectItem);
@@ -44,6 +39,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         public IVsHierarchy GetVsHierarchy(Project project, IServiceProvider serviceProvider)
         {
             return VsUtils.GetVsHierarchy(project, serviceProvider);
+        }
+
+        public void WriteCheckoutXmlFilesInProject(IDictionary<string, object> filesMap)
+        {
+            VsUtils.WriteCheckoutXmlFilesInProject(filesMap);
+        }
+
+        public void WriteCheckoutTextFilesInProject(IDictionary<string, object> filesMap)
+        {
+            VsUtils.WriteCheckoutTextFilesInProject(filesMap);
         }
     }
 }
