@@ -2,6 +2,7 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
+    using System;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.CodeGeneration;
     using Microsoft.Data.Entity.Design.Model.Validation;
@@ -41,10 +42,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         }
 
         // testing only
-        internal OneEFWizard(ConfigFileUtils configFileUtils = null, IVsUtils vsUtils = null, IErrorListHelper errorListHelper = null, ModelGenErrorCache errorCache = null)
+        internal OneEFWizard(ConfigFileUtils configFileUtils = null, IVsUtils vsUtils = null, IErrorListHelper errorListHelper = null, ModelGenErrorCache errorCache = null, 
+            List<KeyValuePair<string, string>> generatedCode = null)
         {
             _configFileUtils = configFileUtils;
-            _generatedCode = new List<KeyValuePair<string, string>>();
+            _generatedCode = generatedCode ?? new List<KeyValuePair<string, string>>();
             _vsUtils = vsUtils;
             _errorListHelper = errorListHelper;
             _errorCache = errorCache;
@@ -115,7 +117,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
             Debug.Assert(_generatedCode.Count > 0, "code has not been generated");
 
-            // TODO: verify if files don't exist
             // TODO: handle exceptions from code gen
 
             replacementsDictionary["$contextfilecontents$"] = _generatedCode[0].Value;
@@ -132,12 +133,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         {
             var project = settings.Project;
 
-            foreach (var generatedItem in _generatedCode.Skip(1))
+            var filesToSave = _generatedCode.Skip(1)
+                .ToDictionary(kvp => Path.Combine(targetDirectory, kvp.Key), kvp => (object)kvp.Value);
+
+            try
             {
-                VsUtils.AddNewFile(
-                    project,
-                    Path.Combine(targetDirectory, generatedItem.Key),
-                    generatedItem.Value);
+                _vsUtils.WriteCheckoutTextFilesInProject(filesToSave);
+            }
+            finally
+            {
+                // even if saving fails we actually might have created some files
+                // and we should add them to the project
+                AddFilesToProject(project, filesToSave.Keys);
             }
 
             _configFileUtils =
@@ -168,6 +175,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 connectionString,
                 settings.RuntimeProviderInvariantName);
             _configFileUtils.SaveConfig(configXml);
+        }
+
+        private static void AddFilesToProject(Project project, IEnumerable<string> paths)
+        {
+            foreach (var path in paths.Where(File.Exists))
+            {
+                project.ProjectItems.AddFromFile(path);
+            }
         }
 
         /// <inheritdoc />

@@ -18,5 +18,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         VisualStudioProjectSystem GetApplicationType(IServiceProvider serviceProvider, Project project);
         LangEnum GetLanguageForProject(Project project);
         void WriteCheckoutXmlFilesInProject(IDictionary<string, object> filesMap);
+        void WriteCheckoutTextFilesInProject(IDictionary<string, object> filesMap);
     }
 }
