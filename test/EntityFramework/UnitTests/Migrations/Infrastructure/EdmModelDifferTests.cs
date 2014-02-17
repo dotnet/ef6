@@ -3010,6 +3010,42 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal(0, operations.Count());
         }
 
+        public class Developer
+        {
+            public int CostCenter { get; set; }
+            public string Alias { get; set; }
+            public ICollection<Checkin> Checkins { get; set; }
+        }
+
+        public class Checkin
+        {
+            public int Id { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_not_detect_diffs_when_upgrading_model_with_entity_having_composite_key_to_6_1()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Developer>().HasKey(d => new { d.CostCenter, d.Alias });
+            modelBuilder.Entity<Checkin>();
+            modelBuilder.Conventions.Remove<ForeignKeyIndexConvention>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Developer>().HasKey(d => new { d.CostCenter, d.Alias });
+            modelBuilder.Entity<Checkin>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel(), sourceModelVersion: "6.0.0");
+
+            Assert.Equal(0, operations.Count());
+        }
+
         [MigrationsTheory]
         public void Should_detect_diffs_when_upgrading_to_6_1_and_new_user_index()
         {
