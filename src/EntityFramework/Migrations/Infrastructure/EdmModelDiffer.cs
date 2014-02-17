@@ -231,19 +231,27 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 var dependentColumnNames = associationType.Constraint.ToProperties.Select(p => p.Name);
                 var indexName = IndexOperation.BuildDefaultName(dependentColumnNames);
-                var indexAttribute = new IndexAttribute(indexName);
 
                 var tableName
                     = GetSchemaQualifiedName(
                         modelMetadata.StoreEntityContainer.EntitySets
                             .Single(es => es.ElementType == associationType.Constraint.DependentEnd.GetEntityType()));
 
-                var consolidatedIndex = new ConsolidatedIndex(tableName, indexAttribute);
+                ConsolidatedIndex consolidatedIndex;
+                var dependentColumns = associationType.Constraint.ToProperties;
 
-                foreach (var dependentColumn in associationType.Constraint.ToProperties)
+                if (dependentColumns.Count > 0)
                 {
-                    indexAttribute.Order++;
-                    consolidatedIndex.Add(dependentColumn.Name, indexAttribute);
+                    consolidatedIndex = new ConsolidatedIndex(tableName, dependentColumns[0].Name, new IndexAttribute(indexName, 0));
+
+                    for (var i = 1; i < dependentColumns.Count; i++)
+                    {
+                        consolidatedIndex.Add(dependentColumns[i].Name, new IndexAttribute(indexName, i));
+                    }
+                }
+                else
+                {
+                    consolidatedIndex = new ConsolidatedIndex(tableName, new IndexAttribute(indexName));
                 }
 
                 yield return consolidatedIndex;
