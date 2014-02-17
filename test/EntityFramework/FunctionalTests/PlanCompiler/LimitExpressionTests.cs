@@ -7,24 +7,25 @@ namespace PlanCompilerTests
     using AdvancedPatternsModel;
     using Xunit;
     using System.IO;
-    using System;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Data.Entity.Query;
 
     /// <summary>
     /// Tests for DbLimitExpression nodes in the CQT tree generation process.
     /// </summary>
-    public class LimitExpressionTests : FunctionalTestBase
+    public abstract class LimitExpressionTests<ArubaContextT, AdvancedPatternsMasterContextT> : FunctionalTestBase
+        where ArubaContextT : ArubaContext, new()
+        where AdvancedPatternsMasterContextT : AdvancedPatternsMasterContext, new()
     {
         #region Infrastructure/setup
 
         public LimitExpressionTests()
         {
-            using (var context = new AdvancedPatternsMasterContext())
+            using (var context = new AdvancedPatternsMasterContextT())
             {
                 context.Database.Initialize(false);
             }
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Initialize(false);
             }
@@ -34,24 +35,45 @@ namespace PlanCompilerTests
 
         #region Tests that generate a limit on a simple model
 
+        #region Abstract expected results
+    
+        protected abstract string Limit_SimpleModel_First_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_OrderBy_First_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_OrderBy_Skip_First_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_FirstOrDefault_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_OrderBy_FirstOrDefault_expectedSql { get; }
+
+        protected abstract string Limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql { get;  }
+
+        protected abstract string Limit_SimpleModel_Single_expectedSql { get; }
+
+        protected abstract string Limit_SimpleModel_OrderBy_Single_expectedSql { get; }
+
+        protected abstract string Limit_SimpleModel_OrderBy_Skip_Single_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_SingleOrDefault_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_OrderBy_SingleOrDefault_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_Take_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_OrderBy_Take_expectedSql { get; }
+        
+        protected abstract string Limit_SimpleModel_OrderBy_Skip_Take_expectedSql { get; }
+
+        #endregion
+
         [Fact]
         public void Limit_SimpleModel_First()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -67,29 +89,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_First_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_First()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -106,32 +115,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_First_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_Skip_First()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Filter1].[Id1] AS [Id], 
-    [Filter1].[FirstName] AS [FirstName], 
-    [Filter1].[LastName] AS [LastName], 
-    [Filter1].[Alias] AS [Alias], 
-    [Filter1].[Id2] AS [Id1], 
-    [Filter1].[Name] AS [Name], 
-    [Filter1].[Purpose] AS [Purpose], 
-    [Filter1].[Geometry] AS [Geometry]
-    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
-        FROM  [dbo].[ArubaOwners] AS [Extent1]
-        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE N'Diego' = [Extent1].[FirstName]
-    )  AS [Filter1]
-    WHERE [Filter1].[row_number] > 2
-    ORDER BY [Filter1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -148,28 +141,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_Skip_First_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_FirstOrDefault()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -185,29 +166,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_FirstOrDefault_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_FirstOrDefault()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -224,32 +192,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_FirstOrDefault_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_Skip_FirstOrDefault()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Filter1].[Id1] AS [Id], 
-    [Filter1].[FirstName] AS [FirstName], 
-    [Filter1].[LastName] AS [LastName], 
-    [Filter1].[Alias] AS [Alias], 
-    [Filter1].[Id2] AS [Id1], 
-    [Filter1].[Name] AS [Name], 
-    [Filter1].[Purpose] AS [Purpose], 
-    [Filter1].[Geometry] AS [Geometry]
-    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
-        FROM  [dbo].[ArubaOwners] AS [Extent1]
-        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE N'Diego' = [Extent1].[FirstName]
-    )  AS [Filter1]
-    WHERE [Filter1].[row_number] > 2
-    ORDER BY [Filter1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -266,28 +218,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_Single()
         {
-            var expectedSql =
-@"SELECT TOP (2) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -303,29 +243,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_Single_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_Single()
         {
-            var expectedSql =
-@"SELECT TOP (2) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -342,32 +269,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_Single_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_Skip_Single()
         {
-            var expectedSql =
-@"SELECT TOP (2) 
-    [Filter1].[Id1] AS [Id], 
-    [Filter1].[FirstName] AS [FirstName], 
-    [Filter1].[LastName] AS [LastName], 
-    [Filter1].[Alias] AS [Alias], 
-    [Filter1].[Id2] AS [Id1], 
-    [Filter1].[Name] AS [Name], 
-    [Filter1].[Purpose] AS [Purpose], 
-    [Filter1].[Geometry] AS [Geometry]
-    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
-        FROM  [dbo].[ArubaOwners] AS [Extent1]
-        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE N'Diego' = [Extent1].[FirstName]
-    )  AS [Filter1]
-    WHERE [Filter1].[row_number] > 2
-    ORDER BY [Filter1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -384,28 +295,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_Skip_Single_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_SingleOrDefault()
         {
-            var expectedSql =
-@"SELECT TOP (2) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -421,29 +320,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_SingleOrDefault_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_SingleOrDefault()
         {
-            var expectedSql =
-@"SELECT TOP (2) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -460,32 +346,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_SingleOrDefault_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_Skip_SingleOrDefault()
         {
-            var expectedSql =
-@"SELECT TOP (2) 
-    [Filter1].[Id1] AS [Id], 
-    [Filter1].[FirstName] AS [FirstName], 
-    [Filter1].[LastName] AS [LastName], 
-    [Filter1].[Alias] AS [Alias], 
-    [Filter1].[Id2] AS [Id1], 
-    [Filter1].[Name] AS [Name], 
-    [Filter1].[Purpose] AS [Purpose], 
-    [Filter1].[Geometry] AS [Geometry]
-    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
-        FROM  [dbo].[ArubaOwners] AS [Extent1]
-        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE N'Diego' = [Extent1].[FirstName]
-    )  AS [Filter1]
-    WHERE [Filter1].[row_number] > 2
-    ORDER BY [Filter1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -502,28 +372,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_Take()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -539,29 +397,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_Take_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_Take()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Extent1].[Id] AS [Id], 
-    [Extent1].[FirstName] AS [FirstName], 
-    [Extent1].[LastName] AS [LastName], 
-    [Extent1].[Alias] AS [Alias], 
-    [Extent2].[Id] AS [Id1], 
-    [Extent2].[Name] AS [Name], 
-    [Extent2].[Purpose] AS [Purpose], 
-    [Extent2].[Geometry] AS [Geometry]
-    FROM  [dbo].[ArubaOwners] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-    WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -578,32 +423,16 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_Take_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
         [Fact]
         public void Limit_SimpleModel_OrderBy_Skip_Take()
         {
-            var expectedSql =
-@"SELECT TOP (1) 
-    [Filter1].[Id1] AS [Id], 
-    [Filter1].[FirstName] AS [FirstName], 
-    [Filter1].[LastName] AS [LastName], 
-    [Filter1].[Alias] AS [Alias], 
-    [Filter1].[Id2] AS [Id1], 
-    [Filter1].[Name] AS [Name], 
-    [Filter1].[Purpose] AS [Purpose], 
-    [Filter1].[Geometry] AS [Geometry]
-    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
-        FROM  [dbo].[ArubaOwners] AS [Extent1]
-        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
-        WHERE N'Diego' = [Extent1].[FirstName]
-    )  AS [Filter1]
-    WHERE [Filter1].[row_number] > 2
-    ORDER BY [Filter1].[LastName] ASC";
             var log = new StringWriter();
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 context.Database.Log = log.Write;
                 try
@@ -620,7 +449,8 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_SimpleModel_OrderBy_Skip_Take_expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -628,10 +458,766 @@ namespace PlanCompilerTests
 
         #region Tests that generate a limit on a complex model
 
+        #region Abstract expected results
+
+        protected abstract string Limit_ComplexModel_First_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_First_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_Skip_First_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_FirstOrDefault_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_FirstOrDefault_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_Single_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_Single_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_Skip_Single_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_SingleOrDefault_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_SingleOrDefault_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_Take_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_Take_expectedSql { get; }
+
+        protected abstract string Limit_ComplexModel_OrderBy_Skip_Take_expectedSql { get; }
+
+        #endregion
+
         [Fact]
         public void Limit_ComplexModel_First()
         {
-            string expectedSql =
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                select building;
+                    var result = query.First();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_First_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_First()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.First();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_First_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Skip_First()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.Skip(2).First();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_Skip_First_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_FirstOrDefault()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                select building;
+                    var result = query.FirstOrDefault();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_FirstOrDefault_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_FirstOrDefault()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.FirstOrDefault();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_FirstOrDefault_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Skip_FirstOrDefault()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.Skip(2).FirstOrDefault();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_Single()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                select building;
+                    var result = query.Single();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_Single_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Single()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.Single();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_Single_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Skip_Single()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.Skip(2).Single();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_Skip_Single_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_SingleOrDefault()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                select building;
+                    var result = query.SingleOrDefault();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_SingleOrDefault_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_SingleOrDefault()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.SingleOrDefault();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_SingleOrDefault_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Skip_SingleOrDefault()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.Skip(2).SingleOrDefault();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_Take()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                select building;
+                    var result = query.Take(1).ToList();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_Take_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Take()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.Take(1).ToList();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_Take_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Skip_Take()
+        {
+            var log = new StringWriter();
+            using (var context = new AdvancedPatternsMasterContextT())
+            {
+                context.Database.Log = log.Write;
+                try
+                {
+                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                                where building.Name == "Building One"
+                                orderby building.Address.ZipCode
+                                select building;
+                    var result = query.Skip(2).Take(1).ToList();
+                }
+                catch
+                {
+                    //we are only trying to capture the query, the result is not important for this test
+                }
+            }
+            Assert.True(
+                QueryTestHelpers.StripFormatting(log.ToString())
+                    .Contains(QueryTestHelpers.StripFormatting(Limit_ComplexModel_OrderBy_Skip_Take_expectedSql)),
+                "The resulting query is different from the expected value");
+        }
+
+        #endregion
+    }
+
+    public class LimitExpressionTests : LimitExpressionTests<ArubaContext, AdvancedPatternsMasterContext>
+    {
+
+        #region Simple model expected results
+
+        protected override string Limit_SimpleModel_First_expectedSql 
+        { 
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_First_expectedSql 
+        {
+            get
+            {
+                return 
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_First_expectedSql 
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Filter1].[Id1] AS [Id], 
+    [Filter1].[FirstName] AS [FirstName], 
+    [Filter1].[LastName] AS [LastName], 
+    [Filter1].[Alias] AS [Alias], 
+    [Filter1].[Id2] AS [Id1], 
+    [Filter1].[Name] AS [Name], 
+    [Filter1].[Purpose] AS [Purpose], 
+    [Filter1].[Geometry] AS [Geometry]
+    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
+        FROM  [dbo].[ArubaOwners] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+        WHERE N'Diego' = [Extent1].[FirstName]
+    )  AS [Filter1]
+    WHERE [Filter1].[row_number] > 2
+    ORDER BY [Filter1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_FirstOrDefault_expectedSql 
+        { 
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_FirstOrDefault_expectedSql 
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql 
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Filter1].[Id1] AS [Id], 
+    [Filter1].[FirstName] AS [FirstName], 
+    [Filter1].[LastName] AS [LastName], 
+    [Filter1].[Alias] AS [Alias], 
+    [Filter1].[Id2] AS [Id1], 
+    [Filter1].[Name] AS [Name], 
+    [Filter1].[Purpose] AS [Purpose], 
+    [Filter1].[Geometry] AS [Geometry]
+    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
+        FROM  [dbo].[ArubaOwners] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+        WHERE N'Diego' = [Extent1].[FirstName]
+    )  AS [Filter1]
+    WHERE [Filter1].[row_number] > 2
+    ORDER BY [Filter1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Filter1].[Id1] AS [Id], 
+    [Filter1].[FirstName] AS [FirstName], 
+    [Filter1].[LastName] AS [LastName], 
+    [Filter1].[Alias] AS [Alias], 
+    [Filter1].[Id2] AS [Id1], 
+    [Filter1].[Name] AS [Name], 
+    [Filter1].[Purpose] AS [Purpose], 
+    [Filter1].[Geometry] AS [Geometry]
+    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
+        FROM  [dbo].[ArubaOwners] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+        WHERE N'Diego' = [Extent1].[FirstName]
+    )  AS [Filter1]
+    WHERE [Filter1].[row_number] > 2
+    ORDER BY [Filter1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Filter1].[Id1] AS [Id], 
+    [Filter1].[FirstName] AS [FirstName], 
+    [Filter1].[LastName] AS [LastName], 
+    [Filter1].[Alias] AS [Alias], 
+    [Filter1].[Id2] AS [Id1], 
+    [Filter1].[Name] AS [Name], 
+    [Filter1].[Purpose] AS [Purpose], 
+    [Filter1].[Geometry] AS [Geometry]
+    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
+        FROM  [dbo].[ArubaOwners] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+        WHERE N'Diego' = [Extent1].[FirstName]
+    )  AS [Filter1]
+    WHERE [Filter1].[row_number] > 2
+    ORDER BY [Filter1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Filter1].[Id1] AS [Id], 
+    [Filter1].[FirstName] AS [FirstName], 
+    [Filter1].[LastName] AS [LastName], 
+    [Filter1].[Alias] AS [Alias], 
+    [Filter1].[Id2] AS [Id1], 
+    [Filter1].[Name] AS [Name], 
+    [Filter1].[Purpose] AS [Purpose], 
+    [Filter1].[Geometry] AS [Geometry]
+    FROM ( SELECT [Extent1].[Id] AS [Id1], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], [Extent2].[Id] AS [Id2], [Extent2].[Name] AS [Name], [Extent2].[Purpose] AS [Purpose], [Extent2].[Geometry] AS [Geometry], row_number() OVER (ORDER BY [Extent1].[LastName] ASC) AS [row_number]
+        FROM  [dbo].[ArubaOwners] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+        WHERE N'Diego' = [Extent1].[FirstName]
+    )  AS [Filter1]
+    WHERE [Filter1].[row_number] > 2
+    ORDER BY [Filter1].[LastName] ASC";
+            }
+        }
+
+        #endregion
+
+        #region Complex model expected results
+
+        protected override string Limit_ComplexModel_First_expectedSql
+        {
+            get
+            {
+                return
 @"SELECT 
     [Limit1].[C1] AS [C1],
     [Limit1].[BuildingId] AS [BuildingId], 
@@ -664,31 +1250,14 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                select building;
-                    var result = query.First();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_First()
+        protected override string Limit_ComplexModel_OrderBy_First_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (1) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -722,32 +1291,14 @@ namespace PlanCompilerTests
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.First();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_Skip_First()
+        protected override string Limit_ComplexModel_OrderBy_Skip_First_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (1) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -784,32 +1335,14 @@ namespace PlanCompilerTests
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.Skip(2).First();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_FirstOrDefault()
+        protected override string Limit_ComplexModel_FirstOrDefault_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT 
     [Limit1].[C1] AS [C1], 
     [Limit1].[BuildingId] AS [BuildingId], 
@@ -842,31 +1375,14 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                select building;
-                    var result = query.FirstOrDefault();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_FirstOrDefault()
+        protected override string Limit_ComplexModel_OrderBy_FirstOrDefault_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (1) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -900,32 +1416,14 @@ namespace PlanCompilerTests
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.FirstOrDefault();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_Skip_FirstOrDefault()
+        protected override string Limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (1) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -962,32 +1460,14 @@ namespace PlanCompilerTests
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.Skip(2).FirstOrDefault();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_Single()
+        protected override string Limit_ComplexModel_Single_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT 
     [Limit1].[C1] AS [C1], 
     [Limit1].[BuildingId] AS [BuildingId], 
@@ -1020,31 +1500,14 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                select building;
-                    var result = query.Single();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_Single()
+        protected override string Limit_ComplexModel_OrderBy_Single_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (2) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -1078,32 +1541,14 @@ namespace PlanCompilerTests
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.Single();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_Skip_Single()
+        protected override string Limit_ComplexModel_OrderBy_Skip_Single_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (2) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -1140,32 +1585,14 @@ namespace PlanCompilerTests
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.Skip(2).Single();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_SingleOrDefault()
+        protected override string Limit_ComplexModel_SingleOrDefault_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT 
     [Limit1].[C1] AS [C1], 
     [Limit1].[BuildingId] AS [BuildingId], 
@@ -1198,31 +1625,14 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                select building;
-                    var result = query.SingleOrDefault();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_SingleOrDefault()
+        protected override string Limit_ComplexModel_OrderBy_SingleOrDefault_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (2) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -1256,32 +1666,14 @@ namespace PlanCompilerTests
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.SingleOrDefault();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_Skip_SingleOrDefault()
+        protected override string Limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (2) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -1318,32 +1710,14 @@ namespace PlanCompilerTests
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.Skip(2).SingleOrDefault();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_Take()
+        protected override string Limit_ComplexModel_Take_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT 
     [Limit1].[C1] AS [C1], 
     [Limit1].[BuildingId] AS [BuildingId], 
@@ -1376,31 +1750,14 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Limit1]";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                select building;
-                    var result = query.Take(1).ToList();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_Take()
+        protected override string Limit_ComplexModel_OrderBy_Take_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (1) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -1434,32 +1791,14 @@ namespace PlanCompilerTests
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.Take(1).ToList();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
-        [Fact]
-        public void Limit_ComplexModel_OrderBy_Skip_Take()
+        protected override string Limit_ComplexModel_OrderBy_Skip_Take_expectedSql
         {
-            string expectedSql =
+            get
+            {
+                return
 @"SELECT TOP (1) 
     [Project1].[C1] AS [C1], 
     [Project1].[BuildingId] AS [BuildingId], 
@@ -1496,28 +1835,955 @@ namespace PlanCompilerTests
     )  AS [Project1]
     WHERE [Project1].[row_number] > 2
     ORDER BY [Project1].[Address_ZipCode] ASC";
-            var log = new StringWriter();
-            using (var context = new AdvancedPatternsMasterContext())
-            {
-                context.Database.Log = log.Write;
-                try
-                {
-                    var query = from building in context.Buildings.Include(b => b.PrincipalMailRoom)
-                                where building.Name == "Building One"
-                                orderby building.Address.ZipCode
-                                select building;
-                    var result = query.Skip(2).Take(1).ToList();
-                }
-                catch
-                {
-                    //we are only trying to capture the query, the result is not important for this test
-                }
             }
-            Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
-                "The resulting query is different from the expected value");
         }
 
         #endregion
+
     }
+
+    public class LimitExpressionTests_2012 : LimitExpressionTests<ArubaContext_2012, AdvancedPatternsMasterContext_2012>
+    {
+
+        #region Simple model expected results
+
+        protected override string Limit_SimpleModel_First_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_First_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_First_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC
+    OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_SimpleModel_FirstOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_FirstOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC
+    OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_SimpleModel_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC
+    OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_SimpleModel_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC
+    OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_SimpleModel_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC";
+            }
+        }
+
+        protected override string Limit_SimpleModel_OrderBy_Skip_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName], 
+    [Extent1].[Alias] AS [Alias], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Purpose] AS [Purpose], 
+    [Extent2].[Geometry] AS [Geometry]
+    FROM  [dbo].[ArubaOwners] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
+    WHERE N'Diego' = [Extent1].[FirstName]
+    ORDER BY [Extent1].[LastName] ASC
+    OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
+            }
+        }
+
+        #endregion
+
+        #region Complex model expected results
+
+        protected override string Limit_ComplexModel_First_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Limit1].[C1] AS [C1],
+    [Limit1].[BuildingId] AS [BuildingId], 
+    [Limit1].[Name] AS [Name], 
+    [Limit1].[Value] AS [Value], 
+    [Limit1].[Address_Street] AS [Address_Street], 
+    [Limit1].[Address_City] AS [Address_City], 
+    [Limit1].[Address_State] AS [Address_State], 
+    [Limit1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Limit1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Limit1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Limit1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Limit1].[id] AS [id], 
+    [Limit1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT TOP (1) 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Limit1]";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_First_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_Skip_First_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC
+    OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_ComplexModel_FirstOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Limit1].[C1] AS [C1], 
+    [Limit1].[BuildingId] AS [BuildingId], 
+    [Limit1].[Name] AS [Name], 
+    [Limit1].[Value] AS [Value], 
+    [Limit1].[Address_Street] AS [Address_Street], 
+    [Limit1].[Address_City] AS [Address_City], 
+    [Limit1].[Address_State] AS [Address_State], 
+    [Limit1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Limit1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Limit1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Limit1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Limit1].[id] AS [id], 
+    [Limit1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT TOP (1) 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Limit1]";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_FirstOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC
+    OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_ComplexModel_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Limit1].[C1] AS [C1], 
+    [Limit1].[BuildingId] AS [BuildingId], 
+    [Limit1].[Name] AS [Name], 
+    [Limit1].[Value] AS [Value], 
+    [Limit1].[Address_Street] AS [Address_Street], 
+    [Limit1].[Address_City] AS [Address_City], 
+    [Limit1].[Address_State] AS [Address_State], 
+    [Limit1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Limit1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Limit1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Limit1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Limit1].[id] AS [id], 
+    [Limit1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT TOP (2) 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Limit1]";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_Skip_Single_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC
+    OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_ComplexModel_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Limit1].[C1] AS [C1], 
+    [Limit1].[BuildingId] AS [BuildingId], 
+    [Limit1].[Name] AS [Name], 
+    [Limit1].[Value] AS [Value], 
+    [Limit1].[Address_Street] AS [Address_Street], 
+    [Limit1].[Address_City] AS [Address_City], 
+    [Limit1].[Address_State] AS [Address_State], 
+    [Limit1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Limit1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Limit1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Limit1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Limit1].[id] AS [id], 
+    [Limit1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT TOP (2) 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Limit1]";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (2) 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC
+    OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
+            }
+        }
+
+        protected override string Limit_ComplexModel_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Limit1].[C1] AS [C1], 
+    [Limit1].[BuildingId] AS [BuildingId], 
+    [Limit1].[Name] AS [Name], 
+    [Limit1].[Value] AS [Value], 
+    [Limit1].[Address_Street] AS [Address_Street], 
+    [Limit1].[Address_City] AS [Address_City], 
+    [Limit1].[Address_State] AS [Address_State], 
+    [Limit1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Limit1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Limit1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Limit1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Limit1].[id] AS [id], 
+    [Limit1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT TOP (1) 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Limit1]";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT TOP (1) 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC";
+            }
+        }
+
+        protected override string Limit_ComplexModel_OrderBy_Skip_Take_expectedSql
+        {
+            get
+            {
+                return
+@"SELECT 
+    [Project1].[C1] AS [C1], 
+    [Project1].[BuildingId] AS [BuildingId], 
+    [Project1].[Name] AS [Name], 
+    [Project1].[Value] AS [Value], 
+    [Project1].[Address_Street] AS [Address_Street], 
+    [Project1].[Address_City] AS [Address_City], 
+    [Project1].[Address_State] AS [Address_State], 
+    [Project1].[Address_ZipCode] AS [Address_ZipCode], 
+    [Project1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+    [Project1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+    [Project1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+    [Project1].[id] AS [id], 
+    [Project1].[BuildingId1] AS [BuildingId1]
+    FROM ( SELECT 
+        [Extent1].[BuildingId] AS [BuildingId], 
+        [Extent1].[Name] AS [Name], 
+        [Extent1].[Value] AS [Value], 
+        [Extent1].[Address_Street] AS [Address_Street], 
+        [Extent1].[Address_City] AS [Address_City], 
+        [Extent1].[Address_State] AS [Address_State], 
+        [Extent1].[Address_ZipCode] AS [Address_ZipCode], 
+        [Extent1].[Address_SiteInfo_Zone] AS [Address_SiteInfo_Zone], 
+        [Extent1].[Address_SiteInfo_Environment] AS [Address_SiteInfo_Environment], 
+        [Extent1].[PrincipalMailRoomId] AS [PrincipalMailRoomId], 
+        1 AS [C1], 
+        [Extent2].[id] AS [id], 
+        [Extent2].[BuildingId] AS [BuildingId1]
+        FROM  [dbo].[Buildings] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
+        WHERE N'Building One' = [Extent1].[Name]
+    )  AS [Project1]
+    ORDER BY [Project1].[Address_ZipCode] ASC
+    OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
+            }
+        }
+
+        #endregion
+
+    }
+
+
 }

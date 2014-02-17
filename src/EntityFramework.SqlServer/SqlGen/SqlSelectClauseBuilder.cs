@@ -47,6 +47,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
         }
 
+        private SkipClause m_skip;
+
+        internal SkipClause Skip
+        {
+            get { return m_skip; }
+            set
+            {
+                Debug.Assert(m_skip == null, "SqlSelectStatement.Skip has already been set");
+                m_skip = value;
+            }
+        }
+
         // <summary>
         // Do we need to add a DISTINCT at the beginning of the SELECT
         // </summary>
@@ -92,7 +104,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 writer.Write("DISTINCT ");
             }
 
-            if (Top != null)
+            if (Top != null && Skip == null)
             {
                 Top.WriteSql(writer, sqlGenerator);
             }

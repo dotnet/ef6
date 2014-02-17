@@ -4,6 +4,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Globalization;
 
     // <summary>
@@ -269,16 +270,39 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             if ((null != orderBy)
                 && !OrderBy.IsEmpty
-                && (IsTopMost || Select.Top != null))
+                && (IsTopMost || Select.Top != null || Select.Skip != null))
             {
                 writer.WriteLine();
                 writer.Write("ORDER BY ");
                 OrderBy.WriteSql(writer, sqlGenerator);
             }
 
+            if (null != Select.Skip)
+            {
+                writer.WriteLine();
+                WriteOffsetFetch(writer, Select.Top, Select.Skip, sqlGenerator); // Write OFFSET, FETCH clause.
+            }
+
             --writer.Indent;
         }
 
         #endregion
+
+        // This function generates OFFSET, FETCH clause from Top and Skip information.
+        // Note that this should be used only when Skip is present.
+        //
+        private static void WriteOffsetFetch(SqlWriter writer, TopClause top, SkipClause skip, SqlGenerator sqlGenerator)
+        {
+            DebugCheck.NotNull(skip);
+            skip.WriteSql(writer, sqlGenerator);
+            if (top != null)
+            {
+                writer.Write("FETCH NEXT ");
+
+                top.TopCount.WriteSql(writer, sqlGenerator);
+
+                writer.Write(" ROWS ONLY ");
+            }
+        }
     }
 }

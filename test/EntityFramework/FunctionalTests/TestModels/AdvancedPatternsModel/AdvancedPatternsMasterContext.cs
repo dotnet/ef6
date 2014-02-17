@@ -11,6 +11,11 @@ namespace AdvancedPatternsModel
         {
         }
 
+        protected AdvancedPatternsMasterContext(string suffix)
+            : base("AdvancedPatternsDatabase_" + suffix)
+        {
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             SetupModel(modelBuilder);
@@ -53,5 +58,13 @@ namespace AdvancedPatternsModel
         public DbSet<BuildingDetail> BuildingDetails { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<Whiteboard> Whiteboards { get; set; }
+    }
+
+    public class AdvancedPatternsMasterContext_2012 : AdvancedPatternsMasterContext 
+    { 
+        public AdvancedPatternsMasterContext_2012()
+            : base("2012")
+        {
+        }
     }
 }

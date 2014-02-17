@@ -2512,6 +2512,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // ) as Y
         // WHERE Y.[row_number] > count
         // ORDER BY sk1, sk2, ...
+        //
+        // For Sql11 it translates to:
+        // SELECT X.x1, X.x2, ..., X.xn
+        // FROM input as X
+        // ORDER BY sk1, sk2, ...
+        // OFFSET s ROWS FETCH NEXT n ROWS ONLY
         // </summary>
         // <returns>
         // A <see cref="SqlBuilder" />
@@ -2540,6 +2546,19 @@ namespace System.Data.Entity.SqlServer.SqlGen
             symbolTable.EnterScope();
 
             AddFromSymbol(input, e.Input.VariableName, fromSymbol);
+
+            if (SqlVersion >= SqlVersion.Sql11)
+            {
+                input.Select.Skip = new SkipClause(HandleCountExpression(e.Count));
+
+                // Add the ORDER BY part.
+                AddSortKeys(input.OrderBy, e.SortOrder);
+
+                symbolTable.ExitScope();
+                selectStatementStack.Pop();
+
+                return input;
+            }
 
             //Add the default columns
             Debug.Assert(input.Select.IsEmpty);
@@ -3977,6 +3996,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 case DbExpressionKind.Distinct:
                     return result.Select.Top == null
+                           && result.Select.Skip == null
                         // #494803: The projection after distinct may not project all 
                         // columns used in the Order By
                         // Improvement: Consider getting rid of the Order By instead
@@ -3986,13 +4006,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     return result.Select.IsEmpty
                            && result.Where.IsEmpty
                            && result.GroupBy.IsEmpty
-                           && result.Select.Top == null;
+                           && result.Select.Top == null
+                           && result.Select.Skip == null;
 
                 case DbExpressionKind.GroupBy:
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
                            && result.OrderBy.IsEmpty
                            && result.Select.Top == null
+                           && result.Select.Skip == null
                            && !result.Select.IsDistinct;
 
                 case DbExpressionKind.Limit:
@@ -4011,6 +4033,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 case DbExpressionKind.Skip:
                     return result.Select.IsEmpty
+                           && result.Select.Skip == null
                            && result.GroupBy.IsEmpty
                            && result.OrderBy.IsEmpty
                            && !result.Select.IsDistinct;

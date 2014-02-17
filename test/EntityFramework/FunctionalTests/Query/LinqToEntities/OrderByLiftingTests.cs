@@ -3,54 +3,134 @@
 namespace System.Data.Entity.Query.LinqToEntities
 {
     using System.Data.Entity.TestModels.ArubaModel;
-    using SimpleModel;
     using System.Data.Entity.Infrastructure;
-    using System.IO;
     using System.Linq;
     using Xunit;
 
-    public class OrderByLiftingTests : FunctionalTestBase
+    public abstract class OrderByLiftingTests<ArubaContextT> : FunctionalTestBase
+        where ArubaContextT : ArubaContext, new()
     {
+        #region Abstract expected results
+
+        protected abstract string OrderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics_expectedSql { get; }
+
+        protected abstract string OrderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics_expectedSql { get; }
+
+        protected abstract string OrderBy_ThenBy_Skip_lifted_above_type_filter_expectedSql { get; }
+
+        protected abstract string OrderBy_ThenBy_Take_lifted_above_type_filter_expectedSql { get; }
+
+        protected abstract string OrderBy_ThenBy_Skip_Take_lifted_above_type_filter_expectedSql { get; }
+
+        #endregion
+
         [Fact]
         public void OrderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics()
         {
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = true;
 
-                var expectedSq =
-@"SELECT 
-[Skip1].[Id] AS [Id], 
-[Skip1].[FirstName] AS [FirstName], 
-[Skip1].[LastName] AS [LastName], 
-[Skip1].[Alias] AS [Alias]
-FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias]
-	FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], row_number() OVER (ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC) AS [row_number]
-		FROM [dbo].[ArubaOwners] AS [Extent1]
-	)  AS [Extent1]
-	WHERE [Extent1].[row_number] > 5
-)  AS [Skip1]
-WHERE 0 = ([Skip1].[Id] % 2)
-ORDER BY [Skip1].[FirstName] DESC, [Skip1].[Id] ASC";
-
                 var query = context.Owners.OrderByDescending(p => p.FirstName).ThenBy(p => p.Id).Skip(5).Where(p => p.Id % 2 == 0);
-                QueryTestHelpers.VerifyDbQuery(query, expectedSq);
+                QueryTestHelpers.VerifyDbQuery(query, OrderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics_expectedSql);
 
                 var results = query.ToList();
                 var expected = context.Owners.ToList().OrderByDescending(p => p.FirstName).ThenBy(p => p.Id).Skip(5).Where(p => p.Id % 2 == 0).ToList();
                 QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
             }
         }
-
+        
         [Fact]
         public void OrderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics()
         {
-            using (var context = new ArubaContext())
+            using (var context = new ArubaContextT())
             {
                 ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
 
-                var expectedSq =
-@"SELECT 
+                var query = context.Owners.OrderByDescending(p => p.FirstName).ThenBy(p => p.Id).Skip(5).Where(p => p.Id % 2 == 0);
+                QueryTestHelpers.VerifyDbQuery(query, OrderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics_expectedSql);
+
+                var results = query.ToList();
+                var expected = context.Owners.ToList().OrderByDescending(p => p.FirstName).ThenBy(p => p.Id).Skip(5).Where(p => p.Id % 2 == 0).ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
+            }
+        }
+        
+        [Fact]
+        public void OrderBy_ThenBy_Skip_lifted_above_type_filter()
+        {
+            using (var context = new ArubaContextT())
+            {
+                var query = context.Configs.OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).OfType<ArubaMachineConfig>();
+                QueryTestHelpers.VerifyDbQuery(query, OrderBy_ThenBy_Skip_lifted_above_type_filter_expectedSql);
+
+                var results = query.ToList();
+                var expected = context.Configs.ToList().OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).OfType<ArubaMachineConfig>().ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
+            }
+        }
+
+        [Fact]
+        public void OrderBy_ThenBy_Take_lifted_above_type_filter()
+        {
+            using (var context = new ArubaContextT())
+            {
+                var query = context.Configs.OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Take(10).OfType<ArubaMachineConfig>();
+                QueryTestHelpers.VerifyDbQuery(query, OrderBy_ThenBy_Take_lifted_above_type_filter_expectedSql);
+
+                var results = query.ToList();
+                var expected = context.Configs.ToList().OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Take(10).OfType<ArubaMachineConfig>().ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
+            }
+        }
+
+        [Fact]
+        public void OrderBy_ThenBy_Skip_Take_lifted_above_type_filter()
+        {
+            using (var context = new ArubaContextT())
+            {
+                var query = context.Configs.OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).Take(10).OfType<ArubaMachineConfig>();
+                QueryTestHelpers.VerifyDbQuery(query, OrderBy_ThenBy_Skip_Take_lifted_above_type_filter_expectedSql);
+
+                var results = query.ToList();
+                var expected = context.Configs.ToList().OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).Take(10).OfType<ArubaMachineConfig>().ToList();
+                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
+            }
+        }
+    }
+
+    public class OrderByLiftingTests : OrderByLiftingTests<ArubaContext>
+    {
+
+        #region Expected results
+
+        protected override string OrderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics_expectedSql
+        {
+            get
+            {
+                return
+        @"SELECT 
+[Skip1].[Id] AS [Id], 
+[Skip1].[FirstName] AS [FirstName], 
+[Skip1].[LastName] AS [LastName], 
+[Skip1].[Alias] AS [Alias]
+FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias]
+FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias], row_number() OVER (ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC) AS [row_number]
+	FROM [dbo].[ArubaOwners] AS [Extent1]
+)  AS [Extent1]
+WHERE [Extent1].[row_number] > 5
+)  AS [Skip1]
+WHERE 0 = ([Skip1].[Id] % 2)
+ORDER BY [Skip1].[FirstName] DESC, [Skip1].[Id] ASC";
+            }
+        }
+
+        protected override string OrderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics_expectedSql
+        {
+            get
+            {
+                return
+        @"SELECT 
 [Skip1].[Id] AS [Id], 
 [Skip1].[FirstName] AS [FirstName], 
 [Skip1].[LastName] AS [LastName], 
@@ -63,23 +143,15 @@ FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Ext
 )  AS [Skip1]
 WHERE 0 = ([Skip1].[Id] % 2)
 ORDER BY [Skip1].[FirstName] DESC, [Skip1].[Id] ASC";
-
-                var query = context.Owners.OrderByDescending(p => p.FirstName).ThenBy(p => p.Id).Skip(5).Where(p => p.Id % 2 == 0);
-                QueryTestHelpers.VerifyDbQuery(query, expectedSq);
-
-                var results = query.ToList();
-                var expected = context.Owners.ToList().OrderByDescending(p => p.FirstName).ThenBy(p => p.Id).Skip(5).Where(p => p.Id % 2 == 0).ToList();
-                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
             }
         }
 
-        [Fact]
-        public void OrderBy_ThenBy_Skip_lifted_above_type_filter()
+        protected override string OrderBy_ThenBy_Skip_lifted_above_type_filter_expectedSql
         {
-            using (var context = new ArubaContext())
+            get
             {
-                var expectedSql =
-@"SELECT 
+                return
+        @"SELECT 
 [Project1].[C1] AS [C1], 
 [Project1].[C2] AS [C2], 
 [Project1].[C3] AS [C3], 
@@ -109,22 +181,15 @@ FROM ( SELECT
 	WHERE [Skip1].[Discriminator] = N'ArubaMachineConfig'
 )  AS [Project1]
 ORDER BY [Project1].[Arch] DESC, [Project1].[Id] ASC";
-                var query = context.Configs.OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).OfType<ArubaMachineConfig>();
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
-
-                var results = query.ToList();
-                var expected = context.Configs.ToList().OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).OfType<ArubaMachineConfig>().ToList();
-                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
             }
         }
 
-        [Fact]
-        public void OrderBy_ThenBy_Take_lifted_above_type_filter()
+        protected override string OrderBy_ThenBy_Take_lifted_above_type_filter_expectedSql
         {
-            using (var context = new ArubaContext())
+            get
             {
-                var expectedSql =
-@"SELECT 
+                return
+        @"SELECT 
 [Project1].[C1] AS [C1], 
 [Project1].[C2] AS [C2], 
 [Project1].[C3] AS [C3], 
@@ -152,23 +217,15 @@ FROM ( SELECT
 	WHERE [Limit1].[Discriminator] = N'ArubaMachineConfig'
 )  AS [Project1]
 ORDER BY [Project1].[Arch] DESC, [Project1].[Id] ASC";
-                
-                var query = context.Configs.OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Take(10).OfType<ArubaMachineConfig>();
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
-
-                var results = query.ToList();
-                var expected = context.Configs.ToList().OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Take(10).OfType<ArubaMachineConfig>().ToList();
-                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
             }
         }
 
-        [Fact]
-        public void OrderBy_ThenBy_Skip_Take_lifted_above_type_filter()
+        protected override string OrderBy_ThenBy_Skip_Take_lifted_above_type_filter_expectedSql
         {
-            using (var context = new ArubaContext())
+            get
             {
-                var expectedSql =
-@"SELECT 
+                return
+        @"SELECT 
 [Project1].[C1] AS [C1], 
 [Project1].[C2] AS [C2], 
 [Project1].[C3] AS [C3], 
@@ -199,14 +256,170 @@ FROM ( SELECT
 	WHERE [Limit1].[Discriminator] = N'ArubaMachineConfig'
 )  AS [Project1]
 ORDER BY [Project1].[Arch] DESC, [Project1].[Id] ASC";
-
-                var query = context.Configs.OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).Take(10).OfType<ArubaMachineConfig>();
-                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
-
-                var results = query.ToList();
-                var expected = context.Configs.ToList().OrderByDescending(p => p.Arch).ThenBy(p => p.Id).Skip(5).Take(10).OfType<ArubaMachineConfig>().ToList();
-                QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
             }
         }
+
+        #endregion
+
     }
+
+    public class OrderByLiftingTests_2012 : OrderByLiftingTests<ArubaContext_2012>
+    {
+
+        #region Expected results
+
+        protected override string OrderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics_expectedSql
+        {
+            get
+            {
+                return
+        @"SELECT 
+[Skip1].[Id] AS [Id], 
+[Skip1].[FirstName] AS [FirstName], 
+[Skip1].[LastName] AS [LastName], 
+[Skip1].[Alias] AS [Alias]
+FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias]
+FROM [dbo].[ArubaOwners] AS [Extent1]
+ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC
+OFFSET 5 ROWS 
+)  AS [Skip1]
+WHERE 0 = ([Skip1].[Id] % 2)
+ORDER BY [Skip1].[FirstName] DESC, [Skip1].[Id] ASC";
+            }
+        }
+
+        protected override string OrderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics_expectedSql
+        {
+            get
+            {
+                return
+        @"SELECT 
+[Skip1].[Id] AS [Id], 
+[Skip1].[FirstName] AS [FirstName], 
+[Skip1].[LastName] AS [LastName], 
+[Skip1].[Alias] AS [Alias]
+FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias]
+FROM [dbo].[ArubaOwners] AS [Extent1]
+ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC
+OFFSET 5 ROWS 
+)  AS [Skip1]
+WHERE 0 = ([Skip1].[Id] % 2)
+ORDER BY [Skip1].[FirstName] DESC, [Skip1].[Id] ASC";
+            }
+        }
+
+        protected override string OrderBy_ThenBy_Skip_lifted_above_type_filter_expectedSql
+        {
+            get
+            {
+                return
+        @"SELECT 
+[Project1].[C1] AS [C1], 
+[Project1].[C2] AS [C2], 
+[Project1].[C3] AS [C3], 
+[Project1].[C4] AS [C4], 
+[Project1].[C5] AS [C5], 
+[Project1].[C6] AS [C6], 
+[Project1].[C7] AS [C7], 
+[Project1].[C8] AS [C8]
+FROM ( SELECT 
+	[Skip1].[Id] AS [Id], 
+	[Skip1].[Arch] AS [Arch], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[Discriminator] END AS [C1], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[Id] END AS [C2], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[OS] END AS [C3], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[Lang] END AS [C4], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[Arch] END AS [C5], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[Host] END AS [C6], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[Address] END AS [C7], 
+	CASE WHEN ([Skip1].[Discriminator] = N'ArubaMachineConfig') THEN [Skip1].[Location] END AS [C8]
+	FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[OS] AS [OS], [Extent1].[Lang] AS [Lang], [Extent1].[Arch] AS [Arch], [Extent1].[Host] AS [Host], [Extent1].[Address] AS [Address], [Extent1].[Location] AS [Location], [Extent1].[Discriminator] AS [Discriminator]
+	    FROM [dbo].[ArubaConfigs] AS [Extent1]
+	    WHERE [Extent1].[Discriminator] IN (N'ArubaMachineConfig',N'ArubaConfig')
+        ORDER BY [Extent1].[Arch] DESC, [Extent1].[Id] ASC
+        OFFSET 5 ROWS 
+	)  AS [Skip1]
+	WHERE [Skip1].[Discriminator] = N'ArubaMachineConfig'
+)  AS [Project1]
+ORDER BY [Project1].[Arch] DESC, [Project1].[Id] ASC";
+            }
+        }
+
+        protected override string OrderBy_ThenBy_Take_lifted_above_type_filter_expectedSql
+        {
+            get
+            {
+                return
+        @"SELECT 
+[Project1].[C1] AS [C1], 
+[Project1].[C2] AS [C2], 
+[Project1].[C3] AS [C3], 
+[Project1].[C4] AS [C4], 
+[Project1].[C5] AS [C5], 
+[Project1].[C6] AS [C6], 
+[Project1].[C7] AS [C7], 
+[Project1].[C8] AS [C8]
+FROM ( SELECT 
+	[Limit1].[Id] AS [Id], 
+	[Limit1].[Arch] AS [Arch], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Discriminator] END AS [C1], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Id] END AS [C2], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[OS] END AS [C3], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Lang] END AS [C4], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Arch] END AS [C5], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Host] END AS [C6], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Address] END AS [C7], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Location] END AS [C8]
+	FROM ( SELECT TOP (10) [Extent1].[Id] AS [Id], [Extent1].[OS] AS [OS], [Extent1].[Lang] AS [Lang], [Extent1].[Arch] AS [Arch], [Extent1].[Host] AS [Host], [Extent1].[Address] AS [Address], [Extent1].[Location] AS [Location], [Extent1].[Discriminator] AS [Discriminator]
+		FROM [dbo].[ArubaConfigs] AS [Extent1]
+		WHERE [Extent1].[Discriminator] IN (N'ArubaMachineConfig',N'ArubaConfig')
+		ORDER BY [Extent1].[Arch] DESC, [Extent1].[Id] ASC
+	)  AS [Limit1]
+	WHERE [Limit1].[Discriminator] = N'ArubaMachineConfig'
+)  AS [Project1]
+ORDER BY [Project1].[Arch] DESC, [Project1].[Id] ASC";
+            }
+        }
+
+        protected override string OrderBy_ThenBy_Skip_Take_lifted_above_type_filter_expectedSql
+        {
+            get
+            {
+                return
+        @"SELECT 
+[Project1].[C1] AS [C1], 
+[Project1].[C2] AS [C2], 
+[Project1].[C3] AS [C3], 
+[Project1].[C4] AS [C4], 
+[Project1].[C5] AS [C5], 
+[Project1].[C6] AS [C6], 
+[Project1].[C7] AS [C7], 
+[Project1].[C8] AS [C8]
+FROM ( SELECT 
+	[Limit1].[Id] AS [Id], 
+	[Limit1].[Arch] AS [Arch], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Discriminator] END AS [C1], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Id] END AS [C2], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[OS] END AS [C3], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Lang] END AS [C4], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Arch] END AS [C5], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Host] END AS [C6], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Address] END AS [C7], 
+	CASE WHEN ([Limit1].[Discriminator] = N'ArubaMachineConfig') THEN [Limit1].[Location] END AS [C8]
+	FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[OS] AS [OS], [Extent1].[Lang] AS [Lang], [Extent1].[Arch] AS [Arch], [Extent1].[Host] AS [Host], [Extent1].[Address] AS [Address], [Extent1].[Location] AS [Location], [Extent1].[Discriminator] AS [Discriminator]
+		FROM [dbo].[ArubaConfigs] AS [Extent1]
+		WHERE [Extent1].[Discriminator] IN (N'ArubaMachineConfig',N'ArubaConfig')
+        ORDER BY [Extent1].[Arch] DESC, [Extent1].[Id] ASC
+        OFFSET 5 ROWS FETCH NEXT 10 ROWS ONLY
+	)  AS [Limit1]
+	WHERE [Limit1].[Discriminator] = N'ArubaMachineConfig'
+)  AS [Project1]
+ORDER BY [Project1].[Arch] DESC, [Project1].[Id] ASC";
+            }
+        }
+
+        #endregion
+
+    }
+
 }

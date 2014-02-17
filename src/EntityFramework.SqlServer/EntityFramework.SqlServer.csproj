@@ -127,6 +127,7 @@
     <Compile Include="SqlGen\DmlFunctionSqlGenerator.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
     <Compile Include="SqlGen\SqlStringBuilder.cs" />
+    <Compile Include="SqlGen\SkipClause.cs" />
     <Compile Include="SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="SqlSpatialFunctions.cs" />
     <Compile Include="SqlTypesAssemblyLoader.cs" />
