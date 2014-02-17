@@ -9,15 +9,16 @@
 // ------------------------------------------------------------------------------
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
-    using System.Linq;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
+    using Microsoft.Data.Entity.Design.CodeGeneration;
     using System;
     
     /// <summary>
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal partial class VBEntityTextTransformation : VBEntityTextTransformationBase
+    internal partial class DefaultVBEntityTypeGenerator : DefaultVBEntityTypeGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -42,22 +43,19 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             this.Write("Imports System\r\nImports System.Collections.Generic\r\nImports System.ComponentModel" +
                     ".DataAnnotations\r\nImports System.ComponentModel.DataAnnotations.Schema\r\nImports " +
-                    "System.Data.Entity.Spatial\r\n\r\nNamespace ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n\r\n");
+                    "System.Data.Entity.Spatial\r\n\r\n");
 
     var typeConfigurations = edm.GetConfigurations(EntitySet, Model).OfType<IAttributeConfiguration>();
 
     foreach (var typeConfiguration in typeConfigurations)
     {
 
-            this.Write("    ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Attribute(typeConfiguration)));
             this.Write("\r\n");
 
     }
 
-            this.Write("    Partial Public Class ");
+            this.Write("Partial Public Class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entityType)));
             this.Write("\r\n");
 
@@ -68,12 +66,12 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     if (collectionProperties.Any())
     {
 
-            this.Write("        Public Sub New()\r\n");
+            this.Write("    Public Sub New()\r\n");
 
     foreach (var collectionProperty in collectionProperties)
     {
 
-            this.Write("            ");
+            this.Write("        ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(collectionProperty)));
             this.Write(" = New HashSet(Of ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(collectionProperty.ToEndMember.GetEntityType())));
@@ -81,7 +79,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
     }
 
-            this.Write("        End Sub\r\n\r\n");
+            this.Write("    End Sub\r\n\r\n");
 
     }
 
@@ -103,13 +101,13 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         foreach (var propertyConfiguration in propertyConfigurations)
         {
 
-            this.Write("        ");
+            this.Write("    ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Attribute(propertyConfiguration)));
             this.Write("\r\n");
 
         }
 
-            this.Write("        Public Property ");
+            this.Write("    Public Property ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(property)));
             this.Write(" As ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(property)));
@@ -129,7 +127,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         }
 
 
-            this.Write("        Public Overridable Property ");
+            this.Write("    Public Overridable Property ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(navigationProperty)));
             this.Write(" As ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(navigationProperty)));
@@ -137,7 +135,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
     }
 
-            this.Write("    End Class\r\nEnd Namespace\r\n");
+            this.Write("End Class\r\n");
             return this.GenerationEnvironment.ToString();
         }
 
@@ -242,7 +240,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal class VBEntityTextTransformationBase
+    internal class DefaultVBEntityTypeGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

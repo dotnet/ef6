@@ -25,11 +25,9 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
             return String.Equals(project.Kind, ProjectKindWeb, StringComparison.OrdinalIgnoreCase);
         }
 
-        /// <summary>
-        ///     Determine whether EDM is supported in the current projec type.
-        /// </summary>
-        /// <param name="hierarchy"></param>
-        /// <returns></returns>
+        // <summary>
+        //     Determine whether EDM is supported in the current projec type.
+        // </summary>
         internal static bool IsEDMSupportedInProject(IVsHierarchy hierarchy)
         {
             // given existing call paths, hierarchy should never be null.
@@ -47,9 +45,9 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
                     String.Equals(currentProject.Kind, ProjectKindWeb, StringComparison.OrdinalIgnoreCase));
         }
 
-        /// <devdoc>
-        ///     Does the work to get a DTE Project from the given IVsHierarchy.  May return null if the given IVsHierarchy doesn't have a DTE Project.  Callers should check for null.
-        /// </devdoc>
+        // <devdoc>
+        //     Does the work to get a DTE Project from the given IVsHierarchy.  May return null if the given IVsHierarchy doesn't have a DTE Project.  Callers should check for null.
+        // </devdoc>
         internal static Project GetProject(IVsHierarchy hierarchy)
         {
             Project project = null;

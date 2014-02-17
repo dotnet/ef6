@@ -9,9 +9,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Linq;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     Strongly type data table for holding the RelationshipDetails
-    /// </summary>
+    // <summary>
+    //     Strongly type data table for holding the RelationshipDetails
+    // </summary>
     [Serializable]
     internal sealed class RelationshipDetailsCollection : DataTable, IEnumerable<RelationshipDetailsRow>
     {
@@ -51,101 +51,99 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         [NonSerialized]
         private DataColumn _columnRelationshipIsCascadeDelete;
 
-        /// <summary>
-        ///     Constructs a RelationsipDetailsDataTable
-        /// </summary>
+        // <summary>
+        //     Constructs a RelationsipDetailsDataTable
+        // </summary>
         public RelationshipDetailsCollection()
         {
             TableName = "RelationshipDetails";
             InitClass();
         }
 
-        /// <summary>
-        ///     Constructs a new instance RelationshipDetailDataTable with a given SerializationInfo and StreamingContext
-        /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
+        // <summary>
+        //     Constructs a new instance RelationshipDetailDataTable with a given SerializationInfo and StreamingContext
+        // </summary>
         internal RelationshipDetailsCollection(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {
             UpdateMemberFieldsAfterDeserialization();
         }
 
-        /// <summary>
-        ///     Gets the PkCatalog column
-        /// </summary>
+        // <summary>
+        //     Gets the PkCatalog column
+        // </summary>
         public DataColumn PKCatalogColumn
         {
             get { return _columnPKCatalog; }
         }
 
-        /// <summary>
-        ///     Gets the PkSchema column
-        /// </summary>
+        // <summary>
+        //     Gets the PkSchema column
+        // </summary>
         public DataColumn PKSchemaColumn
         {
             get { return _columnPKSchema; }
         }
 
-        /// <summary>
-        ///     Gets the PkTable column
-        /// </summary>
+        // <summary>
+        //     Gets the PkTable column
+        // </summary>
         public DataColumn PKTableColumn
         {
             get { return _columnPKTable; }
         }
 
-        /// <summary>
-        ///     Gets the PkColumn column
-        /// </summary>
+        // <summary>
+        //     Gets the PkColumn column
+        // </summary>
         public DataColumn PKColumnColumn
         {
             get { return _columnPKColumn; }
         }
 
-        /// <summary>
-        ///     Gets the FkCatalog column
-        /// </summary>
+        // <summary>
+        //     Gets the FkCatalog column
+        // </summary>
         public DataColumn FKCatalogColumn
         {
             get { return _columnFKCatalog; }
         }
 
-        /// <summary>
-        ///     Gets the FkSchema column
-        /// </summary>
+        // <summary>
+        //     Gets the FkSchema column
+        // </summary>
         public DataColumn FKSchemaColumn
         {
             get { return _columnFKSchema; }
         }
 
-        /// <summary>
-        ///     Gets the FkTable column
-        /// </summary>
+        // <summary>
+        //     Gets the FkTable column
+        // </summary>
         public DataColumn FKTableColumn
         {
             get { return _columnFKTable; }
         }
 
-        /// <summary>
-        ///     Gets the FkColumn column
-        /// </summary>
+        // <summary>
+        //     Gets the FkColumn column
+        // </summary>
         public DataColumn FKColumnColumn
         {
             get { return _columnFKColumn; }
         }
 
-        /// <summary>
-        ///     Gets the Ordinal column
-        /// </summary>
+        // <summary>
+        //     Gets the Ordinal column
+        // </summary>
         public DataColumn OrdinalColumn
         {
             get { return _columnOrdinal; }
         }
 
-        /// <summary>
-        ///     Gets the RelationshipName column
-        /// </summary>
+        // <summary>
+        //     Gets the RelationshipName column
+        // </summary>
         public DataColumn RelationshipNameColumn
         {
             get { return _columnRelationshipName; }
@@ -156,27 +154,27 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             get { return _columnRelationshipId; }
         }
 
-        /// <summary>
-        ///     Gets the IsCascadeDelete value
-        /// </summary>
+        // <summary>
+        //     Gets the IsCascadeDelete value
+        // </summary>
         public DataColumn RelationshipIsCascadeDeleteColumn
         {
             get { return _columnRelationshipIsCascadeDelete; }
         }
 
-        /// <summary>
-        ///     Gets an enumerator over the rows.
-        /// </summary>
-        /// <returns>The row enumerator</returns>
+        // <summary>
+        //     Gets an enumerator over the rows.
+        // </summary>
+        // <returns>The row enumerator</returns>
         public IEnumerator GetEnumerator()
         {
             return Rows.GetEnumerator();
         }
 
-        /// <summary>
-        ///     Creates an instance of this table
-        /// </summary>
-        /// <returns>The newly created instance.</returns>
+        // <summary>
+        //     Creates an instance of this table
+        // </summary>
+        // <returns>The newly created instance.</returns>
         protected override DataTable CreateInstance()
         {
             return new RelationshipDetailsCollection();
@@ -239,20 +237,20 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _columnRelationshipIsCascadeDelete = Columns[IsCascadeDeleteColumnName];
         }
 
-        /// <summary>
-        ///     Create a new row from a DataRowBuilder object.
-        /// </summary>
-        /// <param name="builder">The builder to create the row from.</param>
-        /// <returns>The row that was created.</returns>
+        // <summary>
+        //     Create a new row from a DataRowBuilder object.
+        // </summary>
+        // <param name="builder">The builder to create the row from.</param>
+        // <returns>The row that was created.</returns>
         protected override DataRow NewRowFromBuilder(DataRowBuilder builder)
         {
             return new RelationshipDetailsRow(builder);
         }
 
-        /// <summary>
-        ///     Gets the Type that this row is.
-        /// </summary>
-        /// <returns>The type of this row.</returns>
+        // <summary>
+        //     Gets the Type that this row is.
+        // </summary>
+        // <returns>The type of this row.</returns>
         protected override Type GetRowType()
         {
             return typeof(RelationshipDetailsRow);

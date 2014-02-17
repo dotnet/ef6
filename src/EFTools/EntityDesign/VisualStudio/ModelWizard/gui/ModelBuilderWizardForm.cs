@@ -252,38 +252,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             _wizardFinishing = false;
         }
 
-        // computes a unique connection string name based on the input base name
-        internal string GetUniqueConnectionStringName(string baseConnectionStringName)
-        {
-            if (String.IsNullOrEmpty(baseConnectionStringName))
-            {
-                baseConnectionStringName = ModelConstants.DefaultEntityContainerName;
-            }
-            else
-            {
-                // replace spaces with underscores
-                baseConnectionStringName = baseConnectionStringName.Replace(" ", "_");
-                baseConnectionStringName = baseConnectionStringName.Replace("\t", "_");
-                baseConnectionStringName = baseConnectionStringName + ModelConstants.DefaultEntityContainerName;
-            }
-
-            if (!VsUtils.IsValidIdentifier(baseConnectionStringName, Project, _modelBuilderSettings.VSApplicationType))
-            {
-                baseConnectionStringName = ModelConstants.DefaultEntityContainerName;
-            }
-
-            var connectionStringNames = PackageManager.Package.ConnectionManager.GetExistingConnectionStringNames(Project);
-
-            var i = 1;
-            var uniqueConnectionStringName = baseConnectionStringName;
-            while (connectionStringNames.Contains(uniqueConnectionStringName))
-            {
-                uniqueConnectionStringName = baseConnectionStringName + i++;
-            }
-
-            return uniqueConnectionStringName;
-        }
-
         // mark all following pages as not yet visited
         // this should be invoked if some page data has changed and following pages state is no more valid
         public void InvalidateFollowingPages()

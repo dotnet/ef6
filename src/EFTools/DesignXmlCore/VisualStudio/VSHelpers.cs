@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
-
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
@@ -16,6 +14,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.VisualStudio.TextManager.Interop;
+    using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 
     internal static class VSHelpers
     {

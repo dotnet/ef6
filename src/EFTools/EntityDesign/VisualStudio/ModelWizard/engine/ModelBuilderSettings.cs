@@ -66,7 +66,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             get { return _designTimeConnectionString; }
         }
 
-        internal string AppConfigConnectionString
+        // virtual for testing
+        internal virtual string AppConfigConnectionString
         {
             get { return _appConfigConnectionString; }
         }
@@ -127,15 +128,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         {
             get { return _applicationType; }
             set { _applicationType = value; }
-        }
-
-        internal bool SaveToWebConfig
-        {
-            get
-            {
-                return (_applicationType == VisualStudioProjectSystem.WebApplication ||
-                        _applicationType == VisualStudioProjectSystem.Website);
-            }
         }
 
         internal WorkflowApplication WorkflowInstance { get; set; }

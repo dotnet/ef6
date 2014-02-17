@@ -2,6 +2,19 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using EnvDTE;
+    using Microsoft.Data.Entity.Design.Model;
+    using Microsoft.Data.Entity.Design.Model.Validation;
+    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Data.Core;
+    using Microsoft.VisualStudio.Data.Services;
+    using Microsoft.VisualStudio.DataTools.Interop;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VSDesigner.Data;
+    using Microsoft.VSDesigner.VSDesignerPackage;
+    using Microsoft.WizardFramework;
     using System;
     using System.Collections.Generic;
     using System.Data.Common;
@@ -12,19 +25,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Windows.Forms;
-    using EnvDTE;
-    using Microsoft.Data.Entity.Design.Model.Validation;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
-    using Microsoft.Data.Entity.Design.VisualStudio.Package;
-    using Microsoft.VSDesigner.Data;
-    using Microsoft.VSDesigner.VSDesignerPackage;
-    using Microsoft.VisualStudio;
-    using Microsoft.VisualStudio.Data.Core;
-    using Microsoft.VisualStudio.Data.Services;
-    using Microsoft.VisualStudio.DataTools.Interop;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.WizardFramework;
+    using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
     // <summary>
     //     This is the second page in the ModelGen VS wizard and is invoked if the user wants to generate the model from a database.
@@ -35,6 +36,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     // to view this class in the forms designer, make it temporarily derive from Microsoft.WizardFramework.WizardPage
     internal partial class WizardPageDbConfig : WizardPageBase
     {
+        private readonly ConfigFileUtils _configFileUtils;
         private bool _isInitialized;
 
         //  DDEX Services we use
@@ -51,6 +53,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             InitializeComponent();
 
+            _configFileUtils =
+                new ConfigFileUtils(wizard.Project, wizard.ServiceProvider, wizard.ModelBuilderSettings.VSApplicationType);
+
             Headline = Resources.DbConfigPage_Title;
             Logo = Resources.PageIcon;
             Id = "WizardPageDbConfigId";
@@ -59,7 +64,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             sensitiveInfoTextBox.Text = Resources.SensitiveDataInfoText;
             disallowSensitiveInfoButton.Text = Resources.DisallowSensitiveDataInfoText;
             allowSensitiveInfoButton.Text = Resources.AllowSensitiveDataInfoText;
-            if (wizard.ModelBuilderSettings.SaveToWebConfig)
+            if (VsUtils.IsWebProject(wizard.ModelBuilderSettings.VSApplicationType))
             {
                 checkBoxSaveInAppConfig.Text = Resources.SaveConnectionLabelASP;
             }
@@ -269,8 +274,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 if (!EscherAttributeContentValidator.IsValidCsdlEntityContainerName(id)
                     || !VsUtils.IsValidIdentifier(id, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
                 {
-                    var s = Resources.ConnectionStringNonValidIdentifier;
-                    VsUtils.ShowErrorDialog(String.Format(CultureInfo.CurrentCulture, s, id));
+                    VsUtils.ShowErrorDialog(
+                        string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringNonValidIdentifier, id));
                     textBoxAppConfigConnectionName.Focus();
                     _isFocusSet = true;
                     return false;
@@ -278,14 +283,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
                 // only check that the connection string name is new if started in
                 // 'PerformAllFunctionality' mode
-                if (ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode
-                    && PackageManager.Package.ConnectionManager.GetExistingConnectionStringNames(Wizard.Project).Contains(id))
+                if (ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode)
                 {
-                    var s = Resources.ConnectionStringDuplicateIdentifer;
-                    VsUtils.ShowErrorDialog(String.Format(CultureInfo.CurrentCulture, s, id));
-                    textBoxAppConfigConnectionName.Focus();
-                    _isFocusSet = true;
-                    return false;
+                    string connectionString;
+                    if (ConnectionManager.GetExistingConnectionStrings(_configFileUtils).TryGetValue(id, out connectionString)
+                        && !string.Equals(textBoxConnectionString.Text, connectionString, StringComparison.Ordinal))
+                    {
+                        VsUtils.ShowErrorDialog(
+                            string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringDuplicateIdentifer, id));
+                        textBoxAppConfigConnectionName.Focus();
+                        _isFocusSet = true;
+                        return false;
+                    }
                 }
             }
 
@@ -752,7 +761,33 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Wizard.ModelBuilderSettings.InitialCatalog = initialCatalog;
 
             // compute the connection string name
-            return Wizard.GetUniqueConnectionStringName(initialCatalog);
+            return ConnectionManager.GetUniqueConnectionStringName(
+                _configFileUtils,
+                Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase
+                    ? Wizard.ModelBuilderSettings.ModelName
+                    : GetBaseEdmxConnectionStringName(initialCatalog));
+        }
+
+        private string GetBaseEdmxConnectionStringName(string baseName)
+        {
+            if (String.IsNullOrEmpty(baseName))
+            {
+                baseName = ModelConstants.DefaultEntityContainerName;
+            }
+            else
+            {
+                // replace spaces with underscores
+                baseName = baseName.Replace(" ", "_");
+                baseName = baseName.Replace("\t", "_");
+                baseName = baseName + ModelConstants.DefaultEntityContainerName;
+
+                if (!VsUtils.IsValidIdentifier(baseName, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
+                {
+                    baseName = ModelConstants.DefaultEntityContainerName;
+                }
+            }
+
+            return baseName;
         }
 
         private void disallowSensitiveInfoButton_CheckedChanged(object sender, EventArgs e)

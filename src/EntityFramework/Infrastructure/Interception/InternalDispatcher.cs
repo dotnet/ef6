@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     internal class InternalDispatcher<TInterceptor>
@@ -57,8 +58,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             DebugCheck.NotNull(accumulator);
 
             return _interceptors.Count == 0
-                       ? result
-                       : _interceptors.Aggregate(result, accumulator);
+                ? result
+                : _interceptors.Aggregate(result, accumulator);
         }
 
         public void Dispatch(Action<TInterceptor> action)
@@ -74,7 +75,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         public TResult Dispatch<TInterceptionContext, TResult>(
             TResult result,
             TInterceptionContext interceptionContext,
-            Action<TInterceptor> intercept)
+            Action<TInterceptor, TInterceptionContext> intercept)
             where TInterceptionContext : DbInterceptionContext, IDbMutableInterceptionContext<TResult>
         {
             if (_interceptors.Count == 0)
@@ -84,7 +85,10 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             interceptionContext.MutableData.SetExecuted(result);
 
-            _interceptors.Each(intercept);
+            foreach (var interceptor in _interceptors)
+            {
+                intercept(interceptor, interceptionContext);
+            }
 
             if (interceptionContext.MutableData.Exception != null)
             {
@@ -94,33 +98,40 @@ namespace System.Data.Entity.Infrastructure.Interception
             return interceptionContext.MutableData.Result;
         }
 
-        public void Dispatch<TInterceptionContext>(
-            Action operation,
+        public void Dispatch<TTarget, TInterceptionContext>(
+            TTarget target,
+            Action<TTarget, TInterceptionContext> operation,
             TInterceptionContext interceptionContext,
-            Action<TInterceptor> executing,
-            Action<TInterceptor> executed)
+            Action<TInterceptor, TTarget, TInterceptionContext> executing,
+            Action<TInterceptor, TTarget, TInterceptionContext> executed)
             where TInterceptionContext : DbInterceptionContext, IDbMutableInterceptionContext
         {
             if (_interceptors.Count == 0)
             {
-                operation();
+                operation(target, interceptionContext);
                 return;
             }
 
-            _interceptors.Each(executing);
+            foreach (var interceptor in _interceptors)
+            {
+                executing(interceptor, target, interceptionContext);
+            }
 
             if (!interceptionContext.MutableData.IsExecutionSuppressed)
             {
                 try
                 {
-                    operation();
+                    operation(target, interceptionContext);
                     interceptionContext.MutableData.HasExecuted = true;
                 }
                 catch (Exception ex)
                 {
                     interceptionContext.MutableData.SetExceptionThrown(ex);
 
-                    _interceptors.Each(executed);
+                    foreach (var interceptor in _interceptors)
+                    {
+                        executed(interceptor, target, interceptionContext);
+                    }
 
                     if (ReferenceEquals(interceptionContext.MutableData.Exception, ex))
                     {
@@ -131,7 +142,10 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             if (interceptionContext.MutableData.OriginalException == null)
             {
-                _interceptors.Each(executed);
+                foreach (var interceptor in _interceptors)
+                {
+                    executed(interceptor, target, interceptionContext);
+                }
             }
 
             if (interceptionContext.MutableData.Exception != null)
@@ -140,31 +154,38 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
         }
 
-        public TResult Dispatch<TInterceptionContext, TResult>(
-            Func<TResult> operation,
+        public TResult Dispatch<TTarget, TInterceptionContext, TResult>(
+            TTarget target,
+            Func<TTarget, TInterceptionContext, TResult> operation,
             TInterceptionContext interceptionContext,
-            Action<TInterceptor> executing,
-            Action<TInterceptor> executed)
+            Action<TInterceptor, TTarget, TInterceptionContext> executing,
+            Action<TInterceptor, TTarget, TInterceptionContext> executed)
             where TInterceptionContext : DbInterceptionContext, IDbMutableInterceptionContext<TResult>
         {
             if (_interceptors.Count == 0)
             {
-                return operation();
+                return operation(target, interceptionContext);
             }
 
-            _interceptors.Each(executing);
+            foreach (var interceptor in _interceptors)
+            {
+                executing(interceptor, target, interceptionContext);
+            }
 
             if (!interceptionContext.MutableData.IsExecutionSuppressed)
             {
                 try
                 {
-                    interceptionContext.MutableData.SetExecuted(operation());
+                    interceptionContext.MutableData.SetExecuted(operation(target, interceptionContext));
                 }
                 catch (Exception ex)
                 {
                     interceptionContext.MutableData.SetExceptionThrown(ex);
 
-                    _interceptors.Each(executed);
+                    foreach (var interceptor in _interceptors)
+                    {
+                        executed(interceptor, target, interceptionContext);
+                    }
 
                     if (ReferenceEquals(interceptionContext.MutableData.Exception, ex))
                     {
@@ -175,7 +196,10 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             if (interceptionContext.MutableData.OriginalException == null)
             {
-                _interceptors.Each(executed);
+                foreach (var interceptor in _interceptors)
+                {
+                    executed(interceptor, target, interceptionContext);
+                }
             }
 
             if (interceptionContext.MutableData.Exception != null)
@@ -188,23 +212,28 @@ namespace System.Data.Entity.Infrastructure.Interception
 
 #if !NET40
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public Task DispatchAsync<TInterceptionContext>(
-            Func<Task> operation,
+        public Task DispatchAsync<TTarget, TInterceptionContext>(
+            TTarget target,
+            Func<TTarget, TInterceptionContext, CancellationToken, Task> operation,
             TInterceptionContext interceptionContext,
-            Action<TInterceptor> executing,
-            Action<TInterceptor> executed)
+            Action<TInterceptor, TTarget, TInterceptionContext> executing,
+            Action<TInterceptor, TTarget, TInterceptionContext> executed,
+            CancellationToken cancellationToken)
             where TInterceptionContext : DbInterceptionContext, IDbMutableInterceptionContext
         {
             if (_interceptors.Count == 0)
             {
-                return operation();
+                return operation(target, interceptionContext, cancellationToken);
             }
 
-            _interceptors.Each(executing);
+            foreach (var interceptor in _interceptors)
+            {
+                executing(interceptor, target, interceptionContext);
+            }
 
             var task = interceptionContext.MutableData.IsExecutionSuppressed
                 ? Task.FromResult((object)null)
-                : operation();
+                : operation(target, interceptionContext, cancellationToken);
 
             var tcs = new TaskCompletionSource<object>();
             task.ContinueWith(
@@ -223,7 +252,10 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                     try
                     {
-                        _interceptors.Each(executed);
+                        foreach (var interceptor in _interceptors)
+                        {
+                            executed(interceptor, target, interceptionContext);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -248,61 +280,71 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public Task<TResult> DispatchAsync<TInterceptionContext, TResult>(
-            Func<Task<TResult>> operation,
+        public Task<TResult> DispatchAsync<TTarget, TInterceptionContext, TResult>(
+            TTarget target,
+            Func<TTarget, TInterceptionContext, CancellationToken, Task<TResult>> operation,
             TInterceptionContext interceptionContext,
-            Action<TInterceptor> executing,
-            Action<TInterceptor> executed)
+            Action<TInterceptor, TTarget, TInterceptionContext> executing,
+            Action<TInterceptor, TTarget, TInterceptionContext> executed,
+            CancellationToken cancellationToken)
             where TInterceptionContext : DbInterceptionContext, IDbMutableInterceptionContext<TResult>
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_interceptors.Count == 0)
             {
-                return operation();
+                return operation(target, interceptionContext, cancellationToken);
             }
 
-            _interceptors.Each(executing);
+            foreach (var interceptor in _interceptors)
+            {
+                executing(interceptor, target, interceptionContext);
+            }
 
-            var task = interceptionContext.MutableData.IsExecutionSuppressed 
-                ? Task.FromResult(interceptionContext.MutableData.Result) 
-                : operation();
+            var task = interceptionContext.MutableData.IsExecutionSuppressed
+                ? Task.FromResult(interceptionContext.MutableData.Result)
+                : operation(target, interceptionContext, cancellationToken);
 
             var tcs = new TaskCompletionSource<TResult>();
             task.ContinueWith(
                 t =>
+                {
+                    interceptionContext.MutableData.TaskStatus = t.Status;
+
+                    if (t.IsFaulted)
                     {
-                        interceptionContext.MutableData.TaskStatus = t.Status;
+                        interceptionContext.MutableData.SetExceptionThrown(t.Exception.InnerException);
+                    }
+                    else if (!interceptionContext.MutableData.IsExecutionSuppressed)
+                    {
+                        interceptionContext.MutableData.SetExecuted(t.IsCanceled || t.IsFaulted ? default(TResult) : t.Result);
+                    }
 
-                        if (t.IsFaulted)
+                    try
+                    {
+                        foreach (var interceptor in _interceptors)
                         {
-                            interceptionContext.MutableData.SetExceptionThrown(t.Exception.InnerException);
+                            executed(interceptor, target, interceptionContext);
                         }
-                        else if (!interceptionContext.MutableData.IsExecutionSuppressed)
-                        {
-                            interceptionContext.MutableData.SetExecuted(t.IsCanceled || t.IsFaulted ? default(TResult) : t.Result);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        interceptionContext.MutableData.Exception = ex;
+                    }
 
-                        try
-                        {
-                            _interceptors.Each(executed);
-                        }
-                        catch (Exception ex)
-                        {
-                            interceptionContext.MutableData.Exception = ex;
-                        }
-
-                        if (interceptionContext.MutableData.Exception != null)
-                        {
-                            tcs.SetException(interceptionContext.MutableData.Exception);
-                        }
-                        else if (t.IsCanceled)
-                        {
-                            tcs.SetCanceled();
-                        }
-                        else
-                        {
-                            tcs.SetResult(interceptionContext.MutableData.Result);
-                        }
-                    }, TaskContinuationOptions.ExecuteSynchronously);
+                    if (interceptionContext.MutableData.Exception != null)
+                    {
+                        tcs.SetException(interceptionContext.MutableData.Exception);
+                    }
+                    else if (t.IsCanceled)
+                    {
+                        tcs.SetCanceled();
+                    }
+                    else
+                    {
+                        tcs.SetResult(interceptionContext.MutableData.Result);
+                    }
+                }, TaskContinuationOptions.ExecuteSynchronously);
 
             return tcs.Task;
         }

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
@@ -19,14 +20,19 @@ namespace System.Data.Entity.Infrastructure
     {
         public void InitializeDatabase(TContext context)
         {
-            // We shouldn't create the database here as it might interfere with the parent context initialization.
-            if (context.Database.Exists())
+            var entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+            // We don't need to initialize the TransactionContext if there's no transaction yet
+            if (entityConnection.State == ConnectionState.Open
+                && entityConnection.CurrentTransaction != null)
             {
                 try
                 {
                     using (new TransactionScope(TransactionScopeOption.Suppress))
                     {
-                        context.Transactions.AsNoTracking().Count();
+                        context.Transactions
+                            .AsNoTracking()
+                            .WithExecutionStrategy(new DefaultExecutionStrategy())
+                            .Count();
                     }
                 }
                 catch (EntityException)
@@ -35,7 +41,7 @@ namespace System.Data.Entity.Infrastructure
                     var migrator = new DbMigrator(context.InternalContext.MigrationsConfiguration, context, DatabaseExistenceState.Exists);
                     using (new TransactionScope(TransactionScopeOption.Suppress))
                     {
-                        migrator.ExecuteStatements(sqlStatements);
+                        migrator.ExecuteStatements(sqlStatements, entityConnection.CurrentTransaction.StoreTransaction);
                     }
                 }
             }

@@ -21,12 +21,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
         internal override void DispatchToModelGenerationExtensions()
         {
-            var fromDBDocument = new XDocument(_settings.ModelBuilderEngine.Model);
+            var edmx = ((EdmxModelBuilderEngine)_settings.ModelBuilderEngine).Edmx;
+
+            var fromDBDocument = new XDocument(edmx);
             var dispatcher =
                 new ModelGenerationExtensionDispatcher(
                     _settings.WizardKind,
                     fromDBDocument,
-                    _settings.ModelBuilderEngine.Model,
+                    edmx,
                     _settings.Project);
 
             dispatcher.Dispatch();

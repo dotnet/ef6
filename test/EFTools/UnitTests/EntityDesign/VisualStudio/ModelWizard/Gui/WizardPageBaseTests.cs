@@ -31,9 +31,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_generates_model()
         {
-            var mockModelBuilderEngine = new Mock<ModelBuilderEngine>();
-            mockModelBuilderEngine.Setup(e => e.Model).Returns(new XDocument());
-
+            var mockModelBuilderEngine = 
+                new Mock<EdmxModelBuilderEngine>(Mock.Of<IInitialModelContentsFactory>());
+            
             var mockSettings = new Mock<ModelBuilderSettings> { CallBase = true };
             mockSettings.Setup(s => s.DesignTimeConnectionString).Returns("fakeConnString");
             mockSettings.Object.ModelBuilderEngine = mockModelBuilderEngine.Object;
@@ -46,7 +46,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             mockWizardPageBase.Object.OnDeactivate();
 
             mockModelBuilderEngine
-                .Verify(m => m.GenerateModel(It.IsAny<EdmxHelper>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<ModelBuilderEngineHostContext>()), Times.Once());
+                .Verify(m => m.GenerateModel(It.IsAny<ModelBuilderSettings>(), It.IsAny<ModelBuilderEngineHostContext>()), Times.Once());
         }
     }
 }

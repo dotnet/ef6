@@ -55,19 +55,20 @@ namespace System.Data.Entity.Core.Mapping
                 throw new ArgumentException(Strings.NonComposableFunctionCannotBeMappedAsComposable("targetFunction"));
             }
 
-            if (functionImport.EntitySet != null)
-            {
-                throw new NotSupportedException(Strings.ComposableFunctionImportsReturningEntitiesNotSupported);
-            }
-
             EdmType resultType;
             if (!MetadataHelper.TryGetFunctionImportReturnType(functionImport, 0, out resultType))
             {
                 throw new ArgumentException(Strings.InvalidReturnTypeForComposableFunction);
             }
 
-            // Function mapping is allowed only for TVFs on the s-space.
-            var cTypeTargetFunction = containerMapping.StorageMappingItemCollection.StoreItemCollection.ConvertToCTypeFunction(targetFunction);
+            // when this method is invoked when a CodeFirst model is being built (e.g. from a custom convention) the
+            // StorageMappingItemCollection will be null. In this case we can call the converting method directly which
+            // will return the correct result but the result won't be memoized. This however does not matter at this 
+            // point since the model is still being constructed.
+            var cTypeTargetFunction =
+                containerMapping.StorageMappingItemCollection != null 
+                ? containerMapping.StorageMappingItemCollection.StoreItemCollection.ConvertToCTypeFunction(targetFunction)
+                : StoreItemCollection.ConvertFunctionSignatureToCType(targetFunction);
             var cTypeTvfElementType = TypeHelpers.GetTvfReturnType(cTypeTargetFunction);
             var sTypeTvfElementType = TypeHelpers.GetTvfReturnType(targetFunction);
 
@@ -142,11 +143,6 @@ namespace System.Data.Entity.Core.Mapping
             if (!targetFunction.IsComposableAttribute)
             {
                 throw new ArgumentException(Strings.NonComposableFunctionCannotBeMappedAsComposable("targetFunction"));
-            }
-
-            if (functionImport.EntitySet != null)
-            {
-                throw new NotSupportedException(Strings.ComposableFunctionImportsReturningEntitiesNotSupported);
             }
 
             EdmType resultType;

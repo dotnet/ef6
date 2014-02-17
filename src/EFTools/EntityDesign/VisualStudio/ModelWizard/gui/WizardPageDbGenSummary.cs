@@ -18,7 +18,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.UI.Views.Dialogs;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Microsoft.VisualStudio.Shell.Interop;
     using Microsoft.WizardFramework;
@@ -118,15 +117,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 using (new VsUtils.HourglassHelper())
                 {
                     IList<EdmSchemaError> schemaErrors;
-                    edm = DatabaseGenerationEngine.GetEdmItemCollectionFromArtifact(Wizard.ModelBuilderSettings.Artifact, out schemaErrors);
+                    edm = Wizard.ModelBuilderSettings.Artifact.GetEdmItemCollectionFromArtifact(out schemaErrors);
 
                     Debug.Assert(
                         edm != null && schemaErrors.Count == 0,
                         "EdmItemCollection schema errors found; we should have performed validation on the EdmItemCollection before instantiating the wizard.");
                 }
 
-                var existingSsdl = DatabaseGenerationEngine.GetSsdlFromArtifact(Wizard.ModelBuilderSettings.Artifact);
-                var existingMsl = DatabaseGenerationEngine.GetMslFromArtifact(Wizard.ModelBuilderSettings.Artifact);
+                var existingSsdl = Wizard.ModelBuilderSettings.Artifact.GetSsdlAsString();
+                var existingMsl = Wizard.ModelBuilderSettings.Artifact.GetMslAsString();
 
                 // Attempt to get the workflow path, template path, and database schema name from the artifact. If we don't find them, we'll use defaults.
                 var workflowPath = DatabaseGenerationEngine.GetWorkflowPathFromArtifact(Wizard.ModelBuilderSettings.Artifact);

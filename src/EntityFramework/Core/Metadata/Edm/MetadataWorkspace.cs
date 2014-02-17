@@ -41,12 +41,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly object _schemaVersionLock = new object();
         private readonly Guid _metadataWorkspaceId = Guid.NewGuid();
 
+        internal readonly MetadataOptimization MetadataOptimization;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> class.
         /// </summary>
         public MetadataWorkspace()
         {
             _itemsOSpace = new Lazy<ObjectItemCollection>(() => new ObjectItemCollection(), isThreadSafe: true);
+
+            MetadataOptimization = new MetadataOptimization(this);
         }
 
         /// <summary>
@@ -80,6 +84,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => LoadAndCheckItemCollection(csMappingLoader), isThreadSafe: true);
             _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
                 () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
+
+            MetadataOptimization = new MetadataOptimization(this);
         }
 
         /// <summary>
@@ -109,6 +115,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => LoadAndCheckItemCollection(csMappingLoader), isThreadSafe: true);
             _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
                 () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
+
+            MetadataOptimization = new MetadataOptimization(this);
         }
 
         /// <summary>
@@ -144,6 +152,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 };
 
             CreateMetadataWorkspaceWithResolver(paths, () => assembliesToConsider, resolveReference);
+
+            MetadataOptimization = new MetadataOptimization(this);
         }
 
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource

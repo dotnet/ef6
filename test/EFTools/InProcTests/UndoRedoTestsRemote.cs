@@ -52,7 +52,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Simple_Entity()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string typePrefix = "Simple_Entity";
@@ -245,7 +245,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Simple_Association()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string typePrefix = "Simple_Association";
@@ -498,7 +498,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Simple_Inheritance()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string typePrefix = "Simple_Inheritance";
@@ -645,7 +645,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Simple_FunctionImport()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string typePrefix = "Simple_FunctionImport";
@@ -776,7 +776,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Mapping_Conditions()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string typePrefix = "Mapping_Conditions";
@@ -871,7 +871,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Mapping_General_Blank()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string typePrefix = "Mapping_General_Blank";
@@ -941,7 +941,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Mapping_General_DB()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var typePrefix = "Mapping_General_DB";
@@ -1253,7 +1253,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void TestBug634186()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string testName = "UndoRedo.TestBug634186";
@@ -1321,7 +1321,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void Bug567795_TestDirty()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string testName = "UndoRedo.Bug567795_TestDirty";
@@ -1349,7 +1349,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FunctionImportReturnComplexType()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string testName = "UndoRedo.FunctionImportReturnComplexType";
@@ -1451,7 +1451,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void DeleteComplexType()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         const string testName = "UndoRedo.DeleteComplexType";

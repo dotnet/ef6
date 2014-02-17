@@ -3,8 +3,6 @@
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 {
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Xml.Linq;
     using Moq;
     using Xunit;
@@ -16,25 +14,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             private class UpdateModelFromDatabaseModelBuilderEngineFake
                 : UpdateModelFromDatabaseModelBuilderEngine
             {
-                #region not important
-
-                protected override void AddErrors(IEnumerable<EdmSchemaError> errors)
-                {
-                    throw new NotImplementedException();
-                }
-
-                internal override IEnumerable<EdmSchemaError> Errors
-                {
-                    get { throw new NotImplementedException(); }
-                }
-
-                internal override XDocument Model
-                {
-                    get { throw new NotImplementedException(); }
-                }
-
-                #endregion
-
                 internal void UpdateDesignerInfoInvoker(EdmxHelper edmxHelper, ModelBuilderSettings settings)
                 {
                     UpdateDesignerInfo(edmxHelper, settings);

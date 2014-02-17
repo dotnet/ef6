@@ -7,7 +7,7 @@ namespace ConcurrencyModel
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    public class ConcurrencyModelInitializer : DropCreateDatabaseAlways<F1Context>
+    public class ConcurrencyModelInitializer : DropCreateDatabaseIfModelChanges<F1Context>
     {
         protected override void Seed(F1Context context)
         {

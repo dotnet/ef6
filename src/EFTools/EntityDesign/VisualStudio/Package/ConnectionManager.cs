@@ -2,9 +2,8 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
+    using System.Web.UI.WebControls;
     using EnvDTE;
-    using EnvDTE80;
-    using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Designer;
     using Microsoft.Data.Tools.VSXmlDesignerBase.Common;
@@ -12,7 +11,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using Microsoft.VisualStudio.Data.Core;
     using Microsoft.VisualStudio.DataTools.Interop;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.TextManager.Interop;
     using Microsoft.VSDesigner.Data.Local;
     using System;
     using System.Collections.Generic;
@@ -43,9 +41,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private static readonly object _hashSyncRoot = new object();
 
         private const string Provider = "System.Data.EntityClient";
-        private const string AppConfigItemTemplateCs = "AppConfigInternal.zip";
-        private const string AppConfigItemTemplateVb = "AppConfigurationInternal.zip";
-        private const string WebConfigItemTemplate = "WebConfig.zip";
 
         internal static readonly string SqlClientProviderName = "System.Data.SqlClient";
         internal static readonly string SqlCe35ConnectionStringProvider = "provider=System.Data.SqlServerCe.3.5";
@@ -62,24 +57,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             SqlDatabaseFileConnectionStringUserInstance.Length;
 
         internal static readonly string XmlAttrNameConnectionString = "connectionString";
-        internal static readonly string XmlAttrNameEntityContainerName = "name";
+        internal static readonly string XmlAttrNameName = "name";
         internal static readonly string XmlAttrNameProviderName = "providerName";
         internal static readonly string XmlAttrNameMultipleActiveResultSets = "MultipleActiveResultSets";
-
-        private const string XpathConnectionStrings = "configuration/connectionStrings";
 
         private const string XpathConnectionStringsAddEntity = 
             "configuration/connectionStrings/add[@providerName='" + Provider + "']";
 
-        private const string XpathConnectionStringsAdd = "configuration/connectionStrings/add";
+        internal static readonly string XpathConnectionStringsAdd = "configuration/connectionStrings/add";
 
         internal static readonly string EmbedAsResourcePrefix = "res://*";
 
         private string _staleEntityContainerName;
         private string _staleMetadataArtifactProcessing;
 
-        private const string CsWebApplicationKind = "{349C5853-65DF-11DA-9384-00065B846F21}";
-        private const string VbWebApplicationKind = "{349C5854-65DF-11DA-9384-00065B846F21}";
 
         private const string ProviderConnectionStringPropertyNameApp = "App";
         private const string ProviderConnectionStringPropertyNameApplicationName = "Application Name";
@@ -245,15 +236,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        #region IDisposable Members
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        #endregion
 
         private void Dispose(bool disposing)
         {
@@ -271,36 +258,32 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         // <param name="project">DTE Project that owns App.Config we want to look at.</param>
         internal void ExtractConnStringsIntoHash(Project project, bool createConfig)
         {
-            if (project == null)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            if (project.UniqueName.Equals(Constants.vsMiscFilesProjectUniqueName, StringComparison.Ordinal))
+            if (VsUtils.IsMiscellaneousProject(project))
             {
                 return;
             }
 
-            var configFilePath = GetConfigFilePath(project, createConfig);
-            if (configFilePath != null)
+            var configFileUtils = new ConfigFileUtils(project, PackageManager.Package);
+            if (createConfig)
             {
-                var configXmlDoc = LoadConfigFile(configFilePath);
+                configFileUtils.GetOrCreateConfigFile();
+            }
 
-                if (configXmlDoc != null)
+            var configXmlDoc = configFileUtils.LoadConfig();
+            if (configXmlDoc != null)
+            {
+                var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAddEntity);
+
+                var stringHash = new Dictionary<string, ConnectionString>();
+                foreach (XmlNode node in xmlNodeList)
                 {
-                    var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAddEntity);
-
-                    var stringHash = new Dictionary<string, ConnectionString>();
-                    foreach (XmlNode node in xmlNodeList)
-                    {
-                        var connStringObj = new ConnectionString(node.Attributes.GetNamedItem(XmlAttrNameConnectionString).Value);
-                        stringHash.Add(node.Attributes.GetNamedItem(XmlAttrNameEntityContainerName).Value, connStringObj);
-                    }
-
-                    // from msdn: UniqueName: This [property] returns a temporary, unique string value that you can use to 
-                    // differentiate one project from another.
-                    ConnStringsByProjectHash[project] = stringHash;
+                    var connStringObj = new ConnectionString(node.Attributes.GetNamedItem(XmlAttrNameConnectionString).Value);
+                    stringHash.Add(node.Attributes.GetNamedItem(XmlAttrNameName).Value, connStringObj);
                 }
+
+                // from msdn: UniqueName: This [property] returns a temporary, unique string value that you can use to 
+                // differentiate one project from another.
+                ConnStringsByProjectHash[project] = stringHash;
             }
         }
 
@@ -310,9 +293,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         // </summary>
         internal string ConstructUniqueEntityContainerName(string proposedEntityContainerName, Project project)
         {
-            Debug.Assert(null != project, "Null project in GetUniqueEntityContainerNameForProject()");
+            Debug.Assert(null != project, "project in ConstructUniqueEntityContainerName()");
             Debug.Assert(
-                null != proposedEntityContainerName, "Null proposedEntityContainerName in GetUniqueEntityContainerNameForProject()");
+                null != proposedEntityContainerName, "Null proposedEntityContainerName in ConstructUniqueEntityContainerName()");
 
             var entityContainerName = proposedEntityContainerName;
             var suffix = 1;
@@ -352,165 +335,192 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
             InitializeConnectionStringsHash();
 
-            var configFilePath = GetConfigFilePath(project, true);
 
-            var configXmlDoc = LoadConfigFile(configFilePath);
-            if (configXmlDoc != null)
+            var configFileUtils = new ConfigFileUtils(project, PackageManager.Package);
+            configFileUtils.GetOrCreateConfigFile();
+            var configXmlDoc = configFileUtils.LoadConfig();
+
+            Dictionary<string, ConnectionString> hash;
+            if (!ConnStringsByProjectHash.TryGetValue(project, out hash))
             {
-                var connStringsNode = FindOrCreateXmlElement(configXmlDoc, XpathConnectionStrings, false);
-                if (connStringsNode == null)
-                {
-                    throw new XmlException(Resources.ConnectionManager_CorruptConfig);
-                }
+                var s = String.Format(CultureInfo.CurrentCulture, Resources.ConnectionManager_GetConfigError);
+                VsUtils.LogOutputWindowPaneMessage(project, s);
+                return;
+            }
 
-                // delete all previous System.Data.Entity connection strings that are in the hash
-                var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAddEntity);
-                foreach (XmlNode node in xmlNodeList)
-                {
-                    var prevSibling = node.PreviousSibling;
-                    var nextSibling = node.NextSibling;
-                    node.ParentNode.RemoveChild(node);
-                    if (prevSibling != null
-                        && prevSibling.NodeType == XmlNodeType.Whitespace)
-                    {
-                        prevSibling.ParentNode.RemoveChild(prevSibling);
-                    }
-                    if (nextSibling != null
-                        && nextSibling.NodeType == XmlNodeType.Whitespace)
-                    {
-                        nextSibling.ParentNode.RemoveChild(nextSibling);
-                    }
-                }
-
-                Dictionary<string, ConnectionString> hash = null;
-                if (!ConnStringsByProjectHash.TryGetValue(project, out hash))
-                {
-                    var s = String.Format(CultureInfo.CurrentCulture, Resources.ConnectionManager_GetConfigError);
-                    VsUtils.LogOutputWindowPaneMessage(project, s);
-                }
-                var hashEnum = hash.GetEnumerator();
-
-                var needToUpdate = false;
-
-                // iterate through the hash, using the keys/values to populate an XmlElement
-                while (hashEnum.MoveNext())
-                {
-                    var addNode = configXmlDoc.CreateElement("add");
-
-                    addNode.SetAttribute(XmlAttrNameEntityContainerName, hashEnum.Current.Key);
-                    addNode.SetAttribute(XmlAttrNameConnectionString, hashEnum.Current.Value.Text);
-                    addNode.SetAttribute(XmlAttrNameProviderName, Provider);
-
-                    connStringsNode.AppendChild(addNode);
-                    needToUpdate = true;
-                }
-
-                if (needToUpdate)
-                {
-                    try
-                    {
-                        UpdateConfigFile(configXmlDoc, configFilePath);
-                    }
-                    catch (Exception e)
-                    {
-                        var s = Resources.ConnectionManager_SaveXmlError;
-                        s = String.Format(CultureInfo.CurrentCulture, s, configFilePath, e.Message);
-                        VsUtils.LogOutputWindowPaneMessage(project, s);
-                        throw;
-                    }
-                }
+            if (hash.Any())
+            {
+                UpdateEntityConnectionStringsInConfig(configXmlDoc, hash);
+                configFileUtils.SaveConfig(configXmlDoc);
             }
         }
 
-        // Update the .config file if the nodes have a SQL CE 3.5 provider to use 4.0 instead
-        internal static bool UpdateSqlCeProviderInConnectionStrings(string configFilePath, out XmlDocument configXmlDoc)
+        // internal for testing
+        internal static void UpdateEntityConnectionStringsInConfig(XmlDocument configXmlDoc, Dictionary<string, ConnectionString> entityConnectionStrings)
         {
-            configXmlDoc = LoadConfigFile(configFilePath);
-            var docUpdated = false;
-            if (configXmlDoc != null)
+            Debug.Assert(configXmlDoc != null, "configXmlDoc is null");
+            Debug.Assert(entityConnectionStrings != null, "entityConnectionStrings is null");
+
+            // delete all previous System.Data.Entity connection strings that are in the hash
+            var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAddEntity);
+            foreach (XmlNode node in xmlNodeList)
             {
-                // update all nodes that have SQL CE 3.5 provider
-                var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAdd);
-                foreach (XmlNode node in xmlNodeList)
+                var prevSibling = node.PreviousSibling;
+                var nextSibling = node.NextSibling;
+                node.ParentNode.RemoveChild(node);
+                if (prevSibling != null
+                    && prevSibling.NodeType == XmlNodeType.Whitespace)
                 {
-                    var e = node as XmlElement;
-                    if (e != null)
+                    prevSibling.ParentNode.RemoveChild(prevSibling);
+                }
+                if (nextSibling != null
+                    && nextSibling.NodeType == XmlNodeType.Whitespace)
+                {
+                    nextSibling.ParentNode.RemoveChild(nextSibling);
+                }
+            }
+
+            var connStringsElement = GetConnectionStringsElement(configXmlDoc);
+            if (connStringsElement == null)
+            {
+                throw new XmlException(Resources.ConnectionManager_CorruptConfig);
+            }
+
+            foreach (var nameToConnString in entityConnectionStrings)
+            {
+                AddConnectionStringElement(connStringsElement, nameToConnString.Key, nameToConnString.Value.Text, Provider);
+            }
+        }
+
+        public static void AddConnectionStringElement(XmlDocument configXmlDoc, string connStringName, string connString, string providerName)
+        {
+            var connStringsElement = GetConnectionStringsElement(configXmlDoc); 
+            if (connStringsElement == null)
+            {
+                // can happen if the document element is not "configuration"
+                throw new XmlException(Resources.ConnectionManager_CorruptConfig);
+            }
+
+            AddConnectionStringElement(connStringsElement, connStringName, connString, providerName);
+        }
+
+        private static void AddConnectionStringElement(XmlNode connStringsElement, string connStringName, string connString, string providerName)
+        {
+            var addNode = connStringsElement.OwnerDocument.CreateElement("add");
+
+            addNode.SetAttribute(XmlAttrNameName, connStringName);
+            addNode.SetAttribute(XmlAttrNameConnectionString, connString);
+            addNode.SetAttribute(XmlAttrNameProviderName, providerName);
+
+            connStringsElement.AppendChild(addNode);
+        }
+
+        private static XmlElement GetConnectionStringsElement(XmlDocument configXml)
+        {
+            if (!"configuration".Equals(configXml.DocumentElement.Name, StringComparison.Ordinal)
+                || !string.IsNullOrEmpty(configXml.DocumentElement.NamespaceURI))
+            {
+                return null;
+            }
+
+            var connStringsElement = (XmlElement)configXml.DocumentElement.SelectSingleNode("connectionStrings");
+            if (connStringsElement == null)
+            {
+                connStringsElement = configXml.CreateElement("connectionStrings");
+                configXml.DocumentElement.AppendChild(connStringsElement);
+            }
+
+            return connStringsElement;
+        }
+
+#if (!VS12)
+        // Update the .config file if the nodes have a SQL CE 3.5 provider to use 4.0 instead
+        internal static bool UpdateSqlCeProviderInConnectionStrings(XmlDocument configXmlDoc)
+        {
+            Debug.Assert(configXmlDoc != null, "configXml is null");
+
+            var docUpdated = false;
+            // update all nodes that have SQL CE 3.5 provider
+            var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAdd);
+            foreach (XmlNode node in xmlNodeList)
+            {
+                var e = node as XmlElement;
+                if (e != null)
+                {
+                    var connectionString = e.GetAttribute(XmlAttrNameConnectionString);
+                    if (null != connectionString
+                        && connectionString.Contains(SqlCe35ConnectionStringProvider))
                     {
-                        var connectionString = e.GetAttribute(XmlAttrNameConnectionString);
-                        if (null != connectionString
-                            && connectionString.Contains(SqlCe35ConnectionStringProvider))
-                        {
-                            var newConnString = connectionString.Replace(SqlCe35ConnectionStringProvider, SqlCe40ConnectionStringProvider);
-                            e.SetAttribute(XmlAttrNameConnectionString, newConnString);
-                            docUpdated = true;
-                        }
+                        var newConnString = connectionString.Replace(SqlCe35ConnectionStringProvider, SqlCe40ConnectionStringProvider);
+                        e.SetAttribute(XmlAttrNameConnectionString, newConnString);
+                        docUpdated = true;
                     }
                 }
             }
 
             return docUpdated;
         }
+#endif
 
         // Update the .config file if the nodes have an old style SQL Database File Data Source to have the new style instead
-        internal static bool UpdateSqlDatabaseFileDataSourceInConnectionStrings(string configFilePath, out XmlDocument configXmlDoc)
+        internal static bool UpdateSqlDatabaseFileDataSourceInConnectionStrings(XmlDocument configXmlDoc)
         {
-            configXmlDoc = LoadConfigFile(configFilePath);
+            Debug.Assert(configXmlDoc != null, "configXml is null");
+
             var docUpdated = false;
-            if (configXmlDoc != null)
+
+            // update SQL Database File connections
+            var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAdd);
+            foreach (XmlNode node in xmlNodeList)
             {
-                // update SQL Database File connections
-                var xmlNodeList = configXmlDoc.SelectNodes(XpathConnectionStringsAdd);
-                foreach (XmlNode node in xmlNodeList)
+                var e = node as XmlElement;
+                if (e != null)
                 {
-                    var e = node as XmlElement;
-                    if (e != null)
+                    var connectionString = e.GetAttribute(XmlAttrNameConnectionString);
+                    if (null != connectionString)
                     {
-                        var connectionString = e.GetAttribute(XmlAttrNameConnectionString);
-                        if (null != connectionString)
+                        // a SQL Database File connection must contain AttachDbFileName
+                        var offset = connectionString.IndexOf(
+                            LocalDataUtil.CONNECTION_PROPERTY_ATTACH_DB_FILENAME, StringComparison.OrdinalIgnoreCase);
+                        if (offset > -1)
                         {
-                            // a SQL Database File connection must contain AttachDbFileName
-                            var offset = connectionString.IndexOf(
-                                LocalDataUtil.CONNECTION_PROPERTY_ATTACH_DB_FILENAME, StringComparison.OrdinalIgnoreCase);
+                            var connStringUpdated = false;
+
+                            // check whether connection string contains "Data Source=.\SQLEXPRESS" (case-insensitive)
+                            // if so replace with LocalDB Data Source
+                            offset = connectionString.IndexOf(
+                                PreUpgradeSqlDatabaseFileConnectionStringDataSource, StringComparison.OrdinalIgnoreCase);
                             if (offset > -1)
                             {
-                                var connStringUpdated = false;
+                                connectionString = connectionString.Substring(0, offset) +
+                                                    PostUpgradeSqlDatabaseFileConnectionStringDataSource +
+                                                    connectionString.Substring(
+                                                        offset + PreUpgradeSqlDatabaseFileConnectionStringDataSourceLength);
+                                connStringUpdated = true;
+                            }
 
-                                // check whether connection string contains "Data Source=.\SQLEXPRESS" (case-insensitive)
-                                // if so replace with LocalDB Data Source
-                                offset = connectionString.IndexOf(
-                                    PreUpgradeSqlDatabaseFileConnectionStringDataSource, StringComparison.OrdinalIgnoreCase);
-                                if (offset > -1)
+                            // check whether connection string contains "User Instance=True" (case-insensitive)
+                            // if so remove
+                            offset = connectionString.IndexOf(
+                                SqlDatabaseFileConnectionStringUserInstance, StringComparison.OrdinalIgnoreCase);
+                            if (offset > -1)
+                            {
+                                // if User Instance=True was followed by a semi-colon then remove that too
+                                var afterUserInstance =
+                                    connectionString.Substring(offset + SqlDatabaseFileConnectionStringUserInstanceLength);
+                                if (afterUserInstance.StartsWith(";", StringComparison.Ordinal))
                                 {
-                                    connectionString = connectionString.Substring(0, offset) +
-                                                       PostUpgradeSqlDatabaseFileConnectionStringDataSource +
-                                                       connectionString.Substring(
-                                                           offset + PreUpgradeSqlDatabaseFileConnectionStringDataSourceLength);
-                                    connStringUpdated = true;
+                                    afterUserInstance = afterUserInstance.Substring(1);
                                 }
+                                connectionString = connectionString.Substring(0, offset) + afterUserInstance;
+                                connStringUpdated = true;
+                            }
 
-                                // check whether connection string contains "User Instance=True" (case-insensitive)
-                                // if so remove
-                                offset = connectionString.IndexOf(
-                                    SqlDatabaseFileConnectionStringUserInstance, StringComparison.OrdinalIgnoreCase);
-                                if (offset > -1)
-                                {
-                                    // if User Instance=True was followed by a semi-colon then remove that too
-                                    var afterUserInstance =
-                                        connectionString.Substring(offset + SqlDatabaseFileConnectionStringUserInstanceLength);
-                                    if (afterUserInstance.StartsWith(";", StringComparison.Ordinal))
-                                    {
-                                        afterUserInstance = afterUserInstance.Substring(1);
-                                    }
-                                    connectionString = connectionString.Substring(0, offset) + afterUserInstance;
-                                    connStringUpdated = true;
-                                }
-
-                                // update XML document
-                                if (connStringUpdated)
-                                {
-                                    e.SetAttribute(XmlAttrNameConnectionString, connectionString);
-                                    docUpdated = true;
-                                }
+                            // update XML document
+                            if (connStringUpdated)
+                            {
+                                e.SetAttribute(XmlAttrNameConnectionString, connectionString);
+                                docUpdated = true;
                             }
                         }
                     }
@@ -555,226 +565,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 listener.AfterSaveFile -= OnAfterSaveFile;
             }
         }
-
-        #region Methods for resolving config file
-
-        // <summary>
-        //     Determine the .config file path by finding or creating the file
-        // </summary>
-        // <param name="project">DTE Project that owns the config file</param>
-        // <returns>string that represents the config's file path.</returns>
-        internal static string GetConfigFilePath(Project project, bool createConfig)
-        {
-            if (project == null)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            ProjectItem projectItemConfig = null;
-
-            var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, project);
-            try
-            {
-                if (applicationType == VisualStudioProjectSystem.WebApplication
-                    ||
-                    applicationType == VisualStudioProjectSystem.Website)
-                {
-                    projectItemConfig = FindOrCreateWebConfig(project, createConfig);
-                }
-                else
-                {
-                    projectItemConfig = FindOrCreateAppConfig(project, createConfig);
-                }
-            }
-            catch (NotSupportedException)
-            {
-                return null;
-            }
-
-            if (projectItemConfig == null)
-            {
-                return null;
-            }
-
-            return projectItemConfig.get_FileNames(1);
-        }
-
-        internal static ProjectItem FindOrCreateAppConfig(Project project)
-        {
-            return FindOrCreateAppConfig(project, true);
-        }
-
-        // <summary>
-        //     Finds or creates a .config file for a windows or web application
-        // </summary>
-        // <param name="project">DTE Project that owns the App.Config we want to find/create.</param>
-        // <returns>DTE ProjectItem that represents the config file.</returns>
-        private static ProjectItem FindOrCreateAppConfig(Project project, bool createConfig)
-        {
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            // Get the right item template name for the .config based on the project type (C# or VB)
-            var itemTemplateName = string.Empty;
-
-            var langEnum = VsUtils.GetLanguageForProject(project);
-
-            if (langEnum == LangEnum.CSharp)
-            {
-                itemTemplateName = AppConfigItemTemplateCs;
-            }
-            else if (langEnum == LangEnum.VisualBasic)
-            {
-                itemTemplateName = AppConfigItemTemplateVb;
-            }
-            else
-            {
-                throw new NotSupportedException(Resources.UnsupportedProjectLanguage);
-            }
-
-            return FindOrCreateConfig(project, VsUtils.AppConfigFileName, itemTemplateName, createConfig);
-        }
-
-        private static ProjectItem FindOrCreateWebConfig(Project project, bool createConfig)
-        {
-            return FindOrCreateConfig(project, VsUtils.WebConfigFileName, WebConfigItemTemplate, createConfig);
-        }
-
-        // <summary>
-        //     Finds or creates an Web.Config file in the project based on the built-in VS templates.
-        // </summary>
-        // <param name="project">DTE Project that owns the Web.Config we're interested in.</param>
-        // <returns>DTE ProjectItem that represents the config file.</returns>
-        internal static ProjectItem FindOrCreateWebConfig(Project project)
-        {
-            return FindOrCreateConfig(project, VsUtils.WebConfigFileName, WebConfigItemTemplate, true);
-        }
-
-        // <summary>
-        //     Command implementation of finding or creating a .config file for VS projects
-        // </summary>
-        // <param name="project">DTE project that owns the .config file</param>
-        // <param name="configFileName"></param>
-        // <param name="configItemTemplate"></param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
-        private static ProjectItem FindOrCreateConfig(
-            Project project,
-            string configFileName,
-            string configItemTemplate,
-            bool createConfig)
-        {
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            var projectItemConfig = VsUtils.FindFirstProjectItemWithName(project.ProjectItems, configFileName);
-            var projectDirectoryInfo = VsUtils.GetProjectRoot(project, Services.ServiceProvider);
-            var configFileInfo = new FileInfo(projectDirectoryInfo.FullName + "\\" + configFileName);
-
-            if ((null == projectItemConfig || !configFileInfo.Exists) && createConfig)
-            {
-                // first we'll try to add .config file if it already exists in the project directory but is not included in the project
-                if (configFileInfo.Exists)
-                {
-                    project.ProjectItems.AddFromFile(configFileInfo.FullName);
-                }
-                else
-                {
-                    // Project doesn't have this .config so create it & add it to the project
-                    var solution2 = project.DTE.Solution as Solution2;
-                    if (null != solution2)
-                    {
-                        // get the path to the standard VS template
-                        string itemTemplatePath = null;
-                        if (VsUtils.GetApplicationType(Services.ServiceProvider, project) == VisualStudioProjectSystem.WebApplication)
-                        {
-                            // in this case project.Kind does not indicate the language, so use fixed Guids instead
-                            var projectLanguage = VsUtils.GetLanguageForProject(project);
-                            if (projectLanguage == LangEnum.CSharp)
-                            {
-                                itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, CsWebApplicationKind);
-                            }
-                            else if (projectLanguage == LangEnum.VisualBasic)
-                            {
-                                itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, VbWebApplicationKind);
-                            }
-                            else
-                            {
-                                // could not find project language
-                                throw new NotSupportedException(Resources.UnsupportedProjectLanguage);
-                            }
-                        }
-                        else
-                        {
-                            itemTemplatePath = solution2.GetProjectItemTemplate(configItemTemplate, project.Kind);
-                        }
-
-                        Debug.Assert(itemTemplatePath != null, "Config template path is null");
-
-                        // create it
-                        project.ProjectItems.AddFromTemplate(itemTemplatePath, configFileName); // always returns null
-
-                        // projects from previous VS versions might contain .exe.config (or .dll.config) file
-                        // if so, we should warn the user
-                        try
-                        {
-                            var outputFileName = (string)project.Properties.Item("OutputFileName").Value;
-                            var fi = new FileInfo(projectDirectoryInfo.FullName + "\\" + outputFileName + ".config");
-                            if (fi.Exists)
-                            {
-                                VsUtils.LogStandardWarning(String.Format(
-                                    CultureInfo.CurrentCulture, Resources.ExistingConfigurationFileWarning, fi.Name, configFileName),
-                                    fi.FullName, 0, 0);
-                            }
-                        }
-                        catch (ArgumentException)
-                        {
-                        }
-                    }
-                }
-
-                // now go look for it - we should find it now that we've created it
-                projectItemConfig = VsUtils.FindFirstProjectItemWithName(project.ProjectItems, configFileName);
-            }
-
-            return projectItemConfig;
-        }
-
-        internal static XmlDocument LoadConfigFile(string configFilePath)
-        {
-            // attempt to construct the config xml from the doc data if it is available
-            try
-            {
-                var textLines = VSHelpers.GetDocData(Services.ServiceProvider, configFilePath) as IVsTextLines;
-                return textLines != null
-                           ? EdmUtils.SafeLoadXmlFromString(
-                               VSHelpers.GetTextFromVsTextLines(textLines), preserveWhitespace: true)
-                           : EdmUtils.SafeLoadXmlFromPath(configFilePath);
-            }
-            catch (XmlException e)
-            {
-                VsUtils.LogStandardError(
-                    String.Format(
-                        CultureInfo.CurrentCulture, Resources.VSUtils_ExceptionParsingXml, configFilePath, e.Message),
-                    configFilePath,
-                    e.LineNumber,
-                    e.LinePosition);
-
-                throw;
-            }
-        }
-
-        internal static void UpdateConfigFile(XmlDocument configXmlDoc, string configFilePath)
-        {
-            IDictionary<string, object> map = new Dictionary<string, object>();
-            map.Add(configFilePath, configXmlDoc);
-            VsUtils.WriteCheckoutXmlFilesInProject(map);
-        }
-
-        #endregion
 
         internal static DesignerProperty GetMetadataPropertyFromArtifact(EFArtifact artifact)
         {
@@ -993,37 +783,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return ConnectionDesignerInfo.MAP_EmbedInOutputAssembly;
         }
 
-        internal HashSet<string> GetExistingConnectionStringNames(Project project)
-        {
-            if (!ConnStringsByProjectHash.ContainsKey(project))
-            {
-                return new HashSet<string>();
-            }
-            return new HashSet<string>(ConnStringsByProjectHash[project].Keys);
-        }
-
-        internal ConnectionString GetConnectionStringByMetadataFileName(Project project, string filePath)
-        {
-            var fileName = Path.GetFileNameWithoutExtension(filePath);
-            var connStringsInProject = ConnStringsByProjectHash[project];
-            if (connStringsInProject != null)
-            {
-                var enumerator = connStringsInProject.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    var connString = enumerator.Current.Value;
-                    var metadata = connString.Builder.Metadata;
-                    if (metadata.Contains(fileName + EntityDesignArtifact.ExtensionCsdl)
-                        && metadata.Contains(fileName + EntityDesignArtifact.ExtensionMsl)
-                        && metadata.Contains(fileName + EntityDesignArtifact.ExtensionSsdl))
-                    {
-                        return connString;
-                    }
-                }
-            }
-            return null;
-        }
-
         internal static ConnectionString GetConnectionStringObject(Project project, string entityContainerName)
         {
             return GetConnectionStringObject(project, entityContainerName, PackageManager.Package.ConnectionManager);
@@ -1087,7 +846,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 return false;
             }
             var connectionStringAttr = node.Attributes.GetNamedItem(XmlAttrNameConnectionString);
-            var connectionNameAttr = node.Attributes.GetNamedItem(XmlAttrNameEntityContainerName);
+            var connectionNameAttr = node.Attributes.GetNamedItem(XmlAttrNameName);
             if (connectionStringAttr != null
                 && connectionNameAttr != null)
             {
@@ -1181,6 +940,57 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return (VisualStudioProjectSystem.WebApplication == applicationType)
                 ? project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value as string
                 : string.Empty;
+        }
+
+        // computes a unique connection string name based on the input base name
+        internal static string GetUniqueConnectionStringName(ConfigFileUtils configFileUtils, string baseConnectionStringName)
+        {
+            var connectionStringNames = GetExistingConnectionStrings(configFileUtils).Keys;
+
+            var i = 1;
+            var uniqueConnectionStringName = baseConnectionStringName;
+            while (connectionStringNames.Contains(uniqueConnectionStringName))
+            {
+                uniqueConnectionStringName = baseConnectionStringName + i++;
+            }
+
+            return uniqueConnectionStringName;
+        }
+
+        internal static Dictionary<string, string> GetExistingConnectionStrings(ConfigFileUtils configFileUtils)
+        {
+            var configXml = configFileUtils.LoadConfig();
+
+            var existingConnectionStrings = new Dictionary<string, string>();
+            if (configXml == null)
+            {
+                // can be null if config does not exist in which case there are no connection strings
+                return existingConnectionStrings;
+            }
+
+            // note we return all the connection string names to support CodeFirst scenarios
+            foreach (var addElement in 
+                configXml.SelectNodes(XpathConnectionStringsAdd).OfType<XmlElement>())
+            {
+                var name = addElement.GetAttribute(XmlAttrNameName);
+                if (!string.IsNullOrEmpty(name))
+                {
+                    existingConnectionStrings.Add(name, addElement.GetAttribute(XmlAttrNameConnectionString));
+                }
+            }
+
+            return existingConnectionStrings;
+        }
+
+        public static string CreateDefaultLocalDbConnectionString(string initialCatalog)
+        {
+            Debug.Assert(!string.IsNullOrWhiteSpace(initialCatalog), "invalid initial catalog name");
+
+            return
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    @"Data Source=(LocalDb)\v11.0;Initial Catalog={0};Integrated Security=True",
+                    initialCatalog);
         }
 
         // <summary>
@@ -1365,36 +1175,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                     InsertConnStringsFromHash(project);
                 }
             }
-        }
-
-        // <summary>
-        //     Helper to find or create elements along an XPath expression, under a parent node
-        // </summary>
-        private static XmlNode FindOrCreateXmlElement(XmlNode parentNode, string elementPath, bool prependChild)
-        {
-            XmlNode xmlNode = null;
-
-            var elementNames = elementPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var elementName in elementNames)
-            {
-                xmlNode = parentNode.SelectSingleNode(elementName);
-                if (null == xmlNode)
-                {
-                    xmlNode = parentNode.OwnerDocument.CreateElement(elementName);
-                    if (prependChild)
-                    {
-                        parentNode.PrependChild(xmlNode);
-                    }
-                    else
-                    {
-                        parentNode.AppendChild(xmlNode);
-                    }
-                }
-
-                parentNode = xmlNode;
-            }
-
-            return xmlNode;
         }
 
         #region Event handlers
@@ -1740,7 +1520,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             Debug.Assert(serviceProvider != null, "serviceProvider must not be null");
             Debug.Assert(project != null, "project must not be null");
             Debug.Assert(!string.IsNullOrWhiteSpace(invariantName), "invalid invariantName");
-            Debug.Assert(!string.IsNullOrWhiteSpace(connectionString), "invalid connectionString");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                return connectionString;
+            }
 
             var converter = (IConnectionStringConverterService)serviceProvider.GetService(typeof(IConnectionStringConverterService));
             if (converter == null)

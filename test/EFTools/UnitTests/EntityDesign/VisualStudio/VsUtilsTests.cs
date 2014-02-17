@@ -5,7 +5,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Design;
-    using System.Data.Entity.Core.Common;
+    using System.Data.Common;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using System.IO;
     using System.Linq;
@@ -15,11 +16,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using Microsoft.VisualStudio.Shell.Design;
     using Microsoft.VisualStudio.Shell.Interop;
     using Moq;
+    using Moq.Protected;
     using UnitTests.TestHelpers;
     using VSLangProj;
     using VSLangProj80;
     using VsWebSite;
     using Xunit;
+    using DbProviderServices = System.Data.Entity.Core.Common.DbProviderServices;
 
     public class VsUtilsTests
     {
@@ -653,6 +656,74 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             {
                 DependencyResolver.UnregisterProvider("System.Data.SqlClient");
             }
+        }
+
+        [Fact]
+        public void GetProjectItemByPath_returns_item()
+        {
+            var projectItem = new Mock<ProjectItem>();
+            var projectItems = new Mock<ProjectItems>();
+            projectItems.Setup(i => i.Item("Class1.cs")).Returns(projectItem.Object);
+            var project = new Mock<Project>();
+            project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
+
+            var result = VsUtils.GetProjectItemByPath(project.Object, "Class1.cs");
+
+            Assert.Same(projectItem.Object, result);
+        }
+
+        [Fact]
+        public void GetProjectItemByPath_returns_item_when_nested()
+        {
+            var fileProjectItem = new Mock<ProjectItem>();
+            var directoryProjectItems = new Mock<ProjectItems>();
+            directoryProjectItems.Setup(i => i.Item("Class1.cs")).Returns(fileProjectItem.Object);
+            var directoryProjectItem = new Mock<ProjectItem>();
+            directoryProjectItem.SetupGet(i => i.ProjectItems).Returns(directoryProjectItems.Object);
+            var projectItems = new Mock<ProjectItems>();
+            projectItems.Setup(i => i.Item("Model")).Returns(directoryProjectItem.Object);
+            var project = new Mock<Project>();
+            project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
+
+            var result = VsUtils.GetProjectItemByPath(project.Object, @"Model\Class1.cs");
+
+            Assert.Same(fileProjectItem.Object, result);
+        }
+
+        [Fact]
+        public void GetProjectItemByPath_returns_null_when_error()
+        {
+            var projectItems = new Mock<ProjectItems>();
+            projectItems.Setup(i => i.Item(It.IsAny<object>())).Throws<Exception>();
+            var project = new Mock<Project>();
+            project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
+
+            var result = VsUtils.GetProjectItemByPath(project.Object, "Class1.cs");
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetProviderManifestTokenConnected_returns_provider_manifest_token()
+        {
+            var providerServicesMock = new Mock<DbProviderServices>();
+            providerServicesMock
+                .Protected()
+                .Setup<string>("GetDbProviderManifestToken", ItExpr.IsAny<DbConnection>())
+                .Returns("FakeProviderManifestToken");
+
+            var mockResolver = new Mock<IDbDependencyResolver>();
+            mockResolver.Setup(
+                r => r.GetService(
+                    It.Is<Type>(t => t == typeof(DbProviderServices)),
+                    It.IsAny<string>())).Returns(providerServicesMock.Object);
+
+            Assert.Equal(
+                "FakeProviderManifestToken",
+                VsUtils.GetProviderManifestTokenConnected(
+                    mockResolver.Object,
+                    "System.Data.SqlClient",
+                    providerConnectionString: string.Empty));
         }
     }
 }

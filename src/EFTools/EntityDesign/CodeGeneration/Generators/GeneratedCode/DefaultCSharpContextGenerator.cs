@@ -10,14 +10,14 @@
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
     using System.Linq;
-    using System.Data.Entity.Core.Metadata.Edm;
+    using Microsoft.Data.Entity.Design.CodeGeneration;
     using System;
     
     /// <summary>
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal partial class CSharpEntityTextTransformation : CSharpEntityTextTransformationBase
+    internal partial class DefaultCSharpContextGenerator : DefaultCSharpContextGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -28,133 +28,218 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     var code = new CSharpCodeHelper();
     var edm = new EdmHelper(code);
 
-    if (EntitySet == null)
-    {
-        throw new ArgumentNullException("EntitySet");
-    }
-
     if (Model == null)
     {
         throw new ArgumentNullException("Model");
     }
 
-    var entityType = EntitySet.ElementType;
+    if (Namespace == null)
+    {
+        throw new ArgumentNullException("Namespace");
+    }
+
+    if (ContextClassName == null)
+    {
+        throw new ArgumentNullException("ContextClassName");
+    }
+
+    if (ConnectionStringName == null)
+    {
+        throw new ArgumentNullException("ConnectionStringName");
+    }
 
             this.Write("namespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n{\r\n    using System;\r\n    using System.Collections.Generic;\r\n    using System.C" +
-                    "omponentModel.DataAnnotations;\r\n    using System.ComponentModel.DataAnnotations." +
-                    "Schema;\r\n    using System.Data.Entity.Spatial;\r\n\r\n");
+            this.Write("\r\n{\r\n    using System;\r\n    using System.Data.Entity;\r\n    using System.Component" +
+                    "Model.DataAnnotations.Schema;\r\n    using System.Linq;\r\n\r\n    public partial clas" +
+                    "s ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContextClassName));
+            this.Write(" : DbContext\r\n    {\r\n        public ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContextClassName));
+            this.Write("()\r\n            : base(\"name=");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ConnectionStringName));
+            this.Write("\")\r\n        {\r\n        }\r\n\r\n");
 
-    var typeConfigurations = edm.GetConfigurations(EntitySet, Model).OfType<IAttributeConfiguration>();
-
-    foreach (var typeConfiguration in typeConfigurations)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
 
-            this.Write("    ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Attribute(typeConfiguration)));
-            this.Write("\r\n");
+            this.Write("        public virtual DbSet<");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
+            this.Write("> ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(entitySet)));
+            this.Write(" { get; set; }\r\n");
 
     }
 
-            this.Write("    public partial class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entityType)));
-            this.Write("\r\n    {\r\n");
+            this.Write("\r\n        protected override void OnModelCreating(DbModelBuilder modelBuilder)\r\n " +
+                    "       {\r\n");
 
-    var collectionProperties = from p in entityType.NavigationProperties
-                               where p.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many
-                               select p;
+    var anyConfiguration = false;
 
-    if (collectionProperties.Any())
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
+        var typeConfigurations = edm.GetConfigurations(entitySet, Model).OfType<IFluentConfiguration>()
+            .Where(c => !(c is IAttributeConfiguration || c is KeyConfiguration));
 
-            this.Write("        public ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entityType)));
-            this.Write("()\r\n        {\r\n");
-
-    foreach (var collectionProperty in collectionProperties)
-    {
-
-            this.Write("            ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(collectionProperty)));
-            this.Write(" = new HashSet<");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(collectionProperty.ToEndMember.GetEntityType())));
-            this.Write(">();\r\n");
-
-    }
-
-            this.Write("        }\r\n\r\n");
-
-    }
-
-    var first = true;
-
-    foreach (var property in entityType.Properties)
-    {
-        if (!first)
+        var firstTypeConfiguration = true;
+        foreach (var typeConfiguration in typeConfigurations)
         {
-            WriteLine(string.Empty);
-        }
-        else
-        {
-            first = false;
+            if (firstTypeConfiguration)
+            {
+                firstTypeConfiguration = false;
+
+                if (anyConfiguration)
+                {
+                    WriteLine(string.Empty);
+                }
+                else
+                {
+                    anyConfiguration = true;
+                }
+
+
+            this.Write("            modelBuilder.Entity<");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
+            this.Write(">()\r\n");
+
+            }
+            else
+            {
+                WriteLine(string.Empty);
+            }
+
+            Write("                " + code.MethodChain(typeConfiguration));
         }
 
-        var propertyConfigurations = edm.GetConfigurations(property, Model).OfType<IAttributeConfiguration>();
-
-        foreach (var propertyConfiguration in propertyConfigurations)
+        if (!firstTypeConfiguration)
         {
-
-            this.Write("        ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Attribute(propertyConfiguration)));
-            this.Write("\r\n");
-
+            WriteLine(";");
         }
 
-            this.Write("        public ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(property)));
-            this.Write(" ");
+        foreach (var property in entitySet.ElementType.Properties)
+        {
+            var propertyConfigurations = edm.GetConfigurations(property, Model).OfType<IFluentConfiguration>()
+                .Where(c => !(c is IAttributeConfiguration));
+
+            var firstPropertyConfiguration = true;
+            foreach (var propertyConfiguration in propertyConfigurations)
+            {
+                var columnConfiguration = propertyConfiguration as ColumnConfiguration;
+                if (columnConfiguration != null)
+                {
+                    // Unset this since it is implied in the key configuration calls themselves
+                    columnConfiguration.Order = null;
+
+                    if (columnConfiguration.Name == null && columnConfiguration.TypeName == null)
+                    {
+                        // Nothing left to configure
+                        continue;
+                    }
+                }
+
+                if (firstPropertyConfiguration)
+                {
+                    firstPropertyConfiguration = false;
+                    
+                    if (anyConfiguration)
+                    {
+                        WriteLine(string.Empty);
+                    }
+                    else
+                    {
+                        anyConfiguration = true;
+                    }
+
+
+            this.Write("            modelBuilder.Entity<");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
+            this.Write(">()\r\n                .Property(e => e.");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(property)));
-            this.Write(" { get; set; }\r\n");
+            this.Write(")\r\n");
 
+                }
+                else
+                {
+                    WriteLine(string.Empty);
+                }
+
+                Write("                " + code.MethodChain(propertyConfiguration));
+            }
+
+            if (!firstPropertyConfiguration)
+            {
+                WriteLine(";");
+            }
+        }
+
+        foreach (var navigationProperty in entitySet.ElementType.NavigationProperties)
+        {
+            // Only configure relationships from one end
+            if (navigationProperty.RelationshipType.RelationshipEndMembers.First() != navigationProperty.FromEndMember)
+            {
+                continue;
+            }
+
+            bool isDefaultMultiplicity;
+            var navigationPropertyMultiplicityConfiguration = edm.GetMultiplicityConfiguration(navigationProperty, out isDefaultMultiplicity);
+            var navigationPropertyConfigurations = edm.GetConfigurations(navigationProperty, Model);
+
+            var firstNavigationPropertyConfiguration = true;
+            foreach (var navigationPropertyConfiguration in navigationPropertyConfigurations)
+            {
+                if (firstNavigationPropertyConfiguration)
+                {
+                    firstNavigationPropertyConfiguration = false;
+                    
+                    if (anyConfiguration)
+                    {
+                        WriteLine(string.Empty);
+                    }
+                    else
+                    {
+                        anyConfiguration = true;
+                    }
+
+
+            this.Write("            modelBuilder");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.MethodChain(navigationPropertyMultiplicityConfiguration)));
+            this.Write("\r\n");
+
+                }
+                else
+                {
+                    WriteLine(string.Empty);
+                }
+
+                Write("                " + code.MethodChain(navigationPropertyConfiguration));
+            }
+
+            if (!firstNavigationPropertyConfiguration)
+            {
+                WriteLine(";");
+            }
+            else if (!isDefaultMultiplicity)
+            {            
+                if (anyConfiguration)
+                {
+                    WriteLine(string.Empty);
+                }
+                else
+                {
+                    anyConfiguration = true;
+                }
+
+            this.Write("            modelBuilder");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.MethodChain(navigationPropertyMultiplicityConfiguration)));
+            this.Write(";\r\n");
+
+            }
+        }
     }
 
-    foreach (var navigationProperty in entityType.NavigationProperties)
-    {
-        if (!first)
-        {
-            WriteLine(string.Empty);
-        }
-        else
-        {
-            first = false;
-        }
-
-
-            this.Write("        public virtual ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(navigationProperty)));
-            this.Write(" ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(navigationProperty)));
-            this.Write(" { get; set; }\r\n");
-
-    }
-
-            this.Write("    }\r\n}\r\n");
+            this.Write("        }\r\n    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
-
-private global::System.Data.Entity.Core.Metadata.Edm.EntitySet _EntitySetField;
-
-/// <summary>
-/// Access the EntitySet parameter of the template.
-/// </summary>
-private global::System.Data.Entity.Core.Metadata.Edm.EntitySet EntitySet
-{
-    get
-    {
-        return this._EntitySetField;
-    }
-}
 
 private global::System.Data.Entity.Infrastructure.DbModel _ModelField;
 
@@ -182,6 +267,32 @@ private string Namespace
     }
 }
 
+private string _ContextClassNameField;
+
+/// <summary>
+/// Access the ContextClassName parameter of the template.
+/// </summary>
+private string ContextClassName
+{
+    get
+    {
+        return this._ContextClassNameField;
+    }
+}
+
+private string _ConnectionStringNameField;
+
+/// <summary>
+/// Access the ConnectionStringName parameter of the template.
+/// </summary>
+private string ConnectionStringName
+{
+    get
+    {
+        return this._ConnectionStringNameField;
+    }
+}
+
 
 /// <summary>
 /// Initialize the template
@@ -190,20 +301,6 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool EntitySetValueAcquired = false;
-if (this.Session.ContainsKey("EntitySet"))
-{
-    this._EntitySetField = ((global::System.Data.Entity.Core.Metadata.Edm.EntitySet)(this.Session["EntitySet"]));
-    EntitySetValueAcquired = true;
-}
-if ((EntitySetValueAcquired == false))
-{
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("EntitySet");
-    if ((data != null))
-    {
-        this._EntitySetField = ((global::System.Data.Entity.Core.Metadata.Edm.EntitySet)(data));
-    }
-}
 bool ModelValueAcquired = false;
 if (this.Session.ContainsKey("Model"))
 {
@@ -232,6 +329,34 @@ if ((NamespaceValueAcquired == false))
         this._NamespaceField = ((string)(data));
     }
 }
+bool ContextClassNameValueAcquired = false;
+if (this.Session.ContainsKey("ContextClassName"))
+{
+    this._ContextClassNameField = ((string)(this.Session["ContextClassName"]));
+    ContextClassNameValueAcquired = true;
+}
+if ((ContextClassNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ContextClassName");
+    if ((data != null))
+    {
+        this._ContextClassNameField = ((string)(data));
+    }
+}
+bool ConnectionStringNameValueAcquired = false;
+if (this.Session.ContainsKey("ConnectionStringName"))
+{
+    this._ConnectionStringNameField = ((string)(this.Session["ConnectionStringName"]));
+    ConnectionStringNameValueAcquired = true;
+}
+if ((ConnectionStringNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ConnectionStringName");
+    if ((data != null))
+    {
+        this._ConnectionStringNameField = ((string)(data));
+    }
+}
 
 
     }
@@ -244,7 +369,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal class CSharpEntityTextTransformationBase
+    internal class DefaultCSharpContextGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

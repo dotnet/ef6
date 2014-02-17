@@ -74,5 +74,6 @@ namespace Microsoft.Data.Entity.Design.Common
 
         internal static readonly int GenerateModelFromDbBase = 13100;
         internal static readonly int GenerateModelFromDbReverseEngineerStoreModelFailed = GenerateModelFromDbBase + 1;
+        internal static readonly int GenerateModelFromDbInvalidConceptualModel = GenerateModelFromDbBase + 2;
     }
 }

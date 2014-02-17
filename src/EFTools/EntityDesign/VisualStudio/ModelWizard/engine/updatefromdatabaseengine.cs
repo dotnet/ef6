@@ -26,7 +26,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    internal static class UpdateFromDatabaseEngine
+    internal class UpdateFromDatabaseEngine : DatabaseEngineBase
     {
         // <summary>
         //     Updates the EDMX file based on the Database changes
@@ -43,11 +43,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
             // set up ModelBuilderSettings for startMode=PerformDatabaseConfigAndSelectTables
             ModelBuilderWizardForm.WizardMode startMode;
-            ModelBuilderSettings settings;
-            ModelBuilderEngine.SetupSettingsAndModeForDbPages(
-                serviceProvider, project, artifact, true,
-                ModelBuilderWizardForm.WizardMode.PerformDatabaseConfigAndSelectTables,
-                ModelBuilderWizardForm.WizardMode.PerformSelectTablesOnly, out startMode, out settings);
+            var settings =
+                SetupSettingsAndModeForDbPages(
+                    serviceProvider, project, artifact, true,
+                    ModelBuilderWizardForm.WizardMode.PerformDatabaseConfigAndSelectTables,
+                    ModelBuilderWizardForm.WizardMode.PerformSelectTablesOnly, out startMode);
             settings.WizardKind = WizardKind.UpdateModel;
 
             // use existing storage namespace as new storage namespace
@@ -97,13 +97,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
 
             // Update the app. or web.config, register build providers etc
-            ConfigFileUtils.UpdateConfig(settings);
-
-            // clear all previous errors for this document first
-            ErrorListHelper.ClearErrorsForDocAcrossLists(settings.Artifact.Uri);
-
-            // log any errors that occurred during model-gen to the error list
-            ErrorListHelper.LogUpdateModelWizardErrors(settings.ModelBuilderEngine.Errors, settings.Artifact.Uri.LocalPath);
+            ConfigFileHelper.UpdateConfig(settings);
 
             // use form.ModelBuilderSettings to look at accumulated info and
             // take appropriate action
@@ -130,7 +124,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        internal static bool ProcessAccumulatedInfo(
+        private static bool ProcessAccumulatedInfo(
             EditingContext editingContext, EntityDesignArtifact existingArtifact, ModelBuilderSettings settings)
         {
             var schemaVersionChanged = existingArtifact.SchemaVersion != settings.TargetSchemaVersion;
@@ -253,7 +247,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     () =>
                         {
                             var functionImportCommands = new List<Command>();
-                            ModelBuilderEngine.ProcessStoredProcedureReturnTypeInformation(
+                            ProgressDialogHelper.ProcessStoredProcedureReturnTypeInformation(
                                 existingArtifact, settings.NewFunctionSchemaProcedures, functionImportCommands, true);
 
                             if (functionImportCommands.Count > 0)
@@ -333,7 +327,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         //     TODO: figure out what to do with the actual errors (write to a log?)
         // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        internal static void ValidateArtifact(EntityDesignModelManager modelManager, EFArtifact artifact, WizardKind kind)
+        private static void ValidateArtifact(EntityDesignModelManager modelManager, EFArtifact artifact, WizardKind kind)
         {
             var errorsFound = false;
             Exception caughtException = null;
@@ -410,7 +404,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 using (var sw = new StreamWriter(fs, Encoding.UTF8))
                 {
-                    sw.Write(settings.ModelBuilderEngine.Model.ToString());
+                    sw.Write(((EdmxModelBuilderEngine)settings.ModelBuilderEngine).Edmx.ToString());
                 }
             }
             return new FileInfo(tempFilePath);
@@ -428,7 +422,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 _settings = settings;
                 _artifact = settings.Artifact;
-                _fromDbDocument = settings.ModelBuilderEngine.Model;
+                _fromDbDocument = ((EdmxModelBuilderEngine)settings.ModelBuilderEngine).Edmx;
                 _projectItem = VsUtils.GetProjectItemForDocument(_artifact.Uri.LocalPath, PackageManager.Package);
 
                 // make a copy of the artifact before any chagnes are done to it.  This is the "original document" that will be passed to extensions

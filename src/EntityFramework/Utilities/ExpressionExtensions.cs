@@ -186,14 +186,44 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(expression);
 
-            while ((expression != null)
-                   && (expression.NodeType == ExpressionType.Convert
-                       || expression.NodeType == ExpressionType.ConvertChecked))
+            while (expression.NodeType == ExpressionType.Convert
+                   || expression.NodeType == ExpressionType.ConvertChecked)
             {
-                expression = RemoveConvert(((UnaryExpression)expression).Operand);
+                expression = ((UnaryExpression)expression).Operand;
             }
 
             return expression;
+        }
+
+        public static bool IsNullConstant(this Expression expression)
+        {
+            // convert statements introduced by compiler should not affect nullness
+            expression = expression.RemoveConvert();
+
+            // check if the unwrapped expression is a null constant
+            if (expression.NodeType != ExpressionType.Constant)
+            {
+                return false;
+            }
+
+            return ((ConstantExpression)expression).Value == null;
+        }
+
+        public static bool IsStringAddExpression(this Expression expression)
+        {
+            var linq = expression as BinaryExpression;
+            if (linq == null)
+            {
+                return false;
+            }
+
+            if (linq.Method == null || linq.NodeType != ExpressionType.Add)
+            {
+                return false;
+            }
+
+            return linq.Method.DeclaringType == typeof(string) &&
+                   string.Equals(linq.Method.Name, "Concat", StringComparison.Ordinal);
         }
     }
 }

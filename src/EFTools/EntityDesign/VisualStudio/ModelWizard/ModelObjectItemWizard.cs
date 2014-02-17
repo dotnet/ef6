@@ -300,9 +300,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         {
             if (_edmxItem == null)
             {
-                if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst)
+                if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst
+                    || _modelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase)
                 {
-                    AddOneEFItems(_modelBuilderSettings.Project, _modelBuilderSettings.ModelName);
+                    Debug.Assert(
+                        _modelBuilderSettings.ModelBuilderEngine == null ^
+                        _modelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
+                        "Model should be null for Empty Model and not null CodeFirst from database");
+
+                    AddCodeFirstItems();
                 }
 
                 return;
@@ -320,14 +326,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
                 try
                 {
-                    ConfigFileUtils.UpdateConfig(_modelBuilderSettings);
+                    ConfigFileHelper.UpdateConfig(_modelBuilderSettings);
 
                     // save the model generated in the wizard UI.
                     if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
                     {
                         var writingModelWatch = new Stopwatch();
                         writingModelWatch.Start();
-                        var mbe = _modelBuilderSettings.ModelBuilderEngine;
+                        var modelEdmx = ((EdmxModelBuilderEngine)_modelBuilderSettings.ModelBuilderEngine).Edmx;
 
                         if (!string.Equals(fileExtension, EntityDesignArtifact.ExtensionEdmx, StringComparison.OrdinalIgnoreCase))
                         {
@@ -338,7 +344,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem,
                                 edmxFileInfo,
                                 _modelBuilderSettings.TargetSchemaVersion,
-                                mbe.Model);
+                                modelEdmx);
                             VSArtifact.DispatchToConversionExtensions(
                                 EscherExtensionPointManager.LoadModelConversionExtensions(),
                                 fileExtension,
@@ -353,7 +359,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem.FileNames[1],
                                 new XmlWriterSettings { Indent = true }))
                             {
-                                mbe.Model.WriteTo(modelWriter);
+                                modelEdmx.WriteTo(modelWriter);
                             }
                         }
 
@@ -364,9 +370,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 CultureInfo.CurrentCulture,
                                 Properties.Resources.WritingModelTimeMsg,
                                 writingModelWatch.Elapsed));
-
-                        // now add errors
-                        ErrorListHelper.LogWizardErrors(mbe.Errors, _edmxItem);
                     }
 
                     // set the ItemType for the generated .edmx file
@@ -508,7 +511,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 && modelBuilderSettings.NewFunctionSchemaProcedures.Count > 0)
             {
                 // user selected to create new FunctionImports, but don't create the composable ones as these have already been created by the runtime
-                ModelBuilderEngine.ProcessStoredProcedureReturnTypeInformation(
+                ProgressDialogHelper.ProcessStoredProcedureReturnTypeInformation(
                     designArtifact,
                     modelBuilderSettings.NewFunctionSchemaProcedures,
                     commands,
@@ -578,17 +581,33 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 }
             }
         }
-        private static void AddOneEFItems(Project project, string modelName)
+
+        private void AddCodeFirstItems()
         {
             using (new VsUtils.HourglassHelper())
             {
+                var project = _modelBuilderSettings.Project;
                 var webTag = VsUtils.IsWebSiteProject(project) ? "WS" : "";
                 var languageTag = VsUtils.GetLanguageForProject(project) == LangEnum.VisualBasic ? "VB" : "CS";
 
                 var templateName = string.Format(CultureInfo.InvariantCulture, "CF{0}{1}EF6.zip", languageTag, webTag);
                 var template = ((Solution2)project.DTE.Solution).GetProjectItemTemplate(templateName, project.Kind);
 
-                project.ProjectItems.AddFromTemplate(template, modelName);
+                try
+                {
+                    OneEFWizard.ModelBuilderSettings = _modelBuilderSettings;
+
+                    var parentItems =
+                        project.DTE.SelectedItems.Count > 0 && project.DTE.SelectedItems.Item(1).ProjectItem != null
+                            ? project.DTE.SelectedItems.Item(1).ProjectItem.ProjectItems
+                            : project.ProjectItems;
+
+                    parentItems.AddFromTemplate(template, _modelBuilderSettings.ModelName);
+                }
+                finally
+                {
+                    OneEFWizard.ModelBuilderSettings = null;
+                }
             }
         }
 
@@ -599,7 +618,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// <returns>true if the item should be added; otherwise, false.</returns>
         public bool ShouldAddProjectItem(string filePath)
         {
-            return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst;
+            return _modelBuilderSettings.GenerationOption != ModelGenerationOption.EmptyModelCodeFirst &&
+                   _modelBuilderSettings.GenerationOption != ModelGenerationOption.CodeFirstFromDatabase;
         }
 
         // <summary>

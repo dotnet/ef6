@@ -67,8 +67,6 @@ templates that get installed as part of the Entity Framework Tools.
         };
 
     var sourceDir = Host.ResolvePath("CodeFirst");
-	const string ProjectItemCSTemplate = "ProjectItem.cs.template";
-	const string ProjectItemVBTemplate = "ProjectItem.vb.template";
 
     foreach (var type in types)
     {
@@ -84,13 +82,8 @@ templates that get installed as part of the Entity Framework Tools.
             Directory.CreateDirectory(targetDir);
             TransformTo(vstemplatePath, targetDir, culture, "6");
 
-			var projectItemTemplateName = type.Qualifier1.StartsWith("CS") ? ProjectItemCSTemplate : ProjectItemVBTemplate;
-
-			var projectItemContents = File.ReadAllText(Path.Combine(sourceDir,  projectItemTemplateName));
-
-			// localizing the project item will go here
-
-			File.WriteAllText(Path.Combine(targetDir, Path.GetFileNameWithoutExtension(projectItemTemplateName)), projectItemContents);
+			var projectItemName = Path.ChangeExtension("ProjectItem", type.Qualifier1.StartsWith("CS") ? "cs" : "vb");
+			File.WriteAllText(Path.Combine(targetDir, projectItemName), "$contextfilecontents$");
         }
     }
 #>

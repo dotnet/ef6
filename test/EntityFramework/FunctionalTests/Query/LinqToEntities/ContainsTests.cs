@@ -293,11 +293,7 @@ CASE WHEN ( EXISTS (SELECT
 	1 AS [C1]
 	FROM [dbo].[Books] AS [Extent2]
 	WHERE 0 = [Extent2].[Genre]
-)) THEN cast(1 as bit) WHEN ( NOT EXISTS (SELECT 
-	1 AS [C1]
-	FROM [dbo].[Books] AS [Extent3]
-	WHERE 0 = [Extent3].[Genre]
-)) THEN cast(0 as bit) END AS [C1]
+)) THEN cast(1 as bit) ELSE cast(0 as bit) END AS [C1]
 FROM [dbo].[Books] AS [Extent1]";
 
             using (var context = new UnicodeContext())

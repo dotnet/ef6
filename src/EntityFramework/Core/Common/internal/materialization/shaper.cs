@@ -32,7 +32,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             State = new object[stateCount];
             Context = context;
             Workspace = workspace;
-            AssociationSpaceMap = new Dictionary<AssociationType, AssociationType>();
             _spatialReader = new Lazy<DbSpatialDataReader>(CreateSpatialDataReader);
             Streaming = streaming;
         }
@@ -83,19 +82,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // </summary>
         public readonly MergeOption MergeOption;
 
-        // <summary>
-        // A mapping of CSpace AssociationTypes to OSpace AssociationTypes
-        // Used for faster lookup/retrieval of AssociationTypes during materialization
-        // </summary>
-        private readonly Dictionary<AssociationType, AssociationType> AssociationSpaceMap;
-
         protected readonly bool Streaming;
         
-        // <summary>
-        // Caches Tuples of EntitySet, AssociationType, and source member name for which RelatedEnds exist.
-        // </summary>
-        private HashSet<Tuple<string, string, string>> _relatedEndCache;
-
         // <summary>
         // Utility method used to evaluate a multi-discriminator column map. Takes
         // discriminator values and determines the appropriate entity type, then looks up
@@ -308,13 +296,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             {
                 EntitySet targetEntitySet;
 
-                var entityContainer = Context.MetadataWorkspace.GetEntityContainer(
-                    targetKey.EntityContainerName, DataSpace.CSpace);
-
-                // find the correct AssociationSet
-                var associationSet = MetadataHelper.GetAssociationsForEntitySetAndAssociationType(
-                    entityContainer,
-                    targetKey.EntitySetName, (AssociationType)(targetMember.DeclaringType), targetMember.Name, out targetEntitySet);
+                var associationSet = Context.MetadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                    (AssociationType)targetMember.DeclaringType, targetMember.Name,
+                    targetKey.EntitySetName, targetKey.EntityContainerName, out targetEntitySet);
                 Debug.Assert(associationSet != null, "associationSet should not be null");
 
                 var manager = Context.ObjectStateManager;
@@ -326,13 +310,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                          /*setIsLoaded*/ true, out newEntryState))
                 {
                     // Try to find a state entry for the target key
-                    EntityEntry targetEntry = null;
-                    if (!manager.TryGetEntityEntry(targetKey, out targetEntry))
-                    {
-                        // no entry exists for the target key
-                        // create a key entry for the target
-                        targetEntry = manager.AddKeyEntry(targetKey, targetEntitySet);
-                    }
+                    var targetEntry = manager.GetOrAddKeyEntry(targetKey, targetEntitySet);
 
                     // For 1-1 relationships we have to take care of the relationships of targetEntity
                     var needNewRelationship = true;
@@ -436,12 +414,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Debug.Assert(associationType.DataSpace == DataSpace.CSpace);
 
             // Get the OSpace AssociationType
-            AssociationType oSpaceAssociation;
-            if (!AssociationSpaceMap.TryGetValue(associationType, out oSpaceAssociation))
-            {
-                oSpaceAssociation = Workspace.GetItemCollection(DataSpace.OSpace).GetItem<AssociationType>(associationType.FullName);
-                AssociationSpaceMap[associationType] = oSpaceAssociation;
-            }
+            var oSpaceAssociation = Workspace.MetadataOptimization.GetOSpaceAssociationType(associationType,
+                () => Workspace.GetItemCollection(DataSpace.OSpace).GetItem<AssociationType>(associationType.FullName));
 
             AssociationEndMember sourceEnd = null;
             AssociationEndMember targetEnd = null;
@@ -476,32 +450,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // impact of this check by caching positive hits in a HashSet so we don't have to do this for
                     // every entity in a query.  (We could also cache misses, but since these only happen in MEST, which
                     // is not common, we decided not to slow down the normal non-MEST case anymore by doing this.)
-                    var entitySet = wrappedEntity.EntityKey.GetEntitySet(Workspace);
-                    var relatedEndKey = Tuple.Create(entitySet.Identity, associationType.Identity, sourceEndName);
-
-                    if (_relatedEndCache == null)
-                    {
-                        _relatedEndCache = new HashSet<Tuple<string, string, string>>();
-                    }
-
-                    if (_relatedEndCache.Contains(relatedEndKey))
+                    EntitySet entitySet;
+                    var associationSet = Workspace.MetadataOptimization.FindCSpaceAssociationSet(associationType, sourceEndName,
+                        wrappedEntity.EntityKey.EntitySetName, wrappedEntity.EntityKey.EntityContainerName, out entitySet);
+                    if (associationSet != null)
                     {
                         createRelatedEnd = true;
-                    }
-                    else
-                    {
-                        foreach (var entitySetBase in entitySet.EntityContainer.BaseEntitySets)
-                        {
-                            if (entitySetBase.ElementType == associationType)
-                            {
-                                if (((AssociationSet)entitySetBase).AssociationSetEnds[sourceEndName].EntitySet == entitySet)
-                                {
-                                    createRelatedEnd = true;
-                                    _relatedEndCache.Add(relatedEndKey);
-                                    break;
-                                }
-                            }
-                        }
                     }
                 }
                 if (createRelatedEnd)
@@ -788,13 +742,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             var sourceMember = MetadataHelper.GetOtherAssociationEnd(targetMember);
 
-            var entityContainer = Context.MetadataWorkspace.GetEntityContainer(
-                sourceKey.EntityContainerName,
-                DataSpace.CSpace);
             EntitySet sourceEntitySet;
-            var associationSet = MetadataHelper.GetAssociationsForEntitySetAndAssociationType(
-                entityContainer, sourceKey.EntitySetName,
-                (AssociationType)sourceMember.DeclaringType, sourceMember.Name, out sourceEntitySet);
+            var associationSet = Context.MetadataWorkspace.MetadataOptimization.FindCSpaceAssociationSet(
+                (AssociationType)sourceMember.DeclaringType, sourceMember.Name,
+                sourceKey.EntitySetName, sourceKey.EntityContainerName, out sourceEntitySet);
 
             if (associationSet != null)
             {

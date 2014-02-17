@@ -161,11 +161,11 @@
     <EmbeddedResource Include="Resources\System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.ProviderManifest.xml">
       <LogicalName>System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.ProviderManifest.xml</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl">
-      <LogicalName>System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaMapping.msl">
       <LogicalName>System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaMapping.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\System.Data.Resources.SqlServerCe.Entity.Legacy.SqlCeProviderServices.StoreSchemaDefinition.ssdl">
+      <LogicalName>System.Data.Resources.SqlServerCe.Entity.Legacy.SqlCeProviderServices.StoreSchemaDefinition.ssdl</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

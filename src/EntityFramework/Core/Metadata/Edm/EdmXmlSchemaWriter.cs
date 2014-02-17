@@ -817,6 +817,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteAttributeString(
                 XmlConstants.ReturnType, GetTypeName(functionImport.ReturnParameter.TypeUsage.EdmType));
 
+            if (functionImport.EntitySets.Count == 1 && functionImport.EntitySets[0] != null)
+            {
+                _xmlWriter.WriteAttributeString(XmlConstants.EntitySet, functionImport.EntitySet.Name);
+            }
+
             if (functionImport.IsComposableAttribute)
             {
                 _xmlWriter.WriteAttributeString(XmlConstants.IsComposable, XmlConstants.True);

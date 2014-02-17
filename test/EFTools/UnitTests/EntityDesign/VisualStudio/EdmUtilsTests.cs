@@ -7,15 +7,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System.IO;
     using System.Xml;
     using System.Xml.Linq;
+    using EnvDTE;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Commands;
     using Microsoft.Data.Entity.Design.Model.Designer;
     using Microsoft.Data.Entity.Design.VersioningFacade;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Microsoft.Data.Tools.XmlDesignerBase.Model;
+    using Microsoft.VisualStudio.Shell.Interop;
     using Moq;
     using UnitTests.TestHelpers;
     using VSLangProj;
     using Xunit;
+    using Resources = Microsoft.Data.Entity.Design.Resources;
 
     public class EdmUtilsTests
     {
@@ -351,6 +355,69 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
             designerInfo.PropertySet = designerInfoPropertySet;
             return designerInfo;
+        }
+
+        [Fact]
+        public void UpdateConfigForSqlDbFileUpgrade_updates_and_saves_config()
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(
+                "<configuration>" +
+                "  <connectionStrings>" +
+                "    <add connectionString=\"Data source=.\\SQLExpress;AttachDbFilename=C:\\MyFolder\\MyDataFile.mdf;Database=dbname;Trusted_Connection=Yes;\" />" +
+                "  </connectionStrings>" +
+                "</configuration>");
+
+            var mockConfigFileUtils = 
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
+            mockConfigFileUtils
+                .Setup(u => u.LoadConfig())
+                .Returns(xmlDoc);
+
+            EdmUtils.UpdateConfigForSqlDbFileUpgrade(
+                mockConfigFileUtils.Object, 
+                Mock.Of<Project>(), 
+                Mock.Of<IVsUpgradeLogger>());
+
+            mockConfigFileUtils.Verify(u => u.SaveConfig(It.IsAny<XmlDocument>()), Times.Once());
+        }
+
+        [Fact]
+        public void UpdateConfigForSqlDbFileUpgrade_does_not_save_config_if_content_not_loaded()
+        {
+            var mockConfigFileUtils = new Mock<ConfigFileUtils>(
+                Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
+
+            EdmUtils.UpdateConfigForSqlDbFileUpgrade(
+                mockConfigFileUtils.Object,
+                Mock.Of<Project>(),
+                Mock.Of<IVsUpgradeLogger>());
+
+            mockConfigFileUtils.Verify(u => u.SaveConfig(It.IsAny<XmlDocument>()), Times.Never());
+        }
+
+        [Fact]
+        public void UpdateConfigForSqlDbFileUpgrade_logs_exceptions()
+        {
+            var mockConfigFileUtils = new Mock<ConfigFileUtils>(
+                Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
+
+            mockConfigFileUtils
+                .Setup(u => u.LoadConfig())
+                .Throws(new InvalidOperationException("Loading Failed"));
+
+            var mockLogger = new Mock<IVsUpgradeLogger>();
+
+            EdmUtils.UpdateConfigForSqlDbFileUpgrade(
+                mockConfigFileUtils.Object,
+                Mock.Of<Project>(),
+                mockLogger.Object);
+
+            var expectedErrorMessage =
+                string.Format(Resources.ErrorDuringSqlDatabaseFileUpgrade, null, "Loading Failed");
+
+            mockLogger
+                .Verify(l => l.LogMessage(2, It.IsAny<string>(), It.IsAny<string>(), expectedErrorMessage), Times.Once());
         }
     }
 }

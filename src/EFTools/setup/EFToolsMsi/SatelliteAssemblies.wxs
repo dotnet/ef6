@@ -20,6 +20,10 @@
             <File Id="ide_$(var.IdSafeCulture)_DatabaseGeneration"
                   Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.DatabaseGeneration.resources.dll" />
           </Component>
+          <Component Id="ide_$(var.IdSafeCulture)_DatabaseGenerationIntellisenseComponent">
+            <File Id="ide_$(var.IdSafeCulture)_DatabaseGenerationIntellisense"
+                  Source="$(var.LocOutputPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.DatabaseGeneration.xml" />
+          </Component>
           <?if $(var.VisualStudioVersion) = 11.0?>
             <Component Id="ide_$(var.IdSafeCulture)_DataSourceWizardExtensionComponent">
               <File Id="ide_$(var.IdSafeCulture)_DataSourceWizardExtension"
@@ -29,10 +33,6 @@
           <Component Id="ide_$(var.IdSafeCulture)_EntityDesignerComponent">
             <File Id="ide_$(var.IdSafeCulture)_EntityDesigner"
                   Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.EntityDesigner.resources.dll" />
-          </Component>
-          <Component Id="ide_$(var.IdSafeCulture)_ExtensibilityComponent">
-            <File Id="ide_$(var.IdSafeCulture)_Extensibility"
-                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Extensibility.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_ModelComponent">
             <File Id="ide_$(var.IdSafeCulture)_Model"
@@ -45,6 +45,10 @@
           <Component Id="ide_$(var.IdSafeCulture)_EntityDesign">
             <File Id="ide_$(var.IdSafeCulture)_EntityDesign"
                   Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.resources.dll" />
+          </Component>
+          <Component Id="ide_$(var.IdSafeCulture)_EntityDesignIntellisenseComponent">
+            <File Id="ide_$(var.IdSafeCulture)_EntityDesignIntellisense"
+                  Source="$(var.LocOutputPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.xml" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_EntityFramework">
             <File Id="ide_$(var.IdSafeCulture)_EntityFramework"
@@ -70,6 +74,30 @@
         <?undef IdSafeCulture?>
       <?endforeach?>
     </DirectoryRef>
+
+    <DirectoryRef Id="publicassemblies">
+      <?foreach SatelliteAssemblyCulture in $(var.SatelliteAssemblyCultures)?>
+        <?if $(var.SatelliteAssemblyCulture) = zh-Hans?>
+          <?define IdSafeCulture = zhHans?>
+        <?elseif $(var.SatelliteAssemblyCulture)= zh-Hant?>
+          <?define IdSafeCulture = zhHant?>
+        <?else?>
+          <?define IdSafeCulture = $(var.SatelliteAssemblyCulture)?>
+        <?endif?>
+        <Directory Id="publicassemblies_$(var.IdSafeCulture)" Name="$(var.SatelliteAssemblyCulture)">
+          <Component Id="ide_$(var.IdSafeCulture)_ExtensibilityComponent">
+            <File Id="ide_$(var.IdSafeCulture)_Extensibility"
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Extensibility.resources.dll" />
+          </Component>
+          <Component Id="ide_$(var.IdSafeCulture)_ExtensibilityIntellisenseComponent">
+            <File Id="ide_$(var.IdSafeCulture)_ExtensibilityIntellisense"
+                  Source="$(var.LocOutputPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Extensibility.xml" />
+          </Component>
+        </Directory>
+        <?undef IdSafeCulture?>
+      <?endforeach?>
+    </DirectoryRef>
+
     <ComponentGroup Id="SatelliteAssemblyComponents">
       <?foreach SatelliteAssemblyCulture in $(var.SatelliteAssemblyCultures)?>
         <?if $(var.SatelliteAssemblyCulture) = zh-Hans?>
@@ -95,6 +123,10 @@
         <ComponentRef Id="ide_$(var.IdSafeCulture)_VersioningFacade" />
         <ComponentRef Id="ide_$(var.IdSafeCulture)_XmlCore" />
         <ComponentRef Id="ide_$(var.IdSafeCulture)_ToolsXmlCore" />
+
+        <ComponentRef Id="ide_$(var.IdSafeCulture)_DatabaseGenerationIntellisenseComponent" />
+        <ComponentRef Id="ide_$(var.IdSafeCulture)_EntityDesignIntellisenseComponent" />
+        <ComponentRef Id="ide_$(var.IdSafeCulture)_ExtensibilityIntellisenseComponent" />
       
         <?undef IdSafeCulture?>
       <?endforeach?>

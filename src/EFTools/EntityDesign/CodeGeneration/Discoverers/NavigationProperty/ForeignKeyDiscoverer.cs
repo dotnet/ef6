@@ -17,7 +17,9 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
 
             var associationType = (AssociationType)navigationProperty.RelationshipType;
 
-            if (!associationType.IsForeignKey)
+            if (!associationType.IsForeignKey
+                || (navigationProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many
+                    && navigationProperty.FromEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many))
             {
                 // Doesn't apply
                 return null;

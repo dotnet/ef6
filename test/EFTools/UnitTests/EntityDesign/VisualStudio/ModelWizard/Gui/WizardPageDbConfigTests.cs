@@ -2,12 +2,14 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
-    using System;
-    using System.Collections.Generic;
+    using System.Xml;
     using EnvDTE;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Microsoft.VisualStudio.Data.Core;
     using Moq;
+    using System;
+    using System.Collections.Generic;
     using UnitTests.TestHelpers;
     using VSLangProj;
     using Xunit;
@@ -61,7 +63,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             mockModelProjectItem.Setup(p => p.Collection).Returns(mockCollection.Object);
 
             var wizardPageDbConfig =
-                new WizardPageDbConfig(ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.GenerateFromDatabase, mockDte.Project, @"C:\Project\myModel.edmx"));
+                new WizardPageDbConfig(
+                    ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.GenerateFromDatabase, mockDte.Project, @"C:\Project\myModel.edmx"));
 
             Assert.Equal(
                 "metadata=res://*/myModel.csdl|res://*/myModel.ssdl|res://*/myModel.msl;provider=System.Data.SqlClient;" +
@@ -76,7 +79,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         public void GetTextBoxConnectionStringValue_returns_regular_connection_string_for_CodeFirst_from_Database()
         {
             var guid = new Guid("42424242-4242-4242-4242-424242424242");
-            var wizardPageDbConfig = new WizardPageDbConfig(ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.CodeFirstFromDatabase));
+            var wizardPageDbConfig = new WizardPageDbConfig(
+                ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.CodeFirstFromDatabase));
 
             Assert.Equal(
                 "integrated security=SSPI;MultipleActiveResultSets=True;App=EntityFramework",

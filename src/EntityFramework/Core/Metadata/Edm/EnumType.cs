@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -162,6 +164,75 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(enumMember.Value.GetType() == UnderlyingType.ClrEquivalentType);
 
             Members.Source.Add(enumMember);
+        }
+
+        /// <summary>
+        /// Creates a read-only EnumType instance.
+        /// </summary>
+        /// <param name="name">The name of the enumeration type.</param>
+        /// <param name="namespaceName">The namespace of the enumeration type.</param>
+        /// <param name="underlyingType">The underlying type of the enumeration type.</param>
+        /// <param name="isFlags">Indicates whether the enumeration type can be treated as a bit field; that is, a set of flags.</param>
+        /// <param name="members">The members of the enumeration type.</param>
+        /// <param name="metadataProperties">Metadata properties to be associated with the enumeration type.</param>
+        /// <returns>The newly created EnumType instance.</returns>
+        /// <exception cref="System.ArgumentNullException">underlyingType is null.</exception>
+        /// <exception cref="System.ArgumentException">
+        /// name is null or empty.
+        /// -or-
+        /// namespaceName is null or empty.
+        /// -or-
+        /// underlyingType is not a supported underlying type.
+        /// -or-
+        /// The specified members do not have unique names.
+        /// -or-
+        /// The value of a specified member is not in the range of the underlying type.
+        /// </exception>
+        [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags")]
+        public static EnumType Create(
+            string name,
+            string namespaceName,
+            PrimitiveType underlyingType,
+            bool isFlags,
+            IEnumerable<EnumMember> members,
+            IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(namespaceName, "namespaceName");
+            Check.NotNull(underlyingType, "underlyingType");
+
+            if (!Helper.IsSupportedEnumUnderlyingType(underlyingType.PrimitiveTypeKind))
+            {
+                throw new ArgumentException(Strings.InvalidEnumUnderlyingType, "underlyingType");
+            }
+
+            var instance = new EnumType(name, namespaceName, underlyingType, isFlags, DataSpace.CSpace);
+
+            if (members != null)
+            {
+                foreach (var member in members)
+                {
+                    if (!Helper.IsEnumMemberValueInRange(
+                        underlyingType.PrimitiveTypeKind, Convert.ToInt64(member.Value, CultureInfo.InvariantCulture)))
+                    {
+                        throw new ArgumentException(
+                            Strings.EnumMemberValueOutOfItsUnderylingTypeRange(
+                                member.Value, member.Name, underlyingType.Name),
+                            "members");
+                    }
+
+                    instance.AddMember(member);
+                }
+            }
+
+            if (metadataProperties != null)
+            {
+                instance.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            instance.SetReadOnly();
+
+            return instance;
         }
     }
 }

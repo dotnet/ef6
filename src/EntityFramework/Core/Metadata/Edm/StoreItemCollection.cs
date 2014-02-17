@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Convert the S type function parameters and returnType to C types.
         // </summary>
-        private EdmFunction ConvertFunctionSignatureToCType(EdmFunction sTypeFunction)
+        internal static EdmFunction ConvertFunctionSignatureToCType(EdmFunction sTypeFunction)
         {
             Debug.Assert(sTypeFunction.DataSpace == DataSpace.SSpace, "sTypeFunction.DataSpace == Edm.DataSpace.SSpace");
 

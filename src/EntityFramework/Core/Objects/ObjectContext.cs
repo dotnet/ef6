@@ -471,7 +471,15 @@ namespace System.Data.Entity.Core.Objects
         /// <value>
         /// The transaction handler.
         /// </value>
-        public TransactionHandler TransactionHandler { get { return _transactionHandler; } }
+        public TransactionHandler TransactionHandler
+        {
+            get
+            {
+                EnsureTransactionHandlerRegistered();
+
+                return _transactionHandler;
+            }
+        }
 
         internal DbInterceptionContext InterceptionContext
         {
@@ -1628,12 +1636,16 @@ namespace System.Data.Entity.Core.Objects
         // Ensures that the connection is opened for an operation that requires an open connection to the store.
         // Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         // </summary>
+        // <param name="shouldMonitorTransactions"> Whether there will be a transaction started on the connection that should be monitored. </param>
         // <exception cref="ObjectDisposedException">
         // If the <see cref="ObjectContext" /> instance has been disposed.
         // </exception>
-        internal virtual void EnsureConnection()
+        internal virtual void EnsureConnection(bool shouldMonitorTransactions)
         {
-            EnsureTransactionHandlerRegistered();
+            if (shouldMonitorTransactions)
+            {
+                EnsureTransactionHandlerRegistered();
+            }
 
             if (Connection.State == ConnectionState.Broken)
             {
@@ -1684,13 +1696,18 @@ namespace System.Data.Entity.Core.Objects
         // Ensures that the connection is opened for an operation that requires an open connection to the store.
         // Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         // </summary>
+        // <param name="shouldMonitorTransactions"> Whether there will be a transaction started on the connection that should be monitored. </param>
+        // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <exception cref="ObjectDisposedException">
         // If the <see cref="ObjectContext" /> instance has been disposed.
         // </exception>
-        internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
+        internal virtual async Task EnsureConnectionAsync(bool shouldMonitorTransactions, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            EnsureTransactionHandlerRegistered();
+            if (shouldMonitorTransactions)
+            {
+                EnsureTransactionHandlerRegistered();
+            }
 
             if (Connection.State == ConnectionState.Broken)
             {
@@ -2086,13 +2103,18 @@ namespace System.Data.Entity.Core.Objects
             cacheEntry.Detach();
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ObjectContext"/> class.
+        /// </summary>
+        ~ObjectContext()
+        {
+            Dispose(false);
+        }
+
         /// <summary>Releases the resources used by the object context.</summary>
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
         public void Dispose()
         {
-            // Technically, calling GC.SuppressFinalize is not required because the class does not
-            // have a finalizer, but it does no harm, protects against the case where a finalizer is added
-            // in the future, and prevents an FxCop warning.
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -2107,13 +2129,14 @@ namespace System.Data.Entity.Core.Objects
         {
             if (!_disposed)
             {
+                // Need to dispose _transactionHandler even if being finalized
+                if (_transactionHandler != null)
+                {
+                    _transactionHandler.Dispose();
+                }
+
                 if (disposing)
                 {
-                    if (_transactionHandler != null)
-                    {
-                        _transactionHandler.Dispose();
-                    }
-
                     // Release managed resources here.
                     if (_connection != null)
                     {
@@ -2510,7 +2533,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (refreshKeys.Count > 0)
                 {
-                    EnsureConnection();
+                    EnsureConnection(shouldMonitorTransactions: false);
                     openedConnection = true;
 
                     // All entities from a single set can potentially be refreshed in the same query.
@@ -2655,7 +2678,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (refreshKeys.Count > 0)
                 {
-                    await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    await EnsureConnectionAsync(/*shouldMonitorTransactions:*/ false, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                     openedConnection = true;
 
                     // All entities from a single set can potentially be refreshed in the same query.
@@ -2990,10 +3013,10 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges(SaveOptions options)
         {
-            return SaveChanges(options, executeInExistingTransaction: false);
+            return SaveChangesInternal(options, executeInExistingTransaction: false);
         }
 
-        internal int SaveChanges(SaveOptions options, bool executeInExistingTransaction)
+        internal int SaveChangesInternal(SaveOptions options, bool executeInExistingTransaction)
         {
             AsyncMonitor.EnsureNotEntered();
 
@@ -3068,10 +3091,10 @@ namespace System.Data.Entity.Core.Objects
 
             AsyncMonitor.EnsureNotEntered();
 
-            return SaveChangesInternalAsync(options, cancellationToken);
+            return SaveChangesInternalAsync(options, /*executeInExistingTransaction:*/ false, cancellationToken);
         }
 
-        private async Task<Int32> SaveChangesInternalAsync(SaveOptions options, CancellationToken cancellationToken)
+        internal async Task<Int32> SaveChangesInternalAsync(SaveOptions options, bool executeInExistingTransaction, CancellationToken cancellationToken)
         {
             AsyncMonitor.Enter();
             try
@@ -3083,10 +3106,20 @@ namespace System.Data.Entity.Core.Objects
                 // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
                 if (ObjectStateManager.HasChanges())
                 {
-                    var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
-                    entriesAffected = await executionStrategy.ExecuteAsync(
-                        () => SaveChangesToStoreAsync(options, executionStrategy, cancellationToken),
-                        cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    if (executeInExistingTransaction)
+                    {
+                        entriesAffected =
+                            await SaveChangesToStoreAsync(
+                                options, /*executionStrategy:*/ null, /*startLocalTransaction:*/ false,
+                                cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    }
+                    else
+                    {
+                        var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
+                        entriesAffected = await executionStrategy.ExecuteAsync(
+                            () => SaveChangesToStoreAsync(options, executionStrategy, /*startLocalTransaction:*/ true, cancellationToken),
+                            cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    }
                 }
 
                 ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -3156,7 +3189,7 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         private async Task<int> SaveChangesToStoreAsync(
-            SaveOptions options, IDbExecutionStrategy executionStrategy, CancellationToken cancellationToken)
+            SaveOptions options, IDbExecutionStrategy executionStrategy, bool startLocalTransaction, CancellationToken cancellationToken)
         {
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
@@ -3165,7 +3198,7 @@ namespace System.Data.Entity.Core.Objects
 
             var entriesAffected = await ExecuteInTransactionAsync(
                 () => _adapter.UpdateAsync(cancellationToken), executionStrategy,
-                /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
+                startLocalTransaction, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
                                             .ConfigureAwait(continueOnCapturedContext: false);
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
@@ -3209,7 +3242,7 @@ namespace System.Data.Entity.Core.Objects
         internal virtual T ExecuteInTransaction<T>(
             Func<T> func, IDbExecutionStrategy executionStrategy, bool startLocalTransaction, bool releaseConnectionOnSuccess)
         {
-            EnsureConnection();
+            EnsureConnection(startLocalTransaction);
 
             var needLocalTransaction = false;
             var connection = (EntityConnection)Connection;
@@ -3292,7 +3325,7 @@ namespace System.Data.Entity.Core.Objects
             Func<Task<T>> func, IDbExecutionStrategy executionStrategy,
             bool startLocalTransaction, bool releaseConnectionOnSuccess, CancellationToken cancellationToken)
         {
-            await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await EnsureConnectionAsync(startLocalTransaction, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             var needLocalTransaction = false;
             var connection = (EntityConnection)Connection;

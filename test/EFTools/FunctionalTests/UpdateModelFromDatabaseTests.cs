@@ -3,7 +3,6 @@
 namespace EFDesigner.FunctionalTests
 {
     using System;
-    using System.Xml.Linq;
     using EFDesignerTestInfrastructure;
     using EFDesignerTestInfrastructure.EFDesigner;
     using Microsoft.Data.Entity.Design.Extensibility;
@@ -97,7 +96,6 @@ namespace EFDesigner.FunctionalTests
             hostContext.Setup(hc => hc.DispatchToModelGenerationExtensions()).Callback(() => { });
 
             var modelBuilderEngine = new Mock<UpdateModelFromDatabaseModelBuilderEngine>();
-            modelBuilderEngine.SetupGet(mbe => mbe.Model).Returns(XDocument.Load(artifact.Uri.ToString()));
 
             settings.ModelBuilderEngine = modelBuilderEngine.Object;
 

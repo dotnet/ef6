@@ -6,7 +6,7 @@ namespace SimpleModel
     using System.Data.Entity;
     using System.Data.Entity.Utilities;
 
-    public class SimpleModelInitializer : DropCreateDatabaseAlways<SimpleModelContext>
+    public class SimpleModelInitializer : DropCreateDatabaseIfModelChanges<SimpleModelContext>
     {
         protected override void Seed(SimpleModelContext context)
         {

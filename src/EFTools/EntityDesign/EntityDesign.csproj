@@ -131,6 +131,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CodeGeneration\CodeGeneratorFactory.cs" />
+    <Compile Include="CodeGeneration\Generators\CSharpCodeFirstEmptyModelGenerator.cs" />
+    <Compile Include="CodeGeneration\CodeFirstModelGenerationException.cs" />
+    <Compile Include="CodeGeneration\CodeFirstModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeHelper.cs" />
     <Compile Include="CodeGeneration\Discoverers\NavigationProperty\CascadeDeleteDiscoverer.cs" />
     <Compile Include="CodeGeneration\Discoverers\NavigationProperty\ForeignKeyDiscoverer.cs" />
@@ -173,15 +177,20 @@
     <Compile Include="CodeGeneration\Configuration\Type\KeyConfiguration.cs" />
     <Compile Include="CodeGeneration\Configuration\Type\TableConfiguration.cs" />
     <Compile Include="CodeGeneration\CSharpCodeHelper.cs" />
-    <Compile Include="CodeGeneration\CSharpContextTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\CustomGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultCSharpContextGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultCSharpEntityTypeGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultVBContextGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\DefaultVBEntityTypeGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpContextGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CSharpContextTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultCSharpContextGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="CodeGeneration\CSharpEntityTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpEntityTypeGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CSharpEntityTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultCSharpEntityTypeGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="CodeGeneration\EdmHelper.cs" />
     <Compile Include="CodeGeneration\Extensions\DbModelExtensions.cs" />
@@ -189,16 +198,21 @@
     <Compile Include="CodeGeneration\Extensions\IEnumerableExtensions.cs" />
     <Compile Include="CodeGeneration\Extensions\StoreGeneratedPatternExtensions.cs" />
     <Compile Include="CodeGeneration\Extensions\StringExtensions.cs" />
+    <Compile Include="CodeGeneration\ICodeGeneratorFactory.cs" />
+    <Compile Include="CodeGeneration\Generators\IContextGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\IEntityTypeGenerator.cs" />
+    <Compile Include="CodeGeneration\Generators\TextTemplatingHost.cs" />
+    <Compile Include="CodeGeneration\Generators\VBCodeFirstEmptyModelGenerator.cs" />
     <Compile Include="CodeGeneration\VBCodeHelper.cs" />
-    <Compile Include="CodeGeneration\VBContextTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultVBContextGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VBContextTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultVBContextGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="CodeGeneration\VBEntityTextTransformation.cs">
+    <Compile Include="CodeGeneration\Generators\GeneratedCode\DefaultVBEntityTypeGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>VBEntityTextTransformation.tt</DependentUpon>
+      <DependentUpon>DefaultVBEntityTypeGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
@@ -257,19 +271,28 @@
     <Compile Include="UI\ViewModels\PropertyWindow\Converters\FromRoleListConverter.cs" />
     <Compile Include="UI\ViewModels\PropertyWindow\Converters\ToRoleListConverter.cs" />
     <Compile Include="UI\Views\Explorer\IViewDiagram.cs" />
+    <Compile Include="VisualStudio\ErrorListHelperWrapper.cs" />
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
+    <Compile Include="VisualStudio\IErrorListHelper.cs" />
+    <Compile Include="VisualStudio\IVsUtils.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngine.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseEngineBase.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\EdmxHelper.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\GatherAndReturnSprocInfo.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\IInitialModelContentsFactory.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactory.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerationOption.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerator.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\InitialModelContentsFactory.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\ProgressDialogHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\OneEFWizard.cs" />
     <Compile Include="VisualStudio\ModelWizard\Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="VisualStudio\Package\ConfigFileUtils.cs" />
     <Compile Include="VisualStudio\ProjectExecutionContext.cs" />
     <Compile Include="VisualStudio\RetargetingHandler.cs" />
     <Compile Include="VisualStudio\RuntimeVersion.cs" />
@@ -315,21 +338,26 @@
     <Compile Include="VisualStudio\TextTemplating\SsdlToDdlActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateActivity.cs" />
     <Compile Include="VisualStudio\TextTemplating\TemplateCallback.cs" />
-    <None Include="CodeGeneration\CSharpContextTextTransformation.tt">
+    <Compile Include="VisualStudio\VsUtilsWrapper.cs" />
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpContextGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>CSharpContextTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultCSharpContextGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
-    <None Include="CodeGeneration\CSharpEntityTextTransformation.tt">
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultCSharpEntityTypeGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>CSharpEntityTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultCSharpEntityTypeGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
-    <None Include="CodeGeneration\VBContextTextTransformation.tt">
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultVBContextGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>VBContextTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultVBContextGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
-    <None Include="CodeGeneration\VBEntityTextTransformation.tt">
+    <None Include="CodeGeneration\Generators\GeneratedCode\DefaultVBEntityTypeGenerator.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>VBEntityTextTransformation.cs</LastGenOutput>
+      <LastGenOutput>DefaultVBEntityTypeGenerator.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -445,7 +473,7 @@
     <Compile Include="VisualStudio\AggregateProjectTypeGuidCache.cs" />
     <Compile Include="VisualStudio\ExtensibleFileManager.cs" />
     <Compile Include="VisualStudio\ModelWizard\AddArtifactGeneratorWizard.cs" />
-    <Compile Include="VisualStudio\ModelWizard\Engine\ConfigFileUtils.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\ConfigFileHelper.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseGenerationAssemblyLoader.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseGenerationEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseGenerationXamlSchemaContext.cs" />
@@ -603,7 +631,6 @@
       <DependentUpon>MappingDetailsWindowContainer.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensibility\EscherExtensionPointManager.cs" />
-    <Compile Include="VisualStudio\ModelWizard\Engine\InMemoryModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderEngineHostContext.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelGenerationExtensionDispatcher.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ObjectFilterPolicy.cs" />
@@ -671,7 +698,7 @@
     <Compile Include="VisualStudio\VsUtils.cs" />
     <Compile Include="VisualStudio\ModelWizard\ModelObjectItemWizard.cs" />
     <Compile Include="VisualStudio\ModelWizard\DbContextCodeGenerator.cs" />
-    <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderEngine.cs" />
+    <Compile Include="VisualStudio\ModelWizard\Engine\EdmxModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\ModelBuilderSettings.cs" />
     <Compile Include="VisualStudio\ModelWizard\Gui\ModelBuilderWizardForm.cs">
       <SubType>Form</SubType>
@@ -743,9 +770,9 @@
     <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_CS_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_CS_WS_V6.0.vstemplate" />
     <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_V6.0.vstemplate" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_WS_V6.0.vstemplate" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\ProjectItem.cs.template" />
-    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\ProjectItem.vb.template" />
+    <Content Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\CodeFirst_VB_WS_V6.0.vstemplate">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS_ASPNET.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB.vstemplate" />

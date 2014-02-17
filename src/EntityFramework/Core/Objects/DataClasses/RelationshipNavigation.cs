@@ -46,6 +46,33 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _toAccessor = toAccessor;
         }
 
+        // <summary>
+        // Creates a navigation object with the given relationship
+        // name, role name for the source and role name for the
+        // destination.
+        // </summary>
+        // <param name="associationType"> The association type representing the relationship. </param>
+        // <param name="from"> Name of the role which is the source of the navigation. </param>
+        // <param name="to"> Name of the role which is the destination of the navigation. </param>
+        // <param name="fromAccessor"> The navigation property which is the source of the navigation. </param>
+        // <param name="toAccessor"> The navigation property which is the destination of the navigation. </param>
+        internal RelationshipNavigation(AssociationType associationType, string from, string to,
+            NavigationPropertyAccessor fromAccessor, NavigationPropertyAccessor toAccessor)
+        {
+            DebugCheck.NotNull(associationType);
+            DebugCheck.NotEmpty(@from);
+            DebugCheck.NotEmpty(to);
+
+            _associationType = associationType;
+
+            _relationshipName = associationType.FullName;
+            _from = from;
+            _to = to;
+
+            _fromAccessor = fromAccessor;
+            _toAccessor = toAccessor;
+        }
+
         // ------
         // Fields
         // ------
@@ -66,6 +93,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         [NonSerialized]
         private NavigationPropertyAccessor _toAccessor;
+
+        [NonSerialized]
+        private readonly AssociationType _associationType;
+
+        internal AssociationType AssociationType
+        {
+            get { return _associationType; }
+        }
 
         // ----------
         // Properties
@@ -128,7 +163,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     // the reverse relationship is exactly like this
                     // one but from & to are switched
-                    _reverse = new RelationshipNavigation(_relationshipName, _to, _from, _toAccessor, _fromAccessor);
+                    _reverse = _associationType != null
+                        ? new RelationshipNavigation(_associationType, _to, _from, _toAccessor, _fromAccessor)
+                        : new RelationshipNavigation(_relationshipName, _to, _from, _toAccessor, _fromAccessor);
                 }
 
                 return _reverse;

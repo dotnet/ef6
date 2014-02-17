@@ -43,6 +43,15 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         }
 
         [Fact]
+        public void GetAttributeBody_returns_body_when_order_and_type_and_vb()
+        {
+            var configuration = new ColumnConfiguration { Order = 0, TypeName = "int" };
+            var code = new VBCodeHelper();
+
+            Assert.Equal("Column(Order:=0, TypeName:=\"int\")", configuration.GetAttributeBody(code));
+        }
+
+        [Fact]
         public void GetAttributeBody_returns_body_when_all()
         {
             var configuration = new ColumnConfiguration { Name = "Id", Order = 0, TypeName = "int" };

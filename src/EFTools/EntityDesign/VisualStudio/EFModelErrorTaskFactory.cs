@@ -59,15 +59,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         internal static ErrorTask CreateErrorTask(ErrorInfo errorInfo, IVsHierarchy hierarchy, uint itemID)
         {
-            var document = String.Empty;
-            Debug.Assert(errorInfo.Item != null, "null Item for errorInfo");
-            if (errorInfo.Item != null)
-            {
-                document = errorInfo.Item.Uri.LocalPath;
-            }
-
+            // errorInfo.Item can be null if the error came from CodeFirst
             return CreateErrorTask(
-                document, errorInfo.Message, VSXmlModel.ConvertToVSTextSpan(errorInfo.Item.GetTextSpan()), GetCategory(errorInfo), hierarchy,
+                errorInfo.ItemPath, 
+                errorInfo.Message, 
+                errorInfo.Item != null ? VSXmlModel.ConvertToVSTextSpan(errorInfo.Item.GetTextSpan()) : new TextSpan(),
+                GetCategory(errorInfo), 
+                hierarchy, 
                 itemID);
         }
 

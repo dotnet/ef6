@@ -15,7 +15,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             var viewModel = new RuntimeConfigViewModel(
                 targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion3_5,
                 installedEntityFrameworkVersion: null,
-                isModernProviderAvailable: false);
+                isModernProviderAvailable: false, 
+                isCodeFirst: false);
 
             Assert.Equal(2, viewModel.EntityFrameworkVersions.Count());
 
@@ -44,7 +45,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             var viewModel = new RuntimeConfigViewModel(
                 targetNetFrameworkVersion,
                 installedEntityFrameworkVersion,
-                isModernProviderAvailable);
+                isModernProviderAvailable,
+                isCodeFirst: false);
 
             Assert.Equal(2, viewModel.EntityFrameworkVersions.Count());
 
@@ -69,7 +71,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             var viewModel = new RuntimeConfigViewModel(
                 targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion4_5,
                 installedEntityFrameworkVersion: RuntimeVersion.Version6,
-                isModernProviderAvailable: true);
+                isModernProviderAvailable: true,
+                isCodeFirst: false);
 
             Assert.Equal(1, viewModel.EntityFrameworkVersions.Count());
 
@@ -89,11 +92,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             var targetNetFrameworkVersion = NetFrameworkVersioningHelper.NetFrameworkVersion4_5;
             var installedEntityFrameworkVersion = new Version(7, 0, 0, 0);
             var isModernProviderAvailable = true;
+            var isCodeFirst = false;
 
             var viewModel = new RuntimeConfigViewModel(
                 targetNetFrameworkVersion,
                 installedEntityFrameworkVersion,
-                isModernProviderAvailable);
+                isModernProviderAvailable,
+                isCodeFirst);
 
             Assert.Equal(1, viewModel.EntityFrameworkVersions.Count());
 
@@ -113,11 +118,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             var targetFrameworkVersion = NetFrameworkVersioningHelper.NetFrameworkVersion4;
             var installedEntityFrameworkVersion = new Version(7, 0, 0, 0);
             var isModernProviderAvailable = false;
+            var isCodeFirst = false;
 
             var viewModel = new RuntimeConfigViewModel(
                 targetFrameworkVersion,
                 installedEntityFrameworkVersion,
-                isModernProviderAvailable);
+                isModernProviderAvailable,
+                isCodeFirst);
 
             Assert.Equal(1, viewModel.EntityFrameworkVersions.Count());
 
@@ -137,7 +144,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             var viewModel = new RuntimeConfigViewModel(
                 targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion4,
                 installedEntityFrameworkVersion: null,
-                isModernProviderAvailable: false);
+                isModernProviderAvailable: false,
+                isCodeFirst: false);
 
             Assert.Equal(2, viewModel.EntityFrameworkVersions.Count());
 
@@ -162,7 +170,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             var viewModel = new RuntimeConfigViewModel(
                 targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion4_5,
                 installedEntityFrameworkVersion: null,
-                isModernProviderAvailable: true);
+                isModernProviderAvailable: true,
+                isCodeFirst: false);
 
             Assert.Equal(2, viewModel.EntityFrameworkVersions.Count());
 
@@ -179,6 +188,90 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
             Assert.Equal(RuntimeConfigState.Normal, viewModel.State);
             Assert.Equal(Resources.RuntimeConfig_TargetingHint, viewModel.Message);
             Assert.Equal(Resources.RuntimeConfig_LearnTargetingUrl, viewModel.HelpUrl);
+        }
+
+        [Fact]
+        public void Ctor_initializes_correctly_when_codefirst_and_no_EF_installed_and_modern_provider_available()
+        {
+            var viewModel = new RuntimeConfigViewModel(
+                targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion4_5,
+                installedEntityFrameworkVersion: null,
+                isModernProviderAvailable: true,
+                isCodeFirst: true);
+
+            Assert.Equal(RuntimeConfigState.Skip, viewModel.State);
+
+            Assert.Equal(1, viewModel.EntityFrameworkVersions.Count());
+            var efVersion = viewModel.EntityFrameworkVersions.Single();
+            Assert.Equal(RuntimeVersion.Latest, efVersion.Version);
+            Assert.False(efVersion.Disabled);
+            Assert.True(efVersion.IsDefault);
+
+            Assert.Null(viewModel.Message);
+            Assert.Null(viewModel.HelpUrl);
+        }
+
+        [Fact]
+        public void Ctor_initializes_correctly_when_codefirst_and_no_EF_installed_and_modern_provider_not_available()
+        {
+            var viewModel = new RuntimeConfigViewModel(
+                targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion4_5,
+                installedEntityFrameworkVersion: null,
+                isModernProviderAvailable: false,
+                isCodeFirst: true);
+
+            Assert.Equal(RuntimeConfigState.Error, viewModel.State);
+
+            Assert.Equal(1, viewModel.EntityFrameworkVersions.Count());
+            var efVersion = viewModel.EntityFrameworkVersions.Single();
+            Assert.Equal(RuntimeVersion.Latest, efVersion.Version);
+            Assert.True(efVersion.Disabled);
+            Assert.True(efVersion.IsDefault);
+
+            Assert.Equal(Resources.RuntimeConfig_NoProvider, viewModel.Message);
+            Assert.Equal(Resources.RuntimeConfig_LearnProvidersUrl, viewModel.HelpUrl);
+        }
+
+        [Fact]
+        public void Ctor_initializes_correctly_when_codefirst_and_EF6_installed_and_modern_provider_available()
+        {
+            var viewModel = new RuntimeConfigViewModel(
+                targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion4_5,
+                installedEntityFrameworkVersion: RuntimeVersion.Version6,
+                isModernProviderAvailable: true,
+                isCodeFirst: true);
+
+            Assert.Equal(RuntimeConfigState.Skip, viewModel.State);
+
+            Assert.Equal(1, viewModel.EntityFrameworkVersions.Count());
+            var efVersion = viewModel.EntityFrameworkVersions.Single();
+            Assert.Equal(RuntimeVersion.Latest, efVersion.Version);
+            Assert.False(efVersion.Disabled);
+            Assert.True(efVersion.IsDefault);
+
+            Assert.Null(viewModel.Message);
+            Assert.Null(viewModel.HelpUrl);
+        }
+
+        [Fact]
+        public void Ctor_initializes_correctly_when_codefirst_and_EF6_installed_and_modern_provider_not_available()
+        {
+            var viewModel = new RuntimeConfigViewModel(
+                targetNetFrameworkVersion: NetFrameworkVersioningHelper.NetFrameworkVersion4_5,
+                installedEntityFrameworkVersion: RuntimeVersion.Version6,
+                isModernProviderAvailable: false,
+                isCodeFirst: true);
+
+            Assert.Equal(RuntimeConfigState.Error, viewModel.State);
+
+            Assert.Equal(1, viewModel.EntityFrameworkVersions.Count());
+            var efVersion = viewModel.EntityFrameworkVersions.Single();
+            Assert.Equal(RuntimeVersion.Latest, efVersion.Version);
+            Assert.True(efVersion.Disabled);
+            Assert.True(efVersion.IsDefault);
+
+            Assert.Equal(Resources.RuntimeConfig_SixInstalledButNoProvider, viewModel.Message);
+            Assert.Equal(Resources.RuntimeConfig_LearnProvidersUrl, viewModel.HelpUrl);
         }
     }
 }

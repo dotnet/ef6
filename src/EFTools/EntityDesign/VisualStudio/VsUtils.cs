@@ -1,14 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
-
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.Diagnostics;
@@ -45,6 +43,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using Constants = EnvDTE.Constants;
     using PrjKind = VSLangProj.PrjKind;
     using Resources = Microsoft.Data.Entity.Design.Resources;
+    using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 
     internal enum VisualStudioProjectSystem
     {
@@ -124,28 +123,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
 
             return project;
-        }
-
-        // load web.config as an XML document (also output name of file to be used for saving)
-        private static XmlDocument LoadWebConfig(Project project, out string webConfigFilepath)
-        {
-            webConfigFilepath = null;
-
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
-
-            var webItemConfig = ConnectionManager.FindOrCreateWebConfig(project);
-            if (null == webItemConfig)
-            {
-                return null;
-            }
-
-            // pass 1 to get_FileNames because it asserts if we pass 0
-            webConfigFilepath = webItemConfig.FileNames[1];
-
-            return ConnectionManager.LoadConfigFile(webConfigFilepath);
         }
 
         // <summary>
@@ -232,48 +209,47 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         internal static void RegisterAssembly(Project project, string assemblyFullName)
         {
-            string webConfigFilepath;
-            var webConfigDocument = LoadWebConfig(project, out webConfigFilepath);
-            if (null == webConfigDocument)
-            {
-                return;
-            }
+            UpdateConfig(
+                project, configXml =>
+                {
+                    // <assemblies>
+                    var assembliesElement = FindOrCreateXmlElement(configXml, "configuration/system.web/compilation/assemblies");
 
-            var compilation = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation");
-            if (null != compilation)
-            {
-                // <assemblies>
-                var assembliesElement = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation/assemblies");
-
-                // <add> for System.Data.Entity assembly
-                FindOrCreateChildXmlElementWithAttribute(assembliesElement, "add", "assembly", assemblyFullName, new AssemblyNameComparer());
-                ConnectionManager.UpdateConfigFile(webConfigDocument, webConfigFilepath);
-            }
+                    // <add> for System.Data.Entity assembly
+                    FindOrCreateChildXmlElementWithAttribute(
+                        assembliesElement, "add", "assembly", assemblyFullName, new AssemblyNameComparer());
+                });
         }
 
         internal static void RegisterBuildProviders(Project project)
         {
-            string webConfigFilepath;
-            var webConfigDocument = LoadWebConfig(project, out webConfigFilepath);
-            if (null == webConfigDocument)
+            UpdateConfig(
+                project, (configXml) =>
+                {
+                    // <buildProviders>
+                    var buildProviders = FindOrCreateXmlElement(configXml, "configuration/system.web/compilation/buildProviders");
+
+                    // <add> for edmx
+                    var add = FindOrCreateChildXmlElementWithAttribute(buildProviders, "add", "extension", ".edmx", null);
+
+                    // Hardcode the build provider full type name to avoid the dependency on System.Data.Entity.Design.
+                    add.SetAttribute("type", "System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider");
+                });
+        }
+
+        private static void UpdateConfig(Project project, Action<XmlDocument> updateAction)
+        {
+            var configFileUtils = new ConfigFileUtils(project, PackageManager.Package);
+            configFileUtils.GetOrCreateConfigFile();
+            var configXml = configFileUtils.LoadConfig();
+            if (null == configXml)
             {
                 return;
             }
 
-            var compilation = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation");
-            if (null != compilation)
-            {
-                // <buildProviders>
-                var buildProviders = FindOrCreateXmlElement(webConfigDocument, "configuration/system.web/compilation/buildProviders");
+            updateAction(configXml);
 
-                // <add> for edmx
-                var add = FindOrCreateChildXmlElementWithAttribute(buildProviders, "add", "extension", ".edmx", null);
-
-                // Hardcode the build provider full type name to avoid the dependency on System.Data.Entity.Design.
-                add.SetAttribute("type", "System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider");
-
-                ConnectionManager.UpdateConfigFile(webConfigDocument, webConfigFilepath);
-            }
+            configFileUtils.SaveConfig(configXml);
         }
 
         // <summary>
@@ -348,7 +324,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                                 elem.SetAttribute(attributeName, attributeValue);
                                 return elem;
                             }
-                                // else just do normal string comparison
+                            // else just do normal string comparison
                             else if (attribute.Value == attributeValue)
                             {
                                 return elem;
@@ -464,8 +440,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 // Get an existing pane
                 outputWindowPane = outputWindow.OutputWindowPanes.Item(OutputWindowPaneTitle);
             }
-                // Spec says that OutputWindowPanes.Item() can throw ArgumentException, 
-                // but actually it throws NullReferenceException and NotImplementedException (WCF projects)
+            // Spec says that OutputWindowPanes.Item() can throw ArgumentException, 
+            // but actually it throws NullReferenceException and NotImplementedException (WCF projects)
             catch (Exception ex)
             {
                 if (ex is ArgumentException
@@ -672,7 +648,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
                     applicationType = VisualStudioProjectSystem.Website;
                 }
-                    // WebApplication?
+                // WebApplication?
                 else if (guidsString.IndexOf(WebAppProjectGuid, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     applicationType = VisualStudioProjectSystem.WebApplication;
@@ -691,6 +667,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
 
             return applicationType;
+        }
+
+        internal static bool IsWebProject(Project project, IServiceProvider serviceProvider)
+        {
+            Debug.Assert(project != null, "project is null");
+            Debug.Assert(serviceProvider != null, "serviceProvider is null");
+
+            return IsWebProject(GetApplicationType(serviceProvider, project));
+        }
+
+        internal static bool IsWebProject(VisualStudioProjectSystem applicationType)
+        {
+            return applicationType == VisualStudioProjectSystem.WebApplication
+                   || applicationType == VisualStudioProjectSystem.Website;
         }
 
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsAggregatableProject.GetAggregateProjectTypeGuids(System.String@)")]
@@ -1091,7 +1081,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 propertyName);
         }
 
-        private static object GetPropertyByName(Properties properties, string propertyName)
+        public static object GetPropertyByName(Properties properties, string propertyName)
         {
             Debug.Assert(properties != null, "properties is null.");
             Debug.Assert(!string.IsNullOrWhiteSpace(propertyName), "propertyName is null or empty.");
@@ -1252,13 +1242,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 filesMap,
                 fileDataObject => ((XmlDocument)fileDataObject).InnerXml,
                 (fileDataObject, filePath) =>
+                {
+                    var xmlWriterSettings = new XmlWriterSettings { Encoding = Encoding.UTF8, Indent = true };
+                    using (var writer = XmlWriter.Create(filePath, xmlWriterSettings))
                     {
-                        var xmlWriterSettings = new XmlWriterSettings { Encoding = Encoding.UTF8, Indent = true };
-                        using (var writer = XmlWriter.Create(filePath, xmlWriterSettings))
-                        {
-                            ((XmlDocument)fileDataObject).Save(writer);
-                        }
-                    });
+                        ((XmlDocument)fileDataObject).Save(writer);
+                    }
+                });
         }
 
         internal static void WriteCheckoutTextFilesInProject(IDictionary<string, object> filesMap)
@@ -1413,11 +1403,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             {
                 return sourceProjectItem.ProjectItems.OfType<ProjectItem>().FirstOrDefault(
                     p =>
-                        {
-                            var extension = Path.GetExtension(p.Name);
-                            return FileExtensions.CsExt.Equals(extension, StringComparison.OrdinalIgnoreCase)
-                                   || FileExtensions.VbExt.Equals(extension, StringComparison.OrdinalIgnoreCase);
-                        });
+                    {
+                        var extension = Path.GetExtension(p.Name);
+                        return FileExtensions.CsExt.Equals(extension, StringComparison.OrdinalIgnoreCase)
+                               || FileExtensions.VbExt.Equals(extension, StringComparison.OrdinalIgnoreCase);
+                    });
             }
 
             // For website projects projectItem.ProjectItems does not return the code-generated dependent files
@@ -1723,6 +1713,24 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
 
             return childProjItem;
+        }
+
+        public static ProjectItem AddNewFile(Project project, string path, string contents)
+        {
+            Debug.Assert(project != null, "project is null");
+            Debug.Assert(!string.IsNullOrWhiteSpace(path), "invalid path");
+
+            if (string.IsNullOrWhiteSpace(contents))
+            {
+                return null;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+            // TODO: Source control?
+            File.WriteAllText(path, contents);
+
+            return project.ProjectItems.AddFromFile(path);
         }
 
         internal static void CreateEmptyFile(string filePath, Encoding encoding)
@@ -2239,6 +2247,64 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             }
 
             return providerServicesTypeName;
+        }
+
+        internal static string GetProviderManifestTokenConnected(
+            IDbDependencyResolver resolver, string providerInvariantName, string providerConnectionString)
+        {
+            DbConnection connection = null;
+            try
+            {
+                var factory = DbProviderFactories.GetFactory(providerInvariantName);
+                Debug.Assert(factory != null, "failed because DbProviderFactory is null");
+
+                connection = factory.CreateConnection();
+
+                Debug.Assert(connection != null, "failed because DbConnection is null");
+                connection.ConnectionString = providerConnectionString;
+
+                var providerServices = resolver.GetService<DbProviderServices>(providerInvariantName);
+                Debug.Assert(providerServices != null, "failed because DbProviderServices is null");
+
+                return providerServices.GetProviderManifestToken(connection);
+            }
+            finally
+            {
+                VsUtils.SafeCloseDbConnection(connection, providerInvariantName, providerConnectionString);
+            }
+        }
+
+
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        public static ProjectItem GetProjectItemByPath(Project project, string relativeItemPath)
+        {
+            Debug.Assert(project != null, "project is null.");
+            Debug.Assert(!string.IsNullOrEmpty(relativeItemPath), "relativeItemPath is null or empty.");
+            Debug.Assert(!Path.IsPathRooted(relativeItemPath), "relativeItemPath is rooted.");
+
+            dynamic current = project;
+
+            var parts = relativeItemPath.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
+            {
+                ProjectItem item = null;
+                try
+                {
+                    item = ((ProjectItems)current.ProjectItems).Item(part);
+                }
+                catch
+                {
+                }
+
+                if (item == null)
+                {
+                    return null;
+                }
+
+                current = item;
+            }
+
+            return current;
         }
     }
 }

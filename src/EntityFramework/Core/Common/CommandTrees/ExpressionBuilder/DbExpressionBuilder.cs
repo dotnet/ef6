@@ -1252,11 +1252,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             Check.NotNull(argument, "argument");
 
-            ValidateIsNull(argument, false);
+            ValidateIsNull(argument);
             return new DbIsNullExpression(_booleanType, argument);
         }
 
-        private static void ValidateIsNull(DbExpression argument, bool allowRowType)
+        private static void ValidateIsNull(DbExpression argument)
         {
             DebugCheck.NotNull(argument);
 
@@ -1269,11 +1269,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             // ensure argument type is valid for this operation
             if (!TypeHelpers.IsValidIsNullOpType(argument.ResultType))
             {
-                if (!allowRowType
-                    || !TypeSemantics.IsRowType(argument.ResultType))
-                {
-                    throw new ArgumentException(Strings.Cqt_IsNull_InvalidType);
-                }
+                throw new ArgumentException(Strings.Cqt_IsNull_InvalidType);
             }
         }
 
@@ -3195,15 +3191,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
                             Strings.ADP_InvalidEnumerationValue(paramName, ((int)joinKind).ToString(CultureInfo.InvariantCulture)));
                 }
             }
-        }
-
-        // <summary>
-        // Used only by span rewriter, when a row could be specified as an argument
-        // </summary>
-        internal static DbIsNullExpression CreateIsNullExpressionAllowingRowTypeArgument(DbExpression argument)
-        {
-            ValidateIsNull(argument, true);
-            return new DbIsNullExpression(_booleanType, argument);
         }
 
         // <summary>

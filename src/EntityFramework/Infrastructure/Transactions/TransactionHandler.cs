@@ -18,6 +18,10 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     public abstract class TransactionHandler : IDbTransactionInterceptor, IDbConnectionInterceptor, IDisposable
     {
+        private WeakReference _objectContext;
+        private WeakReference _dbContext;
+        private WeakReference _connection;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionHandler"/> class.
         /// </summary>
@@ -78,7 +82,20 @@ namespace System.Data.Entity.Infrastructure
         /// <value>
         /// The <see cref="ObjectContext"/> for which the transaction operations will be handled.
         /// </value>
-        public ObjectContext ObjectContext { get; private set; }
+        public ObjectContext ObjectContext
+        {
+            get
+            {
+                return _objectContext != null && _objectContext.IsAlive
+                    ? (ObjectContext)_objectContext.Target
+                    : null;
+            }
+
+            private set
+            {
+                _objectContext = new WeakReference(value);
+            }
+        }
 
         /// <summary>
         /// Gets the context.
@@ -86,7 +103,20 @@ namespace System.Data.Entity.Infrastructure
         /// <value>
         /// The <see cref="DbContext"/> for which the transaction operations will be handled, could be null.
         /// </value>
-        public DbContext DbContext { get; private set; }
+        public DbContext DbContext
+        {
+            get
+            {
+                return _dbContext != null && _dbContext.IsAlive
+                    ? (DbContext)_dbContext.Target
+                    : null;
+            }
+
+            private set
+            {
+                _dbContext = new WeakReference(value);
+            }
+        }
 
         /// <summary>
         /// Gets the connection.
@@ -98,7 +128,20 @@ namespace System.Data.Entity.Infrastructure
         /// This connection object is only used to determine whether a particular operation needs to be handled
         /// in cases where a context is not available.
         /// </remarks>
-        public DbConnection Connection { get; private set; }
+        public DbConnection Connection
+        {
+            get
+            {
+                return _connection != null && _connection.IsAlive
+                    ? (DbConnection)_connection.Target
+                    : null;
+            }
+
+            private set
+            {
+                _connection = new WeakReference(value);
+            }
+        }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -126,8 +169,8 @@ namespace System.Data.Entity.Infrastructure
             if (!IsDisposed)
             {
                 DbInterception.Remove(this);
+                IsDisposed = true;
             }
-            IsDisposed = true;
         }
 
         /// <summary>

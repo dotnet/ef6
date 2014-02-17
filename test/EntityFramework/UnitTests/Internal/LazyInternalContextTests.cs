@@ -84,7 +84,7 @@ namespace System.Data.Entity.Internal
             var lazyInternalContext = new LazyInternalContext(
                 dbContext, lazyInternalConnectionMock.Object, null, null, null, null, objectContextMock.Object);
             
-            lazyInternalContext.DisposeContext();
+            lazyInternalContext.DisposeContext(true);
 
             Assert.Equal(2, results.Count);
             Assert.Same("EntityConnection Dispose() called", results[0]);

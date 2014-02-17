@@ -133,7 +133,7 @@ namespace EFDesigner.InProcTests
         {
             var modelPath = Path.Combine(TestContext.DeploymentDirectory, @"TestData\Model\v3\PubSimple.edmx");
 
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         EntityDesignArtifact entityDesignArtifact = null;

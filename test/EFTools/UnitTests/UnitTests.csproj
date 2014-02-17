@@ -33,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <StyleCopEnabled Condition="'$(StyleCopEnabled)' == ''">false</StyleCopEnabled>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -57,6 +58,8 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" />
     <Reference Include="Microsoft.WizardFramework, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface" />
     <Reference Include="Microsoft.VSDesigner, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -155,6 +158,8 @@
     <Compile Include="EntityDesignModel\Validation\EscherAttributeContentValidatorTests.cs" />
     <Compile Include="EntityDesignModel\Validation\RuntimeMetadataValidatorTests.cs" />
     <Compile Include="EntityDesignPackage\CustomCode\MicrosoftDataEntityDesignDocDataTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\CodeFirstModelGeneratorTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\CodeGeneratorFactoryTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\CascadeDeleteConfigurationTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\ForeignKeyConfigurationTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Configuration\NavigationProperty\JoinTableConfigurationTests.cs" />
@@ -189,6 +194,14 @@
     <Compile Include="EntityDesign\CodeGeneration\Discoverers\Property\DatabaseGeneratedDiscovererTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Discoverers\Type\KeyDiscovererTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Discoverers\Type\TableDiscovererTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\CSharpCodeFirstEmptyModelGeneratorTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultCSharpContextGeneratorTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultCSharpEntityTypeGeneratorTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultVBContextGeneratorTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\DefaultVBEntityTypeGeneratorTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\GeneratorTestBase.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\TextTemplatingHostTests.cs" />
+    <Compile Include="EntityDesign\CodeGeneration\Generators\VBCodeFirstEmptyModelGeneratorTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\VBCodeHelperTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Extensions\DbModelExtensionsTests.cs" />
     <Compile Include="EntityDesign\CodeGeneration\Extensions\EdmMemberExtensionsTests.cs" />
@@ -200,12 +213,13 @@
     <Compile Include="EntityDesign\VisualStudio\EdmUtilsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ExecutorWrapperTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\DbContextGeneratorTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngineTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DatabaseEngineBaseTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DatabaseGenerationAssemblyLoaderTests.cs" />
-    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DatabaseGenerationEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\DataConnectionUtilsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\EdmxHelperTests.cs" />
-    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\InMemoryModelBuilerEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\LazyInitialModelContentsFactoryTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\EdmxModelBuilderEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\ModelBuilderEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\ModelGeneratorTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\InitialModelContentsFactoryTests.cs" />
@@ -219,6 +233,7 @@
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\ModelObjectItemWizardTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\OneEFWizardTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Model\StandaloneXmlModelProviderTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\Package\ConfigFileUtilsTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\ConnectionManagerTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\EntityDesignDocumentFrameMgrTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\RetargetingHandlerTests.cs" />
@@ -227,9 +242,11 @@
     <Compile Include="EntityDesign\VisualStudio\NetFrameworkVersioningHelperTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\ModelGenErrorCacheTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\VsUtilsTests.cs" />
+    <Compile Include="TestHelpers\CleanupAction.cs" />
     <Compile Include="TestHelpers\MockDTE.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="XmlCore\Model\EFArtifactServiceTests.cs" />
+    <Compile Include="XmlCore\Model\Validation\ErrorInfoTests.cs" />
     <Compile Include="XmlCore\Model\Validation\XmlReaderProxyTests.cs" />
     <Compile Include="XmlCore\Model\Validation\XNodeReaderLineNumberServiceTests.cs" />
     <Compile Include="XmlCore\Model\Validation\XObjectLineNumberServiceTests.cs" />

@@ -9,9 +9,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Linq;
     using System.Runtime.Serialization;
 
-    /// <summary>
-    ///     Strongly typed DataTable for TableDetails
-    /// </summary>
+    // <summary>
+    //     Strongly typed DataTable for TableDetails
+    // </summary>
     [Serializable]
     internal sealed class TableDetailsCollection : DataTable, IEnumerable<TableDetailsRow>
     {
@@ -57,143 +57,141 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         [NonSerialized]
         private DataColumn _columnIsPrimaryKey;
 
-        /// <summary>
-        ///     Constructs a TableDetailsDataTable
-        /// </summary>
+        // <summary>
+        //     Constructs a TableDetailsDataTable
+        // </summary>
         public TableDetailsCollection()
         {
             TableName = "TableDetails";
             InitClass();
         }
 
-        /// <summary>
-        ///     Constructs a new instance TableDetailsDataTable with a given SerializationInfo and StreamingContext
-        /// </summary>
-        /// <param name="serializationInfo"></param>
-        /// <param name="streamingContext"></param>
+        // <summary>
+        //     Constructs a new instance TableDetailsDataTable with a given SerializationInfo and StreamingContext
+        // </summary>
         internal TableDetailsCollection(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {
             UpdateMemberFieldsAfterDeserialization();
         }
 
-        /// <summary>
-        ///     Gets the Catalog column
-        /// </summary>
+        // <summary>
+        //     Gets the Catalog column
+        // </summary>
         public DataColumn CatalogColumn
         {
             get { return _columnCatalog; }
         }
 
-        /// <summary>
-        ///     Gets the Schema column
-        /// </summary>
+        // <summary>
+        //     Gets the Schema column
+        // </summary>
         public DataColumn SchemaColumn
         {
             get { return _columnSchema; }
         }
 
-        /// <summary>
-        ///     Gets the TableName column
-        /// </summary>
+        // <summary>
+        //     Gets the TableName column
+        // </summary>
         public DataColumn TableNameColumn
         {
             get { return _columnTable; }
         }
 
-        /// <summary>
-        ///     Gets the ColumnName column
-        /// </summary>
+        // <summary>
+        //     Gets the ColumnName column
+        // </summary>
         public DataColumn ColumnNameColumn
         {
             get { return _columnFieldColumn; }
         }
 
-        /// <summary>
-        ///     Gets the IsNullable column
-        /// </summary>
+        // <summary>
+        //     Gets the IsNullable column
+        // </summary>
         public DataColumn IsNullableColumn
         {
             get { return _columnIsNullable; }
         }
 
-        /// <summary>
-        ///     Gets the DataType column
-        /// </summary>
+        // <summary>
+        //     Gets the DataType column
+        // </summary>
         public DataColumn DataTypeColumn
         {
             get { return _columnDataType; }
         }
 
-        /// <summary>
-        ///     Gets the MaximumLength column
-        /// </summary>
+        // <summary>
+        //     Gets the MaximumLength column
+        // </summary>
         public DataColumn MaximumLengthColumn
         {
             get { return _columnMaximumLength; }
         }
 
-        /// <summary>
-        ///     Gets the Precision column
-        /// </summary>
+        // <summary>
+        //     Gets the Precision column
+        // </summary>
         public DataColumn PrecisionColumn
         {
             get { return _columnPrecision; }
         }
 
-        /// <summary>
-        ///     Gets the Precision column
-        /// </summary>
+        // <summary>
+        //     Gets the Precision column
+        // </summary>
         public DataColumn DateTimePrecisionColumn
         {
             get { return _columnDateTimePrecision; }
         }
 
-        /// <summary>
-        ///     Gets the Scale column
-        /// </summary>
+        // <summary>
+        //     Gets the Scale column
+        // </summary>
         public DataColumn ScaleColumn
         {
             get { return _columnScale; }
         }
 
-        /// <summary>
-        ///     Gets the IsIdentityColumn column
-        /// </summary>
+        // <summary>
+        //     Gets the IsIdentityColumn column
+        // </summary>
         public DataColumn IsIdentityColumn
         {
             get { return _columnIsIdentity; }
         }
 
-        /// <summary>
-        ///     Gets the IsIdentityColumn column
-        /// </summary>
+        // <summary>
+        //     Gets the IsIdentityColumn column
+        // </summary>
         public DataColumn IsServerGeneratedColumn
         {
             get { return _columnIsServerGenerated; }
         }
 
-        /// <summary>
-        ///     Gets the IsPrimaryKey column
-        /// </summary>
+        // <summary>
+        //     Gets the IsPrimaryKey column
+        // </summary>
         public DataColumn IsPrimaryKeyColumn
         {
             get { return _columnIsPrimaryKey; }
         }
 
-        /// <summary>
-        ///     Gets an enumerator over the rows.
-        /// </summary>
-        /// <returns>The row enumerator</returns>
+        // <summary>
+        //     Gets an enumerator over the rows.
+        // </summary>
+        // <returns>The row enumerator</returns>
         public IEnumerator GetEnumerator()
         {
             return Rows.GetEnumerator();
         }
 
-        /// <summary>
-        ///     Creates an instance of this table
-        /// </summary>
-        /// <returns>The newly created instance.</returns>
+        // <summary>
+        //     Creates an instance of this table
+        // </summary>
+        // <returns>The newly created instance.</returns>
         protected override DataTable CreateInstance()
         {
             return new TableDetailsCollection();
@@ -264,20 +262,20 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _columnIsPrimaryKey = Columns[IsPrimaryKeyColumnName];
         }
 
-        /// <summary>
-        ///     Create a new row from a DataRowBuilder object.
-        /// </summary>
-        /// <param name="builder">The builder to create the row from.</param>
-        /// <returns>The row that was created.</returns>
+        // <summary>
+        //     Create a new row from a DataRowBuilder object.
+        // </summary>
+        // <param name="builder">The builder to create the row from.</param>
+        // <returns>The row that was created.</returns>
         protected override DataRow NewRowFromBuilder(DataRowBuilder builder)
         {
             return new TableDetailsRow(builder);
         }
 
-        /// <summary>
-        ///     Gets the Type that this row is.
-        /// </summary>
-        /// <returns>The type of this row.</returns>
+        // <summary>
+        //     Gets the Type that this row is.
+        // </summary>
+        // <returns>The type of this row.</returns>
         protected override Type GetRowType()
         {
             return typeof(TableDetailsRow);

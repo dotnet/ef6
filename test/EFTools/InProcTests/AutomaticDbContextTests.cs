@@ -49,7 +49,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void AddDbContextTemplates_does_not_add_the_template_items_when_the_templates_are_not_installed()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateProject("NoDbContextTemplates", "3.5", "VisualBasic");
@@ -68,7 +68,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_returns_null_for_project_targeting_dotNET3_5()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () => { Assert.IsNull(new DbContextCodeGenerator().FindDbContextTemplate(CreateProject("Net35", "3.5", "CSharp"))); });
         }
 
@@ -77,7 +77,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_CSharp_template_when_targeting_dotNET4_with_CSharp()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateProject("DbContextCSharpNet40", "4", "CSharp");
@@ -92,7 +92,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_CSharp_template_when_targeting_dotNET4_5_with_CSharp()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateProject("DbContextCSharpNet45", "4.5", "CSharp");
@@ -107,7 +107,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_VB_template_when_targeting_dotNET4_with_VB()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateProject("DbContextVBNet40", "4", "VisualBasic");
@@ -122,7 +122,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_VB_template_when_targeting_dotNET4_5_with_VB()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateProject("DbContextVBNet45", "4.5", "VisualBasic");
@@ -137,7 +137,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_CSharp_web_site_template_when_targeting_dotNET4_web_site_with_CSharp()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateWebSiteProject("DbContextCSharpNet40Web", "4", "CSharp");
@@ -152,7 +152,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_CSharp_web_site_template_when_targeting_dotNET4_5_web_site_with_CSharp()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateWebSiteProject("DbContextCSharpNet45Web", "4.5", "CSharp");
@@ -167,7 +167,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_VB_web_site_template_when_targeting_dotNET4_web_site_with_VB()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateWebSiteProject("DbContextVBNet40Web", "4", "VisualBasic");
@@ -182,7 +182,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF5_VB_web_site_template_when_targeting_dotNET4_5_web_site_with_VB()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var proj = CreateWebSiteProject("DbContextVBNet45Web", "4.5", "VisualBasic");
@@ -197,7 +197,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF6_CSharp_template()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateProject("DbContextCSharpNet45EF6", "4.5", "CSharp");
@@ -214,7 +214,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF6_VB_template()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateProject("DbContextVBNet45EF6", "4.5", "VisualBasic");
@@ -231,7 +231,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF6_CSharp_web_site_template()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateWebSiteProject("DbContextCSharpNet45WebEF6", "4.5", "CSharp");
@@ -248,7 +248,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void FindDbContextTemplate_finds_the_EF6_VB_web_site_template()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateWebSiteProject("DbContextVBNet45WebEF6", "4.5", "VisualBasic");
@@ -265,7 +265,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void AddDbContextTemplates_does_not_add_the_template_items_to_the_item_collection_when_targeting_dotNET3_5()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateProject("TemplatesNet35", "3.5", "VisualBasic");
@@ -283,7 +283,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void AddDbContextTemplates_adds_the_template_items_nested_under_the_EDMX_item()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateProject("TemplatesNet40", "4", "CSharp");
@@ -305,7 +305,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void AddDbContextTemplates_does_not_nest_existing_tt_files_or_non_tt_files_added_at_the_same_time_as_the_template_items()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateProject("TemplatesNet40_Nesting", "4", "CSharp");
@@ -329,7 +329,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void AddDbContextTemplates_adds_the_template_items_to_the_item_collection_for_a_website_project()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateWebSiteProject("TemplatesNet45Web", "4.5", "CSharp");
@@ -352,7 +352,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void AddDbContextTemplates_is_noop_when_called_more_than_once()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateProject("TemplatesNet45Twice", "4.5", "CSharp");
@@ -373,7 +373,7 @@ namespace EFDesigner.InProcTests
         [HostType("VS IDE")]
         public void AddDbContextTemplates_is_noop_when_called_more_than_once_and_website()
         {
-            UITestRunner.Execute(
+            UITestRunner.Execute(TestContext.TestName, 
                 () =>
                     {
                         var project = CreateWebSiteProject("TemplatesNet45TwiceWeb", "4.5", "CSharp");

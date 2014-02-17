@@ -33,5 +33,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                     new ModelBuilderSettings { GenerationOption = ModelGenerationOption.EmptyModelCodeFirst })
                     .ShouldAddProjectItem("FakeProjectItemName"));
         }
+
+        [Fact]
+        public void ShouldAddProjectItem_returns_false_for_CodeFirstFromDatabase()
+        {
+            Assert.False(
+                new ModelObjectItemWizard(
+                    new ModelBuilderSettings { GenerationOption = ModelGenerationOption.CodeFirstFromDatabase })
+                    .ShouldAddProjectItem("FakeProjectItemName"));
+        }
     }
 }

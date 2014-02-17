@@ -5,6 +5,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
     using Microsoft.WizardFramework;
     using System;
     using System.Collections.Generic;
@@ -38,14 +39,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         private static readonly IDictionary<string, string> _templateContent = new Dictionary<string, string>();
         private readonly bool _codeFirstAllowed;
+        private readonly ConfigFileUtils _configFileUtils;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        public WizardPageStart(ModelBuilderWizardForm wizard)
+        public WizardPageStart(ModelBuilderWizardForm wizard, ConfigFileUtils configFileUtils = null)
             : base(wizard)
         {
             InitializeComponent();
 
-             _codeFirstAllowed = CodeFirstAllowed(Wizard.ModelBuilderSettings);
+            _codeFirstAllowed = CodeFirstAllowed(Wizard.ModelBuilderSettings);
+            _configFileUtils = configFileUtils
+                               ?? new ConfigFileUtils(wizard.Project, wizard.ServiceProvider, wizard.ModelBuilderSettings.VSApplicationType);
 
             components = new Container();
 
@@ -202,6 +206,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModel, 
                     "Generation option not updated correctly");
 
+                Wizard.ModelBuilderSettings.ModelBuilderEngine = null;
+
                 LazyInitialModelContentsFactory.AddSchemaSpecificReplacements(
                     Wizard.ModelBuilderSettings.ReplacementDictionary,
                     Wizard.ModelBuilderSettings.TargetSchemaVersion);
@@ -214,24 +220,47 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 Debug.Assert(Wizard.ModelBuilderSettings.VsTemplatePath != null, "Invalid vstemplate path.");
 
                 Wizard.ModelBuilderSettings.ModelBuilderEngine =
-                    new InMemoryModelBuilderEngine(
+                    new EdmxModelBuilderEngine(
                         new LazyInitialModelContentsFactory(
                             GetEdmxTemplateContent(Wizard.ModelBuilderSettings.VsTemplatePath),
                             Wizard.ModelBuilderSettings.ReplacementDictionary));
             }
-            else
+            else if (selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex)
             {
                 Debug.Assert(
-                    selectedOptionIndex == GenerateEmptyModelCodeFirstIndex ||
-                    selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex,
-                    "Unexpected index.");
+                    Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase,
+                    "Generation option not updated correctly");
+
+                Wizard.ModelBuilderSettings.ModelBuilderEngine = new CodeFirstModelBuilderEngine();
+            }
+            else
+            {
+                Debug.Assert(selectedOptionIndex == GenerateEmptyModelCodeFirstIndex, "Unexpected index.");
 
                 Debug.Assert(
                     (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst
-                     && selectedOptionIndex == GenerateEmptyModelCodeFirstIndex) ||
-                    (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase
-                     && selectedOptionIndex == GenerateCodeFirstFromDatabaseIndex),
+                     && selectedOptionIndex == GenerateEmptyModelCodeFirstIndex),
                     "Generation option not updated correctly");
+
+                Wizard.ModelBuilderSettings.ModelBuilderEngine = null;
+                Wizard.ModelBuilderSettings.AppConfigConnectionPropertyName =
+                    ConnectionManager.GetUniqueConnectionStringName(
+                        _configFileUtils, Wizard.ModelBuilderSettings.ModelName);
+
+                // for CodeFirst empty model we always add a localdb connection
+                var initialCatalog = string.Format(
+                    CultureInfo.CurrentCulture,
+                    "{0}.{1}", 
+                    Wizard.ModelBuilderSettings.ReplacementDictionary["$rootnamespace$"], 
+                    Wizard.ModelBuilderSettings.ModelName);
+
+                Wizard.ModelBuilderSettings.SaveConnectionStringInAppConfig = true;
+                var defaultConnectionString =
+                    ConnectionManager.CreateDefaultLocalDbConnectionString(initialCatalog);
+
+                Wizard.ModelBuilderSettings.SetInvariantNamesAndConnectionStrings(
+                    ServiceProvider, Wizard.Project, ConnectionManager.SqlClientProviderName,
+                    defaultConnectionString, defaultConnectionString, isDesignTime: false);
             }
         }
 
@@ -434,6 +463,31 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var entityFrameworkAssemblyVersion = VsUtils.GetInstalledEntityFrameworkAssemblyVersion(settings.Project);
             return entityFrameworkAssemblyVersion == null
                    || entityFrameworkAssemblyVersion >= RuntimeVersion.Version6;
+        }
+
+        private void listViewModelContents_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if (e.Item.Selected)
+            {
+                e.DrawDefault = true;
+                return;
+            }
+            // custom drawing performed to avoid truncated text on non-selected items
+            // see http://entityframework.codeplex.com/workitem/2046 for more details
+            e.DrawBackground();
+            var image = e.Item.ImageList.Images[e.Item.ImageKey];
+            Debug.Assert(image!=null, "Images shouldn't be null");
+            e.Graphics.DrawImage(
+                image, 
+                e.Bounds.X + (e.Bounds.Width - image.Width) / 2, 
+                e.Bounds.Y + 2);
+            var textBounds = e.Bounds;
+            textBounds.Y = e.Bounds.Y + image.Height + 5;
+            TextRenderer.DrawText(
+                e.Graphics, e.Item.Text, e.Item.Font, textBounds, e.Item.ForeColor,
+                TextFormatFlags.WordBreak |
+                TextFormatFlags.HorizontalCenter |
+                TextFormatFlags.NoPadding);
         }
     }
 }

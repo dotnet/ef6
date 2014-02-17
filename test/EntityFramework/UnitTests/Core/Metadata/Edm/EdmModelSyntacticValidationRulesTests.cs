@@ -42,16 +42,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             foreach (var type in new EdmType[] { rowType, rowType.GetCollectionType() })
             {
-                var validationContext
-                    = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
-                DataModelErrorEventArgs errorEventArgs = null;
-                validationContext.OnError += (_, e) => errorEventArgs = e;
+                foreach (var dataSpace in new[] { DataSpace.CSpace, DataSpace.SSpace })
+                {
+                    var validationContext
+                        = new EdmModelValidationContext(new EdmModel(dataSpace), true);
+                    DataModelErrorEventArgs errorEventArgs = null;
+                    validationContext.OnError += (_, e) => errorEventArgs = e;
 
-                EdmModelSyntacticValidationRules
-                    .EdmModel_NameIsNotAllowed
-                    .Evaluate(validationContext, type);
+                    EdmModelSyntacticValidationRules
+                        .EdmModel_NameIsNotAllowed
+                        .Evaluate(validationContext, type);
 
-                Assert.Null(errorEventArgs);
+                    Assert.Null(errorEventArgs);
+                }
             }
         }
 
@@ -107,9 +110,43 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void EdmModel_NameIsNotAllowed_triggered_for_store_entity_types_with_dots()
+        {
+            var entityType = new EntityType("Entity.With.Dots", "N", DataSpace.SSpace);
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSyntacticValidationRules
+                .EdmModel_NameIsNotAllowed
+                .Evaluate(validationContext, entityType);
+
+            Assert.NotNull(errorEventArgs);
+        }
+
+        [Fact]
         public void EdmModel_NameIsNotAllowed_triggered_for_conceptual_entity_types_with_spaces()
         {
             var entityType = new EntityType("Entity With Spaces", "N", DataSpace.CSpace);
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSyntacticValidationRules
+                .EdmModel_NameIsNotAllowed
+                .Evaluate(validationContext, entityType);
+
+            Assert.NotNull(errorEventArgs);
+        }
+
+        [Fact]
+        public void EdmModel_NameIsNotAllowed_triggered_for_conceptual_entity_types_with_dots()
+        {
+            var entityType = new EntityType("Entity.With.Spaces", "N", DataSpace.CSpace);
 
             var validationContext
                 = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);

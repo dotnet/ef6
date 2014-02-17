@@ -27,6 +27,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <StyleCopEnabled Condition="'$(StyleCopEnabled)' == ''">false</StyleCopEnabled>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

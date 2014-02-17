@@ -252,29 +252,39 @@ namespace System.Data.Entity
         #region Context methods
 
         /// <summary>
-        /// Returns a DbSet instance for access to entities of the given type in the context,
-        /// the ObjectStateManager, and the underlying store.
+        /// Returns a <see cref="DbSet{TEntity}"/> instance for access to entities of the given type in the context
+        /// and the underlying store.
         /// </summary>
         /// <remarks>
-        /// See the DbSet class for more details.
+        /// Note that Entity Framework requires that this method return the same instance each time that it is called
+        /// for a given context instance and entity type. Also, the non-generic <see cref="DbSet"/> returned by the
+        /// <see cref="Set(Type)"/> method must wrap the same underlying query and set of entities. These invariants must
+        /// be maintained if this method is overridden for anything other than creating test doubles for unit testing.
+        /// See the <see cref="DbSet{TEntity}"/> class for more details.
         /// </remarks>
         /// <typeparam name="TEntity"> The type entity for which a set should be returned. </typeparam>
         /// <returns> A set for the given entity type. </returns>
-        public DbSet<TEntity> Set<TEntity>() where TEntity : class
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Set")]
+        public virtual DbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             return (DbSet<TEntity>)InternalContext.Set<TEntity>();
         }
 
         /// <summary>
-        /// Returns a non-generic DbSet instance for access to entities of the given type in the context,
-        /// the ObjectStateManager, and the underlying store.
+        /// Returns a non-generic <see cref="DbSet"/> instance for access to entities of the given type in the context
+        /// and the underlying store.
         /// </summary>
         /// <param name="entityType"> The type of entity for which a set should be returned. </param>
         /// <returns> A set for the given entity type. </returns>
         /// <remarks>
-        /// See the DbSet class for more details.
+        /// Note that Entity Framework requires that this method return the same instance each time that it is called
+        /// for a given context instance and entity type. Also, the generic <see cref="DbSet{TEntity}"/> returned by the
+        /// <see cref="Set"/> method must wrap the same underlying query and set of entities. These invariants must
+        /// be maintained if this method is overridden for anything other than creating test doubles for unit testing.
+        /// See the <see cref="DbSet"/> class for more details.
         /// </remarks>
-        public DbSet Set(Type entityType)
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Set")]
+        public virtual DbSet Set(Type entityType)
         {
             Check.NotNull(entityType, "entityType");
 
@@ -543,7 +553,7 @@ namespace System.Data.Entity
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            InternalContext.Dispose();
+            _internalContext.Dispose();
         }
 
         #endregion

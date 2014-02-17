@@ -274,6 +274,29 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+
+    public class ShopContext_v6 : ShopContext_v3
+    {
+        public ShopContext_v6()
+        {
+        }
+
+        public ShopContext_v6(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<MigrationsStore>()
+                .Property(s => s.Name)
+                .HasMaxLength(15);
+        }
+    }
+
     public class EmptyModel : DbContext
     {
     }

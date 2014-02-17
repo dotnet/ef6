@@ -21,6 +21,11 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             get { return _codeProvider; }
         }
 
+        internal override string NamedParameterSetter
+        {
+            get { return ":="; }
+        }
+
         internal override string TypeArgument(string value)
         {
             Debug.Assert(!string.IsNullOrEmpty(value), "value is null or empty.");

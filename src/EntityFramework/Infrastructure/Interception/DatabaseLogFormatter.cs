@@ -30,7 +30,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// </remarks>
     public class DatabaseLogFormatter : IDbCommandInterceptor, IDbConnectionInterceptor, IDbTransactionInterceptor
     {
-        private readonly DbContext _context;
+        private readonly WeakReference _context;
         private readonly Action<string> _writeAction;
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         {
             Check.NotNull(writeAction, "writeAction");
 
-            _context = context;
+            _context = new WeakReference(context);
             _writeAction = writeAction;
         }
 
@@ -76,7 +76,12 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// </summary>
         protected internal DbContext Context
         {
-            get { return _context; }
+            get
+            {
+                return _context != null && _context.IsAlive
+                    ? (DbContext)_context.Target
+                    : null;
+            }
         }
 
         internal Action<string> WriteAction

@@ -46,17 +46,18 @@ Project global post-settings and targets.
       <AssemblyVersion Condition="'$(BuildingRuntimeProject)' == 'true'">$(VersionMajor).$(RuntimeAssemblyVersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
+      <AssemblyInfoVersion Condition="'$(VersionRelease)' != ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)-$(VersionBuild)</AssemblyInfoVersion>
+      <AssemblyInfoVersion Condition="'$(AssemblyInfoVersion)' == ''">$(AssemblyFileVersion)</AssemblyInfoVersion>
       <!-- TODO: NuGetPackageVersion is set by versions.targets, so when it is being used for runtime dated builds it's important
            not to override it, but for tooling builds it gives the wrong answer (based on the tooling VersionMajor and VersionMinor)
            so there we must override it. Should come up with a fix in version.targets. -->
       <NuGetPackageVersion Condition="'$(BuildingToolingProject)' == 'true' Or '$(NuGetPackageVersion)' == ''">$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>
       <EF6NuGetPackageVersion>$(NuGetPackageVersion)</EF6NuGetPackageVersion>
-      <EFPackageVersion>$(EF6NuGetPackageVersion)</EFPackageVersion>
       <EF6NuGetPackageWixId>$(NuGetPackageVersion)</EF6NuGetPackageWixId>
       <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
-      <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">386835</ProjectUrlFwLinkID>
-      <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">386836</LicenseUrlFwLinkID>
-      <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EFPackageVersion=$(EFPackageVersion)</NuSpecProperties>
+      <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">320540</ProjectUrlFwLinkID>
+      <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">320539</LicenseUrlFwLinkID>
+      <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</NuSpecProperties>
       <NuSpecProperties>$(NuSpecProperties);ProjectUrlFwLinkID=$(ProjectUrlFwLinkID);LicenseUrlFwLinkID=$(LicenseUrlFwLinkID)</NuSpecProperties>
     </PropertyGroup>
     <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.wixproj'" Label="Properties used in setup">

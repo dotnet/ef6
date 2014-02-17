@@ -29,20 +29,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     // to view this class in the forms designer, make it temporarily derive from Microsoft.WizardFramework.WizardPage
     internal partial class WizardPageSelectTables : WizardPageBase
     {
-        // This key is used to store errors that are encountered by WizardPageSelectTables so that other pages can to refer to them.
-        internal const string SELECT_TABLES_ERRORS_KEY = "WizardPageSelectTablesErrors";
-
-        private bool _modelNamespaceInitialized;
+        private readonly bool _isNetFx35;
         private string _initializedDataConnection;
         private bool _initializedUsingLegacyProvider;
-        private DatabaseConnectionSsdlAggregator _ssdlAggregator;
+        // -1 ensures we set the state of the controls when OnActivate is called the first time
+        private ModelGenerationOption _initializedGenerationOption = (ModelGenerationOption)(-1);
         private readonly BackgroundWorker _bgWorkerPopulateTree;
         private readonly Stopwatch _stopwatch;
         private Control _controlWithToolTipShown;
-        internal static readonly string selectTablesPageId = "WizardPageSelectTablesId";
-
-        #region Constructors
-
+        
         internal WizardPageSelectTables(ModelBuilderWizardForm wizard)
             : base(wizard)
         {
@@ -50,7 +45,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             Logo = ModelWizard.Properties.Resources.PageIcon;
             Headline = ModelWizard.Properties.Resources.SelectTablesPage_Title;
-            Id = selectTablesPageId;
+            Id = "WizardPageSelectTablesId";
             ShowInfoPanel = false;
 
             labelPrompt.Text = ModelWizard.Properties.Resources.WhichDatabaseObjectsLabel;
@@ -59,13 +54,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             HelpKeyword = null;
 
             Debug.Assert(
-                Wizard.Mode == ModelBuilderWizardForm.WizardMode.PerformAllFunctionality, "Unexpected wizard mode in WizardPageSelectTables");
-            InitializeModelOptions(
-                chkPluralize, chkIncludeForeignKeys, chkCreateFunctionImports,
-                toolTip, Wizard.Project, Wizard.ServiceProvider,
-                IncludeForeignKeysArea_OnMouseMove, IncludeForeignKeysArea_OnMouseLeave);
+                Wizard.Mode == ModelBuilderWizardForm.WizardMode.PerformAllFunctionality, 
+                "Unexpected wizard mode in WizardPageSelectTables");
 
             _stopwatch = new Stopwatch();
+
+            _isNetFx35 = NetFrameworkVersioningHelper.TargetNetFrameworkVersion(Wizard.Project, ServiceProvider) <
+                NetFrameworkVersioningHelper.NetFrameworkVersion4;
+
+            InitializeModelOptions();
 
             _bgWorkerPopulateTree = new BackgroundWorker();
             _bgWorkerPopulateTree.WorkerSupportsCancellation = true;
@@ -73,71 +70,45 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             _bgWorkerPopulateTree.DoWork += bgWorkerPopulateTree_DoWork;
         }
 
-        internal static void InitializeModelOptions(
-            CheckBox pluralizationCheckBox, CheckBox foreignKeysCheckBox, CheckBox createFunctionImportsCheckBox,
-            ToolTip wizardToolTip, Project appProject, IServiceProvider serviceProvider,
-            MouseEventHandler mouseMoveHandler, EventHandler mouseLeaveHandler)
+        private void InitializeModelOptions()
         {
             // we only support english pluralization for this release, so default this checked in this case
             if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
             {
                 // default to checked if culture is english
-                pluralizationCheckBox.Enabled = true;
-                pluralizationCheckBox.Checked = true;
-                wizardToolTip.SetToolTip(pluralizationCheckBox, ModelWizard.Properties.Resources.PluralizeCheckBoxToolTipText);
+                chkPluralize.Enabled = true;
+                chkPluralize.Checked = true;
+                toolTip.SetToolTip(chkPluralize, ModelWizard.Properties.Resources.PluralizeCheckBoxToolTipText);
             }
             else
             {
                 // even if non-english, we still want the option available, just not checked by default
-                pluralizationCheckBox.Enabled = true;
-                pluralizationCheckBox.Checked = false;
-                wizardToolTip.SetToolTip(pluralizationCheckBox, ModelWizard.Properties.Resources.PluralizeCheckBoxDisabledToolTipText);
+                chkPluralize.Enabled = true;
+                chkPluralize.Checked = false;
+                toolTip.SetToolTip(chkPluralize, ModelWizard.Properties.Resources.PluralizeCheckBoxDisabledToolTipText);
             }
 
-            // foreign keys are supported by any version of EF that runs on .NET Framework 4 or newer
-            if (NetFrameworkVersioningHelper.TargetNetFrameworkVersion(appProject, serviceProvider) >=
-                NetFrameworkVersioningHelper.NetFrameworkVersion4)
+            if (_isNetFx35)
             {
-                foreignKeysCheckBox.Enabled = true;
-                foreignKeysCheckBox.Checked = true;
-                wizardToolTip.SetToolTip(
-                    foreignKeysCheckBox,
-                    ModelWizard.Properties.Resources.SelectTablesPage_IncludeForeignKeysToolTip);
+                toolTip.SetToolTip(chkIncludeForeignKeys, Resources.DisabledFeatureTooltip);
+                chkIncludeForeignKeys.Parent.MouseMove += IncludeForeignKeysArea_OnMouseMove;
+                chkIncludeForeignKeys.Parent.MouseLeave += IncludeForeignKeysArea_OnMouseLeave;
             }
             else
             {
-                wizardToolTip.SetToolTip(foreignKeysCheckBox, Resources.DisabledFeatureTooltip);
-                foreignKeysCheckBox.Parent.MouseMove += mouseMoveHandler;
-                foreignKeysCheckBox.Parent.MouseLeave += mouseLeaveHandler;
-                foreignKeysCheckBox.Enabled = false;
-                foreignKeysCheckBox.Checked = false;
+                toolTip.SetToolTip(
+                    chkIncludeForeignKeys,
+                    ModelWizard.Properties.Resources.SelectTablesPage_IncludeForeignKeysToolTip);
             }
 
-            if (createFunctionImportsCheckBox != null)
-            {
-                // assume we have no Stored Procs and so default the Create Function Imports checkbox to unchecked and not enabled
-                createFunctionImportsCheckBox.Enabled = false;
-                createFunctionImportsCheckBox.Checked = false;
-            }
+            // assume we have no Stored Procs and so default the Create Function Imports checkbox to unchecked and not enabled
+            chkCreateFunctionImports.Enabled = false;
+            chkCreateFunctionImports.Checked = false;
         }
-
-        #endregion Constructors
-
-        #region WizardPage overrides
 
         public override bool IsDataValid
         {
             get { return true; }
-        }
-
-        public override bool OnActivate()
-        {
-            if (!Visited)
-            {
-                _modelNamespaceInitialized = false;
-            }
-
-            return base.OnActivate();
         }
 
         // <summary>
@@ -148,42 +119,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             base.OnActivated();
 
-            _ssdlAggregator = new DatabaseConnectionSsdlAggregator(Wizard.ModelBuilderSettings);
-
-            using (new VsUtils.HourglassHelper())
-            {
-                if (!_modelNamespaceInitialized)
-                {
-                    var existingNamespaces = InitializeExistingNamespaces(Wizard.Project);
-
-                    // set the storage target to the initial catalog but if we're targeting a database project
-                    // then set it to the database name which is by definition unique.
-                    var storageTarget = Wizard.ModelBuilderSettings.InitialCatalog;
-
-                    // set the default name for the Model Namespace
-                    string trialNamespace;
-                    if (String.IsNullOrEmpty(storageTarget))
-                    {
-                        trialNamespace = ModelConstants.DefaultModelNamespace;
-                    }
-                    else
-                    {
-                        trialNamespace = EdmUtils.ConstructValidModelNamespace(
-                            storageTarget + ModelConstants.DefaultModelNamespace,
-                            ModelConstants.DefaultModelNamespace);
-                    }
-
-                    modelNamespaceTextBox.Text = EdmUtils.ConstructUniqueNamespace(trialNamespace, existingNamespaces);
-                }
-            } // restore cursor
-
+            SetControlState(Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase);
+           
             Debug.Assert(
                 Wizard.ModelBuilderSettings.DesignTimeConnectionString != null,
                 "Unexpected null value for connection string");
 
-            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
+            if ((Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase ||
+                Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase)
                 && (!Wizard.ModelBuilderSettings.DesignTimeConnectionString.Equals(_initializedDataConnection) ||
-                    Wizard.ModelBuilderSettings.UseLegacyProvider != _initializedUsingLegacyProvider))
+                    Wizard.ModelBuilderSettings.UseLegacyProvider != _initializedUsingLegacyProvider ||
+                    Wizard.ModelBuilderSettings.GenerationOption != _initializedGenerationOption))
             {
                 // Enable the treeView / labels and hide the database project label and textbox.
                 databaseObjectTreeView.Visible = true;
@@ -209,6 +155,67 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 _stopwatch.Start();
                 _bgWorkerPopulateTree.RunWorkerAsync(this);
             }
+        }
+
+        private void SetControlState(bool isCodeFirstFlow)
+        {
+            modelNamespaceTextBox.Text = GetUniqueModelNamespace();
+            modelNamespaceTextBox.Visible = modelNamespaceLabel.Visible = !isCodeFirstFlow;
+
+            if (isCodeFirstFlow)
+            {
+                // for models created with CodeFirst from database we always want foreign keys
+                // (note that the code generation templates CodeFirst from database don't support IAs)
+                chkIncludeForeignKeys.Checked = true;
+                chkIncludeForeignKeys.Enabled = false;
+
+                // We don't support functions/function imports in Code First
+                chkCreateFunctionImports.Checked = false;
+                chkCreateFunctionImports.Enabled = false;
+            }
+            else if(_initializedGenerationOption != Wizard.ModelBuilderSettings.GenerationOption)
+            {
+
+                if (!_isNetFx35)
+                {
+                    chkIncludeForeignKeys.Enabled = true;
+                    chkIncludeForeignKeys.Checked = true;
+                }
+                else
+                {
+                    // EF1 did not support foreign keys
+                    chkIncludeForeignKeys.Enabled = false;
+                    chkIncludeForeignKeys.Checked = false;
+                }
+            }
+        }
+
+        private string GetUniqueModelNamespace()
+        {
+            using (new VsUtils.HourglassHelper())
+            {
+                var existingNamespaces = InitializeExistingNamespaces(Wizard.Project);
+
+                // set the storage target to the initial catalog but if we're targeting a database project
+                // then set it to the database name which is by definition unique.
+                var storageTarget = Wizard.ModelBuilderSettings.InitialCatalog;
+
+                // set the default name for the Model Namespace
+                string trialNamespace;
+                if (String.IsNullOrEmpty(storageTarget))
+                {
+                    trialNamespace = ModelConstants.DefaultModelNamespace;
+                }
+                else
+                {
+                    trialNamespace = EdmUtils.ConstructValidModelNamespace(
+                        storageTarget + ModelConstants.DefaultModelNamespace,
+                        ModelConstants.DefaultModelNamespace);
+                }
+
+                return EdmUtils.ConstructUniqueNamespace(trialNamespace, existingNamespaces);
+
+            } // restore cursor
         }
 
         // <summary>
@@ -309,7 +316,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
 
 
-            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
+            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase ||
+                Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase)
             {
                 GenerateModel(Wizard.ModelBuilderSettings);
             }
@@ -338,10 +346,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             return true;
         }
 
-        #endregion WizardPage overrides
-
-        #region Methods
-
         // <summary>
         //     DoWork event handler: Get table names in a background thread.
         //     This method is called by background worker component on a different thread than the UI thread.
@@ -353,22 +357,29 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             // Be sure not to manipulate any Windows Forms controls created on the UI thread from this method.
             using (new VsUtils.HourglassHelper())
             {
+                var ssdlAggregator = new DatabaseConnectionSsdlAggregator(Wizard.ModelBuilderSettings);
+
                 var result = new ICollection<EntityStoreSchemaFilterEntry>[3];
                 try
                 {
-                    result[0] = _ssdlAggregator.GetTableFilterEntries(args);
+                    result[0] = ssdlAggregator.GetTableFilterEntries(args);
                     if (args.Cancel)
                     {
                         return;
                     }
 
-                    result[1] = _ssdlAggregator.GetViewFilterEntries(args);
+                    result[1] = ssdlAggregator.GetViewFilterEntries(args);
                     if (args.Cancel)
                     {
                         return;
                     }
 
-                    result[2] = _ssdlAggregator.GetFunctionFilterEntries(args);
+                    // we don't support function imports in CodeFirst so don't have to retrieve them
+                    if (Wizard.ModelBuilderSettings.GenerationOption != ModelGenerationOption.CodeFirstFromDatabase)
+                    {
+                        result[2] = ssdlAggregator.GetFunctionFilterEntries(args);
+                    }
+
                     if (args.Cancel)
                     {
                         return;
@@ -422,7 +433,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         CreateTreeForNewModel(tableEntries, viewEntries, sprocEntries);
 
                         // if there are Sproc entries then enable the Create Function Imports box and by default set to checked
-                        if (sprocEntries.Count > 0)
+                        if (sprocEntries != null && sprocEntries.Count > 0)
                         {
                             chkCreateFunctionImports.Enabled = true;
                             chkCreateFunctionImports.Checked = true;
@@ -437,7 +448,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
                         _initializedDataConnection = Wizard.ModelBuilderSettings.DesignTimeConnectionString;
                         _initializedUsingLegacyProvider = Wizard.ModelBuilderSettings.UseLegacyProvider;
-                        modelNamespaceTextBox.Enabled = true;
+                        _initializedGenerationOption = Wizard.ModelBuilderSettings.GenerationOption;
+                        modelNamespaceTextBox.Enabled = Wizard.ModelBuilderSettings.GenerationOption != ModelGenerationOption.CodeFirstFromDatabase;
                     }
                 }
 
@@ -456,7 +468,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         private void CreateTreeForNewModel(
             ICollection<EntityStoreSchemaFilterEntry> tableEntries,
-            ICollection<EntityStoreSchemaFilterEntry> viewEntries, ICollection<EntityStoreSchemaFilterEntry> sprocEntries)
+            ICollection<EntityStoreSchemaFilterEntry> viewEntries, 
+            ICollection<EntityStoreSchemaFilterEntry> sprocEntries)
         {
             databaseObjectTreeView.TreeViewControl.Nodes.Add(
                 DatabaseObjectTreeView.CreateRootNodeAndDescendents(
@@ -466,10 +479,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 DatabaseObjectTreeView.CreateRootNodeAndDescendents(
                     viewEntries, ModelWizard.Properties.Resources.SelectTablesPage_ViewsNode,
                     DatabaseObjectTreeView.TreeViewImage.DbViewsImage, DatabaseObjectTreeView.TreeViewImage.ViewImage));
-            databaseObjectTreeView.TreeViewControl.Nodes.Add(
-                DatabaseObjectTreeView.CreateRootNodeAndDescendents(
-                    sprocEntries, ModelWizard.Properties.Resources.SelectTablesPage_StoredProceduresNode,
-                    DatabaseObjectTreeView.TreeViewImage.DbStoreProcsImage, DatabaseObjectTreeView.TreeViewImage.StoreProcImage));
+
+            // sprocEntries will be null for CodeFirst from database
+            if (sprocEntries != null)
+            {
+                databaseObjectTreeView.TreeViewControl.Nodes.Add(
+                    DatabaseObjectTreeView.CreateRootNodeAndDescendents(
+                        sprocEntries, ModelWizard.Properties.Resources.SelectTablesPage_StoredProceduresNode,
+                        DatabaseObjectTreeView.TreeViewImage.DbStoreProcsImage, DatabaseObjectTreeView.TreeViewImage.StoreProcImage));
+            }
         }
 
         private ICollection<EntityStoreSchemaFilterEntry> GetSelectedFilterEntriesFromTreeView()
@@ -497,7 +515,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             if (newFunctionEntries.Count > 0
                 && chkCreateFunctionImports.Checked)
             {
-                var result = ModelBuilderEngine.ShowProgressDialog(this, newFunctionEntries, Wizard.ModelBuilderSettings);
+                var result = ProgressDialogHelper.ShowProgressDialog(this, newFunctionEntries, Wizard.ModelBuilderSettings);
             }
         }
 
@@ -614,7 +632,5 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
             controlWithToolTipShown = null;
         }
-
-        #endregion Methods
     }
 }

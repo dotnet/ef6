@@ -58,7 +58,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         if (IsEdmSystemNamespace(edmType.NamespaceName) 
                             && edmType.BuiltInTypeKind != BuiltInTypeKind.RowType
-                            && edmType.BuiltInTypeKind != BuiltInTypeKind.CollectionType)
+                            && edmType.BuiltInTypeKind != BuiltInTypeKind.CollectionType
+                            && edmType.BuiltInTypeKind != BuiltInTypeKind.PrimitiveType)
                         {
                             context.AddError(
                                 edmType,

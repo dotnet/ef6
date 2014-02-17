@@ -19,9 +19,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    /// <summary>
-    ///     This is just wrapper for project item path
-    /// </summary>
+    // <summary>
+    //     This is just wrapper for project item path
+    // </summary>
     internal struct VsProjectItemPath
     {
         internal Url BaseUrl;
@@ -50,18 +50,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 
     internal delegate void HierarchyHandler(IVsHierarchy item, uint id, VsProjectItemPath path);
 
-    /// <summary>
-    ///     HierarchyVisitor walks IVsHierarchy and calls a given delegate for each item
-    ///     found together with a string containing the full SaveName (or moniker) for each item.
-    /// </summary>
+    // <summary>
+    //     HierarchyVisitor walks IVsHierarchy and calls a given delegate for each item
+    //     found together with a string containing the full SaveName (or moniker) for each item.
+    // </summary>
     internal class HierarchyVisitor
     {
         private readonly HierarchyHandler _handler;
 
-        /// <summary>
-        ///     Construct a new hierarchy visitor providing the delegate you want called during each visit.
-        /// </summary>
-        /// <param name="handler"></param>
+        // <summary>
+        //     Construct a new hierarchy visitor providing the delegate you want called during each visit.
+        // </summary>
         internal HierarchyVisitor(HierarchyHandler handler)
         {
             if (handler == null)

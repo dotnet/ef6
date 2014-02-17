@@ -58,10 +58,16 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         public virtual void Lock()
         {
-            DependencyResolver.GetServices<IDbInterceptor>().Each(_dispatchers().AddInterceptor);
+            var beforeLoadedInterceptors = DependencyResolver.GetServices<IDbInterceptor>().ToList();
+            beforeLoadedInterceptors.Each(_dispatchers().AddInterceptor);
 
             DbConfigurationManager.Instance.OnLoaded(this);
             _isLocked = true;
+
+            DependencyResolver
+                .GetServices<IDbInterceptor>()
+                .Except(beforeLoadedInterceptors)
+                .Each(_dispatchers().AddInterceptor);
         }
 
         public void DispatchLoadedInterceptors(DbConfigurationLoadedEventArgs loadedEventArgs)

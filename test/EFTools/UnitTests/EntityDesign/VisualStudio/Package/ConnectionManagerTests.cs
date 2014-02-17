@@ -2,6 +2,7 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
+    using System.Xml;
     using EnvDTE;
     using Microsoft.VisualStudio.Data.Core;
     using Microsoft.VisualStudio.DataTools.Interop;
@@ -13,6 +14,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using UnitTests.TestHelpers;
     using VSLangProj;
     using Xunit;
+    using Xunit.Extensions;
 
     public class ConnectionManagerTests
     {
@@ -116,7 +118,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 connString,
                 ConnectionManager.TranslateConnectionString(
                     Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", connString, false));
+        }
 
+        [Fact]
+        public void TranslateConnectionString_returns_connection_string_if_connection_string_null_or_empty()
+        {
+            Assert.Null(
+                ConnectionManager.TranslateConnectionString(
+                    Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", null, true));
+
+            Assert.Same(
+                string.Empty,
+                ConnectionManager.TranslateConnectionString(
+                    Mock.Of<IServiceProvider>(), Mock.Of<Project>(), "invariantName", string.Empty, false));
         }
 
         [Fact]
@@ -267,6 +281,111 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 Assert.Throws<ArgumentException>(
                     () => ConnectionManager.TranslateConnectionString(mockServiceProvider.Object,
                         Mock.Of<Project>(), "My.Db", "connectionString", true)).Message);
+        }
+
+        [Fact]
+        public void GetUniqueConnectionStringName_returns_candidate_connection_string_name_if_config_does_not_exist()
+        {
+            Assert.Equal("myModel", ConnectionManager.GetUniqueConnectionStringName(
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null).Object,
+                "myModel"));
+        }
+
+        [Fact]
+        public void GetUniqueConnectionStringName_uniquifies_proposed_connection_string_name()
+        {
+            var configXml = new XmlDocument();
+            configXml.LoadXml(@"<configuration>
+  <connectionStrings>    
+    <add name=""myModel"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.SqlClient"" />
+    <add name=""myModel1"" connectionString=""metadata=res://*;"" providerName=""System.Data.EntityClient"" />
+    <add name=""myModel2"" connectionString=""metadata=res://*;"" providerName=""System.Data.SqlCe"" />
+  </connectionStrings>
+</configuration>");
+
+            var mockConfig =
+                new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
+            mockConfig
+                .Setup(c => c.LoadConfig())
+                .Returns(configXml);
+
+            Assert.Equal("myModel3", ConnectionManager.GetUniqueConnectionStringName(mockConfig.Object, "myModel"));
+        }
+
+        [Fact]
+        public void CreateDefaultLocalDbConnectionString_returns_correct_default_connection_string()
+        {
+            Assert.Equal(
+                @"Data Source=(LocalDb)\v11.0;Initial Catalog=App.MyContext;Integrated Security=True",
+                ConnectionManager.CreateDefaultLocalDbConnectionString("App.MyContext"));
+        }
+
+        [Fact]
+        public void AddConnectionStringElement_appends_connection_string()
+        {
+            var configXml = new XmlDocument();
+            configXml.LoadXml(@"<configuration>
+  <connectionStrings>    
+    <add name=""myModel"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.SqlClient"" />
+  </connectionStrings>
+</configuration>");
+
+            ConnectionManager.AddConnectionStringElement(configXml, "MyDb", "db=mydb", "fancyDb");
+
+            var addElement = configXml.SelectSingleNode("/configuration/connectionStrings/add[@name='MyDb']") as XmlElement;
+            Assert.NotNull(addElement);
+            Assert.Equal("db=mydb", addElement.GetAttribute("connectionString"));
+            Assert.Equal("fancyDb", addElement.GetAttribute("providerName"));
+        }
+
+        [Fact]
+        public void AddConnectionStringElement_throws_if_config_invalid()
+        {
+            var configContents = new[]
+            {
+                @"<configuration1 />",
+                @"<configuration xmlns=""fakexmlns""/>",
+                @"<ns:configuration xmlns:ns=""fakexmlns""/>"
+            };
+
+            foreach (var config in configContents)
+            {
+                var configXml = new XmlDocument();
+                configXml.LoadXml(config);
+
+                Assert.Equal(
+                    Assert.Throws<XmlException>(
+                        () => ConnectionManager.AddConnectionStringElement(configXml, "MyDb", "db=mydb", "fancyDb")).Message,
+                    Resources.ConnectionManager_CorruptConfig);
+            }
+        }
+
+        [Fact]
+        public void UpdateEntityConnectionStringsInConfig_updates_config_correctly()
+        {
+            var configXml = new XmlDocument();
+            configXml.LoadXml(@"<configuration>
+  <connectionStrings>
+    <add name=""toBeRemoved"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.EntityClient"" />
+    <add name=""shouldNotBeTouched"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.SqlClient"" />
+  </connectionStrings>
+</configuration>");
+
+            var entityConnectionStrings = new Dictionary<string, ConnectionManager.ConnectionString>
+            {
+                {
+                    "newEntityConnStr",
+                    new ConnectionManager.ConnectionString(
+                        "metadata=res://*/Model1.csdl|res://*/Model1.ssdl|res://*/Model1.msl;provider=System.Data.SqlClient;" +
+                        "provider connection string=\"data source=(localdb)\v11.0;initial catalog=testDB;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework\"")
+                }
+            };
+
+            ConnectionManager.UpdateEntityConnectionStringsInConfig(configXml, entityConnectionStrings);
+
+            Assert.NotNull(configXml.SelectSingleNode("/configuration/connectionStrings/add[@name = 'shouldNotBeTouched']"));
+            Assert.NotNull(configXml.SelectSingleNode("/configuration/connectionStrings/add[@name = 'newEntityConnStr']"));
+            Assert.Null(configXml.SelectSingleNode("/configuration/connectionStrings/add[@name = 'toBeRemoved']"));
         }
     }
 }

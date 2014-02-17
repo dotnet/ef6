@@ -397,12 +397,10 @@ namespace System.Data.Entity.Core.Objects
                     {
                         getRelatedEnd = (manager, relatedEnd) =>
                                         manager.GetRelatedReference<TSource, TTarget>(
-                                            sourceMember.DeclaringType.FullName,
-                                            sourceMember.Name,
-                                            targetMember.Name,
+                                            sourceMember,
+                                            targetMember,
                                             sourceAccessor,
                                             targetAccessor,
-                                            sourceMember.RelationshipMultiplicity,
                                             relatedEnd);
 
                         break;
@@ -411,12 +409,10 @@ namespace System.Data.Entity.Core.Objects
                     {
                         getRelatedEnd = (manager, relatedEnd) =>
                                         manager.GetRelatedCollection<TSource, TTarget>(
-                                            sourceMember.DeclaringType.FullName,
-                                            sourceMember.Name,
-                                            targetMember.Name,
+                                            sourceMember,
+                                            targetMember,
                                             sourceAccessor,
                                             targetAccessor,
-                                            sourceMember.RelationshipMultiplicity,
                                             relatedEnd);
 
                         break;

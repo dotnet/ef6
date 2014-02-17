@@ -96,7 +96,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     ServiceProvider);
 
                 Wizard.ModelBuilderSettings.ProviderManifestToken =
-                    DatabaseGenerationEngine.GetProviderManifestTokenConnected(
+                    VsUtils.GetProviderManifestTokenConnected(
                         DependencyResolver.Instance,
                         Wizard.ModelBuilderSettings.RuntimeProviderInvariantName,
                         Wizard.ModelBuilderSettings.DesignTimeConnectionString);
@@ -138,7 +138,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var viewModel = new RuntimeConfigViewModel(
                 targetFrameworkVersion,
                 installedEntityFrameworkVersion,
-                isModernProviderAvailable);
+                isModernProviderAvailable, 
+                Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.CodeFirstFromDatabase);
 
             versionsPanel.Controls.Clear();
             versionsPanel.Controls.AddRange(viewModel.EntityFrameworkVersions.Select(CreateRadioButton).ToArray());
@@ -199,7 +200,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 };
         }
 
-        private static Bitmap GetNotificationBitmap(RuntimeConfigState state)
+        private Bitmap GetNotificationBitmap(RuntimeConfigState state)
         {
             Bitmap bitmap;
 
@@ -216,10 +217,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 default:
                     return null;
             }
-
-            bitmap.MakeTransparent(Color.FromArgb(255, 0, 255));
-
-            return bitmap;
+            return ThemeUtils.GetThemedButtonImage(bitmap, BackColor);
         }
     }
 }

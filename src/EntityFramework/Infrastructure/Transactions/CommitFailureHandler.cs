@@ -11,6 +11,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Threading;
@@ -105,6 +106,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <inheritdoc/>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override void Dispose(bool disposing)
         {
             if (!IsDisposed
@@ -113,7 +115,13 @@ namespace System.Data.Entity.Infrastructure
             {
                 if (_rowsToDelete.Any())
                 {
-                    PruneTransactionHistory(force: true);
+                    try
+                    {
+                        PruneTransactionHistory(force: true, useExecutionStrategy: false);
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
                 TransactionContext.Dispose();
             }
@@ -146,7 +154,8 @@ namespace System.Data.Entity.Infrastructure
         public override void BeganTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext)
         {
             if (TransactionContext == null
-                || !MatchesParentContext(connection, interceptionContext))
+                || !MatchesParentContext(connection, interceptionContext)
+                || interceptionContext.Result == null)
             {
                 return;
             }
@@ -154,18 +163,18 @@ namespace System.Data.Entity.Infrastructure
             var transactionId = Guid.NewGuid();
             var savedSuccesfully = false;
             var reinitializedDatabase = false;
+            var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
+            ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
             while (!savedSuccesfully)
             {
                 Debug.Assert(!_transactions.ContainsKey(interceptionContext.Result), "The transaction has already been registered");
                 var transactionRow = new TransactionRow { Id = transactionId, CreationTime = DateTime.Now };
                 _transactions.Add(interceptionContext.Result, transactionRow);
-                TransactionContext.Transactions.Add(transactionRow);
 
-                var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
-                ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
+                TransactionContext.Transactions.Add(transactionRow);
                 try
                 {
-                    objectContext.SaveChanges(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
+                    objectContext.SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: true);
                     savedSuccesfully = true;
                 }
                 catch (UpdateException)
@@ -205,9 +214,6 @@ namespace System.Data.Entity.Infrastructure
 
                         reinitializedDatabase = true;
                     }
-
-                    interceptionContext.Result.Rollback();
-                    interceptionContext.Result = connection.BeginTransaction(interceptionContext.IsolationLevel);
                 }
             }
         }
@@ -223,8 +229,7 @@ namespace System.Data.Entity.Infrastructure
         {
             TransactionRow transactionRow;
             if (TransactionContext == null
-                || (transaction.Connection != null
-                    && !MatchesParentContext(transaction.Connection, interceptionContext))
+                || (interceptionContext.Connection != null && !MatchesParentContext(interceptionContext.Connection, interceptionContext))
                 || !_transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;
@@ -233,10 +238,18 @@ namespace System.Data.Entity.Infrastructure
             _transactions.Remove(transaction);
             if (interceptionContext.Exception != null)
             {
-                var existingTransactionRow = TransactionContext.Transactions
-                    .AsNoTracking()
-                    .WithExecutionStrategy(new DefaultExecutionStrategy())
-                    .SingleOrDefault(t => t.Id == transactionRow.Id);
+                TransactionRow existingTransactionRow = null;
+                try
+                {
+                    existingTransactionRow = TransactionContext.Transactions
+                        .AsNoTracking()
+                        .WithExecutionStrategy(new DefaultExecutionStrategy())
+                        .SingleOrDefault(t => t.Id == transactionRow.Id);
+                }
+                catch (EntityCommandExecutionException)
+                {
+                    // Transaction table doesn't exist
+                }
 
                 if (existingTransactionRow != null)
                 {
@@ -266,7 +279,7 @@ namespace System.Data.Entity.Infrastructure
         {
             TransactionRow transactionRow;
             if (TransactionContext == null
-                || (transaction.Connection != null && !MatchesParentContext(transaction.Connection, interceptionContext))
+                || (interceptionContext.Connection != null && !MatchesParentContext(interceptionContext.Connection, interceptionContext))
                 || !_transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;
@@ -300,7 +313,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 MarkTransactionForPruning(transactionRow);
             }
-            PruneTransactionHistory(force: true);
+            PruneTransactionHistory(force: true, useExecutionStrategy: true);
         }
 
 #if !NET40
@@ -330,7 +343,7 @@ namespace System.Data.Entity.Infrastructure
         {
             await TransactionContext.Transactions.ForEachAsync(MarkTransactionForPruning, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
-            await PruneTransactionHistoryAsync( /*force:*/ true, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await PruneTransactionHistoryAsync( /*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
         }
 #endif
 
@@ -353,7 +366,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         public void PruneTransactionHistory()
         {
-            PruneTransactionHistory(force: true);
+            PruneTransactionHistory(force: true, useExecutionStrategy: true);
         }
 
 #if !NET40
@@ -363,7 +376,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>A task that represents the asynchronous operation.</returns>
         public Task PruneTransactionHistoryAsync()
         {
-            return PruneTransactionHistoryAsync( /*force:*/ true, CancellationToken.None);
+            return PruneTransactionHistoryAsync(CancellationToken.None);
         }
 
         /// <summary>
@@ -373,7 +386,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>A task that represents the asynchronous operation.</returns>
         public Task PruneTransactionHistoryAsync(CancellationToken cancellationToken)
         {
-            return PruneTransactionHistoryAsync( /*force:*/ true, cancellationToken);
+            return PruneTransactionHistoryAsync(/*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken);
         }
 #endif
 
@@ -383,7 +396,10 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="force">
         /// if set to <c>true</c> will remove all the old transactions even if their number does not exceed <see cref="PruningLimit"/>.
         /// </param>
-        protected virtual void PruneTransactionHistory(bool force)
+        /// <param name="useExecutionStrategy">
+        /// if set to <c>true</c> the operation will be executed using the associated execution strategy
+        /// </param>
+        protected virtual void PruneTransactionHistory(bool force, bool useExecutionStrategy)
         {
             if (force || _rowsToDelete.Count > PruningLimit)
             {
@@ -394,13 +410,8 @@ namespace System.Data.Entity.Infrastructure
 
                 _rowsToDelete.Clear();
 
-                try
-                {
-                    TransactionContext.SaveChanges();
-                }
-                catch (EntityException)
-                {
-                }
+                ((IObjectContextAdapter)TransactionContext).ObjectContext
+                    .SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: !useExecutionStrategy);
             }
         }
 
@@ -411,9 +422,13 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="force">
         /// if set to <c>true</c> will remove all the old transactions even if their number does not exceed <see cref="PruningLimit"/>.
         /// </param>
+        /// <param name="useExecutionStrategy">
+        /// if set to <c>true</c> the operation will be executed using the associated execution strategy
+        /// </param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual async Task PruneTransactionHistoryAsync(bool force, CancellationToken cancellationToken)
+        protected virtual async Task PruneTransactionHistoryAsync(
+            bool force, bool useExecutionStrategy, CancellationToken cancellationToken)
         {
             if (force || _rowsToDelete.Count > PruningLimit)
             {
@@ -424,13 +439,10 @@ namespace System.Data.Entity.Infrastructure
 
                 _rowsToDelete.Clear();
 
-                try
-                {
-                    await TransactionContext.SaveChangesAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                }
-                catch (EntityException)
-                {
-                }
+                await ((IObjectContextAdapter)TransactionContext).ObjectContext
+                    .SaveChangesInternalAsync(
+                        SaveOptions.AcceptAllChangesAfterSave, /*executeInExistingTransaction:*/ !useExecutionStrategy, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 #endif
@@ -438,7 +450,14 @@ namespace System.Data.Entity.Infrastructure
         private void PruneTransactionHistory(TransactionRow transaction)
         {
             MarkTransactionForPruning(transaction);
-            PruneTransactionHistory(force: false);
+
+            try
+            {
+                PruneTransactionHistory(force: false, useExecutionStrategy: false);
+            }
+            catch (DataException)
+            {
+            }
         }
 
         /// <summary>

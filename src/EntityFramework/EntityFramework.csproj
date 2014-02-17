@@ -136,10 +136,12 @@
     <Compile Include="Core\Metadata\Edm\EdmSerializationVisitor.cs" />
     <Compile Include="Core\Metadata\Edm\EdmXmlSchemaWriter.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataItemHelper.cs" />
+    <Compile Include="Core\Metadata\Edm\MetadataOptimization.cs" />
     <Compile Include="Core\Metadata\Edm\MslSerializer.cs" />
     <Compile Include="Core\Metadata\Edm\MslXmlSchemaWriter.cs" />
     <Compile Include="Core\Metadata\Edm\SsdlSerializer.cs" />
     <Compile Include="Core\Metadata\Edm\XmlSchemaWriter.cs" />
+    <Compile Include="Core\Objects\ELinq\StringTranslatorUtil.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataRecord.cs" />
     <Compile Include="Core\Objects\Internal\ShapedBufferedDataRecord.cs" />
     <Compile Include="Core\Objects\StateManagerValue.cs" />

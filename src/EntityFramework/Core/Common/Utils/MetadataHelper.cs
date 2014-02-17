@@ -591,40 +591,6 @@ namespace System.Data.Entity.Core.Common.Utils
             return result;
         }
 
-        // requires: entitySet and associationType
-        // effects: Returns the associations that refer to associationType and refer to entitySet in one of its end.
-        // If none is found, returns an empty set
-        internal static AssociationSet GetAssociationsForEntitySetAndAssociationType(
-            EntityContainer entityContainer, string entitySetName,
-            AssociationType associationType, string endName, out EntitySet entitySet)
-        {
-            Debug.Assert(associationType.Members.Contains(endName), "EndName should be a valid name");
-            entitySet = null;
-            AssociationSet retValue = null;
-            var baseEntitySets = entityContainer.BaseEntitySets;
-            var count = baseEntitySets.Count;
-            for (var i = 0; i < count; ++i)
-            {
-                var extent = baseEntitySets[i];
-                if (ReferenceEquals(extent.ElementType, associationType))
-                {
-                    var assocSet = (AssociationSet)extent;
-                    var es = assocSet.AssociationSetEnds[endName].EntitySet;
-                    if (es.Name == entitySetName)
-                    {
-                        Debug.Assert(
-                            retValue == null, "There should be only one AssociationSet, given an assocationtype, end name and entity set");
-                        retValue = assocSet;
-                        entitySet = es;
-#if !DEBUG
-                        break;
-#endif
-                    }
-                }
-            }
-            return retValue;
-        }
-
         // requires: entitySet
         // effects: Returns the associations that occur between entitySet
         // and other entitySets. If none is found, returns an empty set

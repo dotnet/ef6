@@ -4,9 +4,13 @@ namespace Microsoft.Data.Entity.Design.Model
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
+    using System.Text;
     using Microsoft.Data.Entity.Design.Model.Entity;
     using Microsoft.Data.Entity.Design.Model.Mapping;
 
@@ -136,6 +140,86 @@ namespace Microsoft.Data.Entity.Design.Model
             }
 
             return item as EFRuntimeModelRoot;
+        }
+
+        internal static string GetSsdlAsString(this EFArtifact artifact)
+        {
+            Debug.Assert(artifact != null, "Artifact is null ");
+            if (artifact != null)
+            {
+                return GetSchemaFromRuntimeModelRoot(artifact.StorageModel());
+            }
+
+            return String.Empty;
+        }
+
+        internal static string GetMslAsString(this EFArtifact artifact)
+        {
+            Debug.Assert(artifact != null, "Artifact is null ");
+            if (artifact != null)
+            {
+                return GetSchemaFromRuntimeModelRoot(artifact.MappingModel());
+            }
+
+            return String.Empty;
+        }
+
+        private static string GetSchemaFromRuntimeModelRoot(EFRuntimeModelRoot modelRoot)
+        {
+            Debug.Assert(modelRoot != null, "EFRuntimeModelRoot is null ");
+            Debug.Assert(modelRoot.XElement != null,
+                "Could not find the runtime model root or its XElement in GetSchemaFromRuntimeModelRoot");
+
+            var sb = new StringBuilder();
+
+            if (modelRoot != null
+                && modelRoot.XElement != null)
+            {
+                using (var writer = new StringWriter(sb, CultureInfo.CurrentCulture))
+                {
+                    modelRoot.XElement.Save(writer);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        internal static EdmItemCollection GetEdmItemCollectionFromArtifact(this EFArtifact artifact, out IList<EdmSchemaError> schemaErrors)
+        {
+            Debug.Assert(artifact != null, "Artifact is null ");
+
+            var conceptualModel = artifact.ConceptualModel();
+
+            EdmItemCollection edmItemCollection = null;
+            schemaErrors = new List<EdmSchemaError>();
+
+            Debug.Assert(
+                conceptualModel != null && conceptualModel.XElement != null,
+                "Could not find the conceptual model or its XElement in GetEdmItemCollectionFromArtifact");
+            if (conceptualModel != null
+                && conceptualModel.XElement != null)
+            {
+                using (var xmlReader = conceptualModel.XElement.CreateReader())
+                {
+                    edmItemCollection = EdmItemCollection.Create(new[] { xmlReader }, null, out schemaErrors);
+                }
+            }
+
+            return edmItemCollection;
+        }
+
+        internal static string GetProviderManifestToken(this EFArtifact artifact)
+        {
+            var storageModel = artifact.StorageModel();
+            if (storageModel != null
+                && storageModel.ProviderManifestToken != null)
+            {
+                return storageModel.ProviderManifestToken.Value;
+            }
+
+            Debug.Fail("Unable to determine the provider manifest token for the SSDL");
+
+            return String.Empty;
         }
     }
 }

@@ -1,48 +1,63 @@
 ﻿<#@ template visibility="internal" linePragmas="false" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.Data.Entity.Design" #>
+<#@ assembly name="EntityFramework" #>
 <#@ import namespace="System.Linq" #>
-<#@ parameter type="System.Data.Entity.Core.Metadata.Edm.EntityContainer" name="Container" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.CodeGeneration" #>
 <#@ parameter type="System.Data.Entity.Infrastructure.DbModel" name="Model" #>
 <#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.String" name="ContextClassName" #>
+<#@ parameter type="System.String" name="ConnectionStringName" #>
 <#
     var code = new VBCodeHelper();
     var edm = new EdmHelper(code);
-
-    if (Container == null)
-    {
-        throw new ArgumentNullException("Container");
-    }
 
     if (Model == null)
     {
         throw new ArgumentNullException("Model");
     }
+
+    if (Namespace == null)
+    {
+        throw new ArgumentNullException("Namespace");
+    }
+
+    if (ContextClassName == null)
+    {
+        throw new ArgumentNullException("ContextClassName");
+    }
+
+    if (ConnectionStringName == null)
+    {
+        throw new ArgumentNullException("ConnectionStringName");
+    }
 #>
+Imports System
 Imports System.Data.Entity
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Linq
 
-Namespace <#= Namespace #>
+Partial Public Class <#= ContextClassName #>
+    Inherits DbContext
 
-    Public Class <#= code.Type(Container) #>
-       Inherits DbContext
-
-        Public Sub New()
-            MyBase.New("Name=<#= code.Type(Container) #>")        
-        End Sub
+    Public Sub New()
+        MyBase.New("name=<#= ConnectionStringName #>")        
+    End Sub
 
 <#
-    foreach (var entitySet in Container.EntitySets)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
 #>
-        Public Overridable Property <#= code.Property(entitySet) #> As DbSet(Of <#= code.Type(entitySet.ElementType) #>)
+    Public Overridable Property <#= code.Property(entitySet) #> As DbSet(Of <#= code.Type(entitySet.ElementType) #>)
 <#
     }
 #>
 
-        Protected Override Sub OnModelCreating(Dim modelBuilder As DbModelBuilder)
+    Protected Overrides Sub OnModelCreating(ByVal modelBuilder As DbModelBuilder)
 <#
     var anyConfiguration = false;
 
-    foreach (var entitySet in Container.EntitySets)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
         var typeConfigurations = edm.GetConfigurations(entitySet, Model).OfType<IFluentConfiguration>()
             .Where(c => !(c is IAttributeConfiguration || c is KeyConfiguration));
@@ -64,15 +79,15 @@ Namespace <#= Namespace #>
                 }
 
 #>
-            modelBuilder.Entity<<#= code.Type(entitySet.ElementType) #>>()
+        modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)() _
 <#
             }
             else
             {
-                WriteLine(string.Empty);
+                WriteLine(" _");
             }
 
-            Write("                " + code.MethodChain(typeConfiguration));
+            Write("            " + code.MethodChain(typeConfiguration));
         }
 
         if (!firstTypeConfiguration)
@@ -115,16 +130,16 @@ Namespace <#= Namespace #>
                     }
 
 #>
-            modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)()
-                .Property(Function(e) e.<#= code.Property(property) #>)
+        modelBuilder.Entity(Of <#= code.Type(entitySet.ElementType) #>)() _
+            .Property(Function(e) e.<#= code.Property(property) #>) _
 <#
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
-                Write("                " + code.MethodChain(propertyConfiguration));
+                Write("            " + code.MethodChain(propertyConfiguration));
             }
 
             if (!firstPropertyConfiguration)
@@ -162,15 +177,15 @@ Namespace <#= Namespace #>
                     }
 
 #>
-            modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration)#>
+        modelBuilder<#= ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration)) #> _
 <#
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
-                Write("                " + code.MethodChain(navigationPropertyConfiguration));
+                Write("            " + code.MethodChain(navigationPropertyConfiguration));
             }
 
             if (!firstNavigationPropertyConfiguration)
@@ -188,12 +203,18 @@ Namespace <#= Namespace #>
                     anyConfiguration = true;
                 }
 #>
-            modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration) #>
+        modelBuilder<#= ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration)) #>
 <#
             }
         }
     }
 #>
-        End Sub
-    End Class
-End Namespace
+    End Sub
+End Class
+<#+
+    private static string ApplyVBFixup(string methodChain)
+    {
+        return methodChain.Replace("                ", "            ")
+            .Replace(Environment.NewLine, " _" + Environment.NewLine);
+    }
+#>

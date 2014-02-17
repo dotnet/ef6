@@ -10,13 +10,14 @@
 namespace Microsoft.Data.Entity.Design.CodeGeneration
 {
     using System.Linq;
+    using Microsoft.Data.Entity.Design.CodeGeneration;
     using System;
     
     /// <summary>
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal partial class CSharpContextTextTransformation : CSharpContextTextTransformationBase
+    internal partial class DefaultVBContextGenerator : DefaultVBContextGeneratorBase
     {
         /// <summary>
         /// Create the template output
@@ -24,47 +25,53 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         public virtual string TransformText()
         {
 
-    var code = new CSharpCodeHelper();
+    var code = new VBCodeHelper();
     var edm = new EdmHelper(code);
-
-    if (Container == null)
-    {
-        throw new ArgumentNullException("Container");
-    }
 
     if (Model == null)
     {
         throw new ArgumentNullException("Model");
     }
 
-            this.Write("namespace ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            this.Write("\r\n{\r\n    using System.Data.Entity;\r\n    using System.ComponentModel.DataAnnotatio" +
-                    "ns.Schema;\r\n\r\n    public class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
-            this.Write(" : DbContext\r\n    {\r\n        public ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
-            this.Write("()\r\n            : base(\"Name=");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(Container)));
-            this.Write("\")\r\n        {\r\n        }\r\n\r\n");
+    if (Namespace == null)
+    {
+        throw new ArgumentNullException("Namespace");
+    }
 
-    foreach (var entitySet in Container.EntitySets)
+    if (ContextClassName == null)
+    {
+        throw new ArgumentNullException("ContextClassName");
+    }
+
+    if (ConnectionStringName == null)
+    {
+        throw new ArgumentNullException("ConnectionStringName");
+    }
+
+            this.Write("Imports System\r\nImports System.Data.Entity\r\nImports System.ComponentModel.DataAnn" +
+                    "otations.Schema\r\nImports System.Linq\r\n\r\nPartial Public Class ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ContextClassName));
+            this.Write("\r\n    Inherits DbContext\r\n\r\n    Public Sub New()\r\n        MyBase.New(\"name=");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ConnectionStringName));
+            this.Write("\")        \r\n    End Sub\r\n\r\n");
+
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
 
-            this.Write("        public virtual DbSet<");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
-            this.Write("> ");
+            this.Write("    Public Overridable Property ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(entitySet)));
-            this.Write(" { get; set; }\r\n");
+            this.Write(" As DbSet(Of ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
+            this.Write(")\r\n");
 
     }
 
-            this.Write("\r\n        protected override void OnModelCreating(DbModelBuilder modelBuilder)\r\n " +
-                    "       {\r\n");
+            this.Write("\r\n    Protected Overrides Sub OnModelCreating(ByVal modelBuilder As DbModelBuilde" +
+                    "r)\r\n");
 
     var anyConfiguration = false;
 
-    foreach (var entitySet in Container.EntitySets)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
         var typeConfigurations = edm.GetConfigurations(entitySet, Model).OfType<IFluentConfiguration>()
             .Where(c => !(c is IAttributeConfiguration || c is KeyConfiguration));
@@ -86,22 +93,22 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 }
 
 
-            this.Write("            modelBuilder.Entity<");
+            this.Write("        modelBuilder.Entity(Of ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
-            this.Write(">()\r\n");
+            this.Write(")() _\r\n");
 
             }
             else
             {
-                WriteLine(string.Empty);
+                WriteLine(" _");
             }
 
-            Write("                " + code.MethodChain(typeConfiguration));
+            Write("            " + code.MethodChain(typeConfiguration));
         }
 
         if (!firstTypeConfiguration)
         {
-            WriteLine(";");
+            WriteLine(string.Empty);
         }
 
         foreach (var property in entitySet.ElementType.Properties)
@@ -139,24 +146,24 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                     }
 
 
-            this.Write("            modelBuilder.Entity<");
+            this.Write("        modelBuilder.Entity(Of ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entitySet.ElementType)));
-            this.Write(">()\r\n                .Property(e => e.");
+            this.Write(")() _\r\n            .Property(Function(e) e.");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Property(property)));
-            this.Write(")\r\n");
+            this.Write(") _\r\n");
 
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
-                Write("                " + code.MethodChain(propertyConfiguration));
+                Write("            " + code.MethodChain(propertyConfiguration));
             }
 
             if (!firstPropertyConfiguration)
             {
-                WriteLine(";");
+                WriteLine(string.Empty);
             }
         }
 
@@ -189,22 +196,22 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                     }
 
 
-            this.Write("            modelBuilder");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.MethodChain(navigationPropertyMultiplicityConfiguration)));
-            this.Write("\r\n");
+            this.Write("        modelBuilder");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration))));
+            this.Write(" _\r\n");
 
                 }
                 else
                 {
-                    WriteLine(string.Empty);
+                    WriteLine(" _");
                 }
 
-                Write("                " + code.MethodChain(navigationPropertyConfiguration));
+                Write("            " + code.MethodChain(navigationPropertyConfiguration));
             }
 
             if (!firstNavigationPropertyConfiguration)
             {
-                WriteLine(";");
+                WriteLine(string.Empty);
             }
             else if (!isDefaultMultiplicity)
             {            
@@ -217,30 +224,24 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                     anyConfiguration = true;
                 }
 
-            this.Write("            modelBuilder");
-            this.Write(this.ToStringHelper.ToStringWithCulture(code.MethodChain(navigationPropertyMultiplicityConfiguration)));
-            this.Write(";\r\n");
+            this.Write("        modelBuilder");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ApplyVBFixup(code.MethodChain(navigationPropertyMultiplicityConfiguration))));
+            this.Write("\r\n");
 
             }
         }
     }
 
-            this.Write("        }\r\n    }\r\n}\r\n");
+            this.Write("    End Sub\r\nEnd Class\r\n");
             return this.GenerationEnvironment.ToString();
         }
 
-private global::System.Data.Entity.Core.Metadata.Edm.EntityContainer _ContainerField;
-
-/// <summary>
-/// Access the Container parameter of the template.
-/// </summary>
-private global::System.Data.Entity.Core.Metadata.Edm.EntityContainer Container
-{
-    get
+    private static string ApplyVBFixup(string methodChain)
     {
-        return this._ContainerField;
+        return methodChain.Replace("                ", "            ")
+            .Replace(Environment.NewLine, " _" + Environment.NewLine);
     }
-}
+
 
 private global::System.Data.Entity.Infrastructure.DbModel _ModelField;
 
@@ -268,6 +269,32 @@ private string Namespace
     }
 }
 
+private string _ContextClassNameField;
+
+/// <summary>
+/// Access the ContextClassName parameter of the template.
+/// </summary>
+private string ContextClassName
+{
+    get
+    {
+        return this._ContextClassNameField;
+    }
+}
+
+private string _ConnectionStringNameField;
+
+/// <summary>
+/// Access the ConnectionStringName parameter of the template.
+/// </summary>
+private string ConnectionStringName
+{
+    get
+    {
+        return this._ConnectionStringNameField;
+    }
+}
+
 
 /// <summary>
 /// Initialize the template
@@ -276,20 +303,6 @@ public virtual void Initialize()
 {
     if ((this.Errors.HasErrors == false))
     {
-bool ContainerValueAcquired = false;
-if (this.Session.ContainsKey("Container"))
-{
-    this._ContainerField = ((global::System.Data.Entity.Core.Metadata.Edm.EntityContainer)(this.Session["Container"]));
-    ContainerValueAcquired = true;
-}
-if ((ContainerValueAcquired == false))
-{
-    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("Container");
-    if ((data != null))
-    {
-        this._ContainerField = ((global::System.Data.Entity.Core.Metadata.Edm.EntityContainer)(data));
-    }
-}
 bool ModelValueAcquired = false;
 if (this.Session.ContainsKey("Model"))
 {
@@ -318,6 +331,34 @@ if ((NamespaceValueAcquired == false))
         this._NamespaceField = ((string)(data));
     }
 }
+bool ContextClassNameValueAcquired = false;
+if (this.Session.ContainsKey("ContextClassName"))
+{
+    this._ContextClassNameField = ((string)(this.Session["ContextClassName"]));
+    ContextClassNameValueAcquired = true;
+}
+if ((ContextClassNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ContextClassName");
+    if ((data != null))
+    {
+        this._ContextClassNameField = ((string)(data));
+    }
+}
+bool ConnectionStringNameValueAcquired = false;
+if (this.Session.ContainsKey("ConnectionStringName"))
+{
+    this._ConnectionStringNameField = ((string)(this.Session["ConnectionStringName"]));
+    ConnectionStringNameValueAcquired = true;
+}
+if ((ConnectionStringNameValueAcquired == false))
+{
+    object data = global::System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("ConnectionStringName");
+    if ((data != null))
+    {
+        this._ConnectionStringNameField = ((string)(data));
+    }
+}
 
 
     }
@@ -330,7 +371,7 @@ if ((NamespaceValueAcquired == false))
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "12.0.0.0")]
-    internal class CSharpContextTextTransformationBase
+    internal class DefaultVBContextGeneratorBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

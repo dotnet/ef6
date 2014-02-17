@@ -933,15 +933,28 @@ namespace System.Data.Entity.Migrations
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
         {
+            ExecuteStatements(migrationStatements, null);
+        }
+
+        internal void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements, DbTransaction existingTransaction)
+        {
             DebugCheck.NotNull(migrationStatements);
 
             DbConnection connection = null;
             try
             {
-                connection = CreateConnection();
-
-                DbProviderServices.GetExecutionStrategy(connection).Execute(
-                    () => ExecuteStatementsInternal(migrationStatements, connection));
+                if (existingTransaction != null)
+                {
+                    var interceptionContext = new DbInterceptionContext();
+                    interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+                    ExecuteStatementsInternal(migrationStatements, existingTransaction, interceptionContext);
+                }
+                else
+                {
+                    connection = CreateConnection();
+                    DbProviderServices.GetExecutionStrategy(connection).Execute(
+                        () => ExecuteStatementsInternal(migrationStatements, connection));
+                }
             }
             finally
             {
@@ -996,7 +1009,7 @@ namespace System.Data.Entity.Migrations
 
                 var beginTransactionInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext)
                     .WithIsolationLevel(IsolationLevel.Serializable);
-                
+
                 DbTransaction transaction = null;
                 try
                 {
@@ -1004,17 +1017,17 @@ namespace System.Data.Entity.Migrations
                         connection,
                         beginTransactionInterceptionContext);
 
-                    foreach (var migrationStatement in migrationStatements)
-                    {
-                        base.ExecuteSql(transaction, migrationStatement, interceptionContext);
-                    }
+                    ExecuteStatementsInternal(migrationStatements, transaction, interceptionContext);
 
                     DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
                     _committedStatements = true;
                 }
                 finally
                 {
-                    DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
+                    if (transaction != null)
+                    {
+                        DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
+                    }
                 }
             }
             finally
@@ -1028,6 +1041,20 @@ namespace System.Data.Entity.Migrations
                 {
                     context.Dispose();
                 }
+            }
+        }
+
+        private void ExecuteStatementsInternal(
+            IEnumerable<MigrationStatement> migrationStatements,
+            DbTransaction transaction,
+            DbInterceptionContext interceptionContext)
+        {
+            DebugCheck.NotNull(migrationStatements);
+            DebugCheck.NotNull(transaction);
+
+            foreach (var migrationStatement in migrationStatements)
+            {
+                base.ExecuteSql(transaction, migrationStatement, interceptionContext);
             }
         }
 

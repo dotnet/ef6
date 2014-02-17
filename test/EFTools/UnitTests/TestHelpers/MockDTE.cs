@@ -109,7 +109,7 @@ namespace UnitTests.TestHelpers
         {
             var mockProjectItem = new Mock<ProjectItem>();
 
-            var mockProperties = new Mock<Properties>();
+            var mockProperties = new Mock<Properties>() { CallBase = true};
 
             mockProjectItem.Setup(p => p.Properties).Returns(mockProperties.Object);
 

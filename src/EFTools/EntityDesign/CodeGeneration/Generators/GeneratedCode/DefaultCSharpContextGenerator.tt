@@ -1,36 +1,53 @@
 ﻿<#@ template visibility="internal" linePragmas="false" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.Data.Entity.Design" #>
+<#@ assembly name="EntityFramework" #>
 <#@ import namespace="System.Linq" #>
-<#@ parameter type="System.Data.Entity.Core.Metadata.Edm.EntityContainer" name="Container" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.CodeGeneration" #>
 <#@ parameter type="System.Data.Entity.Infrastructure.DbModel" name="Model" #>
 <#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.String" name="ContextClassName" #>
+<#@ parameter type="System.String" name="ConnectionStringName" #>
 <#
     var code = new CSharpCodeHelper();
     var edm = new EdmHelper(code);
-
-    if (Container == null)
-    {
-        throw new ArgumentNullException("Container");
-    }
 
     if (Model == null)
     {
         throw new ArgumentNullException("Model");
     }
+
+    if (Namespace == null)
+    {
+        throw new ArgumentNullException("Namespace");
+    }
+
+    if (ContextClassName == null)
+    {
+        throw new ArgumentNullException("ContextClassName");
+    }
+
+    if (ConnectionStringName == null)
+    {
+        throw new ArgumentNullException("ConnectionStringName");
+    }
 #>
 namespace <#= Namespace #>
 {
+    using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
 
-    public class <#= code.Type(Container) #> : DbContext
+    public partial class <#= ContextClassName #> : DbContext
     {
-        public <#= code.Type(Container) #>()
-            : base("Name=<#= code.Type(Container) #>")
+        public <#= ContextClassName #>()
+            : base("name=<#= ConnectionStringName #>")
         {
         }
 
 <#
-    foreach (var entitySet in Container.EntitySets)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
 #>
         public virtual DbSet<<#= code.Type(entitySet.ElementType) #>> <#= code.Property(entitySet) #> { get; set; }
@@ -43,7 +60,7 @@ namespace <#= Namespace #>
 <#
     var anyConfiguration = false;
 
-    foreach (var entitySet in Container.EntitySets)
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
     {
         var typeConfigurations = edm.GetConfigurations(entitySet, Model).OfType<IFluentConfiguration>()
             .Where(c => !(c is IAttributeConfiguration || c is KeyConfiguration));

@@ -1,11 +1,15 @@
 ﻿<#@ template visibility="internal" linePragmas="false" #>
-<#@ import namespace="System.Linq" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.Data.Entity.Design" #>
+<#@ assembly name="EntityFramework" #>
 <#@ import namespace="System.Data.Entity.Core.Metadata.Edm" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.CodeGeneration" #>
 <#@ parameter type="System.Data.Entity.Core.Metadata.Edm.EntitySet" name="EntitySet" #>
 <#@ parameter type="System.Data.Entity.Infrastructure.DbModel" name="Model" #>
 <#@ parameter type="System.String" name="Namespace" #>
 <#
-    var code = new CSharpCodeHelper();
+    var code = new VBCodeHelper();
     var edm = new EdmHelper(code);
 
     if (EntitySet == null)
@@ -20,13 +24,11 @@
 
     var entityType = EntitySet.ElementType;
 #>
-namespace <#= Namespace #>
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel.DataAnnotations
+Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Data.Entity.Spatial
 
 <#
     var typeConfigurations = edm.GetConfigurations(EntitySet, Model).OfType<IAttributeConfiguration>();
@@ -34,12 +36,11 @@ namespace <#= Namespace #>
     foreach (var typeConfiguration in typeConfigurations)
     {
 #>
-    <#= code.Attribute(typeConfiguration) #>
+<#= code.Attribute(typeConfiguration) #>
 <#
     }
 #>
-    public partial class <#= code.Type(entityType) #>
-    {
+Partial Public Class <#= code.Type(entityType) #>
 <#
     var collectionProperties = from p in entityType.NavigationProperties
                                where p.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many
@@ -48,17 +49,16 @@ namespace <#= Namespace #>
     if (collectionProperties.Any())
     {
 #>
-        public <#= code.Type(entityType) #>()
-        {
+    Public Sub New()
 <#
     foreach (var collectionProperty in collectionProperties)
     {
 #>
-            <#= code.Property(collectionProperty) #> = new HashSet<<#= code.Type(collectionProperty.ToEndMember.GetEntityType()) #>>();
+        <#= code.Property(collectionProperty) #> = New HashSet(Of <#= code.Type(collectionProperty.ToEndMember.GetEntityType()) #>)()
 <#
     }
 #>
-        }
+    End Sub
 
 <#
     }
@@ -81,11 +81,11 @@ namespace <#= Namespace #>
         foreach (var propertyConfiguration in propertyConfigurations)
         {
 #>
-        <#= code.Attribute(propertyConfiguration) #>
+    <#= code.Attribute(propertyConfiguration) #>
 <#
         }
 #>
-        public <#= code.Type(property) #> <#= code.Property(property) #> { get; set; }
+    Public Property <#= code.Property(property) #> As <#= code.Type(property) #>
 <#
     }
 
@@ -101,9 +101,8 @@ namespace <#= Namespace #>
         }
 
 #>
-        public virtual <#= code.Type(navigationProperty) #> <#= code.Property(navigationProperty) #> { get; set; }
+    Public Overridable Property <#= code.Property(navigationProperty) #> As <#= code.Type(navigationProperty) #>
 <#
     }
 #>
-    }
-}
+End Class

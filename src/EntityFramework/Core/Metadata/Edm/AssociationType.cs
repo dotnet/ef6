@@ -17,6 +17,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class AssociationType : RelationshipType
     {
+        // Used by MetadataOptimization, do not use for anything else.
+        internal volatile int Index = -1;
+
         // <summary>
         // Initializes a new instance of Association Type with the given name, namespace, version and ends
         // </summary>

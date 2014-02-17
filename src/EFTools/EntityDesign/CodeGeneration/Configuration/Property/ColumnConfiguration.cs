@@ -46,7 +46,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                     builder.Append(", ");
                 }
 
-                builder.Append("Order = ");
+                builder.Append("Order");
+                builder.Append(code.NamedParameterSetter);
                 builder.Append(code.Literal(Order.Value));
             }
 
@@ -57,7 +58,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                     builder.Append(", ");
                 }
 
-                builder.Append("TypeName = ");
+                builder.Append("TypeName");
+                builder.Append(code.NamedParameterSetter);
                 builder.Append(code.Literal(TypeName));
             }
 
