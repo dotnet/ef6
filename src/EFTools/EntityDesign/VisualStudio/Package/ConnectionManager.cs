@@ -57,7 +57,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             SqlDatabaseFileConnectionStringUserInstance.Length;
 
         internal static readonly string XmlAttrNameConnectionString = "connectionString";
-        internal static readonly string XmlAttrNameEntityContainerName = "name";
+        internal static readonly string XmlAttrNameName = "name";
         internal static readonly string XmlAttrNameProviderName = "providerName";
         internal static readonly string XmlAttrNameMultipleActiveResultSets = "MultipleActiveResultSets";
 
@@ -278,7 +278,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 foreach (XmlNode node in xmlNodeList)
                 {
                     var connStringObj = new ConnectionString(node.Attributes.GetNamedItem(XmlAttrNameConnectionString).Value);
-                    stringHash.Add(node.Attributes.GetNamedItem(XmlAttrNameEntityContainerName).Value, connStringObj);
+                    stringHash.Add(node.Attributes.GetNamedItem(XmlAttrNameName).Value, connStringObj);
                 }
 
                 // from msdn: UniqueName: This [property] returns a temporary, unique string value that you can use to 
@@ -408,7 +408,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         {
             var addNode = connStringsElement.OwnerDocument.CreateElement("add");
 
-            addNode.SetAttribute(XmlAttrNameEntityContainerName, connStringName);
+            addNode.SetAttribute(XmlAttrNameName, connStringName);
             addNode.SetAttribute(XmlAttrNameConnectionString, connString);
             addNode.SetAttribute(XmlAttrNameProviderName, providerName);
 
@@ -846,7 +846,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 return false;
             }
             var connectionStringAttr = node.Attributes.GetNamedItem(XmlAttrNameConnectionString);
-            var connectionNameAttr = node.Attributes.GetNamedItem(XmlAttrNameEntityContainerName);
+            var connectionNameAttr = node.Attributes.GetNamedItem(XmlAttrNameName);
             if (connectionStringAttr != null
                 && connectionNameAttr != null)
             {
@@ -945,7 +945,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         // computes a unique connection string name based on the input base name
         internal static string GetUniqueConnectionStringName(ConfigFileUtils configFileUtils, string baseConnectionStringName)
         {
-            var connectionStringNames = GetExistingConnectionStringNames(configFileUtils);
+            var connectionStringNames = GetExistingConnectionStrings(configFileUtils).Keys;
 
             var i = 1;
             var uniqueConnectionStringName = baseConnectionStringName;
@@ -957,22 +957,29 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return uniqueConnectionStringName;
         }
 
-        internal static HashSet<string> GetExistingConnectionStringNames(ConfigFileUtils configFileUtils)
+        internal static Dictionary<string, string> GetExistingConnectionStrings(ConfigFileUtils configFileUtils)
         {
             var configXml = configFileUtils.LoadConfig();
 
+            var existingConnectionStrings = new Dictionary<string, string>();
             if (configXml == null)
             {
                 // can be null if config does not exist in which case there are no connection strings
-                return new HashSet<string>();
+                return existingConnectionStrings;
             }
 
             // note we return all the connection string names to support CodeFirst scenarios
-            return
-                new HashSet<string>(
-                    configXml.SelectNodes(XpathConnectionStringsAdd).OfType<XmlElement>()
-                    .Select(addElement => addElement.GetAttribute("name"))
-                    .Where(connectionStringName => !string.IsNullOrEmpty(connectionStringName)));
+            foreach (var addElement in 
+                configXml.SelectNodes(XpathConnectionStringsAdd).OfType<XmlElement>())
+            {
+                var name = addElement.GetAttribute(XmlAttrNameName);
+                if (!string.IsNullOrEmpty(name))
+                {
+                    existingConnectionStrings.Add(name, addElement.GetAttribute(XmlAttrNameConnectionString));
+                }
+            }
+
+            return existingConnectionStrings;
         }
 
         public static string CreateDefaultLocalDbConnectionString(string initialCatalog)

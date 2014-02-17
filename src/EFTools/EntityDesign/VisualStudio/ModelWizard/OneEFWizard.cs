@@ -168,6 +168,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                 settings.AppConfigConnectionString, settings.RuntimeProviderInvariantName);
 
             _configFileUtils.GetOrCreateConfigFile();
+            var existingConnectionStrings = ConnectionManager.GetExistingConnectionStrings(_configFileUtils);
+            string existingConnectionString;
+            if (existingConnectionStrings.TryGetValue(settings.AppConfigConnectionPropertyName, out existingConnectionString)
+                && string.Equals(existingConnectionString, connectionString))
+            {
+                // An element with the same name and connectionString already exists - no need to update.
+                // This can happen if the user chooses an existing connection and connection name on the WizardPageDbConfig page.
+                return;
+            }
+
             var configXml = _configFileUtils.LoadConfig();
             ConnectionManager.AddConnectionStringElement(
                 configXml, 

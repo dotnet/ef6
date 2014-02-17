@@ -274,8 +274,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 if (!EscherAttributeContentValidator.IsValidCsdlEntityContainerName(id)
                     || !VsUtils.IsValidIdentifier(id, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
                 {
-                    var s = Resources.ConnectionStringNonValidIdentifier;
-                    VsUtils.ShowErrorDialog(String.Format(CultureInfo.CurrentCulture, s, id));
+                    VsUtils.ShowErrorDialog(
+                        string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringNonValidIdentifier, id));
                     textBoxAppConfigConnectionName.Focus();
                     _isFocusSet = true;
                     return false;
@@ -283,14 +283,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
                 // only check that the connection string name is new if started in
                 // 'PerformAllFunctionality' mode
-                if (ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode
-                    && ConnectionManager.GetExistingConnectionStringNames(_configFileUtils).Contains(id))
+                if (ModelBuilderWizardForm.WizardMode.PerformAllFunctionality == Wizard.Mode)
                 {
-                    VsUtils.ShowErrorDialog(
-                        string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringDuplicateIdentifer, id));
-                    textBoxAppConfigConnectionName.Focus();
-                    _isFocusSet = true;
-                    return false;
+                    string connectionString;
+                    if (ConnectionManager.GetExistingConnectionStrings(_configFileUtils).TryGetValue(id, out connectionString)
+                        && !string.Equals(textBoxConnectionString.Text, connectionString, StringComparison.Ordinal))
+                    {
+                        VsUtils.ShowErrorDialog(
+                            string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringDuplicateIdentifer, id));
+                        textBoxAppConfigConnectionName.Focus();
+                        _isFocusSet = true;
+                        return false;
+                    }
                 }
             }
 
