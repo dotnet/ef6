@@ -37,6 +37,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     internal partial class WizardPageDbConfig : WizardPageBase
     {
         private readonly ConfigFileUtils _configFileUtils;
+        private readonly CodeIdentifierUtils _identifierUtil;
         private bool _isInitialized;
 
         //  DDEX Services we use
@@ -55,6 +56,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             _configFileUtils =
                 new ConfigFileUtils(wizard.Project, wizard.ServiceProvider, wizard.ModelBuilderSettings.VSApplicationType);
+
+            _identifierUtil =
+                new CodeIdentifierUtils(wizard.ModelBuilderSettings.VSApplicationType, VsUtils.GetLanguageForProject(wizard.Project));
 
             Headline = Resources.DbConfigPage_Title;
             Logo = Resources.PageIcon;
@@ -272,7 +276,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             {
                 var id = textBoxAppConfigConnectionName.Text;
                 if (!EscherAttributeContentValidator.IsValidCsdlEntityContainerName(id)
-                    || !VsUtils.IsValidIdentifier(id, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
+                    || !_identifierUtil.IsValidIdentifier(id))
                 {
                     VsUtils.ShowErrorDialog(
                         string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringNonValidIdentifier, id));
@@ -781,7 +785,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 baseName = baseName.Replace("\t", "_");
                 baseName = baseName + ModelConstants.DefaultEntityContainerName;
 
-                if (!VsUtils.IsValidIdentifier(baseName, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
+                if (!_identifierUtil.IsValidIdentifier(baseName))
                 {
                     baseName = ModelConstants.DefaultEntityContainerName;
                 }

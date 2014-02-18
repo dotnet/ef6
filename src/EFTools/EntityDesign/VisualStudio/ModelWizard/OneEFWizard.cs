@@ -106,7 +106,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         {
             try
             {
-                var contextClassName = replacementsDictionary["$safeitemname$"];
+                var contextClassName =
+                    new CodeIdentifierUtils(
+                        modelBuilderSettings.VSApplicationType,
+                        _vsUtils.GetLanguageForProject(modelBuilderSettings.Project))
+                        .CreateValidIdentifier(replacementsDictionary["$safeitemname$"]);
+
                 _generatedCode = codeFirstModelGenerator.Generate(
                     modelBuilderSettings.ModelBuilderEngine != null
                             ? modelBuilderSettings.ModelBuilderEngine.Model
