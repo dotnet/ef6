@@ -23,13 +23,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using System.Xml;
     using EnvDTE;
     using EnvDTE80;
-    using Microsoft.CSharp;
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Designer;
     using Microsoft.Data.Entity.Design.VersioningFacade;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
-    using Microsoft.VisualBasic;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Design;
@@ -548,49 +546,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         internal static void ShowErrorDialog(string message)
         {
             ShowError(PackageManager.Package, message);
-        }
-
-        // returns whether an identifier is valid in the given language
-        internal static bool IsValidIdentifier(string id, Project project, VisualStudioProjectSystem appType)
-        {
-            // for WebSite projects we should check with both languages (C# and VB)
-            // because they can use both C# and VB code
-            if (appType == VisualStudioProjectSystem.Website
-                || project == null
-                || project.CodeModel == null
-                || IsMiscellaneousProject(project))
-            {
-                using (var csCodeDomProvider = new CSharpCodeProvider())
-                {
-                    if (csCodeDomProvider.IsValidIdentifier(id))
-                    {
-                        using (var vbCodeDomProvider = new VBCodeProvider())
-                        {
-                            return vbCodeDomProvider.IsValidIdentifier(id);
-                        }
-                    }
-                }
-                return false;
-            }
-            else
-            {
-                var language = project.CodeModel.Language;
-                if (CodeModelLanguageConstants.vsCMLanguageVB == language)
-                {
-                    using (var codeDomProvider = new VBCodeProvider())
-                    {
-                        return codeDomProvider.IsValidIdentifier(id);
-                    }
-                }
-                else
-                {
-                    Debug.Assert(CodeModelLanguageConstants.vsCMLanguageCSharp == language, "Project language is not VB or C#");
-                    using (var codeDomProvider = new CSharpCodeProvider())
-                    {
-                        return codeDomProvider.IsValidIdentifier(id);
-                    }
-                }
-            }
         }
 
         // <summary>
