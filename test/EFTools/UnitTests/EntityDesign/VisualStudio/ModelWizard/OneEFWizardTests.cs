@@ -2,7 +2,6 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
-    using System.CodeDom.Compiler;
     using System.Data.Entity.Infrastructure;
     using System.IO;
     using EnvDTE;
@@ -299,6 +298,54 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
             return new OneEFWizard(
                 vsUtils: mockVsUtils.Object, errorListHelper: mockErrorListHelper.Object, errorCache: errorCache);
+        }
+
+        [Fact]
+        public void RunStarted_handles_CodeFirstModelGenerationException_and_adds_the_error_error_pane()
+        {
+            var project = MockDTE.CreateProject();
+            var mockCodeGenerator = new Mock<CodeFirstModelGenerator>(project);
+
+            var innerException = new Exception("InnerException");
+
+            mockCodeGenerator
+                .Setup(g => g.Generate(It.IsAny<DbModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Throws(new CodeFirstModelGenerationException("Failed generating code.", innerException));
+
+            var mockVsUtils = new Mock<IVsUtils>();
+
+            var replacementsDictionary = new Dictionary<string, string>
+            {
+                { "$safeitemname$", "context.cs" },
+                { "$rootnamespace$", "My.Namespace" }
+            };
+
+            new OneEFWizard(vsUtils: mockVsUtils.Object)
+                .RunStarted(new ModelBuilderSettings(), mockCodeGenerator.Object, replacementsDictionary);
+
+            mockVsUtils.Verify(u => u.ShowErrorDialog("Failed generating code.\r\n" + innerException), Times.Once());
+        }
+
+        [Fact]
+        public void ShouldAddProjectItem_returns_false_if_code_could_not_be_generated()
+        {
+            Assert.False(
+                new OneEFWizard(vsUtils: Mock.Of<IVsUtils>(), generatedCode: null)
+                    .ShouldAddProjectItem(string.Empty));
+
+            Assert.False(
+                new OneEFWizard(vsUtils: Mock.Of<IVsUtils>(), generatedCode: new List<KeyValuePair<string, string>>())
+                    .ShouldAddProjectItem(string.Empty));
+        }
+
+        [Fact]
+        public void ShouldAddProjectItem_returns_true_if_code_could_be_generated()
+        {
+            Assert.True(
+                new OneEFWizard(
+                    vsUtils: Mock.Of<IVsUtils>(),
+                    generatedCode: new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(string.Empty, string.Empty) })
+                    .ShouldAddProjectItem(string.Empty));
         }
     }
 }
