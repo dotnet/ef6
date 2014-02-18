@@ -13,6 +13,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
@@ -103,23 +104,28 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
         internal void RunStarted(ModelBuilderSettings modelBuilderSettings, CodeFirstModelGenerator codeFirstModelGenerator, Dictionary<string, string> replacementsDictionary)
         {
-            var contextClassName = replacementsDictionary["$safeitemname$"];
+            try
+            {
+                var contextClassName = replacementsDictionary["$safeitemname$"];
+                _generatedCode = codeFirstModelGenerator.Generate(
+                    modelBuilderSettings.ModelBuilderEngine != null
+                            ? modelBuilderSettings.ModelBuilderEngine.Model
+                            : null,
+                    replacementsDictionary["$rootnamespace$"],
+                    contextClassName,
+                    modelBuilderSettings.SaveConnectionStringInAppConfig
+                        ? modelBuilderSettings.AppConfigConnectionPropertyName
+                        : contextClassName).ToList();
 
-            _generatedCode = codeFirstModelGenerator.Generate(
-                modelBuilderSettings.ModelBuilderEngine != null
-                        ? modelBuilderSettings.ModelBuilderEngine.Model
-                        : null,
-                replacementsDictionary["$rootnamespace$"],
-                contextClassName,
-                modelBuilderSettings.SaveConnectionStringInAppConfig 
-                    ? modelBuilderSettings.AppConfigConnectionPropertyName 
-                    : contextClassName).ToList();
+                Debug.Assert(_generatedCode.Count > 0, "code has not been generated");
 
-            Debug.Assert(_generatedCode.Count > 0, "code has not been generated");
-
-            // TODO: handle exceptions from code gen
-
-            replacementsDictionary["$contextfilecontents$"] = _generatedCode[0].Value;
+                replacementsDictionary["$contextfilecontents$"] = _generatedCode[0].Value;
+            }
+            catch (CodeFirstModelGenerationException e)
+            {
+                _vsUtils.ShowErrorDialog(
+                    string.Format(CultureInfo.CurrentCulture, "{0}{1}{2}", e.Message, Environment.NewLine, e.InnerException));
+            }
         }
 
         /// <inheritdoc />
@@ -131,6 +137,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         // internal for testing, settings parameter to allow testing without messing with the static variable
         internal void RunFinished(ModelBuilderSettings settings, string targetDirectory)
         {
+            // null indicates an error when generating code
+            if (_generatedCode == null)
+            {
+                return;
+            }
+
             var project = settings.Project;
 
             var filesToSave = _generatedCode.Skip(1)
@@ -198,7 +210,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         /// <inheritdoc />
         public bool ShouldAddProjectItem(string filePath)
         {
-            return true;
+            return _generatedCode != null && _generatedCode.Count > 0;
         }
     }
 }
