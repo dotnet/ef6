@@ -91,6 +91,8 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             return false;
         }
 
+        // This method receives changes as MappingLovElements (user used the mouse)
+        // or as strings (user used the keyboard)
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override void SetValue(object component, object value)
@@ -114,15 +116,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
                 lovElement != null || valueAsString != null,
                 "value is not a MappingLovEFElement nor a string. Actual type is " + value.GetType().FullName);
             if (lovElement == null
-                && valueAsString == null)
+                && string.IsNullOrEmpty(valueAsString))
             {
-                return;
-            }
-
-            // the trid will sometimes send an empty string when the user drops down a list
-            // and then clicks away; if this happens just leave
-            if (string.IsNullOrEmpty(valueAsString))
-            {
+                // Both null is an error condition and should not happen.
+                // But the trid will sometimes send an empty string when the user drops down a list
+                // and then clicks away; in both cases just return without doing anything.
                 return;
             }
 

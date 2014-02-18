@@ -97,6 +97,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             return false;
         }
 
+        // This method receives changes as MappingLovElements (user used the mouse)
+        // or as strings (user used the keyboard)
+        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength", Justification = "We already test for null earlier, here we want to just test against the empty string. Testing length would require that the string exists which is often not the case.")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override void SetValue(object component, object value)
         {
@@ -116,12 +119,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             }
 
             var lovElement = value as MappingLovEFElement;
-            Debug.Assert(
-                lovElement != null || valueAsString != null,
-                "value is not a MappingLovEFElement nor a string. Actual type is " + value.GetType().FullName);
             if (lovElement == null
                 && valueAsString == null)
             {
+                Debug.Fail(
+                    "value is not a MappingLovEFElement nor a string. Actual type is " + value.GetType().FullName);
                 return;
             }
 
@@ -156,12 +158,15 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             }
 
             // the trid will sometimes send an empty string when the user drops down a list
-            // and then clicks away; if this happens just leave
-            if (string.IsNullOrEmpty(valueAsString))
+            // and then clicks away; if this happens just return without doing anything.
+            // Note: _very_ important not to turn this into a string.IsNullOrEmpty() check.
+            // If you do and a MappingLovElement is passed to this method everything below this
+            // if() will not be executed.
+            if (string.Empty == valueAsString)
             {
                 return;
             }
-
+            
             var mset = component as MappingStorageEntityType;
             if (mset != null)
             {

@@ -11,6 +11,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
     using Microsoft.Data.Entity.Design.Model.Entity;
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails;
     using Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails.Tables;
+    using System.Diagnostics.CodeAnalysis;
 
     // <summary>
     //     Based on the type of item being shown, show the correct text for the Value column.
@@ -78,6 +79,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             return false;
         }
 
+        // This method receives changes as MappingLovElements (user used the mouse)
+        // or as strings (user used the keyboard)
+        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength", Justification = "We already test for null earlier, here we want to just test against the empty string. Testing length would require that the string exists which is often not the case.")]
         public override void /* PropertyDescriptor */ SetValue(object component, object value)
         {
             // the user clicked off of the drop-down without choosing a value
@@ -95,13 +99,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
 
             var lovElement = value as MappingLovEFElement;
             var valueAsString = value as string;
-            Debug.Assert(
-                lovElement != null || valueAsString != null,
-                "value is not a MappingLovEFElement nor a string. Actual type is " + value.GetType().FullName);
-
             if (lovElement == null
                 && valueAsString == null)
             {
+                Debug.Fail(
+                    "value is not a MappingLovEFElement nor a string. Actual type is " + value.GetType().FullName);
                 return;
             }
 
@@ -128,7 +130,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
                 {
                     // if the Operator is not 'Is' then user must enter text
                     // into the TextBox
-                    Debug.Assert(valueAsString != null, "valueAsString null for ValuColumn.SetValue() for MappingCondition");
+                    Debug.Assert(valueAsString != null, "valueAsString null for ValueColumn.SetValue() for MappingCondition");
                     if (valueAsString != null)
                     {
                         mc.Value = valueAsString;
@@ -140,8 +142,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Columns
             }
 
             // the trid will sometimes send an empty string when the user drops down a list
-            // and then clicks away; if this happens just leave
-            if (string.IsNullOrEmpty(valueAsString))
+            // and then clicks away; if this happens just return without doing anything.
+            // Note: _very_ important not to turn this into a string.IsNullOrEmpty() check.
+            // If you do and a MappingLovElement is passed to this method everything below this
+            // if() will not be executed.
+            if (string.Empty == valueAsString)
             {
                 return;
             }
