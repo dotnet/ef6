@@ -132,6 +132,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CodeGeneration\CodeGeneratorFactory.cs" />
+    <Compile Include="CodeGeneration\Extensions\EntitySetExtensions.cs" />
     <Compile Include="CodeGeneration\Generators\CSharpCodeFirstEmptyModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerationException.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerator.cs" />
