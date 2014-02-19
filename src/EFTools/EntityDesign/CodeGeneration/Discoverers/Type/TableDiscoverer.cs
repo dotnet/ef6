@@ -7,6 +7,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Diagnostics;
     using System.Linq;
+    using Microsoft.Data.Entity.Design.CodeGeneration.Extensions;
     using Microsoft.Data.Entity.Design.VersioningFacade;
 
     internal class TableDiscoverer : ITypeConfigurationDiscoverer
@@ -40,8 +41,10 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
                 .EntityTypeMappings.First()
                 .Fragments.First()
                 .StoreEntitySet;
-            var tableName = storeEntitySet.Table ?? storeEntitySet.Name;
-            var schemaName = storeEntitySet.Schema;
+            var tableName = storeEntitySet.GetStoreModelBuilderMetadataProperty("Name")
+                ?? storeEntitySet.Table
+                ?? storeEntitySet.Name;
+            var schemaName = storeEntitySet.GetStoreModelBuilderMetadataProperty("Schema") ?? storeEntitySet.Schema;
 
             if (_pluralizationService.Pluralize(_code.Type(entitySet.ElementType)) == tableName
                 && (string.IsNullOrEmpty(schemaName) || schemaName == "dbo"))
