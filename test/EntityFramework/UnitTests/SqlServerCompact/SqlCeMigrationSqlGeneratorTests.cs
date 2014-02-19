@@ -15,6 +15,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.TestHelpers;
     using System.Data.Entity.Utilities;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using Xunit;
@@ -341,6 +342,24 @@ ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
                 s => s.Sql, Environment.NewLine);
 
             Assert.Contains(@"insert into foo", sql);
+        }
+
+        [Fact]
+        public void Generate_should_output_batched_custom_sql_operation()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+
+            var statementBatch = File.ReadAllText("TestDataFiles/SqlOperation_Batch.sql");
+
+            var statements = migrationSqlGenerator
+                .Generate(new[] { new SqlOperation(statementBatch) }, "4.0")
+                .ToList();
+
+            Assert.Equal(3, statements.Count);
+
+            Assert.Equal("insert into foo", statements[0].Sql.Trim());
+            Assert.Equal("insert into bar VALUES ('ab')", statements[1].Sql.Trim());
+            Assert.Equal("insert into bar VALUES ('ab')", statements[2].Sql.Trim());
         }
 
         [Fact]

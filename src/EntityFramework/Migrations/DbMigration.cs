@@ -13,6 +13,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
 
@@ -1351,7 +1352,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        /// Adds an operation to execute a SQL command.
+        /// Adds an operation to execute a SQL command or set of SQL commands.
         ///
         /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
         /// (such as the end user of an application). If input is accepted from such sources it should be validated 
@@ -1377,6 +1378,87 @@ namespace System.Data.Entity.Migrations
                 {
                     SuppressTransaction = suppressTransaction
                 });
+        }
+
+        /// <summary>
+        /// Adds an operation to execute a SQL file.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="sqlFile"> 
+        /// The SQL file to be executed.  Relative paths are assumed to be relative to the current AppDomain's BaseDirectory.
+        /// </param>
+        /// <param name="suppressTransaction">
+        /// A value indicating if the SQL should be executed outside of the transaction being
+        /// used for the migration process. If no value is supplied the SQL will be executed within the transaction.
+        /// </param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
+        protected internal void SqlFile(string sqlFile, bool suppressTransaction = false, object anonymousArguments = null)
+        {
+            Check.NotEmpty(sqlFile, "sqlFile");
+
+            if (!Path.IsPathRooted(sqlFile))
+            {
+                sqlFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, sqlFile);
+            }
+
+            AddOperation(
+                new SqlOperation(File.ReadAllText(sqlFile), anonymousArguments)
+                {
+                    SuppressTransaction = suppressTransaction
+                });
+        }
+
+        /// <summary>
+        /// Adds an operation to execute a SQL resource file.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="sqlResource"> The manifest resource name of the SQL resource file to be executed. </param>
+        /// <param name="resourceAssembly">
+        /// The assembly containing the resource file. The calling assembly is assumed if not provided.
+        /// </param>
+        /// <param name="suppressTransaction">
+        /// A value indicating if the SQL should be executed outside of the transaction being
+        /// used for the migration process. If no value is supplied the SQL will be executed within the transaction.
+        /// </param>
+        /// <param name="anonymousArguments">
+        /// Additional arguments that may be processed by providers. Use anonymous type syntax to
+        /// specify arguments e.g. 'new { SampleArgument = "MyValue" }'.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
+        protected internal void SqlResource(string sqlResource, Assembly resourceAssembly = null, bool suppressTransaction = false, object anonymousArguments = null)
+        {
+            Check.NotEmpty(sqlResource, "sqlResource");
+
+            resourceAssembly = resourceAssembly ?? Assembly.GetCallingAssembly();
+
+            if (!resourceAssembly.GetManifestResourceNames().Contains(sqlResource))
+            {
+                throw new ArgumentException(Strings.UnableToLoadEmbeddedResource(resourceAssembly.FullName, sqlResource));
+            }
+
+            using (var resourceStream = resourceAssembly.GetManifestResourceStream(sqlResource))
+            {
+                using (var textStream = new StreamReader(resourceStream))
+                {
+                    AddOperation(
+                        new SqlOperation(textStream.ReadToEnd(), anonymousArguments)
+                        {
+                            SuppressTransaction = suppressTransaction
+                        });
+                }
+            }
         }
 
         /// <inheritdoc />

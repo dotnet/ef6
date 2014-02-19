@@ -4470,6 +4470,14 @@ namespace System.Data.Entity.Resources
             get { return EntityRes.GetString(EntityRes.UnableToLoadResource); }
         }
 
+        /// <summary>
+        /// A string like "Unable to load embedded resource '{1}' from assembly '{0}'."
+        /// </summary>
+        internal static string UnableToLoadEmbeddedResource(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.UnableToLoadEmbeddedResource, p0, p1);
+        }
+
         // <summary>
         // A string like "The EDMVersion of the item collection {0} is not an EDMVersion that the runtime supports. The supported versions are {1}."
         // </summary>
@@ -16203,6 +16211,7 @@ namespace System.Data.Entity.Resources
         internal const string UnableToFindReflectedType = "UnableToFindReflectedType";
         internal const string AssemblyMissingFromAssembliesToConsider = "AssemblyMissingFromAssembliesToConsider";
         internal const string UnableToLoadResource = "UnableToLoadResource";
+        internal const string UnableToLoadEmbeddedResource = "UnableToLoadEmbeddedResource";
         internal const string EdmVersionNotSupportedByRuntime = "EdmVersionNotSupportedByRuntime";
         internal const string AtleastOneSSDLNeeded = "AtleastOneSSDLNeeded";
         internal const string InvalidMetadataPath = "InvalidMetadataPath";

@@ -25,6 +25,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Provider to convert provider agnostic migration operations into SQL commands
@@ -523,14 +524,14 @@ namespace System.Data.Entity.SqlServerCompact
 
         /// <summary>
         /// Generates SQL for a <see cref="SqlOperation" />.
-        /// Generated SQL should be added using the Statement method.
+        /// Generated SQL should be added using the Statement or StatementBatch methods.
         /// </summary>
         /// <param name="sqlOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(SqlOperation sqlOperation)
         {
             Check.NotNull(sqlOperation, "sqlOperation");
 
-            Statement(sqlOperation.Sql, sqlOperation.SuppressTransaction);
+            StatementBatch(sqlOperation.Sql, sqlOperation.SuppressTransaction);
         }
 
         /// <summary>
@@ -971,5 +972,48 @@ namespace System.Data.Entity.SqlServerCompact
 
             Statement(writer.InnerWriter.ToString());
         }
+
+        /// <summary>
+        /// Breaks string into one or more statements, handling T-SQL utility statements as necessary.
+        /// </summary>
+        /// <param name="sqlBatch">The SQL to split into one ore more statements to be executed.</param>
+        /// <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected void StatementBatch(string sqlBatch, bool suppressTransaction = false)
+        {
+            Check.NotNull(sqlBatch, "sqlBatch");
+
+            // Handle backslash utility statement (see http://technet.microsoft.com/en-us/library/dd207007.aspx)
+            sqlBatch = Regex.Replace(sqlBatch, @"\\(\r\n|\r|\n)", "");
+
+            // Handle batch splitting utility statement (see http://technet.microsoft.com/en-us/library/ms188037.aspx)
+            var batches = Regex.Split(sqlBatch, 
+                String.Format(@"\s+({0}[ \t]+[0-9]+|{0})(?:\s+|$)", BatchTerminator),
+                RegexOptions.IgnoreCase);
+            
+            for (int i = 0; i < batches.Length; ++i)
+            {
+                // Skip batches that merely contain the batch terminator
+                if (batches[i].StartsWith(BatchTerminator, StringComparison.InvariantCultureIgnoreCase) || 
+                    (i == batches.Length - 1 && string.IsNullOrWhiteSpace(batches[i])))
+                {
+                    continue;
+                }
+
+                int repeatCount = 1;
+                
+                // Handle count parameter on the batch splitting utility statement
+                if (batches.Length > i + 1 && 
+                    batches[i + 1].StartsWith(BatchTerminator, StringComparison.InvariantCultureIgnoreCase) && 
+                    ! batches[i + 1].EqualsIgnoreCase(BatchTerminator))
+                {
+                    repeatCount = int.Parse(Regex.Match(batches[i + 1], @"([0-9]+)").Value);
+                }
+
+                for (int j = 0; j < repeatCount; ++j)
+                    Statement(batches[i], suppressTransaction);
+            }       
+        }
+
     }
 }

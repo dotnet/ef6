@@ -342,6 +342,24 @@ END
         }
 
         [Fact]
+        public void Generate_should_output_batched_custom_sql_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var statementBatch = File.ReadAllText("TestDataFiles/SqlOperation_Batch.sql");
+
+            var statements = migrationSqlGenerator
+                .Generate(new[] { new SqlOperation(statementBatch) }, "2008")
+                .ToList();
+
+            Assert.Equal(3, statements.Count);
+
+            Assert.Equal("insert into foo", statements[0].Sql.Trim());
+            Assert.Equal("insert into bar VALUES ('ab')", statements[1].Sql.Trim());
+            Assert.Equal("insert into bar VALUES ('ab')", statements[2].Sql.Trim());
+        }
+
+        [Fact]
         public void Generate_can_output_create_procedure_statements()
         {
             var modelBuilder = new DbModelBuilder();

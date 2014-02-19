@@ -12,6 +12,8 @@ namespace System.Data.Entity.Migrations
     using System.Linq;
     using Moq;
     using Xunit;
+    using System.IO;
+    using System.Reflection;
 
     public class DbMigrationTests
     {
@@ -868,6 +870,55 @@ namespace System.Data.Entity.Migrations
             var sqlOperation = migration.Operations.Cast<SqlOperation>().Single();
 
             Assert.Equal("foo", sqlOperation.Sql);
+        }
+
+        [Fact]
+        public void SqlFile_should_add_sql_operation()
+        {
+            var migration = new TestMigration();
+
+            migration.SqlFile("TestDataFiles/SqlOperation_Basic.sql");
+
+            var sqlOperation = migration.Operations.Cast<SqlOperation>().Single();
+
+            Assert.Equal("insert into foo", sqlOperation.Sql);
+        }
+
+        [Fact]
+        public void SqlFile_should_add_sql_operation_with_rooted_path()
+        {
+            var migration = new TestMigration();
+            var rootedPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDataFiles/SqlOperation_Basic.sql");
+
+            migration.SqlFile(rootedPath);
+
+            var sqlOperation = migration.Operations.Cast<SqlOperation>().Single();
+
+            Assert.Equal("insert into foo", sqlOperation.Sql);
+        }
+
+        [Fact]
+        public void SqlResource_should_add_sql_operation()
+        {
+            var migration = new TestMigration();
+
+            migration.SqlResource("System.Data.Entity.TestDataFiles.SqlOperation_Basic.sql");
+
+            var sqlOperation = migration.Operations.Cast<SqlOperation>().Single();
+
+            Assert.Equal("insert into foo", sqlOperation.Sql);
+        }
+
+        [Fact]
+        public void SqlResource_should_add_sql_operation_from_specific_assembly()
+        {
+            var migration = new TestMigration();
+
+            migration.SqlResource("System.Data.Entity.TestDataFiles.SqlOperation_Basic.sql", Assembly.GetExecutingAssembly());
+
+            var sqlOperation = migration.Operations.Cast<SqlOperation>().Single();
+
+            Assert.Equal("insert into foo", sqlOperation.Sql);
         }
 
         [Fact]
