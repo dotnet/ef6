@@ -50,6 +50,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 new CodeIdentifierUtils(VisualStudioProjectSystem.WebApplication, LangEnum.VisualBasic).CreateValidIdentifier(identifier));
 
             Assert.Same(identifier,
+                new CodeIdentifierUtils(VisualStudioProjectSystem.WindowsApplication, LangEnum.CSharp).CreateValidIdentifier(identifier));
+
+            Assert.Same(identifier,
+                new CodeIdentifierUtils(VisualStudioProjectSystem.WindowsApplication, LangEnum.VisualBasic).CreateValidIdentifier(identifier));
+
+            Assert.Same(identifier,
                 new CodeIdentifierUtils(VisualStudioProjectSystem.Website, LangEnum.CSharp).CreateValidIdentifier(identifier));
 
             Assert.Same(identifier,
@@ -76,6 +82,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
             Assert.Equal("_For",
                 new CodeIdentifierUtils(VisualStudioProjectSystem.WebApplication, LangEnum.VisualBasic).CreateValidIdentifier("For"));
+
+            Assert.Equal("model",
+                new CodeIdentifierUtils(VisualStudioProjectSystem.WebApplication, LangEnum.CSharp).CreateValidIdentifier("'model'"));
+
+            Assert.Equal("model",
+                new CodeIdentifierUtils(VisualStudioProjectSystem.WebApplication, LangEnum.VisualBasic).CreateValidIdentifier("'model'"));
 
             Assert.Equal("@class",
                 new CodeIdentifierUtils(VisualStudioProjectSystem.WebApplication, LangEnum.CSharp).CreateValidIdentifier("@class"));
