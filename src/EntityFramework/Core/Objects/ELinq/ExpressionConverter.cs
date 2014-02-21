@@ -1290,8 +1290,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             if (null != leftType
                 || null != rightType)
             {
-                if ((null != leftType && null != rightType)
-                    && leftType.EdmEquals(rightType))
+                if (null != leftType && null != rightType)
                 {
                     DbExpression shreddedEquals = null;
                     // if the types are the same, use struct equivalence semantics
