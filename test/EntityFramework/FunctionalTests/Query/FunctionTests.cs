@@ -143,38 +143,32 @@ Group By a as gkey";
 
             var expectedSql =
                 @"SELECT 
-[GroupBy1].[K1] AS [C1], 
-[GroupBy1].[A1] AS [C2]
-FROM ( SELECT 
-	[UnionAll4].[C1] AS [K1], 
-	MAX([UnionAll4].[C1]) AS [A1]
-	FROM  (SELECT 
-		[UnionAll3].[C1] AS [C1]
-		FROM  (SELECT 
-			[UnionAll2].[C1] AS [C1]
-			FROM  (SELECT 
-				[UnionAll1].[C1] AS [C1]
-				FROM  (SELECT 
-					1 AS [C1]
-					FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
-				UNION ALL
-					SELECT 
-					1 AS [C1]
-					FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
-			UNION ALL
-				SELECT 
-				2 AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]
-		UNION ALL
-			SELECT 
-			2 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]) AS [UnionAll3]
-	UNION ALL
-		SELECT 
-		2 AS [C1]
-		FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll4]
-	GROUP BY [UnionAll4].[C1]
-)  AS [GroupBy1]";
+    [GroupBy1].[K1] AS [C1], 
+    [GroupBy1].[A1] AS [C2]
+    FROM ( SELECT 
+        [UnionAll4].[C1] AS [K1], 
+        MAX([UnionAll4].[C1]) AS [A1]
+        FROM  (SELECT 
+            1 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+        UNION ALL
+            SELECT 
+            1 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll4]
+        GROUP BY [UnionAll4].[C1]
+    )  AS [GroupBy1]";
 
             QueryTestHelpers.VerifyQuery(query, _workspace, expectedSql);
         }

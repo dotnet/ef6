@@ -606,105 +606,82 @@ ORDER BY [Project1].[ReorderLevel] ASC, [Project1].[C3] ASC";
 
             var expectedSql =
                 @"SELECT 
-[Project30].[C2] AS [C1], 
-[Project30].[C1] AS [C2], 
-[Project30].[C4] AS [C3], 
-[Project30].[C3] AS [C4]
-FROM ( SELECT 
-	[Distinct1].[C1] AS [C1], 
-	1 AS [C2], 
-	CASE WHEN ([UnionAll14].[C1] IS NULL) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll14].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll14].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 6) THEN cast(1 as tinyint) END AS [C3], 
-	CASE WHEN ([UnionAll14].[C1] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C4]
-	FROM   (SELECT DISTINCT 
-		CASE WHEN ([UnionAll7].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll7].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll7].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll7].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll7].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll7].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll7].[C1] = 6) THEN cast(1 as tinyint) END AS [C1]
-		FROM  (SELECT 
-			[UnionAll6].[C1] AS [C1]
-			FROM  (SELECT 
-				[UnionAll5].[C1] AS [C1]
-				FROM  (SELECT 
-					[UnionAll4].[C1] AS [C1]
-					FROM  (SELECT 
-						[UnionAll3].[C1] AS [C1]
-						FROM  (SELECT 
-							[UnionAll2].[C1] AS [C1]
-							FROM  (SELECT 
-								[UnionAll1].[C1] AS [C1]
-								FROM  (SELECT 
-									0 AS [C1]
-									FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
-								UNION ALL
-									SELECT 
-									1 AS [C1]
-									FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
-							UNION ALL
-								SELECT 
-								2 AS [C1]
-								FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]
-						UNION ALL
-							SELECT 
-							3 AS [C1]
-							FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]) AS [UnionAll3]
-					UNION ALL
-						SELECT 
-						4 AS [C1]
-						FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll4]
-				UNION ALL
-					SELECT 
-					5 AS [C1]
-					FROM  ( SELECT 1 AS X ) AS [SingleRowTable6]) AS [UnionAll5]
-			UNION ALL
-				SELECT 
-				6 AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable7]) AS [UnionAll6]
-		UNION ALL
-			SELECT 
-			7 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable8]) AS [UnionAll7] ) AS [Distinct1]
-	LEFT OUTER JOIN  (SELECT 
-		[UnionAll13].[C1] AS [C1]
-		FROM  (SELECT 
-			[UnionAll12].[C1] AS [C1]
-			FROM  (SELECT 
-				[UnionAll11].[C1] AS [C1]
-				FROM  (SELECT 
-					[UnionAll10].[C1] AS [C1]
-					FROM  (SELECT 
-						[UnionAll9].[C1] AS [C1]
-						FROM  (SELECT 
-							[UnionAll8].[C1] AS [C1]
-							FROM  (SELECT 
-								0 AS [C1]
-								FROM  ( SELECT 1 AS X ) AS [SingleRowTable9]
-							UNION ALL
-								SELECT 
-								1 AS [C1]
-								FROM  ( SELECT 1 AS X ) AS [SingleRowTable10]) AS [UnionAll8]
-						UNION ALL
-							SELECT 
-							2 AS [C1]
-							FROM  ( SELECT 1 AS X ) AS [SingleRowTable11]) AS [UnionAll9]
-					UNION ALL
-						SELECT 
-						3 AS [C1]
-						FROM  ( SELECT 1 AS X ) AS [SingleRowTable12]) AS [UnionAll10]
-				UNION ALL
-					SELECT 
-					4 AS [C1]
-					FROM  ( SELECT 1 AS X ) AS [SingleRowTable13]) AS [UnionAll11]
-			UNION ALL
-				SELECT 
-				5 AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable14]) AS [UnionAll12]
-		UNION ALL
-			SELECT 
-			6 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable15]) AS [UnionAll13]
-	UNION ALL
-		SELECT 
-		7 AS [C1]
-		FROM  ( SELECT 1 AS X ) AS [SingleRowTable16]) AS [UnionAll14] ON ([Distinct1].[C1] = (CASE WHEN ([UnionAll14].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll14].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll14].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 6) THEN cast(1 as tinyint) END)) OR (([Distinct1].[C1] IS NULL) AND (CASE WHEN ([UnionAll14].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll14].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll14].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 6) THEN cast(1 as tinyint) END IS NULL))
-)  AS [Project30]
-ORDER BY [Project30].[C1] ASC, [Project30].[C4] ASC";
+    [Project18].[C2] AS [C1], 
+    [Project18].[C1] AS [C2], 
+    [Project18].[C4] AS [C3], 
+    [Project18].[C3] AS [C4]
+    FROM ( SELECT 
+        [Distinct1].[C1] AS [C1], 
+        1 AS [C2], 
+        CASE WHEN ([UnionAll14].[C1] IS NULL) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll14].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll14].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 6) THEN cast(1 as tinyint) END AS [C3], 
+        CASE WHEN ([UnionAll14].[C1] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C4]
+        FROM   (SELECT DISTINCT 
+            CASE WHEN ([UnionAll7].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll7].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll7].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll7].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll7].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll7].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll7].[C1] = 6) THEN cast(1 as tinyint) END AS [C1]
+            FROM  (SELECT 
+                0 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+            UNION ALL
+                SELECT 
+                1 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+            UNION ALL
+                SELECT 
+                2 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]
+            UNION ALL
+                SELECT 
+                3 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]
+            UNION ALL
+                SELECT 
+                4 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]
+            UNION ALL
+                SELECT 
+                5 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable6]
+            UNION ALL
+                SELECT 
+                6 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable7]
+            UNION ALL
+                SELECT 
+                7 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable8]) AS [UnionAll7] ) AS [Distinct1]
+        LEFT OUTER JOIN  (SELECT 
+            0 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable9]
+        UNION ALL
+            SELECT 
+            1 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable10]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable11]
+        UNION ALL
+            SELECT 
+            3 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable12]
+        UNION ALL
+            SELECT 
+            4 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable13]
+        UNION ALL
+            SELECT 
+            5 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable14]
+        UNION ALL
+            SELECT 
+            6 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable15]
+        UNION ALL
+            SELECT 
+            7 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable16]) AS [UnionAll14] ON ([Distinct1].[C1] = (CASE WHEN ([UnionAll14].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll14].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll14].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 6) THEN cast(1 as tinyint) END)) OR (([Distinct1].[C1] IS NULL) AND (CASE WHEN ([UnionAll14].[C1] = 0) THEN cast(1 as tinyint) WHEN ([UnionAll14].[C1] = 1) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 2) THEN cast(3 as tinyint) WHEN ([UnionAll14].[C1] = 3) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 4) THEN CAST(NULL AS int) WHEN ([UnionAll14].[C1] = 5) THEN cast(2 as tinyint) WHEN ([UnionAll14].[C1] = 6) THEN cast(1 as tinyint) END IS NULL))
+    )  AS [Project18]
+    ORDER BY [Project18].[C1] ASC, [Project18].[C4] ASC
+";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }
@@ -848,53 +825,49 @@ ORDER BY [Project1].[Discontinued] ASC, [Project1].[ProductID] ASC, [Project1].[
             var query = groupBinding.GroupBy(keys, aggregates);
             var expectedSql =
                 @"SELECT 
-[Project10].[C1] AS [C1], 
-[Project10].[C2] AS [C2], 
-[Project10].[C3] AS [C3], 
-[Project10].[C7] AS [C4], 
-[Project10].[C4] AS [C5], 
-[Project10].[C5] AS [C6], 
-[Project10].[C6] AS [C7]
-FROM ( SELECT 
-	[Distinct1].[C1] AS [C1], 
-	[Distinct1].[C2] AS [C2], 
-	[Distinct1].[C3] AS [C3], 
-	[UnionAll4].[C1] AS [C4], 
-	CASE WHEN ([UnionAll4].[C1] IS NULL) THEN CAST(NULL AS int) WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN 1 END AS [C5], 
-	CASE WHEN ([UnionAll4].[C1] IS NULL) THEN CAST(NULL AS int) WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN CAST(NULL AS int) END AS [C6], 
-	CASE WHEN ([UnionAll4].[C1] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C7]
-	FROM   (SELECT DISTINCT 
-		1 AS [C1], 
-		CASE WHEN ([UnionAll2].[C1] = 0) THEN 1 WHEN ([UnionAll2].[C1] = 1) THEN 1 END AS [C2], 
-		CASE WHEN ([UnionAll2].[C1] = 0) THEN 1 WHEN ([UnionAll2].[C1] = 1) THEN CAST(NULL AS int) END AS [C3]
-		FROM  (SELECT 
-			[UnionAll1].[C1] AS [C1]
-			FROM  (SELECT 
-				0 AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
-			UNION ALL
-				SELECT 
-				1 AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
-		UNION ALL
-			SELECT 
-			2 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2] ) AS [Distinct1]
-	LEFT OUTER JOIN  (SELECT 
-		[UnionAll3].[C1] AS [C1]
-		FROM  (SELECT 
-			0 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]
-		UNION ALL
-			SELECT 
-			1 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll3]
-	UNION ALL
-		SELECT 
-		2 AS [C1]
-		FROM  ( SELECT 1 AS X ) AS [SingleRowTable6]) AS [UnionAll4] ON (([Distinct1].[C2] = (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN 1 END)) OR (([Distinct1].[C2] IS NULL) AND (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN 1 END IS NULL))) AND (([Distinct1].[C3] = (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN CAST(NULL AS int) END)) OR (([Distinct1].[C3] IS NULL) AND (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN CAST(NULL AS int) END IS NULL)))
-)  AS [Project10]
-ORDER BY [Project10].[C1] ASC, [Project10].[C2] ASC, [Project10].[C3] ASC, [Project10].[C7] ASC";
+    [Project8].[C1] AS [C1], 
+    [Project8].[C2] AS [C2], 
+    [Project8].[C3] AS [C3], 
+    [Project8].[C7] AS [C4], 
+    [Project8].[C4] AS [C5], 
+    [Project8].[C5] AS [C6], 
+    [Project8].[C6] AS [C7]
+    FROM ( SELECT 
+        [Distinct1].[C1] AS [C1], 
+        [Distinct1].[C2] AS [C2], 
+        [Distinct1].[C3] AS [C3], 
+        [UnionAll4].[C1] AS [C4], 
+        CASE WHEN ([UnionAll4].[C1] IS NULL) THEN CAST(NULL AS int) WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN 1 END AS [C5], 
+        CASE WHEN ([UnionAll4].[C1] IS NULL) THEN CAST(NULL AS int) WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN CAST(NULL AS int) END AS [C6], 
+        CASE WHEN ([UnionAll4].[C1] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C7]
+        FROM   (SELECT DISTINCT 
+            1 AS [C1], 
+            CASE WHEN ([UnionAll2].[C1] = 0) THEN 1 WHEN ([UnionAll2].[C1] = 1) THEN 1 END AS [C2], 
+            CASE WHEN ([UnionAll2].[C1] = 0) THEN 1 WHEN ([UnionAll2].[C1] = 1) THEN CAST(NULL AS int) END AS [C3]
+            FROM  (SELECT 
+                0 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+            UNION ALL
+                SELECT 
+                1 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+            UNION ALL
+                SELECT 
+                2 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2] ) AS [Distinct1]
+        LEFT OUTER JOIN  (SELECT 
+            0 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]
+        UNION ALL
+            SELECT 
+            1 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable6]) AS [UnionAll4] ON (([Distinct1].[C2] = (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN 1 END)) OR (([Distinct1].[C2] IS NULL) AND (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN 1 END IS NULL))) AND (([Distinct1].[C3] = (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN CAST(NULL AS int) END)) OR (([Distinct1].[C3] IS NULL) AND (CASE WHEN ([UnionAll4].[C1] = 0) THEN 1 WHEN ([UnionAll4].[C1] = 1) THEN CAST(NULL AS int) END IS NULL)))
+    )  AS [Project8]
+    ORDER BY [Project8].[C1] ASC, [Project8].[C2] ASC, [Project8].[C3] ASC, [Project8].[C7] ASC";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }

@@ -2286,8 +2286,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             // Convert the left and right arguments to expressions.
             //
-            var left = VisitSetOpArgument(n.Child0, op.Outputs, op.VarMap[0]);
-            var right = VisitSetOpArgument(n.Child1, op.Outputs, op.VarMap[1]);
+
+            // UnionAll and Intersect are safe to flatten (i. e. you can do A UNION ALL B UNION ALL C)
+            // whereas EXCEPT is not because it's order-dependent
+            var opSupportsFlattening = op.OpType == OpType.UnionAll || op.OpType == OpType.Intersect;
+            var left = opSupportsFlattening && n.Child0.Op.OpType == op.OpType
+                ? VisitSetOp((SetOp)n.Child0.Op, n.Child0, alias, setOpExpressionBuilder)
+                : VisitSetOpArgument(n.Child0, op.Outputs, op.VarMap[0]);
+            var right = opSupportsFlattening && n.Child1.Op.OpType == op.OpType
+                ? VisitSetOp((SetOp)n.Child1.Op, n.Child1, alias, setOpExpressionBuilder)
+                : VisitSetOpArgument(n.Child1, op.Outputs, op.VarMap[1]);
 
             //
             // If the output of the SetOp is a collection of records then the Vars produced

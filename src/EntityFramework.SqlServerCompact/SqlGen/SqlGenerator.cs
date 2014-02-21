@@ -2064,7 +2064,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         {
             Check.NotNull(e, "e");
 
-            return VisitSetOpExpression(e.Left, e.Right, "UNION ALL");
+            return VisitSetOpExpression(e, "UNION ALL");
         }
 
         // <summary>
@@ -2739,20 +2739,51 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // Handler for set operations
         // It generates left separator right.
         // </summary>
-        private ISqlFragment VisitSetOpExpression(DbExpression left, DbExpression right, string separator)
+        private ISqlFragment VisitSetOpExpression(DbBinaryExpression setOpExpression, string separator)
         {
-            var leftSelectStatement = VisitExpressionEnsureSqlStatement(left);
-            var rightSelectStatement = VisitExpressionEnsureSqlStatement(right);
+            var leafSelectStatements = new List<SqlSelectStatement>();
+            VisitAndGatherSetOpLeafExpressions(setOpExpression.ExpressionKind, setOpExpression.Left, leafSelectStatements);
+            VisitAndGatherSetOpLeafExpressions(setOpExpression.ExpressionKind, setOpExpression.Right, leafSelectStatements);
 
             var setStatement = new SqlBuilder();
-            setStatement.Append(leftSelectStatement);
-            setStatement.AppendLine();
-            setStatement.Append(separator); // e.g. UNION ALL
-            setStatement.AppendLine();
-            setStatement.Append(rightSelectStatement);
 
-            Debug.Assert(!leftSelectStatement.OutputColumnsRenamed, "Output columns shouldn't be renamed");
+            for (var i = 0; i < leafSelectStatements.Count; ++i)
+            {
+                if (i > 0)
+                {
+                    setStatement.AppendLine();
+                    setStatement.Append(separator); // e.g. UNION ALL
+                    setStatement.AppendLine();
+                }
+                setStatement.Append(leafSelectStatements[i]);
+            }
+
+            Debug.Assert(!leafSelectStatements[0].OutputColumnsRenamed, "Output columns shouldn't be renamed");
             return setStatement;
+        }
+
+        // <summary>
+        // Visits the given expression, expanding nodes of type kind and collecting all visited leaf nodes in leafSelectStatements.
+        // The purpose of this is to flatten UNION ALL statements to avoid deep nesting.
+        // </summary>
+        // <param name="kind">the kind of expression matching the tree we're visiting</param>
+        // <param name="expression">the expression to visit</param>
+        // <param name="leafSelectStatements">accumulator for the collected leaf select statements</param>
+        private void VisitAndGatherSetOpLeafExpressions(DbExpressionKind kind, DbExpression expression, List<SqlSelectStatement> leafSelectStatements)
+        {
+            Debug.Assert(kind == DbExpressionKind.UnionAll, "UnionAll is the only set op supported directly in SqlCompact");
+
+            // only allow deep flattening of set op trees when the given expression is another instance of the given kind
+            if (expression.ExpressionKind == kind)
+            {
+                var binary = (DbBinaryExpression)expression;
+                VisitAndGatherSetOpLeafExpressions(kind, binary.Left, leafSelectStatements);
+                VisitAndGatherSetOpLeafExpressions(kind, binary.Right, leafSelectStatements);
+            }
+            else
+            {
+                leafSelectStatements.Add(VisitExpressionEnsureSqlStatement(expression));
+            }
         }
 
         #endregion

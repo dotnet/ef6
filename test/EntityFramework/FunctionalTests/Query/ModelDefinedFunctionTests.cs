@@ -317,29 +317,27 @@ FROM ( SELECT TOP (5)
                 "SELECT top(5) s FROM ProductModel.F_In_ColST_Ret_ColST(SELECT VALUE c.CustomerID from ProductContainer.Customers as c) as s";
 
             var expectedSql =
-@"SELECT
-    [Limit1].[C2] AS [C1],
+@"SELECT 
+    [Limit1].[C2] AS [C1], 
     [Limit1].[C1] AS [C2]
-    FROM ( SELECT TOP (5)
+    FROM ( SELECT TOP (5) 
         [Intersect1].[CustomerID] AS [C1], 
         1 AS [C2]
-        FROM  (SELECT
+        FROM  (SELECT 
             [Extent1].[CustomerID] AS [CustomerID]
             FROM [dbo].[Customers] AS [Extent1]
         INTERSECT
-            SELECT
+            SELECT 
             [UnionAll2].[C1] AS [C1]
-            FROM  (SELECT
-                [UnionAll1].[C1] AS [C1]
-                FROM  (SELECT
-                    'a' AS [C1]
-                    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
-                UNION ALL
-                    SELECT
-                    'b' AS [C1]
-                    FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
+            FROM  (SELECT 
+                'a' AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
             UNION ALL
-                SELECT
+                SELECT 
+                'b' AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+            UNION ALL
+                SELECT 
                 'c' AS [C1]
                 FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]) AS [Intersect1]
     )  AS [Limit1]";

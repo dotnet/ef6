@@ -1211,7 +1211,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             Debug.Assert(SqlVersion != SqlVersion.Sql8, "DbExceptExpression when translating for SQL Server 2000.");
 
-            return VisitSetOpExpression(e.Left, e.Right, "EXCEPT");
+            return VisitSetOpExpression(e, "EXCEPT");
         }
 
         // <summary>
@@ -1574,7 +1574,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             Debug.Assert(SqlVersion != SqlVersion.Sql8, "DbIntersectExpression when translating for SQL Server 2000.");
 
-            return VisitSetOpExpression(e.Left, e.Right, "INTERSECT");
+            return VisitSetOpExpression(e, "INTERSECT");
         }
 
         // <summary>
@@ -2694,7 +2694,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             Check.NotNull(e, "e");
 
-            return VisitSetOpExpression(e.Left, e.Right, "UNION ALL");
+            return VisitSetOpExpression(e, "UNION ALL");
         }
 
         // <summary>
@@ -3373,24 +3373,30 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // Only for SQL 8.0 it may need to create a new select statement
         // above the set operation if the left child's output columns got renamed
         // </summary>
-        private ISqlFragment VisitSetOpExpression(DbExpression left, DbExpression right, string separator)
+        private ISqlFragment VisitSetOpExpression(DbBinaryExpression setOpExpression, string separator)
         {
-            var leftSelectStatement = VisitExpressionEnsureSqlStatement(left, true, true);
-            var rightSelectStatement = VisitExpressionEnsureSqlStatement(right, true, true);
+            var leafSelectStatements = new List<SqlSelectStatement>();
+            VisitAndGatherSetOpLeafExpressions(setOpExpression.ExpressionKind, setOpExpression.Left, leafSelectStatements);
+            VisitAndGatherSetOpLeafExpressions(setOpExpression.ExpressionKind, setOpExpression.Right, leafSelectStatements);
 
             var setStatement = new SqlBuilder();
-            setStatement.Append(leftSelectStatement);
-            setStatement.AppendLine();
-            setStatement.Append(separator); // e.g. UNION ALL
-            setStatement.AppendLine();
-            setStatement.Append(rightSelectStatement);
+
+            for (var i = 0; i < leafSelectStatements.Count; ++i)
+            {
+                if (i > 0)
+                {
+                    setStatement.AppendLine();
+                    setStatement.Append(separator); // e.g. UNION ALL
+                    setStatement.AppendLine();
+                }
+                setStatement.Append(leafSelectStatements[i]);  
+            }
 
             //This is the common scenario
-            if (!leftSelectStatement.OutputColumnsRenamed)
+            if (!leafSelectStatements[0].OutputColumnsRenamed)
             {
                 return setStatement;
             }
-
             else
             {
                 // This is case only for SQL 8.0 when the left child has order by in it
@@ -3404,10 +3410,37 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 selectStatement.From.AppendLine();
                 selectStatement.From.Append(") ");
 
-                var fromSymbol = new Symbol("X", left.ResultType.GetElementTypeUsage(), leftSelectStatement.OutputColumns, true);
+                var fromSymbol = new Symbol("X", setOpExpression.Left.ResultType.GetElementTypeUsage(), leafSelectStatements[0].OutputColumns, true);
                 AddFromSymbol(selectStatement, null, fromSymbol, false);
 
                 return selectStatement;
+            }
+        }
+
+        // <summary>
+        // Visits the given expression, expanding nodes of type kind and collecting all visited leaf nodes in leafSelectStatements.
+        // The purpose of this is to flatten UNION ALL and INTERSECT statements to avoid deep nesting.
+        // </summary>
+        // <param name="kind">the kind of expression matching the tree we're visiting</param>
+        // <param name="expression">the expression to visit</param>
+        // <param name="leafSelectStatements">accumulator for the collected leaf select statements</param>
+        private void VisitAndGatherSetOpLeafExpressions(DbExpressionKind kind, DbExpression expression, List<SqlSelectStatement> leafSelectStatements)
+        {
+            // only allow deep flattening of set op trees when
+            // (1) we are newer than Sql 8.0 (since it needs special handling for set ops anyway... see VisitSetOpExpression)
+            if (this.SqlVersion > SqlVersion.Sql8
+                // (2) we are UNION ALL or INTERSECT (EXCEPT is not safe to flatten since it is order-dependent)
+                && (kind == DbExpressionKind.UnionAll || kind == DbExpressionKind.Intersect)
+                // (3) the given expression is another instance of the given kind
+                && expression.ExpressionKind == kind)
+            {
+                var binary = (DbBinaryExpression)expression;
+                VisitAndGatherSetOpLeafExpressions(kind, binary.Left, leafSelectStatements);
+                VisitAndGatherSetOpLeafExpressions(kind, binary.Right, leafSelectStatements);
+            }
+            else
+            {
+                leafSelectStatements.Add(VisitExpressionEnsureSqlStatement(expression, true, true));
             }
         }
 

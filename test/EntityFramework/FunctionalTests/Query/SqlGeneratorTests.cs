@@ -3,6 +3,8 @@
 namespace System.Data.Entity.Query
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -1034,36 +1036,30 @@ ORDER BY i SKIP 2 LIMIT 4";
 
                 var expectedSql = @"
 SELECT TOP (4) 
-[UnionAll4].[C1] AS [C1]
-FROM ( SELECT [UnionAll4].[C1] AS [C1], row_number() OVER (ORDER BY [UnionAll4].[C1] ASC) AS [row_number]
-	FROM  (SELECT 
-		[UnionAll3].[C1] AS [C1]
-		FROM  (SELECT 
-			[UnionAll2].[C1] AS [C1]
-			FROM  (SELECT 
-				[UnionAll1].[C1] AS [C1]
-				FROM  (SELECT 
-					1 AS [C1]
-					FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
-				UNION ALL
-					SELECT 
-					1 AS [C1]
-					FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
-			UNION ALL
-				SELECT 
-				1 AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]
-		UNION ALL
-			SELECT 
-			2 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]) AS [UnionAll3]
-	UNION ALL
-		SELECT 
-		2 AS [C1]
-		FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll4]
-)  AS [UnionAll4]
-WHERE [UnionAll4].[row_number] > 2
-ORDER BY [UnionAll4].[C1] ASC";
+    [UnionAll4].[C1] AS [C1]
+    FROM ( SELECT [UnionAll4].[C1] AS [C1], row_number() OVER (ORDER BY [UnionAll4].[C1] ASC) AS [row_number]
+        FROM  (SELECT 
+            1 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+        UNION ALL
+            SELECT 
+            1 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+        UNION ALL
+            SELECT 
+            1 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll4]
+    )  AS [UnionAll4]
+    WHERE [UnionAll4].[row_number] > 2
+    ORDER BY [UnionAll4].[C1] ASC";
 
                 // verifying that there are 3 results returned and that they match the expected output
                 using (var db = new ArubaContext())
@@ -1086,29 +1082,27 @@ ORDER BY i SKIP 2 LIMIT 4";
 
                 var expectedSql = @"
 SELECT TOP (4) 
-[Project5].[C2] AS [C1], 
-[Project5].[C1] AS [C2]
-FROM ( SELECT [Project5].[C1] AS [C1], [Project5].[C2] AS [C2], row_number() OVER (ORDER BY [Project5].[C1] ASC) AS [row_number]
-	FROM ( SELECT 
-		[UnionAll2].[C1] AS [C1], 
-		1 AS [C2]
-		FROM  (SELECT 
-			[UnionAll1].[C1] AS [C1]
-			FROM  (SELECT 
-				CAST(NULL AS int) AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
-			UNION ALL
-				SELECT 
-				2 AS [C1]
-				FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
-		UNION ALL
-			SELECT 
-			2 AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]
-	)  AS [Project5]
-)  AS [Project5]
-WHERE [Project5].[row_number] > 2
-ORDER BY [Project5].[C1] ASC";
+    [Project4].[C2] AS [C1], 
+    [Project4].[C1] AS [C2]
+    FROM ( SELECT [Project4].[C1] AS [C1], [Project4].[C2] AS [C2], row_number() OVER (ORDER BY [Project4].[C1] ASC) AS [row_number]
+        FROM ( SELECT 
+            [UnionAll2].[C1] AS [C1], 
+            1 AS [C2]
+            FROM  (SELECT 
+                CAST(NULL AS int) AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+            UNION ALL
+                SELECT 
+                2 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+            UNION ALL
+                SELECT 
+                2 AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]
+        )  AS [Project4]
+    )  AS [Project4]
+    WHERE [Project4].[row_number] > 2
+    ORDER BY [Project4].[C1] ASC";
 
                 // verifying that there is 1 result returned and it is an int
                 using (var db = new ArubaContext())
@@ -1168,6 +1162,119 @@ ORDER BY [Project5].[C1] ASC";
                     {
                         VerifyAgainstBaselineResults(reader, new List<int> { 1 });
                     }
+                }
+            }
+
+            [Fact]
+            public void Large_union_all_should_not_give_query_nested_too_deeply()
+            {
+                var query = "{" + string.Join(", ", Enumerable.Range(1, 100)) + "}";
+
+                using (var db = new ArubaContext())
+                {
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
+                    {
+                        VerifyAgainstBaselineResults(reader, Enumerable.Range(1, 100));
+                    }
+                }
+            }
+
+            [Fact]
+            public void Large_intersect_should_not_give_query_nested_too_deeply()
+            {
+                var query = string.Join(" intersect ", Enumerable.Range(1, 100).Select(i => "{-1, " + i + "}"));
+
+                using (var db = new ArubaContext())
+                {
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
+                    {
+                        VerifyAgainstBaselineResults(reader, new[] { -1 });
+                    }
+                }
+            }
+            
+            // verifies that we are not flattening EXCEPT trees, since they are order-dependent. Also serves as verification that our
+            // queries for Large_intersect_should_not_give_query_nested_too_deeply and Large_union_all_should_not_give_query_nested_too_deeply
+            // are large enough such that they would generate the error without flattening
+            [Fact]
+            public void Large_except_should_give_query_nested_too_deeply()
+            {
+                var query = string.Join(" except ", Enumerable.Range(1, 100).Select(i => "{-1, " + i + "}"));
+
+                using (var db = new ArubaContext())
+                {
+                    var exception = Assert.Throws<System.Data.Entity.Core.EntityCommandExecutionException>(() => QueryTestHelpers.EntityCommandSetup(db, query));
+                    var sqlException = exception.InnerException as System.Data.SqlClient.SqlException;
+                    Assert.NotNull(sqlException);
+                    // error message number for "Some part of your SQL statement is nested too deeply..." see http://technet.microsoft.com/en-us/library/cc917589.aspx
+                    Assert.Equal(191, sqlException.Number);
+                }
+            }
+
+            [Fact]
+            public void Test_union_all_flattening_works_with_table_per_type()
+            {
+                var guids = Enumerable.Range(0, 3).Select(i => Guid.NewGuid()).ToArray();
+                using (var db = new TablePerTypeContext())
+                {
+                    db.Base.Add(new TablePerTypeDerived1 { Id = guids[0] });
+                    db.Base.Add(new TablePerTypeDerived2 { Id = guids[1] });
+                    db.Base.Add(new TablePerTypeDerived3 { Id = guids[2] });
+                    db.SaveChanges();
+                }
+
+                using (var db = new TablePerTypeContext())
+                {
+                    var query = db.Base.Take(5);
+                    
+                    const string expectedSql = @"
+SELECT 
+    [Limit1].[C2] AS [C1], 
+    [Limit1].[C1] AS [C2], 
+    [Limit1].[C3] AS [C3], 
+    [Limit1].[C4] AS [C4], 
+    [Limit1].[C5] AS [C5]
+    FROM ( SELECT TOP (5) 
+        [UnionAll2].[Id] AS [C1], 
+        CASE WHEN ([UnionAll2].[C3] = 1) THEN '0X0X' WHEN ([UnionAll2].[C4] = 1) THEN '0X1X' ELSE '0X2X' END AS [C2], 
+        CASE WHEN ([UnionAll2].[C3] = 1) THEN [UnionAll2].[C1] WHEN ([UnionAll2].[C4] = 1) THEN CAST(NULL AS int) END AS [C3], 
+        CASE WHEN ([UnionAll2].[C3] = 1) THEN CAST(NULL AS int) WHEN ([UnionAll2].[C4] = 1) THEN [UnionAll2].[Value2] END AS [C4], 
+        CASE WHEN ([UnionAll2].[C3] = 1) THEN CAST(NULL AS int) WHEN ([UnionAll2].[C4] = 1) THEN CAST(NULL AS int) ELSE [UnionAll2].[C2] END AS [C5]
+        FROM   (SELECT 
+            [Extent1].[Id] AS [Id], 
+            CAST(NULL AS int) AS [C1], 
+            [Extent1].[Value2] AS [Value2], 
+            CAST(NULL AS int) AS [C2], 
+            cast(0 as bit) AS [C3], 
+            cast(1 as bit) AS [C4]
+            FROM [dbo].[TablePerTypeDerived2] AS [Extent1]
+        UNION ALL
+            SELECT 
+            [Extent2].[Id] AS [Id], 
+            [Extent2].[Value1] AS [Value1], 
+            CAST(NULL AS int) AS [C1], 
+            CAST(NULL AS int) AS [C2], 
+            cast(1 as bit) AS [C3], 
+            cast(0 as bit) AS [C4]
+            FROM [dbo].[TablePerTypeDerived1] AS [Extent2]
+        UNION ALL
+            SELECT 
+            [Extent3].[Id] AS [Id], 
+            CAST(NULL AS int) AS [C1], 
+            CAST(NULL AS int) AS [C2], 
+            [Extent3].[Value3] AS [Value3], 
+            cast(0 as bit) AS [C3], 
+            cast(0 as bit) AS [C4]
+            FROM [dbo].[TablePerTypeDerived3] AS [Extent3]) AS [UnionAll2]
+        INNER JOIN [dbo].[TablePerTypeBase] AS [Extent4] ON [UnionAll2].[Id] = [Extent4].[Id]
+    )  AS [Limit1]";
+
+                    // test an actual read
+                    var values = db.Base.Where(e => guids.Contains(e.Id))
+                        .ToArray();
+                    Assert.Equal(3, values.Select(v => v.GetType()).Distinct().Count());
+
+                    QueryTestHelpers.VerifyQuery(query, expectedSql);
                 }
             }
 
@@ -1274,4 +1381,43 @@ ArubaContext.Owners";
         }
         #endregion
     }
+
+    #region Table per type context
+    public sealed class TablePerTypeContext : DbContext
+    {
+        public TablePerTypeContext()
+        {
+            Database.SetInitializer(new DropCreateDatabaseAlways<TablePerTypeContext>());
+        }
+
+        public DbSet<TablePerTypeBase> Base { get; set; }
+        public DbSet<TablePerTypeDerived1> Derived1 { get; set; }
+        public DbSet<TablePerTypeDerived2> Derived2 { get; set; }
+        public DbSet<TablePerTypeDerived3> Derived3 { get; set; }
+    }
+
+    [Table("TablePerTypeBase")]
+    public abstract class TablePerTypeBase
+    {
+        [Key] public Guid Id { get; set; }
+    }
+
+    [Table("TablePerTypeDerived1")]
+    public class TablePerTypeDerived1 : TablePerTypeBase
+    {
+        public int Value1 { get; set; }
+    }
+
+    [Table("TablePerTypeDerived2")]
+    public class TablePerTypeDerived2 : TablePerTypeBase
+    {
+        public int Value2 { get; set; }
+    }
+
+    [Table("TablePerTypeDerived3")]
+    public class TablePerTypeDerived3 : TablePerTypeBase
+    {
+        public int Value3 { get; set; }
+    }
+    #endregion
 }
