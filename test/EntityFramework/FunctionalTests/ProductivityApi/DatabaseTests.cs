@@ -203,6 +203,7 @@ END";
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void
             DatabaseExists_returns_true_for_existing_database_when_using_static_method_taking_named_connection_string_where_the_last_token_exists_in_Config_file
             ()
