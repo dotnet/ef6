@@ -26,14 +26,16 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             }
 
             var constraint = associationType.Constraint;
-            var toProperties = constraint.ToProperties;
-            var toPropertyName = toProperties.First().Name;
+            var entityType = (EntityType)navigationProperty.DeclaringType;
             var fromProperty = constraint.FromProperties.First();
             var fromPropertyName = fromProperty.Name;
-            var entityType = (EntityType)navigationProperty.DeclaringType;
             var toEntityType = navigationProperty.ToEndMember.GetEntityType();
+            // NOTE: OrderBy works around a bug in primary key column ordering (Work Item 868)
+            var toProperties = constraint.ToProperties.OrderBy(
+                p => entityType.KeyMembers.IndexOf(constraint.FromProperties[constraint.ToProperties.IndexOf(p)]));
+            var toPropertyName = toProperties.First().Name;
 
-            if (toProperties.Count == 1
+            if (!toProperties.MoreThan(1)
                 && (toPropertyName.EqualsIgnoreCase(navigationProperty.Name + fromPropertyName)
                     || (!entityType.NavigationProperties.Where(p => p.ToEndMember.GetEntityType() == toEntityType)
                             .MoreThan(1)
