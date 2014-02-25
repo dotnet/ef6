@@ -433,6 +433,9 @@
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivatorTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilterTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypesFinderTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConventionsTypeActivatorTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConventionsTypeFilterTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConventionsTypesFinderTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\PropertyConventionWithHavingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfigurationTests.cs" />

@@ -15,6 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using Moq;
     using Xunit;
     using System.Data.Entity.Infrastructure;
+    using System.CodeDom.Compiler;
 
     public sealed class ConventionsConfigurationTests
     {
@@ -29,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-            
+
             conventionsConfiguration.Add(mockConvention1.Object);
             conventionsConfiguration.Add(mockConvention2.Object);
 
@@ -122,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-            
+
             conventionsConfiguration.Add(mockConvention1.Object);
             conventionsConfiguration.Add<ConventionFixture>();
 
@@ -646,6 +647,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Message);
         }
 
+        [Fact]
+        public void AddFromAssembly_should_add_all_contained_conventions()
+        {
+            var assembly = CreateDynamicAssemblyWithConventions();
+
+            var conventionsConfiguration = new ConventionsConfiguration();
+            conventionsConfiguration.AddFromAssembly(assembly);
+
+
+            Assert.NotNull(conventionsConfiguration.ConfigurationConventions
+                .Where(c => c.GetType().Name == "RegularConvention")
+                .Single());
+
+            Assert.NotNull(conventionsConfiguration.StoreModelConventions
+                .Where(c => c.GetType().Name == "StoreModelConvention")
+                .Single());
+
+            Assert.NotNull(conventionsConfiguration.ConceptualModelConventions
+                .Where(c => c.GetType().Name == "ConceptualStoreModelConvention")
+                .Single());
+        }
+
         private class ConventionFixture : Convention
         {
         }
@@ -672,6 +695,41 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 throw new NotImplementedException();
             }
+        }
+
+        private Assembly CreateDynamicAssemblyWithConventions()
+        {
+            var parameters = new CompilerParameters
+            {
+                GenerateExecutable = false,
+                OutputAssembly = "DynamicAssemblyWithConventionsForTests.dll"
+            };
+            parameters.ReferencedAssemblies.Add("EntityFramework.dll");
+
+            return CodeDomProvider
+                .CreateProvider("C#")
+                .CompileAssemblyFromSource(
+                    parameters,
+                    @"using System.Data.Entity.ModelConfiguration;
+                      using System.Data.Entity.Core.Metadata.Edm;
+                      using System.Data.Entity.ModelConfiguration.Conventions;
+                      using System.Data.Entity.Infrastructure;
+                      namespace Tests
+                      {
+                        public class RegularConvention : Convention 
+                        {
+                            public RegularConvention(){ }
+                        }
+                        public class StoreModelConvention : IStoreModelConvention<EdmProperty>
+                        {
+                            public void Apply(EdmProperty item, DbModel model) { }
+                        }
+                        public class ConceptualStoreModelConvention : IConceptualModelConvention<EdmProperty>
+                        {
+                            public void Apply(EdmProperty item, DbModel model) { }
+                        }
+                      }")
+                .CompiledAssembly;
         }
 
         [Fact]

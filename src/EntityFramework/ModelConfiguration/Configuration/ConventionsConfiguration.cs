@@ -37,10 +37,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal ConventionsConfiguration(ConventionSet conventionSet)
         {
             DebugCheck.NotNull(conventionSet);
-            Debug.Assert(conventionSet.ConfigurationConventions.All(c => c != null && IsConfigurationConvention(c.GetType())));
-            Debug.Assert(conventionSet.ConceptualModelConventions.All(c => c != null && IsConceptualModelConvention(c.GetType())));
-            Debug.Assert(conventionSet.ConceptualToStoreMappingConventions.All(c => c != null && IsConceptualToStoreMappingConvention(c.GetType())));
-            Debug.Assert(conventionSet.StoreModelConventions.All(c => c != null && IsStoreModelConvention(c.GetType())));
+            Debug.Assert(conventionSet.ConfigurationConventions.All(c => c != null && ConventionsTypeFilter.IsConfigurationConvention(c.GetType())));
+            Debug.Assert(conventionSet.ConceptualModelConventions.All(c => c != null && ConventionsTypeFilter.IsConceptualModelConvention(c.GetType())));
+            Debug.Assert(conventionSet.ConceptualToStoreMappingConventions.All(c => c != null && ConventionsTypeFilter.IsConceptualToStoreMappingConvention(c.GetType())));
+            Debug.Assert(conventionSet.StoreModelConventions.All(c => c != null && ConventionsTypeFilter.IsStoreModelConvention(c.GetType())));
 
             _configurationConventions.AddRange(conventionSet.ConfigurationConventions);
             _conceptualModelConventions.AddRange(conventionSet.ConceptualModelConventions);
@@ -93,6 +93,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
+        /// Discover all conventions in the given assembly and add them for the <see cref="DbModelBuilder" />.
+        /// <remarks>
+        /// This method add all conventions ordered by type name.The order in which conventions are added 
+        /// can have an impact on how they behave because it governs the order in which they are run.
+        /// </remarks>
+        /// </summary>
+        /// <param name="assembly">The assembly containing conventions to be added.</param>
+        public void AddFromAssembly(Assembly assembly)
+        {
+            Check.NotNull(assembly, "assembly");
+
+            var types = assembly.GetAccessibleTypes()
+                .OrderBy(type => type.Name);
+
+            new ConventionsTypeFinder().AddConventions(types, convention => Add(convention));
+        }
+
+        /// <summary>
         /// Enables one or more conventions for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="conventions"> The conventions to be enabled. </param>
@@ -105,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 var invalidType = true;
 
-                if (IsConfigurationConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsConfigurationConvention(c.GetType()))
                 {
                     invalidType = false;
                     var existingConventionIndex = _configurationConventions.FindIndex(
@@ -116,19 +134,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     _configurationConventions.Insert(existingConventionIndex, c);
                 }
 
-                if (IsConceptualModelConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsConceptualModelConvention(c.GetType()))
                 {
                     invalidType = false;
                     _conceptualModelConventions.Add(c);
                 }
 
-                if (IsStoreModelConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsStoreModelConvention(c.GetType()))
                 {
                     invalidType = false;
                     _storeModelConventions.Add(c);
                 }
 
-                if (IsConceptualToStoreMappingConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsConceptualToStoreMappingConvention(c.GetType()))
                 {
                     invalidType = false;
                     _conceptualToStoreMappingConventions.Add(c);
@@ -167,29 +185,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var typeMissmatch = true;
 
-            if (IsConfigurationConvention(newConvention.GetType())
-                && IsConfigurationConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsConfigurationConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsConfigurationConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 1, newConvention, _configurationConventions);
             }
 
-            if (IsConceptualModelConvention(newConvention.GetType())
-                && IsConceptualModelConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsConceptualModelConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsConceptualModelConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 1, newConvention, _conceptualModelConventions);
             }
 
-            if (IsStoreModelConvention(newConvention.GetType())
-                && IsStoreModelConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsStoreModelConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsStoreModelConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 1, newConvention, _storeModelConventions);
             }
 
-            if (IsConceptualToStoreMappingConvention(newConvention.GetType())
-                && IsConceptualToStoreMappingConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsConceptualToStoreMappingConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsConceptualToStoreMappingConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 1, newConvention, _conceptualToStoreMappingConventions);
@@ -217,29 +235,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var typeMissmatch = true;
 
-            if (IsConfigurationConvention(newConvention.GetType())
-                && IsConfigurationConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsConfigurationConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsConfigurationConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 0, newConvention, _configurationConventions);
             }
 
-            if (IsConceptualModelConvention(newConvention.GetType())
-                && IsConceptualModelConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsConceptualModelConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsConceptualModelConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 0, newConvention, _conceptualModelConventions);
             }
 
-            if (IsStoreModelConvention(newConvention.GetType())
-                && IsStoreModelConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsStoreModelConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsStoreModelConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 0, newConvention, _storeModelConventions);
             }
 
-            if (IsConceptualToStoreMappingConvention(newConvention.GetType())
-                && IsConceptualToStoreMappingConvention(typeof(TExistingConvention)))
+            if (ConventionsTypeFilter.IsConceptualToStoreMappingConvention(newConvention.GetType())
+                && ConventionsTypeFilter.IsConceptualToStoreMappingConvention(typeof(TExistingConvention)))
             {
                 typeMissmatch = false;
                 Insert(typeof(TExistingConvention), 0, newConvention, _conceptualToStoreMappingConventions);
@@ -295,22 +313,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var c in conventions)
             {
-                if (IsConfigurationConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsConfigurationConvention(c.GetType()))
                 {
                     _configurationConventions.Remove(c);
                 }
 
-                if (IsConceptualModelConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsConceptualModelConvention(c.GetType()))
                 {
                     _conceptualModelConventions.Remove(c);
                 }
 
-                if (IsStoreModelConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsStoreModelConvention(c.GetType()))
                 {
                     _storeModelConventions.Remove(c);
                 }
 
-                if (IsConceptualToStoreMappingConvention(c.GetType()))
+                if (ConventionsTypeFilter.IsConceptualToStoreMappingConvention(c.GetType()))
                 {
                     _conceptualToStoreMappingConventions.Remove(c);
                 }
@@ -326,22 +344,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Remove<TConvention>()
             where TConvention : IConvention
         {
-            if (IsConfigurationConvention(typeof(TConvention)))
+            if (ConventionsTypeFilter.IsConfigurationConvention(typeof(TConvention)))
             {
                 _configurationConventions.RemoveAll(c => c.GetType() == typeof(TConvention));
             }
 
-            if (IsConceptualModelConvention(typeof(TConvention)))
+            if (ConventionsTypeFilter.IsConceptualModelConvention(typeof(TConvention)))
             {
                 _conceptualModelConventions.RemoveAll(c => c.GetType() == typeof(TConvention));
             }
 
-            if (IsStoreModelConvention(typeof(TConvention)))
+            if (ConventionsTypeFilter.IsStoreModelConvention(typeof(TConvention)))
             {
                 _storeModelConventions.RemoveAll(c => c.GetType() == typeof(TConvention));
             }
 
-            if (IsConceptualToStoreMappingConvention(typeof(TConvention)))
+            if (ConventionsTypeFilter.IsConceptualToStoreMappingConvention(typeof(TConvention)))
             {
                 _conceptualToStoreMappingConventions.RemoveAll(c => c.GetType() == typeof(TConvention));
             }
@@ -562,29 +580,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         propertyInfo, structuralTypeConfiguration, modelConfiguration);
                 }
             }
-        }
-
-        private static bool IsConfigurationConvention(Type conventionType)
-        {
-            return typeof(IConfigurationConvention).IsAssignableFrom(conventionType)
-                   || typeof(Convention).IsAssignableFrom(conventionType)
-                   || conventionType.GetGenericTypeImplementations(typeof(IConfigurationConvention<>)).Any()
-                   || conventionType.GetGenericTypeImplementations(typeof(IConfigurationConvention<,>)).Any();
-        }
-
-        private static bool IsConceptualModelConvention(Type conventionType)
-        {
-            return conventionType.GetGenericTypeImplementations(typeof(IConceptualModelConvention<>)).Any();
-        }
-
-        private static bool IsStoreModelConvention(Type conventionType)
-        {
-            return conventionType.GetGenericTypeImplementations(typeof(IStoreModelConvention<>)).Any();
-        }
-
-        private static bool IsConceptualToStoreMappingConvention(Type conventionType)
-        {
-            return typeof(IDbMappingConvention).IsAssignableFrom(conventionType);
         }
 
         /// <inheritdoc />
