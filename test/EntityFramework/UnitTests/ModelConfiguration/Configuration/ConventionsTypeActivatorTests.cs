@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Xunit;
 
@@ -61,45 +63,60 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.IsAssignableFrom<IConvention>(instance);
         }
 
-        class RegularConvention
+        private class RegularConvention
             : Convention
         {
-            private RegularConvention() { }
+            private RegularConvention()
+            {
+            }
         }
 
-        class RegularPublicConvention
+        private class RegularPublicConvention
             : Convention
         {
-            public RegularPublicConvention() { }
+            public RegularPublicConvention()
+            {
+            }
         }
 
-        class RegularStoreModelConvention
+        private class RegularStoreModelConvention
             : IStoreModelConvention<EdmProperty>
         {
-            private RegularStoreModelConvention() { }
+            private RegularStoreModelConvention()
+            {
+            }
 
-            public void Apply(EdmProperty item, Infrastructure.DbModel model) { }
+            public void Apply(EdmProperty item, DbModel model)
+            {
+            }
         }
 
-
-        class RegularStoreModelPublicConvention
-           : IStoreModelConvention<EdmProperty>
+        private class RegularStoreModelPublicConvention
+            : IStoreModelConvention<EdmProperty>
         {
-            public void Apply(EdmProperty item, Infrastructure.DbModel model) { }
+            public void Apply(EdmProperty item, DbModel model)
+            {
+            }
         }
 
-        class RegularConceptualModelPublicConvention
+        private class RegularConceptualModelPublicConvention
             : IConceptualModelConvention<EdmProperty>
         {
-            public void Apply(EdmProperty item, Infrastructure.DbModel model) { }
+            public void Apply(EdmProperty item, DbModel model)
+            {
+            }
         }
 
-        class RegularConceptualModelConvention
+        private class RegularConceptualModelConvention
             : IConceptualModelConvention<EdmProperty>
         {
-            private RegularConceptualModelConvention() { }
+            private RegularConceptualModelConvention()
+            {
+            }
 
-            public void Apply(EdmProperty item, Infrastructure.DbModel model) { }
+            public void Apply(EdmProperty item, DbModel model)
+            {
+            }
         }
     }
 }

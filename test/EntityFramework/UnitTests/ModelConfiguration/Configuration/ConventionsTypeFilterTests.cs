@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Xunit;
 
@@ -31,28 +33,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.True(new ConventionsTypeFilter().IsConvention(typeof(RegularDbMappingConvention)));
         }
 
-        class RegularConvention
-            :Convention
+        private class RegularConvention
+            : Convention
         {
-
         }
 
-        class RegularStoreModelConvention
-            :IStoreModelConvention<EdmProperty>
+        private class RegularStoreModelConvention
+            : IStoreModelConvention<EdmProperty>
         {
-            public void Apply(EdmProperty item, Infrastructure.DbModel model) { }
+            public void Apply(EdmProperty item, DbModel model)
+            {
+            }
         }
 
-        class RegularConceptualModelConvention
-            :IConceptualModelConvention<EdmProperty>
+        private class RegularConceptualModelConvention
+            : IConceptualModelConvention<EdmProperty>
         {
-            public void Apply(EdmProperty item, Infrastructure.DbModel model) { }
+            public void Apply(EdmProperty item, DbModel model)
+            {
+            }
         }
 
-        class RegularDbMappingConvention
-            :IDbMappingConvention
+        private class RegularDbMappingConvention
+            : IDbMappingConvention
         {
-            public void Apply(DbDatabaseMapping databaseMapping) { }
+            public void Apply(DbDatabaseMapping databaseMapping)
+            {
+            }
         }
     }
 }

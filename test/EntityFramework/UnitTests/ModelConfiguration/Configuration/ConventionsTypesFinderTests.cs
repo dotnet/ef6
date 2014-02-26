@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-
     using System.Collections.Generic;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Xunit;
@@ -22,14 +21,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 typeof(IList<String>)
             };
 
-            conventionsTypesFinder.AddConventions(types, (convention) =>
-            {
-                Assert.IsType<RegularConvention>(convention);
-            });
+            conventionsTypesFinder.AddConventions(types, (convention) => { Assert.IsType<RegularConvention>(convention); });
         }
 
-        class RegularConvention
-            :Convention
+        private class RegularConvention
+            : Convention
         {
         }
     }

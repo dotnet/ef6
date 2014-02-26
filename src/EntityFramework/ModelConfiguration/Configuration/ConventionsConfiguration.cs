@@ -18,8 +18,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    /// Allows the conventions used by a <see cref="DbModelBuilder" /> instance to be customized.
-    /// The default conventions can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
+    ///     Allows the conventions used by a <see cref="DbModelBuilder" /> instance to be customized.
+    ///     The default conventions can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
     /// </summary>
     public partial class ConventionsConfiguration
     {
@@ -37,10 +37,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal ConventionsConfiguration(ConventionSet conventionSet)
         {
             DebugCheck.NotNull(conventionSet);
-            Debug.Assert(conventionSet.ConfigurationConventions.All(c => c != null && ConventionsTypeFilter.IsConfigurationConvention(c.GetType())));
-            Debug.Assert(conventionSet.ConceptualModelConventions.All(c => c != null && ConventionsTypeFilter.IsConceptualModelConvention(c.GetType())));
-            Debug.Assert(conventionSet.ConceptualToStoreMappingConventions.All(c => c != null && ConventionsTypeFilter.IsConceptualToStoreMappingConvention(c.GetType())));
-            Debug.Assert(conventionSet.StoreModelConventions.All(c => c != null && ConventionsTypeFilter.IsStoreModelConvention(c.GetType())));
+            Debug.Assert(
+                conventionSet.ConfigurationConventions.All(c => c != null && ConventionsTypeFilter.IsConfigurationConvention(c.GetType())));
+            Debug.Assert(
+                conventionSet.ConceptualModelConventions.All(
+                    c => c != null && ConventionsTypeFilter.IsConceptualModelConvention(c.GetType())));
+            Debug.Assert(
+                conventionSet.ConceptualToStoreMappingConventions.All(
+                    c => c != null && ConventionsTypeFilter.IsConceptualToStoreMappingConvention(c.GetType())));
+            Debug.Assert(
+                conventionSet.StoreModelConventions.All(c => c != null && ConventionsTypeFilter.IsStoreModelConvention(c.GetType())));
 
             _configurationConventions.AddRange(conventionSet.ConfigurationConventions);
             _conceptualModelConventions.AddRange(conventionSet.ConceptualModelConventions);
@@ -93,12 +99,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Discover all conventions in the given assembly and add them for the <see cref="DbModelBuilder" />.
-        /// <remarks>
-        /// This method add all conventions ordered by type name.The order in which conventions are added 
-        /// can have an impact on how they behave because it governs the order in which they are run.
-        /// </remarks>
+        ///     Discover all conventions in the given assembly and add them to the <see cref="DbModelBuilder" />.
         /// </summary>
+        /// <remarks>
+        ///     This method add all conventions ordered by type name. The order in which conventions are added
+        ///     can have an impact on how they behave because it governs the order in which they are run.
+        ///     All conventions found must have a parameterless public constructor.
+        /// </remarks>
         /// <param name="assembly">The assembly containing conventions to be added.</param>
         public void AddFromAssembly(Assembly assembly)
         {
@@ -111,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Enables one or more conventions for the <see cref="DbModelBuilder" />.
+        ///     Enables one or more conventions for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="conventions"> The conventions to be enabled. </param>
         public void Add(params IConvention[] conventions)
@@ -127,10 +134,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     invalidType = false;
                     var existingConventionIndex = _configurationConventions.FindIndex(
-                            initialConvention => _initialConventionSet.ConfigurationConventions.Contains(initialConvention));
+                        initialConvention => _initialConventionSet.ConfigurationConventions.Contains(initialConvention));
                     existingConventionIndex = existingConventionIndex == -1
-                                                  ? _configurationConventions.Count
-                                                  : existingConventionIndex;
+                        ? _configurationConventions.Count
+                        : existingConventionIndex;
                     _configurationConventions.Insert(existingConventionIndex, c);
                 }
 
@@ -161,7 +168,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Enables a convention for the <see cref="DbModelBuilder" />.
+        ///     Enables a convention for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <typeparam name="TConvention"> The type of the convention to be enabled. </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
@@ -172,8 +179,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Enables a convention for the <see cref="DbModelBuilder" />. This convention
-        /// will run after the one specified.
+        ///     Enables a convention for the <see cref="DbModelBuilder" />. This convention
+        ///     will run after the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention after which the enabled one will run. </typeparam>
         /// <param name="newConvention"> The convention to enable. </param>
@@ -222,8 +229,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Enables a configuration convention for the <see cref="DbModelBuilder" />. This convention
-        /// will run before the one specified.
+        ///     Enables a configuration convention for the <see cref="DbModelBuilder" />. This convention
+        ///     will run before the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention before which the enabled one will run. </typeparam>
         /// <param name="newConvention"> The convention to enable. </param>
@@ -301,7 +308,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Disables one or more conventions for the <see cref="DbModelBuilder" />.
+        ///     Disables one or more conventions for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="conventions"> The conventions to be disabled. </param>
         public void Remove(params IConvention[] conventions)
@@ -336,8 +343,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Disables a convention for the <see cref="DbModelBuilder" />.
-        /// The default conventions that are available for removal can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
+        ///     Disables a convention for the <see cref="DbModelBuilder" />.
+        ///     The default conventions that are available for removal can be found in the
+        ///     System.Data.Entity.ModelConfiguration.Conventions namespace.
         /// </summary>
         /// <typeparam name="TConvention"> The type of the convention to be disabled. </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
@@ -604,7 +612,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        /// Gets the <see cref="Type" /> of the current instance.
+        ///     Gets the <see cref="Type" /> of the current instance.
         /// </summary>
         /// <returns>The exact runtime type of the current instance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
