@@ -14,6 +14,7 @@ namespace System.Data.Entity.Configuration
     public class ProviderAgnosticConfiguration : DbConfiguration
     {
         private static readonly string _providerInvariantName = ConfigurationManager.AppSettings["ProviderInvariantName"];
+        private static readonly string _baseConnectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
 
         public ProviderAgnosticConfiguration()
         {
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Configuration
             switch (_providerInvariantName)
             {
                 case "System.Data.SqlClient":
-                    SetDefaultConnectionFactory(new SqlConnectionFactory());
+                    SetDefaultConnectionFactory(new SqlConnectionFactory(_baseConnectionString));
                     break;
 
 #if !NET40
