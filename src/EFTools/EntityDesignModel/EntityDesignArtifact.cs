@@ -825,7 +825,9 @@ namespace Microsoft.Data.Entity.Design.Model
         internal virtual void DetermineIfArtifactIsVersionSafe()
         {
             // make sure that the XML namespace of the EDMX, Csdl, ssdl & msl nodes match the expected XML namespaces for the schema version 
-            _isVersionSafe = GetRootNamespace() == SchemaManager.GetEDMXNamespaceName(SchemaVersion)
+            var rootNamespace = GetRootNamespace();
+            _isVersionSafe = rootNamespace != null && 
+                             rootNamespace == SchemaManager.GetEDMXNamespaceName(SchemaVersion)
                              && CompareNamespaces(ConceptualModel, SchemaManager.GetCSDLNamespaceName(SchemaVersion))
                              && CompareNamespaces(StorageModel, SchemaManager.GetSSDLNamespaceName(SchemaVersion))
                              && CompareNamespaces(MappingModel, SchemaManager.GetMSLNamespaceName(SchemaVersion));
@@ -849,10 +851,16 @@ namespace Microsoft.Data.Entity.Design.Model
         /// <summary>
         ///     Retrives the namespace of the root elemnt of the document.  This should be either an EDMX, CSDL, SSDL or MSL namespace URI.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The namespace of the Edmx document or NULL if the XDocument for edmx is null.</returns>
         internal XNamespace GetRootNamespace()
         {
-            return XDocument.Root.Name.Namespace;
+            // in some corner cases the XDocument.Root can be null - e.g. the user removes contents of the edmx file
+            // outside the VS and then agrees to reload the document when VS detects the modification (in this 
+            // scenario the NullReferenceException caused a VS crash) 
+            return
+                XDocument != null && XDocument.Root != null
+                    ? XDocument.Root.Name.Namespace
+                    : null;
         }
 
         internal virtual HashSet<string> GetFileExtensions()

@@ -171,5 +171,41 @@ namespace Microsoft.Data.Entity.Design.Model
 
             return mockEntityDesignArtifact.Object;
         }
+
+        [Fact]
+        public void DetermineIfArtifactIsVersionSafe_sets_IsVersionSafe_to_false_if_XDocument_is_null()
+        {
+            var modelManager = new Mock<ModelManager>(null, null).Object;
+            var modelProvider = new Mock<XmlModelProvider>().Object;
+            var mockEntityDesignArtifact =
+                new Mock<EntityDesignArtifact>(modelManager, new Uri("urn:dummy"), modelProvider) { CallBase = true };
+
+            mockEntityDesignArtifact
+                .Setup(a => a.XDocument)
+                .Returns((XDocument)null);
+
+            var artifact = mockEntityDesignArtifact.Object;
+            artifact.DetermineIfArtifactIsVersionSafe();
+
+            Assert.False(artifact.IsVersionSafe);
+        }
+
+        [Fact]
+        public void DetermineIfArtifactIsVersionSafe_sets_IsVersionSafe_to_false_if_XDocument_does_not_have_root()
+        {
+            var modelManager = new Mock<ModelManager>(null, null).Object;
+            var modelProvider = new Mock<XmlModelProvider>().Object;
+            var mockEntityDesignArtifact =
+                new Mock<EntityDesignArtifact>(modelManager, new Uri("urn:dummy"), modelProvider) { CallBase = true };
+
+            mockEntityDesignArtifact
+                .Setup(a => a.XDocument)
+                .Returns(new XDocument());
+
+            var artifact = mockEntityDesignArtifact.Object;
+            artifact.DetermineIfArtifactIsVersionSafe();
+
+            Assert.False(artifact.IsVersionSafe);
+        }
     }
 }

@@ -849,7 +849,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         private void NewDataSourceSelected()
         {
-            SetDataConnection(((DataSourceComboBoxItem)dataSourceComboBox.SelectedItem).GetDataConnection(_dataConnectionManager));
+            var selectedItem = (DataSourceComboBoxItem)dataSourceComboBox.SelectedItem;
+
+            // If the SelectedIndexChanged event is fired but there are no items in the combobox 
+            // the selected index is -1 and the selected item is null. To avoid the NRE and VS crash 
+            // we just don't do anything in this case. Another way to trigger the NRE was to go back to 
+            // the first page and return to the db config page when the combobox was empty
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            SetDataConnection(selectedItem.GetDataConnection(_dataConnectionManager));
 
             // new data source has been selected, we should invalidate following pages
             Wizard.InvalidateFollowingPages();
