@@ -90,45 +90,5 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                 }
             }
         }
-
-        public override void OnEndEdit(DiagramItemEventArgs e)
-        {
-            base.OnEndEdit(e);
-
-            Debug.Assert(ParentShape != null, "ElementListCompartment should be contained in another shape.");
-            if (ParentShape != null)
-            {
-                var ets = ParentShape as EntityTypeShape;
-                Debug.Assert(
-                    ets != null, "Expected ElementListCompartment's parent type: EntityTypeShape, Actual: " + ParentShape.GetType().Name);
-
-                if (ets != null
-                    && ets.Diagram != null)
-                {
-                    var modelDiagram = ets.Diagram.ModelElement.ModelXRef.GetExisting(ets.Diagram) as Diagram;
-                    var diagrams = modelDiagram.Parent as Diagrams;
-                    if (diagrams != null)
-                    {
-                        var diagramArtifact = diagrams.Artifact as DiagramArtifact;
-
-                        if (diagramArtifact != null
-                            && e.DiagramItem.RepresentedElements != null
-                            && e.DiagramItem.RepresentedElements.Count == 1)
-                        {
-                            var representedItems = e.DiagramItem.RepresentedElements.GetEnumerator();
-                            if (representedItems.MoveNext())
-                            {
-                                var scalarProperty = representedItems.Current as ScalarProperty;
-
-                                if (scalarProperty != null)
-                                {
-                                    diagramArtifact.RaisePropertyNameCommitted(ets.Name, scalarProperty.Name);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
