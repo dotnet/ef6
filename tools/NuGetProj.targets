@@ -146,7 +146,7 @@ NuGetPack: Creates a nuget package.
       <!-- BuildCommand is defined in nuget.targets file -->
         <BuildCommand>$(BuildCommand.Replace('-symbols', ''))</BuildCommand>
         <BuildCommand>$(BuildCommand.Replace('/symbols', ''))</BuildCommand>
-      <BuildCommand Condition="'$(NuSpecProperties)' != ''">$(BuildCommand) -Properties $(NuSpecProperties) $(NuGetPackOptions)</BuildCommand>
+      <BuildCommand Condition="'$(NuSpecProperties)' != ''">$(BuildCommand) -Properties "$(NuSpecProperties)" $(NuGetPackOptions)</BuildCommand>
     </PropertyGroup>
     <!-- Invalidate outputs to force a full build in case of failure -->
     <Delete Files="$(NuGetPackTargetFile)" />

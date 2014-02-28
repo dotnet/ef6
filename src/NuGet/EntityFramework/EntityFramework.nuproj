@@ -5,11 +5,11 @@
     <NuSpecFile>EntityFramework.nuspec</NuSpecFile>
   </PropertyGroup>
   <ItemGroup>
-    <NuGetContent Include="EntityFramework.dll;EntityFramework.pdb;EntityFramework.xml">
+    <NuGetContent Include="EntityFramework.dll;EntityFramework.xml">
       <Source>$(OutputPath40)</Source>
       <Destination>lib\net40</Destination>
     </NuGetContent>
-    <NuGetContent Include="EntityFramework.dll;EntityFramework.pdb;EntityFramework.xml">
+    <NuGetContent Include="EntityFramework.dll;EntityFramework.xml">
       <Source>$(OutputPath45)</Source>
       <Destination>lib\net45</Destination>
     </NuGetContent>
