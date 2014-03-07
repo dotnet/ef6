@@ -884,9 +884,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void dataSourceComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            NewDataSourceSelected();
+            try
+            {
+                NewDataSourceSelected();
+            }
+            catch (Exception ex)
+            {
+                VsUtils.ShowErrorDialog(ex.Message);
+            }
         }
 
         private class DataSourceComboBoxItem
