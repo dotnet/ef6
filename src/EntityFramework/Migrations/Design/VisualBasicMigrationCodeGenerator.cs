@@ -221,7 +221,7 @@ namespace System.Data.Entity.Migrations.Design
         /// Generates class attributes.
         /// </summary>
         /// <param name="writer"> Text writer to add the generated code to. </param>
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        /// <param name="designer"> A value indicating if this class is being generated for a code-behind file. </param>
         protected virtual void WriteClassAttributes(IndentedTextWriter writer, bool designer)
         {
             if (designer)
