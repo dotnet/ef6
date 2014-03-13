@@ -924,8 +924,8 @@ namespace System.Data.Entity.Objects
                 ResetTables();
             }
         }
-        
-        [Fact]
+
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Sharing transactions between contexts is not supported for SqlAzure")]
         [UseDefaultExecutionStrategy]
         public void Can_share_transaction_between_DbContexts()
         {

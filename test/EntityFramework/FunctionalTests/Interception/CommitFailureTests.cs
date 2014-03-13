@@ -46,6 +46,7 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void TransactionHandler_and_no_ExecutionStrategy_rethrows_original_exception_on_commit_fail()
         {
             Execute_commit_failure_test(
