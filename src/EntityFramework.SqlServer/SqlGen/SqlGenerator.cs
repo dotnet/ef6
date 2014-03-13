@@ -1807,8 +1807,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var comparisonExpression = e.Argument as DbComparisonExpression;
             if (comparisonExpression != null)
             {
-                if (comparisonExpression.ExpressionKind
-                    == DbExpressionKind.Equals)
+                if (comparisonExpression.ExpressionKind == DbExpressionKind.Equals)
                 {
                     var forceNonUnicodeLocal = _forceNonUnicode; // Save flag
                     // Don't try to optimize the comparison, if one of the sides isn't of type string.
@@ -1816,8 +1815,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     {
                         _forceNonUnicode = CheckIfForceNonUnicodeRequired(comparisonExpression);
                     }
-                    var binaryResult = VisitBinaryExpression(
-                        " <> ", DbExpressionKind.NotEquals, comparisonExpression.Left, comparisonExpression.Right);
+
+                    var binaryResult = VisitComparisonExpression(" <> ", comparisonExpression.Left, comparisonExpression.Right);
+                    
                     _forceNonUnicode = forceNonUnicodeLocal; // Reset flag
                     return binaryResult;
                 }
@@ -2795,6 +2795,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // </summary>
         private SqlBuilder VisitBinaryExpression(string op, DbExpressionKind expressionKind, DbExpression left, DbExpression right)
         {
+            RemoveUnnecessaryCasts(ref left, ref right);
+
             var result = new SqlBuilder();
 
             var isFirst = true;
@@ -2876,6 +2878,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // <param name="right"> the right-side expression </param>
         private SqlBuilder VisitComparisonExpression(string op, DbExpression left, DbExpression right)
         {
+            RemoveUnnecessaryCasts(ref left, ref right);
+
             var result = new SqlBuilder();
 
             var isCastOptional = left.ResultType.EdmType == right.ResultType.EdmType;
@@ -2903,6 +2907,28 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             return result;
+        }
+
+        private static void RemoveUnnecessaryCasts(ref DbExpression left, ref DbExpression right)
+        {
+            if (left.ResultType.EdmType != right.ResultType.EdmType)
+            {
+                return;
+            }
+
+            var leftCast = left as DbCastExpression;
+            if (leftCast != null
+                && leftCast.Argument.ResultType.EdmType == left.ResultType.EdmType)
+            {
+                left = leftCast.Argument;
+            }
+
+            var rightCast = right as DbCastExpression;
+            if (rightCast != null
+                && rightCast.Argument.ResultType.EdmType == left.ResultType.EdmType)
+            {
+                right = rightCast.Argument;
+            }
         }
 
         // <summary>

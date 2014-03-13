@@ -85,7 +85,7 @@ namespace System.Data.Entity.Query
                             TypeUsage.CreateDefaultTypeUsage(workspace.GetPrimitiveTypes(DataSpace.CSpace).Single(t => t.Name == "Int32")))));
 
             var expectedSql =
-                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[Id] =  CAST( [Extent1].[MessageType] AS int)";
+                "SELECT [Extent1].[Id] AS [Id], [Extent1].[MessageType] AS [MessageType] FROM [dbo].[Message] AS [Extent1] WHERE [Extent1].[Id] = [Extent1].[MessageType]";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }

@@ -118,6 +118,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
                     //c35_timestamp
                     c36_geometry_linestring = DbGeometry.FromText(string.Format("LINESTRING (1{0} 2{0}, 1{1} 2{0}, 1{1} 2{1}, 1{0} 2{1}, 1{0} 2{0})", i % 5 + 2, i % 5 + 4), 32768),
                     c37_geometry_polygon = DbGeometry.FromText(string.Format("POLYGON ((1{1} 2{0}, 1{0} 2{0}, 1{0} 2{1}, 1{1} 2{0}))", i % 5 + 3, i % 5 + 4), 32768),
+                    c38_shortenum = (ArubaShortEnum)(i % 3)
                 };
 
                 allTypesList[i] = allTypes;

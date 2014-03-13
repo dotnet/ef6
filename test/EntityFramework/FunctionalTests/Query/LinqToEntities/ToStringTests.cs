@@ -294,7 +294,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     CASE WHEN ([Extent1].[NullableDateTimeProp] IS NULL) THEN N'' ELSE  CAST( [Extent1].[NullableDateTimeProp] AS nvarchar(max)) END AS [C9], 
     CASE WHEN ([Extent1].[NullableDateTimeOffsetProp] IS NULL) THEN N'' ELSE  CAST( [Extent1].[NullableDateTimeOffsetProp] AS nvarchar(max)) END AS [C10], 
     CASE WHEN ([Extent1].[NullableGuidProp] IS NULL) THEN N'' ELSE LOWER( CAST( [Extent1].[NullableGuidProp] AS nvarchar(max))) END AS [C11], 
-    CASE WHEN ( CAST( [Extent1].[NullableEnumProp] AS int) = 0) THEN N'SomeA' WHEN ( CAST( [Extent1].[NullableEnumProp] AS int) = 1) THEN N'SomeB' WHEN ( CAST( [Extent1].[NullableEnumProp] AS int) = 2) THEN N'SomeC' WHEN ( CAST( [Extent1].[NullableEnumProp] AS int) IS NULL) THEN N'' ELSE  CAST(  CAST( [Extent1].[NullableEnumProp] AS int) AS nvarchar(max)) END AS [C12], 
+    CASE WHEN ([Extent1].[NullableEnumProp] = 0) THEN N'SomeA' WHEN ([Extent1].[NullableEnumProp] = 1) THEN N'SomeB' WHEN ([Extent1].[NullableEnumProp] = 2) THEN N'SomeC' WHEN ( CAST( [Extent1].[NullableEnumProp] AS int) IS NULL) THEN N'' ELSE  CAST(  CAST( [Extent1].[NullableEnumProp] AS int) AS nvarchar(max)) END AS [C12], 
     CASE WHEN ([Extent1].[StringProp] IS NULL) THEN N'' ELSE [Extent1].[StringProp] END AS [C13]
     FROM [dbo].[SomeEntities] AS [Extent1]
     WHERE [Extent1].[NullableBoolProp] IS NULL";

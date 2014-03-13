@@ -20,6 +20,13 @@ namespace System.Data.Entity.TestModels.ArubaModel
         ByteEnumValue2 = 2,        
     }
 
+    public enum ArubaShortEnum : short
+    {
+        ShortEnumValue0 = 0,
+        ShortEnumValue1 = 1,
+        ShortEnumValue2 = 2,
+    }
+
     public class ArubaAllTypes
     {
         [Key]
@@ -61,5 +68,6 @@ namespace System.Data.Entity.TestModels.ArubaModel
         public byte[] c35_timestamp { get; set; }
         public DbGeometry c36_geometry_linestring { get; set; }
         public DbGeometry c37_geometry_polygon { get; set; }
+        public ArubaShortEnum c38_shortenum { get; set; } 
     }
 }

@@ -20,7 +20,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     @"SELECT 
 [Extent1].[c34_byteenum] AS [c34_byteenum]
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
-WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
+WHERE 2 = [Extent1].[c34_byteenum]";
 
                 var query = context.AllTypes.Where(a => a.c34_byteenum == ArubaByteEnum.ByteEnumValue2).Select(a => a.c34_byteenum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
@@ -44,7 +44,7 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
                     @"SELECT 
 [Extent1].[c34_byteenum] AS [c34_byteenum]
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
-WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
+WHERE 2 = [Extent1].[c34_byteenum]";
 
                 var query = context.AllTypes.Where(a => a.c34_byteenum == (ArubaByteEnum)2).Select(a => a.c34_byteenum);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
@@ -199,7 +199,7 @@ FROM ( SELECT
                     @"SELECT 
 [Extent1].[c1_int] AS [c1_int]
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
-WHERE ( CAST( [Extent1].[c34_byteenum] AS int) <>  CAST(  CAST(  CAST( [Extent1].[c34_byteenum] AS int) + 2 AS tinyint) AS int)) AND ( CAST(  CAST( [Extent1].[c33_enum] AS int) + 1 AS int) <>  CAST(  CAST( [Extent1].[c33_enum] AS int) - 2 AS int))";
+WHERE ([Extent1].[c34_byteenum] <>  CAST(  CAST( [Extent1].[c34_byteenum] AS int) + 2 AS tinyint)) AND (([Extent1].[c33_enum] + 1) <> ([Extent1].[c33_enum] - 2))";
 
                 var query = context.AllTypes
                                    .Where(a => a.c34_byteenum != a.c34_byteenum + 2)
@@ -227,7 +227,7 @@ WHERE ( CAST( [Extent1].[c34_byteenum] AS int) <>  CAST(  CAST(  CAST( [Extent1]
 [Extent1].[c33_enum] AS [c33_enum], 
 [Extent1].[c34_byteenum] AS [c34_byteenum]
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
-WHERE ( CAST(  CAST( ( CAST( [Extent1].[c34_byteenum] AS int)) & (1) AS tinyint) AS int) > 0) AND (3 =  CAST( ( CAST( [Extent1].[c33_enum] AS int)) | (1) AS int))";
+WHERE ( CAST( ( CAST( [Extent1].[c34_byteenum] AS int)) & (1) AS tinyint) > 0) AND (3 = (( CAST( [Extent1].[c33_enum] AS int)) | (1)))";
 
                 var query = context.AllTypes
                                    .Where(a => (a.c34_byteenum & ArubaByteEnum.ByteEnumValue1) > 0)
@@ -261,7 +261,7 @@ WHERE ( CAST(  CAST( ( CAST( [Extent1].[c34_byteenum] AS int)) & (1) AS tinyint)
                 const string expectedSql = @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum] 
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
-WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS int)";
+WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) = 3";
 
                 var query = context.AllTypes
                     .Where(e => e.c33_enum.HasFlag((ArubaEnum)3))
@@ -288,7 +288,7 @@ WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS
                 const string expectedSql = @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum]
 FROM [dbo].[ArubaAllTypes] AS [Extent1]
-WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) =  CAST( 3 AS int)";
+WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( 3 AS int))) = 3";
 
                 var query = context.AllTypes
                     .Where(e => e.c33_enum.HasFlag((ArubaEnum)3))
@@ -318,12 +318,12 @@ FROM   [dbo].[ArubaAllTypes] AS [Extent1]
 LEFT OUTER JOIN  (SELECT TOP (1) 
     [Extent2].[c33_enum] AS [c33_enum]
     FROM [dbo].[ArubaAllTypes] AS [Extent2]
-    WHERE 1 =  CAST( [Extent2].[c33_enum] AS int) ) AS [Limit1] ON 1 = 1
+    WHERE 1 = [Extent2].[c33_enum] ) AS [Limit1] ON 1 = 1
 LEFT OUTER JOIN  (SELECT TOP (1) 
     [Extent3].[c33_enum] AS [c33_enum]
     FROM [dbo].[ArubaAllTypes] AS [Extent3]
-    WHERE 1 =  CAST( [Extent3].[c33_enum] AS int) ) AS [Limit2] ON 1 = 1
-WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( [Limit1].[c33_enum] AS int))) =  CAST( [Limit2].[c33_enum] AS int)";
+    WHERE 1 = [Extent3].[c33_enum] ) AS [Limit2] ON 1 = 1
+WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( [Limit1].[c33_enum] AS int))) = [Limit2].[c33_enum]";
 
                 var query = 
                     context.AllTypes

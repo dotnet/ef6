@@ -60,6 +60,7 @@ namespace System.Data.Entity.TestModels.ArubaModel
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c28_date).HasColumnType("date");
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c29_datetime2).HasColumnType("datetime2");
             modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c35_timestamp).HasColumnType("timestamp");
+            modelBuilder.Entity<ArubaAllTypes>().Property(p => p.c38_shortenum).HasColumnType("smallint");
 
             // self reference
             modelBuilder.Entity<ArubaPerson>().HasOptional(p => p.Partner).WithOptionalPrincipal();

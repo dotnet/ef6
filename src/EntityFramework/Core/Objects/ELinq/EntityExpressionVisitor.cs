@@ -4,6 +4,7 @@ namespace System.Linq.Expressions
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions.Internal;
 
     // <summary>
@@ -13,6 +14,7 @@ namespace System.Linq.Expressions
     {
         internal const ExpressionType CustomExpression = (ExpressionType)(-1);
 
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal virtual Expression Visit(Expression exp)
         {
             if (exp == null)
@@ -44,18 +46,19 @@ namespace System.Linq.Expressions
                 case ExpressionType.AndAlso:
                 case ExpressionType.Or:
                 case ExpressionType.OrElse:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.Equal:
-                case ExpressionType.NotEqual:
                 case ExpressionType.Coalesce:
                 case ExpressionType.ArrayIndex:
                 case ExpressionType.RightShift:
                 case ExpressionType.LeftShift:
                 case ExpressionType.ExclusiveOr:
                     return VisitBinary((BinaryExpression)exp);
+                case ExpressionType.LessThan:
+                case ExpressionType.LessThanOrEqual:
+                case ExpressionType.GreaterThan:
+                case ExpressionType.GreaterThanOrEqual:
+                case ExpressionType.Equal:
+                case ExpressionType.NotEqual:
+                    return VisitComparison((BinaryExpression)exp);
                 case ExpressionType.TypeIs:
                     return VisitTypeIs((TypeBinaryExpression)exp);
                 case ExpressionType.Conditional:
@@ -143,6 +146,11 @@ namespace System.Linq.Expressions
                 }
             }
             return b;
+        }
+
+        internal virtual Expression VisitComparison(BinaryExpression expression)
+        {
+            return VisitBinary(RemoveUnnecessaryConverts(expression));
         }
 
         internal virtual Expression VisitTypeIs(TypeBinaryExpression b)
@@ -402,6 +410,133 @@ namespace System.Linq.Expressions
         {
             var basicVisitor = new BasicExpressionVisitor(visit);
             return basicVisitor.Visit(exp);
+        }
+
+        private static BinaryExpression RemoveUnnecessaryConverts(BinaryExpression expression)
+        {
+            if (expression.Method != null
+                || expression.Left.Type != expression.Right.Type)
+            {
+                return expression;
+            }
+
+            switch (expression.Left.NodeType)
+            {
+                case ExpressionType.Convert:
+                {
+                    var leftConvert = (UnaryExpression)expression.Left;
+
+                    switch (expression.Right.NodeType)
+                    {
+                        case ExpressionType.Convert:
+                            var rightConvert = (UnaryExpression)expression.Right;
+
+                            if (CanRemoveConverts(leftConvert, rightConvert))
+                            {
+                                return MakeBinaryExpression(expression.NodeType, leftConvert.Operand, rightConvert.Operand);
+                            }
+                            break;
+
+                        case ExpressionType.Constant:
+                            var constant = (ConstantExpression)expression.Right;
+
+                            if (TryConvertConstant(ref constant, leftConvert.Operand.Type))
+                            {
+                                return MakeBinaryExpression(expression.NodeType, leftConvert.Operand, constant);
+                            }
+                            break;
+                    }
+                    break;
+                }
+
+                case ExpressionType.Constant:
+                {
+                    var constant = (ConstantExpression)expression.Left;
+
+                    if (expression.Right.NodeType == ExpressionType.Convert)
+                    {
+                        var rightConvert = (UnaryExpression)expression.Right;
+
+                        if (TryConvertConstant(ref constant, rightConvert.Operand.Type))
+                        {
+                            return MakeBinaryExpression(expression.NodeType, constant, rightConvert.Operand);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            return expression;
+        }
+
+        private static bool CanRemoveConverts(UnaryExpression leftConvert, UnaryExpression rightConvert)
+        {
+            if (leftConvert.Method != null || rightConvert.Method != null)
+            {
+                return false;
+            }
+
+            if (Type.GetTypeCode(leftConvert.Type) != TypeCode.Int32)
+            {
+                return false;
+            }
+
+            switch (Type.GetTypeCode(leftConvert.Operand.Type))
+            {
+                case TypeCode.Byte:
+                case TypeCode.Int16:
+                    break;
+                default:
+                    return false;
+            }
+
+            return leftConvert.Operand.Type == rightConvert.Operand.Type;
+        }
+
+        private static bool TryConvertConstant(ref ConstantExpression constant, Type type)
+        {
+            if (Type.GetTypeCode(constant.Type) != TypeCode.Int32)
+            {
+                return false;
+            }
+
+            var value = (int)constant.Value;
+
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Byte:
+                    if (value >= Byte.MinValue && value <= Byte.MaxValue)
+                    {
+                        constant = Expression.Constant((byte)value);
+                        return true;
+                    }
+                    break;
+
+                case TypeCode.Int16:
+                    if (value >= Int16.MinValue && value <= Int16.MaxValue)
+                    {
+                        constant = Expression.Constant((short)value);
+                        return true;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
+        private static BinaryExpression MakeBinaryExpression(ExpressionType expressionType, Expression left, Expression right)
+        {
+            if (left.Type.IsEnum)
+            {
+                left = Expression.Convert(left, left.Type.GetEnumUnderlyingType());
+            }
+
+            if (right.Type.IsEnum)
+            {
+                right = Expression.Convert(right, right.Type.GetEnumUnderlyingType());
+            }
+
+            return Expression.MakeBinary(expressionType, left, right);
         }
 
         private sealed class BasicExpressionVisitor : EntityExpressionVisitor
