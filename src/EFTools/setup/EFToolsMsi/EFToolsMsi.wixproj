@@ -4,7 +4,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <AssemblyPath Condition="'$(AssemblyPath)' == ''">$(OutputPath)</AssemblyPath>
     <ProductVersion>3.7</ProductVersion>
     <ProjectGuid>69ba80f1-e0eb-4109-a91a-6059f2954b2d</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
