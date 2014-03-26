@@ -3518,7 +3518,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     foreach (var foreignKey in relatedEnd.GetAllKeyValues())
                     {
-                        _cache.RemoveEntryFromForeignKeyIndex(foreignKey, this);
+                        _cache.RemoveEntryFromForeignKeyIndex(relatedEnd, foreignKey, this);
                     }
                 }
                 _cache.AssertEntryDoesNotExistInForeignKeyIndex(this);
@@ -3707,7 +3707,7 @@ namespace System.Data.Entity.Core.Objects
                 else
                 {
                     // Add an entry to the index for later fixup
-                    _cache.AddEntryContainingForeignKeyToIndex(foreignKey, this);
+                    _cache.AddEntryContainingForeignKeyToIndex(relatedEnd, foreignKey, this);
                     if (canModifyReference
                         && replaceExistingRef
                         && relatedEnd.ReferenceValue.Entity != null)

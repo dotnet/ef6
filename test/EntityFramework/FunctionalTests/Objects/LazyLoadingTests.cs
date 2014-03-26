@@ -4,6 +4,7 @@ namespace System.Data.Entity.Objects
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Transactions;
     using ConcurrencyModel;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
@@ -626,6 +627,76 @@ namespace System.Data.Entity.Objects
                 triggers[1].Devices = devices.ToList();
                 triggers[2].Devices = devices.ToList();
             }
+        }
+
+        [Fact] // CodePlex 2172
+        public void Fixup_of_two_relationships_that_share_a_key_results_in_correct_removal_of_dangling_foreign_keys()
+        {
+            using (var context = new Context2172())
+            {
+                context.Database.Initialize(force: false);
+            }
+
+            using (new TransactionScope())
+            {
+                using (var context = new Context2172())
+                {
+                    var user = context.Users.Add(new User2172 { Id = 1 });
+                    context.SaveChanges();
+
+                    var message = context.Messages.Add(new Message2172 { Id = 1, CreatedById = 1, ModifiedById = 1 });
+                    context.SaveChanges();
+
+                    context.Messages.Remove(message);
+                    context.SaveChanges();
+
+                    context.Entry(user).State = EntityState.Detached;
+
+                    Assert.NotNull(context.Users.First(u => u.Id == user.Id));
+                }
+            }
+        }
+
+        public class Context2172 : DbContext
+        {
+            static Context2172()
+            {
+                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Context2172>());
+            }
+
+            public DbSet<User2172> Users { get; set; }
+            public DbSet<Message2172> Messages { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Message2172>()
+                    .HasRequired(o => o.CreatedBy)
+                    .WithMany()
+                    .WillCascadeOnDelete(false);
+
+                modelBuilder.Entity<Message2172>()
+                    .HasRequired(o => o.ModifiedBy)
+                    .WithMany()
+                    .WillCascadeOnDelete(false);
+            }
+        }
+
+        public class User2172
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+        }
+
+        public class Message2172
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public int CreatedById { get; set; }
+            public User2172 CreatedBy { get; set; }
+
+            public int ModifiedById { get; set; }
+            public User2172 ModifiedBy { get; set; }
         }
     }
 }

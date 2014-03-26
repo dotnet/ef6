@@ -936,13 +936,11 @@ namespace System.Data.Entity.Objects
 
             using (var ctx1 = new SimpleModelContext())
             {
-                ctx1.Database.Log = Console.WriteLine;
                 ctx1.Database.Connection.Open();
                 using (var txn = ctx1.Database.Connection.BeginTransaction())
                 {
                     using (var ctx2 = new SimpleModelContext(ctx1.Database.Connection, false))
                     {
-                        ctx2.Database.Log = Console.WriteLine;
                         ctx2.Database.UseTransaction(txn);
                         ctx2.Categories.ToList();
                         txn.Commit();

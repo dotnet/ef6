@@ -64,8 +64,8 @@ namespace System.Data.Entity.Core.Objects
         // materializer instance that can be used to create complex types with just a metadata workspace
         private ComplexTypeMaterializer _complexTypeMaterializer;
 
-        private readonly Dictionary<EntityKey, HashSet<EntityEntry>> _danglingForeignKeys =
-            new Dictionary<EntityKey, HashSet<EntityEntry>>();
+        private readonly Dictionary<EntityKey, HashSet<Tuple<EntityReference, EntityEntry>>> _danglingForeignKeys =
+            new Dictionary<EntityKey, HashSet<Tuple<EntityReference, EntityEntry>>>();
 
         private HashSet<EntityEntry> _entriesWithConceptualNulls;
 
@@ -441,16 +441,16 @@ namespace System.Data.Entity.Core.Objects
         // </summary>
         // <param name="foreignKey"> The foreign key found in the entry </param>
         // <param name="entry"> The entry that contains the foreign key that was found </param>
-        internal virtual void AddEntryContainingForeignKeyToIndex(EntityKey foreignKey, EntityEntry entry)
+        internal virtual void AddEntryContainingForeignKeyToIndex(EntityReference relatedEnd, EntityKey foreignKey, EntityEntry entry)
         {
-            HashSet<EntityEntry> danglingEntries;
+            HashSet<Tuple<EntityReference, EntityEntry>> danglingEntries;
             if (!_danglingForeignKeys.TryGetValue(foreignKey, out danglingEntries))
             {
-                danglingEntries = new HashSet<EntityEntry>();
+                danglingEntries = new HashSet<Tuple<EntityReference, EntityEntry>>();
                 _danglingForeignKeys.Add(foreignKey, danglingEntries);
             }
             Debug.Assert(entry.ObjectStateManager != null, "Attempt to add detached state entry to dangling keys");
-            danglingEntries.Add(entry);
+            danglingEntries.Add(Tuple.Create(relatedEnd, entry));
         }
 
         [Conditional("DEBUG")]
@@ -458,14 +458,14 @@ namespace System.Data.Entity.Core.Objects
         {
             foreach (var dFkEntry in _danglingForeignKeys.SelectMany(kv => kv.Value))
             {
-                if (!(dFkEntry.State == EntityState.Detached || entry.State == EntityState.Detached))
+                if (!(dFkEntry.Item2.State == EntityState.Detached || entry.State == EntityState.Detached))
                 {
                     Debug.Assert(
-                        dFkEntry.EntityKey == null || entry.EntityKey == null ||
-                        (dFkEntry.EntityKey != entry.EntityKey && dFkEntry != entry),
+                        dFkEntry.Item2.EntityKey == null || entry.EntityKey == null ||
+                        (dFkEntry.Item2.EntityKey != entry.EntityKey && dFkEntry.Item2 != entry),
                         string.Format(
                             CultureInfo.InvariantCulture, "The entry references {0} equal. dFkEntry={1}, entry={2}",
-                            dFkEntry == entry ? "are" : "are not", dFkEntry.EntityKey.ConcatKeyValue(), entry.EntityKey.ConcatKeyValue()));
+                            dFkEntry.Item2 == entry ? "are" : "are not", dFkEntry.Item2.EntityKey.ConcatKeyValue(), entry.EntityKey.ConcatKeyValue()));
                 }
             }
         }
@@ -486,15 +486,15 @@ namespace System.Data.Entity.Core.Objects
             var validEntries = new HashSet<ObjectStateEntry>(GetObjectStateEntriesInternal(~EntityState.Detached));
             foreach (var entry in _danglingForeignKeys.SelectMany(kv => kv.Value))
             {
-                Debug.Assert(entry._cache != null, "found an entry in the _danglingForeignKeys collection that has been nulled out");
+                Debug.Assert(entry.Item2._cache != null, "found an entry in the _danglingForeignKeys collection that has been nulled out");
                 Debug.Assert(
-                    validEntries.Contains(entry),
+                    validEntries.Contains(entry.Item2),
                     "The entry in the dangling foreign key store is no longer in the ObjectStateManager. Key="
                     +
-                    (entry.State == EntityState.Detached ? "detached" : entry.EntityKey != null ? "null" : entry.EntityKey.ConcatKeyValue()));
+                    (entry.Item2.State == EntityState.Detached ? "detached" : entry.Item2.EntityKey != null ? "null" : entry.Item2.EntityKey.ConcatKeyValue()));
                 Debug.Assert(
-                    entry.State == EntityState.Detached || !ForeignKeyFactory.IsConceptualNullKey(entry.EntityKey),
-                    "Found an entry with conceptual null Key=" + entry.EntityKey.ConcatKeyValue());
+                    entry.Item2.State == EntityState.Detached || !ForeignKeyFactory.IsConceptualNullKey(entry.Item2.EntityKey),
+                    "Found an entry with conceptual null Key=" + entry.Item2.EntityKey.ConcatKeyValue());
             }
         }
 
@@ -504,12 +504,12 @@ namespace System.Data.Entity.Core.Objects
         // </summary>
         // <param name="foreignKey"> The foreign key found in the entry </param>
         // <param name="entry"> The entry that contains the foreign key that was found </param>
-        internal virtual void RemoveEntryFromForeignKeyIndex(EntityKey foreignKey, EntityEntry entry)
+        internal virtual void RemoveEntryFromForeignKeyIndex(EntityReference relatedEnd, EntityKey foreignKey, EntityEntry entry)
         {
-            HashSet<EntityEntry> danglingEntries;
+            HashSet<Tuple<EntityReference, EntityEntry>> danglingEntries;
             if (_danglingForeignKeys.TryGetValue(foreignKey, out danglingEntries))
             {
-                danglingEntries.Remove(entry);
+                danglingEntries.Remove(Tuple.Create(relatedEnd, entry));
             }
         }
 
@@ -532,12 +532,12 @@ namespace System.Data.Entity.Core.Objects
         // <returns> The state entries that contain the key </returns>
         internal virtual IEnumerable<EntityEntry> GetNonFixedupEntriesContainingForeignKey(EntityKey foreignKey)
         {
-            HashSet<EntityEntry> foundEntries;
+            HashSet<Tuple<EntityReference, EntityEntry>> foundEntries;
             if (_danglingForeignKeys.TryGetValue(foreignKey, out foundEntries))
             {
                 // these entries will be updated by the code consuming them, so 
                 // create a stable container to iterate over.
-                return foundEntries.ToList();
+                return foundEntries.Select(e => e.Item2).ToList();
             }
             return Enumerable.Empty<EntityEntry>();
         }
@@ -1576,7 +1576,7 @@ namespace System.Data.Entity.Core.Objects
                 desiredState == entry.State ||
                 EntityState.Added == desiredState,
                 "unexpected end state");
-            Debug.Assert(entry is RelationshipEntry, "unexpected type of entry");
+
             return entry;
         }
 
