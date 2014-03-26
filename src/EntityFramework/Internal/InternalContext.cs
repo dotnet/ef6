@@ -257,7 +257,7 @@ namespace System.Data.Entity.Internal
         {
             // objectContext may be null when testing.
             new DatabaseCreator().CreateDatabase(
-                this, (config, context) => new DbMigrator(config, context, existenceState, true), objectContext);
+                this, (config, context) => new DbMigrator(config, context, existenceState, calledByCreateDatabase: true), objectContext);
         }
 
         public virtual bool CompatibleWithModel(bool throwIfNoMetadata, DatabaseExistenceState existenceState)

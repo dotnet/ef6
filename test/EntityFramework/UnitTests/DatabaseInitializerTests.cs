@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using Moq;
     using System;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
@@ -11,7 +12,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using Moq;
+    using System.Linq;
     using Xunit;
 
     /// <summary>
@@ -417,6 +418,52 @@ namespace System.Data.Entity
             init.InitializeDatabase(new EmptyContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
 
             Assert.NotEqual("MigrationInitFromConfig", TestMigrationsConfiguration.SeedDatabase);
+            Assert.Equal("System.Data.Entity.DatabaseInitializerTests+EmptyContext", TestMigrationsConfiguration.SeedDatabase);
+        }
+
+        private class FakeForMdtlvsgpsc : DbContext
+        {
+            public DbSet<Blog> Blogs { get; set; }
+
+            public class Blog
+            {
+                public int BlogId { get; set; }
+                public string Name { get; set; }
+            }
+        }
+
+        private class SeedingMigrationsConfiguration : DbMigrationsConfiguration<FakeForMdtlvsgpsc>
+        {
+            public static DbContext DbContextUsedForSeeding { get; set; }
+
+            public SeedingMigrationsConfiguration()
+            {
+                AutomaticMigrationsEnabled = true;
+            }
+
+            protected override void Seed(FakeForMdtlvsgpsc context)
+            {
+                context.Blogs.Add(new FakeForMdtlvsgpsc.Blog());
+                context.Blogs.Add(new FakeForMdtlvsgpsc.Blog());
+                context.Blogs.Add(new FakeForMdtlvsgpsc.Blog());
+
+                DbContextUsedForSeeding = context;
+            }
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_seed_doesnt_pollute_supplied_context()
+        {
+            SeedingMigrationsConfiguration.DbContextUsedForSeeding = null;
+
+            using (var context = new FakeForMdtlvsgpsc())
+            {
+                var init = new MigrateDatabaseToLatestVersion<FakeForMdtlvsgpsc, SeedingMigrationsConfiguration>(useSuppliedContext: true);
+                init.InitializeDatabase(context);
+
+                Assert.Equal(0, context.ChangeTracker.Entries().Count());
+                Assert.ReferenceEquals(context, SeedingMigrationsConfiguration.DbContextUsedForSeeding);
+            }
         }
 
         [Fact]

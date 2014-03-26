@@ -27,25 +27,24 @@ namespace System.Data.Entity
 
         /// <summary>
         /// Initializes a new instance of the MigrateDatabaseToLatestVersion class that will use
-        /// the context passed to InitializeDatabase to perform the migration.
+        /// the connection information from a context constructed using the default constructor 
+        /// or registered factory if applicable
         /// </summary>
         public MigrateDatabaseToLatestVersion()
-            : this(true)
+            : this(useSuppliedContext: false)
         {
 
         }
 
         /// <summary>
         /// Initializes a new instance of the MigrateDatabaseToLatestVersion class specifying whether to
-        /// use the context passed to InitializeDatabase to perform the migration.
+        /// use the connection information from the context that triggered initialization to perform the migration.
         /// </summary>
         /// <param name="useSuppliedContext">
-        /// Whether the context being initialized should be used or if a context should be constructed.
+        /// If set to <c>true</c> the initializer is run using the connection information from the context that 
+        /// triggered initialization. Otherwise, the connection information will be taken from a context constructed 
+        /// using the default constructor or registered factory if applicable. 
         /// </param>
-        /// <remarks>
-        /// If useSuppliedContext is true, the connection information of the context being initialized is ignored.
-        /// The context will be constructed using the default constructor or registered factory if applicable.
-        /// </remarks>
         public MigrateDatabaseToLatestVersion(bool useSuppliedContext)
         {
             _config = new TMigrationsConfiguration();
@@ -66,7 +65,6 @@ namespace System.Data.Entity
                 {
                     TargetDatabase = new DbConnectionInfo(connectionStringName)
                 };
-            _useSuppliedContext = false;
         }
 
         /// <inheritdoc />

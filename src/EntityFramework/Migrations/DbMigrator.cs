@@ -50,7 +50,7 @@ namespace System.Data.Entity.Migrations
         private readonly DbContextInfo _usersContextInfo;
         private readonly EdmModelDiffer _modelDiffer;
         private readonly Lazy<ModificationCommandTreeGenerator> _modificationCommandTreeGenerator;
-        private readonly DbContext _contextForInterception;
+        private readonly DbContext _usersContext;
         private readonly Func<DbConnection, string, HistoryContext> _historyContextFactory;
 
         private readonly bool _calledByCreateDatabase;
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Migrations
             MigrationAssembly migrationAssembly = null)
             : base(null)
         {
-            _contextForInterception = usersContext;
+            _usersContext = usersContext;
             _providerFactory = providerFactory;
             _migrationAssembly = migrationAssembly;
             _usersContextInfo = new DbContextInfo(typeof(DbContext));
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         /// <param name="configuration"> Configuration to be used for the migration process. </param>
         public DbMigrator(DbMigrationsConfiguration configuration)
-            : this(configuration, null, DatabaseExistenceState.Unknown, false)
+            : this(configuration, null, DatabaseExistenceState.Unknown, calledByCreateDatabase: false)
         {
             Check.NotNull(configuration, "configuration");
             Check.NotNull(configuration.ContextType, "configuration.ContextType");
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext)
-            : this(configuration, usersContext, DatabaseExistenceState.Unknown, false)
+            : this(configuration, usersContext, DatabaseExistenceState.Unknown, calledByCreateDatabase: false)
         {
         }
 
@@ -132,7 +132,7 @@ namespace System.Data.Entity.Migrations
             _modelDiffer = _configuration.ModelDiffer;
 
             var context = usersContext ?? _usersContextInfo.CreateInstance();
-            _contextForInterception = context;
+            _usersContext = context;
 
             try
             {
@@ -163,7 +163,7 @@ namespace System.Data.Entity.Migrations
                         _configuration.CommandTimeout,
                         _historyContextFactory,
                         schemas: new[] { _defaultSchema }.Concat(GetHistorySchemas()),
-                        contextForInterception: _contextForInterception,
+                        contextForInterception: _usersContext,
                         initialExistence: _existenceState);
 
                 _providerManifestToken
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Migrations
                                 CreateConnection()));
 
                 var interceptionContext = new DbInterceptionContext();
-                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+                interceptionContext = interceptionContext.WithDbContext(_usersContext);
 
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
@@ -206,7 +206,7 @@ namespace System.Data.Entity.Migrations
             {
                 if (usersContext == null)
                 {
-                    _contextForInterception = null;
+                    _usersContext = null;
                     context.Dispose();
                 }
             }
@@ -414,7 +414,7 @@ namespace System.Data.Entity.Migrations
             if (!_calledByCreateDatabase
                 && !_historyRepository.Exists())
             {
-                var context = _contextForInterception ?? _usersContextInfo.CreateInstance();
+                var context = _usersContext ?? _usersContextInfo.CreateInstance();
 
                 try
                 {
@@ -440,7 +440,7 @@ namespace System.Data.Entity.Migrations
                 }
                 finally
                 {
-                    if (_contextForInterception == null)
+                    if (_usersContext == null)
                     {
                         context.Dispose();
                     }
@@ -610,7 +610,12 @@ namespace System.Data.Entity.Migrations
         {
             Debug.Assert(!_calledByCreateDatabase);
 
-            var context = _contextForInterception ?? _usersContextInfo.CreateInstance();
+            var context = _usersContext ?? _usersContextInfo.CreateInstance();
+            if (_usersContext != null)
+            {
+                // If we're using the users context then don't pollute the state manager during seed
+                context.InternalContext.UseTempObjectContext();
+            }
 
             try
             {
@@ -620,9 +625,13 @@ namespace System.Data.Entity.Migrations
             }
             finally
             {
-                if (_contextForInterception == null)
+                if (_usersContext == null)
                 {
                     context.Dispose();
+                }
+                else
+                {
+                    context.InternalContext.DisposeTempObjectContext();
                 }
             }
         }
@@ -971,7 +980,7 @@ namespace System.Data.Entity.Migrations
                 if (existingTransaction != null)
                 {
                     var interceptionContext = new DbInterceptionContext();
-                    interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+                    interceptionContext = interceptionContext.WithDbContext(_usersContext);
                     ExecuteStatementsInternal(migrationStatements, existingTransaction, interceptionContext);
                 }
                 else
@@ -995,7 +1004,7 @@ namespace System.Data.Entity.Migrations
             DebugCheck.NotNull(migrationStatements);
             DebugCheck.NotNull(connection);
 
-            var context = _contextForInterception ?? _usersContextInfo.CreateInstance();
+            var context = _usersContext ?? _usersContextInfo.CreateInstance();
 
             var interceptionContext = new DbInterceptionContext();
             interceptionContext = interceptionContext.WithDbContext(context);
@@ -1062,7 +1071,7 @@ namespace System.Data.Entity.Migrations
                     transactionHandler.Dispose();
                 }
 
-                if (_contextForInterception == null)
+                if (_usersContext == null)
                 {
                     context.Dispose();
                 }
@@ -1285,9 +1294,9 @@ namespace System.Data.Entity.Migrations
             var connection = _providerFactory.CreateConnection();
 
             var interceptionContext = new DbConnectionPropertyInterceptionContext<string>().WithValue(_usersContextInfo.ConnectionString);
-            if (_contextForInterception != null)
+            if (_usersContext != null)
             {
-                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+                interceptionContext = interceptionContext.WithDbContext(_usersContext);
             }
 
             DbInterception.Dispatch.Connection.SetConnectionString(connection, interceptionContext);
