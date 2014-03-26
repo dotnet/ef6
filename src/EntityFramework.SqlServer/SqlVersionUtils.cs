@@ -54,7 +54,7 @@ namespace System.Data.Entity.SqlServer
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "select serverproperty('EngineEdition')";
+                command.CommandText = "select cast(serverproperty('EngineEdition') as int)";
 
                 using (
                     var reader = DbInterception.Dispatch.Command.Reader(command, new DbCommandInterceptionContext()))
