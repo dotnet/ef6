@@ -201,6 +201,7 @@
     <Compile Include="..\..\..\src\Common\PropertyInfoExtensions.cs">
       <Link>Utilities\PropertyInfoExtensions.cs</Link>
     </Compile>
+    <Compile Include="CodeFirst\CodePlex2169.cs" />
     <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />

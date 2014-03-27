@@ -511,6 +511,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Same(item, collection["R3"]);
         }
 
+        [Fact]
+        public void HandleIdentityChange_does_not_update_collection_if_does_not_contain_specified_item()
+        {
+            var members = new List<EdmProperty>();
+            var memberCount = MetadataCollection<EntityType>.UseDictionaryCrossover + 1;
+
+            for (var i = 0; i < memberCount; i++)
+            {
+                members.Add(EdmProperty.CreatePrimitive("P" + i, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+            }
+
+            var collection = new MetadataCollection<EdmProperty>(members);
+            Assert.Equal(memberCount, collection.Count);
+
+            var property = EdmProperty.CreatePrimitive("MyProperty", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            property.Name = "MyNewProperty";
+            collection.HandleIdentityChange(property, "MyProperty");
+
+            Assert.Equal(memberCount, collection.Count);            
+            Assert.False(collection.ContainsIdentity("MyProperty"));
+            Assert.False(collection.ContainsIdentity("MyNewProperty"));
+
+            property = EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            property.Name = "MyProperty";
+            collection.HandleIdentityChange(property, "P2");
+
+            Assert.Equal(memberCount, collection.Count);            
+            Assert.False(collection.ContainsIdentity("MyProperty"));
+            Assert.True(collection.ContainsIdentity("P2"));
+            Assert.NotSame(property, collection.GetValue("P2", ignoreCase: false));
+        }
+
         private static MetadataCollection<EntityType> CreateEntityTypeCollection(int count)
         {
             var entityTypes = new List<EntityType>();
