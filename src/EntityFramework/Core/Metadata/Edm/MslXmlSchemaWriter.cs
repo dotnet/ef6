@@ -180,7 +180,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteStartElement(MslConstructs.MappingFragmentElement);
 
             _xmlWriter.WriteAttributeString(
-                MslConstructs.MappingFragmentStoreEntitySetAttribute, 
+                MslConstructs.MappingFragmentStoreEntitySetAttribute,
                 mappingFragment.TableSet.Name);
 
             foreach (var propertyMapping in mappingFragment.PropertyMappings)
@@ -202,24 +202,41 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             WriteFunctionImportMappingStartElement(functionImportMapping);
 
-            // no mapping written when mapping to a scalar or entity type
-            if (functionImportMapping.StructuralTypeMappings != null && functionImportMapping.StructuralTypeMappings.First().Item1.BuiltInTypeKind == BuiltInTypeKind.ComplexType)
+            // no mapping written when mapping to a scalar
+            if (functionImportMapping.StructuralTypeMappings != null)
             {
                 _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingResultMapping);
 
                 Debug.Assert(
                     functionImportMapping.StructuralTypeMappings.Count == 1,
                     "multiple result sets not supported.");
-                Debug.Assert(
-                    functionImportMapping.StructuralTypeMappings.First().Item1.BuiltInTypeKind == BuiltInTypeKind.ComplexType,
-                    "mapping to entity sets not supported.");
 
                 var structuralMapping = functionImportMapping.StructuralTypeMappings.Single();
-                _xmlWriter.WriteStartElement(MslConstructs.ComplexTypeMappingElement);
-                _xmlWriter.WriteAttributeString(MslConstructs.ComplexTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
+
+                if (structuralMapping.Item1.BuiltInTypeKind == BuiltInTypeKind.ComplexType)
+                {
+                    _xmlWriter.WriteStartElement(MslConstructs.ComplexTypeMappingElement);
+                    _xmlWriter.WriteAttributeString(MslConstructs.ComplexTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
+                }
+                else
+                {
+                    _xmlWriter.WriteStartElement(MslConstructs.EntityTypeMappingElement);
+                    _xmlWriter.WriteAttributeString(MslConstructs.EntityTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
+
+                    foreach (ConditionPropertyMapping conditionMapping in structuralMapping.Item2)
+                    {
+                        WriteConditionElement(conditionMapping);
+                    }
+                }
+
                 foreach (ScalarPropertyMapping propertyMapping in structuralMapping.Item3)
                 {
                     WritePropertyMapping(propertyMapping);
+                }
+
+                foreach (ConditionPropertyMapping conditionMapping in structuralMapping.Item2)
+                {
+                    WriteConditionElement(conditionMapping);
                 }
 
                 _xmlWriter.WriteEndElement();
@@ -234,6 +251,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(functionImportMapping);
 
             WriteFunctionImportMappingStartElement(functionImportMapping);
+
+            foreach (FunctionImportResultMapping resultMapping in functionImportMapping.ResultMappings)
+            {
+                WriteFunctionImportResultMappingElement(resultMapping);
+            }
+
             WriteFunctionImportEndElement();
         }
 
@@ -248,11 +271,128 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 functionImportMapping.FunctionImport.Name);
         }
 
+        private void WriteFunctionImportResultMappingElement(FunctionImportResultMapping resultMapping)
+        {
+            DebugCheck.NotNull(resultMapping);
+            _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingResultMapping);
+
+            foreach (FunctionImportStructuralTypeMapping typeMapping in resultMapping.TypeMappings)
+            {
+                var entityTypeMapping = typeMapping as FunctionImportEntityTypeMapping;
+                if (entityTypeMapping != null)
+                {
+                    WriteFunctionImportEntityTypeMappingElement(entityTypeMapping);
+                    continue;
+                }
+                else
+                {
+                    var complexTypeMapping = typeMapping as FunctionImportComplexTypeMapping;
+                    if (complexTypeMapping != null)
+                    {
+                        WriteFunctionImportComplexTypeMappingElement(complexTypeMapping);
+                    }
+                }
+            }
+
+            _xmlWriter.WriteEndElement();
+        }
+
+        private void WriteFunctionImportEntityTypeMappingElement(FunctionImportEntityTypeMapping entityTypeMapping)
+        {
+            DebugCheck.NotNull(entityTypeMapping);
+
+            _xmlWriter.WriteStartElement(MslConstructs.EntityTypeMappingElement);
+
+            string entityTypeName = string.Join(";", entityTypeMapping.IsOfTypeEntityTypes.Select(entityType => GetEntityTypeName(entityType.FullName, true))
+                    .Concat(entityTypeMapping.EntityTypes.Select(entityType => GetEntityTypeName(entityType.FullName, false))));
+
+            _xmlWriter.WriteAttributeString(MslConstructs.EntityTypeMappingTypeNameAttribute, entityTypeName);
+
+            foreach (FunctionImportReturnTypeScalarPropertyMapping propertyMapping in entityTypeMapping.PropertyMappings)
+            {
+                WriteFunctionImportScalarPropertyMappingElement(propertyMapping);
+            }
+
+            foreach (FunctionImportEntityTypeMappingCondition condition in entityTypeMapping.Conditions)
+            {
+                WriteFunctionImportConditionElement(condition);
+            }
+
+            _xmlWriter.WriteEndElement();
+        }
+
+        private void WriteFunctionImportComplexTypeMappingElement(FunctionImportComplexTypeMapping complexTypeMapping)
+        {
+            DebugCheck.NotNull(complexTypeMapping);
+
+            _xmlWriter.WriteStartElement(MslConstructs.ComplexTypeMappingElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ComplexTypeMappingTypeNameAttribute, complexTypeMapping.ReturnType.FullName);
+
+            foreach (FunctionImportReturnTypeScalarPropertyMapping property in complexTypeMapping.PropertyMappings)
+            {
+                WriteFunctionImportScalarPropertyMappingElement(property);
+            }
+
+            _xmlWriter.WriteEndElement();
+        }
+
+        private void WriteFunctionImportScalarPropertyMappingElement(FunctionImportReturnTypeScalarPropertyMapping propertyMapping)
+        {
+            DebugCheck.NotNull(propertyMapping);
+            _xmlWriter.WriteStartElement(MslConstructs.ScalarPropertyElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyNameAttribute, propertyMapping.PropertyName);
+            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyColumnNameAttribute, propertyMapping.ColumnName);
+            _xmlWriter.WriteEndElement();
+        }
+
+        private void WriteFunctionImportConditionElement(FunctionImportEntityTypeMappingCondition condition)
+        {
+            DebugCheck.NotNull(condition);
+            var isNullCondition = condition as FunctionImportEntityTypeMappingConditionIsNull;
+            if (isNullCondition != null)
+            {
+                WriteFunctionImportConditionIsNullElement(isNullCondition);
+                return;
+            }
+            else
+            {
+                var valueCondition = condition as FunctionImportEntityTypeMappingConditionValue;
+                if (valueCondition != null)
+                {
+                    WriteFunctionImportConditionValueElement(valueCondition);
+                }
+            }
+        }
+
+        private void WriteFunctionImportConditionIsNullElement(FunctionImportEntityTypeMappingConditionIsNull condition)
+        {
+            DebugCheck.NotNull(condition);
+            _xmlWriter.WriteStartElement(MslConstructs.ConditionElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.ColumnName);
+            _xmlWriter.WriteAttributeString(MslConstructs.ConditionIsNullAttribute, GetLowerCaseStringFromBoolValue(condition.IsNull));
+            _xmlWriter.WriteEndElement();
+        }
+
+        private void WriteFunctionImportConditionValueElement(FunctionImportEntityTypeMappingConditionValue condition)
+        {
+            DebugCheck.NotNull(condition);
+            _xmlWriter.WriteStartElement(MslConstructs.ConditionElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.ColumnName);
+            if (condition.Value is bool)
+            {
+                _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, (bool)condition.Value ? "1" : "0");
+            }
+            else
+            {
+                _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, condition.Value.ToString());
+            }
+            _xmlWriter.WriteEndElement();
+        }
+
         private void WriteFunctionImportEndElement()
         {
             _xmlWriter.WriteEndElement();
         }
-
 
         private void WriteModificationFunctionMapping(EntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
@@ -484,6 +624,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             _xmlWriter.WriteEndElement();
+        }
+
+        private static string GetEntityTypeNames(IEnumerable<Tuple<string, bool>> fullyQualifiedEntityTypeNames)
+        {
+            DebugCheck.NotNull(fullyQualifiedEntityTypeNames);
+            StringBuilder builder = new StringBuilder();
+
+            foreach (Tuple<string, bool> tuple in fullyQualifiedEntityTypeNames)
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append("; ");
+                }
+                builder.Append(GetEntityTypeName(tuple.Item1, tuple.Item2));
+            }
+
+            return builder.ToString();
         }
 
         private static string GetEntityTypeName(string fullyQualifiedEntityTypeName, bool isHierarchyMapping)
