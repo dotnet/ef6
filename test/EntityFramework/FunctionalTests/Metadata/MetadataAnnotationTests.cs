@@ -365,25 +365,52 @@ namespace System.Data.Entity.Metadata
         }
 
         private const string CsdlWithStructs = @"
-<Schema Namespace=""Investigate1833"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
-  <EntityType Name=""NorwegianAnimal"" customannotation:ClrType=""Investigate1833.NorwegianAnimal, Investigate1833, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"">
-    <Key>
-      <PropertyRef Name=""Id"" />
-    </Key>
-    <Property Name=""Id"" Type=""Int32"" Nullable=""false"" annotation:StoreGeneratedPattern=""Identity"" />
-    <Property Name=""WhatDoesItSay"" Type=""String"" MaxLength=""Max"" FixedLength=""false"" Unicode=""true"">
-      <TheSecretOfTheFox xmlns=""FoxAnnotations"">
-        <Option Name=""Hattie Hattie Hattie Ho"" xmlns=""FoxAnnotations"" />
-        <Option Name=""Wa-pa-pa-pa-pa-pow!"" xmlns=""FoxAnnotations"" />
-      </TheSecretOfTheFox>
-    </Property>
-    <TheSecretOfTheFox xmlns=""FoxAnnotations"">
-      <Secret Name=""Ancient Mystery"" xmlns="""" />
-    </TheSecretOfTheFox>
-  </EntityType>
-  <EntityContainer Name=""FoxContext"" customannotation:UseClrTypes=""true"">
-    <EntitySet Name=""Animals"" EntityType=""Self.NorwegianAnimal"" />
-  </EntityContainer>
-</Schema>";
+            <Schema Namespace=""Investigate1833"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
+              <EntityType Name=""NorwegianAnimal"" customannotation:ClrType=""Investigate1833.NorwegianAnimal, Investigate1833, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"">
+                <Key>
+                  <PropertyRef Name=""Id"" />
+                </Key>
+                <Property Name=""Id"" Type=""Int32"" Nullable=""false"" annotation:StoreGeneratedPattern=""Identity"" />
+                <Property Name=""WhatDoesItSay"" Type=""String"" MaxLength=""Max"" FixedLength=""false"" Unicode=""true"">
+                  <TheSecretOfTheFox xmlns=""FoxAnnotations"">
+                    <Option Name=""Hattie Hattie Hattie Ho"" xmlns=""FoxAnnotations"" />
+                    <Option Name=""Wa-pa-pa-pa-pa-pow!"" xmlns=""FoxAnnotations"" />
+                  </TheSecretOfTheFox>
+                </Property>
+                <TheSecretOfTheFox xmlns=""FoxAnnotations"">
+                  <Secret Name=""Ancient Mystery"" xmlns="""" />
+                </TheSecretOfTheFox>
+              </EntityType>
+              <EntityContainer Name=""FoxContext"" customannotation:UseClrTypes=""true"">
+                <EntitySet Name=""Animals"" EntityType=""Self.NorwegianAnimal"" />
+              </EntityContainer>
+            </Schema>";
+
+
+        [Fact] // CodePlex 2051
+        public void Can_load_model_after_assembly_version_of_types_changes()
+        {
+            var edmItemCollection = new EdmItemCollection(new[] { XDocument.Parse(CsdlWithVersion).CreateReader() });
+
+            Assert.Null(GetClrType(edmItemCollection.GetItems<EntityType>().Single(e => e.Name == "Man")));
+        }
+
+        public class Man
+        {
+            public int Id { get; set; }
+        }
+
+        private const string CsdlWithVersion = @"
+            <Schema Namespace=""Half"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
+              <EntityType Name=""Man"" customannotation:ClrType=""System.Data.Entity.Metadata.MetadataAnnotationTests+Man, EntityFramework.FunctionalTests, Version=0.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"">
+                <Key>
+                  <PropertyRef Name=""Id"" />
+                </Key>
+                <Property Name=""Id"" Type=""Int32"" Nullable=""false"" annotation:StoreGeneratedPattern=""Identity"" />
+              </EntityType>
+              <EntityContainer Name=""HalfManContext"" customannotation:UseClrTypes=""true"">
+                <EntitySet Name=""HalfMen"" EntityType=""Self.Man"" />
+              </EntityContainer>
+            </Schema>";
     }
 }
