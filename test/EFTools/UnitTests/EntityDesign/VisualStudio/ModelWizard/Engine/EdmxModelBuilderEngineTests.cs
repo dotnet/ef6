@@ -36,13 +36,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
                 var mockModelBuilderEngine = new Mock<EdmxModelBuilderEngine>(mockInitialContentsFactory.Object) { CallBase = true };
 
-                var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
-
                 mockModelBuilderEngine
                     .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
                     .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
 
-                mockModelBuilderEngine.Object.GenerateModel(CreateMockModelBuilderSettings().Object, mockHostContext.Object);
+                mockModelBuilderEngine.Object.GenerateModel(CreateMockModelBuilderSettings().Object, 
+                    Mock.Of<IVsUtils>(), Mock.Of<ModelBuilderEngineHostContext>());
 
                 mockInitialContentsFactory.Verify(f => f.GetInitialModelContents(It.IsAny<Version>()), Times.Once());
             }
@@ -71,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
                     .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
 
-                mockModelBuilderEngine.Object.GenerateModel(settings, mockHostContext.Object);
+                mockModelBuilderEngine.Object.GenerateModel(settings, Mock.Of<IVsUtils>(), mockHostContext.Object);
 
                 mockHostContext.Verify(h => h.DispatchToModelGenerationExtensions(), Times.Once());
             }
@@ -91,7 +90,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     .Returns(new InitialModelContentsFactory().GetInitialModelContents(EntityFrameworkVersion.Version3));
 
                 var settings = CreateMockModelBuilderSettings().Object;
-                var mockHostContext = new Mock<VSModelBuilderEngineHostContext>(settings);
 
                 var mockModelBuilderEngine = new Mock<EdmxModelBuilderEngine>(mockInitialContentsFactory.Object) { CallBase = true };
 
@@ -99,7 +97,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
                     .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
 
-                mockModelBuilderEngine.Object.GenerateModel(settings, mockHostContext.Object);
+                mockModelBuilderEngine.Object.GenerateModel(settings, Mock.Of<IVsUtils>(), Mock.Of<ModelBuilderEngineHostContext>());
 
                 var edmx = mockModelBuilderEngine.Object.Edmx;
 

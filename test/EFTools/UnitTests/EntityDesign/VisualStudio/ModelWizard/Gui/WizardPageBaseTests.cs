@@ -46,7 +46,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             mockWizardPageBase.Object.OnDeactivate();
 
             mockModelBuilderEngine
-                .Verify(m => m.GenerateModel(It.IsAny<ModelBuilderSettings>(), It.IsAny<ModelBuilderEngineHostContext>()), Times.Once());
+                .Verify(m => m.GenerateModel(It.IsAny<ModelBuilderSettings>(), 
+                    It.IsAny<IVsUtils>(), It.IsAny<ModelBuilderEngineHostContext>()), Times.Once());
         }
     }
 }

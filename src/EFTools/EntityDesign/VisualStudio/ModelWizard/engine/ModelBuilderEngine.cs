@@ -20,7 +20,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
         // virutal for testing
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public virtual void GenerateModel(ModelBuilderSettings settings, ModelBuilderEngineHostContext hostContext = null)
+        public virtual void GenerateModel(ModelBuilderSettings settings, IVsUtils vsUtils = null, 
+            ModelBuilderEngineHostContext hostContext = null)
         {
             if (settings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
                 && String.IsNullOrEmpty(settings.DesignTimeConnectionString))
@@ -31,6 +32,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             var generatingModelWatch = Stopwatch.StartNew();
 
             hostContext = hostContext ?? new VSModelBuilderEngineHostContext(settings);
+            vsUtils = vsUtils ?? new VsUtilsWrapper();
 
             // Clear out the ModelGenErrorCache before ModelGen begins
             PackageManager.Package.ModelGenErrorCache.RemoveErrors(settings.ModelPath);
@@ -46,10 +48,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
                 hostContext.LogMessage(
                     FormatMessage(
-                    errors.Any()
-                        ? Resources.Engine_ModelGenErrors
-                        : Resources.Engine_ModelGenSuccess,
-                    Path.GetFileName(settings.ModelPath)));
+                        errors.Any()
+                            ? Resources.Engine_ModelGenErrors
+                            : Resources.Engine_ModelGenSuccess,
+                        Path.GetFileName(settings.ModelPath)));
 
                 if (errors.Any())
                 {
@@ -59,12 +61,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             catch (Exception e)
             {
                 hostContext.LogMessage(FormatMessage(Resources.Engine_ModelGenException, e));
+                // The exception we re-throw will get swallowed in the message pump and therefore we need to show the message box here.
+                // It will also prevent the form.WizardFinished from being set to true which will cause cancelling the wizard and 
+                // therefore block adding new project items to the project as well as ModelObjectItemWizardFrom.RunFinished method.
+                vsUtils.ShowErrorDialog(FormatMessage(Resources.Engine_ModelGenExceptionMessageBox, e.GetType().Name, e.Message));
+                throw;
             }
+            finally
+            {
+                generatingModelWatch.Stop();
 
-            generatingModelWatch.Stop();
-
-            hostContext.LogMessage(FormatMessage(Resources.LoadingDBMetadataTimeMsg, settings.LoadingDBMetatdataTime));
-            hostContext.LogMessage(FormatMessage(Resources.GeneratingModelTimeMsg, generatingModelWatch.Elapsed));
+                hostContext.LogMessage(FormatMessage(Resources.LoadingDBMetadataTimeMsg, settings.LoadingDBMetatdataTime));
+                hostContext.LogMessage(FormatMessage(Resources.GeneratingModelTimeMsg, generatingModelWatch.Elapsed));
+            }
         }
 
         // internal virtual to allow mocking

@@ -178,6 +178,9 @@
   <data name="Engine_ModelGenException" xml:space="preserve">
     <value>Unable to generate the model because of the following exception: '{0}'.</value>
   </data>
+  <data name="Engine_ModelGenExceptionMessageBox" xml:space="preserve">
+    <value>Unexpected exception occurred when generating the model. See output window for more details. Exception message : '{0}: {1}'.</value>
+  </data>
   <data name="Engine_ModelGenSuccess" xml:space="preserve">
     <value>Generated model file: {0}.</value>
   </data>
