@@ -10,7 +10,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
         [Fact]
         public void Ctor_sets_name_and_version()
         {
-            var version = new Version(6, 0, 0, 0);
+            var version = new Version(4, 3, 0, 0);
             var option = new EntityFrameworkVersionOption(version);
 
             Assert.Equal(
@@ -18,5 +18,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui.ViewModels
                 option.Name);
             Assert.Same(version, option.Version);
         }
+
+        [Fact]
+        public void Ctor_sets_6_x_name_for_EF6()
+        {
+            var version = new Version(6, 0, 0, 0);
+            var option = new EntityFrameworkVersionOption(version);
+
+            Assert.Equal(
+                string.Format(Resources.EntityFrameworkVersionName, "6.x"),
+                option.Name);
+            Assert.Same(version, option.Version);
+        }
+
     }
 }

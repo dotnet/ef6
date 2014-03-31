@@ -808,7 +808,7 @@ namespace EFDesigner.E2ETests
                 var selectionButton =
                     versionsPanel.Get<RadioButton>(
                         SearchCriteria.ByText(
-                            String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.0")));
+                            String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.x")));
                 Assert.IsTrue(selectionButton.IsSelected);
                 ClickNextButton();
             }
@@ -863,7 +863,7 @@ namespace EFDesigner.E2ETests
             var versionsPanel = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("versionsPanel"));
             var selectionButton =
                 versionsPanel.Get<RadioButton>(
-                    SearchCriteria.ByText(String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.0")));
+                    SearchCriteria.ByText(String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.x")));
             Assert.IsTrue(selectionButton.IsSelected);
             ClickNextButton();
 

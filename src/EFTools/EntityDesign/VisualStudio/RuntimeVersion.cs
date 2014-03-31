@@ -59,8 +59,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 entityFrameworkVersion = Version5Net45;
             }
 
-            return string.Format(CultureInfo.InvariantCulture, 
-                Resources.EntityFrameworkVersionName, entityFrameworkVersion.ToString(2));
+            return string.Format(CultureInfo.InvariantCulture,
+                Resources.EntityFrameworkVersionName,
+                entityFrameworkVersion < Version6
+                    ? entityFrameworkVersion.ToString(2)
+                    : Resources.EntityFrameworkVersion6_x);
         }
 
         public static bool RequiresLegacyProvider(Version entityFrameworkVersion)
