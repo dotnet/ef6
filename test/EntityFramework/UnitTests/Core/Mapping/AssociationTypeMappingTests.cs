@@ -90,5 +90,36 @@ namespace System.Data.Entity.Core.Mapping
             associationTypeMapping.SetReadOnly();
             Assert.True(fragment.IsReadOnly);
         }
+
+        [Fact]
+        public void MappingFragments_returns_empty_collection_if_no_mapping_fragments_set()
+        {
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+
+            var setMapping
+                = new AssociationSetMapping(
+                    new AssociationSet("AS", associationType), 
+                    new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+
+            Assert.Empty(new AssociationTypeMapping(associationType, setMapping).MappingFragments);
+        }
+
+        [Fact]
+        public void MappingFragments_returns_mapping_fragment_if_set()
+        {
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+
+            var setMapping
+                = new AssociationSetMapping(
+                    new AssociationSet("AS", associationType),
+                    new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+
+            var associationTypeMapping = new AssociationTypeMapping(setMapping);
+            var fragment = new MappingFragment(new EntitySet(), associationTypeMapping, false);
+            associationTypeMapping.MappingFragment = fragment;
+
+            Assert.Equal(new[] { fragment }, associationTypeMapping.MappingFragments);
+            Assert.Same(fragment, associationTypeMapping.MappingFragment);
+        }
     }
 }

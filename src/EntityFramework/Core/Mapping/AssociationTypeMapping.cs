@@ -116,7 +116,13 @@ namespace System.Data.Entity.Core.Mapping
 
         internal override ReadOnlyCollection<MappingFragment> MappingFragments
         {
-            get { return new ReadOnlyCollection<MappingFragment>(new[] { _mappingFragment }); }
+            get
+            {
+                return
+                    _mappingFragment == null
+                        ? new ReadOnlyCollection<MappingFragment>(new MappingFragment[0])
+                        : new ReadOnlyCollection<MappingFragment>(new[] { _mappingFragment });
+            }
         }
 
         // <summary>
