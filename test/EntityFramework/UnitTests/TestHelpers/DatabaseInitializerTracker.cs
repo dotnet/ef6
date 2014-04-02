@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
@@ -57,10 +58,18 @@ namespace System.Data.Entity
                         _operations.Append("Create ");
                     });
 
-            _mockDatabaseOps.Setup(d => d.Exists(It.IsAny<ObjectContext>())).Callback(() => _operations.Append("Exists ")).Returns(
-                DatabaseExists);
-            _mockDatabaseOps.Setup(d => d.DeleteIfExists(It.IsAny<ObjectContext>())).Callback(() => _operations.Append("DeleteIfExists ")).
-                Returns(DeleteIfExists);
+            _mockDatabaseOps
+                .Setup(d => d.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>()))
+                .Callback(() => _operations.Append("Exists ")).Returns(_databaseExists);
+            
+            _mockDatabaseOps
+                .Setup(d => d.Delete(It.IsAny<ObjectContext>()))
+                .Callback(
+                    () =>
+                    {
+                        _operations.Append("Delete ");
+                        _databaseExists = false;
+                    });
 
             _mockInternalContext.Setup(c => c.UseTempObjectContext()).Callback(() => _operations.Append("UseTempObjectContext "));
             _mockInternalContext.Setup(c => c.DisposeTempObjectContext()).Callback(() => _operations.Append("DisposeTempObjectContext "));
@@ -84,18 +93,6 @@ namespace System.Data.Entity
                                     CallBase = true
                                 };
             _mockStrategy.Protected().Setup("Seed", ItExpr.IsAny<TContext>()).Callback(() => _operations.Append("Seed "));
-        }
-
-        private bool DeleteIfExists()
-        {
-            var exists = _databaseExists;
-            _databaseExists = false;
-            return exists;
-        }
-
-        private bool DatabaseExists()
-        {
-            return _databaseExists;
         }
 
         public void ExecuteStrategy()

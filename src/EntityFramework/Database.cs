@@ -200,22 +200,21 @@ namespace System.Data.Entity
 
         internal void Create(DatabaseExistenceState existenceState)
         {
+            if (existenceState == DatabaseExistenceState.Unknown)
+            {
+                if (_internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout))
+                {
+                    var interceptionContext = new DbInterceptionContext();
+                    interceptionContext = interceptionContext.WithDbContext(_internalContext.Owner);
+
+                    throw Error.Database_DatabaseAlreadyExists(
+                        DbInterception.Dispatch.Connection.GetDatabase(_internalContext.Connection, interceptionContext));
+                }
+                existenceState = DatabaseExistenceState.DoesNotExist;
+            }
+
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
             {
-                if (existenceState == DatabaseExistenceState.Unknown)
-                {
-                    if (_internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
-                    {
-                        var interceptionContext = new DbInterceptionContext();
-                        interceptionContext = interceptionContext.WithDbContext(_internalContext.Owner);
-                        interceptionContext = interceptionContext.WithObjectContext(clonedObjectContext.ObjectContext);
-
-                        throw Error.Database_DatabaseAlreadyExists(
-                            DbInterception.Dispatch.Connection.GetDatabase(_internalContext.Connection, interceptionContext));
-                    }
-                    existenceState = DatabaseExistenceState.DoesNotExist;
-                }
-
                 _internalContext.CreateDatabase(clonedObjectContext.ObjectContext, existenceState);
             }
         }
@@ -227,15 +226,16 @@ namespace System.Data.Entity
         /// <returns> True if the database did not exist and was created; false otherwise. </returns>
         public bool CreateIfNotExists()
         {
+            if (_internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout))
+            {
+                return false;
+            }
+
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
             {
-                if (!_internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
-                {
-                    _internalContext.CreateDatabase(clonedObjectContext.ObjectContext, DatabaseExistenceState.DoesNotExist);
-                    return true;
-                }
+                _internalContext.CreateDatabase(clonedObjectContext.ObjectContext, DatabaseExistenceState.DoesNotExist);
             }
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -244,10 +244,7 @@ namespace System.Data.Entity
         /// <returns> True if the database exists; false otherwise. </returns>
         public bool Exists()
         {
-            using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
-            {
-                return _internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext);
-            }
+            return _internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout);
         }
 
         /// <summary>
@@ -260,17 +257,18 @@ namespace System.Data.Entity
         /// <returns> True if the database did exist and was deleted; false otherwise. </returns>
         public bool Delete()
         {
+            if (!_internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout))
+            {
+                return false;
+            }
+
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
             {
-                var deleted = _internalContext.DatabaseOperations.DeleteIfExists(clonedObjectContext.ObjectContext);
-
-                if (deleted)
-                {
-                    _internalContext.MarkDatabaseNotInitialized();
-                }
-
-                return deleted;
+                _internalContext.DatabaseOperations.Delete(clonedObjectContext.ObjectContext);
+                _internalContext.MarkDatabaseNotInitialized();
             }
+
+            return true;
         }
 
         #endregion
@@ -289,8 +287,10 @@ namespace System.Data.Entity
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
-            return PerformDatabaseOp(
-                new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().Exists);
+            using (var connection = new LazyInternalConnection(nameOrConnectionString))
+            {
+                return new DatabaseOperations().Exists(connection.Connection, null);
+            }
         }
 
         /// <summary>
@@ -305,8 +305,19 @@ namespace System.Data.Entity
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
-            return PerformDatabaseOp(
-                new LazyInternalConnection(nameOrConnectionString), new DatabaseOperations().DeleteIfExists);
+            if (!Exists(nameOrConnectionString))
+            {
+                return false;
+            }
+
+            using (var connection = new LazyInternalConnection(nameOrConnectionString))
+            {
+                using (var context = CreateEmptyObjectContext(connection.Connection))
+                {
+                    new DatabaseOperations().Delete(context);
+                }
+            }
+            return true;
         }
 
         /// <summary>
@@ -318,7 +329,7 @@ namespace System.Data.Entity
         {
             Check.NotNull(existingConnection, "existingConnection");
 
-            return PerformDatabaseOp(existingConnection, new DatabaseOperations().Exists);
+            return new DatabaseOperations().Exists(existingConnection, null);
         }
 
         /// <summary>
@@ -330,7 +341,17 @@ namespace System.Data.Entity
         {
             Check.NotNull(existingConnection, "existingConnection");
 
-            return PerformDatabaseOp(existingConnection, new DatabaseOperations().DeleteIfExists);
+            if (!Exists(existingConnection))
+            {
+                return false;
+            }
+
+            using (var context = CreateEmptyObjectContext(existingConnection))
+            {
+                new DatabaseOperations().Delete(context);
+            }
+
+            return true;
         }
 
         #endregion
@@ -393,38 +414,6 @@ namespace System.Data.Entity
         #endregion
 
         #region Database operations
-
-        // <summary>
-        // Performs the operation defined by the given delegate using the given lazy connection, ensuring
-        // that the lazy connection is disposed after use.
-        // </summary>
-        // <param name="lazyConnection"> Information used to create a DbConnection. </param>
-        // <param name="operation"> The operation to perform. </param>
-        // <returns> The return value of the operation. </returns>
-        private static bool PerformDatabaseOp(
-            LazyInternalConnection lazyConnection, Func<ObjectContext, bool> operation)
-        {
-            using (lazyConnection)
-            {
-                return PerformDatabaseOp(lazyConnection.Connection, operation);
-            }
-        }
-
-        // <summary>
-        // Performs the operation defined by the given delegate against a connection.  The connection
-        // is either the connection accessed from the context backing this object, or is obtained from
-        // the connection information passed to one of the static methods.
-        // </summary>
-        // <param name="connection"> The connection to use. </param>
-        // <param name="operation"> The operation to perform. </param>
-        // <returns> The return value of the operation. </returns>
-        private static bool PerformDatabaseOp(DbConnection connection, Func<ObjectContext, bool> operation)
-        {
-            using (var context = CreateEmptyObjectContext(connection))
-            {
-                return operation(context);
-            }
-        }
 
         // <summary>
         // Returns an empty ObjectContext that can be used to perform delete/exists operations.

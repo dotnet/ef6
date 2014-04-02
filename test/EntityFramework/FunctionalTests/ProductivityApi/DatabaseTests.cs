@@ -355,7 +355,7 @@ END");
         }
 
         [Fact]
-        public void DatabaseExists_returns_false_for_existing_database_when_no_master_nor_database_permissions()
+        public void DatabaseExists_returns_true_for_existing_database_when_no_master_nor_database_permissions()
         {
             using (var context = new NoMasterPermissionContext(SimpleConnectionString<NoMasterPermissionContext>()))
             {
@@ -373,9 +373,9 @@ END");
                     command.CommandText
                         = string.Format(
                             @"IF EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
-BEGIN
-  DROP USER [EFTestSimpleModelUser]
-END");
+                              BEGIN
+                                DROP USER [EFTestSimpleModelUser]
+                              END");
                     command.ExecuteNonQuery();
                 }
             }
@@ -387,7 +387,7 @@ END");
 
             using (var context = new NoMasterPermissionContext(connectionString))
             {
-                Assert.False(context.Database.Exists());
+                Assert.True(context.Database.Exists());
             }
         }
 
@@ -423,9 +423,9 @@ END");
                 {
                     command.CommandText =
                         @"IF NOT EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
-BEGIN
-  CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
-END";
+                          BEGIN
+                            CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
+                          END";
                     command.ExecuteNonQuery();
                 }
             }
@@ -450,18 +450,18 @@ END";
         }
 
         [Fact]
-        public void DatabaseExists_returns_false_for_existing_attached_database_with_InitialCatalog_when_no_master_nor_database_permission()
+        public void DatabaseExists_returns_true_for_existing_attached_database_with_InitialCatalog_when_no_master_nor_database_permission()
         {
-            DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(true);
+            DatabaseExists_returns_true_for_existing_attached_database_when_no_master_nor_database_permission(true);
         }
 
         [Fact]
-        public void DatabaseExists_returns_false_for_existing_attached_database_without_InitialCatalog_when_no_master_nor_database_permission()
+        public void DatabaseExists_returns_true_for_existing_attached_database_without_InitialCatalog_when_no_master_nor_database_permission()
         {
-            DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(false);
+            DatabaseExists_returns_true_for_existing_attached_database_when_no_master_nor_database_permission(false);
         }
 
-        private void DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(bool useInitialcatalog)
+        private void DatabaseExists_returns_true_for_existing_attached_database_when_no_master_nor_database_permission(bool useInitialcatalog)
         {
             using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
             {
@@ -486,7 +486,7 @@ END";
                         "Password1",
                         useInitialcatalog)))
                 {
-                    Assert.False(context.Database.Exists());
+                    Assert.True(context.Database.Exists());
                 }
             }
             finally

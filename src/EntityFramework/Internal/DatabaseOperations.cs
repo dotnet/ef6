@@ -2,6 +2,9 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -36,11 +39,46 @@ namespace System.Data.Entity.Internal
         // having an ObjectContext.
         // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public virtual bool Exists(ObjectContext objectContext)
+        public virtual bool Exists(DbConnection connection, int? commandTimeout)
         {
-            DebugCheck.NotNull(objectContext);
+            DebugCheck.NotNull(connection);
 
-            return objectContext.DatabaseExists();
+            if (connection.State == ConnectionState.Open)
+            {
+                return true;
+            }
+
+            try
+            {
+                return DbProviderServices.GetProviderServices(connection)
+                    .DatabaseExists(connection, commandTimeout, new StoreItemCollection());
+            }
+            catch
+            {
+                // In situations where the user does not have access to the master database
+                // the above DatabaseExists call fails and throws an exception.  Rather than
+                // just let that exception escape to the caller we instead try a different
+                // approach to see if the database really does exist or not.  The approach
+                // is to try to open a connection to the database.  If this succeeds then
+                // we know that the database exists.  If it fails then the database may
+                // not exist or there may be some other issue connecting to it.  In either
+                // case for the purpose of this call we assume that it does not exist and
+                // return false since this functionally gives the best experience in most
+                // scenarios.
+                try
+                {
+                    connection.Open();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
 
         // <summary>
@@ -48,16 +86,11 @@ namespace System.Data.Entity.Internal
         // This is factored in this way so that we do the same thing regardless of how we get to
         // having an ObjectContext.
         // </summary>
-        public virtual bool DeleteIfExists(ObjectContext objectContext)
+        public virtual void Delete(ObjectContext objectContext)
         {
             DebugCheck.NotNull(objectContext);
 
-            if (Exists(objectContext))
-            {
-                objectContext.DeleteDatabase();
-                return true;
-            }
-            return false;
+            objectContext.DeleteDatabase();
         }
 
         #endregion

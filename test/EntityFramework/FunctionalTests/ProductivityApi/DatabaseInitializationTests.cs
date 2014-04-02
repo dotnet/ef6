@@ -1905,7 +1905,7 @@ namespace ProductivityApiTests
 
             public override void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
             {
-                if (command.CommandText.Contains("SELECT Count(*) FROM sys.databases"))
+                if (command.CommandText.Contains("db_id("))
                 {
                     ExistsCount++;
                 }

@@ -20,15 +20,15 @@ namespace System.Data.Entity.Internal
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public DatabaseExistenceState AnyModelTableExists(InternalContext internalContext)
         {
+            var exists = internalContext.DatabaseOperations.Exists(internalContext.Connection, internalContext.CommandTimeout);
+
+            if (!exists)
+            {
+                return DatabaseExistenceState.DoesNotExist;
+            }
+
             using (var clonedObjectContext = internalContext.CreateObjectContextForDdlOps())
             {
-                var exists = internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext);
-
-                if (!exists)
-                {
-                    return DatabaseExistenceState.DoesNotExist;
-                }
-
                 try
                 {
                     if (internalContext.CodeFirstModel == null)

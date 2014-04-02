@@ -107,14 +107,24 @@ namespace System.Data.Entity.SqlServer
             return builder.unencodedStringBuilder.ToString();
         }
 
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "dbid")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.SqlServer.SqlDdlBuilder.AppendSql(System.String)")]
-        internal static string CreateDatabaseExistsScript(string databaseName, bool useDeprecatedSystemTable)
+        internal static string CreateDatabaseExistsScript(string databaseName)
         {
+            // This handles non-SQL Azure servers by using db_id() which will return a non null value for
+            // a database on the server even if the login doesn't have "view any database" permission.
+            // On SQL Azure db_id() only works for the current database, which means it will never work here
+            // because the current database is master. In this case we fall back to the query from sys.databases.
+            // This doesn't work for non-SQL Azure if the login does not have 'view any database'
+            // permission, but that case was covered by db_id(). On SQL Azure there are no server class
+            // securables, which means it is not possible to deny the login 'view any database' so in theory
+            // if the user can connect to master then the sys.databases query will work.
+
             var builder = new SqlDdlBuilder();
-            builder.AppendSql("SELECT Count(*) FROM ");
-            AppendSysDatabases(builder, useDeprecatedSystemTable);
-            builder.AppendSql(" WHERE [name]=");
+            builder.AppendSql("IF db_id(");
+            builder.AppendStringLiteral(databaseName);
+            builder.AppendSql(") IS NOT NULL SELECT 1 ELSE SELECT Count(*) FROM sys.databases WHERE [name]=");
             builder.AppendStringLiteral(databaseName);
             return builder.unencodedStringBuilder.ToString();
         }

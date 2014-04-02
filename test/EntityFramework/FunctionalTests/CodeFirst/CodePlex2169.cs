@@ -53,7 +53,7 @@ namespace System.Data.Entity.CodeFirst
                 {
                     using (var context = new VagueContext())
                     {
-                        Console.WriteLine(context.VagueItems.ToString());
+                        Assert.NotNull(context.VagueItems.ToString());
                     }
                 });
         }
