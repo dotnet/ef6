@@ -2083,7 +2083,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             return from c1 in mappingFragment1.Conditions
                    from c2 in mappingFragment2.Conditions
-                   where c1.Value.Equals(c2.Value)
+                   where Equals(c1.Value, c2.Value)
                    where !c1.Column.Name.EqualsIgnoreCase(c2.Column.Name)
                    select new RenameColumnOperation(table, c1.Column.Name, c2.Column.Name);
         }

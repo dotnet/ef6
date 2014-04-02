@@ -3510,5 +3510,35 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         #endregion
+
+        // issue 2157
+        [MigrationsTheory]
+        public void Diffing_TPH_models_with_discriminator_based_on_nullability_rather_than_value_works() 
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Foo2157>();
+            modelBuilder.Entity<EnhancedFoo2157>().Map(m => m.Requires(o => o.XColumn).HasValue());
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            // making this change to force the actual diff
+            modelBuilder.Entity<EnhancedFoo2157>().Property(e => e.Name).HasMaxLength(20);
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+            var alterColumnOperation = (AlterColumnOperation)operations.Single();
+            Assert.Equal("Name", alterColumnOperation.Column.Name);
+        }
+
+        public class Foo2157
+        {
+            public Guid Foo2157Id { get; set; }
+        }
+
+        public class EnhancedFoo2157 : Foo2157
+        {
+            public Int32 XColumn { get; set; }
+            public string Name { get; set; }
+        }
     }
 }
