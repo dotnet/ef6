@@ -37,11 +37,11 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     //         <example>
     //             <code>Filter(
     //                 b = Project( c.x
-    //                 c = Extent(foo)
+    //                 c = Extent(xyz)
     //                 )
     //                 exists (
     //                 Filter(
-    //                 c = Extent(foo)
+    //                 c = Extent(xyz)
     //                 b.x = c.x
     //                 )
     //                 )
@@ -60,21 +60,21 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     //         <example>
     //             <code>a = Join(InnerJoin
     //                 b = Join(CrossJoin
-    //                 c = Extent(foo)
-    //                 d = Extent(foo)
+    //                 c = Extent(xyz)
+    //                 d = Extent(xyz)
     //                 )
-    //                 e = Extent(foo)
+    //                 e = Extent(xyz)
     //                 on b.c.x = e.x
     //                 )</code>
     //             If translated directly, this will be translated to
     //             <code>FROM ( SELECT c.*, d.*
-    //                 FROM foo as c
-    //                 CROSS JOIN foo as d) as b
-    //                 INNER JOIN foo as e on b.x' = e.x</code>
+    //                 FROM xyz as c
+    //                 CROSS JOIN xyz as d) as b
+    //                 INNER JOIN xyz as e on b.x' = e.x</code>
     //             It would be better to translate this as
-    //             <code>FROM foo as c
-    //                 CROSS JOIN foo as d
-    //                 INNER JOIN foo as e on c.x = e.x</code>
+    //             <code>FROM xyz as c
+    //                 CROSS JOIN xyz as d
+    //                 INNER JOIN xyz as e on c.x = e.x</code>
     //             This allows the optimizer to choose an appropriate join ordering for evaluation.
     //         </example>
     //     </item>
@@ -162,7 +162,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     //     <example>
     //         <code>Project(b.x
     //             b = Filter(
-    //             c = Extent(foo)
+    //             c = Extent(xyz)
     //             c.x = 5)
     //             )</code>
     //         The Extent node creates a new SqlSelectStatement.  This is added to the

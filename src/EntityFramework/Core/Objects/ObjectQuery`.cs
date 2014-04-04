@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Objects
         // <summary>
         // The default query name, which is used in query-building to refer to an
         // element of the ObjectQuery; e.g., in a call to ObjectQuery.Where(), a predicate of
-        // the form "it.Name = 'Foo'" can be specified, where "it" refers to a T.
+        // the form "it.Name = 'Xyz'" can be specified, where "it" refers to a T.
         // Note that the query name may eventually become a parameter in the command
         // tree, so it must conform to the parameter name restrictions enforced by
         // ObjectParameter.ValidateParameterName(string).

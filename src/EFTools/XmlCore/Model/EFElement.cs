@@ -111,10 +111,10 @@ namespace Microsoft.Data.Entity.Design.Model
         ///     A "ghost node" is a node in the EFObject hiearchy that does not have an explicit XElement in the xml file.
         ///     The edm files allow some syntactic short-hand to make authoring files a bit easier.  This means that there
         ///     are *implied* nodes in our model hiearchy.  For example, this
-        ///     <EntityTypeMapping TableName="foo">...</EntityTypeMapping>
+        ///     <EntityTypeMapping TableName="xyz">...</EntityTypeMapping>
         ///     And this
         ///     <EntityTypeMapping>
-        ///         <MappingFragment TableName="foo">...</MappingFragment>
+        ///         <MappingFragment TableName="xyz">...</MappingFragment>
         ///     </EntityTypeMapping>
         ///     are both valid and mean the same thing semantically.  In both cases, our EFObject tree has a MappingFragment
         ///     node.  In the first example, the MappingFragment node is a "ghost-node" because it is implicit (ie, there is no MappingFragment element in XML).

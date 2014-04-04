@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         // <summary>
-        // For the following expression: "a.b.c.Foo()", returns "a.b.c.Foo".
+        // For the following expression: "a.b.c.Xyz()", returns "a.b.c.Xyz".
         // </summary>
         internal Node Expr
         {

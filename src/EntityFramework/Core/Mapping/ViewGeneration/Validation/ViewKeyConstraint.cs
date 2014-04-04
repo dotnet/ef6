@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
             // Check if the slots in this key are a subset of slots in
             // second. If it is a key in this e.g., <A.pid> then <A.pid,
-            // A.foo> is certainly a key as well
+            // A.xyz> is certainly a key as well
 
             if (KeySlots.IsSubsetOf(second.KeySlots))
             {

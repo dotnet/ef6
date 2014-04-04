@@ -125,8 +125,10 @@ namespace Microsoft.Data.Entity.Design.Model
         }
 
         /// <summary>
-        ///     Find an EFObject given a delimited name identifier. For example, to find the property 'Foo' within the EntityType
-        ///     'Bar', the delimitedNameIdentifier will be 'Foo.Bar' and the startingObject will be the artifact
+        ///     Find an EFObject given a delimited name identifier. For example,
+        ///     to find the property 'SomeProperty' within the EntityType 'SomeEntity',
+        ///     the delimitedNameIdentifier will be 'SomeProperty.SomeEntity' and the
+        ///     startingObject will be the artifact
         /// </summary>
         /// <param name="delimitedNameIdentifier"></param>
         /// <returns></returns>

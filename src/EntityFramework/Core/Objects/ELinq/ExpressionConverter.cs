@@ -302,14 +302,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // Ensures that the given initializer metadata is valid within the current converter context.
         // We do not allow two incompatible structures representing the same type within a query, e.g.,
         //
-        //      outer.Join(inner, o => new Foo { X = o.ID }, i => new Foo { Y = i.ID }, ...
+        //      outer.Join(inner, o => new Xyz { X = o.ID }, i => new Xyz { Y = i.ID }, ...
         //
-        // since this introduces a discrepancy between the CLR (where comparisons between Foo are aware
+        // since this introduces a discrepancy between the CLR (where comparisons between Xyz are aware
         // of both X and Y) and in ELinq (where comparisons are based on the row structure only), resulting
         // in the following join predicates:
         //
-        //      Linq: foo1 == foo2 (which presumably amounts to foo1.X == foo2.X && foo1.Y == foo2.Y
-        //      ELinq: foo1.X == foo2.Y
+        //      Linq: xyz1 == xyz2 (which presumably amounts to xyz1.X == xyz2.X && xyz1.Y == xyz2.Y
+        //      ELinq: xyz1.X == xyz2.Y
         //
         // Similar problems occur with set operations such as Union and Concat, where one of the initialization
         // patterns may be ignored.

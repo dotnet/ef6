@@ -4913,11 +4913,11 @@ namespace System.Data.Entity.Core.Objects
                         // By default, we attempt to swap in a SQL Server friendly representation of the parameter.
                         // For other providers, users may write:
                         //
-                        //      ExecuteStoreQuery("select * from foo f where f.X = ?", 1);
+                        //      ExecuteStoreQuery("select * from xyz f where f.X = ?", 1);
                         //
                         // rather than:
                         //
-                        //      ExecuteStoreQuery("select * from foo f where f.X = {0}", 1);
+                        //      ExecuteStoreQuery("select * from xyz f where f.X = {0}", 1);
                         parameterSql[i] = "@" + parameterNames[i];
                     }
                     command.CommandText = string.Format(CultureInfo.InvariantCulture, command.CommandText, parameterSql);
