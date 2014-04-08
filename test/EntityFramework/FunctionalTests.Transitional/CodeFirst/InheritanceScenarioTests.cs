@@ -128,7 +128,7 @@ namespace FunctionalTests
         public class Comment : MessageBase
         {
             public MessageBase Parent { get; set; }
-            public int ParentId { get; set; }
+            public int? ParentId { get; set; }
         }
 
         [Fact]
@@ -2051,6 +2051,54 @@ namespace FunctionalTests
             public int ParentId { get; set; }
         }
 
+        [Fact]
+        public void Single_concrete_class_has_no_discriminator_column()
+        {
+            const string databaseName = "MessageContext";
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MessageBase>();
+            modelBuilder.Entity<Comment>();
+
+            OnModelCreating(modelBuilder);
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var firstComment = new Comment
+            {
+                Title = "First comment",
+                Contents = "The message"
+            };
+
+            var secondComment = new Comment
+            {
+                Title = "Second comment",
+                Contents = "The message",
+                Parent = firstComment
+            };
+
+            using (var context = new DbContext(databaseName, model.Compile()))
+            {
+                context.Database.Delete();
+                context.Database.Create();
+
+                context.Set<Comment>().Add(firstComment);
+                context.Set<Comment>().Add(secondComment);
+
+                context.SaveChanges();
+            }
+
+            model.DatabaseMapping.AssertValid();
+            model.DatabaseMapping.Assert<Comment>().HasColumns("Id", "Title", "Contents", "ParentId");
+
+            using (var context = new DbContext(databaseName, model.Compile()))
+            {
+                var returnedComment = context.Set<Comment>().Single(c => c.Title.Contains("Second"));
+                Assert.Equal(secondComment.Title, returnedComment.Title);
+                Assert.Equal(secondComment.Contents, returnedComment.Contents);
+                Assert.Equal(secondComment.ParentId, returnedComment.ParentId);
+            }
+        }
     }
 
 

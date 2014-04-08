@@ -409,7 +409,10 @@ namespace System.Data.Entity
 
             public TypeAssertions HasColumns(params string[] columns)
             {
-                Xunit.Assert.True(_table.Properties.Select(c => c.Name).SequenceEqual(columns));
+                Xunit.Assert.True(_table.Properties.Select(c => c.Name).SequenceEqual(columns),
+                    string.Format(
+                    @"Expected: {0}
+Actual: {1}", string.Join(", ", columns), string.Join(", ", _table.Properties.Select(c => c.Name))));
 
                 return this;
             }

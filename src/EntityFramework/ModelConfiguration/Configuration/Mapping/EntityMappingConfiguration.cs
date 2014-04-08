@@ -167,9 +167,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DebugCheck.NotNull(valueCondition);
 
             var existingValueCondition =
-                ValueConditions
-                    .Where(vc => vc.Discriminator.Equals(valueCondition.Discriminator, StringComparison.Ordinal))
-                    .SingleOrDefault();
+                ValueConditions.SingleOrDefault(vc => vc.Discriminator.Equals(valueCondition.Discriminator, StringComparison.Ordinal));
 
             if (existingValueCondition == null)
             {
