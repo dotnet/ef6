@@ -144,8 +144,20 @@
     <!-- Restore the EF6 packages from $(LocalPackageSourceDir) -->
     <Message Importance="High"
              Text="RestoreLocalPackages: Using package input directory $(LocalPackageSourceDir)" />
+    
+    <!-- There is a bug in nuget (see issue 4113) such that if a .nupkg and a .symbols.nupkg for the same identity are side by side
+         then nuget install will use the .symbols.nupkg despite the fact that it is missing some files (specifically "content/**/*" and "tools/**/*.ps1")
+         We need those files in order to include them in the MSI. So here we copy just the .nupkg files to a parallel directory and then
+         install from there -->
+    <PropertyGroup>
+      <CopiedNuGetPackagesDir>$(PackagesInputDir)\..\CopiedNuGetPackages</CopiedNuGetPackagesDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(CopiedNuGetPackagesDir)" />
+    <MakeDir Directories="$(CopiedNuGetPackagesDir)" />
+    <Copy SourceFiles="@(LocalPackages)" DestinationFolder="$(CopiedNuGetPackagesDir)" />
+    
     <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
-             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(LocalPackageSourceDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
+             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(CopiedNuGetPackagesDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
              
   </Target>
 
