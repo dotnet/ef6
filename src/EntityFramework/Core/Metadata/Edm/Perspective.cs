@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Given the type in the target space and the member name in the source space,
         // get the corresponding member in the target space
-        // For e.g.  consider a Conceptual Type 'Foo' with a member 'Bar' and a CLR type
-        // 'XFoo' with a member 'YBar'. If one has a reference to Foo one can
-        // invoke GetMember(Foo,"YBar") to retrieve the member metadata for bar
+        // For e.g.  consider a Conceptual Type 'Abc' with a member 'Def' and a CLR type
+        // 'XAbc' with a member 'YDef'. If one has a reference to Abc one can
+        // invoke GetMember(Abc,"YDef") to retrieve the member metadata for Def
         // </summary>
         // <param name="type"> The type in the target perspective </param>
         // <param name="memberName"> the name of the member in the source perspective </param>

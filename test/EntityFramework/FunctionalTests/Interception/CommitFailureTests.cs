@@ -46,6 +46,7 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void TransactionHandler_and_no_ExecutionStrategy_rethrows_original_exception_on_commit_fail()
         {
             Execute_commit_failure_test(
@@ -109,7 +110,9 @@ namespace System.Data.Entity.Interception
                 rollbackOnFail: true);
         }
 
-        private void Execute_commit_failure_test(Action<Action> verifyInitialization, Action<Action> verifySaveChanges, int expectedBlogs, bool useTransactionHandler, bool useExecutionStrategy, bool rollbackOnFail)
+        private void Execute_commit_failure_test(
+            Action<Action> verifyInitialization, Action<Action> verifySaveChanges, int expectedBlogs, bool useTransactionHandler,
+            bool useExecutionStrategy, bool rollbackOnFail)
         {
             var failingTransactionInterceptorMock = new Mock<FailingTransactionInterceptor> { CallBase = true };
             var failingTransactionInterceptor = failingTransactionInterceptorMock.Object;
@@ -124,7 +127,9 @@ namespace System.Data.Entity.Interception
             if (useExecutionStrategy)
             {
                 MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                    key => (Func<IDbExecutionStrategy>)(() => new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
+                    key =>
+                        (Func<IDbExecutionStrategy>)
+                            (() => new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
             }
 
             try
@@ -163,12 +168,12 @@ namespace System.Data.Entity.Interception
                     {
                         using (var infoContext = GetInfoContext(transactionContext))
                         {
-                            Assert.True(!infoContext.TableExists("__Transactions")
+                            Assert.True(
+                                !infoContext.TableExists("__Transactions")
                                 || !transactionContext.Transactions.Any());
                         }
                     }
                 }
-
             }
             finally
             {
@@ -245,7 +250,9 @@ namespace System.Data.Entity.Interception
             DbInterception.Add(failingTransactionInterceptor);
 
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                key => (Func<IDbExecutionStrategy>)(() => new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
+                key =>
+                    (Func<IDbExecutionStrategy>)
+                        (() => new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
 
             try
             {
@@ -274,7 +281,8 @@ namespace System.Data.Entity.Interception
                     {
                         using (var infoContext = GetInfoContext(transactionContext))
                         {
-                            Assert.True(!infoContext.TableExists("__Transactions")
+                            Assert.True(
+                                !infoContext.TableExists("__Transactions")
                                 || !transactionContext.Transactions.Any());
                         }
                     }
@@ -324,6 +332,69 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
+        public void CommitFailureHandler_prunes_transactions_after_set_amount()
+        {
+            CommitFailureHandler_prunes_transactions_after_set_amount_implementation(false);
+        }
+
+        [Fact]
+        public void CommitFailureHandler_prunes_transactions_after_set_amount_and_handles_false_failure()
+        {
+            CommitFailureHandler_prunes_transactions_after_set_amount_implementation(true);
+        }
+
+        private void CommitFailureHandler_prunes_transactions_after_set_amount_implementation(bool shouldThrow)
+        {
+            var failingTransactionInterceptor = new FailingTransactionInterceptor();
+            DbInterception.Add(failingTransactionInterceptor);
+
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new MyCommitFailureHandler(c => new TransactionContext(c)), null, null));
+
+            try
+            {
+                using (var context = new BlogContextCommit())
+                {
+                    context.Database.Delete();
+                    Assert.Equal(1, context.Blogs.Count());
+
+                    var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+                    var transactionHandler = (MyCommitFailureHandler)objectContext.TransactionHandler;
+
+                    for (var i = 0; i < transactionHandler.PruningLimit; i++)
+                    {
+                        context.Blogs.Add(new BlogContext.Blog());
+                        context.SaveChanges();
+                    }
+
+                    AssertTransactionHistoryCount(context, transactionHandler.PruningLimit);
+
+                    if (shouldThrow)
+                    {
+                        failingTransactionInterceptor.ShouldFailTimes = 1;
+                        failingTransactionInterceptor.ShouldRollBack = false;
+                    }
+
+                    context.Blogs.Add(new BlogContext.Blog());
+                    context.SaveChanges();
+
+                    context.Blogs.Add(new BlogContext.Blog());
+                    context.SaveChanges();
+
+                    AssertTransactionHistoryCount(context, 1);
+                    Assert.Equal(1, transactionHandler.TransactionContext.ChangeTracker.Entries<TransactionRow>().Count());
+                }
+            }
+            finally
+            {
+                DbInterception.Remove(failingTransactionInterceptor);
+                MutableResolver.ClearResolvers();
+            }
+
+            DbDispatchersHelpers.AssertNoInterceptors();
+        }
+
+        [Fact]
         public void CommitFailureHandler_ClearTransactionHistory_uses_ExecutionStrategy()
         {
             CommitFailureHandler_with_ExecutionStrategy_test(
@@ -332,30 +403,42 @@ namespace System.Data.Entity.Interception
                     ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistory();
 
                     executionStrategyMock.Verify(e => e.Execute(It.IsAny<Func<int>>()), Times.Exactly(4));
+
+                    Assert.Empty(((MyCommitFailureHandler)c.TransactionHandler).TransactionContext.ChangeTracker.Entries<TransactionRow>());
                 });
         }
 
         [Fact]
         public void CommitFailureHandler_ClearTransactionHistory_does_not_catch_exceptions()
         {
-            CommitFailureHandler_with_ExecutionStrategy_test(
-                (c, executionStrategyMock) =>
-                {
-                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                        key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
+            var failingTransactionInterceptor = new FailingTransactionInterceptor();
+            DbInterception.Add(failingTransactionInterceptor);
 
-                    using (var transactionContext = new TransactionContext(((EntityConnection)c.Connection).StoreConnection))
+            try
+            {
+                CommitFailureHandler_with_ExecutionStrategy_test(
+                    (c, executionStrategyMock) =>
                     {
-                        foreach (var tran in transactionContext.Set<TransactionRow>().ToList())
-                        {
-                            transactionContext.Transactions.Remove(tran);
-                        }
-                        transactionContext.SaveChanges();
-                    }
+                        MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                            key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
 
-                    Assert.Throws<OptimisticConcurrencyException>(
-                        () => ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistory());
-                });
+                        failingTransactionInterceptor.ShouldFailTimes = 1;
+                        failingTransactionInterceptor.ShouldRollBack = true;
+
+                        Assert.Throws<EntityException>(
+                            () => ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistory());
+
+                        AssertTransactionHistoryCount(c, 1);
+
+                        ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistory();
+
+                        AssertTransactionHistoryCount(c, 0);
+                    });
+            }
+            finally
+            {
+                DbInterception.Remove(failingTransactionInterceptor);
+            }
         }
 
         [Fact]
@@ -367,30 +450,42 @@ namespace System.Data.Entity.Interception
                     ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistory();
 
                     executionStrategyMock.Verify(e => e.Execute(It.IsAny<Func<int>>()), Times.Exactly(4));
+
+                    Assert.Empty(((MyCommitFailureHandler)c.TransactionHandler).TransactionContext.ChangeTracker.Entries<TransactionRow>());
                 });
         }
 
         [Fact]
         public void CommitFailureHandler_PruneTransactionHistory_does_not_catch_exceptions()
         {
-            CommitFailureHandler_with_ExecutionStrategy_test(
-                (c, executionStrategyMock) =>
-                {
-                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                        key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
+            var failingTransactionInterceptor = new FailingTransactionInterceptor();
+            DbInterception.Add(failingTransactionInterceptor);
 
-                    using (var transactionContext = new TransactionContext(((EntityConnection)c.Connection).StoreConnection))
+            try
+            {
+                CommitFailureHandler_with_ExecutionStrategy_test(
+                    (c, executionStrategyMock) =>
                     {
-                        foreach (var tran in transactionContext.Set<TransactionRow>().ToList())
-                        {
-                            transactionContext.Transactions.Remove(tran);
-                        }
-                        transactionContext.SaveChanges();
-                    }
+                        MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                            key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
 
-                    Assert.Throws<OptimisticConcurrencyException>(
-                        () =>((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistory());
-                });
+                        failingTransactionInterceptor.ShouldFailTimes = 1;
+                        failingTransactionInterceptor.ShouldRollBack = true;
+
+                        Assert.Throws<EntityException>(
+                            () => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistory());
+
+                        AssertTransactionHistoryCount(c, 1);
+
+                        ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistory();
+
+                        AssertTransactionHistoryCount(c, 0);
+                    });
+            }
+            finally
+            {
+                DbInterception.Remove(failingTransactionInterceptor);
+            }
         }
 
 #if !NET40
@@ -404,31 +499,43 @@ namespace System.Data.Entity.Interception
 
                     executionStrategyMock.Verify(
                         e => e.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Once());
+
+                    Assert.Empty(((MyCommitFailureHandler)c.TransactionHandler).TransactionContext.ChangeTracker.Entries<TransactionRow>());
                 });
         }
 
         [Fact]
-        public void CommitFailureHandler_ClearTransactionHistoryAsync_does_not_throw_exceptions()
+        public void CommitFailureHandler_ClearTransactionHistoryAsync_does_not_catch_exceptions()
         {
-            CommitFailureHandler_with_ExecutionStrategy_test(
-                (c, executionStrategyMock) =>
-                {
-                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                        key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
+            var failingTransactionInterceptor = new FailingTransactionInterceptor();
+            DbInterception.Add(failingTransactionInterceptor);
 
-                    using (var transactionContext = new TransactionContext(((EntityConnection)c.Connection).StoreConnection))
+            try
+            {
+                CommitFailureHandler_with_ExecutionStrategy_test(
+                    (c, executionStrategyMock) =>
                     {
-                        foreach (var tran in transactionContext.Set<TransactionRow>().ToList())
-                        {
-                            transactionContext.Transactions.Remove(tran);
-                        }
-                        transactionContext.SaveChanges();
-                    }
+                        MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                            key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
 
-                    Assert.Throws<OptimisticConcurrencyException>(
-                        () => ExceptionHelpers.UnwrapAggregateExceptions(
-                            () => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait()));
-                });
+                        failingTransactionInterceptor.ShouldFailTimes = 1;
+                        failingTransactionInterceptor.ShouldRollBack = true;
+
+                        Assert.Throws<EntityException>(
+                            () => ExceptionHelpers.UnwrapAggregateExceptions(
+                                () => ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistoryAsync().Wait()));
+
+                        AssertTransactionHistoryCount(c, 1);
+
+                        ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistoryAsync().Wait();
+
+                        AssertTransactionHistoryCount(c, 0);
+                    });
+            }
+            finally
+            {
+                DbInterception.Remove(failingTransactionInterceptor);
+            }
         }
 
         [Fact]
@@ -441,31 +548,43 @@ namespace System.Data.Entity.Interception
 
                     executionStrategyMock.Verify(
                         e => e.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Once());
+
+                    Assert.Empty(((MyCommitFailureHandler)c.TransactionHandler).TransactionContext.ChangeTracker.Entries<TransactionRow>());
                 });
         }
 
         [Fact]
-        public void CommitFailureHandler_PruneTransactionHistoryAsync_does_not_throw_exceptions()
+        public void CommitFailureHandler_PruneTransactionHistoryAsync_does_not_catch_exceptions()
         {
-            CommitFailureHandler_with_ExecutionStrategy_test(
-                (c, executionStrategyMock) =>
-                {
-                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                        key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
+            var failingTransactionInterceptor = new FailingTransactionInterceptor();
+            DbInterception.Add(failingTransactionInterceptor);
 
-                    using (var transactionContext = new TransactionContext(((EntityConnection)c.Connection).StoreConnection))
+            try
+            {
+                CommitFailureHandler_with_ExecutionStrategy_test(
+                    (c, executionStrategyMock) =>
                     {
-                        foreach (var tran in transactionContext.Set<TransactionRow>().ToList())
-                        {
-                            transactionContext.Transactions.Remove(tran);
-                        }
-                        transactionContext.SaveChanges();
-                    }
+                        MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                            key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
 
-                    Assert.Throws<OptimisticConcurrencyException>(
-                        () => ExceptionHelpers.UnwrapAggregateExceptions(
-                            () => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait()));
-                });
+                        failingTransactionInterceptor.ShouldFailTimes = 1;
+                        failingTransactionInterceptor.ShouldRollBack = true;
+
+                        Assert.Throws<EntityException>(
+                            () => ExceptionHelpers.UnwrapAggregateExceptions(
+                                () => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait()));
+
+                        AssertTransactionHistoryCount(c, 1);
+
+                        ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait();
+
+                        AssertTransactionHistoryCount(c, 0);
+                    });
+            }
+            finally
+            {
+                DbInterception.Remove(failingTransactionInterceptor);
+            }
         }
 #endif
 
@@ -491,10 +610,7 @@ namespace System.Data.Entity.Interception
 
                     context.SaveChanges();
 
-                    using (var transactionContext = new TransactionContext(context.Database.Connection))
-                    {
-                        Assert.Equal(1, transactionContext.Transactions.Count());
-                    }
+                    AssertTransactionHistoryCount(context, 1);
 
                     executionStrategyMock.Verify(e => e.Execute(It.IsAny<Func<int>>()), Times.Exactly(3));
                     executionStrategyMock.Verify(
@@ -513,8 +629,19 @@ namespace System.Data.Entity.Interception
             {
                 MutableResolver.ClearResolvers();
             }
+        }
 
-            DbDispatchersHelpers.AssertNoInterceptors();
+        private void AssertTransactionHistoryCount(DbContext context, int count)
+        {
+            AssertTransactionHistoryCount(((IObjectContextAdapter)context).ObjectContext, count);
+        }
+
+        private void AssertTransactionHistoryCount(ObjectContext context, int count)
+        {
+            using (var transactionContext = new TransactionContext(((EntityConnection)context.Connection).StoreConnection))
+            {
+                Assert.Equal(count, transactionContext.Transactions.Count());
+            }
         }
 
         public class SimpleExecutionStrategy : IDbExecutionStrategy
@@ -548,13 +675,23 @@ namespace System.Data.Entity.Interception
         public class MyCommitFailureHandler : CommitFailureHandler
         {
             public MyCommitFailureHandler(Func<DbConnection, TransactionContext> transactionContextFactory)
-                :base(transactionContextFactory)
+                : base(transactionContextFactory)
             {
             }
 
             public new void MarkTransactionForPruning(TransactionRow transaction)
             {
                 base.MarkTransactionForPruning(transaction);
+            }
+
+            public new TransactionContext TransactionContext
+            {
+                get { return base.TransactionContext; }
+            }
+
+            public new virtual int PruningLimit
+            {
+                get { return base.PruningLimit; }
             }
         }
 

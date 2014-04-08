@@ -141,6 +141,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
             var v2 = new Version(2, 0, 0, 0);
             var v3 = new Version(3, 0, 0, 0);
 
+
             Assert.Equal(v1, SchemaManager.GetSchemaVersion(CsdlNsV1));
             Assert.Equal(v2, SchemaManager.GetSchemaVersion(CsdlNsV2));
             Assert.Equal(v3, SchemaManager.GetSchemaVersion(CsdlNsV3));
@@ -157,6 +158,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
             Assert.Equal(v2, SchemaManager.GetSchemaVersion(EdmxNsV2));
             Assert.Equal(v3, SchemaManager.GetSchemaVersion(EdmxNsV3));
 
+            Assert.Equal(v1, SchemaManager.GetSchemaVersion(null));
             Assert.Equal(v1, SchemaManager.GetSchemaVersion("abc"));
         }
 

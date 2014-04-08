@@ -62,7 +62,7 @@ namespace System.Data.Entity.Infrastructure.Annotations
             return stringBuilder.ToString();
         }
 
-        // For example: "{ Name: 'Foo', Order: 1, IsClustered: True, IsUnique: False }"
+        // For example: "{ Name: 'Xyz', Order: 1, IsClustered: True, IsUnique: False }"
         internal static string SerializeIndexAttribute(IndexAttribute indexAttribute)
         {
             DebugCheck.NotNull(indexAttribute);

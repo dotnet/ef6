@@ -640,6 +640,7 @@ namespace System.Data.Entity.Migrations
 
 
         [MigrationsTheory]
+        [UseDefaultExecutionStrategy]
         public void Does_not_throw_ArgumentNullException_on_null_transaction()
         {
             DropDatabase();

@@ -123,7 +123,7 @@ namespace System.Data.Entity.Internal
                     (config, context) =>
                         {
                             configuration = config;
-                            return new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown).Object;
+                            return new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown, true).Object;
                         },
                     null);
 
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Internal
 
                 new DatabaseCreator().CreateDatabase(
                     mockContext.Object,
-                    (config, context) => (mockMigrator = new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown)).Object,
+                    (config, context) => (mockMigrator = new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown, true)).Object,
                     null);
 
                 mockMigrator.Verify(m => m.Update(null), Times.Once());
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Internal
                 
                 new DatabaseCreator().CreateDatabase(
                     internalContext,
-                    (config, context) => new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown).Object,
+                    (config, context) => new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown, true).Object,
                     null);
 
                 Assert.Null(DbContextInfo.TryGetInfoForContext(internalContext.Owner.GetType()));
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Internal
 
                 new DatabaseCreator().CreateDatabase(
                     mockContext.Object,
-                    (config, context) => new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown).Object,
+                    (config, context) => new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown, true).Object,
                     null);
 
                 Assert.False(mockContext.Object.IsDisposed);

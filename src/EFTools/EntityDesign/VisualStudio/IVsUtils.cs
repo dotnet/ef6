@@ -19,5 +19,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         LangEnum GetLanguageForProject(Project project);
         void WriteCheckoutXmlFilesInProject(IDictionary<string, object> filesMap);
         void WriteCheckoutTextFilesInProject(IDictionary<string, object> filesMap);
+        void ShowErrorDialog(string message);
     }
 }

@@ -32,7 +32,7 @@ namespace System.Data.Entity.Infrastructure
         // Doesn't need to be thread-safe since transactions can't run concurrently on the same connection
         private readonly Dictionary<DbTransaction, TransactionRow> _transactions = new Dictionary<DbTransaction, TransactionRow>();
 
-        private readonly List<TransactionRow> _rowsToDelete = new List<TransactionRow>();
+        private readonly HashSet<TransactionRow> _rowsToDelete = new HashSet<TransactionRow>();
 
         private readonly Func<DbConnection, TransactionContext> _transactionContextFactory;
 
@@ -343,7 +343,9 @@ namespace System.Data.Entity.Infrastructure
         {
             await TransactionContext.Transactions.ForEachAsync(MarkTransactionForPruning, cancellationToken)
                 .ConfigureAwait(continueOnCapturedContext: false);
-            await PruneTransactionHistoryAsync( /*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await
+                PruneTransactionHistoryAsync( /*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
         }
 #endif
 
@@ -386,7 +388,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>A task that represents the asynchronous operation.</returns>
         public Task PruneTransactionHistoryAsync(CancellationToken cancellationToken)
         {
-            return PruneTransactionHistoryAsync(/*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken);
+            return PruneTransactionHistoryAsync( /*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken);
         }
 #endif
 
@@ -401,17 +403,30 @@ namespace System.Data.Entity.Infrastructure
         /// </param>
         protected virtual void PruneTransactionHistory(bool force, bool useExecutionStrategy)
         {
-            if (force || _rowsToDelete.Count > PruningLimit)
+            if (_rowsToDelete.Count > 0
+                && (force || _rowsToDelete.Count > PruningLimit))
             {
-                foreach (var rowToDelete in _rowsToDelete)
+                foreach (var rowToDelete in TransactionContext.Transactions.ToList())
                 {
-                    TransactionContext.Transactions.Remove(rowToDelete);
+                    if (_rowsToDelete.Contains(rowToDelete))
+                    {
+                        TransactionContext.Transactions.Remove(rowToDelete);
+                    }
                 }
 
-                _rowsToDelete.Clear();
+                var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
 
-                ((IObjectContextAdapter)TransactionContext).ObjectContext
-                    .SaveChangesInternal(SaveOptions.AcceptAllChangesAfterSave, executeInExistingTransaction: !useExecutionStrategy);
+                try
+                {
+                    objectContext.SaveChangesInternal(SaveOptions.None, executeInExistingTransaction: !useExecutionStrategy);
+                    _rowsToDelete.Clear();
+                }
+                finally
+                {
+                    // If SaveChanges failed we don't know whether the changes went through, so we will assume they did,
+                    // but will retry the next time this method is called.
+                    objectContext.AcceptAllChanges();
+                }
             }
         }
 
@@ -430,19 +445,33 @@ namespace System.Data.Entity.Infrastructure
         protected virtual async Task PruneTransactionHistoryAsync(
             bool force, bool useExecutionStrategy, CancellationToken cancellationToken)
         {
-            if (force || _rowsToDelete.Count > PruningLimit)
+            if (_rowsToDelete.Count > 0
+                && (force || _rowsToDelete.Count > PruningLimit))
             {
-                foreach (var rowToDelete in _rowsToDelete)
+                foreach (var rowToDelete in TransactionContext.Transactions.ToList())
                 {
-                    TransactionContext.Transactions.Remove(rowToDelete);
+                    if (_rowsToDelete.Contains(rowToDelete))
+                    {
+                        TransactionContext.Transactions.Remove(rowToDelete);
+                    }
                 }
 
-                _rowsToDelete.Clear();
+                var objectContext = ((IObjectContextAdapter)TransactionContext).ObjectContext;
 
-                await ((IObjectContextAdapter)TransactionContext).ObjectContext
-                    .SaveChangesInternalAsync(
-                        SaveOptions.AcceptAllChangesAfterSave, /*executeInExistingTransaction:*/ !useExecutionStrategy, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                try
+                {
+                    await ((IObjectContextAdapter)TransactionContext).ObjectContext
+                        .SaveChangesInternalAsync(
+                            SaveOptions.None, /*executeInExistingTransaction:*/ !useExecutionStrategy, cancellationToken)
+                        .ConfigureAwait(continueOnCapturedContext: false);
+                    _rowsToDelete.Clear();
+                }
+                finally
+                {
+                    // If SaveChanges failed we don't know whether the changes went through, so we will assume they did,
+                    // but will retry the next time this method is called.
+                    objectContext.AcceptAllChanges();
+                }
             }
         }
 #endif

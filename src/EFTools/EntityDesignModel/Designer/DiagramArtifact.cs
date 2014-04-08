@@ -20,8 +20,6 @@ namespace Microsoft.Data.Entity.Design.Model
         private EFDesignerInfoRoot _designerInfoRoot;
         private HashSet<string> _namespaces;
 
-        internal event EventHandler<DiagramElementNameCommittedArgs> ElementNameCommitted;
-
         /// <summary>
         ///     Constructs an DiagramArtifact for the passed in URI
         /// </summary>
@@ -31,24 +29,6 @@ namespace Microsoft.Data.Entity.Design.Model
         internal DiagramArtifact(ModelManager modelManager, Uri uri, XmlModelProvider xmlModelProvider)
             : base(modelManager, uri, xmlModelProvider)
         {
-        }
-
-        internal void RaiseShapeNameCommitted(string shapeName)
-        {
-            var handler = ElementNameCommitted;
-            if (handler != null)
-            {
-                handler(this, new DiagramElementNameCommittedArgs(shapeName));
-            }
-        }
-
-        internal void RaisePropertyNameCommitted(string shapeName, string propertyName)
-        {
-            var handler = ElementNameCommitted;
-            if (handler != null)
-            {
-                handler(this, new DiagramElementNameCommittedArgs(shapeName, propertyName));
-            }
         }
 
         protected override void Dispose(bool disposing)

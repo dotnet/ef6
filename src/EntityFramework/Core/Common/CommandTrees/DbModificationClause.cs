@@ -12,8 +12,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// <remarks>
     /// An abstract base class allows the possibility of patterns other than
     /// Property = Value in future versions, e.g.,
-    /// <code>update Foo
-    ///     set ComplexTypeColumn.Bar()
+    /// <code>update SomeTable
+    ///     set ComplexTypeColumn.SomeProperty()
     ///     where Id = 2</code>
     /// </remarks>
     public abstract class DbModificationClause

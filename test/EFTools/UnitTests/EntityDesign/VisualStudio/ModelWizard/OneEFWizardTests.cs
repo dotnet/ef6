@@ -2,7 +2,6 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 {
-    using System.CodeDom.Compiler;
     using System.Data.Entity.Infrastructure;
     using System.IO;
     using EnvDTE;
@@ -299,6 +298,114 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
             return new OneEFWizard(
                 vsUtils: mockVsUtils.Object, errorListHelper: mockErrorListHelper.Object, errorCache: errorCache);
+        }
+
+        [Fact]
+        public void RunStarted_handles_CodeFirstModelGenerationException_and_shows_error_dialog()
+        {
+            var project = MockDTE.CreateProject();
+            var mockCodeGenerator = new Mock<CodeFirstModelGenerator>(project);
+
+            var innerException = new Exception("InnerException", new InvalidOperationException("nested InnerException"));
+
+            mockCodeGenerator
+                .Setup(g => g.Generate(It.IsAny<DbModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Throws(new CodeFirstModelGenerationException("Failed generating code.", innerException));
+
+            var mockVsUtils = new Mock<IVsUtils>();
+
+            var replacementsDictionary = new Dictionary<string, string>
+            {
+                { "$safeitemname$", "context.cs" },
+                { "$rootnamespace$", "My.Namespace" }
+            };
+
+            new OneEFWizard(vsUtils: mockVsUtils.Object)
+                .RunStarted(new ModelBuilderSettings(), mockCodeGenerator.Object, replacementsDictionary);
+
+            mockVsUtils.Verify(u => u.ShowErrorDialog("Failed generating code.\r\n" + innerException), Times.Once());
+        }
+
+        [Fact]
+        public void ShouldAddProjectItem_returns_false_if_code_could_not_be_generated()
+        {
+            Assert.False(
+                new OneEFWizard(vsUtils: Mock.Of<IVsUtils>(), generatedCode: null)
+                    .ShouldAddProjectItem(string.Empty));
+
+            Assert.False(
+                new OneEFWizard(vsUtils: Mock.Of<IVsUtils>(), generatedCode: new List<KeyValuePair<string, string>>())
+                    .ShouldAddProjectItem(string.Empty));
+        }
+
+        [Fact]
+        public void ShouldAddProjectItem_returns_true_if_code_could_be_generated()
+        {
+            Assert.True(
+                new OneEFWizard(
+                    vsUtils: Mock.Of<IVsUtils>(),
+                    generatedCode: new List<KeyValuePair<string, string>> { new KeyValuePair<string, string>(string.Empty, string.Empty) })
+                    .ShouldAddProjectItem(string.Empty));
+        }
+
+        [Fact]
+        public void RunStarted_passes_safeitemname_as_context_name_if_valid_identifier()
+        {
+            const string contextName = "MyContext";
+
+            var mockVsUtils = new Mock<IVsUtils>();
+            var wizard = new OneEFWizard(vsUtils: mockVsUtils.Object);
+
+            var mockCodeGenerator = new Mock<CodeFirstModelGenerator>(MockDTE.CreateProject());
+            mockCodeGenerator
+                .Setup(g => g.Generate(It.IsAny<DbModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+
+            var settings = new ModelBuilderSettings { VSApplicationType = VisualStudioProjectSystem.WebApplication };
+            var replacenentsDictionary = new Dictionary<string, string>
+            {
+                { "$safeitemname$", contextName },
+                { "$rootnamespace$", "Project" }
+            };
+
+            wizard.RunStarted(settings, mockCodeGenerator.Object, replacenentsDictionary);
+
+            mockCodeGenerator.Verify(
+                g => g.Generate(
+                    It.IsAny<DbModel>(),
+                    "Project",
+                    /*contextClassName*/ It.Is<string>(v => ReferenceEquals(v, contextName)),
+                    /*connectionStringName*/ It.Is<string>(v => ReferenceEquals(v, contextName))),
+            Times.Once());
+        }
+
+        [Fact]
+        public void RunStarted_creates_valid_context_name_if_safeitemname_is_not_valid_identifier()
+        {
+            var mockVsUtils = new Mock<IVsUtils>();
+            var wizard = new OneEFWizard(vsUtils: mockVsUtils.Object);
+
+            var mockCodeGenerator = new Mock<CodeFirstModelGenerator>(MockDTE.CreateProject());
+            mockCodeGenerator
+                .Setup(g => g.Generate(It.IsAny<DbModel>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(new[] { new KeyValuePair<string, string>(string.Empty, string.Empty) });
+
+            var settings = new ModelBuilderSettings { VSApplicationType = VisualStudioProjectSystem.WebApplication };
+            var replacenentsDictionary = new Dictionary<string, string>
+            {
+                { "$safeitemname$", "3My.Con text" },
+                { "$rootnamespace$", "Project" }
+            };
+
+            wizard.RunStarted(settings, mockCodeGenerator.Object, replacenentsDictionary);
+
+            mockCodeGenerator.Verify(
+                g => g.Generate(
+                    It.IsAny<DbModel>(), 
+                    "Project",
+                    /*contextClassName*/ "_3MyContext",
+                    /*connectionStringName*/ "_3MyContext"),
+                Times.Once());
         }
     }
 }

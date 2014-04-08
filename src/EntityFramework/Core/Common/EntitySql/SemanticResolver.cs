@@ -485,7 +485,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal MetadataMember ResolveSimpleFunctionName(string name, ErrorContext errCtx)
         {
             //
-            // "Foo()" represents a simple function name. Resolve it as an unqualified name by calling the type resolver directly.
+            // "SomeFunction()" represents a simple function name. Resolve it as an unqualified name by calling the type resolver directly.
             // Note that calling type resolver directly will avoid resolution of the identifier as a local variable or entity container
             // (these resolutions are performed only by ResolveSimpleName(...)).
             //

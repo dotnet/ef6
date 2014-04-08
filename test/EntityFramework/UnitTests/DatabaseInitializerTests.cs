@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity
 {
+    using System.Data.Common;
+    using Moq;
     using System;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
@@ -11,7 +13,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using Moq;
+    using System.Linq;
     using Xunit;
 
     /// <summary>
@@ -97,7 +99,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
@@ -108,7 +110,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists Delete CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
@@ -119,7 +121,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists Delete CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
@@ -130,7 +132,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists CreateDatabase Seed", tracker.Result);
         }
 
         #endregion
@@ -263,7 +265,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists DeleteIfExists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists Exists Delete CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
@@ -306,7 +308,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists DeleteIfExists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("Exists Exists Delete CreateDatabase Seed", tracker.Result);
         }
 
         [Fact] // CodePlex 1192
@@ -329,9 +331,18 @@ namespace System.Data.Entity
 
         public class EmptyContext : DbContext
         {
+            public EmptyContext() : base() { }
+
+            public EmptyContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
         }
 
-        private class TestMigrationsConfiguration : DbMigrationsConfiguration<EmptyContext>
+        public class EmptyNonConstructableContext : EmptyContext
+        {
+            public EmptyNonConstructableContext(string nameOrConnectionString) : base(nameOrConnectionString) { }
+        }
+
+        private class TestMigrationsConfiguration<ContextT> : DbMigrationsConfiguration<ContextT>
+            where ContextT : EmptyContext
         {
             public TestMigrationsConfiguration()
             {
@@ -339,7 +350,7 @@ namespace System.Data.Entity
                 AutomaticMigrationsEnabled = true;
             }
 
-            protected override void Seed(EmptyContext context)
+            protected override void Seed(ContextT context)
             {
                 SeedCalled = true;
                 SeedDatabase = context.Database.Connection.Database;
@@ -347,6 +358,16 @@ namespace System.Data.Entity
 
             public static bool SeedCalled { get; set; }
             public static string SeedDatabase { get; set; }
+        }
+
+        private class TestMigrationsConfiguration : TestMigrationsConfiguration<EmptyContext>
+        {
+
+        }
+
+        private class TestNonConstructableMigrationsConfiguration : TestMigrationsConfiguration<EmptyNonConstructableContext>
+        {
+
         }
 
         [Fact]
@@ -360,6 +381,90 @@ namespace System.Data.Entity
 
             // If seed gets called we know the migrations pipeline was invoked to update to the latest version
             Assert.True(TestMigrationsConfiguration.SeedCalled);
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_uses_passed_context()
+        {
+            var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(true);
+
+            TestMigrationsConfiguration.SeedDatabase = null;
+
+            init.InitializeDatabase(new EmptyContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
+
+            Assert.Equal("MigrationInitFromConfig", TestMigrationsConfiguration.SeedDatabase);
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_uses_passed_nonconstructable_context()
+        {
+            var init = new MigrateDatabaseToLatestVersion<EmptyNonConstructableContext, TestNonConstructableMigrationsConfiguration>(true);
+
+            TestMigrationsConfiguration.SeedDatabase = null;
+            TestNonConstructableMigrationsConfiguration.SeedDatabase = null;
+
+            init.InitializeDatabase(new EmptyNonConstructableContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
+
+            Assert.Null(TestMigrationsConfiguration.SeedDatabase);
+            Assert.Equal("MigrationInitFromConfig", TestNonConstructableMigrationsConfiguration.SeedDatabase);
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_uses_own_context()
+        {
+            var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(false);
+
+            TestMigrationsConfiguration.SeedDatabase = null;
+
+            init.InitializeDatabase(new EmptyContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
+
+            Assert.NotEqual("MigrationInitFromConfig", TestMigrationsConfiguration.SeedDatabase);
+            Assert.Equal("System.Data.Entity.DatabaseInitializerTests+EmptyContext", TestMigrationsConfiguration.SeedDatabase);
+        }
+
+        private class FakeForMdtlvsgpsc : DbContext
+        {
+            public DbSet<Blog> Blogs { get; set; }
+
+            public class Blog
+            {
+                public int BlogId { get; set; }
+                public string Name { get; set; }
+            }
+        }
+
+        private class SeedingMigrationsConfiguration : DbMigrationsConfiguration<FakeForMdtlvsgpsc>
+        {
+            public static DbContext DbContextUsedForSeeding { get; set; }
+
+            public SeedingMigrationsConfiguration()
+            {
+                AutomaticMigrationsEnabled = true;
+            }
+
+            protected override void Seed(FakeForMdtlvsgpsc context)
+            {
+                context.Blogs.Add(new FakeForMdtlvsgpsc.Blog());
+                context.Blogs.Add(new FakeForMdtlvsgpsc.Blog());
+                context.Blogs.Add(new FakeForMdtlvsgpsc.Blog());
+
+                DbContextUsedForSeeding = context;
+            }
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_seed_doesnt_pollute_supplied_context()
+        {
+            SeedingMigrationsConfiguration.DbContextUsedForSeeding = null;
+
+            using (var context = new FakeForMdtlvsgpsc())
+            {
+                var init = new MigrateDatabaseToLatestVersion<FakeForMdtlvsgpsc, SeedingMigrationsConfiguration>(useSuppliedContext: true);
+                init.InitializeDatabase(context);
+
+                Assert.Equal(0, context.ChangeTracker.Entries().Count());
+                Assert.ReferenceEquals(context, SeedingMigrationsConfiguration.DbContextUsedForSeeding);
+            }
         }
 
         [Fact]
@@ -716,7 +821,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>();
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
-            mockOperations.Setup(m => m.Exists(null)).Returns(false);
+            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>())).Returns(false);
 
             mockContext.Object.Owner.Database.Create();
 
@@ -730,7 +835,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>();
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
-            mockOperations.Setup(m => m.Exists(null)).Returns(false);
+            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>())).Returns(false);
 
             mockContext.Object.Owner.Database.CreateIfNotExists();
 
@@ -744,7 +849,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>() { CallBase = true };
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.Connection).Returns(new SqlConnection("Database=Foo"));
-            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
 
             Assert.Equal(
                 Strings.Database_DatabaseAlreadyExists("Foo"),
@@ -760,7 +865,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>();
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
-            mockOperations.Setup(m => m.Exists(null)).Returns(true);
+            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>())).Returns(true);
 
             mockContext.Object.Owner.Database.CreateIfNotExists();
 

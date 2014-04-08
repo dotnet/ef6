@@ -37,6 +37,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     internal partial class WizardPageDbConfig : WizardPageBase
     {
         private readonly ConfigFileUtils _configFileUtils;
+        private readonly CodeIdentifierUtils _identifierUtil;
         private bool _isInitialized;
 
         //  DDEX Services we use
@@ -55,6 +56,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             _configFileUtils =
                 new ConfigFileUtils(wizard.Project, wizard.ServiceProvider, wizard.ModelBuilderSettings.VSApplicationType);
+
+            _identifierUtil =
+                new CodeIdentifierUtils(wizard.ModelBuilderSettings.VSApplicationType, VsUtils.GetLanguageForProject(wizard.Project));
 
             Headline = Resources.DbConfigPage_Title;
             Logo = Resources.PageIcon;
@@ -272,7 +276,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             {
                 var id = textBoxAppConfigConnectionName.Text;
                 if (!EscherAttributeContentValidator.IsValidCsdlEntityContainerName(id)
-                    || !VsUtils.IsValidIdentifier(id, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
+                    || !_identifierUtil.IsValidIdentifier(id))
                 {
                     VsUtils.ShowErrorDialog(
                         string.Format(CultureInfo.CurrentCulture, Resources.ConnectionStringNonValidIdentifier, id));
@@ -781,7 +785,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 baseName = baseName.Replace("\t", "_");
                 baseName = baseName + ModelConstants.DefaultEntityContainerName;
 
-                if (!VsUtils.IsValidIdentifier(baseName, Wizard.Project, Wizard.ModelBuilderSettings.VSApplicationType))
+                if (!_identifierUtil.IsValidIdentifier(baseName))
                 {
                     baseName = ModelConstants.DefaultEntityContainerName;
                 }
@@ -845,7 +849,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         private void NewDataSourceSelected()
         {
-            SetDataConnection(((DataSourceComboBoxItem)dataSourceComboBox.SelectedItem).GetDataConnection(_dataConnectionManager));
+            var selectedItem = (DataSourceComboBoxItem)dataSourceComboBox.SelectedItem;
+
+            // If the SelectedIndexChanged event is fired but there are no items in the combobox 
+            // the selected index is -1 and the selected item is null. To avoid the NRE and VS crash 
+            // we just don't do anything in this case. Another way to trigger the NRE was to go back to 
+            // the first page and return to the db config page when the combobox was empty
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            SetDataConnection(selectedItem.GetDataConnection(_dataConnectionManager));
 
             // new data source has been selected, we should invalidate following pages
             Wizard.InvalidateFollowingPages();
@@ -869,9 +884,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void dataSourceComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            NewDataSourceSelected();
+            try
+            {
+                NewDataSourceSelected();
+            }
+            catch (Exception ex)
+            {
+                VsUtils.ShowErrorDialog(ex.Message);
+            }
         }
 
         private class DataSourceComboBoxItem

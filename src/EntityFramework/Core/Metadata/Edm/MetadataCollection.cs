@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var existingIdentity = _metadataList[index].Identity;
                 _metadataList[index] = value;
 
-                HandleIdentityChange(value, existingIdentity);
+                HandleIdentityChange(value, existingIdentity, validate: false);
             }
         }
 
@@ -125,24 +125,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="initialIdentity">The initial identity of the item.</param>
         internal void HandleIdentityChange(T item, string initialIdentity)
         {
+            HandleIdentityChange(item, initialIdentity, validate: true);
+        }
+
+        private void HandleIdentityChange(T item, string initialIdentity, bool validate)
+        {
             DebugCheck.NotNull(item);
             DebugCheck.NotEmpty(initialIdentity);
 
             // Update the case sensitive dictionary.
             if (_caseSensitiveDictionary != null)
             {
-                RemoveFromCaseSensitiveDictionary(initialIdentity);
+                T existingItem;
+                if (!validate 
+                    || (_caseSensitiveDictionary.TryGetValue(initialIdentity, out existingItem) 
+                        && ReferenceEquals(existingItem, item)))
+                {
+                    RemoveFromCaseSensitiveDictionary(initialIdentity);
 
-                var identity = item.Identity;
-                if (_caseSensitiveDictionary.ContainsKey(identity))
-                {
-                    // Invalidate the case sensitive dictionary.
-                    // The identities are rebuilt externally, uniquiness should be ensured by caller.
-                    _caseSensitiveDictionary = null;
-                }
-                else
-                {
-                    _caseSensitiveDictionary.Add(identity, item);
+                    var identity = item.Identity;
+                    if (_caseSensitiveDictionary.ContainsKey(identity))
+                    {
+                        // Invalidate the case sensitive dictionary.
+                        // The identities are rebuilt externally, uniquiness should be ensured by caller.
+                        _caseSensitiveDictionary = null;
+                    }
+                    else
+                    {
+                        _caseSensitiveDictionary.Add(identity, item);
+                    }
                 }
             }
 

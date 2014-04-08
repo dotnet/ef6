@@ -217,6 +217,21 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
+        /// Generates class attributes.
+        /// </summary>
+        /// <param name="writer"> Text writer to add the generated code to. </param>
+        /// <param name="designer"> A value indicating if this class is being generated for a code-behind file. </param>
+        protected virtual void WriteClassAttributes(IndentedTextWriter writer, bool designer)
+        {
+            if (designer)
+            {
+                writer.WriteLine(
+                    "[GeneratedCode(\"EntityFramework.Migrations\", \"{0}\")]",
+                    typeof(CSharpMigrationCodeGenerator).Assembly().GetInformationalVersion());
+            }
+        }
+
+        /// <summary>
         /// Generates a namespace, using statements and class definition.
         /// </summary>
         /// <param name="namespace"> Namespace that code should be generated in. </param>
@@ -248,12 +263,7 @@ namespace System.Data.Entity.Migrations.Design
 
             writer.WriteLine();
 
-            if (designer)
-            {
-                writer.WriteLine(
-                    "[GeneratedCode(\"EntityFramework.Migrations\", \"{0}\")]",
-                    typeof(CSharpMigrationCodeGenerator).Assembly().GetInformationalVersion());
-            }
+            WriteClassAttributes(writer, designer);
 
             writer.Write("public ");
 

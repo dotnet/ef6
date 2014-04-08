@@ -352,6 +352,9 @@
     <Compile Include="Migrations\Model\ParameterModel.cs" />
     <Compile Include="Migrations\Model\DropProcedureOperation.cs" />
     <Compile Include="Migrations\Model\PropertyModel.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConventionsTypeActivator.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConventionsTypeFilter.cs" />
+    <Compile Include="ModelConfiguration\Configuration\ConventionsTypeFinder.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\ConventionNavigationPropertyConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfiguration`.cs" />

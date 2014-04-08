@@ -6,7 +6,8 @@ namespace Microsoft.Data.Entity.Design.Extensibility
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Defines an EventArgs type that allows extenders of the Entity Designer to drive selection programmatically
+    ///     Defines an EventArgs type that allows extenders of the Entity
+    ///     Designer to drive selection programmatically
     /// </summary>
     public class ChangeEntityDesignerSelectionEventArgs : EventArgs
     {
@@ -14,10 +15,12 @@ namespace Microsoft.Data.Entity.Design.Extensibility
         internal IServiceProvider LayerServiceProvider { get; private set; }
 
         /// <summary>
-        ///     Instantiate an ChangeEntityDesignerSelectionEventArgs. The 'SelectionIdentifier' in this
-        ///     case is a delimited string that corresponds to the hierarchy of the selection from the root.
-        ///     For example, to select a property 'Foo' in entity type 'Bar', the SelectionIdentifier would be:
-        ///     Foo.Bar.
+        ///     Instantiate an ChangeEntityDesignerSelectionEventArgs. The
+        ///     'SelectionIdentifier' in this case is a delimited string that
+        ///     corresponds to the hierarchy of the selection from the root.
+        ///     For example, to select a property 'SomeProperty' in entity
+        ///     type 'SomeEntity', the SelectionIdentifier would be:
+        ///     SomeProperty.SomeEntity.
         /// </summary>
         /// <param name="layerServiceProvider">Service Provider provided by the layer extension</param>
         /// <param name="selectionIdentifiers">A set of string identifiers to drive selection in the Entity Designer</param>

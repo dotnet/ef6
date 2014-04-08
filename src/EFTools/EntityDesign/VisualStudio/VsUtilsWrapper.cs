@@ -50,5 +50,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         {
             VsUtils.WriteCheckoutTextFilesInProject(filesMap);
         }
+
+        public void ShowErrorDialog(string message)
+        {
+            VsUtils.ShowErrorDialog(message);
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
 
             mockModelBuilderEngine.Object
-                .GenerateModel(mockModelBuilderSettings.Object, mockHostContext.Object);
+                .GenerateModel(mockModelBuilderSettings.Object, Mock.Of<IVsUtils>(), mockHostContext.Object);
 
             mockModelBuilderEngine
                 .Verify(m => m.GenerateModels(
@@ -79,7 +79,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     (string storeModelNamespace, ModelBuilderSettings settings, List<EdmSchemaError> errors) => errors.Add(error))
                 .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
 
-            mockModelBuilderEngine.Object.GenerateModel(mockModelBuilderSettings.Object, mockHostContext.Object);
+            mockModelBuilderEngine.Object.GenerateModel(mockModelBuilderSettings.Object, Mock.Of<IVsUtils>(), mockHostContext.Object);
 
             mockModelBuilderEngine
                 .Verify(m => m.GenerateModels(
@@ -122,7 +122,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     (DbModel model, string storeModelNamespace, ModelBuilderSettings settings,
                         ModelBuilderEngineHostContext hostContext, List<EdmSchemaError> errors) => errors.Add(error));
 
-            mockModelBuilderEngine.Object.GenerateModel(mockModelBuilderSettings.Object, mockHostContext.Object);
+            mockModelBuilderEngine.Object.GenerateModel(mockModelBuilderSettings.Object, Mock.Of<IVsUtils>(), mockHostContext.Object);
            
             mockModelBuilderEngine
                 .Verify(m => m.GenerateModels(
@@ -145,25 +145,34 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             PackageManager.Package = mockPackage.Object;
 
             var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
+            var mockVsUtils = new Mock<IVsUtils>();
             var mockModelBuilderSettings = CreateMockModelBuilderSettings();
             var mockModelBuilderEngine = new Mock<ModelBuilderEngine> { CallBase = true };
+            var exception = new Exception("Test exception");
 
             mockModelBuilderEngine
                 .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
                 .Callback(
                     (string storeModelNamespace, ModelBuilderSettings settings, List<EdmSchemaError> errors) =>
                     {
-                        throw new Exception("Test exception");
+                        throw exception;
                     });
 
-            mockModelBuilderEngine.Object
-                .GenerateModel(mockModelBuilderSettings.Object, mockHostContext.Object);
+            Assert.Same(
+                exception,
+                Assert.Throws<Exception>(
+                    () =>
+                    mockModelBuilderEngine.Object
+                        .GenerateModel(mockModelBuilderSettings.Object, mockVsUtils.Object, mockHostContext.Object)));
 
             mockHostContext.Verify(h => h.LogMessage(It.IsAny<string>()), Times.Exactly(3));
             mockHostContext
                 .Verify(h => h.LogMessage(It.IsRegex(Resources.Engine_ModelGenException + ".+Test exception")), Times.Once());
             mockHostContext
                 .Verify(h => h.LogMessage(It.IsRegex(Resources.Engine_ModelGenSuccess)), Times.Never());
+
+            mockVsUtils.Verify(u => u.ShowErrorDialog(string.Format(
+                Resources.Engine_ModelGenExceptionMessageBox, exception.GetType().Name, exception.Message)));
         }
 
         [Fact]
@@ -174,12 +183,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             mockPackage.Setup(p => p.ModelGenErrorCache).Returns(mockModelGenCache.Object);
             PackageManager.Package = mockPackage.Object;
 
-            var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
+            var mockVsUtils = new Mock<IVsUtils>();
             var mockModelBuilderSettings = CreateMockModelBuilderSettings();
             var mockModelBuilderEngine = new Mock<ModelBuilderEngine> { CallBase = true };
+            mockModelBuilderEngine
+                .Setup(e => e.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
+                .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
 
             mockModelBuilderEngine.Object
-                .GenerateModel(mockModelBuilderSettings.Object, mockHostContext.Object);
+                .GenerateModel(mockModelBuilderSettings.Object, Mock.Of<IVsUtils>(), Mock.Of<ModelBuilderEngineHostContext>());
 
             mockModelGenCache.Verify(c => c.RemoveErrors(It.IsAny<string>()), Times.Once());
         }

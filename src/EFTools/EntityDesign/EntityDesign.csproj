@@ -132,6 +132,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CodeGeneration\CodeGeneratorFactory.cs" />
+    <Compile Include="CodeGeneration\Extensions\EntitySetExtensions.cs" />
     <Compile Include="CodeGeneration\Generators\CSharpCodeFirstEmptyModelGenerator.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerationException.cs" />
     <Compile Include="CodeGeneration\CodeFirstModelGenerator.cs" />
@@ -273,6 +274,7 @@
     <Compile Include="UI\Views\Explorer\IViewDiagram.cs" />
     <Compile Include="VisualStudio\ErrorListHelperWrapper.cs" />
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
+    <Compile Include="VisualStudio\CodeIdentifierUtils.cs" />
     <Compile Include="VisualStudio\IErrorListHelper.cs" />
     <Compile Include="VisualStudio\IVsUtils.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngine.cs" />

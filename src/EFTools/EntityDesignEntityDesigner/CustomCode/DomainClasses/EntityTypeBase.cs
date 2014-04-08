@@ -35,9 +35,16 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
 
         public string GetBaseTypeNameValue()
         {
+            // optimistic fix for https://entityframework.codeplex.com/workitem/1143
+            var modelXRef = EntityDesignerViewModel.ModelXRef;
+            if (modelXRef == null)
+            {
+                return string.Empty;
+            }
+
             // We need to look at the model to get the base-type name; the view-model might not have it.
             // In multiple diagram scenario, the base entity-type might not exist in the current diagram.
-            var modelEntityType = EntityDesignerViewModel.ModelXRef.GetExisting(this) as ConceptualEntityType;
+            var modelEntityType = modelXRef.GetExisting(this) as ConceptualEntityType;
             if (modelEntityType != null
                 && modelEntityType.BaseType != null
                 && modelEntityType.BaseType.Target != null)

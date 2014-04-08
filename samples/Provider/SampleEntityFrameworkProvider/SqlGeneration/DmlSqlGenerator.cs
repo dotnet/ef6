@@ -54,7 +54,7 @@ namespace SampleEntityFrameworkProvider
                 //
                 // We use the following pattern:
                 //
-                //  update Foo
+                //  update SomeTable
                 //  set @i = 0
                 //  where ...
                 DbParameter parameter = 

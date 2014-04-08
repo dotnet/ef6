@@ -263,7 +263,7 @@ namespace System.Data.Entity.Internal
                     _connectionStringOrigin = DbConnectionStringOrigin.DbContextInfo;
                     _connectionStringName = connection.Name;
                 }
-                    // If the name or connection string is a simple name or is in the form "name=foo" then use
+                    // If the name or connection string is a simple name or is in the form "name=xyz" then use
                     // that name to try to load from the app/web config file. 
                 else if (!DbHelpers.TryGetConnectionName(_nameOrConnectionString, out name)
                          || !TryInitializeFromAppConfig(name, AppConfig))

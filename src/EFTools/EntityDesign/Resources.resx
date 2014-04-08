@@ -1520,6 +1520,9 @@ Full error message:
   <data name="EntityFrameworkVersionName" xml:space="preserve">
     <value>Entity Framework {0}</value>
   </data>
+  <data name="EntityFrameworkVersion6_x" xml:space="preserve">
+    <value>6.x</value>
+  </data>
   <data name="ExplorerContent_ClearSearch" xml:space="preserve">
     <value>Clear Search</value>
   </data>

@@ -3,13 +3,21 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
   <PropertyGroup>
     <NuSpecFile>EntityFramework.SqlServerCompact.nuspec</NuSpecFile>
-  </PropertyGroup>  
+  </PropertyGroup>
   <ItemGroup>
-    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.xml">
+    <NuGetContent Include="EntityFramework.SqlServerCompact.dll">
+      <Source>$(AssemblyPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.xml">
       <Source>$(OutputPath40)</Source>
       <Destination>lib\net40</Destination>
     </NuGetContent>
-    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.xml">
+    <NuGetContent Include="EntityFramework.SqlServerCompact.dll">
+      <Source>$(AssemblyPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.xml">
       <Source>$(OutputPath45)</Source>
       <Destination>lib\net45</Destination>
     </NuGetContent>
@@ -22,7 +30,8 @@
       <Destination>lib\net45</Destination>
     </NuGetContent>
     <NuGetContentProject Include="$(RepositoryRoot)\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" Condition="'$(NuGetPackSymbols)' == 'true'" />
-    <NuGetContent Include="tools\*">
+    <NuGetContent Include="install.ps1">
+      <Source>$(NuGetScriptsPath)</Source>
       <Destination>tools</Destination>
     </NuGetContent>
     <NuGetContent Include="Content\*">

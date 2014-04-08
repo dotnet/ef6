@@ -202,7 +202,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             }
 
             // if they cancelled or they didn't cancel, and we didn't log that Finish was pressed, 
-            // they must have hit the X so cancel
+            // they must have hit the X or an exception happened so cancel
             if (form.WizardCancelled
                 || !form.WizardFinished)
             {

@@ -12,7 +12,7 @@ namespace System.Data.Entity.TestHelpers
 
         public string ResolveManifestToken(DbConnection connection)
         {
-            if( !string.IsNullOrWhiteSpace(connection.Database) // Some negative cases require the provider to fail
+            if (!string.IsNullOrWhiteSpace(connection.Database) // Some negative cases require the provider to fail
                    && connection is SqlConnection || connection.GetType().FullName.StartsWith("Castle.Proxies."))
             {
                 return (DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString)) ? "2012.Azure" : "2008";

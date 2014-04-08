@@ -163,7 +163,7 @@ namespace System.Data.Entity.Internal
 
         // <summary>
         // Determines whether the given string should be treated as a database name directly (it contains no '='),
-        // is in the form name=foo, or is some other connection string.  If it is a direct name or has name=, then
+        // is in the form name=xyz, or is some other connection string.  If it is a direct name or has name=, then
         // the name is extracted and the method returns true.
         // </summary>
         // <param name="nameOrConnectionString"> The name or connection string. </param>

@@ -196,8 +196,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade
         internal static Version GetSchemaVersion(XNamespace xNamespace)
         {
             // TODO: Returing V1 if the namespace not found feels wrong. Investigate where it is used and return null (or throw?)
+            // Note that throwing from this method can crash VS if the exception is not handled.
+
             Version schemaVersion;
-            return NamespaceToVersionReverseLookUp.TryGetValue(xNamespace, out schemaVersion)
+            return xNamespace != null && NamespaceToVersionReverseLookUp.TryGetValue(xNamespace, out schemaVersion)
                        ? schemaVersion
                        : EntityFrameworkVersion.Version1;
         }

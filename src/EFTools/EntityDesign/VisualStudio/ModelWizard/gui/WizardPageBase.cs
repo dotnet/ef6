@@ -98,7 +98,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             {
                 var mbe = settings.ModelBuilderEngine;
                 mbe.GenerateModel(settings);
-            }            
+            }
         }
 
         protected override void OnHelpRequested(HelpEventArgs hevent)

@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // This constructor expects to get the paths that have potential to turn into multiple
         // artifacts like
-        // res://*/foo.csdl   -- could be multiple assemblies
+        // res://*/xyz.csdl   -- could be multiple assemblies
         // res://MyAssembly/  -- could be multiple artifacts in the one assembly
         // </summary>
         // <param name="originalPath"> The path to the (collection of) resources </param>

@@ -558,7 +558,7 @@ namespace System.Data.Entity.SqlServer
 
                 Assert.True(
                     interceptor.Commands.Select(c => c.CommandText).All(
-                        t => t == "SELECT Count(*) FROM sys.databases WHERE [name]=N'I.Do.Not.Exist'"));
+                        t => t == "IF db_id(N'I.Do.Not.Exist') IS NOT NULL SELECT 1 ELSE SELECT Count(*) FROM sys.databases WHERE [name]=N'I.Do.Not.Exist'"));
 
                 dbConnectionInterceptorMock.Verify(
                     m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
@@ -583,10 +583,10 @@ namespace System.Data.Entity.SqlServer
 
                 dbConnectionInterceptorMock.Verify(
                     m => m.ServerVersionGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
-                    Times.Exactly(2));
+                    Times.Exactly(0));
                 dbConnectionInterceptorMock.Verify(
                     m => m.ServerVersionGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
-                    Times.Exactly(2));
+                    Times.Exactly(0));
 
                 dbConnectionInterceptorMock.Verify(
                     m => m.Opening(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),

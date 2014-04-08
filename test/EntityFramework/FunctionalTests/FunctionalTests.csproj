@@ -201,6 +201,7 @@
     <Compile Include="..\..\..\src\Common\PropertyInfoExtensions.cs">
       <Link>Utilities\PropertyInfoExtensions.cs</Link>
     </Compile>
+    <Compile Include="CodeFirst\CodePlex2169.cs" />
     <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
@@ -246,7 +247,9 @@
     <Compile Include="ProductivityApi\DeadlockTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForSqlCe35.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
+    <Compile Include="Query\ComparisonTestst.cs" />
     <Compile Include="Query\ConditionalTranslatorTests.cs" />
+    <Compile Include="Query\LinqToEntities\JoinTests.cs" />
     <Compile Include="Query\PredicateScalarizationTests.cs" />
     <Compile Include="Query\LinqToEntities\HasFlagTests.cs" />
     <Compile Include="Query\LinqToEntities\ProjectionTests.cs" />
@@ -255,6 +258,7 @@
     <Compile Include="Query\LinqToEntities\ToStringTests.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="Query\SqlCeCanonicalFunctionsTests.cs" />
+    <Compile Include="SqlClient\DatabaseExistsTests.cs" />
     <Compile Include="TestDoubles\InMemoryDbSetTests.cs" />
     <Compile Include="TestDoubles\InMemoryNonGenericDbSet.cs" />
     <Compile Include="TestDoubles\InMemoryNonGenericDbSetTests.cs" />

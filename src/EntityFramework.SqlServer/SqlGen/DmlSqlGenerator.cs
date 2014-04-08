@@ -77,7 +77,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 //
                 // We use the following pattern:
                 //
-                //  update Foo
+                //  update SomeTable
                 //  set @p = 0
                 //  where ...
                 commandText.Append(dummySetParameter + " = 0");

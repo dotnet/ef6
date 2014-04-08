@@ -102,8 +102,8 @@ namespace System.Data.Entity.Internal
         public override DbMemberEntry<TEntity, TProperty> CreateDbMemberEntry<TEntity, TProperty>()
         {
             // The challenge here is that DbMemberEntry is defined in terms of the property type
-            // (e.g. ICollection<Foo>) while DbCollectionEntry is defined in terms of the element
-            // type (e.g. Foo).  We therefore need to dynamically create a DbCollectionEntry of
+            // (e.g. ICollection<Xyz>) while DbCollectionEntry is defined in terms of the element
+            // type (e.g. Xyz).  We therefore need to dynamically create a DbCollectionEntry of
             // the correct type using reflection compiled to a delegate.
             return CreateDbCollectionEntry<TEntity, TProperty>(EntryMetadata.ElementType);
         }

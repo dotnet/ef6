@@ -16,5 +16,19 @@ namespace System.Data.Entity.Infrastructure
         /// The local time when the transaction was started.
         /// </summary>
         public DateTime CreationTime { get; set; }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            var other = obj as TransactionRow;
+            return other != null
+                   && Id == other.Id;
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

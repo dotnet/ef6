@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.IO;
     using System.Reflection;
 
     internal class ClrTypeAnnotationSerializer : IMetadataAnnotationSerializer
@@ -24,7 +25,22 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             // We avoid throwing here if the type could not be loaded because we might be loading an
             // old EDMX from, for example, the MigrationHistory table, and the CLR type might no longer exist.
-            return Type.GetType(value, throwOnError: false);
+            // Note that the exceptions caught below can be thrown even when "throwOnError" is false.
+            try
+            {
+                return Type.GetType(value, throwOnError: false);
+            }
+            catch (FileLoadException)
+            {
+            }
+            catch (TargetInvocationException)
+            {
+            }
+            catch (BadImageFormatException)
+            {
+            }
+
+            return null;
         }
     }
 }

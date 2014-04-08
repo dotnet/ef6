@@ -1093,6 +1093,11 @@ namespace System.Data.Entity.SqlServer
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");
 
+            if (connection.State == ConnectionState.Open)
+            {
+                return true;
+            }
+
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
             var connectionBuilder = new SqlConnectionStringBuilder(
                 DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, new DbInterceptionContext()));
@@ -1156,22 +1161,18 @@ namespace System.Data.Entity.SqlServer
 
         private static bool CheckDatabaseExists(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
-            var databaseExistsInSysTables = false;
+            var databaseExists = false;
             UsingMasterConnection(
                 sqlConnection, conn =>
                     {
-                        var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                        var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
-                            databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                        var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(databaseName);
                         using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
                         {
-                            var rowsAffected = (int)DbInterception.Dispatch.Command.Scalar(
-                                command, new DbCommandInterceptionContext());
-
-                            databaseExistsInSysTables = (rowsAffected > 0);
+                            databaseExists = (int)DbInterception.Dispatch.Command.Scalar(
+                                command, new DbCommandInterceptionContext()) >= 1;
                         }
                     });
-            return databaseExistsInSysTables;
+            return databaseExists;
         }
 
         /// <summary>

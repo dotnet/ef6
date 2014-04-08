@@ -363,10 +363,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 && source != null // do we have an entry?
                 && _cachedForeignKey != null
                 && !ForeignKeyFactory.IsConceptualNullKey(_cachedForeignKey) // do we have an fk?
-                && _cachedForeignKey != newForeignKey // is the FK different from the one that we already have?
-                && !source.FindFKRelatedEnds().Any(e => e != this && e.CachedForeignKey == _cachedForeignKey))
+                && _cachedForeignKey != newForeignKey) // is the FK different from the one that we already have?
             {
-                ObjectContext.ObjectStateManager.RemoveEntryFromForeignKeyIndex(_cachedForeignKey, source);
+                ObjectContext.ObjectStateManager.RemoveEntryFromForeignKeyIndex(this, _cachedForeignKey, source);
             }
             _cachedForeignKey = newForeignKey;
         }
@@ -901,7 +900,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         var foreignKey = ForeignKeyFactory.CreateKeyFromForeignKeyValues(entry, this);
                         if (foreignKey != null)
                         {
-                            stateManager.AddEntryContainingForeignKeyToIndex(foreignKey, entry);
+                            stateManager.AddEntryContainingForeignKeyToIndex(this, foreignKey, entry);
                         }
                     }
                     else if (!ReferenceEquals(stateManager.EntityInvokingFKSetter, WrappedOwner.Entity)

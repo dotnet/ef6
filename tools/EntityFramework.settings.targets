@@ -64,6 +64,16 @@ Project global pre-settings.
     <OutputPath40>$(OutputPath45.TrimEnd('\'))Net40\</OutputPath40>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <AssemblyPath Condition="'$(AssemblyPath)' == ''">$(OutputPath)</AssemblyPath>
+    <AssemblyPath45 Condition="'$(AssemblyPath45)' == ''">$(OutputPath45)</AssemblyPath45>
+    <AssemblyPath40 Condition="'$(AssemblyPath40)' == ''">$(OutputPath40)</AssemblyPath40>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NuGetScriptsPath Condition="'$(NuGetScriptsPath)' == ''">$(MSBuildProjectDirectory)\tools</NuGetScriptsPath>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration45)' == 'Debug'">
     <StyleCopEnabled Condition="'$(StyleCopEnabled)' == ''">false</StyleCopEnabled>
   </PropertyGroup>

@@ -394,25 +394,6 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             headerTitleTextField.AnchoringBehavior.SetRightAnchor(headerExpandCollapseButtonField, AnchoringBehavior.Edge.Left, 0.05);
         }
 
-        public override void OnEndEdit(DiagramItemEventArgs e)
-        {
-            base.OnEndEdit(e);
-            var modelDiagram = Diagram.ModelElement.ModelXRef.GetExisting(Diagram) as Diagram;
-            Debug.Assert(modelDiagram != null, "modelDiagram != null");
-            var diagrams = modelDiagram.Parent as Diagrams;
-            Debug.Assert(diagrams != null, "Could not find Diagrams parent for EntityTypeShape");
-            if (diagrams != null
-                && Name != null)
-            {
-                var diagramArtifact = diagrams.Artifact as DiagramArtifact;
-
-                if (diagramArtifact != null)
-                {
-                    diagramArtifact.RaiseShapeNameCommitted(Name);
-                }
-            }
-        }
-
         protected override void InitializeShapeFields(IList<ShapeField> shapeFields)
         {
             base.InitializeShapeFields(shapeFields);
