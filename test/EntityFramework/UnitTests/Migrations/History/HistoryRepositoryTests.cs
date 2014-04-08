@@ -136,28 +136,6 @@ namespace System.Data.Entity.Migrations.History
         }
 
         [MigrationsTheory]
-        public void GetUpgradeOperations_should_return_add_product_version_column_when_not_present()
-        {
-            ResetDatabase();
-
-            var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
-
-            var createTableOperation = GetCreateHistoryTableOperation();
-
-            createTableOperation.Columns.Remove(createTableOperation.Columns.Last());
-
-            ExecuteOperations(createTableOperation);
-
-            var addColumnOperation = (AddColumnOperation)historyRepository.GetUpgradeOperations().Last();
-
-            Assert.Equal("ProductVersion", addColumnOperation.Column.Name);
-            Assert.Equal("0.7.0.0", addColumnOperation.Column.DefaultValue);
-            Assert.Equal(32, addColumnOperation.Column.MaxLength);
-            Assert.False(addColumnOperation.Column.IsNullable.Value);
-        }
-
-        [MigrationsTheory]
         public void GetUpgradeOperations_should_return_context_key_column_when_not_present()
         {
             ResetDatabase();

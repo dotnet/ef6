@@ -159,50 +159,26 @@ namespace System.Data.Entity.Migrations.History
                             = CreateHistoryQuery(context, contextKey)
                                 .OrderByDescending(h => h.MigrationId);
 
-                        if (_contextKeyColumnExists)
-                        {
-                            var lastModel
-                                = baseQuery
-                                    .Select(
-                                        s => new
+                        var lastModel
+                            = baseQuery
+                                .Select(
+                                    s => new
                                         {
                                             s.MigrationId,
                                             s.Model,
                                             s.ProductVersion
                                         })
-                                    .FirstOrDefault();
+                                .FirstOrDefault();
 
-                            if (lastModel == null)
-                            {
-                                return null;
-                            }
-
-                            migrationId = lastModel.MigrationId;
-                            productVersion = lastModel.ProductVersion;
-
-                            return new ModelCompressor().Decompress(lastModel.Model);
-                        }
-                        else
+                        if (lastModel == null)
                         {
-                            var lastModel
-                                = baseQuery
-                                    .Select(
-                                        s => new
-                                        {
-                                            s.MigrationId,
-                                            s.Model
-                                        })
-                                    .FirstOrDefault();
-
-                            if (lastModel == null)
-                            {
-                                return null;
-                            }
-
-                            migrationId = lastModel.MigrationId;
-
-                            return new ModelCompressor().Decompress(lastModel.Model);
+                            return null;
                         }
+
+                        migrationId = lastModel.MigrationId;
+                        productVersion = lastModel.ProductVersion;
+
+                        return new ModelCompressor().Decompress(lastModel.Model);
                     }
                 }
             }
@@ -239,33 +215,24 @@ namespace System.Data.Entity.Migrations.History
                         = CreateHistoryQuery(context)
                             .Where(h => h.MigrationId == migrationId);
 
-                    if (_contextKeyColumnExists)
-                    {
-                        var model
-                            = baseQuery
-                                .Select(
-                                    h => new
+                    var model
+                        = baseQuery
+                            .Select(
+                                h => new
                                     {
                                         h.Model,
                                         h.ProductVersion
                                     })
-                                .SingleOrDefault();
+                            .SingleOrDefault();
 
-                        if (model == null)
-                        {
-                            return null;
-                        }
-
-                        productVersion = model.ProductVersion;
-
-                        return new ModelCompressor().Decompress(model.Model);
-                    }
-                    else
+                    if (model == null)
                     {
-                        var model = baseQuery.Select(h => new { h.Model }).SingleOrDefault();
-
-                        return model == null ? null : new ModelCompressor().Decompress(model.Model);
+                        return null;
                     }
+
+                    productVersion = model.ProductVersion;
+
+                    return new ModelCompressor().Decompress(model.Model);
                 }
             }
             finally
@@ -641,38 +608,6 @@ namespace System.Data.Entity.Migrations.History
 
                 using (var context = CreateContext(connection))
                 {
-                    var productVersionExists = false;
-
-                    try
-                    {
-                        using (new TransactionScope(TransactionScopeOption.Suppress))
-                        {
-                            context.History
-                                .Select(h => h.ProductVersion)
-                                .FirstOrDefault();
-                        }
-
-                        productVersionExists = true;
-                    }
-                    catch (EntityException)
-                    {
-                    }
-
-                    if (!productVersionExists)
-                    {
-                        yield return new DropColumnOperation(tableName, "Hash");
-
-                        yield return new AddColumnOperation(
-                            tableName,
-                            new ColumnModel(PrimitiveTypeKind.String)
-                            {
-                                MaxLength = 32,
-                                Name = "ProductVersion",
-                                IsNullable = false,
-                                DefaultValue = "0.7.0.0"
-                            });
-                    }
-
                     if (!_contextKeyColumnExists)
                     {
                         if (_historyContextFactory != HistoryContext.DefaultFactory)
@@ -683,12 +618,12 @@ namespace System.Data.Entity.Migrations.History
                         yield return new AddColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
-                            {
-                                MaxLength = _contextKeyMaxLength,
-                                Name = "ContextKey",
-                                IsNullable = false,
-                                DefaultValue = _contextKey
-                            });
+                                {
+                                    MaxLength = _contextKeyMaxLength,
+                                    Name = "ContextKey",
+                                    IsNullable = false,
+                                    DefaultValue = _contextKey
+                                });
 
                         var emptyModel = new DbModelBuilder().Build(connection).GetModel();
                         var createTableOperation = (CreateTableOperation)
@@ -696,10 +631,10 @@ namespace System.Data.Entity.Migrations.History
 
                         var dropPrimaryKeyOperation
                             = new DropPrimaryKeyOperation
-                            {
-                                Table = tableName,
-                                CreateTableOperation = createTableOperation
-                            };
+                                {
+                                    Table = tableName,
+                                    CreateTableOperation = createTableOperation
+                                };
 
                         dropPrimaryKeyOperation.Columns.Add("MigrationId");
 
@@ -708,18 +643,18 @@ namespace System.Data.Entity.Migrations.History
                         yield return new AlterColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
-                            {
-                                MaxLength = _migrationIdMaxLength,
-                                Name = "MigrationId",
-                                IsNullable = false
-                            },
+                                {
+                                    MaxLength = _migrationIdMaxLength,
+                                    Name = "MigrationId",
+                                    IsNullable = false
+                                },
                             isDestructiveChange: false);
 
                         var addPrimaryKeyOperation
                             = new AddPrimaryKeyOperation
-                            {
-                                Table = tableName
-                            };
+                                {
+                                    Table = tableName
+                                };
 
                         addPrimaryKeyOperation.Columns.Add("MigrationId");
                         addPrimaryKeyOperation.Columns.Add("ContextKey");
@@ -751,12 +686,12 @@ namespace System.Data.Entity.Migrations.History
                 {
                     context.History.Add(
                         new HistoryRow
-                        {
-                            MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
-                            ContextKey = _contextKey,
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = _productVersion
-                        });
+                            {
+                                MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
+                                ContextKey = _contextKey,
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = _productVersion
+                            });
 
                     using (var commandTracer = new CommandTracer(context))
                     {
@@ -789,10 +724,10 @@ namespace System.Data.Entity.Migrations.History
                 {
                     var historyRow
                         = new HistoryRow
-                        {
-                            MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
-                            ContextKey = _contextKey
-                        };
+                            {
+                                MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
+                                ContextKey = _contextKey
+                            };
 
                     context.History.Attach(historyRow);
                     context.History.Remove(historyRow);
@@ -920,14 +855,14 @@ namespace System.Data.Entity.Migrations.History
 
                     context.History.Add(
                         new HistoryRow
-                        {
-                            MigrationId = MigrationAssembly
-                                .CreateMigrationId(Strings.InitialCreate)
-                                .RestrictTo(_migrationIdMaxLength),
-                            ContextKey = _contextKey,
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = _productVersion
-                        });
+                            {
+                                MigrationId = MigrationAssembly
+                                    .CreateMigrationId(Strings.InitialCreate)
+                                    .RestrictTo(_migrationIdMaxLength),
+                                ContextKey = _contextKey,
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = _productVersion
+                            });
 
                     context.SaveChanges();
                 }
