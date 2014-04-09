@@ -1337,6 +1337,56 @@ namespace FunctionalTests
             public int Id { get; set; }
             public string Name { get; set; }
         }
+        
+        [Fact]
+        public void TPH_with_discriminator_column_named_Discriminator()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<TPHRoot>()
+                        .Map<TPHNodeA>(m => m.Requires("Discriminator").HasValue(1).HasColumnType("int"))
+                        .Map<TPHNodeB>(m => m.Requires("Discriminator").HasValue(2).HasColumnType("int"))
+                        .Map<TPHNodeC>(m => m.Requires("Discriminator").HasValue(3).HasColumnType("int"));
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<TPHNodeA>()
+                           .HasColumns("Id", "RootData", "AData", "BData", "CData", "Discriminator");
+        }
+
+
+        [Fact]
+        public void TPH_with_discriminator_column_named_Discriminator_and_the_default_discriminator()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<TPHRoot>()
+                        .Map<TPHNodeA>(m => m.Requires("Discriminator").HasValue(1).HasColumnType("int"))
+                        .Map<TPHNodeB>(m => m.Requires("Discriminator").HasValue(2).HasColumnType("int"))
+                        .Map<TPHNodeC>(m => { });
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<TPHNodeA>()
+                           .HasColumns("Id", "RootData", "AData", "BData", "CData", "Discriminator1", "Discriminator");
+
+            databaseMapping.Assert<TPHNodeA>().Column("Discriminator").DbEqual("int", p => p.TypeName);
+        }
+
+        [Fact]
+        public void TPH_with_discriminator_column_named_Discriminator_and_mapped_abstract_base()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<AbsAtBase>()
+                        .Map<AbsAtBaseL1>(m => m.Requires("Discriminator").HasValue(1).HasColumnType("int"))
+                        .Map<AbsAtBaseL2>(m => m.Requires("Discriminator").HasValue(2).HasColumnType("int"));
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<AbsAtBaseL1>()
+                           .HasColumns("Id", "Data", "L1Data", "L2Data", "Discriminator");
+        }
 
         [Fact]
         public void FKs_in_base_type_remain_non_nullable_with_nullability_condition()

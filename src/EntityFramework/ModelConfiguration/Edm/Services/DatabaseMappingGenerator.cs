@@ -103,6 +103,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
                 foreach (var entityTypeMapping in entitySetMapping.EntityTypeMappings)
                 {
+                    // Abstract classes don't need a discriminator as they won't be directly materialized
+                    if (entityTypeMapping.EntityType.Abstract)
+                    {
+                        continue;
+                    }
+
                     var entityTypeMappingFragment = entityTypeMapping.MappingFragments.Single();
 
                     entityTypeMappingFragment.SetDefaultDiscriminator(discriminatorColumn);
