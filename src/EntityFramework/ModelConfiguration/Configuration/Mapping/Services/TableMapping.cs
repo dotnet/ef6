@@ -49,27 +49,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             _entityTypes.Add(entitySet, entityType);
 
             var defaultDiscriminatorColumn = fragment.GetDefaultDiscriminator();
-            ConditionPropertyMapping defaultDiscriminatorCondition = null;
-            if (defaultDiscriminatorColumn != null)
-            {
-                defaultDiscriminatorCondition =
-                    fragment.ColumnConditions.SingleOrDefault(cc => cc.Column == defaultDiscriminatorColumn);
-            }
 
-            foreach (var pm in fragment.ColumnMappings)
+            foreach (var cm in fragment.ColumnMappings)
             {
-                var columnMapping = FindOrCreateColumnMapping(pm.ColumnProperty);
+                var columnMapping = FindOrCreateColumnMapping(cm.ColumnProperty);
                 columnMapping.AddMapping(
                     entityType,
-                    pm.PropertyPath,
-                    fragment.ColumnConditions.Where(cc => cc.Column == pm.ColumnProperty),
-                    defaultDiscriminatorColumn == pm.ColumnProperty);
+                    cm.PropertyPath,
+                    fragment.ColumnConditions.Where(cc => cc.Column == cm.ColumnProperty),
+                    defaultDiscriminatorColumn == cm.ColumnProperty);
             }
 
             // Add any column conditions that aren't mapped to properties
             foreach (
                 var cc in
-                    fragment.ColumnConditions.Where(cc => !fragment.ColumnMappings.Any(pm => pm.ColumnProperty == cc.Column)))
+                    fragment.ColumnConditions.Where(cc => fragment.ColumnMappings.All(pm => pm.ColumnProperty != cc.Column)))
             {
                 var columnMapping = FindOrCreateColumnMapping(cc.Column);
                 columnMapping.AddMapping(entityType, null, new[] { cc }, defaultDiscriminatorColumn == cc.Column);

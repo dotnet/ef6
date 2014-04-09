@@ -259,6 +259,7 @@
     <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="Query\SqlCeCanonicalFunctionsTests.cs" />
     <Compile Include="SqlClient\DatabaseExistsTests.cs" />
+    <Compile Include="SqlServerCompact\CodePlex2197.cs" />
     <Compile Include="TestDoubles\InMemoryDbSetTests.cs" />
     <Compile Include="TestDoubles\InMemoryNonGenericDbSet.cs" />
     <Compile Include="TestDoubles\InMemoryNonGenericDbSetTests.cs" />
