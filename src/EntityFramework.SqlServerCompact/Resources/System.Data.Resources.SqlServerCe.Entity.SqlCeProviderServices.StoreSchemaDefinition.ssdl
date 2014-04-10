@@ -48,7 +48,8 @@
         INFORMATION_SCHEMA.TABLES t ON
         c.TABLE_NAME = t.TABLE_NAME       AND
         t.TABLE_TYPE = 'TABLE'
-        ORDER BY  
+        WHERE SUBSTRING(c.COLUMN_NAME, 1,5) != '__sys'
+        ORDER BY
         [Id]
         ,   [ParentId]
         ,   [Name]
