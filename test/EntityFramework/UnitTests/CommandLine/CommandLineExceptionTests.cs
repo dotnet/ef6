@@ -12,7 +12,7 @@ namespace CmdLine
         [Fact]
         public void Constructors_allow_for_nulls_message_and_inner_exception()
         {
-            Assert.True(new migrate::CmdLine.CommandLineException((string)null).Message.Contains("'CmdLine.CommandLineException'"));
+            Assert.Contains("CmdLine.CommandLineException", new migrate::CmdLine.CommandLineException((string)null).Message);
             Assert.Null(
                 new migrate::CmdLine.CommandLineException(
                     new migrate::CmdLine.CommandArgumentHelp(typeof(SomeCommandLineClass)), null).InnerException);

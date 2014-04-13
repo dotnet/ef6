@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
+    using System.Security.Principal;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -51,7 +52,8 @@ namespace System.Data.Entity.Migrations
         {
             public override void Up()
             {
-                Sql("EXEC sp_grantlogin N'NT AUTHORITY\\NETWORK SERVICE'", suppressTransaction: true);
+                var account = new SecurityIdentifier(WellKnownSidType.NetworkServiceSid, null).Translate(typeof(NTAccount)).Value;
+                Sql(string.Format("EXEC sp_grantlogin N'{0}'", account), suppressTransaction: true);
             }
         }
 

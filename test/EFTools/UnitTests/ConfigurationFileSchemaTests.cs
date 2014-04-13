@@ -88,7 +88,7 @@ namespace UnitTests
                         .Single();
 
                 Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-                Assert.True(validationEvent.Message.Contains(string.Format("'{0}'", topLevelElement)));
+                Assert.Contains(topLevelElement, validationEvent.Message);
             }
         }
 
@@ -100,7 +100,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Warning, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'foo:entityFramework'"));
+            Assert.Contains("foo:entityFramework", validationEvent.Message);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'codeConfigurationType'"));
+            Assert.Contains("codeConfigurationType", validationEvent.Message);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         [Fact]
@@ -205,9 +205,9 @@ namespace UnitTests
 
             Assert.Equal(2, validationEvents.Count);
             Assert.Equal(XmlSeverityType.Error, validationEvents[0].Severity);
-            Assert.True(validationEvents[0].Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvents[0].Message);
             Assert.Equal(XmlSeverityType.Error, validationEvents[1].Severity);
-            Assert.True(validationEvents[1].Message.Contains("'dummy-ns-uri:dummy'"));
+            Assert.Contains("dummy-ns-uri:dummy", validationEvents[1].Message);
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'parameters'"));
+            Assert.Contains("parameters", validationEvent.Message);
         }
 
         [Fact]
@@ -246,7 +246,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         #endregion
@@ -280,7 +280,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         #endregion
@@ -309,7 +309,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'invariantName'"));
+            Assert.Contains("invariantName", validationEvent.Message);
         }
 
         [Fact]
@@ -320,7 +320,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         [Fact]
@@ -331,7 +331,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         [Fact]
@@ -342,7 +342,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         [Fact]
@@ -353,7 +353,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'invariantName'"));
+            Assert.Contains("invariantName", validationEvent.Message);
         }
 
         #endregion
@@ -388,7 +388,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         #endregion
@@ -424,7 +424,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'disableDatabaseInitialization'"));
+            Assert.Contains("disableDatabaseInitialization", validationEvent.Message);
         }
 
         [Fact]
@@ -435,7 +435,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         [Fact]
@@ -446,7 +446,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         [Fact]
@@ -463,7 +463,7 @@ namespace UnitTests
                 .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'databaseInitializer'"));
+            Assert.Contains("databaseInitializer", validationEvent.Message);
         }
 
         [Fact]
@@ -474,7 +474,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         #endregion
@@ -509,7 +509,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         #endregion
@@ -538,7 +538,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         [Fact]
@@ -549,7 +549,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         #endregion
@@ -584,7 +584,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'dummy'"));
+            Assert.Contains("dummy", validationEvent.Message);
         }
 
         #endregion
@@ -613,7 +613,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'value'"));
+            Assert.Contains("value", validationEvent.Message);
         }
 
         [Fact]
@@ -624,7 +624,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'value'"));
+            Assert.Contains("value", validationEvent.Message);
         }
 
         [Fact]
@@ -641,7 +641,7 @@ namespace UnitTests
                     .Single();
 
             Assert.Equal(XmlSeverityType.Error, validationEvent.Severity);
-            Assert.True(validationEvent.Message.Contains("'type'"));
+            Assert.Contains("type", validationEvent.Message);
         }
 
         #endregion

@@ -181,7 +181,7 @@ using System.Data.Entity.Infrastructure;
 
             Assert.Null(storageMappingItemCollection);
             Assert.Equal(1, errors.Count);
-            Assert.Contains("'Non-existing-property'", errors[0].Message);
+            Assert.Contains("Non-existing-property", errors[0].Message);
         }
 
         [Fact]

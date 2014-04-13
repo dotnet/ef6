@@ -193,7 +193,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Null(edmItemCollection);
             Assert.Equal(1, errors.Count);
-            Assert.Contains("'Invalid Name'", errors[0].Message);
+            Assert.Contains("Invalid Name", errors[0].Message);
         }
 
         [Fact]

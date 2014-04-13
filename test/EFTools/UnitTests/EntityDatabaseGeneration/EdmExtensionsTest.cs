@@ -131,8 +131,8 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration
             Assert.True(exception.Message.StartsWith(Resources.ErrorCsdlNotValid.Replace("{0}", string.Empty)));
             var errorMessages = exception.Message.Split('\n');
             Assert.Equal(3, errorMessages.Length);
-            Assert.Contains("'PropertyRef'", errorMessages[0]);
-            Assert.Contains("'InvalidElement'", errorMessages[1]);
+            Assert.Contains("PropertyRef", errorMessages[0]);
+            Assert.Contains("InvalidElement", errorMessages[1]);
             Assert.Contains("InvalidElement", errorMessages[2]);
         }
 
@@ -167,8 +167,8 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration
             Assert.True(exception.Message.StartsWith(Resources.ErrorCsdlNotValid.Replace("{0}", string.Empty)));
             var errorMessages = exception.Message.Split('\n');
             Assert.Equal(3, errorMessages.Length);
-            Assert.Contains("'PropertyRef'", errorMessages[0]);
-            Assert.Contains("'InvalidElement'", errorMessages[1]);
+            Assert.Contains("PropertyRef", errorMessages[0]);
+            Assert.Contains("InvalidElement", errorMessages[1]);
             Assert.Contains("InvalidElement", errorMessages[2]);
         }
 
@@ -243,7 +243,7 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration
 
             Assert.Null(storeItemCollection);
             Assert.Equal(1, schemaErrors.Count);
-            Assert.Contains("'PropertyRef'", schemaErrors[0].Message);
+            Assert.Contains("PropertyRef", schemaErrors[0].Message);
         }
 
         [Fact]
@@ -334,7 +334,7 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration
             Assert.Equal(string.Format(Resources.ErrorNameCollision, exceptionData[0].Message), exception.Message);
             Assert.Equal(3, exceptionData.Count);
             Assert.Contains("'AdventureWorksModel.Store.Entities'", exceptionData[0].Message);
-            Assert.Contains("'InvalidElement'", exceptionData[1].Message);
+            Assert.Contains("InvalidElement", exceptionData[1].Message);
             Assert.Contains("InvalidElement", exceptionData[2].Message);
         }
 
@@ -380,7 +380,7 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration
 
             Assert.Null(storageMappingItemCollection);
             Assert.Equal(1, edmErrors.Count);
-            Assert.Contains("'Non-existing-property'", edmErrors[0].Message);
+            Assert.Contains("Non-existing-property", edmErrors[0].Message);
         }
 
         [Fact]
