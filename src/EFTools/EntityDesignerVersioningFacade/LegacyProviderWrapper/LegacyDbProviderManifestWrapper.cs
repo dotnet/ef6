@@ -265,7 +265,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper
                     var precisionFacetValue = legacyTypeUsage.Facets[PrecisionFacetName].Value;
 
                     if (precisionFacetValue == null
-                        || precisionFacetValue == TypeUsageHelper.UnboundedValue)
+                        || precisionFacetValue == TypeUsageHelper.LegacyUnboundedValue)
                     {
                         Debug.Assert(
                             legacyTypeUsage.Facets[ScaleFacetName].Value == precisionFacetValue,

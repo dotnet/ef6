@@ -392,6 +392,18 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper
         }
 
         [Fact]
+        public void GetEdmType_handles_Unbounded_facets_on_decimal_type_correctly()
+        {
+            var typeUsage = 
+                TypeUsage.CreateDecimalTypeUsage(
+                    ProviderManifestWrapper.GetStoreTypes().Single(t => t.Name == "decimal"));
+            var edmTypeUsage = ProviderManifestWrapper.GetEdmType(typeUsage);
+
+            Assert.Equal("Max", edmTypeUsage.Facets["Scale"].Value.ToString());
+            Assert.Equal("Max", edmTypeUsage.Facets["Precision"].Value.ToString());
+        }
+
+        [Fact]
         public void GetEdmType_returns_correct_type_usages_for_specific_String_type_usages()
         {
             foreach (var isUnicode in new[] { true, false })
