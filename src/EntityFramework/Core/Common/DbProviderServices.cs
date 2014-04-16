@@ -300,9 +300,24 @@ namespace System.Data.Entity.Core.Common
             return GetExecutionStrategy(connection, storeMetadata.ProviderFactory);
         }
 
+        /// <summary>
+        /// Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
+        /// This overload should be used by the derived classes for compatability with wrapping providers.
+        /// </summary>
+        /// <param name="connection">The database connection</param>
+        /// <param name="providerInvariantName">The provider invariant name</param>
+        /// <returns>
+        /// A new instance of <see cref="DbExecutionStrategy" />
+        /// </returns>
+        protected static IDbExecutionStrategy GetExecutionStrategy(DbConnection connection, string providerInvariantName)
+        {
+            return GetExecutionStrategy(connection, GetProviderFactory(connection), providerInvariantName);
+        }
+
         private static IDbExecutionStrategy GetExecutionStrategy(
             DbConnection connection,
-            DbProviderFactory providerFactory)
+            DbProviderFactory providerFactory,
+            string providerInvariantName = null)
         {
             var entityConnection = connection as EntityConnection;
             if (entityConnection != null)
@@ -320,7 +335,7 @@ namespace System.Data.Entity.Core.Common
                 k =>
                 DbConfiguration.DependencyResolver.GetService<Func<IDbExecutionStrategy>>(
                     new ExecutionStrategyKey(
-                    DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(providerFactory).Name,
+                    providerInvariantName ?? DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(providerFactory).Name,
                     dataSource)));
             return factory();
         }

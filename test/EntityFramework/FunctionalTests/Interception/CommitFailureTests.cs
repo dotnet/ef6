@@ -790,15 +790,6 @@ namespace System.Data.Entity.Interception
         [Fact]
         public void BuildDatabaseInitializationScript_can_be_used_to_initialize_the_database_if_no_migration_generator()
         {
-            var providerInvariantNameMock = new Mock<IProviderInvariantName>();
-            providerInvariantNameMock.Setup(m => m.Name).Returns("Foo");
-
-            var providerInvariantNameResolverMock = new Mock<IDbDependencyResolver>();
-            providerInvariantNameResolverMock.Setup(m => m.GetService(It.IsAny<Type>(), It.IsAny<object>()))
-                .Returns(providerInvariantNameMock.Object);
-
-            MutableResolver.AddResolver<IProviderInvariantName>(providerInvariantNameResolverMock.Object);
-
             var mockDbProviderServiceResolver = new Mock<IDbDependencyResolver>();
             mockDbProviderServiceResolver
                 .Setup(r => r.GetService(It.IsAny<Type>(), It.IsAny<string>()))

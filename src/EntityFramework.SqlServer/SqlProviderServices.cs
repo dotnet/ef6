@@ -1316,7 +1316,7 @@ namespace System.Data.Entity.SqlServer
                                     == ConnectionState.Closed;
             if (openingConnection)
             {
-                GetExecutionStrategy(sqlConnection).Execute(
+                GetExecutionStrategy(sqlConnection, ProviderInvariantName).Execute(
                         () =>
                         {
                             // If Open() fails the original credentials need to be restored before retrying
