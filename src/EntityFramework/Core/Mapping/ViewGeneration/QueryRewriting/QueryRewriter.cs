@@ -630,7 +630,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                         var builder = new StringBuilder();
                         builder.AppendLine(
                             Strings.ViewGen_No_Default_Value_For_Configuration(currentPath.PathToString(false /* for alias */)));
-                        RewritingValidator.EntityConfigurationToUserString(configurationNeedsDefault.Condition, builder);
                         _errorLog.AddEntry(
                             new ErrorLog.Record(
                                 ViewGenErrorCode.NoDefaultValue, builder.ToString(), _context.AllWrappersForExtent, String.Empty));

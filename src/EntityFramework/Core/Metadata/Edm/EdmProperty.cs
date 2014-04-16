@@ -230,6 +230,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public Object DefaultValue
         {
             get { return TypeUsage.Facets[DbProviderManifest.DefaultValueFacetName].Value; }
+            internal set
+            {
+                Util.ThrowIfReadOnly(this);
+
+                TypeUsage = TypeUsage.ShallowCopy(
+                    new FacetValues
+                    {
+                        DefaultValue = value
+                    });
+            }
         }
 
         // <summary>
