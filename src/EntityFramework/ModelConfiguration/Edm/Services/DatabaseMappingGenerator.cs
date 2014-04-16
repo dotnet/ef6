@@ -90,7 +90,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 var discriminatorColumn
                     = new EdmProperty(DiscriminatorColumnName, typeUsage)
                         {
-                            Nullable = false
+                            Nullable = false,
+                            DefaultValue = "(Undefined)"
                         };
 
                 entitySetMapping

@@ -544,5 +544,46 @@ namespace FunctionalTests
 
             Assert.True(databaseMapping.Model.Containers.Single().EntitySets.Any(es => es.Name == "Foos"));
         }
+
+        public class CodePlex2181 : FunctionalTestBase
+        {
+            public class User
+            {
+                public Guid Id { get; set; }
+            }
+
+            public class LoginInformation
+            {
+                public string Login { get; set; }
+            }
+
+            public class LoggableUser : User
+            {
+                public LoginInformation Account { get; set; }
+            }
+
+            public class Administrator : LoggableUser
+            {
+            }
+
+            [Fact]
+            public void Mapping_is_valid()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<User>().Map(m => m.ToTable("Users"));
+
+                modelBuilder.Entity<Administrator>().Map(
+                    m =>
+                    {
+                        m.ToTable("Administrators");
+                        m.MapInheritedProperties();
+                    });
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+            }
+        }
     }
 }
