@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Mapping;
     using System.Linq;
     using System.Text;
@@ -716,14 +717,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
                 ));
 
-            var mappingItemCollection = new StorageMappingItemCollection(new EdmItemCollection(EdmModel.CreateConceptualModel()), new StoreItemCollection(EdmModel.CreateStoreModel(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest)), new string[0]);
-            var containerMapping = new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace), new EntityContainer("S", DataSpace.SSpace), mappingItemCollection, false);
+            var mappingItemCollection = 
+                new StorageMappingItemCollection(
+                    new EdmItemCollection(EdmModel.CreateConceptualModel()), 
+                    new StoreItemCollection(
+                        EdmModel.CreateStoreModel(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest)), 
+                    new string[0]);
+
+            var containerMapping = new EntityContainerMapping(
+                new EntityContainer("C", DataSpace.CSpace), new EntityContainer("S", DataSpace.SSpace), mappingItemCollection, false);
 
             var functionImportMapping =
                 new FunctionImportMappingNonComposable(
                    functionImport,
                    storeFunction,
-                   new FunctionImportResultMapping[]
+                   new []
                    {
                        functionImportResultMapping
                    },
@@ -808,18 +816,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     },
                     new FunctionImportEntityTypeMappingCondition[]
                     {
-                        new FunctionImportEntityTypeMappingConditionIsNull("RTProperty1", false)
+                        new FunctionImportEntityTypeMappingConditionIsNull("RTProperty1", false),
+                        new FunctionImportEntityTypeMappingConditionValue("RTProperty2", 4),
+                        new FunctionImportEntityTypeMappingConditionValue("FakeCondition", true)
                     }
                 ));
 
-            var mappingItemCollection = new StorageMappingItemCollection(new EdmItemCollection(EdmModel.CreateConceptualModel()), new StoreItemCollection(EdmModel.CreateStoreModel(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest)), new string[0]);
-            var containerMapping = new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace), new EntityContainer("S", DataSpace.SSpace), mappingItemCollection, false);
+            var mappingItemCollection = 
+                new StorageMappingItemCollection(
+                    new EdmItemCollection(EdmModel.CreateConceptualModel()), 
+                    new StoreItemCollection(
+                        EdmModel.CreateStoreModel(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest)), 
+                        new string[0]);
+
+            var containerMapping = 
+                new EntityContainerMapping(
+                    new EntityContainer("C", DataSpace.CSpace), new EntityContainer("S", DataSpace.SSpace), mappingItemCollection, false);
 
             var functionImportMapping =
                 new FunctionImportMappingNonComposable(
                    functionImport,
                    storeFunction,
-                   new FunctionImportResultMapping[]
+                   new []
                    {
                        functionImportResultMapping
                    },
@@ -836,10 +854,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
       <ScalarProperty Name=""ETProperty1"" ColumnName=""RTProperty1"" />
       <ScalarProperty Name=""ETProperty2"" ColumnName=""RTProperty2"" />
       <Condition ColumnName=""RTProperty1"" IsNull=""false"" />
+      <Condition ColumnName=""RTProperty2"" Value=""4"" />
+      <Condition ColumnName=""FakeCondition"" Value=""1"" />
     </EntityTypeMapping>
   </ResultMapping>
 </FunctionImportMapping>",
                 fixture.ToString());
+        }
+
+        [Fact]
+        public void CreateFunctionImportEntityTypeMappingTypeName_returns_correct_TypeName_attribute_value()
+        {
+            var ofEntityTypes = new[]
+            {
+                new EntityType("OfType1", "Ns", DataSpace.CSpace),
+                new EntityType("OfType2", "Ns", DataSpace.CSpace)
+            };
+
+            var entityTypes = new[]
+            {
+                new EntityType("ET1", "Ns", DataSpace.CSpace),
+                new EntityType("ET2", "Ns", DataSpace.CSpace)
+            };
+
+            var mapping = new FunctionImportEntityTypeMapping(
+                ofEntityTypes,
+                entityTypes,
+                new Collection<FunctionImportReturnTypePropertyMapping>(),
+                new List<FunctionImportEntityTypeMappingCondition>());
+
+            Assert.Equal(
+                "Ns.ET1;Ns.ET2;IsTypeOf(Ns.OfType1);IsTypeOf(Ns.OfType2)",
+                MslXmlSchemaWriter.CreateFunctionImportEntityTypeMappingTypeName(mapping));
         }
 
         private class Fixture

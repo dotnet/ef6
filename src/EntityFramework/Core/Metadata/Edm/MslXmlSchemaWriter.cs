@@ -148,8 +148,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             foreach (var propertyMapping in endMapping.PropertyMappings)
             {
                 WriteScalarPropertyElement(
-                    propertyMapping.Property,
-                    propertyMapping.Column);
+                    propertyMapping.Property.Name,
+                    propertyMapping.Column.Name);
             }
 
             _xmlWriter.WriteEndElement();
@@ -220,23 +220,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
+                    Debug.Assert(structuralMapping.Item1.BuiltInTypeKind == BuiltInTypeKind.EntityType, "Unexpected return type");
+
                     _xmlWriter.WriteStartElement(MslConstructs.EntityTypeMappingElement);
                     _xmlWriter.WriteAttributeString(MslConstructs.EntityTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
 
-                    foreach (ConditionPropertyMapping conditionMapping in structuralMapping.Item2)
+                    foreach (var conditionMapping in structuralMapping.Item2)
                     {
                         WriteConditionElement(conditionMapping);
                     }
                 }
 
-                foreach (ScalarPropertyMapping propertyMapping in structuralMapping.Item3)
+                foreach (var propertyMapping in structuralMapping.Item3)
                 {
                     WritePropertyMapping(propertyMapping);
-                }
-
-                foreach (ConditionPropertyMapping conditionMapping in structuralMapping.Item2)
-                {
-                    WriteConditionElement(conditionMapping);
                 }
 
                 _xmlWriter.WriteEndElement();
@@ -252,7 +249,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             WriteFunctionImportMappingStartElement(functionImportMapping);
 
-            foreach (FunctionImportResultMapping resultMapping in functionImportMapping.ResultMappings)
+            foreach (var resultMapping in functionImportMapping.ResultMappings)
             {
                 WriteFunctionImportResultMappingElement(resultMapping);
             }
@@ -276,21 +273,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(resultMapping);
             _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingResultMapping);
 
-            foreach (FunctionImportStructuralTypeMapping typeMapping in resultMapping.TypeMappings)
+            foreach (var typeMapping in resultMapping.TypeMappings)
             {
                 var entityTypeMapping = typeMapping as FunctionImportEntityTypeMapping;
                 if (entityTypeMapping != null)
                 {
                     WriteFunctionImportEntityTypeMappingElement(entityTypeMapping);
-                    continue;
                 }
                 else
                 {
-                    var complexTypeMapping = typeMapping as FunctionImportComplexTypeMapping;
-                    if (complexTypeMapping != null)
-                    {
-                        WriteFunctionImportComplexTypeMappingElement(complexTypeMapping);
-                    }
+                    Debug.Assert(typeMapping is FunctionImportComplexTypeMapping, "Unexpected mapping kind.");
+
+                    WriteFunctionImportComplexTypeMappingElement((FunctionImportComplexTypeMapping)typeMapping);
                 }
             }
 
@@ -303,22 +297,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _xmlWriter.WriteStartElement(MslConstructs.EntityTypeMappingElement);
 
-            string entityTypeName = string.Join(";", entityTypeMapping.IsOfTypeEntityTypes.Select(entityType => GetEntityTypeName(entityType.FullName, true))
-                    .Concat(entityTypeMapping.EntityTypes.Select(entityType => GetEntityTypeName(entityType.FullName, false))));
+            var entityTypeName = CreateFunctionImportEntityTypeMappingTypeName(entityTypeMapping);
 
             _xmlWriter.WriteAttributeString(MslConstructs.EntityTypeMappingTypeNameAttribute, entityTypeName);
 
-            foreach (FunctionImportReturnTypeScalarPropertyMapping propertyMapping in entityTypeMapping.PropertyMappings)
-            {
-                WriteFunctionImportScalarPropertyMappingElement(propertyMapping);
-            }
+            WriteFunctionImportPropertyMappingElements(
+                entityTypeMapping.PropertyMappings.Cast<FunctionImportReturnTypeScalarPropertyMapping>());
 
-            foreach (FunctionImportEntityTypeMappingCondition condition in entityTypeMapping.Conditions)
+            foreach (var condition in entityTypeMapping.Conditions)
             {
                 WriteFunctionImportConditionElement(condition);
             }
 
             _xmlWriter.WriteEndElement();
+        }
+
+        // internal for testing
+        internal static string CreateFunctionImportEntityTypeMappingTypeName(FunctionImportEntityTypeMapping entityTypeMapping)
+        {
+            var entityTypeName =
+                string.Join(
+                    ";",
+                    entityTypeMapping.EntityTypes.Select(e => GetEntityTypeName(e.FullName, false))
+                        .Concat(entityTypeMapping.IsOfTypeEntityTypes.Select(e => GetEntityTypeName(e.FullName, true))));
+
+            return entityTypeName;
         }
 
         private void WriteFunctionImportComplexTypeMappingElement(FunctionImportComplexTypeMapping complexTypeMapping)
@@ -328,64 +331,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteStartElement(MslConstructs.ComplexTypeMappingElement);
             _xmlWriter.WriteAttributeString(MslConstructs.ComplexTypeMappingTypeNameAttribute, complexTypeMapping.ReturnType.FullName);
 
-            foreach (FunctionImportReturnTypeScalarPropertyMapping property in complexTypeMapping.PropertyMappings)
-            {
-                WriteFunctionImportScalarPropertyMappingElement(property);
-            }
+            WriteFunctionImportPropertyMappingElements(
+                complexTypeMapping.PropertyMappings.Cast<FunctionImportReturnTypeScalarPropertyMapping>());
 
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteFunctionImportScalarPropertyMappingElement(FunctionImportReturnTypeScalarPropertyMapping propertyMapping)
+        private void WriteFunctionImportPropertyMappingElements(IEnumerable<FunctionImportReturnTypeScalarPropertyMapping> propertyMappings)
         {
-            DebugCheck.NotNull(propertyMapping);
-            _xmlWriter.WriteStartElement(MslConstructs.ScalarPropertyElement);
-            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyNameAttribute, propertyMapping.PropertyName);
-            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyColumnNameAttribute, propertyMapping.ColumnName);
-            _xmlWriter.WriteEndElement();
+            foreach (var propertyMapping in propertyMappings)
+            {
+                WriteScalarPropertyElement(propertyMapping.PropertyName, propertyMapping.ColumnName);
+            }            
         }
 
         private void WriteFunctionImportConditionElement(FunctionImportEntityTypeMappingCondition condition)
         {
             DebugCheck.NotNull(condition);
+            _xmlWriter.WriteStartElement(MslConstructs.ConditionElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.ColumnName);
+
             var isNullCondition = condition as FunctionImportEntityTypeMappingConditionIsNull;
             if (isNullCondition != null)
             {
-                WriteFunctionImportConditionIsNullElement(isNullCondition);
-                return;
+                WriteIsNullConditionAttribute(isNullCondition.IsNull);
             }
             else
             {
-                var valueCondition = condition as FunctionImportEntityTypeMappingConditionValue;
-                if (valueCondition != null)
-                {
-                    WriteFunctionImportConditionValueElement(valueCondition);
-                }
-            }
-        }
+                Debug.Assert(condition is FunctionImportEntityTypeMappingConditionValue, "Unexpected condition type");
 
-        private void WriteFunctionImportConditionIsNullElement(FunctionImportEntityTypeMappingConditionIsNull condition)
-        {
-            DebugCheck.NotNull(condition);
-            _xmlWriter.WriteStartElement(MslConstructs.ConditionElement);
-            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.ColumnName);
-            _xmlWriter.WriteAttributeString(MslConstructs.ConditionIsNullAttribute, GetLowerCaseStringFromBoolValue(condition.IsNull));
-            _xmlWriter.WriteEndElement();
-        }
+                WriteConditionValue(((FunctionImportEntityTypeMappingConditionValue)condition).Value);
+            }
 
-        private void WriteFunctionImportConditionValueElement(FunctionImportEntityTypeMappingConditionValue condition)
-        {
-            DebugCheck.NotNull(condition);
-            _xmlWriter.WriteStartElement(MslConstructs.ConditionElement);
-            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.ColumnName);
-            if (condition.Value is bool)
-            {
-                _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, (bool)condition.Value ? "1" : "0");
-            }
-            else
-            {
-                _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, condition.Value.ToString());
-            }
             _xmlWriter.WriteEndElement();
         }
 
@@ -605,7 +582,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(scalarPropertyMapping);
 
-            WriteScalarPropertyElement(scalarPropertyMapping.Property, scalarPropertyMapping.Column);
+            WriteScalarPropertyElement(scalarPropertyMapping.Property.Name, scalarPropertyMapping.Column.Name);
         }
 
         private void WritePropertyMapping(ComplexPropertyMapping complexPropertyMapping)
@@ -624,23 +601,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             _xmlWriter.WriteEndElement();
-        }
-
-        private static string GetEntityTypeNames(IEnumerable<Tuple<string, bool>> fullyQualifiedEntityTypeNames)
-        {
-            DebugCheck.NotNull(fullyQualifiedEntityTypeNames);
-            StringBuilder builder = new StringBuilder();
-
-            foreach (Tuple<string, bool> tuple in fullyQualifiedEntityTypeNames)
-            {
-                if (builder.Length > 0)
-                {
-                    builder.Append("; ");
-                }
-                builder.Append(GetEntityTypeName(tuple.Item1, tuple.Item2));
-            }
-
-            return builder.ToString();
         }
 
         private static string GetEntityTypeName(string fullyQualifiedEntityTypeName, bool isHierarchyMapping)
@@ -662,32 +622,42 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteStartElement(MslConstructs.ConditionElement);
             if (condition.IsNull.HasValue)
             {
-                _xmlWriter.WriteAttributeString(
-                    MslConstructs.ConditionIsNullAttribute, GetLowerCaseStringFromBoolValue(condition.IsNull.Value));
+                WriteIsNullConditionAttribute(condition.IsNull.Value);
             }
             else
             {
-                if (condition.Value is bool)
-                {
-                    _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, (bool)condition.Value ? "1" : "0");
-                }
-                else
-                {
-                    _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, condition.Value.ToString());
-                }
+                WriteConditionValue(condition.Value);
             }
             _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.Column.Name);
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteScalarPropertyElement(EdmProperty property, EdmProperty column)
+        private void WriteIsNullConditionAttribute(bool isNullValue)
         {
-            DebugCheck.NotNull(property);
-            DebugCheck.NotNull(column);
+            _xmlWriter.WriteAttributeString(
+                MslConstructs.ConditionIsNullAttribute, GetLowerCaseStringFromBoolValue(isNullValue));
+        }
+
+        private void WriteConditionValue(object conditionValue)
+        {
+            if (conditionValue is bool)
+            {
+                _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, (bool)conditionValue ? "1" : "0");
+            }
+            else
+            {
+                _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, conditionValue.ToString());
+            }
+        }
+
+        private void WriteScalarPropertyElement(string propertyName, string columnName)
+        {
+            DebugCheck.NotNull(propertyName);
+            DebugCheck.NotNull(columnName);
 
             _xmlWriter.WriteStartElement(MslConstructs.ScalarPropertyElement);
-            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyNameAttribute, property.Name);
-            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyColumnNameAttribute, column.Name);
+            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyNameAttribute, propertyName);
+            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyColumnNameAttribute, columnName);
             _xmlWriter.WriteEndElement();
         }
     }
