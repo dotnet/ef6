@@ -592,7 +592,13 @@ namespace System.Data.Entity.Internal.Linq
             {
                 // This call initializes the context, performs o-space loading if necessary, and checks that the
                 // type is valid and is part of the model. It will throw if the entity type for this set is not mapped.
-                InitializeUnderlyingTypes(base.InternalContext.GetEntitySetAndBaseTypeForType(typeof(TEntity)));
+                // It could also trigger the set initialization during database initialization
+                var pair = base.InternalContext.GetEntitySetAndBaseTypeForType(typeof(TEntity));
+
+                if (_entitySet == null)
+                {
+                    InitializeUnderlyingTypes(pair);
+                }
             }
         }
 

@@ -18,6 +18,7 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.MappingViews;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Utilities;
@@ -506,6 +507,34 @@ namespace ProductivityApiUnitTests
             }
             finally
             {
+                context.Database.Delete();
+            }
+        }
+
+        [Fact]
+        public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_CommitFailureHandler()
+        {
+            EnsureEfTestUserExists();
+            var connectionString
+                = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
+                    "EFTestUser",
+                    "Password1");
+
+            var context = new PersistSecurityInfoContext(connectionString);
+            
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
+
+            try
+            {
+                context.Database.Delete();
+                context.Database.Initialize(true);
+                
+                CommitFailureHandler.FromContext(context).ClearTransactionHistory();
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
                 context.Database.Delete();
             }
         }
