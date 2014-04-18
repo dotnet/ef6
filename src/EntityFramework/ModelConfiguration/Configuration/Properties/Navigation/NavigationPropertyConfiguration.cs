@@ -160,7 +160,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             set
             {
                 DebugCheck.NotNull(value);
-                
+
                 _modificationStoredProceduresConfiguration = value;
             }
         }
@@ -183,7 +183,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
             else
             {
-                ValidateConsistency(configuration);
+                EnsureConsistency(configuration);
             }
 
             ConfigureInverse(associationType, model);
@@ -289,75 +289,113 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void ValidateConsistency(NavigationPropertyConfiguration navigationPropertyConfiguration)
+        private void EnsureConsistency(NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
             DebugCheck.NotNull(navigationPropertyConfiguration);
 
-            if ((navigationPropertyConfiguration.InverseEndKind != null)
-                && (RelationshipMultiplicity != null)
-                && (navigationPropertyConfiguration.InverseEndKind != RelationshipMultiplicity))
+            if (RelationshipMultiplicity != null)
             {
-                throw Error.ConflictingMultiplicities(
-                    NavigationProperty.Name, NavigationProperty.ReflectedType);
-            }
-
-            if ((navigationPropertyConfiguration.RelationshipMultiplicity != null)
-                && (InverseEndKind != null)
-                && (navigationPropertyConfiguration.RelationshipMultiplicity != InverseEndKind))
-            {
-                if (InverseNavigationProperty == null)
+                if (navigationPropertyConfiguration.InverseEndKind == null)
                 {
-                    // InverseNavigationProperty may be null if the association is bi-directional and is configured
-                    // from both sides but on one side the navigation property is not specified in the configuration.
-                    // See Dev11 330745.
-                    // In this case we use the navigation property that we do know about in the exception message.
+                    navigationPropertyConfiguration.InverseEndKind = RelationshipMultiplicity;
+                }
+                else if (navigationPropertyConfiguration.InverseEndKind != RelationshipMultiplicity)
+                {
                     throw Error.ConflictingMultiplicities(
                         NavigationProperty.Name, NavigationProperty.ReflectedType);
                 }
-                throw Error.ConflictingMultiplicities(
-                    InverseNavigationProperty.Name, InverseNavigationProperty.ReflectedType);
             }
 
-            if ((navigationPropertyConfiguration.DeleteAction != null)
-                && (DeleteAction != null)
-                && (navigationPropertyConfiguration.DeleteAction != DeleteAction))
+            if (InverseEndKind != null)
             {
-                throw Error.ConflictingCascadeDeleteOperation(
-                    NavigationProperty.Name, NavigationProperty.ReflectedType);
+                if (navigationPropertyConfiguration.RelationshipMultiplicity == null)
+                {
+                    navigationPropertyConfiguration.RelationshipMultiplicity = InverseEndKind;
+                }
+                else if (navigationPropertyConfiguration.RelationshipMultiplicity != InverseEndKind)
+                {
+                    if (InverseNavigationProperty == null)
+                    {
+                        // InverseNavigationProperty may be null if the association is bi-directional and is configured
+                        // from both sides but on one side the navigation property is not specified in the configuration.
+                        // See Dev11 330745.
+                        // In this case we use the navigation property that we do know about in the exception message.
+                        throw Error.ConflictingMultiplicities(
+                            NavigationProperty.Name, NavigationProperty.ReflectedType);
+                    }
+                    throw Error.ConflictingMultiplicities(
+                        InverseNavigationProperty.Name, InverseNavigationProperty.ReflectedType);
+                }
             }
 
-            if ((navigationPropertyConfiguration.Constraint != null)
-                && (Constraint != null)
-                && !Equals(navigationPropertyConfiguration.Constraint, Constraint))
+            if (DeleteAction != null)
             {
-                throw Error.ConflictingConstraint(
-                    NavigationProperty.Name, NavigationProperty.ReflectedType);
+                if (navigationPropertyConfiguration.DeleteAction == null)
+                {
+                    navigationPropertyConfiguration.DeleteAction = DeleteAction;
+                }
+                else if (navigationPropertyConfiguration.DeleteAction != DeleteAction)
+                {
+                    throw Error.ConflictingCascadeDeleteOperation(
+                        NavigationProperty.Name, NavigationProperty.ReflectedType);
+                }
             }
 
-            if ((navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal != null)
-                && (IsNavigationPropertyDeclaringTypePrincipal != null)
-                && navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal
-                == IsNavigationPropertyDeclaringTypePrincipal)
+            if (Constraint != null)
             {
-                throw Error.ConflictingConstraint(
-                    NavigationProperty.Name, NavigationProperty.ReflectedType);
+                if (navigationPropertyConfiguration.Constraint == null)
+                {
+                    navigationPropertyConfiguration.Constraint = Constraint;
+                }
+                else if (!Equals(navigationPropertyConfiguration.Constraint, Constraint))
+                {
+                    throw Error.ConflictingConstraint(
+                        NavigationProperty.Name, NavigationProperty.ReflectedType);
+                }
             }
 
-            if ((navigationPropertyConfiguration.AssociationMappingConfiguration != null)
-                && (AssociationMappingConfiguration != null)
-                && !Equals(
+            if (IsNavigationPropertyDeclaringTypePrincipal != null)
+            {
+                if (navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal == null)
+                {
+                    navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal =
+                        !IsNavigationPropertyDeclaringTypePrincipal;
+                }
+                else if (navigationPropertyConfiguration.IsNavigationPropertyDeclaringTypePrincipal
+                         == IsNavigationPropertyDeclaringTypePrincipal)
+                {
+                    throw Error.ConflictingConstraint(
+                        NavigationProperty.Name, NavigationProperty.ReflectedType);
+                }
+            }
+
+            if (AssociationMappingConfiguration != null)
+            {
+                if (navigationPropertyConfiguration.AssociationMappingConfiguration == null)
+                {
+                    navigationPropertyConfiguration.AssociationMappingConfiguration = AssociationMappingConfiguration;
+                }
+                else if (!Equals(
                     navigationPropertyConfiguration.AssociationMappingConfiguration, AssociationMappingConfiguration))
-            {
-                throw Error.ConflictingMapping(
-                    NavigationProperty.Name, NavigationProperty.ReflectedType);
+                {
+                    throw Error.ConflictingMapping(
+                        NavigationProperty.Name, NavigationProperty.ReflectedType);
+                }
             }
 
-            if ((navigationPropertyConfiguration.ModificationStoredProceduresConfiguration != null)
-                && (ModificationStoredProceduresConfiguration != null)
-                && !navigationPropertyConfiguration.ModificationStoredProceduresConfiguration.IsCompatibleWith(ModificationStoredProceduresConfiguration))
+            if (ModificationStoredProceduresConfiguration != null)
             {
-                throw Error.ConflictingFunctionsMapping(
-                    NavigationProperty.Name, NavigationProperty.ReflectedType);
+                if (navigationPropertyConfiguration.ModificationStoredProceduresConfiguration == null)
+                {
+                    navigationPropertyConfiguration.ModificationStoredProceduresConfiguration = ModificationStoredProceduresConfiguration;
+                }
+                else if (
+                    !navigationPropertyConfiguration.ModificationStoredProceduresConfiguration.IsCompatibleWith(
+                        ModificationStoredProceduresConfiguration))
+                {
+                    throw Error.ConflictingFunctionsMapping(
+                        NavigationProperty.Name, NavigationProperty.ReflectedType);
+                }
             }
         }
 

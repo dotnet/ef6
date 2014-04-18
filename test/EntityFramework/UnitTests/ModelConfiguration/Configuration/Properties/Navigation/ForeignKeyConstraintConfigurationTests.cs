@@ -35,7 +35,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "P");
             var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object });
-            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var entityType = new EntityType("SE", "N", DataSpace.CSpace);
+            entityType.GetMetadataProperties().SetClrType(typeof(object));
             var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
@@ -43,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             property.SetClrPropertyInfo(mockPropertyInfo);
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
             associationType.SourceEnd = new AssociationEndMember("S", entityType);
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("TE", "N", DataSpace.CSpace));
 
             constraintConfiguration.Configure(
                 associationType, associationType.SourceEnd, new EntityTypeConfiguration(typeof(object)));
@@ -56,7 +57,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "P");
             var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object });
-            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var entityType = new EntityType("SE", "N", DataSpace.CSpace);
+            entityType.GetMetadataProperties().SetClrType(typeof(object));
             var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
@@ -65,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             property.SetClrPropertyInfo(mockPropertyInfo);
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
             associationType.SourceEnd = new AssociationEndMember("S", entityType);
-            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
+            associationType.TargetEnd = new AssociationEndMember("T", new EntityType("TE", "N", DataSpace.CSpace));
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
             constraintConfiguration.Configure(
@@ -86,13 +88,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                         });
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
+            var entityType = new EntityType("T", "N", DataSpace.CSpace);
+            entityType.GetMetadataProperties().SetClrType(typeof(object));
+
             Assert.Equal(
                 Strings.ForeignKeyPropertyNotFound("P", "T"),
                 Assert.Throws<InvalidOperationException>(
                     () => constraintConfiguration.Configure(
                         associationType,
-                        new AssociationEndMember(
-                              "E", new EntityType("T", "N", DataSpace.CSpace))
+                        new AssociationEndMember("E", entityType)
                               , new EntityTypeConfiguration(typeof(object)))).Message);
         }
     }

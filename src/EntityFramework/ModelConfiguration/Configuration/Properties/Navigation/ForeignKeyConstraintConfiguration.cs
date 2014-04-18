@@ -95,6 +95,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 return;
             }
 
+            if (dependentEnd.GetEntityType().GetClrType() != entityTypeConfiguration.ClrType)
+            {
+                // Configure the constraint when we are configuring the dependent type
+                return;
+            }
+
             var dependentPropertInfos = _dependentProperties.AsEnumerable();
 
             if (!IsFullySpecified)

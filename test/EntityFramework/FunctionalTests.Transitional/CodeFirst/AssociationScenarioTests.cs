@@ -33,6 +33,52 @@ namespace FunctionalTests
                 new[] { "DependentForeignKeyPropertyNotFromConvention1" }, "Principal_172949");
         }
 
+        [Fact]
+        public void CascadeOnDelete_fluent_overrides_data_anotation()
+        {
+            Action<DbModelBuilder> principalEntityConfig = modelBuilder => modelBuilder.Entity<Principal_172949>();
+            Action<DbModelBuilder> dependentEntityConfig = modelBuilder => modelBuilder.Entity<Dependent_172949>();
+            Action<DbModelBuilder> dependentPrincipalAssociationConfig = modelBuilder =>
+                modelBuilder.Entity<Dependent_172949>()
+                    .HasRequired<Principal_172949>(i => i.PrincipalNavigation)
+                    .WithMany(a => a.DependentNavigation)
+                    .HasForeignKey(d => d.DependentForeignKeyPropertyNotFromConvention1)
+                    .WillCascadeOnDelete(false);
+            Action<DbModelBuilder> principalDependentAssociationConfig = modelBuilder =>
+                modelBuilder.Entity<Principal_172949>()
+                    .HasMany<Dependent_172949>(i => i.DependentNavigation)
+                    .WithRequired(d => d.PrincipalNavigation)
+                    .HasForeignKey(d => d.DependentForeignKeyPropertyNotFromConvention1)
+                    .WillCascadeOnDelete(false);
+
+            CascadeOnDelete_fluent_overrides_data_anotation_implementation(
+                new[] { principalEntityConfig, dependentEntityConfig, dependentPrincipalAssociationConfig });
+
+            CascadeOnDelete_fluent_overrides_data_anotation_implementation(
+                new[] { dependentEntityConfig, principalEntityConfig, dependentPrincipalAssociationConfig });
+
+            CascadeOnDelete_fluent_overrides_data_anotation_implementation(
+                new[] { principalEntityConfig, dependentEntityConfig, principalDependentAssociationConfig });
+
+            CascadeOnDelete_fluent_overrides_data_anotation_implementation(
+                new[] { dependentEntityConfig, principalEntityConfig, principalDependentAssociationConfig });
+        }
+
+        private void CascadeOnDelete_fluent_overrides_data_anotation_implementation(IEnumerable<Action<DbModelBuilder>> configurations)
+        {
+            var modelBuilder = new DbModelBuilder();
+            configurations.Each(c => c(modelBuilder));
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            var association = databaseMapping.Model.AssociationTypes.Single();
+
+            Assert.Equal(OperationAction.None, association.SourceEnd.DeleteBehavior);
+            Assert.Equal(OperationAction.None, association.TargetEnd.DeleteBehavior);
+        }
+
         public class Dependent_172949
         {
             public int Id { get; set; }

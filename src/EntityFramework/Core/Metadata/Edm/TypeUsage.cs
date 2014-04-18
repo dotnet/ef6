@@ -120,8 +120,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotNull(edmType, "edmType");
 
-            var type = Create(edmType);
-            return type;
+            return Create(edmType);
         }
 
         /// <summary>
