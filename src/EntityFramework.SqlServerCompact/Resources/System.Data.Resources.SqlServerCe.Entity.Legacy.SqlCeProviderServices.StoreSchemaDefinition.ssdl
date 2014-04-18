@@ -202,16 +202,16 @@
     <EntitySet Name="SConstraints" EntityType="Self.Constraint">
       <DefiningQuery>
         SELECT TOP(2147483648)
-          '[' + tc.CONSTRAINT_NAME + ']'       [Id]
-        , '[' + tc.TABLE_NAME + ']'            [ParentId]
-        , tc.CONSTRAINT_NAME                   [Name]
-        , tc.CONSTRAINT_TYPE                   [ConstraintType]
-        , CAST(tc.IS_DEFERRABLE as bit)        [IsDeferrable]
-        , CAST(tc.INITIALLY_DEFERRED as bit)   [IsInitiallyDeferred]
+        '[' + tc.TABLE_NAME      + ']' + '[' + tc.CONSTRAINT_NAME + ']'    [Id]
+        , '[' + tc.TABLE_NAME + ']'                                        [ParentId]
+        , tc.CONSTRAINT_NAME                                               [Name]
+        , tc.CONSTRAINT_TYPE                                               [ConstraintType]
+        , CAST(tc.IS_DEFERRABLE as bit)                                    [IsDeferrable]
+        , CAST(tc.INITIALLY_DEFERRED as bit)                               [IsInitiallyDeferred]
         FROM
         INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
         WHERE tc.TABLE_NAME IS NOT NULL
-        ORDER BY           
+        ORDER BY
         [Id]
         , [ParentId]
         , [Name]
@@ -233,7 +233,7 @@
     <EntitySet Name="SConstraintColumns" EntityType="Self.ConstraintColumn">
       <DefiningQuery>
         SELECT TOP(2147483648)
-            '[' + CONSTRAINT_NAME                              + ']' [ConstraintId]
+        '[' + TABLE_NAME     + ']' + '[' + CONSTRAINT_NAME + ']'     [ConstraintId]
         ,   '[' + TABLE_NAME      + ']' + '[' + COLUMN_NAME    + ']' [ColumnId]
         FROM
         INFORMATION_SCHEMA.KEY_COLUMN_USAGE
@@ -246,9 +246,9 @@
     <EntitySet Name="SForeignKeyConstraints" EntityType="Self.ForeignKeyConstraint">
       <DefiningQuery>
         SELECT TOP(2147483648)
-         '[' + rc.CONSTRAINT_NAME + ']'         [Id]
-        , rc.UPDATE_RULE                        [UpdateRule]
-        , rc.DELETE_RULE                        [DeleteRule]
+        '[' + rc.CONSTRAINT_TABLE_NAME + ']' + '[' + CONSTRAINT_NAME + ']'   [Id]
+        , rc.UPDATE_RULE                                                     [UpdateRule]
+        , rc.DELETE_RULE                                                     [DeleteRule]
         FROM
         INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
         ORDER BY
@@ -261,21 +261,23 @@
     <EntitySet Name="SForeignKeys" EntityType="Self.ForeignKey">
       <DefiningQuery>
         SELECT TOP(2147483648)
-            '[' + FC.CONSTRAINT_NAME + ']' + '[' + cast(FC.ORDINAL_POSITION as nvarchar(30)) + ']'   [Id]
-        ,   '[' + PC.TABLE_NAME      + ']' + '[' + PC.COLUMN_NAME + ']'                              [ToColumnId]
-        ,   '[' + FC.TABLE_NAME      + ']' + '[' + FC.COLUMN_NAME + ']'                              [FromColumnId]
-        ,   '[' + FC.CONSTRAINT_NAME                              + ']'                              [ConstraintId]
+        '[' + FC.TABLE_NAME + ']' + '[' + FC.CONSTRAINT_NAME + ']' + '[' + cast(FC.ORDINAL_POSITION as nvarchar(30)) + ']'   [Id]
+        ,   '[' + PC.TABLE_NAME      + ']' + '[' + PC.COLUMN_NAME + ']'                                                          [ToColumnId]
+        ,   '[' + FC.TABLE_NAME      + ']' + '[' + FC.COLUMN_NAME + ']'                                                          [FromColumnId]
+        ,   '[' + FC.TABLE_NAME + ']' + '[' + FC.CONSTRAINT_NAME + ']'                                                           [ConstraintId]
         ,   FC.ORDINAL_POSITION [Ordinal]
         FROM
         INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC
         INNER JOIN
         INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS PC /* PRIMARY KEY COLS*/
         ON        RC.UNIQUE_CONSTRAINT_NAME    = PC.CONSTRAINT_NAME
+        AND       RC.UNIQUE_CONSTRAINT_TABLE_NAME = PC.TABLE_NAME
         INNER JOIN
         INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS FC /* FOREIGN KEY COLS*/
         ON        RC.CONSTRAINT_NAME    = FC.CONSTRAINT_NAME
+        AND      RC.CONSTRAINT_TABLE_NAME = FC.TABLE_NAME
         AND      PC.ORDINAL_POSITION = FC.ORDINAL_POSITION
-        ORDER BY 
+        ORDER BY
         [Id]
         ,   [ToColumnId]
         ,   [FromColumnId]
