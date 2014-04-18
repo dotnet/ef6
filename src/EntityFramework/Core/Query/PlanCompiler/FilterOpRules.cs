@@ -516,17 +516,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             if (joinOp.OpType == OpType.LeftOuterJoin
                 && !predicate.PreservesNulls(rightTableNodeInfo.Definitions, true))
             {
-                // In case of multiple joins allow the JoinElimination phase to eliminate 
-                // the redundant ones before promoting the LeftOuter join to Inner join.
-                if (!(leftInputNode.Op is JoinBaseOp)
-                    || trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.JoinElimination))
+                // Allow the JoinElimination phase to eliminate redundant joins
+                // and allow the NullSemantics phase to fully expand the filter 
+                // predicate before attempting to promote the LeftOuter join 
+                // to Inner join.
+                if (trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.NullSemantics))
                 {
                     joinOp = command.CreateInnerJoinOp();
                     needsTransformation = true;
                 }
                 else
                 {
-                    trc.PlanCompiler.ForceApplyTransformationsAfterJoinElimination = true;
+                    trc.PlanCompiler.TransformationsDeferred = true;
                 }
             }
             var leftTableInfo = command.GetExtendedNodeInfo(leftInputNode);
@@ -671,7 +672,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             newNode = filterNode;
             var applyNode = filterNode.Child0;
-            var applyOp = applyNode.Op;
             var applyRightInputNode = applyNode.Child1;
             var trc = (TransformationRulesContext)context;
             var command = trc.Command;
@@ -684,10 +684,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var predicate = new Predicate(command, filterNode.Child1);
             if (!predicate.PreservesNulls(rightTableNodeInfo.Definitions, true))
             {
-                var newApplyNode = command.CreateNode(command.CreateCrossApplyOp(), applyNode.Child0, applyRightInputNode);
-                var newFilterNode = command.CreateNode(command.CreateFilterOp(), newApplyNode, filterNode.Child1);
-                newNode = newFilterNode;
-                return true;
+                // Allow the JoinElimination phase to eliminate redundant joins
+                // and allow the NullSemantics phase to fully expand the filter 
+                // predicate before attempting to promote the OuterApply to CrossApply.
+                if (trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.NullSemantics))
+                {
+                    var newApplyNode = command.CreateNode(command.CreateCrossApplyOp(), applyNode.Child0, applyRightInputNode);
+                    var newFilterNode = command.CreateNode(command.CreateFilterOp(), newApplyNode, filterNode.Child1);
+                    newNode = newFilterNode;
+                    return true;
+                }
+
+                trc.PlanCompiler.TransformationsDeferred = true;
             }
 
             return false;

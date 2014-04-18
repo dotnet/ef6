@@ -1320,5 +1320,81 @@ FROM ( SELECT
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }
+
+        public class CodePlex2160 : FunctionalTestBase
+        {
+            public class Foo
+            {
+                public string S { get; set; }
+                public Bar Bar { get; set; }
+            }
+
+            public class Bar
+            {
+                public int Id { get; set; }
+                public string Q { get; set; }
+            }
+
+            public class Context : DbContext
+            {
+                public DbSet<Foo> Foos { get; set; }
+
+                static Context()
+                {
+                    Database.SetInitializer(new ContextInitializer());
+                }
+
+                public Context()
+                {
+                    Configuration.UseDatabaseNullSemantics = false;
+                }
+
+                protected override void OnModelCreating(DbModelBuilder modelBuilder)
+                {
+                    modelBuilder.Entity<Foo>().HasKey(e => e.S).HasOptional(e => e.Bar);
+                }
+            }
+
+            public class ContextInitializer : DropCreateDatabaseIfModelChanges<Context>
+            {
+                protected override void Seed(Context context)
+                {
+                    context.Foos.Add(new Foo { S = "a" });
+                    context.Foos.Add(new Foo { S = "b" });
+                    context.Foos.Add(new Foo { S = "c" });
+                }
+            }
+
+            [Fact]
+            public void Group_by_nullable_reference_does_not_result_in_empty_group()
+            {
+                var expectedSql =
+@"SELECT 
+    1 AS [C1], 
+    [Join2].[S] AS [S], 
+    [Join2].[Bar_Id] AS [Bar_Id]
+    FROM   (SELECT DISTINCT 
+        [Extent2].[Q] AS [Q]
+        FROM  [dbo].[Foos] AS [Extent1]
+        LEFT OUTER JOIN [dbo].[Bars] AS [Extent2] ON [Extent1].[Bar_Id] = [Extent2].[Id] ) AS [Distinct1]
+    INNER JOIN  (SELECT [Extent3].[S] AS [S], [Extent3].[Bar_Id] AS [Bar_Id], [Extent4].[Q] AS [Q]
+        FROM  [dbo].[Foos] AS [Extent3]
+        LEFT OUTER JOIN [dbo].[Bars] AS [Extent4] ON [Extent3].[Bar_Id] = [Extent4].[Id] ) AS [Join2] ON ([Distinct1].[Q] = [Join2].[Q]) OR (([Distinct1].[Q] IS NULL) AND ([Join2].[Q] IS NULL))";
+
+                using (var context = new Context())
+                {
+                    context.Configuration.UseDatabaseNullSemantics = false;
+
+                    var query = context.Foos.GroupBy(x => x.Bar.Q).SelectMany(x => x);
+
+                    QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+
+                    var items = query.ToArray();
+
+                    Assert.Equal(3, items.Length);
+                    Assert.Equal(new[] { "a", "b", "c" }, items.Select(it => it.S));
+                }
+            }
+        }
     }
 }

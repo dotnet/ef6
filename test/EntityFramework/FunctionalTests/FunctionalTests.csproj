@@ -249,6 +249,7 @@
     <Compile Include="ProductivityApi\TemplateTests.cs" />
     <Compile Include="Query\ComparisonTestst.cs" />
     <Compile Include="Query\ConditionalTranslatorTests.cs" />
+    <Compile Include="Query\FilterOpRulesTests.cs" />
     <Compile Include="Query\LinqToEntities\JoinTests.cs" />
     <Compile Include="Query\PredicateScalarizationTests.cs" />
     <Compile Include="Query\LinqToEntities\HasFlagTests.cs" />

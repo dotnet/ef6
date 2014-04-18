@@ -503,8 +503,9 @@ namespace System.Data.Entity.Query
     [Extent1].[NullableId] AS [NullableId], 
     [Extent1].[Name] AS [Name]
     FROM  [dbo].[A] AS [Extent1]
-    INNER JOIN  (SELECT TOP (1) [c].[Name] AS [Name]
-        FROM [dbo].[B] AS [c] ) AS [Limit1] ON [Extent1].[Name] = [Limit1].[Name]";
+    LEFT OUTER JOIN  (SELECT TOP (1) [c].[Name] AS [Name]
+        FROM [dbo].[B] AS [c] ) AS [Limit1] ON 1 = 1
+    WHERE ([Extent1].[Name] = [Limit1].[Name]) OR (([Extent1].[Name] IS NULL) AND ([Limit1].[Name] IS NULL))";
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }

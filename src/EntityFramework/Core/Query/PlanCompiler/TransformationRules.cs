@@ -56,6 +56,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> NullSemanticsRulesTable =
             BuildLookupTableForRules(NullSemanticsRules);
 
+        internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> DeferredRulesTable =
+            BuildLookupTableForRules(DeferredRules);
+
         #region private state maintenance
 
         private static List<Rule> allRules;
@@ -147,6 +150,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
+        private static List<Rule> deferredRules;
+
+        private static List<Rule> DeferredRules
+        {
+            get
+            {
+                if (deferredRules == null)
+                {
+                    deferredRules = new List<Rule>();
+                    deferredRules.Add(FilterOpRules.Rule_FilterOverLeftOuterJoin);
+                    deferredRules.Add(FilterOpRules.Rule_FilterOverOuterApply);
+                }
+                return deferredRules;
+            }
+        }
+
         private static ReadOnlyCollection<ReadOnlyCollection<Rule>> BuildLookupTableForRules(IEnumerable<Rule> rules)
         {
             var NoRules = new ReadOnlyCollection<Rule>(new Rule[0]);
@@ -232,6 +251,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     break;
                 case TransformationRulesGroup.NullSemantics:
                     rulesTable = NullSemanticsRulesTable;
+                    break;
+                case TransformationRulesGroup.Deferred:
+                    rulesTable = DeferredRulesTable;
                     break;
             }
 

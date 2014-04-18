@@ -273,6 +273,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var beforeTransformationRules4 = String.Empty;
             var beforeNullSemantics = String.Empty;
             var beforeTransformationRules5 = String.Empty;
+            var beforeTransformationRules6 = String.Empty;
             var beforeCodeGen = String.Empty;
 
             //
@@ -355,7 +356,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 beforeJoinElimination1 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
                 var modified = JoinElimination.Process(this);
-                if (modified || ForceApplyTransformationsAfterJoinElimination)
+                if (modified)
                 {
                     ApplyTransformations(ref beforeTransformationRules3, TransformationRulesGroup.PostJoinElimination);
                     beforeJoinElimination2 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
@@ -367,15 +368,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-            if (IsPhaseNeeded(PlanCompilerPhase.NullSemantics)
-                && !m_ctree.UseDatabaseNullSemantics)
+            if (IsPhaseNeeded(PlanCompilerPhase.NullSemantics))
             {
                 beforeNullSemantics = SwitchToPhase(PlanCompilerPhase.NullSemantics);
 
-                if (NullSemantics.Process(Command))
+                if (!m_ctree.UseDatabaseNullSemantics && NullSemantics.Process(Command))
                 {
                     ApplyTransformations(ref beforeTransformationRules5, TransformationRulesGroup.NullSemantics);
                 }
+            }
+
+            if (TransformationsDeferred)
+            {
+                ApplyTransformations(ref beforeTransformationRules6, TransformationRulesGroup.Deferred);
             }
 
             // Code generation
@@ -400,6 +405,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             size = beforeTransformationRules4.Length;
             size = beforeNullSemantics.Length;
             size = beforeTransformationRules5.Length;
+            size = beforeTransformationRules6.Length;
             size = beforeCodeGen.Length;
 #endif
         }
@@ -467,7 +473,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        internal bool ForceApplyTransformationsAfterJoinElimination { get; set; }
+        internal bool TransformationsDeferred { get; set; }
 
         // <summary>
         // Compute whether transformations may be applied.
