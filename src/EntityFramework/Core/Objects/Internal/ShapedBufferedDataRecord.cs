@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 #if !NET40
@@ -329,14 +330,13 @@ namespace System.Data.Entity.Core.Objects.Internal
 
 #if !NET40
 
-
         private async Task<BufferedDataRecord> InitializeAsync(
             DbDataReader reader, DbSpatialDataReader spatialDataReader, Type[] columnTypes, bool[] nullableColumns,
             CancellationToken cancellationToken)
         {
             InitializeFields(columnTypes, nullableColumns);
 
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+            while (await reader.ReadAsync(cancellationToken).WithCurrentCulture())
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -360,189 +360,189 @@ namespace System.Data.Entity.Core.Objects.Internal
                             case TypeCase.Bool:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadBoolAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadBoolAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadBoolAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadBoolAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Byte:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadByteAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadByteAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadByteAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadByteAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Char:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadCharAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadCharAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadCharAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadCharAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.DateTime:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadDateTimeAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadDateTimeAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadDateTimeAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadDateTimeAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Decimal:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadDecimalAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadDecimalAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadDecimalAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadDecimalAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Double:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadDoubleAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadDoubleAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadDoubleAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadDoubleAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Float:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadFloatAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadFloatAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadFloatAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadFloatAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Guid:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadGuidAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadGuidAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadGuidAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadGuidAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Short:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadShortAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadShortAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadShortAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadShortAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Int:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadIntAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadIntAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadIntAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadIntAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Long:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadLongAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadLongAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadLongAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadLongAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.DbGeography:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadGeographyAsync(spatialDataReader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadGeographyAsync(spatialDataReader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadGeographyAsync(spatialDataReader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadGeographyAsync(spatialDataReader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.DbGeometry:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadGeometryAsync(spatialDataReader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadGeometryAsync(spatialDataReader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadGeometryAsync(spatialDataReader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadGeometryAsync(spatialDataReader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             case TypeCase.Empty:
                                 if (nullableColumns[i])
                                 {
-                                    _tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    _tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                             default:
                                 if (nullableColumns[i])
                                 {
-                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)))
+                                    if (!(_tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture()))
                                     {
-                                        await ReadObjectAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                        await ReadObjectAsync(reader, i, cancellationToken).WithCurrentCulture();
                                     }
                                 }
                                 else
                                 {
-                                    await ReadObjectAsync(reader, i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                    await ReadObjectAsync(reader, i, cancellationToken).WithCurrentCulture();
                                 }
                                 break;
                         }
@@ -551,7 +551,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     {
                         if (nullableColumns[i])
                         {
-                            _tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                            _tempNulls[_currentRowNumber * _nullCount + _nullOrdinalToIndexMap[i]] = await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture();
                         }
                     }
                 }
@@ -761,7 +761,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _tempBools[_currentRowNumber * _boolCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<bool>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<bool>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -777,7 +777,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _bytes[_currentRowNumber * _byteCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<byte>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<byte>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -793,7 +793,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _chars[_currentRowNumber * _charCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<char>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<char>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -809,7 +809,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _dateTimes[_currentRowNumber * _dateTimeCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<DateTime>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<DateTime>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -825,7 +825,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _decimals[_currentRowNumber * _decimalCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<decimal>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<decimal>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -841,7 +841,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _doubles[_currentRowNumber * _doubleCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<double>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<double>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -857,7 +857,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _floats[_currentRowNumber * _floatCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<float>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<float>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -873,7 +873,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _guids[_currentRowNumber * _guidCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<Guid>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<Guid>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -889,7 +889,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _shorts[_currentRowNumber * _shortCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<short>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<short>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -905,7 +905,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _ints[_currentRowNumber * _intCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<int>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<int>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -921,7 +921,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _longs[_currentRowNumber * _longCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<long>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<long>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -937,7 +937,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbDataReader reader, int ordinal, CancellationToken cancellationToken)
         {
             _objects[_currentRowNumber * _objectCount + _ordinalToIndexMap[ordinal]] =
-                await reader.GetFieldValueAsync<object>(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await reader.GetFieldValueAsync<object>(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -953,7 +953,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbSpatialDataReader spatialReader, int ordinal, CancellationToken cancellationToken)
         {
             _objects[_currentRowNumber * _objectCount + _ordinalToIndexMap[ordinal]] =
-                await spatialReader.GetGeographyAsync(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await spatialReader.GetGeographyAsync(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -969,7 +969,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbSpatialDataReader spatialReader, int ordinal, CancellationToken cancellationToken)
         {
             _objects[_currentRowNumber * _objectCount + _ordinalToIndexMap[ordinal]] =
-                await spatialReader.GetGeometryAsync(ordinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await spatialReader.GetGeometryAsync(ordinal, cancellationToken).WithCurrentCulture();
         }
 
 #endif

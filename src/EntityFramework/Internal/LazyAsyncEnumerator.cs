@@ -64,7 +64,7 @@ namespace System.Data.Entity.Internal
 
         private async Task<bool> FirstMoveNextAsync(CancellationToken cancellationToken)
         {
-            var objectResult = await _getObjectResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var objectResult = await _getObjectResultAsync(cancellationToken).WithCurrentCulture();
             DebugCheck.NotNull(objectResult); // await _getObjectResultAsync should never return null 
             try
             {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Internal
                 objectResult.Dispose();
                 throw;
             }
-            return await _objectResultAsyncEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            return await _objectResultAsyncEnumerator.MoveNextAsync(cancellationToken).WithCurrentCulture();
         }
     }
 }

@@ -571,6 +571,7 @@
     <Compile Include="Utilities\ProviderRowFinderTests.cs" />
     <Compile Include="Utilities\SqlDataReaderWrapperTests.cs" />
     <Compile Include="Utilities\StringExtensionsTests.cs" />
+    <Compile Include="Utilities\TaskExtensionsTests.cs" />
     <Compile Include="Utilities\TaskHelperTests.cs" />
     <Compile Include="Utilities\TypeFinderTests.cs" />
     <Compile Include="Utilities\XContainerExtensionsTests.cs" />

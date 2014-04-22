@@ -139,7 +139,7 @@ namespace System.Data.Entity.Infrastructure
         public async Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
             var storeValues =
-                await _internalEntityEntry.GetDatabaseValuesAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await _internalEntityEntry.GetDatabaseValuesAsync(cancellationToken).WithCurrentCulture();
             return storeValues == null ? null : new DbPropertyValues(storeValues);
         }
 

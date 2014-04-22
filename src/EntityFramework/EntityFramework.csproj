@@ -1485,6 +1485,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\ProviderRowFinder.cs" />
+    <Compile Include="Utilities\TaskExtensions.cs" />
     <Compile Include="Utilities\TaskHelper.cs" />
     <Compile Include="Utilities\TypeFinder.cs" />
     <Compile Include="Utilities\XContainerExtensions.cs" />

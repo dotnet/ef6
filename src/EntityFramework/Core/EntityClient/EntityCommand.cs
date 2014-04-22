@@ -586,7 +586,7 @@ namespace System.Data.Entity.Core.EntityClient
             // prepare the query first
             Prepare();
             var dbDataReader =
-                await _commandDefinition.ExecuteAsync(this, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await _commandDefinition.ExecuteAsync(this, behavior, cancellationToken).WithCurrentCulture();
             var reader = _entityDataReaderFactory.CreateEntityDataReader(this, dbDataReader, behavior);
             _dataReader = reader;
 
@@ -618,7 +618,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </returns>
         protected override async Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
-            return await ExecuteReaderAsync(behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            return await ExecuteReaderAsync(behavior, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -651,10 +651,10 @@ namespace System.Data.Entity.Core.EntityClient
             using (
                 var reader =
                     await
-                    ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false)
+                    ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).WithCurrentCulture()
                 )
             {
-                await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).WithCurrentCulture();
                 return reader.RecordsAffected;
             }
         }

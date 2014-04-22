@@ -144,7 +144,7 @@ namespace System.Data.Entity.Internal.Linq
             // because if the object found was of the wrong type then it would still get into
             // the state manager.
             var entity = FindInStateManager(key)
-                         ?? await FindInStoreAsync(key, "keyValues", cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                         ?? await FindInStoreAsync(key, "keyValues", cancellationToken).WithCurrentCulture();
 
             if (entity != null
                 && !(entity is TEntity))
@@ -264,7 +264,7 @@ namespace System.Data.Entity.Internal.Linq
 
             try
             {
-                return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                return await BuildFindQuery(key).SingleOrDefaultAsync(cancellationToken).WithCurrentCulture();
             }
             catch (EntitySqlException ex)
             {

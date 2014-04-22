@@ -485,7 +485,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             cancellationToken.ThrowIfCancellationRequested();
 
             var storeDataReader =
-                await ExecuteStoreCommandsAsync(entityCommand, behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await ExecuteStoreCommandsAsync(entityCommand, behavior & ~CommandBehavior.SequentialAccess, cancellationToken).WithCurrentCulture();
             DbDataReader result = null;
 
             // If we actually executed something, then go ahead and construct a bridge
@@ -499,9 +499,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     {
                         // For a query with no result type (and therefore no column map), consume the reader.
                         // When the user requests Metadata for this reader, we return nothing.
-                        await
-                            CommandHelper.ConsumeReaderAsync(storeDataReader, cancellationToken).ConfigureAwait(
-                                continueOnCapturedContext: false);
+                        await CommandHelper.ConsumeReaderAsync(storeDataReader, cancellationToken).WithCurrentCulture();
                         result = storeDataReader;
                     }
                     else
@@ -579,7 +577,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             {
                 reader = await
                          storeProviderCommand.ExecuteReaderAsync(behavior, cancellationToken)
-                                             .ConfigureAwait(continueOnCapturedContext: false);
+                                             .WithCurrentCulture();
             }
             catch (Exception e)
             {

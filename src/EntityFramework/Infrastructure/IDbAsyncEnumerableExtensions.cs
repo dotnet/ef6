@@ -31,7 +31,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var enumerator = source.GetAsyncEnumerator())
             {
-                if (await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await enumerator.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     Task<bool> moveNextTask;
                     do
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Infrastructure
                         moveNextTask = enumerator.MoveNextAsync(cancellationToken);
                         action(current);
                     }
-                    while (await moveNextTask.ConfigureAwait(continueOnCapturedContext: false));
+                    while (await moveNextTask.WithCurrentCulture());
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await enumerator.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     Task<bool> moveNextTask;
                     do
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Infrastructure
                         moveNextTask = enumerator.MoveNextAsync(cancellationToken);
                         action(current);
                     }
-                    while (await moveNextTask.ConfigureAwait(continueOnCapturedContext: false));
+                    while (await moveNextTask.WithCurrentCulture());
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Infrastructure
             DebugCheck.NotNull(source);
 
             var list = new List<T>();
-            await source.ForEachAsync(e => list.Add((T)e), cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await source.ForEachAsync(e => list.Add((T)e), cancellationToken).WithCurrentCulture();
             return list;
         }
 
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Infrastructure
         {
             DebugCheck.NotNull(source);
 
-            var list = await source.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            var list = await source.ToListAsync(cancellationToken).WithCurrentCulture();
             return list.ToArray();
         }
 
@@ -441,8 +441,8 @@ namespace System.Data.Entity.Infrastructure
 
             var d = new Dictionary<TKey, TElement>(comparer);
             await
-                source.ForEachAsync(element => d.Add(keySelector(element), elementSelector(element)), cancellationToken).ConfigureAwait(
-                    continueOnCapturedContext: false);
+                source.ForEachAsync(element => d.Add(keySelector(element), elementSelector(element)), cancellationToken)
+                    .WithCurrentCulture();
             return d;
         }
 
@@ -477,7 +477,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     return e.Current;
                 }
@@ -496,7 +496,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     if (predicate(e.Current))
                     {
@@ -531,7 +531,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     return e.Current;
                 }
@@ -549,7 +549,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     if (predicate(e.Current))
                     {
@@ -577,7 +577,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (!await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (!await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     throw Error.EmptySequence();
                 }
@@ -586,7 +586,7 @@ namespace System.Data.Entity.Infrastructure
 
                 var result = e.Current;
 
-                if (!await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (!await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     return result;
                 }
@@ -617,7 +617,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -659,7 +659,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (!await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (!await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     return default(TSource);
                 }
@@ -668,7 +668,7 @@ namespace System.Data.Entity.Infrastructure
 
                 var result = e.Current;
 
-                if (!await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (!await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     return result;
                 }
@@ -699,7 +699,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -738,7 +738,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     if (EqualityComparer<TSource>.Default.Equals(e.Current, value))
                     {
@@ -767,7 +767,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                if (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     return true;
                 }
@@ -795,7 +795,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     if (predicate(e.Current))
                     {
@@ -828,7 +828,7 @@ namespace System.Data.Entity.Infrastructure
 
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     if (!predicate(e.Current))
                     {
@@ -861,7 +861,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 checked
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -896,7 +896,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 checked
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -931,7 +931,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 checked
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -966,7 +966,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 checked
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1000,7 +1000,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 using (var e = source.GetAsyncEnumerator())
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1020,7 +1020,7 @@ namespace System.Data.Entity.Infrastructure
 
                 using (var e = source.GetAsyncEnumerator())
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1066,7 +1066,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 using (var e = source.GetAsyncEnumerator())
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1086,7 +1086,7 @@ namespace System.Data.Entity.Infrastructure
 
                 using (var e = source.GetAsyncEnumerator())
                 {
-                    while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -1129,7 +1129,7 @@ namespace System.Data.Entity.Infrastructure
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1159,7 +1159,7 @@ namespace System.Data.Entity.Infrastructure
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1192,7 +1192,7 @@ namespace System.Data.Entity.Infrastructure
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1222,7 +1222,7 @@ namespace System.Data.Entity.Infrastructure
             long sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1255,7 +1255,7 @@ namespace System.Data.Entity.Infrastructure
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1285,7 +1285,7 @@ namespace System.Data.Entity.Infrastructure
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1318,7 +1318,7 @@ namespace System.Data.Entity.Infrastructure
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1348,7 +1348,7 @@ namespace System.Data.Entity.Infrastructure
             double sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1381,7 +1381,7 @@ namespace System.Data.Entity.Infrastructure
             decimal sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1411,7 +1411,7 @@ namespace System.Data.Entity.Infrastructure
             decimal sum = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1445,7 +1445,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1481,7 +1481,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1520,7 +1520,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1556,7 +1556,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1595,7 +1595,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1631,7 +1631,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1670,7 +1670,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1706,7 +1706,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1745,7 +1745,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1781,7 +1781,7 @@ namespace System.Data.Entity.Infrastructure
             long count = 0;
             using (var e = source.GetAsyncEnumerator())
             {
-                while (await e.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await e.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 

@@ -364,11 +364,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 using (
                     var reader =
                         await
-                        _dbCommand.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(
-                            continueOnCapturedContext: false))
+                        _dbCommand.ExecuteReaderAsync(CommandBehavior.SequentialAccess, cancellationToken).WithCurrentCulture())
                 {
                     // Retrieve only the first row from the first result set
-                    if (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    if (await reader.ReadAsync(cancellationToken).WithCurrentCulture())
                     {
                         rowsAffected++;
 
@@ -383,20 +382,19 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             if (Helper.IsSpatialType(columnType)
                                 &&
                                 !await
-                                 reader.IsDBNullAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                                 reader.IsDBNullAsync(columnOrdinal, cancellationToken).WithCurrentCulture())
                             {
                                 value =
                                     await
-                                    SpatialHelpers.GetSpatialValueAsync(
-                                        Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken).ConfigureAwait(
-                                            continueOnCapturedContext: false);
+                                        SpatialHelpers.GetSpatialValueAsync(
+                                            Translator.MetadataWorkspace, reader, columnType, columnOrdinal, cancellationToken)
+                                            .WithCurrentCulture();
                             }
                             else
                             {
                                 value =
                                     await
-                                    reader.GetFieldValueAsync<object>(columnOrdinal, cancellationToken).ConfigureAwait(
-                                        continueOnCapturedContext: false);
+                                        reader.GetFieldValueAsync<object>(columnOrdinal, cancellationToken).WithCurrentCulture();
                             }
 
                             // register for back-propagation
@@ -414,12 +412,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                     // Consume the current reader (and subsequent result sets) so that any errors
                     // executing the function can be intercepted
-                    await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    await CommandHelper.ConsumeReaderAsync(reader, cancellationToken).WithCurrentCulture();
                 }
             }
             else
             {
-                rowsAffected = await _dbCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                rowsAffected = await _dbCommand.ExecuteNonQueryAsync(cancellationToken).WithCurrentCulture();
             }
 
             return GetRowsAffected(rowsAffected, Translator);

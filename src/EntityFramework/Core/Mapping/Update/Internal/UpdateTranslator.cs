@@ -462,8 +462,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     source = command;
                     var rowsAffected =
                         await
-                        command.ExecuteAsync(identifierValues, generatedValues, cancellationToken).ConfigureAwait(
-                            continueOnCapturedContext: false);
+                        command.ExecuteAsync(identifierValues, generatedValues, cancellationToken).WithCurrentCulture();
                     ValidateRowsAffected(rowsAffected, source);
                 }
             }

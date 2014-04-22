@@ -237,9 +237,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     // results).
                     var objectResult =
                         await
-                        sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken).ConfigureAwait(
-                            continueOnCapturedContext: false);
-                    refreshedValue = await objectResult.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                        sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken).WithCurrentCulture();
+                    refreshedValue = await objectResult.ToListAsync(cancellationToken).WithCurrentCulture();
                 }
 
                 HandleRefreshedValue(mergeOption, refreshedValue);
