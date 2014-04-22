@@ -40,6 +40,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public string Name
         {
             get { return _associationType.Name; }
+            set { _associationType.Name = value; }
         }
 
         public virtual EntityType PrincipalTable

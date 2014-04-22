@@ -898,7 +898,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         && associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.Column != column))
                     {
                         // Remove table FKs that refer to this column, and then remove the column
-                        ForeignKeyPrimitiveOperations.RemoveAllForeignKeyConstraintsForColumn(table, column);
+                        ForeignKeyPrimitiveOperations.RemoveAllForeignKeyConstraintsForColumn(table, column, databaseMapping);
                         TablePrimitiveOperations.RemoveColumn(table, column);
                     }
                 }
