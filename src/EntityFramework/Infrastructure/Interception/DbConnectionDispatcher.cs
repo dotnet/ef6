@@ -102,9 +102,10 @@ namespace System.Data.Entity.Infrastructure.Interception
                 connection,
                 (t, c) =>
                 {
-                    // using dynamic here to emulate the behavior of the using statement
-                    dynamic dynamicConnection = t;
-                    dynamicConnection.Dispose();
+                    // Will invoke the explicit IDisposable implementation if one exists
+                    using (t)
+                    {
+                    }
                 },
                 new DbConnectionInterceptionContext(interceptionContext),
                 (i, t, c) => i.Disposing(t, c),
