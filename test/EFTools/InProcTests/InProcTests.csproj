@@ -70,7 +70,7 @@
     <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.$(VisualStudioVersion)" />
     <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Shell.$(VisualStudioVersion)" />
     <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.GraphObject.$(VisualStudioVersion)" />
-    <Reference Include="Microsoft.VisualStudio.XmlEditor" />
+    <Reference Include="Microsoft.VisualStudio.XmlEditor, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
