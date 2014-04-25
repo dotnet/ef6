@@ -371,8 +371,10 @@ namespace System.Data.Entity.SqlServer
             {
                 connection.Open();
 
-                ExecuteNonQuery(connection, "IF db_id('{0}') IS NULL CREATE DATABASE [{0}]", DatabaseName);
-
+                if (!ExecuteScalarReturnsOne(connection, "SELECT Count(*) FROM sys.databases WHERE [name]=N'{0}'", DatabaseName))
+                {
+                    ExecuteNonQuery(connection, "CREATE DATABASE [{0}]", DatabaseName);
+                }
                 connection.Close();
             }
         }
@@ -438,8 +440,16 @@ namespace System.Data.Entity.SqlServer
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = string.Format(commandText, args);
-                return (int)command.ExecuteScalar() == 1;
+                try
+                {
+                    command.CommandText = string.Format(commandText, args);
+                    return (int)command.ExecuteScalar() == 1;  
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+        
             }
         }
 
