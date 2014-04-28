@@ -196,20 +196,20 @@ namespace System.Data.Entity.Core.Objects.Internal
                     _bufferedDataRecords.Add(await
                         ShapedBufferedDataRecord.InitializeAsync(
                             providerManifestToken, providerSerivces, reader, columnTypes, nullableColumns, cancellationToken)
-                            .ConfigureAwait(continueOnCapturedContext: false));
+                            .WithCurrentCulture());
                 }
                 else
                 {
                     _bufferedDataRecords.Add(await
                         ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
-                            .ConfigureAwait(continueOnCapturedContext: false));
+                            .WithCurrentCulture());
                 }
 
-                while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await reader.NextResultAsync(cancellationToken).WithCurrentCulture())
                 {
                     _bufferedDataRecords.Add(await
                         ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
-                            .ConfigureAwait(continueOnCapturedContext: false));
+                            .WithCurrentCulture());
                 }
 
                 _recordsAffected = reader.RecordsAffected;

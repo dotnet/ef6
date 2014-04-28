@@ -189,7 +189,7 @@ namespace System.Data.Entity.Infrastructure
             return ProtectedExecuteAsync(
                 async () =>
                 {
-                    await operation().ConfigureAwait(continueOnCapturedContext: false);
+                    await operation().WithCurrentCulture();
                     return true;
                 }, cancellationToken);
         }
@@ -237,7 +237,7 @@ namespace System.Data.Entity.Infrastructure
 
                 try
                 {
-                    return await operation().ConfigureAwait(continueOnCapturedContext: false);
+                    return await operation().WithCurrentCulture();
                 }
                 catch (Exception ex)
                 {
@@ -258,7 +258,7 @@ namespace System.Data.Entity.Infrastructure
                     throw new InvalidOperationException(Strings.ExecutionStrategy_NegativeDelay(delay));
                 }
 
-                await Task.Delay(delay.Value, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await Task.Delay(delay.Value, cancellationToken).WithCurrentCulture();
             }
         }
 

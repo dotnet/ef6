@@ -1716,7 +1716,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (Connection.State == ConnectionState.Closed)
             {
-                await Connection.OpenAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await Connection.OpenAsync(cancellationToken).WithCurrentCulture();
                 _openedConnection = true;
             }
 
@@ -1732,13 +1732,11 @@ namespace System.Data.Entity.Core.Objects
                 await EnsureContextIsEnlistedInCurrentTransaction(
                     currentTransaction, async () =>
                     {
-                        await
-                            Connection.OpenAsync(cancellationToken).ConfigureAwait(
-                                continueOnCapturedContext: false);
+                        await Connection.OpenAsync(cancellationToken).WithCurrentCulture();
                         Debug.Assert(_openedConnection);
                         return true;
                     },
-                    Task.FromResult(false)).ConfigureAwait(continueOnCapturedContext: false);
+                    Task.FromResult(false)).WithCurrentCulture();
 
                 // If we get here, we have an open connection, either enlisted in the current
                 // transaction (if it's non-null) or unenlisted from all transactions (if the
@@ -2678,7 +2676,7 @@ namespace System.Data.Entity.Core.Objects
 
                 if (refreshKeys.Count > 0)
                 {
-                    await EnsureConnectionAsync(/*shouldMonitorTransactions:*/ false, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    await EnsureConnectionAsync(/*shouldMonitorTransactions:*/ false, cancellationToken).WithCurrentCulture();
                     openedConnection = true;
 
                     // All entities from a single set can potentially be refreshed in the same query.
@@ -2693,7 +2691,7 @@ namespace System.Data.Entity.Core.Objects
                             refreshedCount =
                                 await
                                 BatchRefreshEntitiesByKeyAsync(refreshMode, entities, targetSet, setKeys, refreshedCount, cancellationToken)
-                                    .ConfigureAwait(continueOnCapturedContext: false);
+                                    .WithCurrentCulture();
                         }
                     }
                 }
@@ -2788,7 +2786,7 @@ namespace System.Data.Entity.Core.Objects
                     () => queryPlanAndNextPosition.Item1.ExecuteAsync<object>(this, null, cancellationToken),
                     executionStrategy, startLocalTransaction: false,
                     releaseConnectionOnSuccess: true, cancellationToken: cancellationToken), cancellationToken)
-                                                 .ConfigureAwait(continueOnCapturedContext: false);
+                                                 .WithCurrentCulture();
 
             ProcessRefreshedEntities(trackedEntities, results);
 
@@ -3111,14 +3109,14 @@ namespace System.Data.Entity.Core.Objects
                         entriesAffected =
                             await SaveChangesToStoreAsync(
                                 options, /*executionStrategy:*/ null, /*startLocalTransaction:*/ false,
-                                cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                                cancellationToken).WithCurrentCulture();
                     }
                     else
                     {
                         var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
                         entriesAffected = await executionStrategy.ExecuteAsync(
                             () => SaveChangesToStoreAsync(options, executionStrategy, /*startLocalTransaction:*/ true, cancellationToken),
-                            cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                            cancellationToken).WithCurrentCulture();
                     }
                 }
 
@@ -3199,7 +3197,7 @@ namespace System.Data.Entity.Core.Objects
             var entriesAffected = await ExecuteInTransactionAsync(
                 () => _adapter.UpdateAsync(cancellationToken), executionStrategy,
                 startLocalTransaction, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
-                                            .ConfigureAwait(continueOnCapturedContext: false);
+                                            .WithCurrentCulture();
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
             {
@@ -3325,7 +3323,7 @@ namespace System.Data.Entity.Core.Objects
             Func<Task<T>> func, IDbExecutionStrategy executionStrategy,
             bool startLocalTransaction, bool releaseConnectionOnSuccess, CancellationToken cancellationToken)
         {
-            await EnsureConnectionAsync(startLocalTransaction, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            await EnsureConnectionAsync(startLocalTransaction, cancellationToken).WithCurrentCulture();
 
             var needLocalTransaction = false;
             var connection = (EntityConnection)Connection;
@@ -3350,7 +3348,7 @@ namespace System.Data.Entity.Core.Objects
                     localTransaction = connection.BeginTransaction();
                 }
 
-                var result = await func().ConfigureAwait(continueOnCapturedContext: false);
+                var result = await func().WithCurrentCulture();
 
                 if (localTransaction != null)
                 {
@@ -4216,7 +4214,7 @@ namespace System.Data.Entity.Core.Objects
                         executionStrategy,
                         /*startLocalTransaction:*/ transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                         /*releaseConnectionOnSuccess:*/ true, cancellationToken),
-                    cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    cancellationToken).WithCurrentCulture();
             }
             finally
             {
@@ -4667,7 +4665,7 @@ namespace System.Data.Entity.Core.Objects
                         executionStrategy,
                         /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.UserSpecifiedStreaming.Value,
                         cancellationToken),
-                    cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    cancellationToken).WithCurrentCulture();
             }
             finally
             {
@@ -4694,7 +4692,7 @@ namespace System.Data.Entity.Core.Objects
                         executionOptions.UserSpecifiedStreaming.Value
                             ? CommandBehavior.Default
                             : CommandBehavior.SequentialAccess,
-                        cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                        cancellationToken).WithCurrentCulture();
                 }
 
                 shaperFactory = InternalTranslate<TElement>(
@@ -4722,7 +4720,7 @@ namespace System.Data.Entity.Core.Objects
 
                     bufferedReader = new BufferedDataReader(reader);
                     await bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes, shaperFactory.NullableColumns, cancellationToken)
-                        .ConfigureAwait(continueOnCapturedContext: false);
+                        .WithCurrentCulture();
                     reader = bufferedReader;
                 }
                 catch

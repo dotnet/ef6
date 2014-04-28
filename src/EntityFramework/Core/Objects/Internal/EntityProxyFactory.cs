@@ -85,6 +85,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             return moduleBuilder;
         }
 
+        private static void DiscardDynamicModule(EntityType ospaceEntityType)
+        {
+            _moduleBuilders.Remove(ospaceEntityType.ClrType.Assembly());
+        }
+
         internal static bool TryGetProxyType(Type clrType, string entityTypeName, out EntityProxyTypeInfo proxyTypeInfo)
         {
             _typeMapLock.EnterReadLock();
@@ -236,22 +241,35 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (!_proxyNameMap.TryGetValue(proxyIdentiy, out proxyTypeInfo)
                 && CanProxyType(ospaceEntityType))
             {
-                var moduleBuilder = GetDynamicModule(ospaceEntityType);
-                proxyTypeInfo = BuildType(moduleBuilder, clrEntityType, workspace);
-
-                _typeMapLock.EnterWriteLock();
                 try
                 {
-                    _proxyNameMap[proxyIdentiy] = proxyTypeInfo;
-                    if (proxyTypeInfo != null)
+                    var moduleBuilder = GetDynamicModule(ospaceEntityType);
+                    proxyTypeInfo = BuildType(moduleBuilder, clrEntityType, workspace);
+
+                    _typeMapLock.EnterWriteLock();
+                    try
                     {
-                        // If there is a proxy type, create the reverse lookup
-                        _proxyTypeMap[proxyTypeInfo.ProxyType] = proxyTypeInfo;
+                        _proxyNameMap[proxyIdentiy] = proxyTypeInfo;
+                        if (proxyTypeInfo != null)
+                        {
+                            // If there is a proxy type, create the reverse lookup
+                            _proxyTypeMap[proxyTypeInfo.ProxyType] = proxyTypeInfo;
+                        }
+                    }
+                    finally
+                    {
+                        _typeMapLock.ExitWriteLock();
                     }
                 }
-                finally
+                catch
                 {
-                    _typeMapLock.ExitWriteLock();
+                    // See CodePlex 2228
+                    // If something went wrong creating the dynamic type, then the module builder is likely in
+                    // a corrupt state, which means it needs to be discarded such that a new, non-corrupt builder
+                    // can be created when proxy creation is tried again.
+                    DiscardDynamicModule(ospaceEntityType);
+
+                    throw;
                 }
             }
 

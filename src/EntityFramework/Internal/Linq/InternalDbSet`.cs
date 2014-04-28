@@ -116,7 +116,7 @@ namespace System.Data.Entity.Internal.Linq
         // <inheritdoc />
         public override async Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
-            return await _internalSet.FindAsync(cancellationToken, keyValues).ConfigureAwait(continueOnCapturedContext: false);
+            return await _internalSet.FindAsync(cancellationToken, keyValues).WithCurrentCulture();
         }
 
 #endif

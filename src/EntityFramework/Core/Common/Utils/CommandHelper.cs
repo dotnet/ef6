@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Common.Utils
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await reader.NextResultAsync(cancellationToken).WithCurrentCulture())
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 

@@ -342,10 +342,10 @@ namespace System.Data.Entity.Infrastructure
         public virtual async Task ClearTransactionHistoryAsync(CancellationToken cancellationToken)
         {
             await TransactionContext.Transactions.ForEachAsync(MarkTransactionForPruning, cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                .WithCurrentCulture();
             await
                 PruneTransactionHistoryAsync( /*force:*/ true, /*useExecutionStrategy:*/ true, cancellationToken)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                    .WithCurrentCulture();
         }
 #endif
 
@@ -463,7 +463,7 @@ namespace System.Data.Entity.Infrastructure
                     await ((IObjectContextAdapter)TransactionContext).ObjectContext
                         .SaveChangesInternalAsync(
                             SaveOptions.None, /*executeInExistingTransaction:*/ !useExecutionStrategy, cancellationToken)
-                        .ConfigureAwait(continueOnCapturedContext: false);
+                        .WithCurrentCulture();
                     _rowsToDelete.Clear();
                 }
                 finally

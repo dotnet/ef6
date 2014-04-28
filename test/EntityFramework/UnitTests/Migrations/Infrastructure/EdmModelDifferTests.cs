@@ -9,6 +9,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
+    using System.Data.Entity.Migrations.Infrastructure.Tph_to_tpt_v1;
+    using System.Data.Entity.Migrations.Infrastructure.Tph_to_tpt_v2;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.OSpaceRenames_v1;
     using System.Data.Entity.Migrations.OSpaceRenames_v2;
@@ -3539,6 +3541,81 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             public Int32 XColumn { get; set; }
             public string Name { get; set; }
+        }
+
+        // issue 2103
+        [MigrationsTheory]
+        public void Tph_to_tpt()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<AttachedFile>()
+                .HasRequired(t => t.Tender)
+                .WithMany(t => t.AttachedFiles)
+                .HasForeignKey(d => d.TenderId);
+            modelBuilder
+                .Entity<AttachedFile>()
+                .ToTable("AttachedFile");
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<AttachedFileBase>();
+            modelBuilder
+                .Entity<TenderAttachedFile>()
+                .HasRequired(t => t.Tender)
+                .WithMany(t => t.AttachedFiles)
+                .HasForeignKey(d => d.TenderId);
+            modelBuilder
+                .Entity<TenderAttachedFile>()
+                .ToTable("TenderAttachedFile");
+            
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations 
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(7, operations.Count);
+        }
+    }
+
+    namespace Tph_to_tpt_v1
+    {
+        public class Tender
+        {
+            public int Id { get; set; }
+            public ICollection<AttachedFile> AttachedFiles { get; set; }
+        }
+
+        public class AttachedFile
+        {
+            public int Id { get; set; }
+            public int TenderId { get; set; }
+            public Tender Tender { get; set; }
+        }
+    }
+
+    namespace Tph_to_tpt_v2
+    {
+        public class Tender
+        {
+            public int Id { get; set; }
+            public ICollection<TenderAttachedFile> AttachedFiles { get; set; }
+        }
+
+        public abstract class AttachedFileBase
+        {
+            public int Id { get; set; }
+        }
+
+        public class TenderAttachedFile : AttachedFileBase
+        {
+            public int TenderId { get; set; }
+            public Tender Tender { get; set; }
         }
     }
 }

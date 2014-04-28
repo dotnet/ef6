@@ -41,12 +41,12 @@ namespace System.Data.Entity.Spatial
             if (Helper.IsGeographicType((PrimitiveType)columnType.EdmType))
             {
                 return
-                    await spatialReader.GetGeographyAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    await spatialReader.GetGeographyAsync(columnOrdinal, cancellationToken).WithCurrentCulture();
             }
             else
             {
                 return
-                    await spatialReader.GetGeometryAsync(columnOrdinal, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    await spatialReader.GetGeometryAsync(columnOrdinal, cancellationToken).WithCurrentCulture();
             }
         }
 

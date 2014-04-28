@@ -354,9 +354,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     {
                         var queryResult =
                             await
-                            sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken).ConfigureAwait(
-                                continueOnCapturedContext: false);
-                        refreshedValues = await queryResult.ToListAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                            sourceQuery.ExecuteAsync(sourceQuery.MergeOption, cancellationToken).WithCurrentCulture();
+                        refreshedValues = await queryResult.ToListAsync(cancellationToken).WithCurrentCulture();
                     }
                     else
                     {

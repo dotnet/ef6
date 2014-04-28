@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
@@ -150,7 +151,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                                        ? CommandBehavior.Default
                                                        : CommandBehavior.SequentialAccess
                                       , cancellationToken)
-                                               .ConfigureAwait(continueOnCapturedContext: false);
+                                               .WithCurrentCulture();
                 }
 
                 var shaperFactory = (ShaperFactory<TResultType>)ResultShaperFactory;
@@ -168,7 +169,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     bufferedReader = new BufferedDataReader(storeReader);
                     await
                         bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes, shaperFactory.NullableColumns, cancellationToken)
-                                      .ConfigureAwait(continueOnCapturedContext: false);
+                                      .WithCurrentCulture();
 
                     shaper = shaperFactory.Create(
                         bufferedReader, context, context.MetadataWorkspace, MergeOption, true, Streaming);

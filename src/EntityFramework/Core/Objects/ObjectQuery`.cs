@@ -625,7 +625,7 @@ namespace System.Data.Entity.Core.Objects
         // <inheritdoc />
         internal override async Task<ObjectResult> ExecuteInternalAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
-            return await GetResultsAsync(mergeOption, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            return await GetResultsAsync(mergeOption, cancellationToken).WithCurrentCulture();
         }
 
 #endif
@@ -745,7 +745,7 @@ namespace System.Data.Entity.Core.Objects
                               executionStrategy,
                               /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehaviour,
                         cancellationToken),
-                    cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    cancellationToken).WithCurrentCulture();
             }
             finally
             {

@@ -633,7 +633,7 @@ namespace System.Data.Entity.Core.EntityClient
                     await executionStrategy.ExecuteAsync(
                         () => DbInterception.Dispatch.Connection.OpenAsync(_storeConnection, InterceptionContext, cancellationToken),
                         cancellationToken)
-                        .ConfigureAwait(continueOnCapturedContext: false);
+                        .WithCurrentCulture();
                 }
                 catch (Exception e)
                 {

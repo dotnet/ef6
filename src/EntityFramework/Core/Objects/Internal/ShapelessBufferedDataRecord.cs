@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 #if !NET40
@@ -85,12 +86,12 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var fieldCount = record.FieldCount;
             var resultSet = new List<object[]>();
-            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+            while (await reader.ReadAsync(cancellationToken).WithCurrentCulture())
             {
                 var row = new object[fieldCount];
                 for (var i = 0; i < fieldCount; i++)
                 {
-                    if (await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    if (await reader.IsDBNullAsync(i, cancellationToken).WithCurrentCulture())
                     {
                         row[i] = DBNull.Value;
                     }
@@ -98,18 +99,18 @@ namespace System.Data.Entity.Core.Objects.Internal
                              && record._geographyColumns[i])
                     {
                         row[i] = await record._spatialDataReader.GetGeographyAsync(i, cancellationToken)
-                                           .ConfigureAwait(continueOnCapturedContext: false);
+                                           .WithCurrentCulture();
                     }
                     else if (record._spatialDataReader != null
                              && record._geometryColumns[i])
                     {
                         row[i] = await record._spatialDataReader.GetGeometryAsync(i, cancellationToken)
-                                           .ConfigureAwait(continueOnCapturedContext: false);
+                                           .WithCurrentCulture();
                     }
                     else
                     {
                         row[i] = await reader.GetFieldValueAsync<object>(i, cancellationToken)
-                                           .ConfigureAwait(continueOnCapturedContext: false);
+                                           .WithCurrentCulture();
                     }
                 }
                 resultSet.Add(row);

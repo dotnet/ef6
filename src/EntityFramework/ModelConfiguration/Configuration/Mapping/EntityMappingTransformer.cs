@@ -269,6 +269,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         DeleteAction = fk.DeleteAction
                     };
 
+            newFk.SetPreferredName(fk.Name);
+
             var dependentColumns = 
                 GetDependentColumns(
                     selector != null
@@ -397,15 +399,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 .Each(fk => { MoveForeignKeyConstraint(fromTable, toTable, fk); });
         }
 
-        public static void RemoveAllForeignKeyConstraintsForColumn(EntityType table, EdmProperty column)
+        public static void RemoveAllForeignKeyConstraintsForColumn(
+            EntityType table, EdmProperty column, DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(table);
             DebugCheck.NotNull(column);
+            DebugCheck.NotNull(databaseMapping);
 
             table.ForeignKeyBuilders
                  .Where(fk => fk.DependentColumns.Contains(column))
                  .ToArray()
-                 .Each(table.RemoveForeignKey);
+                 .Each(
+                     fk =>
+                     {
+                         table.RemoveForeignKey(fk);
+
+                         var copiedFk
+                             = databaseMapping.Database.EntityTypes
+                                 .SelectMany(t => t.ForeignKeyBuilders)
+                                 .SingleOrDefault(fk2 => Equals(fk2.GetPreferredName(), fk.Name));
+
+                         if (copiedFk != null)
+                         {
+                             copiedFk.Name = copiedFk.GetPreferredName();
+                         }
+                     });
         }
     }
 

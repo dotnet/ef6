@@ -207,7 +207,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             bool readSucceeded;
             try
             {
-                readSucceeded = await Reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                readSucceeded = await Reader.ReadAsync(cancellationToken).WithCurrentCulture();
             }
             catch (Exception e)
             {
@@ -340,7 +340,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (await _shaper.StoreReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await _shaper.StoreReadAsync(cancellationToken).WithCurrentCulture())
                 {
                     try
                     {
@@ -445,7 +445,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     _shaper.StartMaterializingElement();
 
-                    if (!await _shaper.StoreReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    if (!await _shaper.StoreReadAsync(cancellationToken).WithCurrentCulture())
                     {
                         // Reset all collections
                         RootCoordinator.ResetCollection(_shaper);
@@ -627,10 +627,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 switch (_state)
                 {
                     case State.Start:
-                        if (await TryReadToNextElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                        if (await TryReadToNextElementAsync(cancellationToken).WithCurrentCulture())
                         {
                             // if there's an element in the reader...
-                            await ReadElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                            await ReadElementAsync(cancellationToken).WithCurrentCulture();
                         }
                         else
                         {
@@ -639,7 +639,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         }
                         break;
                     case State.Reading:
-                        await ReadElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                        await ReadElementAsync(cancellationToken).WithCurrentCulture();
                         break;
                     case State.NoRowsLastElementPending:
                         // nothing to do but move to the next state...
@@ -696,7 +696,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 // now we need to read to the next element (or the end of the
                 // reader) so that we can return the first element
-                if (await TryReadToNextElementAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                if (await TryReadToNextElementAsync(cancellationToken).WithCurrentCulture())
                 {
                     // we're positioned at the start of the next element (which
                     // corresponds to the 'reading' state)
@@ -732,7 +732,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             private async Task<bool> TryReadToNextElementAsync(CancellationToken cancellationToken)
             {
-                while (await _rowEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                while (await _rowEnumerator.MoveNextAsync(cancellationToken).WithCurrentCulture())
                 {
                     // if we hit a new element, return true
                     if (_rowEnumerator.Current[0] != null)
@@ -889,7 +889,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                             || _rowEnumerator.Current.Length == _depth)
                         {
                             // time to move to the next row...
-                            if (!await _rowEnumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                            if (!await _rowEnumerator.MoveNextAsync(cancellationToken).WithCurrentCulture())
                             {
                                 // no more rows...
                                 _current = null;

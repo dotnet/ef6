@@ -201,7 +201,7 @@ namespace System.Data.Entity.Internal
             cancellationToken.ThrowIfCancellationRequested();
 
             var dataRecord =
-                await GetDatabaseValuesQuery().SingleOrDefaultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await GetDatabaseValuesQuery().SingleOrDefaultAsync(cancellationToken).WithCurrentCulture();
 
             return dataRecord == null ? null : new ClonedPropertyValues(OriginalValues, dataRecord);
         }

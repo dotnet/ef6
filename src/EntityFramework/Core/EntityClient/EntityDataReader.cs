@@ -480,7 +480,7 @@ namespace System.Data.Entity.Core.EntityClient
 
             try
             {
-                return await _storeDataReader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                return await _storeDataReader.NextResultAsync(cancellationToken).WithCurrentCulture();
             }
             catch (Exception e)
             {
