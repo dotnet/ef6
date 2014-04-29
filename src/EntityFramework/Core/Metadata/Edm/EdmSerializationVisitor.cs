@@ -139,7 +139,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         protected internal override void VisitFunctionImport(EdmFunction functionImport)
         {
             _schemaWriter.WriteFunctionImportElementHeader(functionImport);
+
+            if (functionImport.ReturnParameters.Count == 1)
+            {
+                _schemaWriter.WriteFunctionImportReturnTypeAttributes(functionImport.ReturnParameter, functionImport.EntitySet, inline: true);
+                VisitFunctionImportReturnParameter(functionImport.ReturnParameter);
+            }
+    
             base.VisitFunctionImport(functionImport);
+
+            // stored procs with multiple result sets
+            if (functionImport.ReturnParameters.Count > 1)
+            {
+                VisitFunctionImportReturnParameters(functionImport);
+            }
+
             _schemaWriter.WriteEndElement();
         }
 
@@ -150,10 +164,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _schemaWriter.WriteEndElement();
         }
 
-        protected internal override void VisitFunctionImportReturnParameter(FunctionParameter parameter)
+        private void VisitFunctionImportReturnParameters(EdmFunction functionImport)
         {
-            // function imports with multiple return types are currently not supported
-            // for function with single return value the return type is being written inline
+            for (var i = 0; i < functionImport.ReturnParameters.Count; i++)
+            {
+                _schemaWriter.WriteFunctionReturnTypeElementHeader();
+                _schemaWriter.WriteFunctionImportReturnTypeAttributes(functionImport.ReturnParameters[i], functionImport.EntitySets[i], inline: false);
+                VisitFunctionImportReturnParameter(functionImport.ReturnParameter);
+                _schemaWriter.WriteEndElement();
+            }
         }
 
         protected internal override void VisitRowType(RowType rowType)

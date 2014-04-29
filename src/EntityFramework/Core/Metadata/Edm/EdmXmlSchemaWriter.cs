@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
@@ -814,17 +815,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _xmlWriter.WriteStartElement(XmlConstants.FunctionImport);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, functionImport.Name);
-            _xmlWriter.WriteAttributeString(
-                XmlConstants.ReturnType, GetTypeName(functionImport.ReturnParameter.TypeUsage.EdmType));
-
-            if (functionImport.EntitySets.Count == 1 && functionImport.EntitySets[0] != null)
-            {
-                _xmlWriter.WriteAttributeString(XmlConstants.EntitySet, functionImport.EntitySet.Name);
-            }
 
             if (functionImport.IsComposableAttribute)
             {
                 _xmlWriter.WriteAttributeString(XmlConstants.IsComposable, XmlConstants.True);
+            }
+        }
+
+        internal virtual void WriteFunctionImportReturnTypeAttributes(FunctionParameter returnParameter, EntitySet entitySet, bool inline)
+        {
+            _xmlWriter.WriteAttributeString(
+                inline ? XmlConstants.ReturnType : XmlConstants.TypeAttribute, GetTypeName(returnParameter.TypeUsage.EdmType));
+
+            if (entitySet != null)
+            {
+                _xmlWriter.WriteAttributeString(XmlConstants.EntitySet, entitySet.Name);
             }
         }
 

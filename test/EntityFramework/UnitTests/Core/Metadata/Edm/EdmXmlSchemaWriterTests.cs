@@ -211,7 +211,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             fixture.Writer.WriteFunctionImportElementHeader(functionImport);
 
             Assert.Equal(
-                "<FunctionImport Name=\"foo\" ReturnType=\"Collection(N.CT)\" IsComposable=\"true\"",
+                "<FunctionImport Name=\"foo\" IsComposable=\"true\"",
                 fixture.ToString());
         }
 
@@ -239,37 +239,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             fixture.Writer.WriteFunctionImportElementHeader(functionImport);
 
             Assert.Equal(
-                "<FunctionImport Name=\"foo\" ReturnType=\"Int32\"",
-                fixture.ToString());
-        }
-
-        [Fact]
-        public void WriteFunctionImportHeader_EntitySet_attribute_if_function_import_mapped_to_entity_set()
-        {
-            var fixture = new Fixture();
-
-            var entityType = new EntityType("type", "ns", DataSpace.CSpace);
-            var entitySet = new EntitySet("set", "ns", null, null, entityType);
-
-            var functionPayload =
-                new EdmFunctionPayload
-                {
-                    IsComposable = false,
-                    ReturnParameters = new[] {
-                        FunctionParameter.Create(
-                            "ReturnValue",
-                            entityType.GetCollectionType(),
-                            ParameterMode.ReturnValue)},
-                    EntitySets = new[] { entitySet }
-                };
-
-            var functionImport
-                = new EdmFunction("foo", "nction", DataSpace.CSpace, functionPayload);
-
-            fixture.Writer.WriteFunctionImportElementHeader(functionImport);
-
-            Assert.Equal(
-                "<FunctionImport Name=\"foo\" ReturnType=\"Collection(ns.type)\" EntitySet=\"set\"",
+                "<FunctionImport Name=\"foo\"",
                 fixture.ToString());
         }
 
@@ -299,6 +269,57 @@ namespace System.Data.Entity.Core.Metadata.Edm
             fixture.Writer.WriteFunctionReturnTypeElementHeader();
 
             Assert.Equal("<ReturnType", fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionImportReturnTypeAttributes_writes_ReturnType_attribute_for_inline_definition()
+        {
+            var fixture = new Fixture();
+
+            var returnParameter =
+                new FunctionParameter(
+                    "RetValue",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                    ParameterMode.ReturnValue);
+
+            fixture.Writer.WriteFunctionReturnTypeElementHeader();
+            fixture.Writer.WriteFunctionImportReturnTypeAttributes(returnParameter, null, true);
+
+            Assert.Equal("<ReturnType ReturnType=\"Int32\"", fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionImportReturnTypeAttributes_writes_Type_attribute_for_non_inline_definition()
+        {
+            var fixture = new Fixture();
+
+            var returnParameter =
+                new FunctionParameter(
+                    "RetValue",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                    ParameterMode.ReturnValue);
+
+            fixture.Writer.WriteFunctionReturnTypeElementHeader();
+            fixture.Writer.WriteFunctionImportReturnTypeAttributes(returnParameter, null, false);
+
+            Assert.Equal("<ReturnType Type=\"Int32\"", fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionImportReturnTypeAttributes_writes_EntitySet_attribute()
+        {
+            var fixture = new Fixture();
+
+            var returnParameter =
+                new FunctionParameter(
+                    "RetValue",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                    ParameterMode.ReturnValue);
+
+            fixture.Writer.WriteFunctionReturnTypeElementHeader();
+            fixture.Writer.WriteFunctionImportReturnTypeAttributes(returnParameter, new EntitySet { Name = "ES" }, false);
+
+            Assert.Equal("<ReturnType Type=\"Int32\" EntitySet=\"ES\"", fixture.ToString());
         }
 
         [Fact]

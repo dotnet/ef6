@@ -210,6 +210,80 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void VisitFunctionImport_writes_inline_return_type_if_one_return_parameter()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+
+            var functionImport =
+                new EdmFunction(
+                    "f",
+                    "entityModel",
+                    DataSpace.CSpace,
+                    new EdmFunctionPayload
+                    {
+                        IsComposable = true,
+                        EntitySets = new[] { (EntitySet)null },
+                        ReturnParameters =
+                            new[]
+                                    {
+                                        new FunctionParameter(
+                                            "ReturnType", 
+                                            TypeUsage.CreateDefaultTypeUsage(new ComplexType()), 
+                                            ParameterMode.ReturnValue)
+                                    }
+                    });
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionImport(functionImport);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionImportElementHeader(functionImport), Times.Once());
+            schemaWriterMock.Verify(
+                sw => sw.WriteFunctionImportReturnTypeAttributes(functionImport.ReturnParameter, null, true), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteFunctionReturnTypeElementHeader(), Times.Never());
+            schemaWriterMock.Verify(
+                sw => sw.WriteFunctionImportReturnTypeAttributes(It.IsAny<FunctionParameter>(), It.IsAny<EntitySet>(), false), Times.Never());
+        }
+
+        [Fact]
+        public void VisitFunctionImport_writes_multiple_return_parameters()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+
+            var functionImport =
+                new EdmFunction(
+                    "f",
+                    "entityModel",
+                    DataSpace.CSpace,
+                    new EdmFunctionPayload
+                    {
+                        IsComposable = true,
+                        EntitySets = new[] { null, new EntitySet { Name = "ES"} },
+                        ReturnParameters =
+                            new[]
+                                    {
+                                        new FunctionParameter(
+                                            "ReturnType1", 
+                                            TypeUsage.CreateDefaultTypeUsage(new ComplexType()), 
+                                            ParameterMode.ReturnValue),
+                                        new FunctionParameter(
+                                            "ReturnType2", 
+                                            TypeUsage.CreateDefaultTypeUsage(new EntityType("ET", "NS", DataSpace.CSpace)), 
+                                            ParameterMode.ReturnValue)
+                                    }
+                    });
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionImport(functionImport);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionImportElementHeader(functionImport), Times.Once());
+            schemaWriterMock.Verify(
+                sw => sw.WriteFunctionImportReturnTypeAttributes(functionImport.ReturnParameters[0], null, false), Times.Once());
+            schemaWriterMock.Verify(
+                sw => sw.WriteFunctionImportReturnTypeAttributes(functionImport.ReturnParameters[1], functionImport.EntitySets[1], false), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteFunctionReturnTypeElementHeader(), Times.Exactly(2));
+            schemaWriterMock.Verify(
+                sw => sw.WriteFunctionImportReturnTypeAttributes(It.IsAny<FunctionParameter>(), It.IsAny<EntitySet>(), true), Times.Never());
+        }
+
+        [Fact]
         public void VisitFunctionReturnParameter_writes_return_and_collection_header_for_rowtype()
         {
             var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
