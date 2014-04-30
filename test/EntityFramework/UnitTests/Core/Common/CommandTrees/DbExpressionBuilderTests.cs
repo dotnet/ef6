@@ -2158,6 +2158,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         #endregion
 
+        #region SetClause
+
+        [Fact]
+        public void SetClause_can_create_for_property()
+        {
+            var instance = this.productsEntitySet.Scan().Element();
+            var edmProperty = (EdmProperty)((StructuralType)this.productTypeUsage.EdmType).Members["ProductID"];
+            var propertyExpression = instance.Property(edmProperty);
+            var valueExpression = DbExpression.FromInt32(1);
+
+            var set = DbExpressionBuilder.SetClause(propertyExpression, valueExpression);
+
+            Assert.Same(propertyExpression, set.Property);
+            Assert.Same(valueExpression, set.Value);
+        }
+
+        #endregion
+
         #region Null checks
 
         [Fact]
@@ -2502,6 +2520,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Limit(DbExpressionBuilder.True, null));
             Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Take(null, DbExpressionBuilder.True));
             Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Take(DbExpressionBuilder.True, null));
+        }
+
+        [Fact]
+        public void Null_check_Set()
+        {
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.SetClause(null, DbExpressionBuilder.True));
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.SetClause(DbExpressionBuilder.True, null));
         }
 
         #endregion

@@ -2217,6 +2217,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         #endregion
 
+        #region CUD - SetClause
+
+        /// <summary>
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSetClause" /> representing setting a property to a value.
+        /// </summary>
+        /// <param name="property">The property to be set.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <returns>The newly created set clause.</returns>
+        public static DbSetClause SetClause(DbExpression property, DbExpression value)
+        {
+            Check.NotNull(property, "property");
+            Check.NotNull(value, "value");
+
+            return new DbSetClause(property, value);
+        }
+
+        #endregion
+
         #region Lambda-based methods: All, Any, Cross|OuterApply, Cross|FullOuter|Inner|LeftOuterJoin, Filter, GroupBy, Project, Skip, Sort
 
         private static string ExtractAlias(MethodInfo method)
