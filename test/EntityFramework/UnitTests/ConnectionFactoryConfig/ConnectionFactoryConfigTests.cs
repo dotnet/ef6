@@ -1244,7 +1244,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                     });
         }
 
-        [Fact]
+        //[Fact] Disabling--this test is too flakey for the value it brings
         public void GetProjectTypes_returns_project_types()
         {
             Run_Project_test_if_Visual_Studio_is_running(

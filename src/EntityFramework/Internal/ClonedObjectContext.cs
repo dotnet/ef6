@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal.MockingProxies;
@@ -18,6 +19,8 @@ namespace System.Data.Entity.Internal
     internal class ClonedObjectContext : IDisposable
     {
         private ObjectContextProxy _objectContext;
+        private readonly bool _connectionCloned;
+        private readonly EntityConnectionProxy _clonedEntityConnection;
 
         // <summary>
         // For mocking.
@@ -32,20 +35,28 @@ namespace System.Data.Entity.Internal
         // the cloned connection.
         // </summary>
         public ClonedObjectContext(
-            ObjectContextProxy objectContext, string connectionString, bool transferLoadedAssemblies = true)
+            ObjectContextProxy objectContext, 
+            DbConnection connection,
+            string connectionString, 
+            bool transferLoadedAssemblies = true)
         {
             DebugCheck.NotNull(objectContext);
             // connectionString may be null when connection has been created from DbContextInfo using just a provider
 
-            var clonedConnection =
-                DbProviderServices.GetProviderFactory(objectContext.Connection.StoreConnection).CreateConnection();
-            DbInterception.Dispatch.Connection.SetConnectionString(
-                clonedConnection,
-                new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionString));
+            if (connection == null
+                || connection.State != ConnectionState.Open)
+            {
+                connection =
+                    DbProviderServices.GetProviderFactory(objectContext.Connection.StoreConnection).CreateConnection();
+                DbInterception.Dispatch.Connection.SetConnectionString(
+                    connection,
+                    new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionString));
+                _connectionCloned = true;
+            }
 
-            var clonedEntityConnection = objectContext.Connection.CreateNew(clonedConnection);
+            _clonedEntityConnection = objectContext.Connection.CreateNew(connection);
 
-            _objectContext = objectContext.CreateNew(clonedEntityConnection);
+            _objectContext = objectContext.CreateNew(_clonedEntityConnection);
             _objectContext.CopyContextOptions(objectContext);
 
             if (!String.IsNullOrWhiteSpace(objectContext.DefaultContainerName))
@@ -112,7 +123,13 @@ namespace System.Data.Entity.Internal
                 _objectContext = null;
 
                 tempContext.Dispose();
-                DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+
+                if (_connectionCloned)
+                {
+                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
+                }
+
+                _clonedEntityConnection.Dispose();
             }
         }
     }

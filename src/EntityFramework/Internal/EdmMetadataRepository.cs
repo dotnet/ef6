@@ -13,9 +13,9 @@ namespace System.Data.Entity.Internal
         {
         }
 
-        public virtual string QueryForModelHash(Func<DbConnection, EdmMetadataContext> createContext)
+        public virtual string QueryForModelHash(Func<EdmMetadataContext> createContext)
         {
-            using (var metadataContext = createContext(CreateConnection()))
+            using (var metadataContext = createContext())
             {
                 try
                 {

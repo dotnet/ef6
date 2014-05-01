@@ -555,12 +555,7 @@ namespace System.Data.Entity.Objects
 
                     using (var context = new NonInitUseTransaction(connection, contextOwnsConnection: false))
                     {
-                        // Note that the initializer did not use the transaction because it was run with
-                        // a cloned connection. We did a lot of work around using the same connection instead
-                        // of cloning it, but this caused more problems than it fixed.
-                        Assert.Equal(
-                            new[] { "Pepsi" },
-                            context.Categories.Select(c => c.Id).OrderBy(c => c).ToList());
+                        Assert.Empty(context.Categories.Select(c => c.Id).OrderBy(c => c).ToList());
                     }
                 }
             }

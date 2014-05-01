@@ -179,8 +179,11 @@ namespace System.Data.Entity.Internal
             InitializeContext();
 
             return new ClonedObjectContext(
-                new ObjectContextProxy(GetObjectContextWithoutDatabaseInitialization()), OriginalConnectionString,
-                transferLoadedAssemblies: false);
+                new ObjectContextProxy(
+                    GetObjectContextWithoutDatabaseInitialization()), 
+                    Connection,
+                    OriginalConnectionString,
+                    transferLoadedAssemblies: false);
         }
 
         // <summary>
@@ -208,6 +211,7 @@ namespace System.Data.Entity.Internal
                 _tempObjectContext =
                     new ClonedObjectContext(
                         new ObjectContextProxy(GetObjectContextWithoutDatabaseInitialization()),
+                        Connection,
                         OriginalConnectionString);
 
                 InitializeEntitySetMappings();
@@ -283,8 +287,11 @@ namespace System.Data.Entity.Internal
         // <returns> The model hash, or null if not found. </returns>
         public virtual string QueryForModelHash()
         {
-            return new EdmMetadataRepository(OriginalConnectionString, ProviderFactory)
-                .QueryForModelHash(c => new EdmMetadataContext(c));
+            var repository = new EdmMetadataRepository(OriginalConnectionString, ProviderFactory);
+            return repository.QueryForModelHash(
+                    () => Connection.State == ConnectionState.Open
+                        ? new EdmMetadataContext(Connection, contextOwnsConnection: false)
+                        : new EdmMetadataContext(repository.CreateConnection(), contextOwnsConnection: true));
         }
 
         // <summary>

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure.Interception;
@@ -156,6 +157,19 @@ FROM INFORMATION_SCHEMA.TABLES AS t
 WHERE t.TABLE_SCHEMA + '.' + t.TABLE_NAME IN (" + modelTablesListBuilder + @")
     OR t.TABLE_NAME = '" + edmMetadataContextTableName + "'";
 
+                    var shouldClose = true;
+
+                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Open)
+                    {
+                        shouldClose = false;
+
+                        var entityTransaction = ((EntityConnection)context.Connection).CurrentTransaction;
+                        if (entityTransaction != null)
+                        {
+                            command.Transaction = entityTransaction.StoreTransaction;
+                        }
+                    }
+
                     var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
                     try
                     {
@@ -177,7 +191,7 @@ WHERE t.TABLE_SCHEMA + '.' + t.TABLE_NAME IN (" + modelTablesListBuilder + @")
                     }
                     finally
                     {
-                        if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) != ConnectionState.Closed)
+                        if (shouldClose && DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) != ConnectionState.Closed)
                         {
                             DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
                         }

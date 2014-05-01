@@ -20,7 +20,7 @@ namespace System.Data.Entity.Internal
             _providerFactory = providerFactory;
         }
 
-        protected DbConnection CreateConnection()
+        public DbConnection CreateConnection()
         {
             var connection = _providerFactory.CreateConnection();
             DbInterception.Dispatch.Connection.SetConnectionString(connection,

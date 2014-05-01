@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal.MockingProxies;
@@ -17,14 +18,14 @@ namespace System.Data.Entity.Internal
     {
         [Fact]
         public void Creating_a_cloned_ObjectContext_causes_the_store_and_entity_connection_to_be_cloned_and_given_connection_string_applied(
-            
+
             )
         {
             var storeConnection = new SqlConnection();
             var mockConnection = CreateMockConnection(storeConnection);
             var mockContext = CreateMockObjectContext(mockConnection);
 
-            new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             mockConnection.Verify(
                 m =>
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Internal
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
             mockContext.Setup(m => m.DefaultContainerName).Returns("Kipper");
 
-            var clonedContext = new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            var clonedContext = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             mockClonedContext.VerifySet(m => m.DefaultContainerName = It.IsAny<string>());
             Assert.Equal("Kipper", clonedContext.ObjectContext.DefaultContainerName);
@@ -54,7 +55,7 @@ namespace System.Data.Entity.Internal
             var mockClonedContext = new Mock<ObjectContextProxy>();
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
 
-            var clonedContext = new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            var clonedContext = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             mockClonedContext.VerifySet(m => m.DefaultContainerName = It.IsAny<string>(), Times.Never());
             Assert.Null(clonedContext.ObjectContext.DefaultContainerName);
@@ -67,7 +68,7 @@ namespace System.Data.Entity.Internal
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
             mockContext.Setup(m => m.DefaultContainerName).Returns(" ");
 
-            var clonedContext = new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            var clonedContext = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             mockClonedContext.VerifySet(m => m.DefaultContainerName = It.IsAny<string>(), Times.Never());
             Assert.Null(clonedContext.ObjectContext.DefaultContainerName);
@@ -79,7 +80,7 @@ namespace System.Data.Entity.Internal
             var storeConnection = new SqlConnection();
             var mockContext = CreateMockObjectContext(CreateMockConnection(storeConnection));
 
-            var clonedConnection = new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo").Connection;
+            var clonedConnection = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo").Connection;
 
             Assert.NotSame(storeConnection, clonedConnection);
             Assert.Equal("Database=PinkyDinkyDo", clonedConnection.ConnectionString);
@@ -92,7 +93,7 @@ namespace System.Data.Entity.Internal
             var mockClonedContext = new Mock<ObjectContextProxy>();
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
 
-            var clonedContext = new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            var clonedContext = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             mockContext.Verify(m => m.CreateNew(It.IsAny<EntityConnectionProxy>()));
             Assert.Same(mockClonedContext.Object, clonedContext.ObjectContext);
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Internal
             try
             {
                 new ClonedObjectContext(
-                    mockContext.Object, "Database=PinkyDinkyDo",
+                    mockContext.Object, null, "Database=PinkyDinkyDo",
                     transferLoadedAssemblies: false);
             }
             finally
@@ -125,7 +126,7 @@ namespace System.Data.Entity.Internal
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
 
             new ClonedObjectContext(
-                mockContext.Object, "Database=PinkyDinkyDo",
+                mockContext.Object, null, "Database=PinkyDinkyDo",
                 transferLoadedAssemblies: false);
 
             mockContext.Verify(m => m.GetObjectItemCollection(), Times.Never());
@@ -139,7 +140,7 @@ namespace System.Data.Entity.Internal
             var mockClonedContext = new Mock<ObjectContextProxy>();
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
 
-            new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             mockContext.Verify(m => m.GetObjectItemCollection(), Times.Once());
             mockClonedContext.Verify(m => m.LoadFromAssembly(typeof(object).Assembly()));
@@ -153,7 +154,7 @@ namespace System.Data.Entity.Internal
             var mockClonedContext = new Mock<ObjectContextProxy>();
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
 
-            var clonedContext = new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            var clonedContext = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             var connectionIsDisposed = false;
             clonedContext.Connection.Disposed += (_, __) => connectionIsDisposed = true;
@@ -170,7 +171,7 @@ namespace System.Data.Entity.Internal
             var mockClonedContext = new Mock<ObjectContextProxy>();
             var mockContext = CreateMockObjectContext(CreateMockConnection(), mockClonedContext);
 
-            var clonedContext = new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
+            var clonedContext = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
 
             var connectionIsDisposed = false;
             clonedContext.Connection.Disposed += (_, __) => connectionIsDisposed = true;

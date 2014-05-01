@@ -345,16 +345,35 @@ namespace System.Data.Entity.SqlServer
 
             string providerManifestToken = null;
             // Try to get the provider manifest token from the database connection
-            // That failing, try using connection to master database (in case the database doesn't exist yet)
             try
             {
                 UsingConnection(connection, conn => { providerManifestToken = QueryForManifestToken(conn); });
+                return providerManifestToken;
             }
             catch
             {
-                UsingMasterConnection(connection, conn => { providerManifestToken = QueryForManifestToken(conn); });
+                // Could not connect to the database, but not throwing here for reasons described below.
             }
-            return providerManifestToken;
+
+            // That failing, try using connection to master database (in case the database doesn't exist yet)
+            try
+            {
+                UsingMasterConnection(connection, conn => { providerManifestToken = QueryForManifestToken(conn); });
+                return providerManifestToken;
+            }
+            catch
+            {
+                // May not be able to access master for any number of reasons
+            }
+
+            // Database doesn't exist and can't connect to master, so just continue with a default provider manifest token.
+            // This likely means that things will fail later because there is no database, but throwing here is very
+            // confusing because the exception doesn't appear to be anything to do with the database not being available.
+            // Also, throwing here prevents any code from using Exists in an initializer to correctly reason about whether
+            // or not a database exists when no connection to master can be made. So by returning a default token we allow
+            // correctly written code to work by never accessing the non-existent database and code that would try to use
+            // or create the database will now throw in a more meaningful way and place.
+            return SqlProviderManifest.TokenSql10;
         }
 
         private static string QueryForManifestToken(DbConnection conn)

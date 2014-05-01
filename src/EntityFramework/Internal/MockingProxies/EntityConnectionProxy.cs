@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal.MockingProxies
 {
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
@@ -37,12 +38,25 @@ namespace System.Data.Entity.Internal.MockingProxies
             get { return _entityConnection.StoreConnection; }
         }
 
+        public virtual void Dispose()
+        {
+            _entityConnection.Dispose();
+        }
+        
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual EntityConnectionProxy CreateNew(DbConnection storeConnection)
         {
-            return
-                new EntityConnectionProxy(
-                    new EntityConnection(_entityConnection.GetMetadataWorkspace(), storeConnection));
+            var clonedConnection = new EntityConnection(_entityConnection.GetMetadataWorkspace(), storeConnection);
+
+            var currentTransaction = _entityConnection.CurrentTransaction;
+            if (currentTransaction != null
+                && DbInterception.Dispatch.Transaction.GetConnection(
+                    currentTransaction.StoreTransaction, _entityConnection.InterceptionContext) == storeConnection)
+            {
+                clonedConnection.UseStoreTransaction(currentTransaction.StoreTransaction);
+            }
+
+            return new EntityConnectionProxy(clonedConnection);
         }
     }
 }

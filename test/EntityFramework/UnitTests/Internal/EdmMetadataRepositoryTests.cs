@@ -24,7 +24,7 @@ namespace System.Data.Entity.Internal
                 var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
                 var mockContext = CreateMockContext("Hash");
 
-                repository.QueryForModelHash(c => mockContext.Object);
+                repository.QueryForModelHash(() => mockContext.Object);
             }
             finally
             {
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Internal
             var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext("Hash");
 
-            Assert.Equal("Hash", repository.QueryForModelHash(c => mockContext.Object));
+            Assert.Equal("Hash", repository.QueryForModelHash(() => mockContext.Object));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Internal
             var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext("Hash1", "Hash2", "Hash3");
 
-            Assert.Equal("Hash3", repository.QueryForModelHash(c => mockContext.Object));
+            Assert.Equal("Hash3", repository.QueryForModelHash(() => mockContext.Object));
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Internal
             var mockContext = CreateMockContext("Hash");
             mockContext.Setup(m => m.Metadata).Throws(new EntityCommandExecutionException());
 
-            Assert.Null(repository.QueryForModelHash(c => mockContext.Object));
+            Assert.Null(repository.QueryForModelHash(() => mockContext.Object));
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Internal
             var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext();
 
-            Assert.Null(repository.QueryForModelHash(c => mockContext.Object));
+            Assert.Null(repository.QueryForModelHash(() => mockContext.Object));
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Internal
             var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext((string)null);
 
-            Assert.Null(repository.QueryForModelHash(c => mockContext.Object));
+            Assert.Null(repository.QueryForModelHash(() => mockContext.Object));
         }
 
         private Mock<EdmMetadataContext> CreateMockContext(params string[] hashValues)

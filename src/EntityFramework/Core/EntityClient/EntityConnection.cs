@@ -335,7 +335,7 @@ namespace System.Data.Entity.Core.EntityClient
             _associatedContexts.Add(context);
         }
 
-        private DbInterceptionContext InterceptionContext
+        internal DbInterceptionContext InterceptionContext
         {
             get { return DbInterceptionContext.Combine(AssociatedContexts.Select(c => c.InterceptionContext)); }
         }
