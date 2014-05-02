@@ -107,11 +107,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private Node HandleNE(Node n)
         {
+            Debug.Assert(n.Op.OpType == OpType.NE);
+
+            var comparisonOp = (ComparisonOp)n.Op;
+
             // Transform a != b into !(a == b)
             n = _command.CreateNode(
                 _command.CreateConditionalOp(OpType.Not),
                 _command.CreateNode(
-                    _command.CreateComparisonOp(OpType.EQ),
+                    _command.CreateComparisonOp(OpType.EQ, comparisonOp.UseDatabaseNullSemantics),
                     n.Child0, n.Child1));
 
             _modified = true;
@@ -128,6 +132,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node ImplementEquality(Node n, bool negated)
         {
             Debug.Assert(n.Op.OpType == OpType.EQ);
+
+            var comparisonOp = (ComparisonOp) n.Op;
+
+            if (comparisonOp.UseDatabaseNullSemantics)
+            {
+                return n;
+            }
 
             var x = n.Child0;
             var y = n.Child1;

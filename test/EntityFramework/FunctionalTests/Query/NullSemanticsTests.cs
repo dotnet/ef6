@@ -633,5 +633,71 @@ namespace System.Data.Entity.Query
                 QueryTestHelpers.StripFormatting(expectedSql), 
                 QueryTestHelpers.StripFormatting(entityCommand.ToTraceString()));
         }
+
+        public class CodePlex2187 : FunctionalTestBase
+        {
+            public class Order
+            {
+                public int Id { get; set; }
+                public int Group { get; set; }
+                public Invoice Invoice { get; set; }
+            }
+
+            public class Invoice
+            {
+                public int Id { get; set; }
+                public Order Order { get; set; }
+            }
+
+            public class Context : DbContext
+            {
+                static Context()
+                {
+                    Database.SetInitializer(new Initializer());
+                }
+
+                public DbSet<Order> Orders { get; set; }
+                public DbSet<Invoice> Invoices { get; set; }
+
+                protected override void OnModelCreating(DbModelBuilder builder)
+                {
+                    builder.Entity<Order>().HasOptional(e => e.Invoice).WithRequired(e => e.Order);
+                }
+            }
+
+            public class Initializer : DropCreateDatabaseIfModelChanges<Context>
+            {
+                protected override void Seed(Context context)
+                {
+                    context.Orders.Add(new Order() { Group = 5 });
+                    context.Orders.Add(new Order() { Group = 5 });
+                    context.Orders.Add(new Order() { Group = 5 });
+                }
+            }
+
+            [Fact]
+            public void EQ_is_not_expanded_when_rewriting_navigation_properties()
+            {
+                using (var context = new Context())
+                {
+                    var query = context.Orders.Where(order => order.Invoice.Order.Group < 10);
+
+                    QueryTestHelpers.VerifyDbQuery(
+                        query,
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Group] AS [Group]
+    FROM  [dbo].[Orders] AS [Extent1]
+    CROSS APPLY  (SELECT [Extent2].[Group] AS [Group]
+        FROM   [dbo].[Orders] AS [Extent2]
+        LEFT OUTER JOIN [dbo].[Invoices] AS [Extent3] ON [Extent2].[Id] = [Extent3].[Id]
+        INNER JOIN [dbo].[Invoices] AS [Extent4] ON [Extent4].[Id] = [Extent3].[Id]
+        WHERE [Extent1].[Id] = [Extent4].[Id] ) AS [Filter1]
+    WHERE [Filter1].[Group] < 10");
+
+                    Assert.Equal(0, query.Count());
+                }
+            }
+        }
     }
 }

@@ -520,7 +520,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // and allow the NullSemantics phase to fully expand the filter 
                 // predicate before attempting to promote the LeftOuter join 
                 // to Inner join.
-                if (trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.NullSemantics))
+                if (trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.NullSemantics)
+                    && trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.JoinElimination))
                 {
                     joinOp = command.CreateInnerJoinOp();
                     needsTransformation = true;
@@ -687,7 +688,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Allow the JoinElimination phase to eliminate redundant joins
                 // and allow the NullSemantics phase to fully expand the filter 
                 // predicate before attempting to promote the OuterApply to CrossApply.
-                if (trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.NullSemantics))
+                if (trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.NullSemantics)
+                    && trc.PlanCompiler.IsAfterPhase(PlanCompilerPhase.JoinElimination))
                 {
                     var newApplyNode = command.CreateNode(command.CreateCrossApplyOp(), applyNode.Child0, applyRightInputNode);
                     var newFilterNode = command.CreateNode(command.CreateFilterOp(), newApplyNode, filterNode.Child1);

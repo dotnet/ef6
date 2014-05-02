@@ -39,6 +39,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             get { return 2; }
         }
 
+        internal bool UseDatabaseNullSemantics { get; set; }
+
         // <summary>
         // Visitor pattern method
         // </summary>

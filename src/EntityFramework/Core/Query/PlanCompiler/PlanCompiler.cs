@@ -351,6 +351,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
+            if (IsPhaseNeeded(PlanCompilerPhase.NullSemantics))
+            {
+                beforeNullSemantics = SwitchToPhase(PlanCompilerPhase.NullSemantics);
+
+                if (!m_ctree.UseDatabaseNullSemantics && NullSemantics.Process(Command))
+                {
+                    ApplyTransformations(ref beforeTransformationRules3, TransformationRulesGroup.NullSemantics);
+                }
+            }
+
             // Join elimination
             if (IsPhaseNeeded(PlanCompilerPhase.JoinElimination))
             {
@@ -358,23 +368,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 var modified = JoinElimination.Process(this);
                 if (modified)
                 {
-                    ApplyTransformations(ref beforeTransformationRules3, TransformationRulesGroup.PostJoinElimination);
+                    ApplyTransformations(ref beforeTransformationRules4, TransformationRulesGroup.PostJoinElimination);
                     beforeJoinElimination2 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
                     modified = JoinElimination.Process(this);
                     if (modified)
                     {
-                        ApplyTransformations(ref beforeTransformationRules4, TransformationRulesGroup.PostJoinElimination);
+                        ApplyTransformations(ref beforeTransformationRules5, TransformationRulesGroup.PostJoinElimination);
                     }
-                }
-            }
-
-            if (IsPhaseNeeded(PlanCompilerPhase.NullSemantics))
-            {
-                beforeNullSemantics = SwitchToPhase(PlanCompilerPhase.NullSemantics);
-
-                if (!m_ctree.UseDatabaseNullSemantics && NullSemantics.Process(Command))
-                {
-                    ApplyTransformations(ref beforeTransformationRules5, TransformationRulesGroup.NullSemantics);
                 }
             }
 

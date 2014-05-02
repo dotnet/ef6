@@ -2171,7 +2171,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Node andNode = null;
             for (var i = 0; i < values1.Count; i++)
             {
-                var newCompOp = m_command.CreateComparisonOp(op.OpType);
+                var newCompOp = m_command.CreateComparisonOp(op.OpType, op.UseDatabaseNullSemantics);
                 var newCompNode = m_command.CreateNode(newCompOp, values1[i], values2[i]);
                 if (null == andNode)
                 {

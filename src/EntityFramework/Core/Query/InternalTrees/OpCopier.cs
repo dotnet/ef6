@@ -395,7 +395,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ComparisonOp op, Node n)
         {
-            return CopyDefault(m_destCmd.CreateComparisonOp(op.OpType), n);
+            return CopyDefault(m_destCmd.CreateComparisonOp(op.OpType, op.UseDatabaseNullSemantics), n);
         }
 
         // <summary>

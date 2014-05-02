@@ -478,7 +478,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var sourceEnd = m_command.CreateNode(
                 m_command.CreatePropertyOp(navigateOp.FromEnd),
                 m_command.CreateNode(m_command.CreateVarRefOp(unionAllVar)));
-            var predicateNode = m_command.BuildComparison(OpType.EQ, navigateOpNode.Child0, sourceEnd);
+            var predicateNode = m_command.BuildComparison(
+                OpType.EQ, navigateOpNode.Child0, sourceEnd, useDatabaseNullSemantics: true);
             var filterNode = m_command.CreateNode(
                 m_command.CreateFilterOp(),
                 unionAllNode, predicateNode);
@@ -595,7 +596,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var entityRefNode = m_command.CreateNode(
                 m_command.CreateGetEntityRefOp(derefOpNode.Child0.Op.Type),
                 m_command.CreateNode(m_command.CreateVarRefOp(unionAllVar)));
-            var keyComparisonPred = m_command.BuildComparison(OpType.EQ, derefOpNode.Child0, entityRefNode);
+            var keyComparisonPred = m_command.BuildComparison(
+                OpType.EQ, derefOpNode.Child0, entityRefNode, useDatabaseNullSemantics: true);
             var filterNode = m_command.CreateNode(
                 m_command.CreateFilterOp(),
                 unionAllNode,
@@ -669,8 +671,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var joinPredicate = m_command.BuildComparison(
                 OpType.EQ,
                 m_command.CreateNode(m_command.CreateGetEntityRefOp(end.TypeUsage), m_command.CreateNode(m_command.CreateVarRefOp(esVar))),
-                m_command.CreateNode(m_command.CreatePropertyOp(end), m_command.CreateNode(m_command.CreateVarRefOp(rsVar)))
-                );
+                m_command.CreateNode(m_command.CreatePropertyOp(end), m_command.CreateNode(m_command.CreateVarRefOp(rsVar))),
+                useDatabaseNullSemantics: true);
 
             var joinNode = m_command.CreateNode(
                 m_command.CreateInnerJoinOp(),
@@ -820,8 +822,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_command.CreateRelPropertyOp(inverseRelProperty),
                 m_command.CreateNode(m_command.CreateVarRefOp(outputVar)));
             var predicateNode = m_command.BuildComparison(
-                OpType.EQ,
-                sourceRefNode, inverseRelPropertyNode);
+                OpType.EQ, sourceRefNode, inverseRelPropertyNode, useDatabaseNullSemantics: true);
             var ret = m_command.CreateNode(m_command.CreateFilterOp(), unionAllNode, predicateNode);
 
             return ret;
@@ -890,8 +891,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_command.CreatePropertyOp(relProperty.FromEnd),
                 m_command.CreateNode(m_command.CreateVarRefOp(unionAllVars[0])));
             var predicate = m_command.BuildComparison(
-                OpType.EQ,
-                sourceRefNode, rsSourceRefNode);
+                OpType.EQ, sourceRefNode, rsSourceRefNode, useDatabaseNullSemantics: true);
             var filterNode = m_command.CreateNode(
                 m_command.CreateFilterOp(),
                 unionAllNode, predicate);
@@ -1633,7 +1633,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var predicateNode = m_command.BuildComparison(
                 OpType.EQ,
                 keyExpr,
-                m_command.CreateNode(m_command.CreateGetRefKeyOp(keyExpr.Op.Type), sourceEndNode));
+                m_command.CreateNode(m_command.CreateGetRefKeyOp(keyExpr.Op.Type), sourceEndNode),
+                useDatabaseNullSemantics: true);
             var filterNode = m_command.CreateNode(
                 m_command.CreateFilterOp(),
                 scanNode, predicateNode);

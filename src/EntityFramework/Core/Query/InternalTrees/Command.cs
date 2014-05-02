@@ -780,10 +780,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Creates a new ComparisonOp of the specified type
         // </summary>
         // <param name="opType"> An OpType that specifies one of the valid comparison OpTypes: EQ, GT, GE, NE, LT, LE </param>
+        // <param name="useDatabaseNullSemantics"> Specifies whether database null comparison behavior is enabled. </param>
         // <returns> A new ComparisonOp of the specified comparison OpType </returns>
-        internal virtual ComparisonOp CreateComparisonOp(OpType opType)
+        internal virtual ComparisonOp CreateComparisonOp(OpType opType, bool useDatabaseNullSemantics = false)
         {
-            return new ComparisonOp(opType, BooleanType);
+            return new ComparisonOp(opType, BooleanType) { UseDatabaseNullSemantics = useDatabaseNullSemantics };
         }
 
         // <summary>
@@ -1802,8 +1803,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // <param name="opType"> the comparison optype </param>
         // <param name="arg0"> Arg 0 </param>
         // <param name="arg1"> Arg 1 </param>
+        // <param name="useDatabaseNullSemantics"> Specifies whether database null comparison behavior is enabled. </param>
         // <returns> the resulting comparison tree </returns>
-        internal Node BuildComparison(OpType opType, Node arg0, Node arg1)
+        internal Node BuildComparison(OpType opType, Node arg0, Node arg1, bool useDatabaseNullSemantics = false)
         {
             if (!EqualTypes(arg0.Op.Type, arg1.Op.Type))
             {
@@ -1818,7 +1820,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                     arg1 = CreateNode(CreateSoftCastOp(commonType), arg1);
                 }
             }
-            var newNode = CreateNode(CreateComparisonOp(opType), arg0, arg1);
+
+            var newNode = CreateNode(CreateComparisonOp(opType, useDatabaseNullSemantics), arg0, arg1);
             return newNode;
         }
 
