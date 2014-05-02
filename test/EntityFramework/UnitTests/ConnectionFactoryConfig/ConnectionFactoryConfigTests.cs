@@ -950,66 +950,66 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         public void SqlServerDetector_detects_the_version_of_LocalDB_in_the_registry_when_only_one_version_is_installed()
         {
             Assert.Equal(
-                "some version",
+                "mssqllocaldb",
                 new SqlServerDetector(
-                    CreatedMockedRegistryKey("some version"),
+                    CreatedMockedRegistryKey("v13.0"),
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         [Fact]
-        public void SqlServerDetector_detects_the_highest_orderable_version_of_LocalDB_in_the_registry_when_multiple_versions_are_installed(
-            
-            )
+        public void SqlServerDetector_detects_the_highest_orderable_version_of_LocalDB_in_the_registry_when_multiple_versions_are_installed()
         {
             Assert.Equal(
-                "12.0",
+                "mssqllocaldb",
                 new SqlServerDetector(
                     CreatedMockedRegistryKey("11.0", "12.0", "11.5"),
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         [Fact]
         public void SqlServerDetector_orders_LocalDB_versions_numerically_when_multiple_versions_are_installed()
         {
             Assert.Equal(
-                "100",
+                "mssqllocaldb",
                 new SqlServerDetector(
                     CreatedMockedRegistryKey("20", "100"),
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         [Fact]
         public void SqlServerDetector_ignores_LocalDB_versions_that_are_not_numeric_when_multiple_versions_are_installed()
         {
             Assert.Equal(
-                "12.0",
-                new SqlServerDetector(
+                "mssqllocaldb",
+                 new SqlServerDetector(
                     CreatedMockedRegistryKey("11.0", "12.0", "dingo", "11.5"),
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         [Fact]
-        public void SqlServerDetector_returns_null_if_multiple_non_numeric_LocalDB_versions_are_installed()
+        public void SqlServerDetector_returns_mssqllocaldb_if_multiple_non_numeric_LocalDB_versions_are_installed()
         {
-            Assert.Null(
+            Assert.Equal(
+                "mssqllocaldb",
                 new SqlServerDetector(
                     CreatedMockedRegistryKey("kangaroo", "dingo", "wallaby"),
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         [Fact]
-        public void SqlServerDetector_returns_null_if_LocalDB_registry_exists_but_no_version_keys_are_found()
+        public void SqlServerDetector_returns_mssqllocaldb_if_LocalDB_registry_exists_but_no_version_keys_are_found()
         {
-            Assert.Null(
+            Assert.Equal(
+                "mssqllocaldb",
                 new SqlServerDetector(
                     CreatedMockedRegistryKey(new string[0]),
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         private RegistryKeyProxy CreatedMockedRegistryKey(params string[] versions)
@@ -1031,7 +1031,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void SqlServerDetector_returns_null_if_LocalDB_registry_keys_do_not_exist()
+        public void SqlServerDetector_returns_mssqllocaldb_if_LocalDB_registry_keys_do_not_exist()
         {
             var mockedRegistryKey = new Mock<RegistryKeyProxy>();
 
@@ -1042,11 +1042,12 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             mockedRegistryKey.Setup(k => k.OpenSubKey("Wow6432Node")).Returns(
                 new RegistryKeyProxy(null));
 
-            Assert.Null(
+            Assert.Equal(
+                "mssqllocaldb", 
                 new SqlServerDetector(
                     mockedRegistryKey.Object,
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         [Fact]
@@ -1067,14 +1068,14 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             mockedWow64RegistryKey.Setup(k => k.OpenSubKey("Installed Versions")).Returns(mockedWow64RegistryKey.Object);
 
             mockedWow64RegistryKey.Setup(k => k.SubKeyCount).Returns(1);
-            mockedWow64RegistryKey.Setup(k => k.GetSubKeyNames()).Returns(new[] { "64BitVersion" });
+            mockedWow64RegistryKey.Setup(k => k.GetSubKeyNames()).Returns(new[] { "11.5" });
 
             Assert.Equal(
-                "64BitVersion",
+                "v11.5",
                 new SqlServerDetector(
                     mockedRegistryKey.Object,
                     new Mock<ServiceControllerProxy>().Object)
-                    .TryGetLocalDBVersionInstalled());
+                    .GetLocalDBVersionInstalled());
         }
 
         [Fact]
@@ -1129,11 +1130,11 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             Assert.Equal(
                 ConnectionFactorySpecification.LocalDbConnectionFactoryName,
                 specification.ConnectionFactoryName);
-            Assert.Equal("v12.0", specification.ConstructorArguments.Single());
+            Assert.Equal("mssqllocaldb", specification.ConstructorArguments.Single());
         }
 
         [Fact]
-        public void SqlServerDetector_generates_LocalDB_11_base_connection_string_if_neither_LocalDB_or_Express_are_installed()
+        public void SqlServerDetector_generates_LocalDB_12_base_connection_string_if_neither_LocalDB_or_Express_are_installed()
         {
             var specification =
                 new SqlServerDetector(
@@ -1143,7 +1144,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             Assert.Equal(
                 ConnectionFactorySpecification.LocalDbConnectionFactoryName,
                 specification.ConnectionFactoryName);
-            Assert.Equal("v11.0", specification.ConstructorArguments.Single());
+            Assert.Equal("mssqllocaldb", specification.ConstructorArguments.Single());
         }
 
         [Fact]
@@ -1169,7 +1170,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                     Registry.LocalMachine, new Mock<ServiceControllerProxy>().Object)
                 )
             {
-                Assert.NotNull(detector.TryGetLocalDBVersionInstalled());
+                Assert.NotNull(detector.GetLocalDBVersionInstalled());
             }
         }
 

@@ -37,7 +37,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         // If the SQL Express service is found, then SQL Express will be configured.
         // Otherwise, if a particular version of LocalDB is found, then that version will be used. If
         // multiple versions are found then an attempt to use the highest version will be made. If no version
-        // of SQL Express or LocalDB is found, then LocalDB v11.0 (SQL Server 2012) will be used.
+        // of SQL Express or LocalDB is found, then LocalDB "mssqllocaldb" (SQL Server 2014 or later) will be used.
         // </remarks>
         public virtual ConnectionFactorySpecification BuildConnectionFactorySpecification()
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                              ConnectionFactorySpecification.SqlConnectionFactoryName)
                        : new ConnectionFactorySpecification(
                              ConnectionFactorySpecification.LocalDbConnectionFactoryName,
-                             "v" + (TryGetLocalDBVersionInstalled() ?? "11.0"));
+                             GetLocalDBVersionInstalled());
         }
 
         // <summary>
@@ -57,18 +57,13 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         // If multiple versions are found, then an attempt to treat those versions as decimal numbers is
         // made and the highest of these is returned.
         // </remarks>
-        public virtual string TryGetLocalDBVersionInstalled()
+        public virtual string GetLocalDBVersionInstalled()
         {
             var key = OpenLocalDBInstalledVersions(useWow6432Node: false);
 
             if (key.SubKeyCount == 0)
             {
                 key = OpenLocalDBInstalledVersions(useWow6432Node: true);
-            }
-
-            if (key.SubKeyCount == 1)
-            {
-                return key.GetSubKeyNames()[0];
             }
 
             var orderableVersions = new List<Tuple<decimal, string>>();
@@ -81,7 +76,17 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                 }
             }
 
-            return orderableVersions.OrderByDescending(v => v.Item1).Select(v => v.Item2).FirstOrDefault();
+            var highestVersion = orderableVersions.OrderByDescending(v => v.Item1).FirstOrDefault();
+
+            if (highestVersion == null
+                || highestVersion.Item2 == null
+                || highestVersion.Item1 >= 12.0m)
+            {
+                // For v12.0 and higher the instance name is mssqllocaldb. See CodePlex 2246.
+                return "mssqllocaldb";
+            }
+
+            return "v" + highestVersion.Item2;
         }
 
         // <summary>

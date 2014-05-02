@@ -28,6 +28,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         /// Creates a new instance of the connection factory for the given version of LocalDb.
         /// For SQL Server 2012 LocalDb use "v11.0".
+        /// For SQL Server 2014 and later LocalDb use "mssqllocaldb".
         /// </summary>
         /// <param name="localDbVersion"> The LocalDb version to use. </param>
         public LocalDbConnectionFactory(string localDbVersion)
@@ -41,6 +42,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         /// Creates a new instance of the connection factory for the given version of LocalDb.
         /// For SQL Server 2012 LocalDb use "v11.0".
+        /// For SQL Server 2014 and later LocalDb use "mssqllocaldb".
         /// </summary>
         /// <param name="localDbVersion"> The LocalDb version to use. </param>
         /// <param name="baseConnectionString"> The connection string to use for options to the database other than the 'Initial Catalog', 'Data Source', and 'AttachDbFilename'. The 'Initial Catalog' and 'AttachDbFilename' will be prepended to this string based on the database name when CreateConnection is called. The 'Data Source' will be set based on the LocalDbVersion argument. </param>
