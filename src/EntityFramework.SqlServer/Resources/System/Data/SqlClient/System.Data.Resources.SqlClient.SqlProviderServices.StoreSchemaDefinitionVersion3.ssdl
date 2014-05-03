@@ -344,22 +344,26 @@
     <EntitySet Name="SForeignKeys" EntityType="Self.ForeignKey">
       <DefiningQuery>
         SELECT
-        quotename(FC.CONSTRAINT_SCHEMA) + quotename(FC.CONSTRAINT_NAME) + quotename(cast(FC.ORDINAL_POSITION as nvarchar(30))) [Id]
-        ,   quotename(PC.TABLE_SCHEMA) + quotename(PC.TABLE_NAME) + quotename(PC.COLUMN_NAME) [ToColumnId]
-        ,   quotename(FC.TABLE_SCHEMA) + quotename(FC.TABLE_NAME) + quotename(FC.COLUMN_NAME) [FromColumnId]
-        ,   quotename(FC.CONSTRAINT_SCHEMA) + quotename(FC.CONSTRAINT_NAME) [ConstraintId]
-        ,   FC.ORDINAL_POSITION [Ordinal]
+        quotename(SCHEMA_NAME(fk.schema_id)) + quotename(fk.name) + quotename(cast(fromOrdinal.ORDINAL_POSITION as nvarchar(30))) [Id]
+        ,   quotename(SCHEMA_NAME(toSchema.schema_id)) + quotename(OBJECT_NAME(fk.referenced_object_id)) + quotename(toCol.name) [ToColumnId]
+        ,   quotename(SCHEMA_NAME(fromSchema.schema_id)) + quotename(OBJECT_NAME(fk.parent_object_id)) + quotename(fromCol.name) [FromColumnId]
+        ,   quotename(SCHEMA_NAME(fk.schema_id)) + quotename(fk.name) [ConstraintId]
+        ,   fromOrdinal.ORDINAL_POSITION [Ordinal]
         FROM
-        INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC
+        sys.foreign_keys fk
         INNER JOIN
-        INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS PC /* PRIMARY KEY COLS*/
-        ON       RC.UNIQUE_CONSTRAINT_SCHEMA = PC.CONSTRAINT_SCHEMA
-        AND      RC.UNIQUE_CONSTRAINT_NAME    = PC.CONSTRAINT_NAME
+        sys.foreign_key_columns fkc ON fkc.constraint_object_id = fk.object_id
         INNER JOIN
-        INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS FC /* FOREIGN KEY COLS*/
-        ON       RC.CONSTRAINT_SCHEMA = FC.CONSTRAINT_SCHEMA
-        AND      RC.CONSTRAINT_NAME    = FC.CONSTRAINT_NAME
-        AND      PC.ORDINAL_POSITION = FC.ORDINAL_POSITION
+        sys.columns toCol ON fkc.referenced_column_id = toCol.column_id AND fkc.referenced_object_id = toCol.object_id /* PRIMARY KEY COLS*/
+        INNER JOIN
+        sys.columns fromCol ON fkc.parent_column_id = fromCol.column_id AND fkc.parent_object_id = fromCol.object_id /* FOREIGN KEY COLS*/
+        INNER JOIN
+        INFORMATION_SCHEMA.KEY_COLUMN_USAGE fromOrdinal on fk.name = fromOrdinal.CONSTRAINT_NAME
+          AND fromCol.name = fromOrdinal.COLUMN_NAME
+        INNER join
+        sys.objects toSchema ON toSchema.object_id = fk.referenced_object_id
+        INNER JOIN
+        sys.objects fromSchema ON fromSchema.object_id = fk.parent_object_id
       </DefiningQuery>
     </EntitySet>
 
