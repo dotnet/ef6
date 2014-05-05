@@ -96,16 +96,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 return;
             }
 
-            if (dependentEnd.GetEntityType().GetClrType() != entityTypeConfiguration.ClrType)
-            {
-                // Configure the constraint when we are configuring the dependent type
-                return;
-            }
-
-            var dependentPropertInfos = _dependentProperties.AsEnumerable();
+            var dependentPropertyInfos = _dependentProperties.AsEnumerable();
 
             if (!IsFullySpecified)
             {
+                if (dependentEnd.GetEntityType().GetClrType() != entityTypeConfiguration.ClrType)
+                {
+                    // This can only happen if the dependent end has a navigation property,
+                    // as otherwise the column order has to be fully specified.
+                    // Thus we can configure the constraint when we are configuring the navigation property on the dependent type
+                    return;
+                }
+
                 var foreignKeys
                     = from p in _dependentProperties
                       select new
@@ -123,7 +125,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                         && foreignKeys.All(fk => dependentKeys.Any(p => p.GetClrPropertyInfo().IsSameAs(fk.PropertyInfo))))
                     {
                         // The FK and PK sets are equal, we know the order
-                        dependentPropertInfos = dependentKeys.Select(p => p.GetClrPropertyInfo());
+                        dependentPropertyInfos = dependentKeys.Select(p => p.GetClrPropertyInfo());
                     }
                     else
                     {
@@ -132,13 +134,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 }
                 else
                 {
-                    dependentPropertInfos = foreignKeys.OrderBy(p => p.ColumnOrder).Select(p => p.PropertyInfo);
+                    dependentPropertyInfos = foreignKeys.OrderBy(p => p.ColumnOrder).Select(p => p.PropertyInfo);
                 }
             }
 
             var dependentProperties = new List<EdmProperty>();
 
-            foreach (var dependentProperty in dependentPropertInfos)
+            foreach (var dependentProperty in dependentPropertyInfos)
             {
                 var property
                     = dependentEnd.GetEntityType()

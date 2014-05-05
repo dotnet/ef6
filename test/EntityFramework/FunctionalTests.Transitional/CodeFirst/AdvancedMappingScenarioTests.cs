@@ -18,6 +18,109 @@ namespace FunctionalTests
     public class AdvancedMappingScenarioTests : TestBase
     {
         [Fact]
+        public void Can_map_join_table_for_many_to_many_if_names_do_not_match_convention_with_fluent_API()
+        {
+            Can_map_join_table_for_many_to_many_if_names_do_not_match_convention(
+                (role, user, userRole, modelBuilder) =>
+                {
+                    modelBuilder.Entity<SomeUser>()
+                        .ToTable("Users")
+                        .HasKey(u => new { u.Id1, u.Id2 })
+                        .HasMany(u => u.Roles)
+                        .WithRequired()
+                        .HasForeignKey(ur => new { ur.UserId1, ur.UserId2 });
+
+                    modelBuilder.Entity<SomeRole>()
+                        .ToTable("Roles")
+                        .HasKey(r => new { r.Id1, r.Id2 })
+                        .HasMany(r => r.Users)
+                        .WithRequired()
+                        .HasForeignKey(ur => new { ur.RoleId1, ur.RoleId2 });
+
+                    modelBuilder.Entity<UserRole>().HasKey(r => new { r.UserId1, r.UserId2, r.RoleId1, r.RoleId2 });
+                });
+        }
+
+        [Fact]
+        public void Can_map_join_table_for_many_to_many_if_names_do_not_match_convention_with_annotations()
+        {
+            Can_map_join_table_for_many_to_many_if_names_do_not_match_convention(
+                (role, user, userRole, modelBuilder) =>
+                {
+                    role.TypeAttributes = new[] { new TableAttribute("Roles") };
+                    role.SetPropertyAttributes(r => r.Users, new ForeignKeyAttribute("RoleId1, RoleId2"));
+                    role.SetPropertyAttributes(r => r.Id1, new KeyAttribute(), new ColumnAttribute { Order = 0 });
+                    role.SetPropertyAttributes(r => r.Id2, new KeyAttribute(), new ColumnAttribute { Order = 1 });
+
+                    user.TypeAttributes = new[] { new TableAttribute("Users") };
+                    user.SetPropertyAttributes(r => r.Roles, new ForeignKeyAttribute("UserId1, UserId2"));
+                    user.SetPropertyAttributes(r => r.Id1, new KeyAttribute(), new ColumnAttribute { Order = 0 });
+                    user.SetPropertyAttributes(r => r.Id2, new KeyAttribute(), new ColumnAttribute { Order = 1 });
+
+                    userRole.SetPropertyAttributes(ur => ur.UserId1, new KeyAttribute(), new ColumnAttribute { Order = 0 });
+                    userRole.SetPropertyAttributes(ur => ur.UserId2, new KeyAttribute(), new ColumnAttribute { Order = 1 });
+                    userRole.SetPropertyAttributes(ur => ur.RoleId1, new KeyAttribute(), new ColumnAttribute { Order = 2 });
+                    userRole.SetPropertyAttributes(ur => ur.RoleId2, new KeyAttribute(), new ColumnAttribute { Order = 3 });
+
+                    modelBuilder.Entity<SomeUser>();
+                    modelBuilder.Entity<SomeRole>();
+                    modelBuilder.Entity<UserRole>();
+                });
+        }
+
+        private void Can_map_join_table_for_many_to_many_if_names_do_not_match_convention(
+            Action<DynamicTypeDescriptionConfiguration<SomeRole>,
+                DynamicTypeDescriptionConfiguration<SomeUser>,
+                DynamicTypeDescriptionConfiguration<UserRole>,
+                AdventureWorksModelBuilder> configure)
+        {
+            DbDatabaseMapping databaseMapping;
+            using (var roleConfiguration = new DynamicTypeDescriptionConfiguration<SomeRole>())
+            {
+                using (var userConfiguration = new DynamicTypeDescriptionConfiguration<SomeUser>())
+                {
+                    using (var userRoleConfiguration = new DynamicTypeDescriptionConfiguration<UserRole>())
+                    {
+                        var modelBuilder = new AdventureWorksModelBuilder();
+
+                        configure(roleConfiguration, userConfiguration, userRoleConfiguration, modelBuilder);
+
+                        databaseMapping = BuildMapping(modelBuilder);
+                    }
+                }
+            }
+
+            databaseMapping.Assert<UserRole>().HasColumns("UserId1", "UserId2", "RoleId1", "RoleId2");
+            databaseMapping.Assert<UserRole>().ColumnCountEquals(4);
+            databaseMapping.Assert<UserRole>().HasForeignKey(new[] { "UserId1", "UserId2" }, "Users");
+            databaseMapping.Assert<UserRole>().HasForeignKey(new[] { "RoleId1", "RoleId2" }, "Roles");
+        }
+
+        public class SomeRole
+        {
+            public virtual ICollection<UserRole> Users { get; private set; }
+
+            public virtual string Id1 { get; set; }
+            public virtual string Id2 { get; set; }
+        }
+
+        public class SomeUser
+        {
+            public virtual ICollection<UserRole> Roles { get; private set; }
+
+            public virtual string Id1 { get; set; }
+            public virtual string Id2 { get; set; }
+        }
+
+        public class UserRole
+        {
+            public virtual string UserId1 { get; set; }
+            public virtual string UserId2 { get; set; }
+            public virtual string RoleId1 { get; set; }
+            public virtual string RoleId2 { get; set; }
+        }
+
+        [Fact]
         public void Sql_ce_should_get_explicit_max_lengths_for_string_and_binary_properties_by_convention()
         {
             var modelBuilder = new DbModelBuilder();
