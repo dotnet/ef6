@@ -10,13 +10,22 @@ Project global pre-settings.
   <PropertyGroup >
     <RuntimeVersionMajor>6</RuntimeVersionMajor>
     <RuntimeVersionMinor>1</RuntimeVersionMinor>
+    <RuntimeAssemblyVersionMinor>0</RuntimeAssemblyVersionMinor>
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '11.0'">11</ToolingVersionMajor>
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '12.0'">12</ToolingVersionMajor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '11.0'">2</ToolingVersionMinor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '12.0'">0</ToolingVersionMinor>
+    <VersionBuild>0</VersionBuild>
+    <VersionRevision>0</VersionRevision>
     <VersionReleasePrefix>1</VersionReleasePrefix>
     <VersionRelease>$(VersionReleasePrefix)-alpha1</VersionRelease>
     <VersionReleaseName>Alpha 1</VersionReleaseName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">389132</ProjectUrlFwLinkID>
+    <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">389134</LicenseUrlFwLinkID>
+    <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
   </PropertyGroup>
 
   <!-- Default properties -->
@@ -31,16 +40,6 @@ Project global pre-settings.
     <VersionMajor Condition="'$(BuildingToolingProject)' == 'true'">$(ToolingVersionMajor)</VersionMajor>
     <VersionMinor Condition="'$(BuildingRuntimeProject)' == 'true'">$(RuntimeVersionMinor)</VersionMinor>
     <VersionMinor Condition="'$(BuildingToolingProject)' == 'true'">$(ToolingVersionMinor)</VersionMinor>
-    <RuntimeAssemblyVersionMinor>0</RuntimeAssemblyVersionMinor>
-    <VersionBuild>0</VersionBuild>
-    <VersionRevision>0</VersionRevision>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
-    <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2012</WixFullProductName_Dev11>
-    <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2013</WixFullProductName_Dev12>
-    <WixProductDescription_Dev11>$(WixFullProductName_Dev11)</WixProductDescription_Dev11>
-    <WixProductDescription_Dev12>$(WixFullProductName_Dev12)</WixProductDescription_Dev12>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -71,11 +70,17 @@ Project global pre-settings.
   </PropertyGroup>
 
   <PropertyGroup>
+    <NuGetOutputPath>$(AssemblyPath)Packages</NuGetOutputPath>
+    <NuGetSymbolsOutputPath>$(AssemblyPath)\SymbolPackages</NuGetSymbolsOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <NuGetScriptsPath Condition="'$(NuGetScriptsPath)' == ''">$(MSBuildProjectDirectory)\tools</NuGetScriptsPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration45)' == 'Debug'">
-    <StyleCopEnabled Condition="'$(StyleCopEnabled)' == ''">false</StyleCopEnabled>
+  <PropertyGroup>
+    <StyleCopEnabled Condition="'$(StyleCopEnabled)' == '' AND '$(Configuration45)' == 'Debug'">false</StyleCopEnabled>
+    <StyleCopEnabled Condition="'$(MSBuildProjectExtension)' == '.nuproj'">false</StyleCopEnabled>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -89,5 +94,10 @@ Project global pre-settings.
     <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterMicrosoftCommonTargets>
     <CustomAfterNuGetProjTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterNuGetProjTargets>
     <CustomAfterWixTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterWixTargets>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--Force a rebuild if this file is changed -->
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
 </Project>

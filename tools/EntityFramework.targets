@@ -4,7 +4,11 @@ Project global post-settings and targets.
 ****************************************************************************************************-->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!-- Set computed properties after all dependent properties have been resolved -->
+  <PropertyGroup>
+    <BuildDependsOn Condition="'$(BuildingToolingProject)' == 'true'">ValidateVisualStudioVersion;$(BuildDependsOn)</BuildDependsOn>
+    <BuildDependsOn Condition="'$(MSBuildProjectExtension)' == '.nuproj'">ValidateNuGetConfig;SetNuSpecProperties;GetNuGetContentFromProject;$(BuildDependsOn)</BuildDependsOn>
+  </PropertyGroup>
+
   <PropertyGroup>
     <DefineConstants Condition="'$(InternalsInvisible)' == 'true'">$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
     <DefineConstants Condition="'$(VisualStudioVersion)' == '11.0'">$(DefineConstants);VS11</DefineConstants>
@@ -26,10 +30,37 @@ Project global post-settings and targets.
     </AssemblySearchPaths>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!--Force a rebuild if this file is changed -->
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+
+  <!-- Post-targets imports -->
+
+  <Import Project="EF.stylecop.targets" Condition="Exists('..\packages\StyleCop.4.7.10.0\lib\StyleCop.dll')" />
+  <Import Project="EFTools.common.tasks" Condition="'$(BuildingToolingProject)' == 'true'" />
+  <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
+
+  <!-- Post-imports defintions: Set (overwrite) computed properties after all dependent properties have been resolved -->
+
+  <PropertyGroup>
+    <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
+    <AssemblyVersion Condition="'$(BuildingRuntimeProject)' == 'true'">$(VersionMajor).$(RuntimeAssemblyVersionMinor).0.$(VersionRevision)</AssemblyVersion>
+    <AssemblyFileVersion>$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
+    <EF6NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</EF6NuGetPackageVersion>
+    <EF6NuGetPackageVersion Condition="$(VersionRelease.Contains('-')) AND '$(AppendVersionBuild)' == 'true'">$(EF6NuGetPackageVersion)-$(VersionBuild)</EF6NuGetPackageVersion>
+    <NuGetPackageVersion>$(EF6NuGetPackageVersion)</NuGetPackageVersion>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
-    <BuildDependsOn>ValidateVisualStudioVersion;$(BuildDependsOn)</BuildDependsOn>
+    <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2012</WixFullProductName_Dev11>
+    <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2013</WixFullProductName_Dev12>
+    <WixProductDescription_Dev11>$(WixFullProductName_Dev11)</WixProductDescription_Dev11>
+    <WixProductDescription_Dev12>$(WixFullProductName_Dev12)</WixProductDescription_Dev12>
   </PropertyGroup>
+
+  <!-- Target definitions -->
+
   <Target Name="ValidateVisualStudioVersion">
     <PropertyGroup>
       <VisualStudioVersionError Condition="'$(VisualStudioVersion)' == '' OR ('$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0')">true</VisualStudioVersionError>
@@ -37,43 +68,18 @@ Project global post-settings and targets.
     <Error Condition="'$(VisualStudioVersionError)' == 'true'" Text="VisualStudioVersion property value is invalid or not supported: '$(VisualStudioVersion)'" />
   </Target>
 
-  <PropertyGroup>
-    <BuildDependsOn>SetComputedProperties;$(BuildDependsOn)</BuildDependsOn>
-  </PropertyGroup>
-  <Target Name="SetComputedProperties">
+  <Target Name="SetNuSpecProperties">
     <PropertyGroup>
-      <!-- If building the runtime then override the default AssemblyVersion. This only affects nightly builds. -->
-      <AssemblyVersion Condition="'$(BuildingRuntimeProject)' == 'true'">$(VersionMajor).$(RuntimeAssemblyVersionMinor).0.$(VersionRevision)</AssemblyVersion>
-      <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
-      <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
-      <AssemblyInfoVersion Condition="'$(VersionRelease)' != ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)-$(VersionBuild)</AssemblyInfoVersion>
-      <AssemblyInfoVersion Condition="'$(AssemblyInfoVersion)' == ''">$(AssemblyFileVersion)</AssemblyInfoVersion>
-      <!-- TODO: NuGetPackageVersion is set by versions.targets, so when it is being used for runtime dated builds it's important
-           not to override it, but for tooling builds it gives the wrong answer (based on the tooling VersionMajor and VersionMinor)
-           so there we must override it. Should come up with a fix in version.targets. -->
-      <NuGetPackageVersion Condition="'$(BuildingToolingProject)' == 'true' Or '$(NuGetPackageVersion)' == ''">$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>
-      <EF6NuGetPackageVersion>$(NuGetPackageVersion)</EF6NuGetPackageVersion>
-      <EF6NuGetPackageWixId>$(NuGetPackageVersion)</EF6NuGetPackageWixId>
-      <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
-
-      <!-- Note: ProjectUrlFwLinkID and LicenseUrlFwLinkID are overridden for nightly builds in EntityFramework.Extensions.settings.targets -->
-      <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">389132</ProjectUrlFwLinkID>
-      <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">389134</LicenseUrlFwLinkID>
-
       <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</NuSpecProperties>
       <NuSpecProperties>$(NuSpecProperties);ProjectUrlFwLinkID=$(ProjectUrlFwLinkID);LicenseUrlFwLinkID=$(LicenseUrlFwLinkID)</NuSpecProperties>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.wixproj'" Label="Properties used in setup">
-      <!-- WixID must not contain hyphens -->
-      <EF6NuGetPackageWixId>$(EF6NuGetPackageVersion.Replace('-', '_'))</EF6NuGetPackageWixId>
-    </PropertyGroup>
+  </Target>
+
+  <Target Name="ValidateNuGetConfig">
+    <Error Condition="'$(Configuration)' != '$(Configuration45)'" Text="NuGet projects can be built for Configuration45 only" />
   </Target>
 
   <!-- GetNuGetContentFromProject: Gets the Compile item collection (source files) from projects into the NuGetContent item. -->
-  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.nuproj'">
-    <BuildDependsOn>GetNuGetContentFromProject;$(BuildDependsOn)</BuildDependsOn>
-  </PropertyGroup>
-
   <ItemDefinitionGroup>
     <NuGetContentProject>
       <SourceRootFullPath />
@@ -98,9 +104,5 @@ Project global post-settings and targets.
       </NugetContent>
     </ItemGroup>
   </Target>
-
-  <Import Project="EF.stylecop.targets" Condition="Exists('..\packages\StyleCop.4.7.10.0\lib\StyleCop.dll')" />
-  <Import Project="EFTools.common.tasks" Condition="'$(BuildingToolingProject)' == 'true'" />
-  <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
 </Project>
 

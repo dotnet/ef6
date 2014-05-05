@@ -52,15 +52,11 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 
-  <Target Name="Clean">
+  <Target Name="Clean" DependsOnTargets="CleanPackages">
     <MSBuild Targets="Clean"
              Projects="@(ProjectToBuild)"
              Properties="Configuration=%(BuildConfiguration.Identity);$(BuildProperties)"
              BuildInParallel="true" />
-    <MSBuild Targets="Clean"
-             Projects="src\NuGet\NuGet.proj"
-             Properties="Configuration=$(Configuration)"
-             Condition="'$(Configuration)' == '$(Configuration45)'" />
   </Target>
 
   <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
@@ -80,7 +76,14 @@
   </Target>
 
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
-  
+
+  <!-- Rebuild core projects w/o internals visible and w/o running code quality tools. -->
+  <Target Name="RebuildLean">
+    <MSBuild Targets="Rebuild"
+             Projects="$(MSBuildThisFileFullPath)"
+      	     Properties="Configuration=$(Configuration);$(BuildProperties);BuildCoreOnly=true;InternalsInvisible=true;RunCodeAnalysis=false;StyleCopEnabled=false" />
+  </Target>
+
   <Import Project="tools\SkipStrongNames.targets" />
 
   <UsingTask TaskName="Xunit.Runner.MSBuild.xunit"
@@ -94,13 +97,32 @@
     <xunit Assemblies="@(ProviderAgnosticXunitAssembly)" />
   </Target>
 
-  <Target Name="Package">
-    <MSBuild Targets="Rebuild"
-             Projects="$(MSBuildThisFileFullPath)"
-             Properties="Configuration=$(Configuration);$(BuildProperties);BuildCoreOnly=true;InternalsInvisible=true;RunCodeAnalysis=false;StyleCopEnabled=false" />
+  <Target Name="Package" DependsOnTargets="RebuildLean;BuildPackages" />
+
+  <Target Name="BuildPackages">
     <MSBuild Targets="Build"
-             Projects="src\NuGet\NuGet.proj"
-             Properties="Configuration=$(Configuration)"
+             Projects="$(RepositoryRoot)src\NuGet\NuGet.proj"
+             Properties="Configuration=$(Configuration);RunCodeAnalysis=false;StyleCopEnabled=false"
+             Condition="'$(Configuration)' == '$(Configuration45)'" />
+    <CallTarget Targets="MoveNuGetSymbols" />
+  </Target>
+
+  <Target Name="CleanPackages" DependsOnTargets="RemoveNuGetSymbols">
+    <MSBuild Targets="Clean"
+             Projects="$(RepositoryRoot)src\NuGet\NuGet.proj"
+             Properties="Configuration=$(Configuration);RunCodeAnalysis=false;StyleCopEnabled=false"
              Condition="'$(Configuration)' == '$(Configuration45)'" />
   </Target>
+
+  <Target Name="MoveNuGetSymbols">
+    <ItemGroup>
+      <SymbolNuPkg Include="$(AssemblyPath)**\*symbols.nupkg" />
+    </ItemGroup>
+    <Move SourceFiles="@(SymbolNuPkg)" DestinationFolder="$(NuGetSymbolsOutputPath)" />
+  </Target>
+
+  <Target Name="RemoveNuGetSymbols">
+    <RemoveDir Directories="$(NuGetSymbolsOutputPath)" Condition="Exists($(NuGetSymbolsOutputPath))"/>
+  </Target>
+
 </Project>

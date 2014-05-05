@@ -88,9 +88,7 @@
           Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
 
   <PropertyGroup>
-    <!-- If NuGetOutputPath is set search for packages there, otherwise look in the default place they are output by the runtime build -->
-    <PackagesInputDir Condition=" '$(PackagesInputDir)' == '' AND '$(NuGetOutputPath)' != ''">$(NuGetOutputPath)</PackagesInputDir>
-    <PackagesInputDir Condition=" '$(PackagesInputDir)' == ''">$(OutputPath)..\Release\NuGet</PackagesInputDir>
+    <PackagesInputDir Condition=" '$(PackagesInputDir)' == ''">$(NuGetOutputPath)</PackagesInputDir>
 
     <!-- override output dir for EF5 package restore (which will automatically append \packages to path) -->
     <PackageRestoreOutputDir>$(PackagesInputDir)</PackageRestoreOutputDir>
@@ -105,9 +103,8 @@
     <ShouldUseFrozenRuntime Condition="'$(ShouldUseFrozenRuntime)' == ''">False</ShouldUseFrozenRuntime>
     <LocalPackageSourceDir Condition="'$(ShouldUseFrozenRuntime)' == 'True'">$(FrozenRuntimeDir)</LocalPackageSourceDir>
     <LocalPackageSourceDir Condition="'$(LocalPackageSourceDir)' == ''">$(PackagesInputDir)</LocalPackageSourceDir>
-    
-    <!-- Ensure SetComputedProperties comes before RestoreLocalPackages so that EF6NuGetPackageVersion is set -->
-    <BuildDependsOn>RestorePackages;SetComputedProperties;RestoreLocalPackages;ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
+
+    <BuildDependsOn>RestorePackages;RestoreLocalPackages;ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
 
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
@@ -157,7 +154,7 @@
     <Copy SourceFiles="@(LocalPackages)" DestinationFolder="$(CopiedNuGetPackagesDir)" />
     
     <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
-             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(CopiedNuGetPackagesDir);RequireNoCache=true;IncludePreRelease=true;NuGetOutputPath=$(NuGetOutputPath)" />
+             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackageRestoreOutputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(CopiedNuGetPackagesDir);RequireNoCache=true;IncludePreRelease=true" />
              
   </Target>
 
@@ -173,12 +170,14 @@
   -->
   <Target Name="BeforeBuild">
     <PropertyGroup>
+      <!-- WixID must not contain hyphens -->
+      <EF6NuGetPackageWixId>$(EF6NuGetPackageVersion.Replace('-', '_'))</EF6NuGetPackageWixId>
       <!-- WIX authoring inputs. This target ensures dependency properties has been resolved.  -->
       <DefineConstants>$(DefineConstants);AssemblyFileVersion=$(AssemblyFileVersion);BuildRevisionProductVersion=$(VersionBuild).$(VersionRevision)</DefineConstants>
       <DefineConstants>$(DefineConstants);AssemblyVersion=$(AssemblyVersion);AssemblyInfoVersion=$(AssemblyInfoVersion)</DefineConstants>
       <DefineConstants>$(DefineConstants);VisualStudioVersion=$(VisualStudioVersion);MajorVisualStudioVersion=$(VisualStudioVersion.Substring(0, 2))</DefineConstants>
       <DefineConstants>$(DefineConstants);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
-      <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath=$(AssemblyPath)</DefineConstants>
+      <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath=$(AssemblyPath45)</DefineConstants>
       <DefineConstants>$(DefineConstants);SatelliteAssemblyPath=$(SatelliteAssemblyPath);LocOutputPath=$(LocOutputPath)</DefineConstants>
       <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts)</DefineConstants>
       <DefineConstants Condition="'$(ShouldUseFrozenRuntime)' == 'True'">$(DefineConstants);FrozenRuntimeDir=$(FrozenRuntimeDir)</DefineConstants>
