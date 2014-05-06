@@ -78,7 +78,7 @@
     <Import Project="tools\SkipStrongNames.targets" />
 
     <Target Name="BuildFrameworkPackages">
-      <MSBuild Projects="$(RepositoryRoot)EF.msbuild" Targets="Package" Properties="Configuration=Release" />
+      <MSBuild Projects="$(RepositoryRoot)EF.msbuild" Targets="Package" Properties="Configuration=$(Configuration)" />
     </Target>
 
     <Target Name="BuildDesigner" DependsOnTargets="CreateDirectories;CheckSkipStrongNames">
