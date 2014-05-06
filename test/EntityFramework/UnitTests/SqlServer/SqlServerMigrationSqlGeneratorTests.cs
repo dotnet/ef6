@@ -31,6 +31,7 @@ namespace System.Data.Entity.SqlServer
 
             var historyRepository
                 = new HistoryRepository(
+                    Mock.Of<InternalContextForMock>(),
                     new SqlConnectionFactory().CreateConnection("Foo").ConnectionString,
                     DbProviderFactories.GetFactory(ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName),
                     "MyKey",

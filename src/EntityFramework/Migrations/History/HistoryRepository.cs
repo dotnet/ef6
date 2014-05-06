@@ -7,6 +7,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
@@ -38,12 +39,14 @@ namespace System.Data.Entity.Migrations.History
         private readonly int _contextKeyMaxLength;
         private readonly int _migrationIdMaxLength;
         private readonly DatabaseExistenceState _initialExistence;
+        private readonly DbTransaction _existingTransaction;
 
         private string _currentSchema;
         private bool? _exists;
         private bool _contextKeyColumnExists;
 
         public HistoryRepository(
+            InternalContext usersContext,
             string connectionString,
             DbProviderFactory providerFactory,
             string contextKey,
@@ -52,14 +55,14 @@ namespace System.Data.Entity.Migrations.History
             IEnumerable<string> schemas = null,
             DbContext contextForInterception = null,
             DatabaseExistenceState initialExistence = DatabaseExistenceState.Unknown)
-            : base(connectionString, providerFactory)
+            : base(usersContext, connectionString, providerFactory)
         {
             DebugCheck.NotEmpty(contextKey);
             DebugCheck.NotNull(historyContextFactory);
 
             _initialExistence = initialExistence;
-
             _commandTimeout = commandTimeout;
+            _existingTransaction = usersContext.TryGetCurrentStoreTransaction();
 
             _schemas
                 = new[] { EdmModelExtensions.DefaultSchema }
@@ -106,10 +109,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
 
             _contextKey = contextKey.RestrictTo(_contextKeyMaxLength);
@@ -184,10 +184,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -237,10 +234,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -296,10 +290,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -343,10 +334,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -387,10 +375,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -431,10 +416,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -462,10 +444,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -551,10 +530,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
 
             return !string.IsNullOrWhiteSpace(_currentSchema);
@@ -665,10 +641,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -704,10 +677,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -743,10 +713,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -797,10 +764,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -869,10 +833,7 @@ namespace System.Data.Entity.Migrations.History
             }
             finally
             {
-                if (connection != null)
-                {
-                    DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
-                }
+                DisposeConnection(connection);
             }
         }
 
@@ -883,6 +844,16 @@ namespace System.Data.Entity.Migrations.History
             var context = _historyContextFactory(connection, schema ?? CurrentSchema);
 
             context.Database.CommandTimeout = _commandTimeout;
+
+            if (_existingTransaction != null)
+            {
+                Debug.Assert(_existingTransaction.Connection == connection);
+
+                if (_existingTransaction.Connection == connection)
+                {
+                    context.Database.UseTransaction(_existingTransaction);
+                }
+            }
 
             InjectInterceptionContext(context);
 

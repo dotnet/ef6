@@ -157,6 +157,7 @@ namespace System.Data.Entity.Migrations
 
                 _historyRepository
                     = new HistoryRepository(
+                        context.InternalContext,
                         _usersContextInfo.ConnectionString,
                         _providerFactory,
                         _configuration.ContextKey,

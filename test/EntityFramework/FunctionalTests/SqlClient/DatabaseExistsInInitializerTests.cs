@@ -15,15 +15,25 @@ namespace System.Data.Entity.SqlServer
     public class DatabaseExistsInInitializerTests : FunctionalTestBase, IDisposable
     {
         private const string Password = "Password1";
-        private const string NormalUser = "EFLoose10WithDbVisibility";
-        private const string ImpairedUser = "EFLoose10WithoutDbVisibility";
-        private const string DatabaseName = "ItsAMooseGoose";
+        private const string NormalUser = "EFGooseWithDbVisibility";
+        private const string ImpairedUser = "EFGooseWithoutDbVisibility";
+        private const string DatabaseWithMigrationHistory = "MigratoryGoose";
+        private const string DatabaseWithoutMigrationHistory = "NonMigratoryGoose";
+        private const string DatabaseOutOfDate = "MigratedGoose";
 
         public DatabaseExistsInInitializerTests()
         {
-            EnsureDatabaseExists();
-            EnsureUserExists(NormalUser, allowMasterQuery: true);
-            EnsureUserExists(ImpairedUser, allowMasterQuery: false);
+            EnsureDatabaseExists(DatabaseWithMigrationHistory, drophistoryTable: false, outOfDate: false);
+            EnsureUserExists(DatabaseWithMigrationHistory, NormalUser, allowMasterQuery: true);
+            EnsureUserExists(DatabaseWithMigrationHistory, ImpairedUser, allowMasterQuery: false);
+
+            EnsureDatabaseExists(DatabaseWithoutMigrationHistory, drophistoryTable: true, outOfDate: false);
+            EnsureUserExists(DatabaseWithoutMigrationHistory, NormalUser, allowMasterQuery: true);
+            EnsureUserExists(DatabaseWithoutMigrationHistory, ImpairedUser, allowMasterQuery: false);
+
+            EnsureDatabaseExists(DatabaseOutOfDate, drophistoryTable: false, outOfDate: true);
+            EnsureUserExists(DatabaseOutOfDate, NormalUser, allowMasterQuery: true);
+            EnsureUserExists(DatabaseOutOfDate, ImpairedUser, allowMasterQuery: false);
 
             MutableResolver.AddResolver<IManifestTokenResolver>(
                 new SingletonDependencyResolver<IManifestTokenResolver>(new BasicManifestTokenResolver()));
@@ -37,37 +47,109 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void Exists_check_with_master_persist_info()
         {
-            ExistsTest(NormalUser, persistSecurityInfo: true);
+            ExistsTest(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: true);
         }
 
         [Fact]
         public void Exists_check_with_master_no_persist_info()
         {
-            ExistsTest(NormalUser, persistSecurityInfo: false);
+            ExistsTest(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false);
         }
 
         [Fact]
         public void Exists_check_without_master_persist_info()
         {
-            ExistsTestNoMaster(NormalUser, persistSecurityInfo: true);
+            ExistsTestNoMaster(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: true);
         }
 
         [Fact]
         public void Exists_check_without_master_no_persist_info()
         {
-            ExistsTestNoMaster(NormalUser, persistSecurityInfo: false);
+            ExistsTestNoMaster(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false);
         }
 
         [Fact] // CodePlex 2113
         public void Exists_check_with_no_master_query_persist_info()
         {
-            ExistsTest(ImpairedUser, persistSecurityInfo: true);
+            ExistsTest(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: true);
         }
 
         [Fact] // CodePlex 2113
         public void Exists_check_with_no_master_query_no_persist_info()
         {
-            ExistsTest(ImpairedUser, persistSecurityInfo: false);
+            ExistsTest(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: false);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_persist_info_no_MigrationHistory()
+        {
+            ExistsTest(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: true);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_no_persist_info_no_MigrationHistory()
+        {
+            ExistsTest(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_persist_info_no_MigrationHistory()
+        {
+            ExistsTestNoMaster(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: true);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_no_persist_info_no_MigrationHistory()
+        {
+            ExistsTestNoMaster(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_persist_info_no_MigrationHistory()
+        {
+            ExistsTest(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: true);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_no_persist_info_no_MigrationHistory()
+        {
+            ExistsTest(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: false);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_persist_info_out_of_date()
+        {
+            ExistsTest(DatabaseOutOfDate, NormalUser, persistSecurityInfo: true);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_no_persist_info_out_of_date()
+        {
+            ExistsTest(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_persist_info_out_of_date()
+        {
+            ExistsTestNoMaster(DatabaseOutOfDate, NormalUser, persistSecurityInfo: true);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_no_persist_info_out_of_date()
+        {
+            ExistsTestNoMaster(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_persist_info_out_of_date()
+        {
+            ExistsTest(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: true);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_no_persist_info_out_of_date()
+        {
+            ExistsTest(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: false);
         }
 
         [Fact]
@@ -109,73 +191,217 @@ namespace System.Data.Entity.SqlServer
         [Fact] // CodePlex 2068
         public void Exists_check_with_master_persist_info_open_connection()
         {
-            ExistsTestWithConnection(NormalUser, persistSecurityInfo: true, openConnection: true);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: true);
         }
 
         [Fact] // CodePlex 2068
         public void Exists_check_with_master_no_persist_info_open_connection()
         {
-            ExistsTestWithConnection(NormalUser, persistSecurityInfo: false, openConnection: true);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: true);
         }
 
         [Fact] // CodePlex 2068
         public void Exists_check_without_master_persist_info_open_connection()
         {
-            ExistsTestNoMasterWithConnection(NormalUser, persistSecurityInfo: true, openConnection: true);
+            ExistsTestNoMasterWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: true);
         }
 
         [Fact] // CodePlex 2068
         public void Exists_check_without_master_no_persist_info_open_connection()
         {
-            ExistsTestNoMasterWithConnection(NormalUser, persistSecurityInfo: false, openConnection: true);
+            ExistsTestNoMasterWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: true);
         }
 
         [Fact] // CodePlex 2113, 2068
         public void Exists_check_with_no_master_query_persist_info_open_connection()
         {
-            ExistsTestWithConnection(ImpairedUser, persistSecurityInfo: true, openConnection: true);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: true, openConnection: true);
         }
 
         [Fact] // CodePlex 2113, 2068
         public void Exists_check_with_no_master_query_no_persist_info_open_connection()
         {
-            ExistsTestWithConnection(ImpairedUser, persistSecurityInfo: false, openConnection: true);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: false, openConnection: true);
         }
 
         [Fact]
         public void Exists_check_with_master_persist_info_closed_connection()
         {
-            ExistsTestWithConnection(NormalUser, persistSecurityInfo: true, openConnection: false);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: false);
         }
 
         [Fact]
         public void Exists_check_with_master_no_persist_info_closed_connection()
         {
-            ExistsTestWithConnection(NormalUser, persistSecurityInfo: false, openConnection: false);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: false);
         }
 
         [Fact]
         public void Exists_check_without_master_persist_info_closed_connection()
         {
-            ExistsTestNoMasterWithConnection(NormalUser, persistSecurityInfo: true, openConnection: false);
+            ExistsTestNoMasterWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: false);
         }
 
         [Fact]
         public void Exists_check_without_master_no_persist_info_closed_connection()
         {
-            ExistsTestNoMasterWithConnection(NormalUser, persistSecurityInfo: false, openConnection: false);
+            ExistsTestNoMasterWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: false);
         }
 
         [Fact] // CodePlex 2113
         public void Exists_check_with_no_master_query_persist_info_closed_connection()
         {
-            ExistsTestWithConnection(ImpairedUser, persistSecurityInfo: true, openConnection: false);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: true, openConnection: false);
         }
 
         [Fact] // CodePlex 2113
         public void Exists_check_with_no_master_query_no_persist_info_closed_connection()
         {
-            ExistsTestWithConnection(ImpairedUser, persistSecurityInfo: false, openConnection: false);
+            ExistsTestWithConnection(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: false, openConnection: false);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_with_master_persist_info_open_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_with_master_no_persist_info_open_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_without_master_persist_info_open_connection_no_MigrationHistory()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_without_master_no_persist_info_open_connection_no_MigrationHistory()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2113, 2068
+        public void Exists_check_with_no_master_query_persist_info_open_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: true, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2113, 2068
+        public void Exists_check_with_no_master_query_no_persist_info_open_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: false, openConnection: true);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_persist_info_closed_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: false);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_no_persist_info_closed_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: false);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_persist_info_closed_connection_no_MigrationHistory()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: true, openConnection: false);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_no_persist_info_closed_connection_no_MigrationHistory()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: false);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_persist_info_closed_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: true, openConnection: false);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_no_persist_info_closed_connection_no_MigrationHistory()
+        {
+            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: false, openConnection: false);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_with_master_persist_info_open_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: true, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_with_master_no_persist_info_open_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_without_master_persist_info_open_connection_out_of_date()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: true, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2068
+        public void Exists_check_without_master_no_persist_info_open_connection_out_of_date()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2113, 2068
+        public void Exists_check_with_no_master_query_persist_info_open_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: true, openConnection: true);
+        }
+
+        [Fact] // CodePlex 2113, 2068
+        public void Exists_check_with_no_master_query_no_persist_info_open_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: false, openConnection: true);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_persist_info_closed_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: true, openConnection: false);
+        }
+
+        [Fact]
+        public void Exists_check_with_master_no_persist_info_closed_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false, openConnection: false);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_persist_info_closed_connection_out_of_date()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: true, openConnection: false);
+        }
+
+        [Fact]
+        public void Exists_check_without_master_no_persist_info_closed_connection_out_of_date()
+        {
+            ExistsTestNoMasterWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false, openConnection: false);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_persist_info_closed_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: true, openConnection: false);
+        }
+
+        [Fact] // CodePlex 2113
+        public void Exists_check_with_no_master_query_no_persist_info_closed_connection_out_of_date()
+        {
+            ExistsTestWithConnection(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: false, openConnection: false);
         }
 
         [Fact]
@@ -214,14 +440,15 @@ namespace System.Data.Entity.SqlServer
             NotExistsTestWithConnection(ImpairedUser, persistSecurityInfo: false, openConnection: false);
         }
 
-        private void ExistsTest(string username, bool persistSecurityInfo)
+        private void ExistsTest(string databaseName, string username, bool persistSecurityInfo)
         {
             AssertExists(
+                databaseName,
                 ModelHelpers.SimpleConnectionStringWithCredentials(
-                    DatabaseName, username, Password, persistSecurityInfo));
+                    databaseName, username, Password, persistSecurityInfo));
         }
 
-        private void ExistsTestNoMaster(string username, bool persistSecurityInfo)
+        private void ExistsTestNoMaster(string databaseName, string username, bool persistSecurityInfo)
         {
             var interceptor = new NoMasterInterceptor();
             try
@@ -229,8 +456,9 @@ namespace System.Data.Entity.SqlServer
                 DbInterception.Add(interceptor);
 
                 AssertExists(
+                    databaseName,
                     ModelHelpers.SimpleConnectionStringWithCredentials(
-                        DatabaseName, username, Password, persistSecurityInfo));
+                        databaseName, username, Password, persistSecurityInfo));
             }
             finally
             {
@@ -262,14 +490,15 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private void ExistsTestWithConnection(string username, bool persistSecurityInfo, bool openConnection)
+        private void ExistsTestWithConnection(string databaseName, string username, bool persistSecurityInfo, bool openConnection)
         {
             AssertExistsWithConnection(
+                databaseName,
                 ModelHelpers.SimpleConnectionStringWithCredentials(
-                    DatabaseName, username, Password, persistSecurityInfo), openConnection);
+                    databaseName, username, Password, persistSecurityInfo), openConnection);
         }
 
-        private void ExistsTestNoMasterWithConnection(string username, bool persistSecurityInfo, bool openConnection)
+        private void ExistsTestNoMasterWithConnection(string databaseName, string username, bool persistSecurityInfo, bool openConnection)
         {
             var interceptor = new NoMasterInterceptor();
             try
@@ -277,8 +506,9 @@ namespace System.Data.Entity.SqlServer
                 DbInterception.Add(interceptor);
 
                 AssertExistsWithConnection(
+                    databaseName,
                     ModelHelpers.SimpleConnectionStringWithCredentials(
-                        DatabaseName, username, Password, persistSecurityInfo), openConnection);
+                        databaseName, username, Password, persistSecurityInfo), openConnection);
             }
             finally
             {
@@ -310,18 +540,11 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private static void AssertExists(string connectionString)
+        private static void AssertExists(string databaseName, string connectionString)
         {
             using (var context = ExistsContext.Create(connectionString))
             {
-                context.Database.Initialize(force: false);
-
-                Assert.True(context.InitializerCalled);
-                Assert.True(context.Exists);
-
-                context.SetDefaultInitializer();
-                context.Database.Initialize(force: true);
-                context.Database.Initialize(force: true);
+                AssertExists(databaseName, context);
             }
         }
 
@@ -336,7 +559,7 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private static void AssertExistsWithConnection(string connectionString, bool openConnection)
+        private static void AssertExistsWithConnection(string databaseName, string connectionString, bool openConnection)
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -347,17 +570,45 @@ namespace System.Data.Entity.SqlServer
 
                 using (var context = ExistsContext.Create(connection))
                 {
-                    context.Database.Initialize(force: false);
-
-                    Assert.True(context.InitializerCalled);
-                    Assert.True(context.Exists);
-
-                    context.SetDefaultInitializer();
-                    context.Database.Initialize(force: true);
-                    context.Database.Initialize(force: true);
+                    AssertExists(databaseName, context);
                 }
 
                 connection.Close();
+            }
+        }
+
+        private static void AssertExists(string databaseName, ExistsContext context)
+        {
+            context.Database.Initialize(force: false);
+
+            Assert.True(context.InitializerCalled);
+            Assert.True(context.Exists);
+
+            if (databaseName == DatabaseWithMigrationHistory)
+            {
+                context.SetDropCreateIfNotExists();
+                context.Database.Initialize(force: true);
+                context.Database.Initialize(force: true);
+
+                context.SetDropCreateIfModelChanges();
+                context.Database.Initialize(force: true);
+                context.Database.Initialize(force: true);
+            }
+            else if (databaseName == DatabaseWithoutMigrationHistory)
+            {
+                context.SetDropCreateIfNotExists();
+                context.Database.Initialize(force: true);
+                context.Database.Initialize(force: true);
+
+                context.SetDropCreateIfModelChanges();
+                Assert.Throws<NotSupportedException>(() => context.Database.Initialize(force: true))
+                    .ValidateMessage("Database_NoDatabaseMetadata");
+            }
+            else if (databaseName == DatabaseOutOfDate)
+            {
+                context.SetDropCreateIfNotExists();
+                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: true))
+                    .ValidateMessage("DatabaseInitializationStrategy_ModelMismatch", context.GetType().Name);
             }
         }
 
@@ -382,19 +633,29 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private static void EnsureDatabaseExists()
+        private static void EnsureDatabaseExists(string databaseName, bool drophistoryTable, bool outOfDate)
         {
-            using (var context = new ExistsContext(SimpleConnectionString(DatabaseName)))
+            using (var context = outOfDate
+                ? new ExistsContextModelChanged(SimpleConnectionString(databaseName))
+                : new ExistsContext(SimpleConnectionString(databaseName)))
             {
                 if (!context.Database.Exists())
                 {
                     context.Database.Create();
-                    context.Database.ExecuteSqlCommand("drop table " + HistoryContext.DefaultTableName);
+
+                    if (drophistoryTable)
+                    {
+                        context.Database.ExecuteSqlCommand("DROP TABLE " + HistoryContext.DefaultTableName);
+                    }
+                    else
+                    {
+                        context.Database.ExecuteSqlCommand(@"UPDATE __MigrationHistory SET ContextKey = 'TestContextKey'");
+                    }
                 }
             }
         }
 
-        private void EnsureUserExists(string username, bool allowMasterQuery)
+        private void EnsureUserExists(string databaseName, string username, bool allowMasterQuery)
         {
             using (var connection = new SqlConnection(SimpleConnectionString("master")))
             {
@@ -425,7 +686,7 @@ namespace System.Data.Entity.SqlServer
                 connection.Close();
             }
 
-            using (var connection = new SqlConnection(SimpleConnectionString(DatabaseName)))
+            using (var connection = new SqlConnection(SimpleConnectionString(databaseName)))
             {
                 connection.Open();
 
@@ -437,6 +698,7 @@ namespace System.Data.Entity.SqlServer
                 {
                     ExecuteNonQuery(connection, "CREATE USER [{0}] FROM LOGIN [{0}]", username);
                     ExecuteNonQuery(connection, "GRANT VIEW DEFINITION TO [{0}]", username);
+                    ExecuteNonQuery(connection, "GRANT SELECT TO [{0}]", username);
                 }
 
                 connection.Close();
@@ -579,7 +841,7 @@ namespace System.Data.Entity.SqlServer
         {
             public bool InitializerCalled { get; set; }
             public bool Exists { get; set; }
-            
+
             private static int _typeCount;
 
             static ExistsContext()
@@ -590,11 +852,24 @@ namespace System.Data.Entity.SqlServer
             public ExistsContext(string connectionString)
                 : base(connectionString)
             {
+                SetContextKey();
             }
 
             public ExistsContext(DbConnection connection)
                 : base(connection, contextOwnsConnection: false)
             {
+                SetContextKey();
+            }
+
+            private void SetContextKey()
+            {
+                var internalContext = typeof(DbContext)
+                    .GetField("_internalContext", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(this);
+
+                internalContext.GetType().BaseType
+                    .GetField("_defaultContextKey", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .SetValue(internalContext, "TestContextKey");
             }
 
             public DbSet<ExistsEntity> Entities { get; set; }
@@ -623,16 +898,49 @@ namespace System.Data.Entity.SqlServer
                 return typeof(ExistsContext<>).MakeGenericType(typeof(Tuple<,,,,,,,>).MakeGenericType(typeBits));
             }
 
-            public virtual void SetDefaultInitializer()
+            public virtual void SetDropCreateIfNotExists()
+            {
+                throw new NotImplementedException();
+            }
+
+            public virtual void SetDropCreateIfModelChanges()
             {
                 throw new NotImplementedException();
             }
         }
 
+        public class ExistsContextModelChanged : ExistsContext
+        {
+            static ExistsContextModelChanged()
+            {
+                Database.SetInitializer<ExistsContextModelChanged>(null);
+            }
+
+            public ExistsContextModelChanged(string connectionString)
+                : base(connectionString)
+            {
+            }
+
+            public ExistsContextModelChanged(DbConnection connection)
+                : base(connection)
+            {
+            }
+
+            public DbSet<ModelChangedEntity> ModelChangedEntities { get; set; }
+        }
+
         public class ExistsContext<T> : ExistsContext
         {
             private static readonly ExistsInitializer<T> _initializer = new ExistsInitializer<T>();
-            private static readonly CreateDatabaseIfNotExists<ExistsContext<T>> _defaultInitializer = new CreateDatabaseIfNotExists<ExistsContext<T>>();
+
+            private static readonly CreateDatabaseIfNotExists<ExistsContext<T>> _dropCreateIfNotExists
+                = new CreateDatabaseIfNotExists<ExistsContext<T>>();
+
+            private static readonly DropCreateDatabaseIfModelChanges<ExistsContext<T>> _dropCreateIfModelChanges
+                = new DropCreateDatabaseIfModelChanges<ExistsContext<T>>();
+
+            private static readonly DropCreateDatabaseAlways<ExistsContext<T>> _dropCreateAlways
+                = new DropCreateDatabaseAlways<ExistsContext<T>>();
 
             static ExistsContext()
             {
@@ -649,9 +957,14 @@ namespace System.Data.Entity.SqlServer
             {
             }
 
-            public override void SetDefaultInitializer()
+            public override void SetDropCreateIfNotExists()
             {
-                Database.SetInitializer(_defaultInitializer);
+                Database.SetInitializer(_dropCreateIfNotExists);
+            }
+
+            public override void SetDropCreateIfModelChanges()
+            {
+                Database.SetInitializer(_dropCreateIfModelChanges);
             }
         }
 
@@ -673,6 +986,11 @@ namespace System.Data.Entity.SqlServer
         }
 
         public class ExistsEntity
+        {
+            public int Id { get; set; }
+        }
+
+        public class ModelChangedEntity
         {
             public int Id { get; set; }
         }

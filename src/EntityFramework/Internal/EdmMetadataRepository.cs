@@ -4,29 +4,51 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
     using System.Data.Entity.Core;
+    using System.Diagnostics;
     using System.Linq;
 
     internal class EdmMetadataRepository : RepositoryBase
     {
-        public EdmMetadataRepository(string connectionString, DbProviderFactory providerFactory)
-            : base(connectionString, providerFactory)
+        private readonly DbTransaction _existingTransaction;
+
+        public EdmMetadataRepository(InternalContext usersContext, string connectionString, DbProviderFactory providerFactory)
+            : base(usersContext, connectionString, providerFactory)
         {
+            _existingTransaction = usersContext.TryGetCurrentStoreTransaction();
         }
 
-        public virtual string QueryForModelHash(Func<EdmMetadataContext> createContext)
+        public virtual string QueryForModelHash(Func<DbConnection, EdmMetadataContext> createContext)
         {
-            using (var metadataContext = createContext())
+            var connection = CreateConnection();
+            try
             {
-                try
+                using (var metadataContext = createContext(connection))
                 {
-                    var edmMetadata =
-                        metadataContext.Metadata.AsNoTracking().OrderByDescending(m => m.Id).FirstOrDefault();
-                    return edmMetadata != null ? edmMetadata.ModelHash : null;
+                    if (_existingTransaction != null)
+                    {
+                        Debug.Assert(_existingTransaction.Connection == connection);
+
+                        if (_existingTransaction.Connection == connection)
+                        {
+                            metadataContext.Database.UseTransaction(_existingTransaction);
+                        }
+                    }
+
+                    try
+                    {
+                        var edmMetadata =
+                            metadataContext.Metadata.AsNoTracking().OrderByDescending(m => m.Id).FirstOrDefault();
+                        return edmMetadata != null ? edmMetadata.ModelHash : null;
+                    }
+                    catch (EntityCommandExecutionException)
+                    {
+                        return null;
+                    }
                 }
-                catch (EntityCommandExecutionException)
-                {
-                    return null;
-                }
+            }
+            finally
+            {
+                DisposeConnection(connection);
             }
         }
     }

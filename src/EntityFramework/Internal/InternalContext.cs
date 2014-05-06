@@ -9,6 +9,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
@@ -123,6 +124,8 @@ namespace System.Data.Entity.Internal
         private bool? _migrationsConfigurationDiscovered;
 
         private DbContextInfo _contextInfo;
+
+        private string _defaultContextKey;
 
         protected InternalContext(DbContext owner, Lazy<DbDispatchers> dispatchers = null)
         {
@@ -287,11 +290,8 @@ namespace System.Data.Entity.Internal
         // <returns> The model hash, or null if not found. </returns>
         public virtual string QueryForModelHash()
         {
-            var repository = new EdmMetadataRepository(OriginalConnectionString, ProviderFactory);
-            return repository.QueryForModelHash(
-                    () => Connection.State == ConnectionState.Open
-                        ? new EdmMetadataContext(Connection, contextOwnsConnection: false)
-                        : new EdmMetadataContext(repository.CreateConnection(), contextOwnsConnection: true));
+            var repository = new EdmMetadataRepository(this, OriginalConnectionString, ProviderFactory);
+            return repository.QueryForModelHash(c => new EdmMetadataContext(c));
         }
 
         // <summary>
@@ -328,6 +328,7 @@ namespace System.Data.Entity.Internal
             DiscoverMigrationsConfiguration();
 
             return new HistoryRepository(
+                this,
                 OriginalConnectionString,
                 ProviderFactory,
                 _migrationsConfiguration().ContextKey,
@@ -336,6 +337,13 @@ namespace System.Data.Entity.Internal
                 schemas: DefaultSchema != null ? new[] { DefaultSchema } : Enumerable.Empty<string>(),
                 contextForInterception: Owner,
                 initialExistence: existenceState);
+        }
+
+        public virtual DbTransaction TryGetCurrentStoreTransaction()
+        {
+            var entityTransaction = ((EntityConnection)GetObjectContextWithoutDatabaseInitialization().Connection).CurrentTransaction;
+         
+            return entityTransaction != null ? entityTransaction.StoreTransaction : null;
         }
 
         // <summary>
@@ -1459,10 +1467,8 @@ namespace System.Data.Entity.Internal
         // </summary>
         public string DefaultContextKey
         {
-            get
-            {
-                return OwnerShortTypeName;
-            }
+            get { return _defaultContextKey ?? OwnerShortTypeName; }
+            set { _defaultContextKey = value; }
         }
 
         public DbMigrationsConfiguration MigrationsConfiguration

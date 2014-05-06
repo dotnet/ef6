@@ -21,10 +21,10 @@ namespace System.Data.Entity.Internal
             DbInterception.Add(dbConnectionInterceptorMock.Object);
             try
             {
-                var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
                 var mockContext = CreateMockContext("Hash");
+                var repository = new EdmMetadataRepository(Mock.Of<InternalContextForMock>(), "Database=Foo", SqlClientFactory.Instance);
 
-                repository.QueryForModelHash(() => mockContext.Object);
+                repository.QueryForModelHash(c => mockContext.Object);
             }
             finally
             {
@@ -42,52 +42,52 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void QueryForModelHash_returns_the_model_hash_if_it_exists()
         {
-            var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
+            var repository = new EdmMetadataRepository(Mock.Of<InternalContextForMock>(), "Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext("Hash");
 
-            Assert.Equal("Hash", repository.QueryForModelHash(() => mockContext.Object));
+            Assert.Equal("Hash", repository.QueryForModelHash(c => mockContext.Object));
         }
 
         [Fact]
         public void QueryForModelHash_returns_the_last_model_hash_if_more_than_one_exists()
         {
-            var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
+            var repository = new EdmMetadataRepository(Mock.Of<InternalContextForMock>(), "Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext("Hash1", "Hash2", "Hash3");
 
-            Assert.Equal("Hash3", repository.QueryForModelHash(() => mockContext.Object));
+            Assert.Equal("Hash3", repository.QueryForModelHash(c => mockContext.Object));
         }
 
         [Fact]
         public void QueryForModelHash_returns_null_if_the_EdmMetadata_table_is_missing()
         {
-            var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
+            var repository = new EdmMetadataRepository(Mock.Of<InternalContextForMock>(), "Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext("Hash");
             mockContext.Setup(m => m.Metadata).Throws(new EntityCommandExecutionException());
 
-            Assert.Null(repository.QueryForModelHash(() => mockContext.Object));
+            Assert.Null(repository.QueryForModelHash(c => mockContext.Object));
         }
 
         [Fact]
         public void QueryForModelHash_returns_null_if_the_EdmMetadata_has_no_rows()
         {
-            var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
+            var repository = new EdmMetadataRepository(Mock.Of<InternalContextForMock>(), "Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext();
 
-            Assert.Null(repository.QueryForModelHash(() => mockContext.Object));
+            Assert.Null(repository.QueryForModelHash(c => mockContext.Object));
         }
 
         [Fact]
         public void QueryForModelHash_returns_null_if_the_EdmMetadata_has_row_with_null_model_hash()
         {
-            var repository = new EdmMetadataRepository("Database=Foo", SqlClientFactory.Instance);
+            var repository = new EdmMetadataRepository(Mock.Of<InternalContextForMock>(), "Database=Foo", SqlClientFactory.Instance);
             var mockContext = CreateMockContext((string)null);
 
-            Assert.Null(repository.QueryForModelHash(() => mockContext.Object));
+            Assert.Null(repository.QueryForModelHash(c => mockContext.Object));
         }
 
         private Mock<EdmMetadataContext> CreateMockContext(params string[] hashValues)
         {
-            var mockContext = new Mock<EdmMetadataContext>(new Mock<DbConnection>().Object, true)
+            var mockContext = new Mock<EdmMetadataContext>(new Mock<DbConnection>().Object)
                                   {
                                       CallBase = true
                                   };

@@ -29,6 +29,7 @@ namespace System.Data.Entity.SqlServerCompact
 
             var historyRepository
                 = new HistoryRepository(
+                    Mock.Of<InternalContextForMock>(),
                     new SqlCeConnectionFactory(providerInvariantName)
                         .CreateConnection("Foo").ConnectionString,
                     DbProviderFactories.GetFactory(providerInvariantName),

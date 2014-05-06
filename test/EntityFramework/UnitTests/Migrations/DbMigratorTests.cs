@@ -95,7 +95,7 @@ namespace System.Data.Entity.Migrations
 
         private static void DropMigrationHistoryAndAddEdmMetadata(DbConnection connection, string hash)
         {
-            using (var poker = new EdmMetadataContext(connection, contextOwnsConnection: false))
+            using (var poker = new EdmMetadataContext(connection))
             {
                 poker.Database.ExecuteSqlCommand("drop table " + HistoryContext.DefaultTableName);
 

@@ -16,8 +16,8 @@ namespace System.Data.Entity.Internal
             Database.SetInitializer<EdmMetadataContext>(null);
         }
 
-        public EdmMetadataContext(DbConnection existingConnection, bool contextOwnsConnection)
-            : base(existingConnection, contextOwnsConnection)
+        public EdmMetadataContext(DbConnection existingConnection)
+            : base(existingConnection, contextOwnsConnection: false)
         {
         }
 
