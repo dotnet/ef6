@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata schemaVersion="2">
+    <id>EntityFramework.CodeTemplates.CSharp</id>
+    <version>$NuGetPackageVersion$</version>
+    <title>EntityFramework.CodeTemplates.CSharp</title>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</iconUrl>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <tags>Microsoft EF</tags>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=$ProjectUrlFwLinkID$</projectUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=$LicenseUrlFwLinkID$</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Adds the templates that EF uses to generate Code First models from a database so that code generation can be customized.</description>
+    <summary>Adds the templates that EF uses to generate Code First models from a database so that code generation can be customized.</summary>
+    <language>en-US</language>
+  </metadata>
+</package>

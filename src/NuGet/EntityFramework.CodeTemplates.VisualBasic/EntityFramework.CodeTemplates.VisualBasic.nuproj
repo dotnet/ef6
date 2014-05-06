@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
+  <PropertyGroup>
+    <NuGetPackSymbols>false</NuGetPackSymbols>
+    <NuSpecFile>EntityFramework.CodeTemplates.VisualBasic.nuspec</NuSpecFile>
+    <IntermediateOutputPath Condition="'$(IntermediateOutputPath)' == ''">obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <NuGetContent Include="$(IntermediateOutputPath)Content\**\*">
+      <Destination>content\%(RecursiveDir)</Destination>
+    </NuGetContent>
+  </ItemGroup>
+  <Import Project="$(RepositoryRoot)Tools\NuGetProj.targets"/>
+  <PropertyGroup>
+    <BuildDependsOn>CopyTemplates;$(BuildDependsOn)</BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="CopyTemplates">
+    <PropertyGroup>
+      <TemplateSourceFolder>..\..\EFTools\EntityDesign\CodeGeneration\Generators\GeneratedCode\</TemplateSourceFolder>
+      <TemplateTargetFolder>$(IntermediateOutputPath)Content\CodeTemplates\EFModelFromDatabase\</TemplateTargetFolder>
+    </PropertyGroup>
+    <MakeDir Directories="$(TemplateTargetFolder)" />
+    <Copy
+      SourceFiles="$(TemplateSourceFolder)DefaultVBContextGenerator.tt"
+      DestinationFiles="$(TemplateTargetFolder)Context.vb.t4" />
+    <Copy
+      SourceFiles="$(TemplateSourceFolder)DefaultVBEntityTypeGenerator.tt"
+      DestinationFiles="$(TemplateTargetFolder)EntityType.vb.t4" />
+  </Target>
+</Project>
