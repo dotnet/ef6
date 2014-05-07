@@ -177,7 +177,7 @@
       <DefineConstants>$(DefineConstants);AssemblyVersion=$(AssemblyVersion);AssemblyInfoVersion=$(AssemblyInfoVersion)</DefineConstants>
       <DefineConstants>$(DefineConstants);VisualStudioVersion=$(VisualStudioVersion);MajorVisualStudioVersion=$(VisualStudioVersion.Substring(0, 2))</DefineConstants>
       <DefineConstants>$(DefineConstants);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
-      <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath=$(AssemblyPath45)</DefineConstants>
+      <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath45=$(AssemblyPath45)</DefineConstants>
       <DefineConstants>$(DefineConstants);SatelliteAssemblyPath=$(SatelliteAssemblyPath);LocOutputPath=$(LocOutputPath)</DefineConstants>
       <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts)</DefineConstants>
       <DefineConstants Condition="'$(ShouldUseFrozenRuntime)' == 'True'">$(DefineConstants);FrozenRuntimeDir=$(FrozenRuntimeDir)</DefineConstants>
