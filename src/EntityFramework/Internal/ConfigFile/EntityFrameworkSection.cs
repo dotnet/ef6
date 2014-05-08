@@ -15,6 +15,7 @@ namespace System.Data.Entity.Internal.ConfigFile
         private const string ProviderKey = "providers";
         private const string ConfigurationTypeKey = "codeConfigurationType";
         private const string InterceptorsKey = "interceptors";
+        private const string QueryCacheKey = "queryCache";
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [ConfigurationProperty(DefaultConnectionFactoryKey)]
@@ -47,6 +48,13 @@ namespace System.Data.Entity.Internal.ConfigFile
         public virtual InterceptorsCollection Interceptors
         {
             get { return (InterceptorsCollection)base[InterceptorsKey]; }
+        }
+
+        [ConfigurationProperty(QueryCacheKey)]
+        public virtual QueryCacheElement QueryCache
+        {
+            get { return (QueryCacheElement)this[QueryCacheKey]; }
+            set { this[QueryCacheKey] = value; }
         }
     }
 }

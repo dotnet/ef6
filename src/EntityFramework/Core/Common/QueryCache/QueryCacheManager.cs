@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -17,27 +18,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
     // </remarks>
     internal class QueryCacheManager : IDisposable
     {
-        #region Constants/Default values for configuration parameters
-
-        // <summary>
-        // Default Soft maximum number of entries in the cache
-        // Default value: 1000
-        // </summary>
-        private const int DefaultMaxNumberOfEntries = 1000;
-
-        // <summary>
-        // Default high mark for starting sweeping process
-        // default value: 80% of MaxNumberOfEntries
-        // </summary>
-        private const float DefaultHighMarkPercentageFactor = 0.8f; // 80% of MaxLimit
-
-        // <summary>
-        // Recycler timer period
-        // </summary>
-        private const int DefaultRecyclerPeriodInMilliseconds = 60 * 1000;
-
-        #endregion
-
         #region Fields
 
         // <summary>
@@ -77,7 +57,15 @@ namespace System.Data.Entity.Core.Common.QueryCache
         // </returns>
         internal static QueryCacheManager Create()
         {
-            return new QueryCacheManager(DefaultMaxNumberOfEntries, DefaultHighMarkPercentageFactor, DefaultRecyclerPeriodInMilliseconds);
+            var configuration = AppConfig.DefaultInstance
+                .QueryCache;
+
+            const float loadFactor = 0.8f;
+
+            var size = configuration.GetQueryCacheSize();
+            var cleaningIntervalInSeconds = configuration.GetCleaningIntervalInSeconds();
+
+            return new QueryCacheManager(size, loadFactor,cleaningIntervalInSeconds);
         }
 
         // <summary>

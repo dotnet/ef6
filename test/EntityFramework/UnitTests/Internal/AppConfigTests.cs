@@ -297,6 +297,43 @@ namespace System.Data.Entity.Internal
                 Assert.Empty(new AppConfig(new ConnectionStringSettingsCollection(), null, null).Interceptors);
             }
         }
+
+        public class QueryCache : TestBase
+        {
+            [Fact]
+            public void QueryCache_return_registered_values()
+            {
+                var mockEFSection = new Mock<EntityFrameworkSection>();
+                mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
+                mockEFSection.Setup(m => m.QueryCache)
+                    .Returns(new QueryCacheElement() { Size = 800, CleaningIntervalInSeconds = 10 });
+
+                Assert.Equal(
+                    800,
+                    new AppConfig(new ConnectionStringSettingsCollection(),null,mockEFSection.Object).QueryCache.GetQueryCacheSize());
+
+                Assert.Equal(
+                    10,
+                    new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).QueryCache.GetCleaningIntervalInSeconds());
+            }
+
+            [Fact]
+            public void QueryCache_return_default_values_if_element_is_empty()
+            {
+                var mockEFSection = new Mock<EntityFrameworkSection>();
+                mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
+                mockEFSection.Setup(m => m.QueryCache)
+                    .Returns(new QueryCacheElement());
+
+                Assert.Equal(
+                    1000,
+                    new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).QueryCache.GetQueryCacheSize());
+
+                Assert.Equal(
+                    60*1000,
+                    new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).QueryCache.GetCleaningIntervalInSeconds());
+            }
+        }
     }
 
     #region Fake connection factories

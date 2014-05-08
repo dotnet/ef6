@@ -241,7 +241,35 @@ namespace System.Data.Entity.Internal.ConfigFile
                         Strings.ContextConfiguredMultipleTimes("MyContext")));
             }
         }
+        public class QueryCache
+        {
+            [Fact]
+            public void QueryCache_return_the_configured_query_cache_parameters()
+            {
+                var config = CreateConfig(
+                    @"<entityFramework>
+                        <queryCache size='1000' cleaningIntervalInSeconds='60'/>
+                      </entityFramework>");
 
+                var ef = (EntityFrameworkSection)config.GetSection("entityFramework");
+
+                Assert.Equal(1000, ef.QueryCache.Size);
+                Assert.Equal(60, ef.QueryCache.CleaningIntervalInSeconds);
+            }
+
+            [Fact]
+            public void QueryCache_return_default_values_if_element_is_not_present()
+            {
+                var config = CreateConfig(
+                    @"<entityFramework>
+                      </entityFramework>");
+
+                var ef = (EntityFrameworkSection)config.GetSection("entityFramework");
+
+                Assert.Equal(default(Int32), ef.QueryCache.Size);
+                Assert.Equal(default(Int32), ef.QueryCache.CleaningIntervalInSeconds);
+            }
+        }
         public class Providers
         {
             [Fact]
@@ -290,6 +318,8 @@ namespace System.Data.Entity.Internal.ConfigFile
                         Strings.ProviderInvariantRepeatedInConfig("My.Invariant1")));
             }
         }
+
+
 
         private static Configuration CreateConfig(string efSection)
         {

@@ -337,7 +337,9 @@
     <Compile Include="Infrastructure\Transactions\TransactionRow.cs" />
     <Compile Include="Internal\ConfigFile\InterceptorElement.cs" />
     <Compile Include="Internal\ConfigFile\InterceptorsCollection.cs" />
+    <Compile Include="Internal\ConfigFile\QueryCacheElement.cs" />
     <Compile Include="Internal\DatabaseExistenceState.cs" />
+    <Compile Include="Internal\QueryCacheConfig.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Migrations\Infrastructure\VersionedModel.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />

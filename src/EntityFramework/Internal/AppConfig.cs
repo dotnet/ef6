@@ -177,5 +177,10 @@ namespace System.Data.Entity.Internal
         {
             get { return _entityFrameworkSettings.Interceptors.Interceptors; }
         }
+
+        public virtual QueryCacheConfig QueryCache
+        {
+            get { return new QueryCacheConfig(_entityFrameworkSettings); }
+        }
     }
 }
