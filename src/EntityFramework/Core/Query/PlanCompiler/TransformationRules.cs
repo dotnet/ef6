@@ -161,6 +161,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     deferredRules = new List<Rule>();
                     deferredRules.Add(FilterOpRules.Rule_FilterOverLeftOuterJoin);
                     deferredRules.Add(FilterOpRules.Rule_FilterOverOuterApply);
+                    deferredRules.AddRange(ApplyOpRules.Rules);
+                    deferredRules.AddRange(JoinOpRules.Rules);
                 }
                 return deferredRules;
             }

@@ -688,12 +688,11 @@ namespace System.Data.Entity.Query
     [Extent1].[Id] AS [Id], 
     [Extent1].[Group] AS [Group]
     FROM  [dbo].[Orders] AS [Extent1]
-    CROSS APPLY  (SELECT [Extent2].[Group] AS [Group]
+    INNER JOIN  (SELECT [Extent2].[Group] AS [Group], [Extent4].[Id] AS [Id1]
         FROM   [dbo].[Orders] AS [Extent2]
         LEFT OUTER JOIN [dbo].[Invoices] AS [Extent3] ON [Extent2].[Id] = [Extent3].[Id]
-        INNER JOIN [dbo].[Invoices] AS [Extent4] ON [Extent4].[Id] = [Extent3].[Id]
-        WHERE [Extent1].[Id] = [Extent4].[Id] ) AS [Filter1]
-    WHERE [Filter1].[Group] < 10");
+        INNER JOIN [dbo].[Invoices] AS [Extent4] ON [Extent4].[Id] = [Extent3].[Id] ) AS [Join2] ON [Extent1].[Id] = [Join2].[Id1]
+    WHERE [Join2].[Group] < 10");
 
                     Assert.Equal(0, query.Count());
                 }
