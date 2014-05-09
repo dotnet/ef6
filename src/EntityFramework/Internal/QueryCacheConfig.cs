@@ -8,7 +8,7 @@ namespace System.Data.Entity.Internal
     internal class QueryCacheConfig
     {
         private const int DefaultSize = 1000;
-        private const int DefaultCleaningIntervalInSeconds = 60 * 1000;
+        private const int DefaultCleaningIntervalInSeconds = 60;
 
         private readonly EntityFrameworkSection _entityFrameworkSection;
 

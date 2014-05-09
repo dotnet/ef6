@@ -12,14 +12,16 @@ namespace System.Data.Entity.Internal.ConfigFile
         private const string SizeKey = "size";
         private const string CleaningIntervalInSecondsKey = "cleaningIntervalInSeconds";
 
-        [ConfigurationProperty(SizeKey)]
+        [ConfigurationProperty(SizeKey),
+        IntegerValidator(MinValue = 0,MaxValue = Int32.MaxValue)]
         public int Size
         {
             get { return (int)this[SizeKey]; }
             set { this[SizeKey] = value; }
         }
 
-        [ConfigurationProperty(CleaningIntervalInSecondsKey)]
+        [ConfigurationProperty(CleaningIntervalInSecondsKey),
+        IntegerValidator(MinValue = 0, MaxValue = Int32.MaxValue)]
         public int CleaningIntervalInSeconds
         {
             get { return (int)this[CleaningIntervalInSecondsKey]; }

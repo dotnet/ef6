@@ -63,9 +63,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             const float loadFactor = 0.8f;
 
             var size = configuration.GetQueryCacheSize();
-            var cleaningIntervalInSeconds = configuration.GetCleaningIntervalInSeconds();
+            var cleaningInterval = configuration.GetCleaningIntervalInSeconds() * 1000;
 
-            return new QueryCacheManager(size, loadFactor,cleaningIntervalInSeconds);
+            return new QueryCacheManager(size, loadFactor,cleaningInterval);
         }
 
         // <summary>

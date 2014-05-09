@@ -258,6 +258,40 @@ namespace System.Data.Entity.Internal.ConfigFile
             }
 
             [Fact]
+            public void QueryCache_throw_for_size_is_negative()
+            {
+                var config = CreateConfig(
+                    @"<entityFramework>
+                        <queryCache size='-1' cleaningIntervalInSeconds='60'/>
+                      </entityFramework>");
+
+                
+
+                Assert.Throws<ConfigurationErrorsException>(() =>
+                {
+                    var ef = (EntityFrameworkSection)config.GetSection("entityFramework");
+
+                    var size = ef.QueryCache.Size;
+                });
+            }
+
+            [Fact]
+            public void QueryCache_throw_for_cleaningIntervalInSeconds_is_negative_number()
+            {
+                var config = CreateConfig(
+                    @"<entityFramework>
+                        <queryCache size='1000' cleaningIntervalInSeconds='-1'/>
+                      </entityFramework>");
+
+                Assert.Throws<ConfigurationErrorsException>(() =>
+                {
+                    var ef = (EntityFrameworkSection)config.GetSection("entityFramework");
+
+                    var cleaningInterval = ef.QueryCache.CleaningIntervalInSeconds;
+                });
+            }
+
+            [Fact]
             public void QueryCache_return_default_values_if_element_is_not_present()
             {
                 var config = CreateConfig(
