@@ -2856,7 +2856,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var dropPrimaryKeyOperation = operations.OfType<DropPrimaryKeyOperation>().Single();
 
-            Assert.Equal("dbo.OrderLines", dropPrimaryKeyOperation.Table);
+            Assert.Equal("dbo.tbl_OrderLines", dropPrimaryKeyOperation.Table);
             Assert.Equal("Id", dropPrimaryKeyOperation.Columns.Single());
         }
 

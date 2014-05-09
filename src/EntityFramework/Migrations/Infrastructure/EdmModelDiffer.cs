@@ -1517,7 +1517,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation
                 {
-                    Table = GetSchemaQualifiedName(tablePair.Item1)
+                    Table = GetSchemaQualifiedName(tablePair.Item2)
                 };
 
             tablePair.Item1.ElementType.KeyProperties
