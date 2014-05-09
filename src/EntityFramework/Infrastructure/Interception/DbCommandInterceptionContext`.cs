@@ -100,6 +100,15 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
+        /// Gets or sets a value containing arbitrary user-specified state information associated with the operation.
+        /// </summary>
+        public object UserState
+        {
+            get { return _mutableData.UserState; }
+            set { _mutableData.UserState = value; }
+        }
+
+        /// <summary>
         /// Prevents the operation from being executed if called before the operation has executed.
         /// </summary>
         /// <exception cref="InvalidOperationException">

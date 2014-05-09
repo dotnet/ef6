@@ -13,6 +13,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         public bool HasExecuted { get; set; }
         public Exception OriginalException { get; set; }
         public TaskStatus TaskStatus { get; set; }
+        public object UserState { get; set; }
 
         public bool IsExecutionSuppressed
         {

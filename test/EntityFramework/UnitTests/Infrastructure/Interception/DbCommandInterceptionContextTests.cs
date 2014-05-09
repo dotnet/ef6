@@ -88,6 +88,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             var mutableData = ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData;
             mutableData.SetExecuted("Wensleydale");
             mutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
+            mutableData.UserState = new object();
 
             interceptionContext = interceptionContext
                 .WithDbContext(dbContext)
@@ -104,6 +105,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
+            Assert.Null(interceptionContext.UserState);
             Assert.False(interceptionContext.IsExecutionSuppressed);
         }
 
@@ -124,6 +126,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
+            Assert.Null(interceptionContext.UserState);
             Assert.False(interceptionContext.IsExecutionSuppressed);
 
             ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData.SetExecuted("Wensleydale");
@@ -132,15 +135,20 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
+            Assert.Null(interceptionContext.UserState);
             Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Result = "Double Gloucester";
+            interceptionContext.UserState = "Cheddar";
             Assert.Equal("Double Gloucester", interceptionContext.Result);
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
+            Assert.Equal("Cheddar", interceptionContext.UserState);
             Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Result = null;
+            interceptionContext.UserState = null;
             Assert.Null(interceptionContext.Result);
+            Assert.Null(interceptionContext.UserState);
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
             Assert.False(interceptionContext.IsExecutionSuppressed);
         }

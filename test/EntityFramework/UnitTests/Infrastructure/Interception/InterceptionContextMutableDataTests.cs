@@ -159,5 +159,25 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.True(data.HasExecuted);
             Assert.False(data.IsExecutionSuppressed);
         }
+
+        [Fact]
+        public void UserState_can_be_changed()
+        {
+            var data = new InterceptionContextMutableData();
+
+            Assert.Null(data.UserState);
+
+            var firstUserState = new object();
+
+            data.UserState = firstUserState;
+
+            Assert.Same(firstUserState, data.UserState);
+
+            var secondUserState = new object();
+
+            data.UserState = secondUserState;
+
+            Assert.Same(secondUserState, data.UserState);
+        }
     }
 }
