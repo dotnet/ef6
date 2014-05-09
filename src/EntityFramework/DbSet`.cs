@@ -303,7 +303,11 @@ namespace System.Data.Entity
         /// context.Blogs.SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <param name="sql"> The SQL query string. </param>
-        /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
+        /// <param name="parameters"> 
+        /// The parameters to apply to the SQL query string. If output parameters are used, their values will 
+        /// not be available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A <see cref="DbSqlQuery{TEntity}" /> object that will execute the query when it is enumerated.
         /// </returns>

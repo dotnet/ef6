@@ -3494,7 +3494,9 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
         /// <param name="parameters">
-        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects. If output parameters are used, 
+        /// their values will not be available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
         /// </param>
         /// <typeparam name="TElement">
         /// The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
@@ -3525,7 +3527,9 @@ namespace System.Data.Entity.Core.Objects
         /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query.
         /// </param>
         /// <param name="parameters">
-        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects. If output parameters are used, 
+        /// their values will not be available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
         /// </param>
         /// <typeparam name="TElement">
         /// The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
@@ -3551,7 +3555,11 @@ namespace System.Data.Entity.Core.Objects
         /// Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
         /// </param>
         /// <param name="executionOptions"> The options for executing this function. </param>
-        /// <param name="parameters"> The parameter values to use for the function. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the function. If output parameters are used, their values 
+        /// will not be available until the results have been read completely. This is due to the underlying 
+        /// behavior of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>An object representing the result of executing this function.</returns>
         /// <exception cref="ArgumentException"> If function is null or empty </exception>
         /// <exception cref="InvalidOperationException">
@@ -3603,7 +3611,9 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of rows affected.</returns>
         /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
         /// <param name="parameters">
-        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects. If output parameters are used, 
+        /// their values will not be available until the results have been read completely. This is due to the underlying 
+        /// behavior of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
         /// </param>
         /// <exception cref="T:System.ArgumentException"> function  is null or empty or function  is not found.</exception>
         /// <exception cref="T:System.InvalidOperationException">The entity reader does not support this  function or there is a type mismatch on the reader and the  function .</exception>
@@ -4236,7 +4246,11 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
@@ -4259,7 +4273,11 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="executionOptions"> The options for executing this query. </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior of 
+        /// DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
@@ -4287,7 +4305,11 @@ namespace System.Data.Entity.Core.Objects
         /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. The default is
         /// <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
@@ -4313,7 +4335,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="executionOptions"> The options for executing this query. </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
@@ -4439,7 +4465,11 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
@@ -4469,7 +4499,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="cancellationToken">
         /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
@@ -4503,7 +4537,11 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="executionOptions"> The options for executing this query. </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
@@ -4536,7 +4574,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="cancellationToken">
         /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
@@ -4576,7 +4618,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="executionOptions"> The options for executing this query. </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
@@ -4609,7 +4655,11 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="cancellationToken">
         /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
-        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <param name="parameters"> 
+        /// The parameter values to use for the query. If output parameters are used, their values will not be 
+        /// available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .

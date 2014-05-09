@@ -448,7 +448,11 @@ namespace System.Data.Entity
         /// </summary>
         /// <typeparam name="TElement"> The type of object returned by the query. </typeparam>
         /// <param name="sql"> The SQL query string. </param>
-        /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
+        /// <param name="parameters"> 
+        /// The parameters to apply to the SQL query string. If output parameters are used, their values will 
+        /// not be available until the results have been read completely. This is due to the underlying behavior 
+        /// of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A <see cref="DbRawSqlQuery{TElement}" /> object that will execute the query when it is enumerated.
         /// </returns>
@@ -477,7 +481,11 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name="elementType"> The type of object returned by the query. </param>
         /// <param name="sql"> The SQL query string. </param>
-        /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
+        /// <param name="parameters"> 
+        /// The parameters to apply to the SQL query string. If output parameters are used, their values 
+        /// will not be available until the results have been read completely. This is due to the underlying 
+        /// behavior of DbDataReader, see http://go.microsoft.com/fwlink/?LinkID=398589 for more details.
+        /// </param>
         /// <returns>
         /// A <see cref="DbRawSqlQuery" /> object that will execute the query when it is enumerated.
         /// </returns>
