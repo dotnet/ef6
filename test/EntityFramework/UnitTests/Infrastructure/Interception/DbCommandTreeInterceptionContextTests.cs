@@ -19,6 +19,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.Empty(interceptionContext.DbContexts);
             Assert.Equal(null, interceptionContext.Result);
             Assert.Equal(null, interceptionContext.OriginalResult);
+            Assert.Null(interceptionContext.UserState);
         }
 
         [Fact]
@@ -30,6 +31,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             var interceptionContext = new DbCommandTreeInterceptionContext();
             
             interceptionContext.MutableData.SetExecuted(new Mock<DbCommandTree>().Object);
+            interceptionContext.MutableData.UserState = "Bel Paese";
 
             interceptionContext = interceptionContext
                 .WithDbContext(dbContext)
@@ -42,6 +44,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             Assert.Null(interceptionContext.Result);
             Assert.Null(interceptionContext.OriginalResult);
+            Assert.Null(interceptionContext.UserState);
         }
 
         [Fact]
@@ -58,18 +61,22 @@ namespace System.Data.Entity.Infrastructure.Interception
             var interceptionContext = new DbCommandTreeInterceptionContext();
             Assert.Null(interceptionContext.Result);
             Assert.Null(interceptionContext.OriginalResult);
+            Assert.Null(interceptionContext.UserState);
 
             var commandTree = new Mock<DbCommandTree>().Object;
             interceptionContext.MutableData.SetExecuted(commandTree);
+            interceptionContext.MutableData.UserState = commandTree;
 
             Assert.Same(commandTree, interceptionContext.Result);
             Assert.Same(commandTree, interceptionContext.OriginalResult);
+            Assert.Same(commandTree, interceptionContext.UserState);
           
             var commandTree2 = new Mock<DbCommandTree>().Object;
             interceptionContext.Result = commandTree2;
 
             Assert.Same(commandTree2, interceptionContext.Result);
             Assert.Same(commandTree, interceptionContext.OriginalResult);
+            Assert.Same(commandTree, interceptionContext.UserState);
         }
 
         [Fact]

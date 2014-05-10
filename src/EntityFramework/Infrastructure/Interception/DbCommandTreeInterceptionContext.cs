@@ -78,6 +78,15 @@ namespace System.Data.Entity.Infrastructure.Interception
             set { _mutableData.Result = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value containing arbitrary user-specified state information associated with the operation.
+        /// </summary>
+        public object UserState
+        {
+            get { return _mutableData.UserState; }
+            set { _mutableData.UserState = value; }
+        }
+
         /// <inheritdoc />
         protected override DbInterceptionContext Clone()
         {

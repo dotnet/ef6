@@ -32,6 +32,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Equal(0, interceptionContext.OriginalResult);
                 Assert.Equal(0, interceptionContext.Result);
                 Assert.Equal((TaskStatus)0, interceptionContext.TaskStatus);
+                Assert.Null(interceptionContext.UserState);
             }
 
             [Fact]
@@ -43,6 +44,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var interceptionContext = new DbConnectionInterceptionContext<int>();
                 interceptionContext.Exception = new Exception("Cheez Whiz");
                 interceptionContext.Result = 23;
+                interceptionContext.UserState = "Red Windsor";
 
                 interceptionContext = interceptionContext
                     .WithDbContext(dbContext)
@@ -58,6 +60,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Null(interceptionContext.Exception);
                 Assert.Null(interceptionContext.OriginalException);
                 Assert.False(interceptionContext.IsExecutionSuppressed);
+                Assert.Null(interceptionContext.UserState);
             }
 
             [Fact]
@@ -95,6 +98,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Empty(interceptionContext.ObjectContexts);
                 Assert.Null(interceptionContext.OriginalException);
                 Assert.Equal((TaskStatus)0, interceptionContext.TaskStatus);
+                Assert.Null(interceptionContext.UserState);
             }
 
             [Fact]
@@ -107,6 +111,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 var mutableData = ((IDbMutableInterceptionContext)interceptionContext).MutableData;
                 mutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
+                mutableData.UserState = "Red Leicester";
 
                 interceptionContext = interceptionContext
                     .WithDbContext(dbContext)
@@ -120,6 +125,7 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Null(interceptionContext.Exception);
                 Assert.Null(interceptionContext.OriginalException);
                 Assert.False(interceptionContext.IsExecutionSuppressed);
+                Assert.Null(interceptionContext.UserState);
             }
 
             [Fact]

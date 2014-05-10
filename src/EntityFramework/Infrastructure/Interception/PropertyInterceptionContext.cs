@@ -63,6 +63,15 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
+        /// Gets or sets a value containing arbitrary user-specified state information associated with the operation.
+        /// </summary>
+        public object UserState
+        {
+            get { return _mutableData.UserState; }
+            set { _mutableData.UserState = value; }
+        }
+
+        /// <summary>
         /// Creates a new <see cref="BeginTransactionInterceptionContext" /> that contains all the contextual information in this
         /// interception context together with the given property value.
         /// </summary>
