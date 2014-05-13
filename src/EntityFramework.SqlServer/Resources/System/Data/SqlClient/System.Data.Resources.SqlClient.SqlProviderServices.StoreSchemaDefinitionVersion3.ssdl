@@ -344,11 +344,11 @@
     <EntitySet Name="SForeignKeys" EntityType="Self.ForeignKey">
       <DefiningQuery>
         SELECT
-        quotename(SCHEMA_NAME(fk.schema_id)) + quotename(fk.name) + quotename(cast(fromOrdinal.ORDINAL_POSITION as nvarchar(30))) [Id]
+        quotename(SCHEMA_NAME(fk.schema_id)) + quotename(fk.name) + quotename(cast(fkc.constraint_column_id as nvarchar(30))) [Id]
         ,   quotename(SCHEMA_NAME(toSchema.schema_id)) + quotename(OBJECT_NAME(fk.referenced_object_id)) + quotename(toCol.name) [ToColumnId]
         ,   quotename(SCHEMA_NAME(fromSchema.schema_id)) + quotename(OBJECT_NAME(fk.parent_object_id)) + quotename(fromCol.name) [FromColumnId]
         ,   quotename(SCHEMA_NAME(fk.schema_id)) + quotename(fk.name) [ConstraintId]
-        ,   fromOrdinal.ORDINAL_POSITION [Ordinal]
+        ,   fkc.constraint_column_id [Ordinal]
         FROM
         sys.foreign_keys fk
         INNER JOIN
@@ -357,9 +357,6 @@
         sys.columns toCol ON fkc.referenced_column_id = toCol.column_id AND fkc.referenced_object_id = toCol.object_id /* PRIMARY KEY COLS*/
         INNER JOIN
         sys.columns fromCol ON fkc.parent_column_id = fromCol.column_id AND fkc.parent_object_id = fromCol.object_id /* FOREIGN KEY COLS*/
-        INNER JOIN
-        INFORMATION_SCHEMA.KEY_COLUMN_USAGE fromOrdinal on fk.name = fromOrdinal.CONSTRAINT_NAME
-          AND fromCol.name = fromOrdinal.COLUMN_NAME
         INNER join
         sys.objects toSchema ON toSchema.object_id = fk.referenced_object_id
         INNER JOIN
