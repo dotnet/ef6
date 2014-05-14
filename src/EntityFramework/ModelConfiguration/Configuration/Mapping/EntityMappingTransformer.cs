@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DebugCheck.NotNull(table);
             DebugCheck.NotNull(templateColumn);
 
-            var existingColumn = table.Properties.SingleOrDefault(isCompatible);
+            var existingColumn = table.Properties.FirstOrDefault(isCompatible);
 
             if (existingColumn == null)
             {
@@ -499,7 +499,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static void UpdatePropertyMapping(
-            DbDatabaseMapping databaseMapping,
+            EdmModel database,
+            Dictionary<EdmProperty, IList<ColumnMappingBuilder>> columnMappingIndex,
             ColumnMappingBuilder propertyMappingBuilder,
             EntityType fromTable,
             EntityType toTable,
@@ -507,21 +508,82 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             propertyMappingBuilder.ColumnProperty
                 = TableOperations.CopyColumnAndAnyConstraints(
-                    databaseMapping.Database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, GetPropertyPathMatcher(databaseMapping, propertyMappingBuilder), useExisting);
+                    database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, GetPropertyPathMatcher(columnMappingIndex, propertyMappingBuilder), useExisting);
 
             propertyMappingBuilder.SyncNullabilityCSSpace();
         }
 
-        private static Func<EdmProperty, bool> GetPropertyPathMatcher(DbDatabaseMapping databaseMapping, ColumnMappingBuilder propertyMappingBuilder)
+        private static Func<EdmProperty, bool> GetPropertyPathMatcher(Dictionary<EdmProperty, IList<ColumnMappingBuilder>> columnMappingIndex, ColumnMappingBuilder propertyMappingBuilder)
         {
             return c =>
-                databaseMapping.EntityContainerMappings.Single()
-                    .EntitySetMappings.SelectMany(esm => esm.EntityTypeMappings)
-                    .SelectMany(etm => etm.MappingFragments)
-                    .SelectMany(etmf => etmf.ColumnMappings)
-                    .Any(
-                        pm => pm.PropertyPath.SequenceEqual(propertyMappingBuilder.PropertyPath)
-                              && pm.ColumnProperty == c);
+            {
+                if (!columnMappingIndex.ContainsKey(c)) return false;
+                var columnMappingList = columnMappingIndex[c];
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (var iter = 0; iter < columnMappingList.Count; ++iter)
+                {
+                    var columnMapping = columnMappingList[iter];
+                    if (columnMapping.PropertyPath.PathEqual(propertyMappingBuilder.PropertyPath))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            };
+        }
+
+        private static bool PathEqual(this IList<EdmProperty> listA, IList<EdmProperty> listB)
+        {
+            if (listA == null || listB == null) return false;
+            if (listA.Count != listB.Count) return false;
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var iter = 0; iter < listA.Count; ++iter)
+            {
+                if (listA[iter] != listB[iter]) return false;
+            }
+            return true;
+        }
+
+        private static Dictionary<EdmProperty, IList<ColumnMappingBuilder>> GetColumnMappingIndex(DbDatabaseMapping databaseMapping)
+        {
+            var columnMappingIndex = new Dictionary<EdmProperty, IList<ColumnMappingBuilder>>();
+            var entitySetMappings = databaseMapping.EntityContainerMappings.Single().EntitySetMappings;
+            if (entitySetMappings == null) return columnMappingIndex;
+            var entitySetMappingsList = entitySetMappings.ToList();
+            // ReSharper disable ForCanBeConvertedToForeach
+            for (var entitySetMappingsListIterator = 0; entitySetMappingsListIterator < entitySetMappingsList.Count; ++entitySetMappingsListIterator)
+            {
+                var entityTypeMappings = entitySetMappingsList[entitySetMappingsListIterator].EntityTypeMappings as IList<EntityTypeMapping>;
+                if (entityTypeMappings == null) continue;
+                for (var entityTypeMappingsIterator = 0; entityTypeMappingsIterator < entityTypeMappings.Count; ++entityTypeMappingsIterator)
+                {
+                    var mappingFragments = entityTypeMappings[entityTypeMappingsIterator].MappingFragments as IList<MappingFragment>;
+                    if (mappingFragments == null) continue;
+                    for (var mappingFragmentsIterator = 0; mappingFragmentsIterator < mappingFragments.Count; ++mappingFragmentsIterator)
+                    {
+                        var columnMappings = mappingFragments[mappingFragmentsIterator].ColumnMappings as IList<ColumnMappingBuilder>;
+                        if (columnMappings == null) continue;
+                        // ReSharper disable once LoopCanBeConvertedToQuery
+                        for (var columnMappingsIterator = 0; columnMappingsIterator < columnMappings.Count; ++columnMappingsIterator)
+                        {
+                            var columnMapping = columnMappings[columnMappingsIterator];
+                            IList<ColumnMappingBuilder> columnMappingList = null;
+                            if (columnMappingIndex.ContainsKey(columnMapping.ColumnProperty))
+                            {
+                                columnMappingList = columnMappingIndex[columnMapping.ColumnProperty];
+                            }
+                            else
+                            {
+                                columnMappingIndex.Add(columnMapping.ColumnProperty, columnMappingList = new List<ColumnMappingBuilder>());
+                            }
+                            columnMappingList.Add(columnMapping);
+                        }
+                    }
+                }
+            }
+            // ReSharper enable ForCanBeConvertedToForeach
+            return columnMappingIndex;
         }
 
         public static void UpdatePropertyMappings(
@@ -533,8 +595,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             // move the column from the fromTable to the table in fragment
             if (fromTable != fragment.Table)
             {
+                var columnMappingIndex = GetColumnMappingIndex(databaseMapping);
                 fragment.ColumnMappings.Each(
-                    pm => UpdatePropertyMapping(databaseMapping, pm, fromTable, fragment.Table, useExisting));
+                    pm => UpdatePropertyMapping(databaseMapping.Database, columnMappingIndex, pm, fromTable, fragment.Table, useExisting));
             }
         }
 
@@ -549,7 +612,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             // move the column from the formTable to the table in fragment
             if (requiresUpdate && fromFragment.Table != toFragment.Table)
             {
-                UpdatePropertyMapping(databaseMapping, propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
+                UpdatePropertyMapping(databaseMapping.Database, GetColumnMappingIndex(databaseMapping), propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
             }
 
             // move the propertyMapping
