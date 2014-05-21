@@ -4,13 +4,7 @@
   <PropertyGroup>
     <NuGetPackSymbols>false</NuGetPackSymbols>
     <NuSpecFile>EntityFramework.CodeTemplates.VisualBasic.nuspec</NuSpecFile>
-    <IntermediateOutputPath Condition="'$(IntermediateOutputPath)' == ''">obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
-  <ItemGroup>
-    <NuGetContent Include="$(IntermediateOutputPath)Content\**\*">
-      <Destination>content\%(RecursiveDir)</Destination>
-    </NuGetContent>
-  </ItemGroup>
   <Import Project="$(RepositoryRoot)Tools\NuGetProj.targets"/>
   <PropertyGroup>
     <BuildDependsOn>CopyTemplates;$(BuildDependsOn)</BuildDependsOn>
