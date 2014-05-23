@@ -15,7 +15,9 @@ namespace Microsoft.VisualStudio.TestTools.HostAdapters.VsIde
     /// </summary>
     internal static class RegistrySettings
     {
-#if VS12
+#if VS14
+        internal const string VsRegistryRoot = @"SOFTWARE\Microsoft\VisualStudio\14.0";
+#elif VS12
         internal const string VsRegistryRoot = @"SOFTWARE\Microsoft\VisualStudio\12.0";
 #else
         internal const string VsRegistryRoot = @"SOFTWARE\Microsoft\VisualStudio\11.0";

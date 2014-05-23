@@ -56,7 +56,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
 
             // adjust control sizes
             var colorHintStripWidth = 3;
-#if VS12
+#if VS12ORNEWER
             toolbar.ImageScalingSize = toolbar.ImageScalingSize.LogicalToDeviceUnits();
             foreach (var button in toolbar.Items.OfType<ToolStripButton>())
             {

@@ -17,7 +17,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
-#if VS12
+#if VS12ORNEWER
     using Microsoft.VisualStudio.PlatformUI;
 #endif
 
@@ -74,7 +74,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             imageList.Images.Add("EmptyModelCodeFirst.png", Resources.EmptyModelCodeFirst);
             imageList.Images.Add("CodeFirstFromDatabase.png", Resources.CodeFirstFromDatabase);
 
-#if VS12
+#if VS12ORNEWER
             // scale images as appropriate for screen resolution
             DpiHelper.LogicalToDeviceUnits(ref imageList);
 #endif

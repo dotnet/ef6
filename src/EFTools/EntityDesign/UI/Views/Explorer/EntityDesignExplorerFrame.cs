@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 
-#if VS12
+#if VS12ORNEWER
 using System.Windows.Media;
 using Microsoft.VisualStudio.PlatformUI;
 #endif
@@ -52,7 +52,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
             _putSelectedExplorerItemInRenameModeRequest = new DeferredRequest(PutSelectedItemInRenameMode);
             Loaded += ExplorerFrameLoaded;
 
-#if VS12
+#if VS12ORNEWER
     // set bitmap scaling mode to most appropriate value based on text scaling
             RenderOptions.SetBitmapScalingMode(this, DpiHelper.BitmapScalingMode);
 #endif
@@ -284,8 +284,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
 
         protected override ExplorerContent InitializeExplorerContent()
         {
-#if VS12
-        
+#if VS14
+            var content = FileResourceManager.GetElement("Resources/ExplorerContent_14.0.xaml") as ExplorerContent;
+#elif VS12
             var content = FileResourceManager.GetElement("Resources/ExplorerContent_12.0.xaml") as ExplorerContent;
 #else
 

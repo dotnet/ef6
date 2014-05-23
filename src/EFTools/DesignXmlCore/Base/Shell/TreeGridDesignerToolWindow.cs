@@ -168,7 +168,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
             _treeControl.ForeColor = VSColorTheme.GetThemedColor(TreeViewColors.BackgroundTextColorKey);
 #if VS11
             _treeControl.GridLinesColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTabBorderColorKey);
-#elif VS12
+#else
             _treeControl.GridLinesColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowContentGridColorKey);
 #endif
         }

@@ -50,7 +50,7 @@
   <PropertyGroup>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  <Import Project="$(RepositoryRoot)tools\EFToolsDev12References.settings.targets" Condition="$(VisualStudioVersion)=='12.0'" />
+  <Import Project="$(RepositoryRoot)tools\EFToolsVsReferences.settings.targets" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Activities" />

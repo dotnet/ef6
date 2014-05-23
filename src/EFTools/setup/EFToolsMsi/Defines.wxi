@@ -8,10 +8,15 @@
     <?define FullProductName = !(loc.FullProductName_Dev11)?>
     <?define ProductDescription = !(loc.ProductDescription_Dev11)?>
     <?define ProductVersion = 11.2.$(var.BuildRevisionProductVersion)?>
-  <?else?>
+  <?elseif $(var.VisualStudioVersion) = 12.0?>
     <?define UpgradeCode = {B9BF703A-2405-4A71-AFC5-38F59C11911D}?>
     <?define FullProductName = !(loc.FullProductName_Dev12)?>
     <?define ProductDescription = !(loc.ProductDescription_Dev12)?>
+    <?define ProductVersion = $(var.AssemblyFileVersion)?>
+  <?elseif $(var.VisualStudioVersion) = 14.0?>
+    <?define UpgradeCode = {EEF38802-5975-4564-B920-B94537093BD9}?>
+    <?define FullProductName = !(loc.FullProductName_Dev14)?>
+    <?define ProductDescription = !(loc.ProductDescription_Dev14)?>
     <?define ProductVersion = $(var.AssemblyFileVersion)?>
   <?endif?>
 </Include>

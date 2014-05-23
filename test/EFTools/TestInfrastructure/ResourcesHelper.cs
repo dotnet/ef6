@@ -10,7 +10,12 @@ namespace EFDesignerTestInfrastructure
 
     public class ResourcesHelper
     {
-#if VS12
+#if VS14
+        private static readonly string _vsInstallDir = (string)Registry.GetValue(
+            Registry.LocalMachine + "\\SOFTWARE\\Microsoft\\VisualStudio\\14.0",
+            "InstallDir",
+            null);
+#elif VS12
         private static readonly string _vsInstallDir = (string)Registry.GetValue(
             Registry.LocalMachine + "\\SOFTWARE\\Microsoft\\VisualStudio\\12.0",
             "InstallDir",

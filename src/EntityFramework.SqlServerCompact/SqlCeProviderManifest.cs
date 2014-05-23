@@ -57,8 +57,8 @@ namespace System.Data.Entity.SqlServerCompact
         private const string storeSchemaDescriptionFile =
             "System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
 #endif
-        // This SSDL is being used only at design time. And because SqlServerCe 3.5 is not supported in 
-        // either VS2013 nor VS2012 we don't need a SqlServerCe 3.5 version of this file.
+        // This SSDL is being used only at design time. And because SqlServerCe 3.5 is not supported after
+        // VS2010 we don't need a SqlServerCe 3.5 version of this file.
         private const string storeSchemaDescriptionFileForRDP =
             "Microsoft.SqlServerCe.Client.Resources.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
         // '~' is the same escape character that L2S uses

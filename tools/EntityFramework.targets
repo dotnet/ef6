@@ -13,9 +13,12 @@ Project global post-settings and targets.
     <DefineConstants Condition="'$(InternalsInvisible)' == 'true'">$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
     <DefineConstants Condition="'$(VisualStudioVersion)' == '11.0'">$(DefineConstants);VS11</DefineConstants>
     <DefineConstants Condition="'$(VisualStudioVersion)' == '12.0'">$(DefineConstants);VS12</DefineConstants>
+    <DefineConstants Condition="'$(VisualStudioVersion)' == '14.0'">$(DefineConstants);VS14</DefineConstants>
+    <DefineConstants Condition="'$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">$(DefineConstants);VS12ORNEWER</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'" >
+    <VsSDKDir Condition="'$(VisualStudioVersion)' == '14.0'">$(VSSDK140Install)</VsSDKDir>
     <VsSDKDir Condition="'$(VisualStudioVersion)' == '12.0'">$(VSSDK120Install)</VsSDKDir>
     <VsSDKDir Condition="'$(VisualStudioVersion)' == '11.0'">$(VSSDK110Install)</VsSDKDir>
     <AssemblySearchPaths>
@@ -55,15 +58,17 @@ Project global post-settings and targets.
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
     <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2012</WixFullProductName_Dev11>
     <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2013</WixFullProductName_Dev12>
+    <WixFullProductName_Dev14>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2014</WixFullProductName_Dev14>
     <WixProductDescription_Dev11>$(WixFullProductName_Dev11)</WixProductDescription_Dev11>
     <WixProductDescription_Dev12>$(WixFullProductName_Dev12)</WixProductDescription_Dev12>
+    <WixProductDescription_Dev14>$(WixFullProductName_Dev14)</WixProductDescription_Dev14>
   </PropertyGroup>
 
   <!-- Target definitions -->
 
   <Target Name="ValidateVisualStudioVersion">
     <PropertyGroup>
-      <VisualStudioVersionError Condition="'$(VisualStudioVersion)' == '' OR ('$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0')">true</VisualStudioVersionError>
+      <VisualStudioVersionError Condition="'$(VisualStudioVersion)' == '' OR ('$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0')">true</VisualStudioVersionError>
     </PropertyGroup>
     <Error Condition="'$(VisualStudioVersionError)' == 'true'" Text="VisualStudioVersion property value is invalid or not supported: '$(VisualStudioVersion)'" />
   </Target>

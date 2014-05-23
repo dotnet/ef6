@@ -18,5 +18,8 @@ using System.Runtime.InteropServices;
 #elif VS12
 [assembly: AssemblyVersion("12.0.0.0")]
 [assembly: AssemblyFileVersion("12.0.0.0")]
+#elif VS14
+[assembly: AssemblyVersion("14.0.0.0")]
+[assembly: AssemblyFileVersion("14.0.0.0")]
 #endif
 #endif

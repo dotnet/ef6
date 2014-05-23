@@ -49,10 +49,11 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
+    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='14.0'">VS140COMNTOOLS</VsCommonToolsEnvVarName>
     <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='12.0'">VS120COMNTOOLS</VsCommonToolsEnvVarName>
     <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='11.0'">VS110COMNTOOLS</VsCommonToolsEnvVarName>
   </PropertyGroup>
-  <Import Project="$(RepositoryRoot)tools\EFToolsDev12References.settings.targets" Condition="$(VisualStudioVersion)=='12.0'" />
+  <Import Project="$(RepositoryRoot)tools\EFToolsVsReferences.settings.targets" />
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.$(VisualStudioVersion)" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0" />
