@@ -433,7 +433,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return connStringsElement;
         }
 
-#if (!VS12)
+#if (VS11)
         // Update the .config file if the nodes have a SQL CE 3.5 provider to use 4.0 instead
         internal static bool UpdateSqlCeProviderInConnectionStrings(XmlDocument configXmlDoc)
         {

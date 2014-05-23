@@ -5,7 +5,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Model.VisualStudio
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if VS12
+#if VS12ORNEWER
     using Microsoft.Data.Entity.Design.VisualStudio;
 #endif
     using System.Diagnostics.CodeAnalysis;
@@ -118,7 +118,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Model.VisualStudio
 #if DEBUG
             var skipChecks = false;
 
-#if VS12
+#if VS12ORNEWER
     // The behaviour of VsShellUtilities.IsDocumentOpen changed in VS2013. In VS2012 IsDocumentOpen would return true if the document
     // has been loaded even though loading the solution has not finished yet. In VS2013 IsOpenDocument returns false if the solution 
     // is still being loaded. This caused multiple asserts when opening a project after VS was closed when edmx file was active/opened

@@ -128,7 +128,7 @@ namespace Microsoft.Data.Entity.Design.Package
 
                 // There is no SQL CE support dev12 onward, so removing the references
 
-#if (!VS12)
+#if (VS11)
                 // Subscribe to the SQL CE and SqlDatabaseFile upgrade services
                 var sqlCeUpgradeService = GetGlobalService(typeof(IVsSqlCeUpgradeService)) as IVsSqlCeUpgradeService;
 #endif
@@ -136,7 +136,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 var sqlDatabaseFileUpgradeService =
                     GetGlobalService(typeof(IVsSqlDatabaseFileUpgradeService)) as IVsSqlDatabaseFileUpgradeService;
 
-#if (VS12)
+#if (VS12ORNEWER)
                 if (sqlDatabaseFileUpgradeService == null)
 #else
                 if (sqlCeUpgradeService == null
@@ -146,7 +146,7 @@ namespace Microsoft.Data.Entity.Design.Package
                     // attempt to start IVsSqlCeUpgradeService and IVsSqlDatabaseFileUpgradeService
                     BootstrapVSDesigner();
 
-#if (!VS12)
+#if (VS11)
                     if (sqlCeUpgradeService == null)
                     {
                         sqlCeUpgradeService = GetGlobalService(typeof(IVsSqlCeUpgradeService)) as IVsSqlCeUpgradeService;
@@ -160,7 +160,7 @@ namespace Microsoft.Data.Entity.Design.Package
                     }
                 }
 
-#if (!VS12)
+#if (VS11)
                 Debug.Assert(null != sqlCeUpgradeService, "sqlCeUpgradeService service is null");
                 if (sqlCeUpgradeService != null)
                 {
@@ -245,7 +245,7 @@ namespace Microsoft.Data.Entity.Design.Package
 
                 _modelManager.Dispose();
 
-#if (!VS12)
+#if (VS11)
                 // UnSubscribe from the SQL CE upgrade service
                 var sqlCeUpgradeService = GetGlobalService(typeof(IVsSqlCeUpgradeService)) as IVsSqlCeUpgradeService;
                 if (sqlCeUpgradeService != null)

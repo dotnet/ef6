@@ -362,7 +362,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return String.Empty;
         }
 
-#if (!VS12)
+#if (VS11)
         // <summary>
         //     Called when a SQL CE database is upgraded from 3.5 to 4.0.
         //     1. Check the project type, return immediately if project is misc project.

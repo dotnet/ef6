@@ -252,11 +252,11 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                                 Saturation = hslColor.Saturation * 3 / 5,
                                 Luminosity = GetHighlightLuminosity(hslColor.Luminosity)
                             }.ToRgbColor(),
-#if VS12   
-                EntityGlyph = ThemeUtils.GetThemedButtonImage(EntityGlyph, fillColor),
-                BaseTypeIcon = ThemeUtils.GetThemedButtonImage(BaseTypeIcon, fillColor),
-                ChevronExpanded = ThemeUtils.GetThemedButtonImage(ChevronExpanded, fillColor),
-                ChevronCollapsed = ThemeUtils.GetThemedButtonImage(ChevronCollapsed, fillColor)
+#if VS12ORNEWER
+                    EntityGlyph = ThemeUtils.GetThemedButtonImage(EntityGlyph, fillColor),
+                    BaseTypeIcon = ThemeUtils.GetThemedButtonImage(BaseTypeIcon, fillColor),
+                    ChevronExpanded = ThemeUtils.GetThemedButtonImage(ChevronExpanded, fillColor),
+                    ChevronCollapsed = ThemeUtils.GetThemedButtonImage(ChevronCollapsed, fillColor)
 #else
                     // avoid icon inversion in VS11 because it causes unclear images on light backgrounds
                     EntityGlyph = EntityGlyph,

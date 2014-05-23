@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 
-#if VS12
+#if VS12ORNEWER
 using Microsoft.VisualStudio.PlatformUI;
 #endif
 
@@ -70,7 +70,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             imageList.Images.Add("DbUpdatedItems.bmp", Resources.DbUpdatedItems);
             imageList.Images.Add("database_schema.bmp", Resources.database_schema);
 
-#if VS12
+#if VS12ORNEWER
     // scale images as appropriate for screen resolution
             DpiHelper.LogicalToDeviceUnits(ref imageList);
 #endif
