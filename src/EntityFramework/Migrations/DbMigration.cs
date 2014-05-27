@@ -1448,16 +1448,13 @@ namespace System.Data.Entity.Migrations
                 throw new ArgumentException(Strings.UnableToLoadEmbeddedResource(resourceAssembly.FullName, sqlResource));
             }
 
-            using (var resourceStream = resourceAssembly.GetManifestResourceStream(sqlResource))
+            using (var textStream = new StreamReader(resourceAssembly.GetManifestResourceStream(sqlResource)))
             {
-                using (var textStream = new StreamReader(resourceStream))
-                {
-                    AddOperation(
-                        new SqlOperation(textStream.ReadToEnd(), anonymousArguments)
-                        {
-                            SuppressTransaction = suppressTransaction
-                        });
-                }
+                AddOperation(
+                    new SqlOperation(textStream.ReadToEnd(), anonymousArguments)
+                    {
+                        SuppressTransaction = suppressTransaction
+                    });
             }
         }
 

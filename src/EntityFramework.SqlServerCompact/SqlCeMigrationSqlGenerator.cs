@@ -988,13 +988,13 @@ namespace System.Data.Entity.SqlServerCompact
 
             // Handle batch splitting utility statement (see http://technet.microsoft.com/en-us/library/ms188037.aspx)
             var batches = Regex.Split(sqlBatch, 
-                String.Format(@"\s+({0}[ \t]+[0-9]+|{0})(?:\s+|$)", BatchTerminator),
+                String.Format(CultureInfo.InvariantCulture, @"\s+({0}[ \t]+[0-9]+|{0})(?:\s+|$)", BatchTerminator),
                 RegexOptions.IgnoreCase);
             
             for (int i = 0; i < batches.Length; ++i)
             {
                 // Skip batches that merely contain the batch terminator
-                if (batches[i].StartsWith(BatchTerminator, StringComparison.InvariantCultureIgnoreCase) || 
+                if (batches[i].StartsWith(BatchTerminator, StringComparison.OrdinalIgnoreCase) || 
                     (i == batches.Length - 1 && string.IsNullOrWhiteSpace(batches[i])))
                 {
                     continue;
@@ -1003,11 +1003,11 @@ namespace System.Data.Entity.SqlServerCompact
                 int repeatCount = 1;
                 
                 // Handle count parameter on the batch splitting utility statement
-                if (batches.Length > i + 1 && 
-                    batches[i + 1].StartsWith(BatchTerminator, StringComparison.InvariantCultureIgnoreCase) && 
+                if (batches.Length > i + 1 &&
+                    batches[i + 1].StartsWith(BatchTerminator, StringComparison.OrdinalIgnoreCase) && 
                     ! batches[i + 1].EqualsIgnoreCase(BatchTerminator))
                 {
-                    repeatCount = int.Parse(Regex.Match(batches[i + 1], @"([0-9]+)").Value);
+                    repeatCount = int.Parse(Regex.Match(batches[i + 1], @"([0-9]+)").Value, CultureInfo.InvariantCulture);
                 }
 
                 for (int j = 0; j < repeatCount; ++j)
