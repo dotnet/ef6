@@ -330,7 +330,7 @@ namespace System.Data.Entity.Internal
                     new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).QueryCache.GetQueryCacheSize());
 
                 Assert.Equal(
-                    60*1000,
+                    60,
                     new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).QueryCache.GetCleaningIntervalInSeconds());
             }
         }
