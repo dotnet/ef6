@@ -3,7 +3,7 @@
   <metadata schemaVersion="2">
     <id>EntityFramework.CodeTemplates.VisualBasic</id>
     <version>$NuGetPackageVersion$</version>
-    <title>EntityFramework.CodeTemplates.CSharp</title>
+    <title>EntityFramework.CodeTemplates.VisualBasic</title>
     <iconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</iconUrl>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
