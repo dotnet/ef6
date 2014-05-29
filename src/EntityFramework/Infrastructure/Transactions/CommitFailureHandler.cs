@@ -17,6 +17,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Threading;
     using System.Threading.Tasks;
 
+    //TODO: cref seems to have an error in vNext that it will not resolve a reference to a protected method
+    //      restore to <see cref="DbContext.OnModelCreating(DbModelBuilder)"/> below when working.
     /// <summary>
     /// A transaction handler that allows to gracefully recover from connection failures
     /// during transaction commit by storing transaction tracing information in the database.
@@ -25,7 +27,7 @@ namespace System.Data.Entity.Infrastructure
     /// <remarks>
     /// This transaction handler uses <see cref="TransactionContext"/> to store the transaction information
     /// the schema used can be configured by creating a class derived from <see cref="TransactionContext"/>
-    /// that overrides <see cref="DbContext.OnModelCreating"/> and passing it to the constructor of this class.
+    /// that overrides DbContext.OnModelCreating(DbModelBuilder) and passing it to the constructor of this class.
     /// </remarks>
     public class CommitFailureHandler : TransactionHandler
     {

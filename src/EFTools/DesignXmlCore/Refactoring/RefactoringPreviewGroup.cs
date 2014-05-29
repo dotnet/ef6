@@ -87,7 +87,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         public void RegisterLanguageService(string fileExtension, Guid languageService)
         {
             if (fileExtension != null
-                && languageService != null)
+                && languageService != Guid.Empty)
             {
                 Guid temp;
                 if (!_languageServices.TryGetValue(fileExtension, out temp))

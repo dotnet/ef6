@@ -874,7 +874,7 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.Explorer
             }
         }
 
-        private IEnumerable<ExplorerEFElement> AncestorsFromNode(ExplorerEFElement startNode)
+        private static IEnumerable<ExplorerEFElement> AncestorsFromNode(ExplorerEFElement startNode)
         {
             var e = startNode;
             while (e != null)

@@ -21,14 +21,15 @@ namespace System.Data.Entity
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    //TODO: cref seems to have an error in vNext that it will not resolve a reference to a protected method.
+    //      Restore to <see cref="DbContext.OnModelCreating(DbModelBuilder)"/> below when working.
     /// <summary>
     /// DbModelBuilder is used to map CLR classes to a database schema.
     /// This code centric approach to building an Entity Data Model (EDM) model is known as 'Code First'.
     /// </summary>
     /// <remarks>
     /// DbModelBuilder is typically used to configure a model by overriding
-    /// <see
-    ///     cref="DbContext.OnModelCreating(DbModelBuilder)" />
+    /// DbContext.OnModelCreating(DbModelBuilder)
     /// .
     /// You can also use DbModelBuilder independently of DbContext to build a model and then construct a
     /// <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" />.

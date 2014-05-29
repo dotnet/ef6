@@ -289,13 +289,15 @@ namespace System.Data.Entity.Infrastructure
 
         #region Validation
 
+        //TODO: cref seems to have an error in vNext that it will not resolve a reference to a protected method.
+        //      Restore to <see cref="DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" />
+        //      below when working.
         /// <summary>
         /// Validates this <see cref="DbEntityEntry" /> instance and returns validation result.
         /// </summary>
         /// <returns>
         /// Entity validation result. Possibly null if
-        /// <see
-        ///     cref="DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" />
+        /// DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})
         /// method is overridden.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
