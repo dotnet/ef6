@@ -2746,7 +2746,6 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                             // Toggle the current selection on a control-space
                             if (e.Control)
                             {
-                                var hWnd = Handle;
                                 var iCaret = CaretIndex;
                                 if (iCaret != VirtualTreeConstant.NullIndex)
                                 {

@@ -9,7 +9,7 @@
   <ItemGroup Condition="$(VisualStudioVersion)=='14.0'">
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0" />
-    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.12.0" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.14.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0" />
   </ItemGroup>
 </Project>

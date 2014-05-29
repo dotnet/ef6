@@ -489,7 +489,7 @@ namespace Microsoft.Data.Entity.Design.Model
         /// <summary>
         ///     This will mask the dictionary using an error class, returning back a list of error lists
         /// </summary>
-        private IEnumerable<ICollection<ErrorInfo>> GetErrorInfosUsingMask(
+        private static IEnumerable<ICollection<ErrorInfo>> GetErrorInfosUsingMask(
             Dictionary<ErrorClass, ICollection<ErrorInfo>> errorClass2ErrorInfos, ErrorClass errorClassMask)
         {
             var nonCompositeEnumValues = ErrorClassValues.Where(v => !IsCompositeErrorClass(v) && v != 0);
