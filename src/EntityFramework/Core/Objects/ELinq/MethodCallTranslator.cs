@@ -2922,6 +2922,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     }
                     else
                     {
+                        input = RestrictResult(parent, input);
+
                         CqtExpression element = input.Element();
                         element = FirstTranslatorBase.AddDefaultCase(element, call.Type);
 

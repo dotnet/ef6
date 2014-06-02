@@ -318,12 +318,12 @@ FROM   [dbo].[ArubaAllTypes] AS [Extent1]
 LEFT OUTER JOIN  (SELECT TOP (1) 
     [Extent2].[c33_enum] AS [c33_enum]
     FROM [dbo].[ArubaAllTypes] AS [Extent2]
-    WHERE 1 =  CAST( [Extent2].[c33_enum] AS int) ) AS [Element1] ON 1 = 1
+    WHERE 1 =  CAST( [Extent2].[c33_enum] AS int) ) AS [Limit1] ON 1 = 1
 LEFT OUTER JOIN  (SELECT TOP (1) 
     [Extent3].[c33_enum] AS [c33_enum]
     FROM [dbo].[ArubaAllTypes] AS [Extent3]
-    WHERE 1 =  CAST( [Extent3].[c33_enum] AS int) ) AS [Element2] ON 1 = 1
-WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( [Element1].[c33_enum] AS int))) =  CAST( [Element2].[c33_enum] AS int)";
+    WHERE 1 =  CAST( [Extent3].[c33_enum] AS int) ) AS [Limit2] ON 1 = 1
+WHERE (( CAST( [Extent1].[c33_enum] AS int)) & ( CAST( [Limit1].[c33_enum] AS int))) =  CAST( [Limit2].[c33_enum] AS int)";
 
                 var query = 
                     context.AllTypes
