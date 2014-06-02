@@ -267,13 +267,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var beforeTransformationRules1 = String.Empty;
             var beforeProjectionPruning3 = String.Empty;
             var beforeTransformationRules2 = String.Empty;
-            var beforeJoinElimination1 = String.Empty;
-            var beforeTransformationRules3 = String.Empty;
-            var beforeJoinElimination2 = String.Empty;
-            var beforeTransformationRules4 = String.Empty;
             var beforeNullSemantics = String.Empty;
-            var beforeTransformationRules5 = String.Empty;
-            var beforeTransformationRules6 = String.Empty;
+            var beforeTransformationRules3 = String.Empty;
+            var beforeJoinElimination = String.Empty;
+            var beforeTransformationRules4 = String.Empty;
             var beforeCodeGen = String.Empty;
 
             //
@@ -364,23 +361,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Join elimination
             if (IsPhaseNeeded(PlanCompilerPhase.JoinElimination))
             {
-                beforeJoinElimination1 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
-                var modified = JoinElimination.Process(this);
-                if (modified)
+                const int maxIterations = 10;
+
+                for (var i = 0; i < maxIterations; i++)
                 {
-                    ApplyTransformations(ref beforeTransformationRules4, TransformationRulesGroup.PostJoinElimination);
-                    beforeJoinElimination2 = SwitchToPhase(PlanCompilerPhase.JoinElimination);
-                    modified = JoinElimination.Process(this);
-                    if (modified)
+                    beforeJoinElimination = SwitchToPhase(PlanCompilerPhase.JoinElimination);
+
+                    var modified = JoinElimination.Process(this);
+
+                    if (modified || TransformationsDeferred)
                     {
-                        ApplyTransformations(ref beforeTransformationRules5, TransformationRulesGroup.PostJoinElimination);
+                        TransformationsDeferred = false;
+
+                        ApplyTransformations(ref beforeTransformationRules4, TransformationRulesGroup.PostJoinElimination);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
-            }
-
-            if (TransformationsDeferred)
-            {
-                ApplyTransformations(ref beforeTransformationRules6, TransformationRulesGroup.Deferred);
             }
 
             // Code generation
@@ -399,13 +398,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             size = beforeTransformationRules1.Length;
             size = beforeProjectionPruning3.Length;
             size = beforeTransformationRules2.Length;
-            size = beforeJoinElimination1.Length;
-            size = beforeTransformationRules3.Length;
-            size = beforeJoinElimination2.Length;
-            size = beforeTransformationRules4.Length;
             size = beforeNullSemantics.Length;
-            size = beforeTransformationRules5.Length;
-            size = beforeTransformationRules6.Length;
+            size = beforeTransformationRules3.Length;
+            size = beforeJoinElimination.Length;
+            size = beforeTransformationRules4.Length;
             size = beforeCodeGen.Length;
 #endif
         }

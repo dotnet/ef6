@@ -10,7 +10,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         All,
         Project,
         PostJoinElimination,
-        NullSemantics,
-        Deferred
+        NullSemantics
     }
 }

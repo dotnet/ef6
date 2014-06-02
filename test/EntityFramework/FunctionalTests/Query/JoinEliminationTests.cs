@@ -211,5 +211,165 @@ WHERE 1 = [Extent1].[Id]";
                 QueryTestHelpers.VerifyQuery(query, expectedSqlStrings);
             }
         }
+
+        public class CodePlex2296 : FunctionalTestBase
+        {
+            public class MyBase
+            {
+                public int Id { get; set; }
+            }
+
+            public class MyDerived1 : MyBase
+            {
+                public string Name { get; set; }
+                public MyDerived2 Derived2 { get; set; }
+            }
+
+            public class MyDerived2 : MyBase
+            {
+                public string Name { get; set; }
+                public MyDerived1 Derived1 { get; set; }
+            }
+
+            public class MyContext : DbContext
+            {
+                static MyContext()
+                {
+                    Database.SetInitializer<MyContext>(null);
+                }
+
+                public DbSet<MyBase> Bases { get; set; }
+
+                protected override void OnModelCreating(DbModelBuilder builder)
+                {
+                    builder.Entity<MyBase>().ToTable("MyBase");
+                    builder.Entity<MyDerived2>().HasOptional(e => e.Derived1).WithOptionalDependent(e => e.Derived2);
+                    builder.Entity<MyDerived1>().ToTable("Derived1");
+                    builder.Entity<MyDerived2>().ToTable("Derived2");
+                }
+            }
+
+            [Fact]
+            public void Joins_are_eliminated_and_expression_is_simplified()
+            {
+                using (var context = new MyContext())
+                {
+                    var query = context.Bases.OfType<MyDerived2>().Where(e => e.Derived1.Derived2.Name == "Foo");
+
+                    QueryTestHelpers.VerifyQuery(
+                        query,
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    '0X0X' AS [C1], 
+    [Extent1].[Name] AS [Name], 
+    CAST(NULL AS varchar(1)) AS [C2], 
+    [Extent1].[Derived1_Id] AS [Derived1_Id]
+    FROM  [dbo].[Derived2] AS [Extent1]
+    INNER JOIN [dbo].[Derived2] AS [Extent2] ON ([Extent2].[Derived1_Id] = [Extent1].[Derived1_Id]) AND ([Extent1].[Derived1_Id] IS NOT NULL)
+    WHERE ([Extent2].[Derived1_Id] IS NOT NULL) AND (N'Foo' = [Extent2].[Name])");
+                }
+            }
+        }
+
+        public class CodePlex2256 : FunctionalTestBase
+        {
+            public class A
+            {
+                public int Id { get; set; }
+
+                public B B { get; set; }
+            }
+
+            public class B
+            {
+                public B()
+                {
+                    As = new List<A>();
+                }
+
+                public int Id { get; set; }
+
+                public C C { get; set; }
+                public ICollection<A> As { get; set; } 
+            }
+
+            public class C
+            {
+                public C()
+                {
+                    Bs = new List<B>();
+                }
+
+                public int Id { get; set; }
+
+                public D D { get; set; }
+                public ICollection<B> Bs { get; set; }
+            }
+
+            public class D
+            {
+                public D()
+                {
+                    Cs = new List<C>();
+                }
+
+                public int Id { get; set; }
+
+                public E E { get; set; }
+                public ICollection<C> Cs { get; set; }
+            }
+
+            public class E
+            {
+                public E()
+                {
+                    Ds = new List<D>();
+                }
+
+                public int Id { get; set; }
+
+                public ICollection<D> Ds { get; set; }
+            }
+
+            public class MyContext : DbContext
+            {
+                static MyContext()
+                {
+                    Database.SetInitializer<MyContext>(null);
+                }
+
+                public DbSet<A> As { get; set; }
+
+                protected override void OnModelCreating(DbModelBuilder modelBuilder)
+                {
+                    modelBuilder.Entity<A>().HasRequired(e => e.B).WithMany(e => e.As);
+                    modelBuilder.Entity<B>().HasRequired(e => e.C).WithMany(e => e.Bs);
+                    modelBuilder.Entity<C>().HasRequired(e => e.D).WithMany(e => e.Cs);
+                    modelBuilder.Entity<D>().HasRequired(e => e.E).WithMany(e => e.Ds);
+                }
+            }
+
+            [Fact]
+            public void Joins_are_eliminated_and_expression_is_simplified()
+            {
+                using (var context = new MyContext())
+                {
+                    var query = context.As.Include(a => a.B.C.D.E);
+
+                    QueryTestHelpers.VerifyQuery(
+                        query,
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent3].[Id] AS [Id2], 
+    [Extent4].[Id] AS [Id3], 
+    [Extent4].[E_Id] AS [E_Id]
+    FROM    [dbo].[A] AS [Extent1]
+    INNER JOIN [dbo].[B] AS [Extent2] ON [Extent1].[B_Id] = [Extent2].[Id]
+    INNER JOIN [dbo].[C] AS [Extent3] ON [Extent2].[C_Id] = [Extent3].[Id]
+    INNER JOIN [dbo].[D] AS [Extent4] ON [Extent3].[D_Id] = [Extent4].[Id]");
+                }
+            }
+        }
     }
 }

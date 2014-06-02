@@ -56,9 +56,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> NullSemanticsRulesTable =
             BuildLookupTableForRules(NullSemanticsRules);
 
-        internal static readonly ReadOnlyCollection<ReadOnlyCollection<Rule>> DeferredRulesTable =
-            BuildLookupTableForRules(DeferredRules);
-
         #region private state maintenance
 
         private static List<Rule> allRules;
@@ -99,6 +96,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     //these don't use key info per-se, but can help after the distinct op rules.
                     postJoinEliminationRules.AddRange(DistinctOpRules.Rules);
                     postJoinEliminationRules.AddRange(FilterOpRules.Rules);
+                    postJoinEliminationRules.AddRange(ApplyOpRules.Rules);
                     postJoinEliminationRules.AddRange(JoinOpRules.Rules);
                     postJoinEliminationRules.AddRange(NullabilityRules);
                 }
@@ -147,24 +145,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     nullSemanticsRules.Add(ScalarOpRules.Rule_FlattenCase);
                 }
                 return nullSemanticsRules;
-            }
-        }
-
-        private static List<Rule> deferredRules;
-
-        private static List<Rule> DeferredRules
-        {
-            get
-            {
-                if (deferredRules == null)
-                {
-                    deferredRules = new List<Rule>();
-                    deferredRules.Add(FilterOpRules.Rule_FilterOverLeftOuterJoin);
-                    deferredRules.Add(FilterOpRules.Rule_FilterOverOuterApply);
-                    deferredRules.AddRange(ApplyOpRules.Rules);
-                    deferredRules.AddRange(JoinOpRules.Rules);
-                }
-                return deferredRules;
             }
         }
 
@@ -253,9 +233,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     break;
                 case TransformationRulesGroup.NullSemantics:
                     rulesTable = NullSemanticsRulesTable;
-                    break;
-                case TransformationRulesGroup.Deferred:
-                    rulesTable = DeferredRulesTable;
                     break;
             }
 
