@@ -602,11 +602,13 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     });
         }
 
+#if !VS14
         [Fact]
         public void IsOpenInEditorError_returns_false_for_recoverable_runtime_errors()
         {
             Assert.False(IsOpenInEditorError<EFObject>(-1));
         }
+#endif
 
         [Fact]
         public void IsOpenInEditorError_returns_true_for_unrecoverable_errors_if_additional_conditions_not_met()
@@ -635,6 +637,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     });
         }
 
+#if !VS14
         [Fact]
         public void IsOpenInEditorError_returns_false_for_SchemaValidationError_for_ModificationFunctionMapping()
         {
@@ -676,6 +679,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
             Assert.False(
                 IsOpenInEditorError<ComplexConceptualProperty>((int)ErrorCode.NotInNamespace));
         }
+#endif
 
         private static bool IsOpenInEditorError<T>(int errorCode) where T : EFObject
         {

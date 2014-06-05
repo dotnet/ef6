@@ -108,7 +108,8 @@
 
     <Target Name="InstallTestHost" DependsOnTargets="CreateDirectories;BuildTestHost">
         <PropertyGroup>
-            <TestHostPath>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{D39AE4C3-21C4-40DE-9F35-53A83803F8DB}</TestHostPath>
+            <TestHostPath>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{6FDF32A2-AC01-477f-A9DF-738BC836EE53}</TestHostPath>
+            <TestHostPath Condition="$(VisualStudioVersion)=='12.0'">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{D39AE4C3-21C4-40DE-9F35-53A83803F8DB}</TestHostPath>
             <TestHostPath Condition="$(VisualStudioVersion)=='11.0'">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{710EEA0D-C40D-4245-B3FA-C883AAD83A65}</TestHostPath>
             <TestHostQuery>$([MSBuild]::GetRegistryValueFromView('$(TestHostPath)', 'DisplayName', null, RegistryView.Registry64, RegistryView.Registry32))</TestHostQuery>
             <TestHostInstalled>$(TestHostQuery.StartsWith('VS IDE Test Host for Visual Studio'))</TestHostInstalled>
@@ -120,7 +121,8 @@
     <Target Name="UninstallTestHost">
         <PropertyGroup>
             <TestHostUnistallGuid Condition=" '$(VisualStudioVersion)' == '11.0' ">{710EEA0D-C40D-4245-B3FA-C883AAD83A65}</TestHostUnistallGuid>
-            <TestHostUnistallGuid Condition=" '$(TestHostUnistallGuid)' == '' ">{D39AE4C3-21C4-40DE-9F35-53A83803F8DB}</TestHostUnistallGuid>
+            <TestHostUnistallGuid Condition=" '$(VisualStudioVersion)' == '12.0' ">{D39AE4C3-21C4-40DE-9F35-53A83803F8DB}</TestHostUnistallGuid>
+            <TestHostUnistallGuid Condition=" '$(TestHostUnistallGuid)' == '' ">{6FDF32A2-AC01-477f-A9DF-738BC836EE53}</TestHostUnistallGuid>
         </PropertyGroup>
         <Exec Command='msiexec /qb /x $(TestHostUnistallGuid) /L*v $(LogsDir)VsIdeTestHost.msi.uninstall.log' />
     </Target>
