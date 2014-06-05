@@ -103,5 +103,75 @@ namespace System.Data.Entity.Query
                 }
             }
         }
+
+        public class CodePlex2251 : FunctionalTestBase
+        {
+            public class MyContext : DbContext
+            {
+                public DbSet<User> Users { get; set; }
+            }
+
+            public class User
+            {
+                public User()
+                {
+                    LoggedActions = new List<LoggedAction>();
+                }
+
+                public int Id { get; set; }
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
+
+                public ICollection<LoggedAction> LoggedActions { get; set; }
+            }
+
+            public class LoggedAction
+            {
+                public int Id { get; set; }
+                public DateTime CreatedOn { get; set; }
+                public string TypeReference { get; set; }
+            }
+
+            [Fact]
+            public void Generated_SQL_for_query_with_sort_in_virtual_extent_honors_OrderBy()
+            {
+                using (var ctx = new MyContext())
+                {
+                    var query
+                        = from u in ctx.Users
+                            where u.Id == 4817
+                            let loggedActions
+                                = u.LoggedActions
+                                    .OrderByDescending(o => o.CreatedOn)
+                                    .Where(w => w.TypeReference == "Login")
+                            select new
+                                   {
+                                       Name = u.FirstName + " " + u.LastName,
+                                       loggedActions.FirstOrDefault().CreatedOn,
+                                   };
+
+                    QueryTestHelpers.VerifyQuery(
+                        query,
+@"SELECT 
+    [Project2].[Id] AS [Id], 
+    CASE WHEN ([Project2].[FirstName] IS NULL) THEN N'' ELSE [Project2].[FirstName] END + N' ' + CASE WHEN ([Project2].[LastName] IS NULL) THEN N'' ELSE [Project2].[LastName] END AS [C1], 
+    [Project2].[C1] AS [C2]
+    FROM ( SELECT 
+        [Extent1].[Id] AS [Id], 
+        [Extent1].[FirstName] AS [FirstName], 
+        [Extent1].[LastName] AS [LastName], 
+        (SELECT TOP (1) [Project1].[CreatedOn] AS [CreatedOn]
+            FROM ( SELECT 
+                [Extent2].[CreatedOn] AS [CreatedOn]
+                FROM [dbo].[LoggedActions] AS [Extent2]
+                WHERE ([Extent1].[Id] = [Extent2].[User_Id]) AND (N'Login' = [Extent2].[TypeReference])
+            )  AS [Project1]
+            ORDER BY [Project1].[CreatedOn] DESC) AS [C1]
+        FROM [dbo].[Users] AS [Extent1]
+        WHERE 4817 = [Extent1].[Id]
+    )  AS [Project2]");
+                }
+            }
+        }
     }
 }

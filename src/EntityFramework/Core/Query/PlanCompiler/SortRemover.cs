@@ -92,6 +92,38 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitors
 
         // <summary>
+        // ITreeGenerator.CreateLimitNode transforms Limit(Sort(x)) to ConstrainedSort(x,Null,Limit)
+        // with the same keys as the input Sort. The transformation ensures that the sort is not 
+        // eliminated by the SortRemover if it occurs in a subquery.
+        // ITreeGenerator.CreateLimitNode also transforms Limit(x) to ConstrainedSort(x,Null,Limit), 
+        // with no keys, when x is neither a Sort nor a ConstrainedSort. However, there are scenarios
+        // where x includes a Sort that will be lifted during NestPullup, in which case this becomes
+        // ConstrainedSort(Sort(x),Null,Limit) which is basically equivalent to Limit(Sort(x)) and 
+        // thus it needs to be transformed to ConstrainedSort(x,Null,Limit) with the same keys as 
+        // the input Sort.
+        // </summary>
+        public override Node Visit(ConstrainedSortOp op, Node n)
+        {
+            if (op.Keys.Count > 0
+                || n.Children.Count != 3
+                || n.Child0 == null
+                || n.Child1 == null
+                || n.Child0.Op.OpType != OpType.Sort
+                || n.Child1.Op.OpType != OpType.Null
+                || n.Child0.Children.Count != 1)
+            {
+                return n;
+            }
+
+            return
+                m_command.CreateNode(
+                    m_command.CreateConstrainedSortOp(((SortOp)n.Child0.Op).Keys, op.WithTies),
+                    n.Child0.Child0,
+                    n.Child1,
+                    n.Child2);
+        }
+
+        // <summary>
         // If the given node is not the top most SortOp node remove it.
         // </summary>
         public override Node Visit(SortOp op, Node n)
