@@ -8,6 +8,7 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     using System.Linq;
     using Xunit;
 
+    // TODO - remove this comment - this is just to force line-endings (which git does not seem to accept as the only change)
     public class MultiplicityConfigurationTests
     {
         [Fact]
