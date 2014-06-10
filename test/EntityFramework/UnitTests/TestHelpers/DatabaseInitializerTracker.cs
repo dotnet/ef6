@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
@@ -59,7 +60,7 @@ namespace System.Data.Entity
                     });
 
             _mockDatabaseOps
-                .Setup(d => d.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>()))
+                .Setup(d => d.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>()))
                 .Callback(() => _operations.Append("Exists ")).Returns(_databaseExists);
             
             _mockDatabaseOps

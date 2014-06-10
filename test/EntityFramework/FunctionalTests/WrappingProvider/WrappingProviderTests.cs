@@ -5,6 +5,7 @@ namespace System.Data.Entity.WrappingProvider
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
@@ -189,6 +190,28 @@ namespace System.Data.Entity.WrappingProvider
             Assert.Contains("Close", methods);
             Assert.Contains("Commit", methods);
             Assert.Contains("Generate", methods);
+        }
+
+        [Fact] // CodePlex 2320
+        [UseDefaultExecutionStrategy]
+        public void Model_is_available_in_DatabaseExists()
+        {
+            WrappingAdoNetProvider<SqlClientFactory>.WrapProviders();
+
+            var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
+            log.Clear();
+
+            using (var context = new EfLevelBlogContext())
+            {
+                context.Database.Exists();
+            }
+
+            var rawDetails = (object[])log.Where(i => i.Method == "DbDatabaseExists").Select(i => i.RawDetails).Single();
+            var itemCollection = (StoreItemCollection)rawDetails[1];
+            
+            Assert.Equal(
+                new[] { "Blog", "Post" },
+                itemCollection.OfType<EntityType>().Select(e => e.Name).OrderBy(n => n).ToArray());
         }
 
         public class Blog

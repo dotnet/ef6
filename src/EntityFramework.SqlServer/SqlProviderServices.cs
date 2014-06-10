@@ -1107,7 +1107,31 @@ namespace System.Data.Entity.SqlServer
         /// <param name="commandTimeout">Execution timeout for any commands needed to determine the existence of the database.</param>
         /// <param name="storeItemCollection">The collection of all store items from the model. This parameter is no longer used for determining database existence.</param>
         /// <returns>True if the provider can deduce the database only based on the connection.</returns>
-        protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
+        protected override bool DbDatabaseExists(
+            DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
+        {
+            return DbDatabaseExists(connection, commandTimeout, new Lazy<StoreItemCollection>(() => storeItemCollection));
+        }
+
+        /// <summary>
+        /// Determines whether the database for the given connection exists.
+        /// There are three cases:
+        /// 1.  Initial Catalog = X, AttachDBFilename = null:   (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
+        /// 2.  Initial Catalog = X, AttachDBFilename = F:      if (SELECT Count(*) FROM sys.databases WHERE [name]= X) >  true,
+        /// if not, try to open the connection and then return (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
+        /// 3.  Initial Catalog = null, AttachDBFilename = F:   Try to open the connection. If that succeeds the result is true, otherwise
+        /// if the there are no databases corresponding to the given file return false, otherwise throw.
+        /// Note: We open the connection to cover the scenario when the mdf exists, but is not attached.
+        /// Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case.
+        /// Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
+        /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
+        /// </summary>
+        /// <param name="connection">Connection to a database whose existence is checked by this method.</param>
+        /// <param name="commandTimeout">Execution timeout for any commands needed to determine the existence of the database.</param>
+        /// <param name="storeItemCollection">The collection of all store items from the model. This parameter is no longer used for determining database existence.</param>
+        /// <returns>True if the provider can deduce the database only based on the connection.</returns>
+        protected override bool DbDatabaseExists(
+            DbConnection connection, int? commandTimeout, Lazy<StoreItemCollection> storeItemCollection)
         {
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");

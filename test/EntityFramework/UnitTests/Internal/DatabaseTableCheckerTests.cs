@@ -28,7 +28,7 @@ namespace System.Data.Entity.Internal
             var internalContextMock = new Mock<InternalContext>();
 
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
 
             var dbCommandMock = new Mock<DbCommand>();
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Internal
             var dbCommandMock = new Mock<DbCommand>();
 
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
 
             SetupMocksForTableChecking(dbCommandMock, connectionMock, internalContextMock);
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Internal
         public void AnyModelTableExists_returns_DoesNotExist_if_database_does_not_exist()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(false);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(false);
 
             var internalContextMock = new Mock<InternalContext>();
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Internal
         public void AnyModelTableExists_returns_Exists_if_database_exists_and_not_Code_First()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             var internalContextMock = new Mock<InternalContext>();
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Internal
         public void AnyModelTableExists_returns_Exists_if_provider_doesnt_support_table_checking()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             var internalContextMock = new Mock<InternalContext>();
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Internal
         public void AnyModelTableExists_returns_Exists_if_model_is_empty()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             var internalContextMock = new Mock<InternalContext>();
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
@@ -160,7 +160,7 @@ namespace System.Data.Entity.Internal
         public void AnyModelTableExists_returns_Exists_if_any_model_table_exists()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             var internalContextMock = new Mock<InternalContext>();
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Internal
         public void AnyModelTableExists_returns_Exists_if_history_table_with_entry_exists()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             var internalContextMock = new Mock<InternalContext>();
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
@@ -207,7 +207,7 @@ namespace System.Data.Entity.Internal
         public void AnyModelTableExists_returns_ExistsConsideredEmpty_if_no_tables_and_no_history()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             var internalContextMock = new Mock<InternalContext>();
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);

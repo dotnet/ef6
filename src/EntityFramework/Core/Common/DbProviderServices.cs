@@ -644,14 +644,51 @@ namespace System.Data.Entity.Core.Common
         /// <param name="connection">Connection to a database whose existence is checked by this method.</param>
         /// <param name="commandTimeout">Execution timeout for any commands needed to determine the existence of the database.</param>
         /// <param name="storeItemCollection">The collection of all store items from the model. This parameter is no longer used for determining database existence.</param>
+        public bool DatabaseExists(
+            DbConnection connection, 
+            int? commandTimeout, 
+            Lazy<StoreItemCollection> storeItemCollection)
+        {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                return DbDatabaseExists(connection, commandTimeout, storeItemCollection);
+            }
+        }
+
+        /// <summary>Returns a value indicating whether a given database exists on the server.</summary>
+        /// <returns>True if the provider can deduce the database only based on the connection.</returns>
+        /// <param name="connection">Connection to a database whose existence is checked by this method.</param>
+        /// <param name="commandTimeout">Execution timeout for any commands needed to determine the existence of the database.</param>
+        /// <param name="storeItemCollection">The collection of all store items from the model. This parameter is no longer used for determining database existence.</param>
         protected virtual bool DbDatabaseExists(
-            DbConnection connection, int? commandTimeout,
+            DbConnection connection, 
+            int? commandTimeout,
             StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");
 
             throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportDatabaseExists);
+        }
+
+        /// <summary>Returns a value indicating whether a given database exists on the server.</summary>
+        /// <returns>True if the provider can deduce the database only based on the connection.</returns>
+        /// <param name="connection">Connection to a database whose existence is checked by this method.</param>
+        /// <param name="commandTimeout">Execution timeout for any commands needed to determine the existence of the database.</param>
+        /// <param name="storeItemCollection">The collection of all store items from the model. This parameter is no longer used for determining database existence.</param>
+        /// <remarks>Override this method to avoid creating the store item collection if it is not needed. The default implementation evaluates the Lazy and calls the other overload of this method.</remarks>
+        protected virtual bool DbDatabaseExists(
+            DbConnection connection, 
+            int? commandTimeout,
+            Lazy<StoreItemCollection> storeItemCollection)
+        {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(storeItemCollection, "storeItemCollection");
+
+            return DbDatabaseExists(connection, commandTimeout, storeItemCollection.Value);
         }
 
         /// <summary>Deletes the specified database.</summary>
