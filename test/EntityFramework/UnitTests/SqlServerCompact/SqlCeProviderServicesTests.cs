@@ -222,7 +222,7 @@ namespace System.Data.Entity.SqlServerCompact
                 {
                     using (var connection = new SqlCeConnection(ModelHelpers.SimpleCeConnectionString("I.Do.Not.Exist")))
                     {
-                        Assert.False(SqlCeProviderServices.Instance.DatabaseExists(connection, null, new StoreItemCollection()));
+                        Assert.False(SqlCeProviderServices.Instance.DatabaseExists(connection, null, new Lazy<StoreItemCollection>()));
                     }
                 }
                 finally

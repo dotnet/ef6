@@ -5,6 +5,7 @@ namespace System.Data.Entity
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
@@ -202,7 +203,10 @@ namespace System.Data.Entity
         {
             if (existenceState == DatabaseExistenceState.Unknown)
             {
-                if (_internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout))
+                if (_internalContext.DatabaseOperations.Exists(
+                    _internalContext.Connection, 
+                    _internalContext.CommandTimeout,
+                    new Lazy<StoreItemCollection>(CreateStoreItemCollection)))
                 {
                     var interceptionContext = new DbInterceptionContext();
                     interceptionContext = interceptionContext.WithDbContext(_internalContext.Owner);
@@ -226,7 +230,10 @@ namespace System.Data.Entity
         /// <returns> True if the database did not exist and was created; false otherwise. </returns>
         public bool CreateIfNotExists()
         {
-            if (_internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout))
+            if (_internalContext.DatabaseOperations.Exists(
+                _internalContext.Connection,
+                _internalContext.CommandTimeout,
+                new Lazy<StoreItemCollection>(CreateStoreItemCollection)))
             {
                 return false;
             }
@@ -244,7 +251,10 @@ namespace System.Data.Entity
         /// <returns> True if the database exists; false otherwise. </returns>
         public bool Exists()
         {
-            return _internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout);
+            return _internalContext.DatabaseOperations.Exists(
+                _internalContext.Connection,
+                _internalContext.CommandTimeout,
+                new Lazy<StoreItemCollection>(CreateStoreItemCollection));
         }
 
         /// <summary>
@@ -257,7 +267,10 @@ namespace System.Data.Entity
         /// <returns> True if the database did exist and was deleted; false otherwise. </returns>
         public bool Delete()
         {
-            if (!_internalContext.DatabaseOperations.Exists(_internalContext.Connection, _internalContext.CommandTimeout))
+            if (!_internalContext.DatabaseOperations.Exists(
+                _internalContext.Connection, 
+                _internalContext.CommandTimeout,
+                new Lazy<StoreItemCollection>(CreateStoreItemCollection)))
             {
                 return false;
             }
@@ -289,7 +302,10 @@ namespace System.Data.Entity
 
             using (var connection = new LazyInternalConnection(nameOrConnectionString))
             {
-                return new DatabaseOperations().Exists(connection.Connection, null);
+                return new DatabaseOperations().Exists(
+                    connection.Connection, 
+                    null, 
+                    new Lazy<StoreItemCollection>(() => new StoreItemCollection()));
             }
         }
 
@@ -329,7 +345,10 @@ namespace System.Data.Entity
         {
             Check.NotNull(existingConnection, "existingConnection");
 
-            return new DatabaseOperations().Exists(existingConnection, null);
+            return new DatabaseOperations().Exists(
+                existingConnection, 
+                null,
+                new Lazy<StoreItemCollection>(() => new StoreItemCollection()));
         }
 
         /// <summary>
@@ -691,6 +710,15 @@ namespace System.Data.Entity
         }
 
         #endregion
+
+        private StoreItemCollection CreateStoreItemCollection()
+        {
+            using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
+            {
+                var entityConnection = ((EntityConnection)clonedObjectContext.ObjectContext.Connection);
+                return (StoreItemCollection)entityConnection.GetMetadataWorkspace().GetItemCollection(DataSpace.SSpace);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the timeout value, in seconds, for all context operations.

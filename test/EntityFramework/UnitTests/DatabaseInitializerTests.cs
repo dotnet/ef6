@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using Moq;
     using System;
     using System.Data.Entity.Core.Objects;
@@ -821,7 +822,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>();
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
-            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>())).Returns(false);
+            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(false);
 
             mockContext.Object.Owner.Database.Create();
 
@@ -835,7 +836,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>();
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
-            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>())).Returns(false);
+            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(false);
 
             mockContext.Object.Owner.Database.CreateIfNotExists();
 
@@ -849,7 +850,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>() { CallBase = true };
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.Connection).Returns(new SqlConnection("Database=Foo"));
-            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<DbConnection>(), It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             Assert.Equal(
                 Strings.Database_DatabaseAlreadyExists("Foo"),
@@ -865,7 +866,7 @@ namespace System.Data.Entity
             var mockContext = new Mock<InternalContextForMock<FakeContext>>();
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             mockContext.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
-            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>())).Returns(true);
+            mockOperations.Setup(m => m.Exists(null, It.IsAny<int?>(), It.IsAny<Lazy<StoreItemCollection>>())).Returns(true);
 
             mockContext.Object.Owner.Database.CreateIfNotExists();
 

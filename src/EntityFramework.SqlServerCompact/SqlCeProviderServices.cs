@@ -93,6 +93,20 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns> Bool indicating whether database exists or not. </returns>
         protected override bool DbDatabaseExists(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
+            return DbDatabaseExists(connection, timeOut, new Lazy<StoreItemCollection>(() => storeItemCollection));
+        }
+
+        /// <summary>
+        /// API for checkin whether database exists or not.
+        /// This will internally only check whether the file that the connection points to exists or not.
+        /// Note: In case of SQLCE, timeout and storeItemCollection parameters are ignored.
+        /// </summary>
+        /// <param name="connection"> Connection </param>
+        /// <param name="timeOut"> Timeout for internal commands. </param>
+        /// <param name="storeItemCollection"> Item Collection. </param>
+        /// <returns> Bool indicating whether database exists or not. </returns>
+        protected override bool DbDatabaseExists(DbConnection connection, int? timeOut, Lazy<StoreItemCollection> storeItemCollection)
+        {
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");
 

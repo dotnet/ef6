@@ -39,7 +39,7 @@ namespace System.Data.Entity.Internal
         // having an ObjectContext.
         // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public virtual bool Exists(DbConnection connection, int? commandTimeout)
+        public virtual bool Exists(DbConnection connection, int? commandTimeout, Lazy<StoreItemCollection> storeItemCollection)
         {
             DebugCheck.NotNull(connection);
 
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Internal
             try
             {
                 return DbProviderServices.GetProviderServices(connection)
-                    .DatabaseExists(connection, commandTimeout, new StoreItemCollection());
+                    .DatabaseExists(connection, commandTimeout, storeItemCollection);
             }
             catch
             {

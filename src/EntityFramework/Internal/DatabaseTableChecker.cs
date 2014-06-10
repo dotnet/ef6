@@ -21,7 +21,10 @@ namespace System.Data.Entity.Internal
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public DatabaseExistenceState AnyModelTableExists(InternalContext internalContext)
         {
-            var exists = internalContext.DatabaseOperations.Exists(internalContext.Connection, internalContext.CommandTimeout);
+            var exists = internalContext.DatabaseOperations.Exists(
+                internalContext.Connection, 
+                internalContext.CommandTimeout,
+                new Lazy<StoreItemCollection>(() => CreateStoreItemCollection(internalContext)));
 
             if (!exists)
             {
@@ -84,6 +87,15 @@ namespace System.Data.Entity.Internal
                     // Revert to previous behavior on error
                     return DatabaseExistenceState.Exists;
                 }
+            }
+        }
+
+        private static StoreItemCollection CreateStoreItemCollection(InternalContext internalContext)
+        {
+            using (var clonedObjectContext = internalContext.CreateObjectContextForDdlOps())
+            {
+                var entityConnection = ((EntityConnection)clonedObjectContext.ObjectContext.Connection);
+                return (StoreItemCollection)entityConnection.GetMetadataWorkspace().GetItemCollection(DataSpace.SSpace);
             }
         }
 
