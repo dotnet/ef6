@@ -22,9 +22,9 @@ namespace System.Data.Entity.Utilities
             }
             catch (ProviderIncompatibleException ex)
             {
-                if ("(localdb)\v11.0".Equals(
-                    DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext()),
-                    StringComparison.OrdinalIgnoreCase))
+                var dataSource = DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext());
+                if (@"(localdb)\v11.0".Equals(dataSource, StringComparison.OrdinalIgnoreCase)
+                    || @"(localdb)\mssqllocaldb".Equals(dataSource, StringComparison.OrdinalIgnoreCase))
                 {
                     throw new ProviderIncompatibleException(Strings.BadLocalDBDatabaseName, ex);
                 }

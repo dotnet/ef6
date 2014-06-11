@@ -989,7 +989,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return
                 string.Format(
                     CultureInfo.InvariantCulture,
+#if VS14
+                    @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog={0};Integrated Security=True",
+#else
                     @"Data Source=(LocalDb)\v11.0;Initial Catalog={0};Integrated Security=True",
+#endif
                     initialCatalog);
         }
 

@@ -409,7 +409,11 @@ namespace EFDesigner.E2ETests
                                        "Title CHAR(50) NOT NULL, Author CHAR(50), " +
                                        "PageCount INTEGER, Topic CHAR(30), Code CHAR(15))";
 
+#if VS14
+            const string connectionString = @"Data Source=(localdb)\mssqllocaldb;initial catalog=School;integrated security=True;Pooling=false";
+#else
             const string connectionString = @"Data Source=(localdb)\v11.0;initial catalog=School;integrated security=True;Pooling=false";
+#endif
             ExecuteSqlCommand(connectionString, createTable);
 
             // Update model from db
@@ -912,7 +916,11 @@ namespace EFDesigner.E2ETests
             var serverNameText = _wizard.Get<TextBox>(
                 SearchCriteria.ByText(
                     _resourceHelper.GetConnectionUIDialogResourceString("serverLabel.Text")));
+#if VS14
+            serverNameText.Enter(@"(localdb)\mssqllocaldb");
+#else
             serverNameText.Enter(@"(localdb)\v11.0");
+#endif
 
             var refreshButton = _wizard.Get<Button>(
                 SearchCriteria.ByText(

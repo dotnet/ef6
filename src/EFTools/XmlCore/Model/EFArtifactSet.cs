@@ -15,7 +15,7 @@ namespace Microsoft.Data.Entity.Design.Model
 
     /// <summary>
     ///     This class represents a set of artifacts that are validated and resolved with respect to one another.
-    ///     This class contains resolve information (symbols & bindings) and dep & anti-dep info
+    ///     This class contains resolve information (symbols &amp; bindings) and dep &amp; anti-dep info
     /// </summary>
     internal abstract class EFArtifactSet
     {
