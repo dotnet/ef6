@@ -22,13 +22,6 @@ namespace System.Data.Entity.Utilities
             }
             catch (ProviderIncompatibleException ex)
             {
-                var dataSource = DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext());
-                if (@"(localdb)\v11.0".Equals(dataSource, StringComparison.OrdinalIgnoreCase)
-                    || @"(localdb)\mssqllocaldb".Equals(dataSource, StringComparison.OrdinalIgnoreCase))
-                {
-                    throw new ProviderIncompatibleException(Strings.BadLocalDBDatabaseName, ex);
-                }
-
                 throw new ProviderIncompatibleException(Strings.FailedToGetProviderInformation, ex);
             }
         }

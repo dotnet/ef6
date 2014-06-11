@@ -903,14 +903,6 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Connection to the database failed. The connection string is configured with an invalid LocalDB server name. This may have been set in 'global.asax' by a pre-release version of MVC4. The default connection factory is now set in web.config so the line in 'global.asax' starting with 'Database.DefaultConnectionFactory = ' should be removed. See http://go.microsoft.com/fwlink/?LinkId=243166 for details."
-        // </summary>
-        internal static string BadLocalDBDatabaseName
-        {
-            get { return EntityRes.GetString(EntityRes.BadLocalDBDatabaseName); }
-        }
-
-        // <summary>
         // A string like "An error occurred accessing the database. This usually means that the connection to the database failed. Check that the connection string is correct and that the appropriate DbContext constructor is being used to specify it or find it in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=386386 for information on DbContext and connections. See the inner exception for details of the failure."
         // </summary>
         internal static string FailedToGetProviderInformation
@@ -14005,6 +13997,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.TransactionDisposedLog, p0, p1);
         }
+
+        // <summary>
+        // A string like "Unable to load embedded resource '{1}' from assembly '{0}'."
+        // </summary>
+        internal static string UnableToLoadEmbeddedResource(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.UnableToLoadEmbeddedResource, p0, p1);
+        }
     }
 
     // <summary>
@@ -15757,7 +15757,6 @@ namespace System.Data.Entity.Resources
         internal const string DuplicateConfiguredColumnOrder = "DuplicateConfiguredColumnOrder";
         internal const string UnsupportedUseOfV3Type = "UnsupportedUseOfV3Type";
         internal const string MultiplePropertiesMatchedAsKeys = "MultiplePropertiesMatchedAsKeys";
-        internal const string BadLocalDBDatabaseName = "BadLocalDBDatabaseName";
         internal const string FailedToGetProviderInformation = "FailedToGetProviderInformation";
         internal const string DbPropertyEntry_CannotGetCurrentValue = "DbPropertyEntry_CannotGetCurrentValue";
         internal const string DbPropertyEntry_CannotSetCurrentValue = "DbPropertyEntry_CannotSetCurrentValue";
@@ -17395,6 +17394,7 @@ namespace System.Data.Entity.Resources
         internal const string TransactionHandler_AlreadyInitialized = "TransactionHandler_AlreadyInitialized";
         internal const string ConnectionDisposedLog = "ConnectionDisposedLog";
         internal const string TransactionDisposedLog = "TransactionDisposedLog";
+        internal const string UnableToLoadEmbeddedResource = "UnableToLoadEmbeddedResource";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
