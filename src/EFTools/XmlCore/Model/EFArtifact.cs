@@ -899,7 +899,7 @@ namespace Microsoft.Data.Entity.Design.Model
         }
 
         /// <summary>
-        ///     Returns the XObject for the given line & column number.
+        ///     Returns the XObject for the given line &amp; column number.
         /// </summary>
         internal XObject FindXObjectForLineAndColumn(int lineNumber, int columnNumber)
         {

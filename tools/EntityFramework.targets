@@ -58,7 +58,7 @@ Project global post-settings and targets.
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
     <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2012</WixFullProductName_Dev11>
     <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2013</WixFullProductName_Dev12>
-    <WixFullProductName_Dev14>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2014</WixFullProductName_Dev14>
+    <WixFullProductName_Dev14>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 14</WixFullProductName_Dev14>
     <WixProductDescription_Dev11>$(WixFullProductName_Dev11)</WixProductDescription_Dev11>
     <WixProductDescription_Dev12>$(WixFullProductName_Dev12)</WixProductDescription_Dev12>
     <WixProductDescription_Dev14>$(WixFullProductName_Dev14)</WixProductDescription_Dev14>

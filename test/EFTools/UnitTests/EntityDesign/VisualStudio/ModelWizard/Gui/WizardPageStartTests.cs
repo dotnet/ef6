@@ -177,11 +177,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         public void OnDeactivate_updates_model_settings_if_model_file_does_not_exist_for_CodeFirst_empty_model()
         {
             var configXml = new XmlDocument();
-            configXml.LoadXml(@"<configuration>
-  <connectionStrings>    
-    <add name=""myModel"" connectionString=""Data Source=(localdb)\v11.0;"" providerName=""System.Data.SqlClient"" />
+            configXml.LoadXml(
+                string.Format(System.Globalization.CultureInfo.CurrentCulture,
+@"<configuration>
+  <connectionStrings>
+    <add name=""myModel"" connectionString=""Data Source=(localdb)\{0};"" providerName=""System.Data.SqlClient"" />
   </connectionStrings>
-</configuration>");
+</configuration>",
+#if VS14
+    "MSSQLLocalDB"
+#else
+    "v11.0"
+#endif
+            ));
 
             var mockConfig = new Mock<ConfigFileUtils>(Mock.Of<Project>(), Mock.Of<IServiceProvider>(), null, Mock.Of<IVsUtils>(), null);
             mockConfig.Setup(u => u.LoadConfig()).Returns(configXml);
@@ -201,7 +209,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Assert.Equal(@"myModel1", modelBuilderSettings.AppConfigConnectionPropertyName);
             Assert.True(modelBuilderSettings.SaveConnectionStringInAppConfig);
             Assert.Equal(
+#if VS14
+                @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=modelNamespace.myModel;Integrated Security=True",
+#else
                 @"Data Source=(LocalDb)\v11.0;Initial Catalog=modelNamespace.myModel;Integrated Security=True",
+#endif
                 modelBuilderSettings.AppConfigConnectionString);
         }
 
