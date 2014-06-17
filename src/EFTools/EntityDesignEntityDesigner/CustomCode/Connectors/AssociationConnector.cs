@@ -5,6 +5,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Globalization;
     using Microsoft.Data.Entity.Design.EntityDesigner.CustomCode.Utils;
     using Microsoft.Data.Entity.Design.EntityDesigner.CustomSerializer;
@@ -35,6 +36,11 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         ///     Are themable colors already applied?
         /// </summary>
         internal static bool IsColorThemeSet { get; set; }
+
+        /// <summary>
+        ///     Even when dark theme is selected sometimes need to draw against white background (e.g. ExportAsImage)
+        /// </summary>
+        internal static bool ForceDrawOnWhiteBackground { get; set; }
 
         protected override void InitializeDecorators(IList<ShapeField> shapeFields, IList<Decorator> decorators)
         {
@@ -84,10 +90,14 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             // Set the emphasis outline color for selected shapes.
             ClassStyleSet.OverridePenColor(DiagramPens.EmphasisOutline, EntityTypeShape.EmphasisShapeOutlineColor);
+
             // SourceEndDisplayText and TargetEndDisplayText use this brush, and we need them to be distinguisable in the background. 
-            ClassStyleSet.OverrideBrushColor(
-                DiagramBrushes.ShapeText, VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey));
-            // Shouldn't need to do this unless user changes theme.
+            // If we are drawing shapes for ExportAsImage we'll need to override the theme to make the text (i.e. cardinalities) visible.
+            var shapeTextColor = ForceDrawOnWhiteBackground
+                ? Color.Black
+                : VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+            ClassStyleSet.OverrideBrushColor(DiagramBrushes.ShapeText, shapeTextColor);
+            // Shouldn't need to do this unless user changes theme or we had been drawing on white background for ExportAsImage.
             IsColorThemeSet = true;
         }
 

@@ -7,6 +7,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Utils
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
     using System.Windows.Forms;
@@ -84,7 +85,19 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Utils
                         if (childShapes != null
                             && childShapes.Count > 0)
                         {
-                            var bmp = diagram.CreateBitmap(childShapes, Diagram.CreateBitmapPreference.FavorSmallSizeOverClarity);
+                            Bitmap bmp = null;
+                            try
+                            {
+                                // image has a white background - so force the AssociationConnector text to take that into account
+                                AssociationConnector.ForceDrawOnWhiteBackground = true;
+                                AssociationConnector.IsColorThemeSet = false;
+                                bmp = diagram.CreateBitmap(childShapes, Diagram.CreateBitmapPreference.FavorSmallSizeOverClarity);
+                            }
+                            finally
+                            {
+                                AssociationConnector.ForceDrawOnWhiteBackground = false;
+                                AssociationConnector.IsColorThemeSet = false;
+                            }
 
                             var imageFormat = ImageFormat.Bmp;
                             var fi = new FileInfo(dlg.FileName);
