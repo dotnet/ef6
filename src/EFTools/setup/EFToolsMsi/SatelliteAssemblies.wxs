@@ -52,11 +52,11 @@
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_EntityFramework">
             <File Id="ide_$(var.IdSafeCulture)_EntityFramework"
-                  Source="$(var.PackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6NuGetPackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.resources.dll" />
+                  Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6NuGetPackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_SqlServer">
             <File Id="ide_$(var.IdSafeCulture)_SqlServer"
-                  Source="$(var.PackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6NuGetPackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.SqlServer.resources.dll" />
+                  Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6NuGetPackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.SqlServer.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_VersioningFacade">
             <File Id="ide_$(var.IdSafeCulture)_VersioningFacade"

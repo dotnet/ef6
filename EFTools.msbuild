@@ -59,6 +59,8 @@
         <MSBuild Targets="Clean"
                  Projects="@(TestHostProjects)" />
         <MSBuild Targets="Clean"
+                 Projects="$(SolutionDir)\src\EFTools\Setup\GenerateMsiInputs\GenerateMsiInputs.msbuild" />
+        <MSBuild Targets="Clean"
                  Projects="$(SolutionDir)\src\EFTools\Setup\EFToolsMsi\EFToolsMsi.wixproj" />
     </Target>
 
@@ -93,7 +95,14 @@
                  Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
 
-    <Target Name="BuildInstaller" DependsOnTargets="BuildFrameworkPackages">
+    <Target Name="GenerateInstallerInputs" DependsOnTargets="BuildFrameworkPackages">
+        <MSBuild Targets="GenerateMsiInputs"
+             Projects="$(SolutionDir)src\EFTools\setup\GenerateMsiInputs\GenerateMsiInputs.msbuild"
+             BuildInParallel="false"
+             Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
+    </Target>
+
+    <Target Name="BuildInstaller" DependsOnTargets="GenerateInstallerInputs">
         <MSBuild Targets="$(BuildTargets)"
              Projects="$(SolutionDir)src\EFTools\setup\EFToolsMsi\EFToolsMsi.wixproj"
              BuildInParallel="false"
@@ -129,6 +138,24 @@
 
     <Target Name="Install" DependsOnTargets="Rebuild">
         <Exec Command='msiexec /qb /i $(OutputPath)en\EFTools.msi SKIPENVIRONMENTSETUP="$(SkipEnvSetup)" /L*v $(LogsDir)EFTools.msi.log' />
+
+    <!-- This is included here so that we have the correct .PDBs for the last EFTools _installed_ (not just built) -->
+      <ItemGroup>
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.BootstrapPackage.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.DatabaseGeneration.pdb" />
+        <EFDesignerSymbolFiles Condition="$(VisualStudioVersion)=='11.0'" Include="$(OutputPath)Microsoft.Data.Entity.Design.DataSourceWizardExtension.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.EntityDesigner.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Extensibility.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Model.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Package.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.VersioningFacade.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Tools.Design.XmlCore.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.VisualStudio.Data.Tools.Design.XmlCore.pdb" />
+        <EFDesignerSymbolFiles Include="$(OutputPath)EntityFramework.pdb" />
+      </ItemGroup>
+      <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(EFDesignerSymbolFiles)" DestinationFolder="$(OutputPath)\en\Symbols" />
+
     </Target>
 
     <Target Name="Test" DependsOnTargets="Install;InstallTestHost;ReRunXUnitTests;ReRunInProcTests;ReRunE2ETests" />

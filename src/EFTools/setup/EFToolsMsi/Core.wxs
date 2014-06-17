@@ -36,18 +36,13 @@
               AssemblyApplication="Microsoft.Data.Entity.Design.dll"
               Assembly=".net"
               KeyPath="yes" />
-        <?if $(var.FrozenRuntimeDir) = "" ?>
-          <?define RuntimeDllDir=$(var.AssemblyPath45) ?>
-        <?else?>
-          <?define RuntimeDllDir=$(var.FrozenRuntimeDir) ?>
-        <?endif?>
-        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.RuntimeDllDir)\EntityFramework.dll">
+        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.MsiRuntimeInputsNet45DllsDir)\EntityFramework.dll">
           <netfx:NativeImage Id="ngen_IDE_EntityFramework" Platform="all" Priority="3" AppBaseDirectory="ide" />
         </File>
-        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.RuntimeDllDir)\EntityFramework.SqlServerCompact.dll" >
+        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.MsiRuntimeInputsNet45DllsDir)\EntityFramework.SqlServerCompact.dll" >
           <netfx:NativeImage Id="ngen_IDE_EntityFramework_SqlServerCompact" Platform="all" Priority="3" AppBaseDirectory="ide" />
         </File>
-        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.RuntimeDllDir)\EntityFramework.SqlServer.dll" >
+        <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.MsiRuntimeInputsNet45DllsDir)\EntityFramework.SqlServer.dll" >
           <netfx:NativeImage Id="ngen_IDE_EntityFramework_SqlServer" Platform="all" Priority="3" AppBaseDirectory="ide" />
         </File>
         <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft">

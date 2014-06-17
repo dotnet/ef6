@@ -11,7 +11,7 @@
     <OutputType>Package</OutputType>
     <Name>EFToolsMsi</Name>
     <SolutionDir Condition="$(SolutionDir) == ''">..\..\..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <RestorePackages>false</RestorePackages>
     <EmbedCab Condition="$(EmbedCab) == ''">no</EmbedCab>
     <IncludeLocalizedArtifacts Condition="$(IncludeLocalizedArtifacts) == ''">false</IncludeLocalizedArtifacts>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
@@ -92,82 +92,25 @@
           Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
 
   <PropertyGroup>
-    <PackagesInputDir Condition=" '$(PackagesInputDir)' == ''">$(NuGetOutputPath)</PackagesInputDir>
-
-    <!-- override output dir for EF5 package restore (which will automatically append \packages to path) -->
-    <PackageRestoreOutputDir>$(PackagesInputDir)</PackageRestoreOutputDir>
-
-    <!-- Now align PackagesDir with PackagesInputDir so that the local framework and the EF5 framework end up in the same directory -->
-    <PackagesDir>$(PackagesInputDir)\packages</PackagesDir>
-    
-    <!-- Allow the source of local packages to be overridden for a frozen runtime
-         If running locally $(build_branch_name) will not be set - so override if only $(FrozenRuntimeDir) is set.
-         But if $(build_branch_name) is set (CI builds) require that $(FrozenRuntimeBranch) exists and is equal to $(build_branch_name). -->
-    <ShouldUseFrozenRuntime Condition="'$(FrozenRuntimeDir)' != '' AND ('$(build_branch_name)' == '' OR '$(build_branch_name)' == '$(FrozenRuntimeBranch)')">True</ShouldUseFrozenRuntime>
-    <ShouldUseFrozenRuntime Condition="'$(ShouldUseFrozenRuntime)' == ''">False</ShouldUseFrozenRuntime>
-    <LocalPackageSourceDir Condition="'$(ShouldUseFrozenRuntime)' == 'True'">$(FrozenRuntimeDir)</LocalPackageSourceDir>
-    <LocalPackageSourceDir Condition="'$(LocalPackageSourceDir)' == ''">$(PackagesInputDir)</LocalPackageSourceDir>
-
-    <BuildDependsOn>RestorePackages;RestoreLocalPackages;ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
+    <BuildDependsOn>ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
-
+  
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 
   <Target Name="ExtractNuspecs">
     <ItemGroup>
-      <ExtractNuspecPackages Include="$(PackagesDir)\**\EntityFramework*.nupkg" />
+      <ExtractNuspecPackages Include="$(MsiRuntimeInputsPackagesDir)\**\EntityFramework*.nupkg" />
     </ItemGroup>
     <ExtractNuspecFromPackage NuGetPackageFilePath="%(ExtractNuspecPackages.Identity)" />
   </Target>
   
-  <Target Name="RestoreLocalPackages">
-    <!-- Loop over all local packages (which, on a nightly build, should include the localized ones
-         but exclude the dated ones) exploding the packages -->
-    <ItemGroup>
-      <!-- Note: the construction of DatedLocalPackages assumes the date will be the
-                 only part after "$(EF6NuGetPackageVersion)-" in the package name -->
-      <DatedLocalPackages Include="$(LocalPackageSourceDir)\EntityFramework.$(EF6NuGetPackageVersion)-*.nupkg" />
-      <DatedLocalPackages Include="$(LocalPackageSourceDir)\EntityFramework.*.$(EF6NuGetPackageVersion)-*.nupkg" />
-
-      <!-- On a local build the symbols.nupkg files are in the same directory as the .nupkgs and must be excluded -->
-      <LocalPackages Include="$(LocalPackageSourceDir)\EntityFramework*.nupkg"
-                     Exclude="$(LocalPackageSourceDir)\EntityFramework*.symbols.nupkg;@(DatedLocalPackages)" />
-    </ItemGroup>
-    
-    <!-- TODO: Remove Message tasks below - inserted for DEBUG only -->
-    <Message Importance="High" Text="DEBUG: build_branch_name=$(build_branch_name)" />
-    <Message Importance="High" Text="DEBUG: FrozenRuntimeBranch=$(FrozenRuntimeBranch)" />
-    <Message Importance="High" Text="DEBUG: FrozenRuntimeDir=$(FrozenRuntimeDir)" />
-    <Message Importance="High" Text="DEBUG: ShouldUseFrozenRuntime=$(ShouldUseFrozenRuntime)" />
-
-    <Error Condition="'@(LocalPackages)' == ''" Text="LocalPackages is empty and must not be.  It should contain the list of non-dated, non-symbols EntityFramework .nupkg's from directory $(LocalPackageSourceDir)" />
-    
-    <!-- Restore the EF6 packages from $(LocalPackageSourceDir) -->
-    <Message Importance="High"
-             Text="RestoreLocalPackages: Using package input directory $(LocalPackageSourceDir)" />
-    
-    <!-- There is a bug in nuget (see issue 4113) such that if a .nupkg and a .symbols.nupkg for the same identity are side by side
-         then nuget install will use the .symbols.nupkg despite the fact that it is missing some files (specifically "content/**/*" and "tools/**/*.ps1")
-         We need those files in order to include them in the MSI. So here we copy just the .nupkg files to a parallel directory and then
-         install from there -->
-    <PropertyGroup>
-      <CopiedNuGetPackagesDir>$(PackagesInputDir)\..\CopiedNuGetPackages</CopiedNuGetPackagesDir>
-    </PropertyGroup>
-    <RemoveDir Directories="$(CopiedNuGetPackagesDir)" />
-    <MakeDir Directories="$(CopiedNuGetPackagesDir)" />
-    <Copy SourceFiles="@(LocalPackages)" DestinationFolder="$(CopiedNuGetPackagesDir)" />
-    
-    <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
-             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackageRestoreOutputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(CopiedNuGetPackagesDir);RequireNoCache=true;IncludePreRelease=true" />
-             
-  </Target>
-
   <Target Name="ReplaceEFToolsStrings">
     <RegexReplaceInFile InputFileName="Resources\EFToolsStrings.wxl.tokenized"
                         OutputFileName="Resources\EFToolsStrings.wxl"
                         Patterns="WIX_FULL_PRODUCT_NAME_DEV11;WIX_FULL_PRODUCT_NAME_DEV12;WIX_FULL_PRODUCT_NAME_DEV14;WIX_PRODUCT_DESCRIPTION_DEV11;WIX_PRODUCT_DESCRIPTION_DEV12;WIX_PRODUCT_DESCRIPTION_DEV14"
                         Replacements="$(WixFullProductName_Dev11);$(WixFullProductName_Dev12);$(WixFullProductName_Dev14);$(WixProductDescription_Dev11);$(WixProductDescription_Dev12);$(WixProductDescription_Dev14)" />
   </Target>
+  
   <!--
   To modify your build process, add your task inside one of the targets below and uncomment it.
   Other similar extension points exist, see Wix.targets.
@@ -181,34 +124,14 @@
       <DefineConstants>$(DefineConstants);AssemblyVersion=$(AssemblyVersion);AssemblyInfoVersion=$(AssemblyInfoVersion)</DefineConstants>
       <DefineConstants>$(DefineConstants);VisualStudioVersion=$(VisualStudioVersion);MajorVisualStudioVersion=$(VisualStudioVersion.Substring(0, 2))</DefineConstants>
       <DefineConstants>$(DefineConstants);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
-      <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath45=$(AssemblyPath45)</DefineConstants>
+      <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);AssemblyPath45=$(AssemblyPath45)</DefineConstants>
+      <DefineConstants>$(DefineConstants);MsiRuntimeInputsPackagesDir=$(MsiRuntimeInputsPackagesDir);MsiRuntimeInputsNet45DllsDir=$(MsiRuntimeInputsNet45DllsDir)</DefineConstants>
       <DefineConstants>$(DefineConstants);SatelliteAssemblyPath=$(SatelliteAssemblyPath);LocOutputPath=$(LocOutputPath)</DefineConstants>
       <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts)</DefineConstants>
-      <DefineConstants Condition="'$(ShouldUseFrozenRuntime)' == 'True'">$(DefineConstants);FrozenRuntimeDir=$(FrozenRuntimeDir)</DefineConstants>
-      <DefineConstants Condition="'$(ShouldUseFrozenRuntime)' != 'True'">$(DefineConstants);FrozenRuntimeDir=</DefineConstants>
     </PropertyGroup>
   </Target>
+  
   <Target Name="AfterBuild">
-    <!-- This is here so that we have the correct .PDBs for the last EFTools _installed_ (not just built) -->
-    <ItemGroup>
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.BootstrapPackage.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.DatabaseGeneration.pdb" />
-      <EFDesignerSymbolFiles Condition="$(VisualStudioVersion)=='11.0'" Include="$(OutputPath)Microsoft.Data.Entity.Design.DataSourceWizardExtension.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.EntityDesigner.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Extensibility.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Model.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Package.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.VersioningFacade.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Tools.Design.XmlCore.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.VisualStudio.Data.Tools.Design.XmlCore.pdb" />
-      <EFDesignerSymbolFiles Include="$(OutputPath)EntityFramework.pdb" />
-    </ItemGroup>
-    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(EFDesignerSymbolFiles)" DestinationFolder="$(OutputPath)\en\Symbols" />
   </Target>
 
-  <Target Name="AfterClean">
-    <!-- Remove the extra packages (and their expansions) created by RestorePackages and RestoreLocalPackages above -->
-    <RemoveDir Directories="$(PackagesDir)" />
-  </Target>
 </Project>

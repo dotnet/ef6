@@ -14,89 +14,89 @@
         <Directory Id="EntityFramework_$(var.packageVersionId)" Name="EntityFramework.$(var.PackageVersion)">
           <Directory Id="content_$(var.packageVersionId)" Name="Content">
             <Component Id="App.config.transform_$(var.packageVersionId)">
-              <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\Content\App.config.transform"/>
+              <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\App.config.transform"/>
             </Component>
             <Component Id="Web.config.transform_$(var.packageVersionId)">
-              <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\Content\Web.config.transform"/>
+              <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\Web.config.transform"/>
             </Component>
           </Directory>
           <Directory Id="tools_$(var.packageVersionId)" Name="tools">
             <Component Id="about_EntityFramework.help.txt_$(var.packageVersionId)">
-              <File Id="about_EF.help.txt_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\about_EntityFramework.help.txt"/>
+              <File Id="about_EF.help.txt_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\about_EntityFramework.help.txt"/>
             </Component>
             <Component Id="EntityFramework.PowerShell.dll_$(var.packageVersionId)">
-              <File Id="EF.Powershell.dll_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.PowerShell.dll"/>
+              <File Id="EF.Powershell.dll_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.PowerShell.dll"/>
             </Component>
             <Component Id="EntityFramework.PowerShell.Utility.dll_$(var.packageVersionId)">
-              <File Id="EF.Powershell.Utility.dll_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.PowerShell.Utility.dll"/>
+              <File Id="EF.Powershell.Utility.dll_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.PowerShell.Utility.dll"/>
             </Component>
             <Component Id="EntityFramework.psd1_$(var.packageVersionId)">
-              <File Id="EF.psd1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.psd1"/>
+              <File Id="EF.psd1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.psd1"/>
             </Component>
             <Component Id="EntityFramework.psm1_$(var.packageVersionId)">
-              <File Id="EF.psm1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.psm1"/>
+              <File Id="EF.psm1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.psm1"/>
             </Component>
             <Component Id="init.ps1_$(var.packageVersionId)">
-              <File Id="init.ps1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\init.ps1"/>
+              <File Id="init.ps1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\init.ps1"/>
             </Component>
             <Component Id="install.ps1_$(var.packageVersionId)">
-              <File Id="install.ps1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\install.ps1"/>
+              <File Id="install.ps1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\install.ps1"/>
             </Component>
             <Component Id="migrate.exe_$(var.packageVersionId)">
-              <File Id="migrate.exe_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\migrate.exe"/>
+              <File Id="migrate.exe_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\migrate.exe"/>
             </Component>
             <?if $(var.PackageVersion) = $(var.EF5NuGetPackageVersion)?>
               <Component Id="EntityFramework.PS3.psd1_$(var.packageVersionId)">
-                <File Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.PS3.psd1"/>
+                <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.PS3.psd1"/>
               </Component>
               <Component Id="Redirect.config_$(var.packageVersionId)">
-                <File Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\Redirect.config"/>
+                <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\Redirect.config"/>
               </Component>
               <Component Id="Redirect.VS11.config_$(var.packageVersionId)">
-                <File Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\Redirect.VS11.config"/>
+                <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\tools\Redirect.VS11.config"/>
               </Component>
             <?endif?>
           </Directory>
           <Directory Id="lib_$(var.packageVersionId)" Name="lib">
             <Directory Id="net40_$(var.packageVersionId)" Name="net40">
               <Component Id="entityframeworkdll_1_$(var.packageVersionId)">
-                <File Id="entityframeworkdll_1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.dll"/>
+                <File Id="entityframeworkdll_1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.dll"/>
               </Component>
               <Component Id="EntityFramework.xml_$(var.packageVersionId)">
-                <File Id="EntityFramework.xml_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.xml"/>
+                <File Id="EntityFramework.xml_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.xml"/>
               </Component>
               <?if $(var.PackageVersion) != $(var.EF5NuGetPackageVersion)?>
                 <Component Id="EntityFramework.SqlServerProvider.dll_$(var.packageVersionId)">
-                  <File Id="EntityFramework.SqlServerProvider.dll_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.SqlServer.dll"/>
+                  <File Id="EntityFramework.SqlServerProvider.dll_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.SqlServer.dll"/>
                 </Component>
                 <Component Id="EntityFramework.SqlServerProvider.xml_$(var.packageVersionId)">
-                  <File Id="EntityFramework.SqlServerProvider.xml_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.SqlServer.xml"/>
+                  <File Id="EntityFramework.SqlServerProvider.xml_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.SqlServer.xml"/>
                 </Component>
               <?endif?>
             </Directory>
             <Directory Id="net45_$(var.packageVersionId)" Name="net45">
               <Component Id="entityframeworkdll_2_$(var.packageVersionId)">
-                <File Id="entityframeworkdll_2_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.dll"/>
+                <File Id="entityframeworkdll_2_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.dll"/>
               </Component>
               <Component Id="entityframeworkxml_1_$(var.packageVersionId)">
-                <File Id="entityframeworkxml_1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.xml"/>
+                <File Id="entityframeworkxml_1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.xml"/>
               </Component>
               <?if $(var.PackageVersion) != $(var.EF5NuGetPackageVersion)?>
                 <Component Id="EntityFramework.SqlServerProvider.dll_1_$(var.packageVersionId)">
-                  <File Id="EntityFramework.SqlServerProvider.dll_1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.SqlServer.dll"/>
+                  <File Id="EntityFramework.SqlServerProvider.dll_1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.SqlServer.dll"/>
                 </Component>
                 <Component Id="EntityFramework.SqlServerProvider.xml_1_$(var.packageVersionId)">
-                  <File Id="EntityFramework.SqlServerProvider.xml_1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.SqlServer.xml"/>
+                  <File Id="EntityFramework.SqlServerProvider.xml_1_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.SqlServer.xml"/>
                 </Component>
               <?endif?>
             </Directory>
           </Directory>
           <Component Id="EntityFramework.$(var.packageVersionId).nuspec">
-            <File Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\EntityFramework.$(var.PackageVersion).nuspec"/>
+            <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\EntityFramework.$(var.PackageVersion).nuspec"/>
           </Component>
         </Directory>
         <Component>
-          <File Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\EntityFramework.$(var.PackageVersion).nupkg"/>
+          <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\EntityFramework.$(var.PackageVersion).nupkg"/>
         </Component>
         <?undef packageVersionId?>
       <?endforeach?>
@@ -124,30 +124,30 @@
                 <Directory Id="net40_$(var.safeLang)_$(var.packageVersionId)" Name="net40">
                   <Directory Id="$(var.safeLang)_$(var.packageVersionId)" Name="$(var.NuGetLang)">
                     <Component Id="entityframeworkresourcesdll_$(var.safeLang)_$(var.packageVersionId)">
-                      <File Id="entityframeworkresourcesdll_$(var.safeLang)_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net40\$(var.NuGetLang)\EntityFramework.resources.dll"/>
+                      <File Id="entityframeworkresourcesdll_$(var.safeLang)_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net40\$(var.NuGetLang)\EntityFramework.resources.dll"/>
                     </Component>
                     <Component Id="entityframeworkxml_$(var.safeLang)_$(var.packageVersionId)">
-                      <File Id="entityframeworkxml_$(var.safeLang)_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net40\$(var.NuGetLang)\EntityFramework.xml"/>
+                      <File Id="entityframeworkxml_$(var.safeLang)_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net40\$(var.NuGetLang)\EntityFramework.xml"/>
                     </Component>
                   </Directory>
                 </Directory>
                 <Directory Id="net45_$(var.safeLang)_$(var.packageVersionId)" Name="net45">
                   <Directory Id="$(var.safeLang)_$(var.packageVersionId)_1" Name="$(var.NuGetLang)">
                     <Component Id="entityframeworkresourcesdll_$(var.safeLang)_$(var.packageVersionId)_1">
-                      <File Id="entityframeworkresourcesdll_$(var.safeLang)_$(var.packageVersionId)_1" Source="$(var.PackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net45\$(var.NuGetLang)\EntityFramework.resources.dll"/>
+                      <File Id="entityframeworkresourcesdll_$(var.safeLang)_$(var.packageVersionId)_1" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net45\$(var.NuGetLang)\EntityFramework.resources.dll"/>
                     </Component>
                     <Component Id="entityframeworkxml_$(var.safeLang)_$(var.packageVersionId)_1">
-                      <File Id="entityframeworkxml_$(var.safeLang)_$(var.packageVersionId)_1" Source="$(var.PackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net45\$(var.NuGetLang)\EntityFramework.xml"/>
+                      <File Id="entityframeworkxml_$(var.safeLang)_$(var.packageVersionId)_1" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\lib\net45\$(var.NuGetLang)\EntityFramework.xml"/>
                     </Component>
                   </Directory>
                 </Directory>
               </Directory>
               <Component Id="entityframework$(var.safeLang)$(var.packageVersionId)nuspec">
-                <File Source="$(var.PackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion).nuspec"/>
+                <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion).nuspec"/>
               </Component>
             </Directory>
             <Component Id="entityframework$(var.safeLang)$(var.packageVersionId)nupkg">
-              <File Source="$(var.PackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion).nupkg"/>
+              <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion).nupkg"/>
             </Component>
             <?undef safeLang?>
           <?endforeach NuGetLang in $(var.NuGetLangs)?>

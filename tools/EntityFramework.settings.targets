@@ -77,6 +77,12 @@ Project global pre-settings.
   </PropertyGroup>
 
   <PropertyGroup>
+    <MsiRuntimeInputsPath Condition="'$(MsiRuntimeInputsPath)' == ''">$(AssemblyPath)MsiRuntimeInputs</MsiRuntimeInputsPath>
+    <MsiRuntimeInputsPackagesDir Condition="'$(MsiRuntimeInputsPackagesDir)' == ''">$(MsiRuntimeInputsPath)\packages</MsiRuntimeInputsPackagesDir>
+    <MsiRuntimeInputsNet45DllsDir Condition="'$(MsiRuntimeInputsNet45DllsDir)' == ''">$(MsiRuntimeInputsPath)\net45</MsiRuntimeInputsNet45DllsDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <NuGetScriptsPath Condition="'$(NuGetScriptsPath)' == ''">$(MSBuildProjectDirectory)\tools</NuGetScriptsPath>
   </PropertyGroup>
 
