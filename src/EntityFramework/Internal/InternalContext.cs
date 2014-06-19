@@ -94,6 +94,8 @@ namespace System.Data.Entity.Internal
         // of the inheritance hierarchy for the given type.
         private IDictionary<Type, EntitySetTypePair> _entitySetMappings;
 
+        private object _entitySetMappingsUpdateLock = new object();
+
         // Usually null, but can be set to a temporary ObjectContext that is used for transient operations
         // such as seeding a database and is then disposed.
         private ClonedObjectContext _tempObjectContext;
@@ -1267,7 +1269,8 @@ namespace System.Data.Entity.Internal
         // </summary>
         protected void InitializeEntitySetMappings()
         {
-            _entitySetMappings = new Dictionary<Type, EntitySetTypePair>();
+            var metadataWorkspace = GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace;
+            _entitySetMappings = metadataWorkspace.MetadataOptimization.GetEntitySetMappingCache();
             foreach (var set in _genericSets.Values.Union(_nonGenericSets.Values))
             {
                 set.InternalSet.ResetQuery();
@@ -1307,18 +1310,27 @@ namespace System.Data.Entity.Internal
             {
                 return true;
             }
+
             // We didn't find the type on first look, but this could be because the o-space loading
             // has not happened.  So we try that, update our cached mappings, and try again.
+            var metadataWorkspace = GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace;
             var typeToLoad = entityType;
             do
             {
-                ObjectContext.MetadataWorkspace.LoadFromAssembly(typeToLoad.Assembly());
+                metadataWorkspace.LoadFromAssembly(typeToLoad.Assembly());
                 typeToLoad = typeToLoad.BaseType();
             }
             while (typeToLoad != null
-                   && typeToLoad != typeof(Object));
+                    && typeToLoad != typeof(Object));
 
-            UpdateEntitySetMappings();
+            lock (_entitySetMappingsUpdateLock)
+            {
+                if (_entitySetMappings.ContainsKey(entityType))
+                {
+                    return true;
+                }
+                metadataWorkspace.MetadataOptimization.UpdateEntitySetMappings(_entitySetMappings);
+            }
 
             return _entitySetMappings.ContainsKey(entityType);
         }
@@ -1367,62 +1379,6 @@ namespace System.Data.Entity.Internal
             var ospaceTypes = metadataWorkspace.GetItems<ComplexType>(DataSpace.OSpace);
 
             return ospaceTypes.Any(t => objectItemCollection.GetClrType(t) == clrType);
-        }
-
-        // <summary>
-        // Updates the cache of types to entity sets either for the first time or after potentially
-        // doing some o-space loading.
-        // </summary>
-        private void UpdateEntitySetMappings()
-        {
-            var metadataWorkspace = GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace;
-            var objectItemCollection = (ObjectItemCollection)metadataWorkspace.GetItemCollection(DataSpace.OSpace);
-            var ospaceTypes = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
-            var inverseHierarchy = new Stack<EntityType>();
-
-            foreach (var ospaceType in ospaceTypes)
-            {
-                inverseHierarchy.Clear();
-                var cspaceType = (EntityType)metadataWorkspace.GetEdmSpaceType(ospaceType);
-                do
-                {
-                    inverseHierarchy.Push(cspaceType);
-                    cspaceType = (EntityType)cspaceType.BaseType;
-                }
-                while (cspaceType != null);
-
-                EntitySet entitySet = null;
-                while (entitySet == null
-                       && inverseHierarchy.Count > 0)
-                {
-                    cspaceType = inverseHierarchy.Pop();
-                    foreach (var container in metadataWorkspace.GetItems<EntityContainer>(DataSpace.CSpace))
-                    {
-                        var entitySets = container.BaseEntitySets.Where(s => s.ElementType == cspaceType);
-                        var entitySetsCount = entitySets.Count();
-                        if (entitySetsCount > 1
-                            || entitySetsCount == 1 && entitySet != null)
-                        {
-                            throw Error.DbContext_MESTNotSupported();
-                        }
-                        if (entitySetsCount == 1)
-                        {
-                            entitySet = (EntitySet)entitySets.First();
-                        }
-                    }
-                }
-
-                // Entity set may be null if the o-space type is a base type that is in the model but is
-                // not part of any set.  For most practical purposes, this type is not in the model since
-                // there is no way to query etc. for objects of this type.
-                if (entitySet != null)
-                {
-                    var ospaceBaseType = (EntityType)metadataWorkspace.GetObjectSpaceType(cspaceType);
-                    var clrType = objectItemCollection.GetClrType(ospaceType);
-                    var clrBaseType = objectItemCollection.GetClrType(ospaceBaseType);
-                    _entitySetMappings[clrType] = new EntitySetTypePair(entitySet, clrBaseType);
-                }
-            }
         }
 
         public void ApplyContextInfo(DbContextInfo info)

@@ -3,13 +3,20 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
+    using System.Collections.Concurrent;
 
     internal class MetadataOptimization
     {
         private readonly MetadataWorkspace _workspace;
+
+        private readonly IDictionary<Type, EntitySetTypePair> _entitySetMappingsCache
+            = new Dictionary<Type, EntitySetTypePair>();
 
         private volatile AssociationType[] _csAssociationTypes;
         private volatile AssociationType[] _osAssociationTypes;
@@ -21,6 +28,77 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _workspace = workspace;
         }
+
+        #region Entity Set Mappings
+
+        // <summary>
+        // Returns a dictionary that serves as a cache of the mapping between clr types and entity sets 
+        // used by the internal context.
+        // The cache's lifecycle is the same as the metadata workspace's lifecycle.
+        // </summary>
+        // <returns>The entity set mapping dictionary owned by the provided context type</returns>
+        internal IDictionary<Type, EntitySetTypePair> GetEntitySetMappingCache()
+        {
+            return _entitySetMappingsCache;
+        }
+
+        // <summary>
+        // Updates the cache of types to entity sets either for the first time or after potentially
+        // doing some o-space loading.
+        // </summary>
+        // <param name="entitySetMappings">The dictionary where the mappings will be updated</param>
+        internal void UpdateEntitySetMappings(IDictionary<Type, EntitySetTypePair> entitySetMappings)
+        {
+            var objectItemCollection = (ObjectItemCollection)_workspace.GetItemCollection(DataSpace.OSpace);
+            var ospaceTypes = _workspace.GetItems<EntityType>(DataSpace.OSpace);
+            var inverseHierarchy = new Stack<EntityType>();
+
+            foreach (var ospaceType in ospaceTypes)
+            {
+                inverseHierarchy.Clear();
+                var cspaceType = (EntityType)_workspace.GetEdmSpaceType(ospaceType);
+                do
+                {
+                    inverseHierarchy.Push(cspaceType);
+                    cspaceType = (EntityType)cspaceType.BaseType;
+                }
+                while (cspaceType != null);
+
+                EntitySet entitySet = null;
+                while (entitySet == null
+                       && inverseHierarchy.Count > 0)
+                {
+                    cspaceType = inverseHierarchy.Pop();
+                    foreach (var container in _workspace.GetItems<EntityContainer>(DataSpace.CSpace))
+                    {
+                        var entitySets = container.BaseEntitySets.Where(s => s.ElementType == cspaceType).ToList();
+                        var entitySetsCount = entitySets.Count;
+                        if (entitySetsCount > 1
+                            || entitySetsCount == 1 && entitySet != null)
+                        {
+                            throw Error.DbContext_MESTNotSupported();
+                        }
+                        if (entitySetsCount == 1)
+                        {
+                            entitySet = (EntitySet)entitySets[0];
+                        }
+                    }
+                }
+
+                // Entity set may be null if the o-space type is a base type that is in the model but is
+                // not part of any set.  For most practical purposes, this type is not in the model since
+                // there is no way to query etc. for objects of this type.
+                if (entitySet != null)
+                {
+                    var ospaceBaseType = (EntityType)_workspace.GetObjectSpaceType(cspaceType);
+                    var clrType = objectItemCollection.GetClrType(ospaceType);
+                    var clrBaseType = objectItemCollection.GetClrType(ospaceBaseType);
+                    entitySetMappings[clrType] = new EntitySetTypePair(entitySet, clrBaseType);
+                }
+            }
+        }
+
+        #endregion
 
         #region CSpace
 

@@ -2,9 +2,11 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class MetadataOptimizationTests
@@ -312,6 +314,101 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Enumerable.Empty<MetadataProperty>());
 
             return associationType;
+        }
+
+        [Fact]
+        public void GetEntitySetMappingCache_returns_unique_instance_per_metadataworkspace_per_contexttype()
+        {
+            var metadataWorkspace1 = CreateMetadataWorkspace();
+            var metadataWorkspace2 = CreateMetadataWorkspace();
+
+            var entitySetMappings1 = metadataWorkspace1.MetadataOptimization.GetEntitySetMappingCache();
+            var entitySetMappings2 = metadataWorkspace2.MetadataOptimization.GetEntitySetMappingCache();
+
+            Assert.False(
+                ReferenceEquals(entitySetMappings1, entitySetMappings2),
+                "Metadata workspace should produce a unique entitysetmapping dictionary per metadata workspace instance");
+            Assert.True(
+                ReferenceEquals(entitySetMappings1, metadataWorkspace1.MetadataOptimization.GetEntitySetMappingCache()),
+                "Metadata workspace should provide the cached instance of the entitysetmapping dictionary for the provided context type");
+        }
+
+        public class Blog
+        {
+            public int BlogId { get; set; }
+            public string Title { get; set; }
+            public virtual ICollection<Post> Posts { get; set; }
+        }
+
+        public class Post
+        {
+            public int PostId { get; set; }
+            public string Title { get; set; }
+            public string Content { get; set; }
+            public Blog Blog { get; set; }
+        }
+
+        public class BlogDbContext : DbContext
+        {
+            public virtual DbSet<Blog> Blogs { get; set; }
+            public virtual DbSet<Post> Posts { get; set; }
+        }
+
+        public class Picture
+        {
+            public int PictureId { get; set; }
+            public string Name { get; set; }
+            public byte[] Data { get; set; }
+        }
+
+        public class BlogDbContextVersion2 : DbContext
+        {
+            public virtual DbSet<Blog> Blogs { get; set; }
+            public virtual DbSet<Post> Posts { get; set; }
+            public virtual DbSet<Picture> Pictures { get; set; }
+        }
+
+        [Fact]
+        public void GetEntitySetMappingCache_produces_multiple_entitysets_for_single_clr_type_present_in_multiple_models()
+        {
+            var blogType = typeof(Blog);
+            Internal.EntitySetTypePair blog1PairForBlogType;
+            using (var blog1 = new BlogDbContext())
+            {
+                using (var blog2 = new BlogDbContextVersion2())
+                {
+                    //obtain the type to entityset dictionaries and update the mappings
+                    var workspace1 = ((IObjectContextAdapter)blog1).ObjectContext.MetadataWorkspace.MetadataOptimization;
+                    var entitySetMappingCache1 = workspace1.GetEntitySetMappingCache();
+                    workspace1.UpdateEntitySetMappings(entitySetMappingCache1);
+
+                    var workspace2 = ((IObjectContextAdapter)blog2).ObjectContext.MetadataWorkspace.MetadataOptimization;
+                    var entitySetMappingCache2 = workspace2.GetEntitySetMappingCache();
+                    workspace2.UpdateEntitySetMappings(entitySetMappingCache2);
+
+                    //check that the same clr type maps to different entity sets on different metadata workspaces
+                    blog1PairForBlogType = entitySetMappingCache1[blogType];
+                    Assert.NotNull(blog1PairForBlogType);
+                    Assert.False(
+                        ReferenceEquals(blog1PairForBlogType, entitySetMappingCache2[blogType]),
+                        "Single CLR type on two different metadata workspaces erroneously maps to the same entity set instance");
+                }
+            }
+
+            using (var blog1Bis = new BlogDbContext())
+            {
+                var workspace1Bis = ((IObjectContextAdapter)blog1Bis).ObjectContext.MetadataWorkspace.MetadataOptimization;
+                var entitySetMappingCache1Bis = workspace1Bis.GetEntitySetMappingCache();
+                workspace1Bis.UpdateEntitySetMappings(entitySetMappingCache1Bis);
+
+                Assert.True(
+                        blog1PairForBlogType.Equals(entitySetMappingCache1Bis[blogType]),
+                        "Metadata workspace should produce same entity set for same CLR type on different context instances");
+
+                Assert.True(
+                        blog1PairForBlogType.Equals(entitySetMappingCache1Bis[new Blog().GetType()]),
+                        "Metadata workspace should produce the same entity set for the same CLR type using different instances of the same type");
+            }
         }
     }
 }
