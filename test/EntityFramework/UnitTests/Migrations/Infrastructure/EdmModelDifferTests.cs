@@ -1858,6 +1858,28 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [MigrationsTheory]
+        public void Should_drop_correct_constraint_when_ia_fk_name_component_changed() // #2338
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Renamed_ia_pk_v1.Dependent>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Renamed_ia_pk_v2.Dependent>();
+            
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(8, operations.Count());
+            Assert.Equal("Principal_Id", operations.OfType<DropForeignKeyOperation>().First().DependentColumns.Single());
+        }
+        
+        [MigrationsTheory]
         public void Should_introduce_temp_column_renames_when_transitive_dependencies()
         {
             var modelBuilder = new DbModelBuilder();
@@ -3616,6 +3638,34 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             public int TenderId { get; set; }
             public Tender Tender { get; set; }
+        }
+    }
+
+    namespace Renamed_ia_pk_v1
+    {
+        public class Dependent
+        {
+            public int Id { get; set; }
+            public virtual Principal Principal { get; set; }
+        }
+
+        public class Principal
+        {
+            public int Id { get; set; }
+        }
+    }
+
+    namespace Renamed_ia_pk_v2
+    {
+        public class Dependent
+        {
+            public int Id { get; set; }
+            public virtual Principal Principal { get; set; }
+        }
+
+        public class Principal
+        {
+            public int PrincipalId { get; set; }
         }
     }
 }

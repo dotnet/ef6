@@ -1503,15 +1503,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             DebugCheck.NotNull(tablePair);
 
-            var referencedForeignKeys
-                = _target.StoreItemCollection.GetItems<AssociationType>()
+            var sourceReferencedForeignKeys
+                = _source.StoreItemCollection.GetItems<AssociationType>()
                     .Select(at => at.Constraint)
-                    .Where(c => c.FromProperties.SequenceEqual(tablePair.Item2.ElementType.KeyProperties))
+                    .Where(c => c.FromProperties.SequenceEqual(tablePair.Item1.ElementType.KeyProperties))
                     .ToList();
 
-            foreach (var constraint in referencedForeignKeys)
+            foreach (var constraint in sourceReferencedForeignKeys)
             {
-                yield return BuildDropForeignKeyOperation(constraint, _target);
+                yield return BuildDropForeignKeyOperation(constraint, _source);
             }
 
             var dropPrimaryKeyOperation
@@ -1536,7 +1536,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             yield return addPrimaryKeyOperation;
 
-            foreach (var constraint in referencedForeignKeys)
+            var targetReferencedForeignKeys
+                = _target.StoreItemCollection.GetItems<AssociationType>()
+                    .Select(at => at.Constraint)
+                    .Where(c => c.FromProperties.SequenceEqual(tablePair.Item2.ElementType.KeyProperties))
+                    .ToList();
+
+            foreach (var constraint in targetReferencedForeignKeys)
             {
                 yield return BuildAddForeignKeyOperation(constraint, _target);
             }

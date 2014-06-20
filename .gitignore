@@ -25,3 +25,4 @@ EntityFramework.SqlServerCompact.xml
 /src/EFTools/setup/EFToolsMsi/Resources/EFToolsStrings.wxl
 Index.dat
 Storage.dat
+*.sln.ide
