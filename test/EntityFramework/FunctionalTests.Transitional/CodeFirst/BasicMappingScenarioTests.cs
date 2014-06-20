@@ -1970,6 +1970,8 @@ namespace FunctionalTests
                 .Ignore(b => b.AssocRelated)
                 .Ignore(b => b.AssocRelatedId);
 
+            modelBuilder.Ignore<AssocExtraDerived>();
+
             var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
@@ -2889,6 +2891,7 @@ namespace FunctionalTests
             
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2950,6 +2953,7 @@ namespace FunctionalTests
                         });
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2989,6 +2993,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.Deriveds);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -3020,6 +3025,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.Bases);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -3051,6 +3057,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.Bases);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
             modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -3061,6 +3068,127 @@ namespace FunctionalTests
                 "Id", "AssocRelated_Id", "Name", "BaseData",
                 "DerivedData1", "DerivedData2");
             databaseMapping.Assert<AssocDerived>("Deriveds").HasForeignKeyColumn("AssocRelated_Id");
+        }
+
+        [Fact]
+        public void ToTable_configures_TPC_with_IA_to_non_most_derived_type()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<AssocBase>().ToTable("Bases");
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBase);
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
+            modelBuilder.Entity<AssocDerived>()
+                .Map(
+                    mc =>
+                    {
+                        mc.MapInheritedProperties();
+                        mc.ToTable("Deriveds");
+                    });
+            modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
+            modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
+            modelBuilder.Entity<AssocExtraDerived>()
+                .Map(
+                    mc =>
+                    {
+                        mc.MapInheritedProperties();
+                        mc.ToTable("Extras");
+                    });
+
+            modelBuilder.Entity<AssocExtraDerived>().Ignore(e => e.ExtraAssocRelated);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.Bases);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.Deriveds);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+            
+            databaseMapping.Assert<AssocBase>("Bases").HasColumns("Id", "Name", "BaseData");
+            databaseMapping.Assert<AssocDerived>("Deriveds").HasColumns(
+                "Id", "Name", "BaseData", "DerivedData1", "DerivedData2");
+
+            databaseMapping.Assert<AssocRelated>("AssocRelateds").HasColumns(
+                "Id", "Name", "RefDerived_Id");
+            databaseMapping.Assert<AssocRelated>("AssocRelateds").HasNoForeignKeyColumns();
+            Assert.Equal("RefDerived_Id", databaseMapping.GetAssociationSetMappings().Single().Conditions.Single().Column.Name);
+        }
+
+        [Fact]
+        public void ToTable_throws_when_TPC_with_IA_on_non_most_derived_type()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<AssocBase>().ToTable("Bases");
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBase);
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
+            modelBuilder.Entity<AssocDerived>()
+                .Map(
+                    mc =>
+                    {
+                        mc.MapInheritedProperties();
+                        mc.ToTable("Deriveds");
+                    });
+            modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.Bases);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
+            
+            modelBuilder.Entity<AssocExtraDerived>()
+                .Map(
+                    mc =>
+                    {
+                        mc.MapInheritedProperties();
+                        mc.ToTable("Extras");
+                    });
+
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
+                .ValidateMessage("EntityMappingConfiguration_TPCWithIAsOnNonLeafType", "AssocRelated_Deriveds", "AssocRelated", "AssocDerived");
+        }
+
+        [Fact]
+        public void ToTable_configures_TPC_with_IA_on_double_derived_type()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<AssocBase>().ToTable("Bases");
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBase);
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
+
+            modelBuilder.Entity<AssocDerived>()
+                .Map(
+                    mc =>
+                    {
+                        mc.MapInheritedProperties();
+                        mc.ToTable("Deriveds");
+                    });
+            modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
+            modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
+
+            modelBuilder.Entity<AssocExtraDerived>()
+                .Map(
+                    mc =>
+                    {
+                        mc.MapInheritedProperties();
+                        mc.ToTable("Extras");
+                    });
+
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.Bases);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefBase);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.RefDerived);
+            modelBuilder.Entity<AssocRelated>().Ignore(r => r.Deriveds);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.Equal(2, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+
+            databaseMapping.Assert<AssocBase>("Bases").HasColumns("Id", "Name", "BaseData");
+            databaseMapping.Assert<AssocDerived>("Deriveds").HasColumns(
+                "Id", "Name", "BaseData", "DerivedData1", "DerivedData2");
+
+            databaseMapping.Assert<AssocExtraDerived>("Extras").HasColumns(
+                "Id", "ExtraAssocRelated_Id", "Name", "BaseData", "DerivedData1", "DerivedData2", "ExtraData");
+            databaseMapping.Assert<AssocExtraDerived>("Extras").HasForeignKeyColumn("ExtraAssocRelated_Id");
         }
 
         [Fact]
@@ -4672,6 +4800,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -4714,6 +4843,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -4757,6 +4887,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -4805,6 +4936,7 @@ namespace FunctionalTests
             modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelated);
             modelBuilder.Entity<AssocDerived>().Ignore(d => d.AssocRelatedId);
+            modelBuilder.Ignore<AssocExtraDerived>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -4829,6 +4961,12 @@ namespace FunctionalTests
             public string DerivedData1 { get; set; }
             public string DerivedData2 { get; set; }
             public AssocRelated AssocRelated { get; set; }
+        }
+
+        public class AssocExtraDerived : AssocDerived
+        {
+            public string ExtraData { get; set; }
+            public AssocRelated ExtraAssocRelated { get; set; }
         }
 
         public class AssocRelated

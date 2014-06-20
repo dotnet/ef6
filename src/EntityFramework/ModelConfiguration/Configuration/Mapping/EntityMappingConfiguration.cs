@@ -235,7 +235,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(providerManifest);
 
-            var isIdentityTable = entityType.BaseType == null && configurationIndex == 0;
+            var baseType = (EntityType)entityType.BaseType;
+            var isIdentityTable = baseType == null && configurationIndex == 0;
 
             var fragment = FindOrCreateTypeMappingFragment(
                 databaseMapping, ref entityTypeMapping, configurationIndex, entityType, providerManifest);
@@ -297,9 +298,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 }
                 if (isMappingAnyInheritedProperty)
                 {
+                    var baseTables =
+                        databaseMapping.GetEntityTypeMappings(baseType)
+                        .SelectMany(etm => etm.MappingFragments)
+                        .Select(mf => mf.Table);
+
                     var associationMapping = databaseMapping.EntityContainerMappings
                         .SelectMany(asm => asm.AssociationSetMappings)
-                        .FirstOrDefault(a => a.Table == fromTable);
+                        .FirstOrDefault(a => baseTables.Contains(a.Table)
+                                 && (baseType == a.AssociationSet.ElementType.SourceEnd.GetEntityType()
+                                     || baseType == a.AssociationSet.ElementType.TargetEnd.GetEntityType()));
 
                     if (associationMapping != null)
                     {
