@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core
 {
@@ -306,6 +306,46 @@ namespace System.Data.Entity.Core
 
                 Assert.Equal("Name2", key.EntityKeyValues.Skip(1).Single().Key);
                 Assert.Equal("Foo", key.EntityKeyValues.Skip(1).Single().Value);
+            }
+            
+            [Fact]
+            public void ValidateEntityKey_handles_unsigned_integers()
+            {
+                var entityType = new EntityType(
+                    "FakeEntityType",
+                    "FakeNamespace",
+                    DataSpace.CSpace,
+                    new[] { "key" },
+                    new EdmMember[]
+                    { new EdmProperty("key", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64))) });
+                var entitySet = new EntitySet("FakeSet", "FakeSchema", "FakeTable", null, entityType);
+                var entityContainer = new EntityContainer("FakeContainer", DataSpace.CSpace);
+                entityContainer.AddEntitySetBase(entitySet);
+                entitySet.ChangeEntityContainerWithoutCollectionFixup(entityContainer);
+                var entityKey = new EntityKey(entitySet, 1U);
+
+                entityKey.ValidateEntityKey(new Mock<MetadataWorkspace>().Object, entitySet);
+            }
+
+            [Fact]
+            public void ValidateEntityKey_throws_for_incompatible_types()
+            {
+                var entityType = new EntityType(
+                    "FakeEntityType",
+                    "FakeNamespace",
+                    DataSpace.CSpace,
+                    new[] { "key" },
+                    new EdmMember[] { new EdmProperty("key", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))) });
+                var entitySet = new EntitySet("FakeSet", "FakeSchema", "FakeTable", null, entityType);
+                var entityContainer = new EntityContainer("FakeContainer", DataSpace.CSpace);
+                entityContainer.AddEntitySetBase(entitySet);
+                entitySet.ChangeEntityContainerWithoutCollectionFixup(entityContainer);
+                var entityKey = new EntityKey(entitySet, 1U);
+
+                Assert.Equal(
+                    Strings.EntityKey_IncorrectValueType("key", typeof(int).FullName, typeof(uint).FullName),
+                    Assert.Throws<InvalidOperationException>(() =>
+                            entityKey.ValidateEntityKey(new Mock<MetadataWorkspace>().Object, entitySet)).Message);
             }
 
             private static Mock<EntityType> CreateMockEntityType(params string[] keyNames)
