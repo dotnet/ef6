@@ -220,6 +220,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                        && !entityType.DeclaredProperties.Contains(x.First()));
         }
 
+        [SuppressMessage("Microsoft.Maintainability","CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void Configure(
             DbDatabaseMapping databaseMapping,
