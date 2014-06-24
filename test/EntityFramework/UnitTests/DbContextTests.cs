@@ -539,6 +539,55 @@ namespace ProductivityApiUnitTests
             }
         }
 
+
+        [Fact] // CodePlex 2362
+        public void Initialize_database_happens_once_without_persistence_of_security_info()
+        {
+            EnsureEfTestUserExists();
+
+            var connectionString = SimpleConnectionStringWithCredentials<OneContextToRuleThemAll>("EFTestUser", "Password1");
+
+            using (var context = new OneContextToRuleThemAll(connectionString))
+            {
+                context.Database.Initialize(force: false);
+                Assert.Equal(1, OneInitializerToRuleThemAll.CalledCount);
+            }
+
+            using (var context = new OneContextToRuleThemAll(connectionString))
+            {
+                context.Database.Connection.Open();
+                context.Database.Connection.Close();
+
+                context.Database.Initialize(force: false);
+                Assert.Equal(1, OneInitializerToRuleThemAll.CalledCount);
+            }
+        }
+
+        private class OneContextToRuleThemAll : PersistSecurityInfoContext
+        {
+            static OneContextToRuleThemAll()
+            {
+                Database.SetInitializer(new OneInitializerToRuleThemAll());
+            }
+
+            public OneContextToRuleThemAll(string nameOrConnectionString)
+                : base(nameOrConnectionString)
+            {
+            }
+        }
+
+        private class OneInitializerToRuleThemAll : DropCreateDatabaseAlways<OneContextToRuleThemAll>
+        {
+            public static int CalledCount { get; set; }
+
+            public override void InitializeDatabase(OneContextToRuleThemAll context)
+            {
+                CalledCount++;
+
+                base.InitializeDatabase(context);
+            }
+        }
+
         private void EnsureEfTestUserExists()
         {
             using (var connection = new SqlConnection(SimpleConnectionString("master")))

@@ -232,10 +232,10 @@ namespace System.Data.Entity.Internal
 
                 dbConnectionInterceptorMock.Verify(
                     m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
-                    Times.Exactly(2));
+                    Times.Once());
                 dbConnectionInterceptorMock.Verify(
                     m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
-                    Times.Exactly(2));
+                    Times.Once());
             }
         }
 

@@ -65,8 +65,7 @@ namespace System.Data.Entity.Internal
                                CultureInfo.InvariantCulture, "{0};{1}", UnderlyingConnection.GetType(),
                                UnderlyingConnection is EntityConnection
                                    ? UnderlyingConnection.ConnectionString
-                                   : DbInterception.Dispatch.Connection.GetConnectionString(
-                                       UnderlyingConnection, InterceptionContext)));
+                                   : OriginalConnectionString));
             }
         }
 
