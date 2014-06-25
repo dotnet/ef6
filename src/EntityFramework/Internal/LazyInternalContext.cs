@@ -458,7 +458,7 @@ namespace System.Data.Entity.Internal
 
                     _objectContext.InterceptionContext = _objectContext.InterceptionContext.WithDbContext(Owner);
 
-                    InitializeEntitySetMappings();
+                    ResetDbSets();
 
                     _objectContext.InitializeMappingViewCacheFactory(Owner);
                 }

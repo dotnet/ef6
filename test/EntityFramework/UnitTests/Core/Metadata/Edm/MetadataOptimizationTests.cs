@@ -322,14 +322,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var metadataWorkspace1 = CreateMetadataWorkspace();
             var metadataWorkspace2 = CreateMetadataWorkspace();
 
-            var entitySetMappings1 = metadataWorkspace1.MetadataOptimization.GetEntitySetMappingCache();
-            var entitySetMappings2 = metadataWorkspace2.MetadataOptimization.GetEntitySetMappingCache();
+            var entitySetMappings1 = metadataWorkspace1.MetadataOptimization.EntitySetMappingCache;
+            var entitySetMappings2 = metadataWorkspace2.MetadataOptimization.EntitySetMappingCache;
 
             Assert.False(
                 ReferenceEquals(entitySetMappings1, entitySetMappings2),
                 "Metadata workspace should produce a unique entitysetmapping dictionary per metadata workspace instance");
             Assert.True(
-                ReferenceEquals(entitySetMappings1, metadataWorkspace1.MetadataOptimization.GetEntitySetMappingCache()),
+                ReferenceEquals(entitySetMappings1, metadataWorkspace1.MetadataOptimization.EntitySetMappingCache),
                 "Metadata workspace should provide the cached instance of the entitysetmapping dictionary for the provided context type");
         }
 
@@ -379,12 +379,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     //obtain the type to entityset dictionaries and update the mappings
                     var workspace1 = ((IObjectContextAdapter)blog1).ObjectContext.MetadataWorkspace.MetadataOptimization;
-                    var entitySetMappingCache1 = workspace1.GetEntitySetMappingCache();
-                    workspace1.UpdateEntitySetMappings(entitySetMappingCache1);
+                    var entitySetMappingCache1 = workspace1.EntitySetMappingCache;
+                    workspace1.TryUpdateEntitySetMappingsForType(blogType);
 
                     var workspace2 = ((IObjectContextAdapter)blog2).ObjectContext.MetadataWorkspace.MetadataOptimization;
-                    var entitySetMappingCache2 = workspace2.GetEntitySetMappingCache();
-                    workspace2.UpdateEntitySetMappings(entitySetMappingCache2);
+                    var entitySetMappingCache2 = workspace2.EntitySetMappingCache;
+                    workspace2.TryUpdateEntitySetMappingsForType(blogType);
 
                     //check that the same clr type maps to different entity sets on different metadata workspaces
                     blog1PairForBlogType = entitySetMappingCache1[blogType];
@@ -398,8 +398,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             using (var blog1Bis = new BlogDbContext())
             {
                 var workspace1Bis = ((IObjectContextAdapter)blog1Bis).ObjectContext.MetadataWorkspace.MetadataOptimization;
-                var entitySetMappingCache1Bis = workspace1Bis.GetEntitySetMappingCache();
-                workspace1Bis.UpdateEntitySetMappings(entitySetMappingCache1Bis);
+                var entitySetMappingCache1Bis = workspace1Bis.EntitySetMappingCache;
+                workspace1Bis.TryUpdateEntitySetMappingsForType(blogType);
 
                 Assert.True(
                         blog1PairForBlogType.Equals(entitySetMappingCache1Bis[blogType]),

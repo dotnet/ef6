@@ -15,8 +15,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private readonly MetadataWorkspace _workspace;
 
+        // Cache of the types that are valid mapped types for this metadata workspace,
+        // together withthe entity sets to which these types map and the CLR type that
+        // acts as the base of the inheritance hierarchy for the given type.
         private readonly IDictionary<Type, EntitySetTypePair> _entitySetMappingsCache
             = new Dictionary<Type, EntitySetTypePair>();
+
+        private object _entitySetMappingsUpdateLock = new object();
 
         private volatile AssociationType[] _csAssociationTypes;
         private volatile AssociationType[] _osAssociationTypes;
@@ -36,18 +41,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // used by the internal context.
         // The cache's lifecycle is the same as the metadata workspace's lifecycle.
         // </summary>
-        // <returns>The entity set mapping dictionary owned by the provided context type</returns>
-        internal IDictionary<Type, EntitySetTypePair> GetEntitySetMappingCache()
+        // <returns>The entity set mapping dictionary</returns>
+        internal IDictionary<Type, EntitySetTypePair> EntitySetMappingCache
         {
-            return _entitySetMappingsCache;
+            get { return _entitySetMappingsCache; }
         }
 
         // <summary>
         // Updates the cache of types to entity sets either for the first time or after potentially
         // doing some o-space loading.
         // </summary>
-        // <param name="entitySetMappings">The dictionary where the mappings will be updated</param>
-        internal void UpdateEntitySetMappings(IDictionary<Type, EntitySetTypePair> entitySetMappings)
+        private void UpdateEntitySetMappings()
         {
             var objectItemCollection = (ObjectItemCollection)_workspace.GetItemCollection(DataSpace.OSpace);
             var ospaceTypes = _workspace.GetItems<EntityType>(DataSpace.OSpace);
@@ -93,9 +97,45 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     var ospaceBaseType = (EntityType)_workspace.GetObjectSpaceType(cspaceType);
                     var clrType = objectItemCollection.GetClrType(ospaceType);
                     var clrBaseType = objectItemCollection.GetClrType(ospaceBaseType);
-                    entitySetMappings[clrType] = new EntitySetTypePair(entitySet, clrBaseType);
+                    _entitySetMappingsCache[clrType] = new EntitySetTypePair(entitySet, clrBaseType);
                 }
             }
+        }
+
+        // <summary>
+        // Performs o-space loading for the type and returns false if the type is not in the model.
+        // </summary>
+        internal bool TryUpdateEntitySetMappingsForType(Type entityType)
+        {
+            Debug.Assert(
+                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
+
+            if (_entitySetMappingsCache.ContainsKey(entityType))
+            {
+                return true;
+            }
+
+            // We didn't find the type on first look, but this could be because the o-space loading
+            // has not happened.  So we try that, update our cached mappings, and try again.
+            var typeToLoad = entityType;
+            do
+            {
+                _workspace.LoadFromAssembly(typeToLoad.Assembly());
+                typeToLoad = typeToLoad.BaseType();
+            }
+            while (typeToLoad != null
+                    && typeToLoad != typeof(Object));
+
+            lock (_entitySetMappingsUpdateLock)
+            {
+                if (_entitySetMappingsCache.ContainsKey(entityType))
+                {
+                    return true;
+                }
+                UpdateEntitySetMappings();
+            }
+
+            return _entitySetMappingsCache.ContainsKey(entityType);
         }
 
         #endregion

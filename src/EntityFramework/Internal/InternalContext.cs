@@ -34,6 +34,9 @@ namespace System.Data.Entity.Internal
     using System.Threading;
     using System.Threading.Tasks;
     using SaveOptions = System.Data.Entity.Core.Objects.SaveOptions;
+#if !NET40
+    using System.Runtime.CompilerServices;
+#endif
 
     // <summary>
     // An <see cref="InternalContext" /> underlies every instance of <see cref="DbContext" /> and wraps an
@@ -88,13 +91,6 @@ namespace System.Data.Entity.Internal
 
         // The DbContext that owns this InternalContext instance
         private readonly DbContext _owner;
-
-        // Cache of the types that are valid mapped types for this context, together with
-        // the entity sets to which these types map and the CLR type that acts as the base
-        // of the inheritance hierarchy for the given type.
-        private IDictionary<Type, EntitySetTypePair> _entitySetMappings;
-
-        private object _entitySetMappingsUpdateLock = new object();
 
         // Usually null, but can be set to a temporary ObjectContext that is used for transient operations
         // such as seeding a database and is then disposed.
@@ -219,7 +215,7 @@ namespace System.Data.Entity.Internal
                         Connection,
                         OriginalConnectionString);
 
-                InitializeEntitySetMappings();
+                ResetDbSets();
             }
         }
 
@@ -236,7 +232,7 @@ namespace System.Data.Entity.Internal
                 {
                     _tempObjectContext.Dispose();
                     _tempObjectContext = null;
-                    InitializeEntitySetMappings();
+                    ResetDbSets();
                 }
             }
         }
@@ -782,7 +778,7 @@ namespace System.Data.Entity.Internal
             Initialize();
 
             UpdateEntitySetMappingsForType(entityType);
-            return _entitySetMappings[entityType];
+            return GetEntitySetMappingForType(entityType);
         }
 
         // <summary>
@@ -800,7 +796,7 @@ namespace System.Data.Entity.Internal
 
             Initialize();
 
-            return TryUpdateEntitySetMappingsForType(entityType) ? _entitySetMappings[entityType] : null;
+            return TryUpdateEntitySetMappingsForType(entityType) ? GetEntitySetMappingForType(entityType) : null;
         }
 
         // <summary>
@@ -1264,13 +1260,11 @@ namespace System.Data.Entity.Internal
         }
 
         // <summary>
-        // Checks whether or not the internal cache of types to entity sets has been initialized,
-        // and initializes it if necessary.
+        // Resets the generic and non-generic DbSets. Invoke after setting or resetting
+        // the ObjectContext instance to avoid having stale values.
         // </summary>
-        protected void InitializeEntitySetMappings()
+        protected void ResetDbSets()
         {
-            var metadataWorkspace = GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace;
-            _entitySetMappings = metadataWorkspace.MetadataOptimization.GetEntitySetMappingCache();
             foreach (var set in _genericSets.Values.Union(_nonGenericSets.Values))
             {
                 set.InternalSet.ResetQuery();
@@ -1301,38 +1295,28 @@ namespace System.Data.Entity.Internal
         // <summary>
         // Performs o-space loading for the type and returns false if the type is not in the model.
         // </summary>
+#if !NET40
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         private bool TryUpdateEntitySetMappingsForType(Type entityType)
         {
-            Debug.Assert(
-                entityType == ObjectContextTypeCache.GetObjectType(entityType), "Proxy type should have been converted to real type");
+            return GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace
+                        .MetadataOptimization.TryUpdateEntitySetMappingsForType(entityType);
+        }
 
-            if (_entitySetMappings.ContainsKey(entityType))
-            {
-                return true;
-            }
-
-            // We didn't find the type on first look, but this could be because the o-space loading
-            // has not happened.  So we try that, update our cached mappings, and try again.
-            var metadataWorkspace = GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace;
-            var typeToLoad = entityType;
-            do
-            {
-                metadataWorkspace.LoadFromAssembly(typeToLoad.Assembly());
-                typeToLoad = typeToLoad.BaseType();
-            }
-            while (typeToLoad != null
-                    && typeToLoad != typeof(Object));
-
-            lock (_entitySetMappingsUpdateLock)
-            {
-                if (_entitySetMappings.ContainsKey(entityType))
-                {
-                    return true;
-                }
-                metadataWorkspace.MetadataOptimization.UpdateEntitySetMappings(_entitySetMappings);
-            }
-
-            return _entitySetMappings.ContainsKey(entityType);
+        // <summary>
+        // Obtains the entity set type mapping for the given entity type from the metadata
+        // workspace cache.
+        // </summary>
+        // <param name="entityType">The CLR type</param>
+        // <returns>The Entity Set mapping for the given CLR type</returns>
+#if !NET40
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        private EntitySetTypePair GetEntitySetMappingForType(Type entityType)
+        {
+            return GetObjectContextWithoutDatabaseInitialization().MetadataWorkspace
+                        .MetadataOptimization.EntitySetMappingCache[entityType];
         }
 
         // <summary>
