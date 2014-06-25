@@ -749,29 +749,45 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(providerManifest);
 
-            foreach (var foreignKeyConstraint in databaseMapping.Database.EntityTypes.SelectMany(t => t.ForeignKeyBuilders))
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            var entityTypesList = databaseMapping.Database.EntityTypes as IList<EntityType> ?? databaseMapping.Database.EntityTypes.ToList();
+            // ReSharper disable ForCanBeConvertedToForeach
+            for (var entityTypesListIterator = 0;
+                entityTypesListIterator < entityTypesList.Count;
+                ++entityTypesListIterator)
             {
-                foreignKeyConstraint
-                    .DependentColumns
-                    .Each(
-                        (c, i) =>
-                            {
-                                var primitivePropertyConfiguration =
-                                    c.GetConfiguration() as PrimitivePropertyConfiguration;
+                var entityType = entityTypesList[entityTypesListIterator];
+                var foreignKeyBuilders = entityType.ForeignKeyBuilders as IList<ForeignKeyBuilder> ?? entityType.ForeignKeyBuilders.ToList();
+                for (var foreignKeyBuildersIterator = 0;
+                    foreignKeyBuildersIterator < foreignKeyBuilders.Count;
+                    ++foreignKeyBuildersIterator)
+                {
+                    var foreignKeyConstraint = foreignKeyBuilders[foreignKeyBuildersIterator];
 
-                                if ((primitivePropertyConfiguration != null)
-                                    && (primitivePropertyConfiguration.ColumnType != null))
-                                {
-                                    return;
-                                }
+                    var dependentColumns = foreignKeyConstraint.DependentColumns;
+                    var dependentColumnsList = dependentColumns as IList<EdmProperty> ?? dependentColumns.ToList();
 
-                                var principalColumn = foreignKeyConstraint.PrincipalTable.KeyProperties.ElementAt(i);
+                    for (var i = 0; i < dependentColumnsList.Count; ++i)
+                    {
+                        var c = dependentColumnsList[i];
+                        var primitivePropertyConfiguration =
+                            c.GetConfiguration() as PrimitivePropertyConfiguration;
 
-                                c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
+                        if ((primitivePropertyConfiguration != null)
+                            && (primitivePropertyConfiguration.ColumnType != null))
+                        {
+                            continue;
+                        }
 
-                                c.CopyFrom(principalColumn);
-                            });
+                        var principalColumn = foreignKeyConstraint.PrincipalTable.KeyProperties.ElementAt(i);
+
+                        c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
+
+                        c.CopyFrom(principalColumn);
+                    }
+                }
             }
+            // ReSharper restore ForCanBeConvertedToForeach
         }
 
         private static void VerifyAllCSpacePropertiesAreMapped(

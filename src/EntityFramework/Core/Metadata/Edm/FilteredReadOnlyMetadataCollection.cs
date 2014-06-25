@@ -132,8 +132,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static List<TDerived> FilterCollection(ReadOnlyMetadataCollection<TBase> collection, Predicate<TBase> predicate)
         {
             var list = new List<TDerived>(collection.Count);
-            foreach (var item in collection)
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for(var iterator = 0; iterator < collection.Count; ++iterator)
             {
+                var item = collection[iterator];
                 if (predicate(item))
                 {
                     list.Add((TDerived)item);

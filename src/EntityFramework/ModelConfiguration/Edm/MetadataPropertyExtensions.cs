@@ -131,15 +131,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(metadataProperties);
             DebugCheck.NotEmpty(name);
 
-            var property = metadataProperties.SingleOrDefault(p => p.Name.Equals(name, StringComparison.Ordinal));
-
-            if (property == null)
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            foreach(var p in metadataProperties)
             {
-                return null;
+                if (p.Name.Equals(name, StringComparison.Ordinal))
+                {
+                    Debug.Assert(p.IsAnnotation);
+                    return p.Value;
+                }
             }
 
-            Debug.Assert(property.IsAnnotation);
-            return property.Value;
+            return null;
         }
 
         // <summary>
