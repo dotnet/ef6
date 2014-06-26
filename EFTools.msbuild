@@ -6,6 +6,7 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
         <BuildProperties>Platform=$(Platform)</BuildProperties>
+        <BuildProperties Condition=" '$(RunCodeAnalysis)' != '' ">$(BuildProperties);RunCodeAnalysis=$(RunCodeAnalysis)</BuildProperties>
         <VSTest>$(VSINSTALLDIR)\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe</VSTest>
         <BuildTargets>Build</BuildTargets>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
