@@ -59,13 +59,8 @@ namespace System.Data.Entity.Internal
                 Debug.Assert(UnderlyingConnection != null, "UnderlyingConnection should have been initialized before getting here.");
 
                 return _key
-                       ??
-                       (_key =
-                           String.Format(
-                               CultureInfo.InvariantCulture, "{0};{1}", UnderlyingConnection.GetType(),
-                               UnderlyingConnection is EntityConnection
-                                   ? UnderlyingConnection.ConnectionString
-                                   : OriginalConnectionString));
+                       ?? (_key =
+                           String.Format(CultureInfo.InvariantCulture, "{0};{1}", UnderlyingConnection.GetType(), OriginalConnectionString));
             }
         }
 
