@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var oSpaceEntityType = codeFirstOSpaceTypeFactory.TryCreateType(typeof(SimpleEntity), cSpaceEntityType);
             codeFirstOSpaceTypeFactory.CspaceToOspace.Add(cSpaceEntityType, oSpaceEntityType);
 
-            metadataWorkspaceMock.Setup(m => m.GetItem<EdmType>(It.IsAny<string>(), DataSpace.OSpace))
+            metadataWorkspaceMock.Setup(m => m.GetItem<EdmType>("N.SimpleEntity", DataSpace.OSpace))
                 .Returns(oSpaceEntityType);
             
             return collectionMap;
@@ -400,7 +400,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var collectionMap = new SimpleCollectionColumnMap(
                 entityTypeUsage, "MockCollectionType", refColumnMap, null, null);
 
-            metadataWorkspaceMock.Setup(m => m.GetItem<EdmType>(It.IsAny<string>(), DataSpace.OSpace))
+            metadataWorkspaceMock.Setup(m => m.GetItem<EdmType>("N.RefEntity", DataSpace.OSpace))
                 .Returns(oSpaceEntityType);
 
             var factory =
@@ -408,7 +408,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     collectionMap, metadataWorkspaceMock.Object, new SpanIndex(), MergeOption.NoTracking, streaming: false, valueLayer: false);
             Assert.NotNull(factory);
 
-            Assert.Equal(new[] { null, typeof(object) }, factory.ColumnTypes);
+            Assert.Equal(new[] { null, typeof(int) }, factory.ColumnTypes);
             Assert.Equal(new[] { false, true }, factory.NullableColumns);
         }
     }

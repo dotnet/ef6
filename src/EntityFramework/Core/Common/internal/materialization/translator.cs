@@ -289,7 +289,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // clrType doesn't derive from IEntityWithKey
                 var entityIdentity = columnMap.EntityIdentity;
                 Expression entitySetReader = null;
-                var entityKeyReader = Emit_EntityKey_ctor(this, entityIdentity, false, out entitySetReader);
+                var entityKeyReader = Emit_EntityKey_ctor(this, entityIdentity, columnMap.Type.EdmType, false, out entitySetReader);
 
                 if (IsValueLayer)
                 {
@@ -765,7 +765,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     var type = pair.Value;
 
                     // Note that we're not just blindly using the type from the column map
-                    // because we need to match the type thatthe initializer says it needs; 
+                    // because we need to match the type that the initializer says it needs; 
                     // that's why were not using AcceptWithMappedType;
                     if (null == type)
                     {
@@ -1170,7 +1170,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // hasValue ? entityKey : (EntityKey)null
                 Expression result = Expression.Condition(
                     CodeGenEmitter.Emit_EntityKey_HasValue(entityIdentity.Keys),
-                    Emit_EntityKey_ctor(this, entityIdentity, true, out entitySetReader),
+                    Emit_EntityKey_ctor(this, entityIdentity, ((RefType)columnMap.Type.EdmType).ElementType, true, out entitySetReader),
                     Expression.Constant(null, typeof(EntityKey))
                     );
 
@@ -1543,18 +1543,34 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // a value (Emit_EntityKey_HasValue == true) and that the EntitySet has value
             // (EntitySet != null).
             // </summary>
-            private static Expression Emit_EntityKey_ctor(
-                TranslatorVisitor translatorVisitor, EntityIdentity entityIdentity, bool isForColumnValue, out Expression entitySetReader)
+            private Expression Emit_EntityKey_ctor(
+                TranslatorVisitor translatorVisitor, EntityIdentity entityIdentity, EdmType type, bool isForColumnValue, out Expression entitySetReader)
             {
                 Expression result;
                 Expression setEntitySetStateSlotValue = null;
 
                 // First build the expressions that read each value that comprises the EntityKey
                 var keyReaders = new List<Expression>(entityIdentity.Keys.Length);
-                for (var i = 0; i < entityIdentity.Keys.Length; i++)
+                if (IsValueLayer)
                 {
-                    var keyReader = entityIdentity.Keys[i].Accept(translatorVisitor, new TranslatorArg(typeof(object))).Expression;
-                    keyReaders.Add(keyReader);
+                    for (var i = 0; i < entityIdentity.Keys.Length; i++)
+                    {
+                        var keyReader = entityIdentity.Keys[i].Accept(translatorVisitor, new TranslatorArg(typeof(object))).Expression;
+                        keyReaders.Add(keyReader);
+                    }
+                }
+                else
+                {
+                    var mapping = LookupObjectMapping(type);
+                    for (var i = 0; i < entityIdentity.Keys.Length; i++)
+                    {
+                        var edmProperty = mapping.GetPropertyMap(entityIdentity.Keys[i].Name).ClrProperty;
+                        var propertyInfoForSet = DelegateFactory.ValidateSetterProperty(edmProperty.PropertyInfo);
+                        var propertyType = propertyInfoForSet.PropertyType;
+
+                        var keyReader = entityIdentity.Keys[i].Accept(translatorVisitor, new TranslatorArg(propertyType)).Expression;
+                        keyReaders.Add(CodeGenEmitter.Emit_EnsureType(keyReader, typeof(object)));
+                    }
                 }
 
                 // Next build the expression that determines us the entitySet; how we do this differs 
