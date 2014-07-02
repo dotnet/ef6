@@ -305,7 +305,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void EntityTypeConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<EntityTypeConfiguration>(12);
+            VerifyFieldCount<EntityTypeConfiguration>(13);
         }
 
         [Fact]

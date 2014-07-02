@@ -23,23 +23,28 @@ namespace System.ComponentModel.DataAnnotations.Schema
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes")]
     public class IndexAttribute : Attribute
     {
+        private Guid? _identity;
         private string _name;
         private int _order = -1;
         private bool? _isClustered;
         private bool? _isUnique;
 
         /// <summary>
-        /// Creates a <see cref="IndexAttribute" /> instance for an index that will be named by convention and
-        /// has no column order, clustering, or uniqueness specified.
+        /// Creates a <see cref="IndexAttribute" /> instance for an index that will be named by convention, 
+        /// but has no identity, column order, clustering, or uniqueness specified.
         /// </summary>
         public IndexAttribute()
         {
         }
 
         /// <summary>
-        /// Creates a <see cref="IndexAttribute" /> instance for an index with the given name and
-        /// has no column order, clustering, or uniqueness specified.
+        /// Creates a <see cref="IndexAttribute" /> instance for an index with the given name,
+        /// but with no identity, column order, clustering, or uniqueness specified.
         /// </summary>
+        /// <remarks>
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
+        /// in these attributes is then merged together to specify the actual database index.
+        /// </remarks>
         /// <param name="name">The index name.</param>
         public IndexAttribute(string name)
         {
@@ -49,11 +54,30 @@ namespace System.ComponentModel.DataAnnotations.Schema
         }
 
         /// <summary>
-        /// Creates a <see cref="IndexAttribute" /> instance for an index with the given name and column order, 
-        /// but with no clustering or uniqueness specified.
+        /// Creates a <see cref="IndexAttribute" /> instance for an index with the given identity and name,
+        /// but with no column order, clustering, or uniqueness specified.
         /// </summary>
         /// <remarks>
-        /// Multi-column indexes are created by using the same index name in multiple attributes. The information
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
+        /// in these attributes is then merged together to specify the actual database index.
+        /// </remarks>
+        /// <param name="identityGuid">The index groups's unique identity, must be in a valid GUID format.</param>
+        /// <param name="name">The index name.</param>
+        public IndexAttribute(string identityGuid, string name)
+        {
+            Check.NotEmpty(identityGuid, "identityGuid");
+            Check.NotEmpty(name, "name");
+
+            _identity = Guid.Parse(identityGuid);
+            _name = name;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IndexAttribute" /> instance for an index with the given name and column order, 
+        /// but with no identity, clustering, or uniqueness specified.
+        /// </summary>
+        /// <remarks>
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
         /// in these attributes is then merged together to specify the actual database index.
         /// </remarks>
         /// <param name="name">The index name.</param>
@@ -71,8 +95,42 @@ namespace System.ComponentModel.DataAnnotations.Schema
             _order = order;
         }
 
-        private IndexAttribute(string name, int order, bool? isClustered, bool? isUnique)
+        /// <summary>
+        /// Creates a <see cref="IndexAttribute" /> instance for an index with the given identity, name, and column order, 
+        /// but with no clustering or uniqueness specified.
+        /// </summary>
+        /// <remarks>
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
+        /// in these attributes is then merged together to specify the actual database index.
+        /// </remarks>
+        /// <param name="identityGuid">The index groups's unique identity, must be in a valid GUID format.</param>
+        /// <param name="name">The index name.</param>
+        /// <param name="order">A number which will be used to determine column ordering for multi-column indexes.</param>
+        public IndexAttribute(string identityGuid, string name, int order)
         {
+            Check.NotEmpty(identityGuid, "identityGuid");
+            Check.NotEmpty(name, "name");
+
+            if (order < 0)
+            {
+                throw new ArgumentOutOfRangeException("order");
+            }
+
+            _identity = Guid.Parse(identityGuid);
+            _name = name;
+            _order = order;
+        }
+
+        internal IndexAttribute(string name, bool? isClustered, bool? isUnique)
+        {
+            _name = name;
+            _isClustered = isClustered;
+            _isUnique = isUnique;
+        }
+
+        internal IndexAttribute(Guid? identity, string name, int order, bool? isClustered, bool? isUnique)
+        {
+            _identity = identity;
             _name = name;
             _order = order;
             _isClustered = isClustered;
@@ -80,10 +138,46 @@ namespace System.ComponentModel.DataAnnotations.Schema
         }
 
         /// <summary>
+        /// A unique identifier to allow grouping multiple indexes together without specifying an explicit name on all of the indexes.
+        /// </summary>
+        /// <remarks>
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
+        /// in these attributes is then merged together to specify the actual database index.
+        /// </remarks>
+        public virtual Guid? Identity
+        {
+            get { return _identity; }
+            internal set 
+            {
+                DebugCheck.NotNull(value);
+
+                _identity = value; 
+            }
+        }
+
+        /// <summary>
+        /// A unique identifier to allow grouping multiple indexes together without specifying an explicit name on all of the indexes.
+        /// </summary>
+        /// <remarks>
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
+        /// in these attributes is then merged together to specify the actual database index.
+        /// </remarks>
+        public virtual string IdentityGuid
+        {
+            get { return _identity.ToString(); }
+            set
+            {
+                DebugCheck.NotEmpty(value);
+
+                _identity = Guid.Parse(value);
+            }
+        }
+
+        /// <summary>
         /// The index name.
         /// </summary>
         /// <remarks>
-        /// Multi-column indexes are created by using the same index name in multiple attributes. The information
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
         /// in these attributes is then merged together to specify the actual database index.
         /// </remarks>
         public virtual string Name
@@ -94,7 +188,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 DebugCheck.NotEmpty(value);
                 
                 _name = value;
-        }
+            }
         }
 
         /// <summary>
@@ -102,7 +196,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         /// column order has been specified.
         /// </summary>
         /// <remarks>
-        /// Multi-column indexes are created by using the same index name in multiple attributes. The information
+        /// Multi-column indexes are created by using the same index identity and/or name in multiple attributes. The information
         /// in these attributes is then merged together to specify the actual database index.
         /// </remarks>
         public virtual int Order
@@ -225,6 +319,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
             unchecked
             {
                 var hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ _identity.GetHashCode();
                 hashCode = (hashCode * 397) ^ (_name != null ? _name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ _order;
                 hashCode = (hashCode * 397) ^ _isClustered.GetHashCode();

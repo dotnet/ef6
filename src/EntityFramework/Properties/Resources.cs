@@ -14035,7 +14035,22 @@ namespace System.Data.Entity.Resources
         // </summary>
         internal static string ProviderDoesNotSupportEscapingLikeArgument
         {
-            get { return EntityRes.GetString(EntityRes.ProviderDoesNotSupportEscapingLikeArgument); }
+            get { return EntityRes.GetString(EntityRes.ProviderDoesNotSupportEscapingLikeArgument); 
+		}
+
+        // A string like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
+        // </summary>
+        internal static string IndexPropertyNotFound(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.IndexPropertyNotFound, p0, p1);
+        }
+
+        // <summary>
+        // A string like "IndexAttributes with identity '{0}' and name '{1}' cannot be merged because they ambiguously match multiple, conflicting IndexAttributes."
+        // </summary>
+        internal static string ConflictingIndexAttributeMatches(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConflictingIndexAttributeMatches, p0, p1);
         }
     }
 
@@ -15651,6 +15666,21 @@ namespace System.Data.Entity.Resources
         internal static Exception StoreTypeNotFound(object p0, object p1)
         {
             return new InvalidOperationException(Strings.StoreTypeNotFound(p0, p1));
+        }
+
+        // InvalidOperationException with message like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
+        // </summary>
+        internal static Exception IndexPropertyNotFound(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.IndexPropertyNotFound(p0, p1));
+        }
+
+        // <summary>
+        // InvalidOperationException with message like "IndexAttributes with identity '{0}' and name '{1}' cannot be merged because they ambiguously match multiple, conflicting IndexAttributes."
+        // </summary>
+        internal static Exception ConflictingIndexAttributeMatches(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.ConflictingIndexAttributeMatches(p0, p1));
         }
 
         // <summary>
@@ -17439,6 +17469,8 @@ namespace System.Data.Entity.Resources
         internal const string CannotDefineKeysOnBothBaseAndDerivedTypes = "CannotDefineKeysOnBothBaseAndDerivedTypes";
         internal const string StoreTypeNotFound = "StoreTypeNotFound";
         internal const string ProviderDoesNotSupportEscapingLikeArgument = "ProviderDoesNotSupportEscapingLikeArgument";
+        internal const string IndexPropertyNotFound = "IndexPropertyNotFound";
+        internal const string ConflictingIndexAttributeMatches = "ConflictingIndexAttributeMatches";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

@@ -217,7 +217,10 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                                  o.Key,
                                  o.Code,
                                  o.Signature
-                             })
+                             });
+
+            modelBuilder
+                .Entity<Order>()
                 .MapToStoredProcedures()
                 .Property(so => so.Id)
                 .HasColumnName("order_id");

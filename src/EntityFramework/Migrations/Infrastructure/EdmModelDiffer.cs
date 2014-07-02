@@ -1545,6 +1545,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .ToDictionary(a => a.Name.Substring(XmlConstants.CustomAnnotationPrefix.Length), a => a.Value);
         }
 
+        internal static IndexAttribute GetPrimaryKeyIndexAttribute(EntityType entityType)
+        {
+            return entityType.Annotations.Where(a => a.Name == XmlConstants.IndexAnnotationWithPrefix)
+                .Select(a => a.Value)
+                .OfType<IndexAnnotation>()
+                .SelectMany(ia => ia.Indexes)
+                .SingleOrDefault();
+        }
+
         private IEnumerable<MigrationOperation> FindAlteredPrimaryKeys(
             ICollection<Tuple<EntitySet, EntitySet>> tablePairs,
             ICollection<RenameColumnOperation> renamedColumns,
@@ -1557,6 +1566,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return
                 from ts in tablePairs
                 let t2 = GetSchemaQualifiedName(ts.Item2)
+                let pk1 = GetPrimaryKeyIndexAttribute(ts.Item1.ElementType) ?? new IndexAttribute()
+                let pk2 = GetPrimaryKeyIndexAttribute(ts.Item2.ElementType) ?? new IndexAttribute()
                 where !ts.Item1.ElementType.KeyProperties.SequenceEqual(
                     ts.Item2.ElementType.KeyProperties,
                     (p1, p2) => p1.Name.EqualsIgnoreCase(p2.Name)
@@ -1569,6 +1580,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                               p => alteredColumns.Any(
                                   ac => ac.Table.EqualsIgnoreCase(t2)
                                         && ac.Column.Name.EqualsIgnoreCase(p.Name)))
+                      || (pk1.Name != pk2.Name ||
+                            pk1.IsClusteredConfigured != pk2.IsClusteredConfigured || 
+                            pk1.IsClustered != pk2.IsClustered)
                 from o in BuildChangePrimaryKeyOperations(ts)
                 select o;
         }
@@ -1597,6 +1611,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
             tablePair.Item1.ElementType.KeyProperties
                 .Each(pr => dropPrimaryKeyOperation.Columns.Add(pr.Name));
 
+
+            var sourcePrimaryKeyIndexAttribute = GetPrimaryKeyIndexAttribute(tablePair.Item1.ElementType);
+            if (sourcePrimaryKeyIndexAttribute != null)
+            {
+                dropPrimaryKeyOperation.Name = sourcePrimaryKeyIndexAttribute.Name;
+
+                if (sourcePrimaryKeyIndexAttribute.IsClusteredConfigured)
+                {
+                    dropPrimaryKeyOperation.IsClustered = sourcePrimaryKeyIndexAttribute.IsClustered;
+                }
+            }
+
             yield return dropPrimaryKeyOperation;
 
             var addPrimaryKeyOperation
@@ -1607,6 +1633,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             tablePair.Item2.ElementType.KeyProperties
                 .Each(pr => addPrimaryKeyOperation.Columns.Add(pr.Name));
+
+
+            var targetPrimaryKeyIndexAttribute = GetPrimaryKeyIndexAttribute(tablePair.Item2.ElementType);
+            if (targetPrimaryKeyIndexAttribute != null)
+            {
+                addPrimaryKeyOperation.Name = targetPrimaryKeyIndexAttribute.Name;
+
+                if (targetPrimaryKeyIndexAttribute.IsClusteredConfigured)
+                {
+                    addPrimaryKeyOperation.IsClustered = targetPrimaryKeyIndexAttribute.IsClustered;
+                }
+            }
 
             yield return addPrimaryKeyOperation;
 
@@ -2188,6 +2226,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             entitySet.ElementType.KeyProperties
                 .Each(p => addPrimaryKeyOperation.Columns.Add(p.Name));
+
+
+            var primaryKeyIndexAttribute = GetPrimaryKeyIndexAttribute(entitySet.ElementType);
+            if (primaryKeyIndexAttribute != null)
+            {
+                addPrimaryKeyOperation.Name = primaryKeyIndexAttribute.Name;
+
+                if (primaryKeyIndexAttribute.IsClusteredConfigured)
+                {
+                    addPrimaryKeyOperation.IsClustered = primaryKeyIndexAttribute.IsClustered;
+                }
+            }
 
             createTableOperation.PrimaryKey = addPrimaryKeyOperation;
 

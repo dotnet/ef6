@@ -15,6 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Linq;
     using Moq;
     using Xunit;
+    using System.Data.Entity.Infrastructure.Annotations;
 
     public sealed class EntityTypeConfigurationTests
     {
@@ -332,6 +333,57 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Assert.Equal(2, config.KeyProperties.Count());
             Assert.Equal("Key1", config.KeyProperties.First().Name);
             Assert.Equal("Key2", config.KeyProperties.Last().Name);
+        }
+
+        [Fact]
+        public void Index_creates_index_configuration()
+        {
+            var config = new EntityTypeConfiguration(typeof(AType1));
+
+            config.Index(new PropertyPath(new[] { 
+                typeof(AType1).GetDeclaredProperty("Key1"),
+                typeof(AType1).GetDeclaredProperty("Key2")
+            }));
+
+            config.Index(new PropertyPath(new[] { 
+                typeof(AType1).GetDeclaredProperty("Key2"),
+                typeof(AType1).GetDeclaredProperty("Key1")
+            }));
+
+            Assert.Equal(2, config.PropertyIndexes.Count());
+
+            Assert.Equal(2, config.PropertyIndexes.First().Count());
+            Assert.Equal("Key1", config.PropertyIndexes.First().First().Name);
+            Assert.Equal("Key2", config.PropertyIndexes.First().Last().Name);
+
+
+            Assert.Equal(2, config.PropertyIndexes.Last().Count());
+            Assert.Equal("Key2", config.PropertyIndexes.Last().First().Name);
+            Assert.Equal("Key1", config.PropertyIndexes.Last().Last().Name);
+        }
+
+        [Fact]
+        public void Index_creates_index_configuration_and_doesnt_duplicate()
+        {
+            var config = new EntityTypeConfiguration(typeof(AType1));
+
+            config.Index(new PropertyPath(new[] { 
+                typeof(AType1).GetDeclaredProperty("Key1"),
+                typeof(AType1).GetDeclaredProperty("Key2")
+            }));
+
+            // Duplicate
+            config.Index(new PropertyPath(new[] { 
+                typeof(AType1).GetDeclaredProperty("Key1"),
+                typeof(AType1).GetDeclaredProperty("Key2")
+            }));
+
+
+            Assert.Equal(1, config.PropertyIndexes.Count());
+
+            Assert.Equal(2, config.PropertyIndexes.First().Count());
+            Assert.Equal("Key1", config.PropertyIndexes.First().First().Name);
+            Assert.Equal("Key2", config.PropertyIndexes.First().Last().Name);
         }
     }
 }

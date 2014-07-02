@@ -74,7 +74,11 @@ namespace FunctionalTests
                 .Column("WithMultiple")
                 .HasAnnotation(
                     "Index",
-                    new IndexAnnotation(new[] { new IndexAttribute("I1"), new IndexAttribute("I2") }),
+                    new IndexAnnotation(new[] { 
+                        new IndexAttribute() { IdentityGuid = EntityWithIndexes.IdentityGuid1 }, 
+                        new IndexAttribute() { IdentityGuid = EntityWithIndexes.IdentityGuid2 },
+                        new IndexAttribute("I1"), new IndexAttribute("I2") 
+                    }),
                     new IndexAnnotationEqualityComparer());
         }
 
@@ -110,6 +114,8 @@ namespace FunctionalTests
                     new IndexAnnotation(
                         new[]
                         {
+                            new IndexAttribute() { IdentityGuid = EntityWithIndexes.IdentityGuid1 },
+                            new IndexAttribute() { IdentityGuid = EntityWithIndexes.IdentityGuid2, Order = 6 },
                             new IndexAttribute("I1"),
                             new IndexAttribute("I2", 6),
                             new IndexAttribute("I3", 7),
@@ -139,6 +145,7 @@ namespace FunctionalTests
                     new IndexAnnotation(
                         new[]
                         {
+                            new IndexAttribute() { IdentityGuid = EntityWithIndexes.IdentityGuid1, Order = 6, IsClustered = true, IsUnique = true },
                             new IndexAttribute("I1", 6) { IsClustered = true, IsUnique = true }
                         }),
                     new IndexAnnotationEqualityComparer());
@@ -146,15 +153,22 @@ namespace FunctionalTests
 
         public class EntityWithIndexes
         {
+            public const string IdentityGuid1 = "82b37765-57f7-4ae4-afe6-8b4b990607f7";
+            public const string IdentityGuid2 = "f4b95b07-2843-4da7-a923-192e6a291e93";
+
             public int Id { get; set; }
             
             [Index]
             public string SimpleProp { get; set; }
-
+            
+            [Index(IdentityGuid = IdentityGuid1)]
+            [Index(IdentityGuid = IdentityGuid2)]
             [Index("I1")]
             [Index("I2")]
             public string WithMultiple { get; set; }
 
+            [Index(IdentityGuid = IdentityGuid1)]
+            [Index(IdentityGuid = IdentityGuid2, Order = 6)]
             [Index("I1")]
             [Index("I2", 6)]
             [Index("I3", Order = 7)]
@@ -168,6 +182,13 @@ namespace FunctionalTests
             [Index("I11", Order = 13, IsClustered = true, IsUnique = true)]
             public string WithOptions { get; set; }
 
+            [Index(IdentityGuid = IdentityGuid1)]
+            [Index(IdentityGuid = IdentityGuid1, Order = 6)]
+            [Index(IdentityGuid = IdentityGuid1, IsClustered = true)]
+            [Index(IdentityGuid = IdentityGuid1, IsUnique = true)]
+            [Index(IdentityGuid = IdentityGuid1, Order = 6, IsClustered = true)]
+            [Index(IdentityGuid = IdentityGuid1, Order = 6, IsUnique = true)]
+            [Index(IdentityGuid = IdentityGuid1, Order = 6, IsClustered = true, IsUnique = true)]
             [Index("I1")]
             [Index("I1", 6)]
             [Index("I1", Order = 6)]
