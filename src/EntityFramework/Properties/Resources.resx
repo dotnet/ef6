@@ -5570,4 +5570,12 @@
   <data name="CannotDefineKeysOnBothBaseAndDerivedTypes" xml:space="preserve">
     <value>Cannot define key members on both the base and the derived types.</value>
   </data>
+  <data name="IndexPropertyNotFound" xml:space="preserve">
+    <value>The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="ConflictingIndexAttributeMatches" xml:space="preserve">
+    <value>IndexAttributes with identity '{0}' and name '{1}' cannot be merged because they ambiguously match multiple, conflicting IndexAttributes.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>

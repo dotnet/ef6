@@ -204,6 +204,7 @@
     <Compile Include="CodeFirst\CodePlex2169.cs" />
     <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
+    <Compile Include="CodeFirst\PropertyConfigurationScenarioTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
     <Compile Include="CodeFirst\ModificationFunctionsEndToEndTests.cs" />
     <Compile Include="CodeFirst\SpecialCharacterTests.cs" />

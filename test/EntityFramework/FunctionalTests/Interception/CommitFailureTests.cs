@@ -279,7 +279,9 @@ namespace System.Data.Entity.Interception
             {
                 modelBuilder.Entity<TransactionRow>()
                     .ToTable("MyTransactions")
-                    .HasKey(e => e.Id)
+                    .HasKey(e => e.Id);
+                
+                modelBuilder.Entity<TransactionRow>()
                     .Property(e => e.CreationTime).HasColumnName("Time").HasColumnType("datetime2");
             }
         }

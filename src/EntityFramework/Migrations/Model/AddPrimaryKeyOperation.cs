@@ -27,7 +27,7 @@ namespace System.Data.Entity.Migrations.Model
         public AddPrimaryKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            IsClustered = true;
+
         }
 
         /// <summary>
@@ -41,7 +41,8 @@ namespace System.Data.Entity.Migrations.Model
                     = new DropPrimaryKeyOperation
                           {
                               Name = Name,
-                              Table = Table
+                              Table = Table,
+                              IsClustered = IsClustered
                           };
 
                 Columns.Each(c => dropPrimaryKeyOperation.Columns.Add(c));
@@ -49,10 +50,5 @@ namespace System.Data.Entity.Migrations.Model
                 return dropPrimaryKeyOperation;
             }
         }
-
-        /// <summary>
-        /// Gets or sets whether this is a clustered primary key.
-        /// </summary>
-        public bool IsClustered { get; set; }
     }
 }

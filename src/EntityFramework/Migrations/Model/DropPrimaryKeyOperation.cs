@@ -40,7 +40,8 @@ namespace System.Data.Entity.Migrations.Model
                     = new AddPrimaryKeyOperation
                           {
                               Name = Name,
-                              Table = Table
+                              Table = Table,
+                              IsClustered = IsClustered
                           };
 
                 Columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));

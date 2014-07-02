@@ -560,7 +560,7 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<AbstractType1>().HasKey(a => a.Property1_ID).ToTable("AbstractType1");
+            modelBuilder.Entity<AbstractType1>().ToTable("AbstractType1").HasKey(a => a.Property1_ID);
             modelBuilder.Entity<AbstractType1_1>().ToTable("AbstractType1_1");
             modelBuilder.Entity<ConcreteType1_1_1>().ToTable("ConcreteType1_1_1");
             modelBuilder.Entity<ConcreteType1_2>().ToTable("ConcreteType1_2");

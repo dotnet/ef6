@@ -1613,7 +1613,10 @@ namespace System.Data.Entity.SqlServer
 
             var target = new CreateTableOperation(source.Name + suffix)
                              {
-                                 PrimaryKey = new AddPrimaryKeyOperation()
+                                 PrimaryKey = new AddPrimaryKeyOperation() 
+                                 {
+                                     IsClustered = source.PrimaryKey.IsClustered
+                                 }
                              };
 
             Debug.Assert(target.PrimaryKey.Name == source.PrimaryKey.Name + suffix);

@@ -359,6 +359,10 @@
     <Compile Include="ModelConfiguration\Configuration\ConventionsTypeActivator.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsTypeFilter.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsTypeFinder.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Index\Api\IndexConfigurationBase.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Index\Api\IndexConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Index\Api\PrimaryKeyIndexConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Index\IndexConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\ConventionNavigationPropertyConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfiguration`.cs" />

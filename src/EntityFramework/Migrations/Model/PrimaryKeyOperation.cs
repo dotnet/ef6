@@ -45,6 +45,7 @@ namespace System.Data.Entity.Migrations.Model
         protected PrimaryKeyOperation(object anonymousArguments = null)
             : base(anonymousArguments)
         {
+            IsClustered = true;
         }
 
         /// <summary>
@@ -109,5 +110,10 @@ namespace System.Data.Entity.Migrations.Model
         {
             get { return BuildDefaultName(Table); }
         }
+
+        /// <summary>
+        /// Gets or sets whether this is a clustered primary key.
+        /// </summary>
+        public bool IsClustered { get; set; }
     }
 }
