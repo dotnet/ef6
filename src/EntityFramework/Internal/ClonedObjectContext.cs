@@ -124,12 +124,14 @@ namespace System.Data.Entity.Internal
 
                 tempContext.Dispose();
 
+                // EntityConnection should be disposed of before store connection is disposed. EntityConnection dispose method unsubscribes from StateChanged event 
+                // on the underlying store connection, so if order is reversed we try to modify an already disposed object.
+                _clonedEntityConnection.Dispose();
+
                 if (_connectionCloned)
                 {
                     DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
                 }
-
-                _clonedEntityConnection.Dispose();
             }
         }
     }

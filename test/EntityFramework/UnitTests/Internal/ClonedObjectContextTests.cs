@@ -185,6 +185,142 @@ namespace System.Data.Entity.Internal
             Assert.False(connectionIsDisposed);
         }
 
+        [Fact]
+        public void ClonedObjectContext_disposes_of_connections_in_correct_order()
+        {
+            var myConnectionInterceptor = new ConnectionDisposingInterceptor();
+            DbInterception.Add(myConnectionInterceptor);
+            try
+            {
+                var mockClonedContext = new Mock<ObjectContextProxy>();
+
+                var storeConnection = new SqlConnection();
+                var mockEntityConnection = new Mock<EntityConnectionProxy>();
+                mockEntityConnection.Setup(m => m.StoreConnection).Returns(storeConnection);
+                
+                mockEntityConnection.Setup(m => m.CreateNew(It.IsAny<SqlConnection>())).Returns<SqlConnection>(
+                    c =>
+                    {
+                        var mockClonedConnection = new Mock<EntityConnectionProxy>();
+                        mockClonedConnection.Setup(cc => cc.StoreConnection).Returns(c);
+                        mockClonedConnection.Setup(m => m.Dispose()).Callback(() => myConnectionInterceptor.IsClonedEntityConnectionDisposed = true);
+
+                        return mockClonedConnection.Object;
+                    });
+
+                var mockContext = CreateMockObjectContext(mockEntityConnection, mockClonedContext);
+                var clonedContext = new ClonedObjectContext(mockContext.Object, null, "Database=PinkyDinkyDo");
+
+                clonedContext.Dispose();
+            }
+            finally
+            {
+                DbInterception.Remove(myConnectionInterceptor);
+            }
+        }
+
+        private class ConnectionDisposingInterceptor : IDbConnectionInterceptor
+        {
+            public bool IsClonedEntityConnectionDisposed { get; set; }
+
+            public void BeginningTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void BeganTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void Closing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void Closed(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void ConnectionStringGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void ConnectionStringGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void ConnectionStringSetting(DbConnection connection, DbConnectionPropertyInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void ConnectionStringSet(DbConnection connection, DbConnectionPropertyInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void ConnectionTimeoutGetting(DbConnection connection, DbConnectionInterceptionContext<int> interceptionContext)
+            {
+            }
+
+            public void ConnectionTimeoutGot(DbConnection connection, DbConnectionInterceptionContext<int> interceptionContext)
+            {
+            }
+
+            public void DatabaseGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void DatabaseGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void DataSourceGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void DataSourceGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
+                Assert.True(IsClonedEntityConnectionDisposed, "EntityConnection should be disposed of before underlying store connection.");
+            }
+
+            public void Disposed(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void EnlistingTransaction(DbConnection connection, EnlistTransactionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void EnlistedTransaction(DbConnection connection, EnlistTransactionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void Opening(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void Opened(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
+            }
+
+            public void ServerVersionGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void ServerVersionGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+            {
+            }
+
+            public void StateGetting(DbConnection connection, DbConnectionInterceptionContext<ConnectionState> interceptionContext)
+            {
+            }
+
+            public void StateGot(DbConnection connection, DbConnectionInterceptionContext<ConnectionState> interceptionContext)
+            {
+            }
+        }
+
         private Mock<EntityConnectionProxy> CreateMockConnection(SqlConnection storeConnection = null)
         {
             storeConnection = storeConnection ?? new SqlConnection();
