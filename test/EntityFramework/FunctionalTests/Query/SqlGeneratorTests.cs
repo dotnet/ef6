@@ -8,6 +8,7 @@ namespace System.Data.Entity.Query
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
     using Xunit;
@@ -331,14 +332,29 @@ select o.Id
 from ArubaContext.Owners as o
 order by o.Id desc skip @pInt16 LIMIT 5";
 
-                var expectedSql = @"
-SELECT TOP (5) 
-[Extent1].[Id] AS [Id]
-FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
-	FROM [dbo].[ArubaOwners] AS [Extent1]
-)  AS [Extent1]
-WHERE [Extent1].[row_number] > @pInt16
-ORDER BY [Extent1].[Id] DESC";
+                var expectedSql = default(string);
+                var sqlVersion = DatabaseTestHelpers.GetSqlDatabaseVersion<ArubaContext>(() => new ArubaContext());
+                if (sqlVersion >= 11)
+                {
+                    expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id]
+    FROM [dbo].[ArubaOwners] AS [Extent1]
+    ORDER BY [Extent1].[Id] DESC
+    OFFSET @pInt16 ROWS FETCH NEXT 5 ROWS ONLY ";
+                }
+                else
+                {
+                    expectedSql = 
+@"SELECT TOP (5) 
+    [Extent1].[Id] AS [Id]
+    FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
+	    FROM [dbo].[ArubaOwners] AS [Extent1]
+    )  AS [Extent1]
+    WHERE [Extent1].[row_number] > @pInt16
+    ORDER BY [Extent1].[Id] DESC";
+                }
+
                 var prm1 = new EntityParameter("pInt16", DbType.Int16);
                 prm1.Value = 5;
 
@@ -353,8 +369,25 @@ ORDER BY [Extent1].[Id] DESC";
             }
         }
 
-        public class SkipLimit : FunctionalTestBase
+        public class SkipLimit : FunctionalTestBase, IUseFixture<SkipLimitFixture>
         {
+            private string _basic_skip_limit_expectedSql;
+            private string _skip_limit_group_by_expectedSql;
+            private string _skip_no_limit_with_inheritance_expectedSql;
+            private string _skip_limit_distinct_expectedSql;
+            private string _multiple_sort_keys_expectedSql;
+            private string _nested_skip_limits_in_select_expectedSql;
+            private string _nested_skip_limits_in_from_expectedSql;
+            private string _intersect_with_split_limit_expectedSql;
+            private string _nested_projections_list_expectedSql;
+            private string _anyelement_over_skip_limit_expectedSql;
+            private string _complicated_order_by_expectedSql;
+            private string _skip_with_no_limit_and_multiset_expectedSql;
+            private string _edge_case_column_name_expectedSql;
+            private string _skip_limit_over_skip_limit_intersect_expectedSql;
+            private string _skip_limit_with_duplicates_expectedSql;
+            private string _skip_limit_with_nulls_expectedSql;
+
             [Fact]
             public void Nested_limit()
             {
@@ -394,23 +427,12 @@ SELECT C.Id, C.Address
 FROM OFTYPE (ArubaContext.Configs, CodeFirstNamespace.ArubaMachineConfig) AS C 
 ORDER BY C.Id DESC SKIP 3 LIMIT 2";
 
-                var expectedSql = @"
-SELECT TOP (2) 
-[Filter1].[Id] AS [Id], 
-[Filter1].[Address] AS [Address]
-FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[Address] AS [Address], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
-	FROM [dbo].[ArubaConfigs] AS [Extent1]
-	WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
-)  AS [Filter1]
-WHERE [Filter1].[row_number] > 3
-ORDER BY [Filter1].[Id] DESC";
-
                 // verifying that there are 2 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
                 {
                     using (var db2 = new ArubaContext())
                     {
-                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, _basic_skip_limit_expectedSql))
                         {
                             var expectedResults =
                                 db.Configs.ToList().OfType<ArubaMachineConfig>().OrderByDescending(o => o.Id).Skip(3).Take(2)
@@ -431,27 +453,10 @@ FROM ArubaContext.Owners as o
 GROUP BY o.FirstName
 ORDER BY c DESC SKIP 1 LIMIT 2";
 
-                var expectedSql = @"
-SELECT TOP (2) 
-[Project2].[C1] AS [C1], 
-[Project2].[FirstName] AS [FirstName]
-FROM ( SELECT [Project2].[FirstName] AS [FirstName], [Project2].[C1] AS [C1], row_number() OVER (ORDER BY [Project2].[FirstName] DESC) AS [row_number]
-	FROM ( SELECT 
-		[Distinct1].[FirstName] AS [FirstName], 
-		1 AS [C1]
-		FROM ( SELECT DISTINCT 
-			[Extent1].[FirstName] AS [FirstName]
-			FROM [dbo].[ArubaOwners] AS [Extent1]
-		)  AS [Distinct1]
-	)  AS [Project2]
-)  AS [Project2]
-WHERE [Project2].[row_number] > 1
-ORDER BY [Project2].[FirstName] DESC";
-
                 // verifying that there are 2 results returned and they are sorted in Descending order
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _skip_limit_group_by_expectedSql))
                     {
                         VerifySortDescAndCountString(reader, 2);
                     }
@@ -466,23 +471,12 @@ SELECT Config.Id, Config.Address
 FROM OFTYPE (ArubaContext.Configs, CodeFirstNamespace.ArubaMachineConfig) AS Config 
 ORDER BY Config.Id DESC SKIP 1";
 
-                var expectedSql = @"
-SELECT 
-[Filter1].[Id] AS [Id], 
-[Filter1].[Address] AS [Address]
-FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[Address] AS [Address], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
-	FROM [dbo].[ArubaConfigs] AS [Extent1]
-	WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
-)  AS [Filter1]
-WHERE [Filter1].[row_number] > 1
-ORDER BY [Filter1].[Id] DESC";
-
                 // verify that the first 1 is skipped and that the results are sorted in descending order
                 using (var db = new ArubaContext())
                 {
                     using (var db2 = new ArubaContext())
                     {
-                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, _skip_no_limit_with_inheritance_expectedSql))
                         {
                             var expectedResults = db.Configs.OfType<ArubaMachineConfig>().ToList().OrderByDescending(c => c.Id).Skip(1)
                                                     .Select(c => c.Id);
@@ -500,24 +494,10 @@ SELECT DISTINCT o.FirstName as a
 FROM ArubaContext.Owners as o
 ORDER BY a SKIP 1 LIMIT 1";
                 
-                var expectedSql = @"
-SELECT TOP (1) 
-[Distinct1].[C1] AS [C1], 
-[Distinct1].[FirstName] AS [FirstName]
-FROM ( SELECT [Distinct1].[FirstName] AS [FirstName], [Distinct1].[C1] AS [C1], row_number() OVER (ORDER BY [Distinct1].[FirstName] ASC) AS [row_number]
-	FROM ( SELECT DISTINCT 
-		[Extent1].[FirstName] AS [FirstName], 
-		1 AS [C1]
-		FROM [dbo].[ArubaOwners] AS [Extent1]
-	)  AS [Distinct1]
-)  AS [Distinct1]
-WHERE [Distinct1].[row_number] > 1
-ORDER BY [Distinct1].[FirstName] ASC";
-
                 // verifying that there is 1 result returned
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _skip_limit_distinct_expectedSql))
                     {
                         VerifySortDescAndCountString(reader, 1);
                     }
@@ -532,23 +512,12 @@ ORDER BY [Distinct1].[FirstName] ASC";
  FROM ArubaContext.Owners as o
  ORDER BY o.FirstName ASC, o.LastName DESC SKIP 3 LIMIT 4";
 
-                var expectedSql = @"
-SELECT TOP (4) 
-[Extent1].[Id] AS [Id], 
-[Extent1].[FirstName] AS [FirstName], 
-[Extent1].[LastName] AS [LastName]
-FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], row_number() OVER (ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC) AS [row_number]
-	FROM [dbo].[ArubaOwners] AS [Extent1]
-)  AS [Extent1]
-WHERE [Extent1].[row_number] > 3
-ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC";
-
                 // verifying that there are 2 results returned
                 using (var db = new ArubaContext())
                 {
                     using (var db2 = new ArubaContext())
                     {
-                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, _multiple_sort_keys_expectedSql))
                         {
                             var expectedResults = db.Owners.ToList().OrderBy(o => o.FirstName).ThenByDescending(o => o.LastName)
                                                     .Skip(3).Take(4).Select(o => o.Id);
@@ -570,32 +539,10 @@ FROM ArubaContext.Owners as oo
 WHERE oo.Id > 3
 ORDER BY oo.Id SKIP 2 LIMIT 3";
 
-                var expectedSql = @"
-SELECT 
-[Limit1].[Id] AS [Id], 
-[Project1].[C1] AS [C1], 
-[Project1].[Id] AS [Id1]
-FROM   (SELECT TOP (3) [Filter1].[Id] AS [Id]
-	FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
-		FROM [dbo].[ArubaOwners] AS [Extent1]
-		WHERE [Extent1].[Id] > 3
-	)  AS [Filter1]
-	WHERE [Filter1].[row_number] > 2
-	ORDER BY [Filter1].[Id] ASC ) AS [Limit1]
-LEFT OUTER JOIN  (SELECT TOP (2) 
-	[Extent2].[Id] AS [Id], 
-	1 AS [C1]
-	FROM ( SELECT [Extent2].[Id] AS [Id], row_number() OVER (ORDER BY [Extent2].[Id] ASC) AS [row_number]
-		FROM [dbo].[ArubaOwners] AS [Extent2]
-	)  AS [Extent2]
-	WHERE [Extent2].[row_number] > 1
-	ORDER BY [Extent2].[Id] ASC ) AS [Project1] ON 1 = 1
-ORDER BY [Limit1].[Id] ASC, [Project1].[C1] ASC";
-
                 // verifying that there are 3 results returned
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _nested_skip_limits_in_select_expectedSql))
                     {
                         var count = 0;
                         while (reader.Read())
@@ -624,25 +571,10 @@ FROM  (
 ) AS TOP
 ORDER BY TOP.Id SKIP 1 LIMIT 2";
 
-                var expectedSql = @"
-SELECT TOP (2) 
-[Limit1].[Id] AS [Id]
-FROM ( SELECT [Limit1].[Id] AS [Id], row_number() OVER (ORDER BY [Limit1].[Id] ASC) AS [row_number]
-	FROM ( SELECT TOP (5) [Extent1].[Id] AS [Id]
-		FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
-			FROM [dbo].[ArubaOwners] AS [Extent1]
-		)  AS [Extent1]
-		WHERE [Extent1].[row_number] > 2
-		ORDER BY [Extent1].[Id] DESC
-	)  AS [Limit1]
-)  AS [Limit1]
-WHERE [Limit1].[row_number] > 1
-ORDER BY [Limit1].[Id] ASC";
-
                 // verifying that there are 2 integer results returned
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _nested_skip_limits_in_from_expectedSql))
                     {
                         VerifyTypeAndCount(reader, 2, "Int32");
                     }
@@ -661,44 +593,12 @@ ORDER BY o.Id DESC, o.Alias DESC SKIP 3L LIMIT 7L)
 FROM ArubaContext.Owners as o
 ORDER BY o.Id ASC, o.Alias ASC SKIP 4 LIMIT 6)";
 
-                var expectedSql = @"
-SELECT 
-[Intersect1].[C1] AS [C1], 
-[Intersect1].[Id] AS [C2]
-FROM  (SELECT TOP (7) 
-	[Project1].[C1] AS [C1], 
-	[Project1].[Id] AS [Id]
-	FROM ( SELECT [Project1].[Id] AS [Id], [Project1].[Alias] AS [Alias], [Project1].[C1] AS [C1], row_number() OVER (ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC) AS [row_number]
-		FROM ( SELECT 
-			[Extent1].[Id] AS [Id], 
-			[Extent1].[Alias] AS [Alias], 
-			1 AS [C1]
-			FROM [dbo].[ArubaOwners] AS [Extent1]
-		)  AS [Project1]
-	)  AS [Project1]
-	WHERE [Project1].[row_number] > 3
-	ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC
-INTERSECT
-	SELECT TOP (6) 
-	[Project3].[C1] AS [C1], 
-	[Project3].[Id] AS [Id]
-	FROM ( SELECT [Project3].[Id] AS [Id], [Project3].[Alias] AS [Alias], [Project3].[C1] AS [C1], row_number() OVER (ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC) AS [row_number]
-		FROM ( SELECT 
-			[Extent2].[Id] AS [Id], 
-			[Extent2].[Alias] AS [Alias], 
-			1 AS [C1]
-			FROM [dbo].[ArubaOwners] AS [Extent2]
-		)  AS [Project3]
-	)  AS [Project3]
-	WHERE [Project3].[row_number] > 4
-	ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC) AS [Intersect1]";
-
                 // verifying that the results returned match the results of the Linq baseline
                 using (var db = new ArubaContext())
                 {
                     using (var db2 = new ArubaContext())
                     {
-                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, _intersect_with_split_limit_expectedSql))
                         {
                             //building expected results
                             var query1 = db.Owners.ToList().OrderByDescending(o => o.Id).ThenByDescending(o => o.Alias).Skip(3).Take(7)
@@ -789,35 +689,10 @@ SELECT VALUE (
 FROM ArubaContext.Owners AS c 
 ORDER BY c.Id skip 5 limit 2";
 
-                var expectedSql = @"
-SELECT 
-[Project2].[Id] AS [Id], 
-[Project2].[C1] AS [C1], 
-[Project2].[Id1] AS [Id1]
-FROM ( SELECT 
-	[Limit1].[Id] AS [Id], 
-	[Limit2].[Id] AS [Id1], 
-	CASE WHEN ([Limit2].[Id] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]
-	FROM   (SELECT TOP (2) [Extent1].[Id] AS [Id]
-		FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
-			FROM [dbo].[ArubaOwners] AS [Extent1]
-		)  AS [Extent1]
-		WHERE [Extent1].[row_number] > 5
-		ORDER BY [Extent1].[Id] ASC ) AS [Limit1]
-	OUTER APPLY  (SELECT TOP (2) [Project1].[Id] AS [Id]
-		FROM ( SELECT 
-			[Extent2].[Id] AS [Id]
-			FROM [dbo].[ArubaOwners] AS [Extent2]
-			WHERE [Extent2].[Id] > [Limit1].[Id]
-		)  AS [Project1]
-		ORDER BY [Project1].[Id] ASC ) AS [Limit2]
-)  AS [Project2]
-ORDER BY [Project2].[Id] ASC, [Project2].[C1] ASC";
-
                 // verifying that there are 4 results returned and they are integers
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _nested_projections_list_expectedSql))
                     {
                         var count = 0;
 
@@ -846,24 +721,10 @@ ANYELEMENT (
     ORDER BY C.Id SKIP 3 LIMIT 2
 )";
 
-                var expectedSql = @"
-SELECT 
-[Element1].[Id] AS [Id]
-FROM   ( SELECT 1 AS X ) AS [SingleRowTable1]
-LEFT OUTER JOIN  (SELECT TOP (1) [element].[Id] AS [Id]
-	FROM ( SELECT TOP (2) 
-		[Extent1].[Id] AS [Id]
-		FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
-			FROM [dbo].[ArubaOwners] AS [Extent1]
-		)  AS [Extent1]
-		WHERE [Extent1].[row_number] > 3
-		ORDER BY [Extent1].[Id] ASC
-	)  AS [element] ) AS [Element1] ON 1 = 1";
-
                 // verifying that there is 1 result returned and that it is an integer
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _anyelement_over_skip_limit_expectedSql))
                     {
                         VerifyTypeAndCount(reader, 1, "Int32");
                     }
@@ -879,25 +740,10 @@ FROM ArubaContext.Owners as c, ArubaContext.Owners as d
 WHERE c.Id == d.Id 
 ORDER BY anyelement(select value c.Id * (-1) from {d} as c) SKIP 4 LIMIT 3";
 
-                var expectedSql = @"
-SELECT TOP (3) 
-[Project1].[Id] AS [Id], 
-[Project1].[C2] AS [C1]
-FROM ( SELECT [Project1].[C1] AS [C1], [Project1].[Id] AS [Id], [Project1].[C2] AS [C2], row_number() OVER (ORDER BY [Project1].[C1] ASC) AS [row_number]
-	FROM ( SELECT 
-		[Extent1].[Id] * -1 AS [C1], 
-		[Extent1].[Id] AS [Id], 
-		1 AS [C2]
-		FROM [dbo].[ArubaOwners] AS [Extent1]
-	)  AS [Project1]
-)  AS [Project1]
-WHERE [Project1].[row_number] > 4
-ORDER BY [Project1].[C1] ASC";
-
                 // verifying that there are 3 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _complicated_order_by_expectedSql))
                     {
                         VerifySortDescAndCountInt(reader, 3);
                     }
@@ -912,20 +758,11 @@ SELECT c.Id
 FROM ArubaContext.Owners AS c
 ORDER BY c.Id DESC SKIP 2";
 
-                var expectedSql = @"
-SELECT 
-[Extent1].[Id] AS [Id]
-FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
-	FROM [dbo].[ArubaOwners] AS [Extent1]
-)  AS [Extent1]
-WHERE [Extent1].[row_number] > 2
-ORDER BY [Extent1].[Id] DESC";
-
                 using (var db = new ArubaContext())
                 {
                     using (var db2 = new ArubaContext())
                     {
-                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, _skip_with_no_limit_and_multiset_expectedSql))
                         {
                             var expectedResults = db.Owners.ToList().OrderByDescending(o => o.Id).Skip(2).Select(o => o.Id);
                             VerifyAgainstBaselineResults(reader, expectedResults);
@@ -942,19 +779,10 @@ SELECT c.Id as [row_number]
 FROM ArubaContext.Owners as c
 ORDER BY [row_number] skip 2 limit 3";
 
-                var expectedSql = @"
-SELECT TOP (3) 
-[Extent1].[Id] AS [Id]
-FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
-	FROM [dbo].[ArubaOwners] AS [Extent1]
-)  AS [Extent1]
-WHERE [Extent1].[row_number] > 2
-ORDER BY [Extent1].[Id] ASC";
-
                 // verifying that there are 3 results returned and they are sorted in ascending order
                 using (var db = new ArubaContext())
                 {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _edge_case_column_name_expectedSql))
                     {
                         VerifySortAscAndCountInt(reader, 3);
                     }
@@ -977,8 +805,571 @@ FROM (
     ) AS d
 ORDER BY d.Id SKIP 1 LIMIT 2";
 
-                var expectedSql = @"
-SELECT TOP (2) 
+                // verifying that there is 1 result returned and it is an integer
+                using (var db = new ArubaContext())
+                {
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _skip_limit_over_skip_limit_intersect_expectedSql))
+                    {
+                        VerifyTypeAndCount(reader, 1, "Int32");
+                    }
+                }
+            }
+
+            [Fact]
+            public void Skip_limit_with_duplicates()
+            {
+                var query = @"
+SELECT i
+FROM  {1,1,1,2,2} as i
+ORDER BY i SKIP 2 LIMIT 4";
+
+                // verifying that there are 3 results returned and that they match the expected output
+                using (var db = new ArubaContext())
+                {
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _skip_limit_with_duplicates_expectedSql))
+                    {
+                        var values = new List<int> { 1, 2, 2 };
+                        VerifyAgainstBaselineResults(reader, values);
+                    }
+                }
+            }
+
+            [Fact]
+            public void Skip_limit_with_nulls()
+            {
+                var query = @"
+SELECT i
+FROM  {null, 2,2} as i
+ORDER BY i SKIP 2 LIMIT 4";
+
+                // verifying that there is 1 result returned and it is an int
+                using (var db = new ArubaContext())
+                {
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, _skip_limit_with_nulls_expectedSql))
+                    {
+                        VerifyTypeAndCount(reader, 1, "Int32");
+                    }
+                }
+            }
+
+            public void SetFixture(SkipLimitFixture data)
+            {
+                _basic_skip_limit_expectedSql = data.Basic_skip_limit_expectedSql;
+                _skip_limit_group_by_expectedSql = data.Skip_limit_group_by_expectedSql;
+                _skip_no_limit_with_inheritance_expectedSql = data.Skip_no_limit_with_inheritance_expectedSql;
+                _skip_limit_distinct_expectedSql = data.Skip_limit_distinct_expectedSql;
+                _multiple_sort_keys_expectedSql = data.Multiple_sort_keys_expectedSql;
+                _nested_skip_limits_in_select_expectedSql = data.Nested_skip_limits_in_select_expectedSql;
+                _nested_skip_limits_in_from_expectedSql = data.Nested_skip_limits_in_from_expectedSql;
+                _intersect_with_split_limit_expectedSql = data.Intersect_with_split_limit_expectedSql;
+                _nested_projections_list_expectedSql = data.Nested_projections_list_expectedSql;
+                _anyelement_over_skip_limit_expectedSql = data.Anyelement_over_skip_limit_expectedSql;
+                _complicated_order_by_expectedSql = data.Complicated_order_by_expectedSql;
+                _skip_with_no_limit_and_multiset_expectedSql = data.Skip_with_no_limit_and_multiset_expectedSql;
+                _edge_case_column_name_expectedSql = data.Edge_case_column_name_expectedSql;
+                _skip_limit_over_skip_limit_intersect_expectedSql = data.Skip_limit_over_skip_limit_intersect_expectedSql;
+                _skip_limit_with_duplicates_expectedSql = data.Skip_limit_with_duplicates_expectedSql;
+                _skip_limit_with_nulls_expectedSql = data.Skip_limit_with_nulls_expectedSql;
+            }
+        }
+
+        public class SkipLimitFixture
+        {
+            public string Basic_skip_limit_expectedSql { get; private set; }
+            public string Skip_limit_group_by_expectedSql { get; private set; }
+            public string Skip_no_limit_with_inheritance_expectedSql { get; private set; }
+            public string Skip_limit_distinct_expectedSql { get; private set; }
+            public string Multiple_sort_keys_expectedSql { get; private set; }
+            public string Nested_skip_limits_in_select_expectedSql { get; private set; }
+            public string Nested_skip_limits_in_from_expectedSql { get; private set; }
+            public string Intersect_with_split_limit_expectedSql { get; private set; }
+            public string Nested_projections_list_expectedSql { get; private set; }
+            public string Anyelement_over_skip_limit_expectedSql { get; private set; }
+            public string Complicated_order_by_expectedSql { get; private set; }
+            public string Skip_with_no_limit_and_multiset_expectedSql { get; private set; }
+            public string Edge_case_column_name_expectedSql { get; private set; }
+            public string Skip_limit_over_skip_limit_intersect_expectedSql { get; private set; }
+            public string Skip_limit_with_duplicates_expectedSql { get; private set; }
+            public string Skip_limit_with_nulls_expectedSql { get; private set; }
+
+            public SkipLimitFixture()
+            {
+                var sqlVersion = DatabaseTestHelpers.GetSqlDatabaseVersion<ArubaContext>(() => new ArubaContext());
+                if (sqlVersion >= 11)
+                {
+                    SetExpectedSqlForSql2012();
+                }
+                else
+                {
+                    SetExpectedSqlForLegacySql();
+                }
+            }
+
+            private void SetExpectedSqlForSql2012()
+            {
+                Basic_skip_limit_expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Address] AS [Address]
+    FROM [dbo].[ArubaConfigs] AS [Extent1]
+    WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
+    ORDER BY [Extent1].[Id] DESC
+    OFFSET 3 ROWS FETCH NEXT 2 ROWS ONLY ";
+
+                Skip_limit_group_by_expectedSql =
+@"SELECT 
+    [Project2].[C1] AS [C1], 
+    [Project2].[FirstName] AS [FirstName]
+    FROM ( SELECT 
+        [Distinct1].[FirstName] AS [FirstName], 
+        1 AS [C1]
+        FROM ( SELECT DISTINCT 
+            [Extent1].[FirstName] AS [FirstName]
+            FROM [dbo].[ArubaOwners] AS [Extent1]
+        )  AS [Distinct1]
+    )  AS [Project2]
+    ORDER BY [Project2].[FirstName] DESC
+    OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY ";
+
+                Skip_no_limit_with_inheritance_expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Address] AS [Address]
+    FROM [dbo].[ArubaConfigs] AS [Extent1]
+    WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
+    ORDER BY [Extent1].[Id] DESC
+    OFFSET 1 ROWS ";
+
+                Skip_limit_distinct_expectedSql =
+@"SELECT 
+    [Distinct1].[C1] AS [C1], 
+    [Distinct1].[FirstName] AS [FirstName]
+    FROM ( SELECT DISTINCT 
+        [Extent1].[FirstName] AS [FirstName], 
+        1 AS [C1]
+        FROM [dbo].[ArubaOwners] AS [Extent1]
+    )  AS [Distinct1]
+    ORDER BY [Distinct1].[FirstName] ASC
+    OFFSET 1 ROWS FETCH NEXT 1 ROWS ONLY ";
+
+                Multiple_sort_keys_expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[FirstName] AS [FirstName], 
+    [Extent1].[LastName] AS [LastName]
+    FROM [dbo].[ArubaOwners] AS [Extent1]
+    ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC
+    OFFSET 3 ROWS FETCH NEXT 4 ROWS ONLY ";
+
+                Nested_skip_limits_in_select_expectedSql =
+@"SELECT 
+    [Limit1].[Id] AS [Id], 
+    [Project1].[C1] AS [C1], 
+    [Project1].[Id] AS [Id1]
+    FROM   (SELECT [Extent1].[Id] AS [Id]
+        FROM [dbo].[ArubaOwners] AS [Extent1]
+        WHERE [Extent1].[Id] > 3
+        ORDER BY [Extent1].[Id] ASC
+        OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY  ) AS [Limit1]
+    LEFT OUTER JOIN  (SELECT 
+        [Extent2].[Id] AS [Id], 
+        1 AS [C1]
+        FROM [dbo].[ArubaOwners] AS [Extent2]
+        ORDER BY [Extent2].[Id] ASC
+        OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY  ) AS [Project1] ON 1 = 1
+    ORDER BY [Limit1].[Id] ASC, [Project1].[C1] ASC";
+
+                Nested_skip_limits_in_from_expectedSql =
+@"SELECT 
+    [Limit1].[Id] AS [Id]
+    FROM ( SELECT [Extent1].[Id] AS [Id]
+        FROM [dbo].[ArubaOwners] AS [Extent1]
+        ORDER BY [Extent1].[Id] DESC
+        OFFSET 2 ROWS FETCH NEXT 5 ROWS ONLY 
+    )  AS [Limit1]
+    ORDER BY [Limit1].[Id] ASC
+    OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY ";
+
+                Intersect_with_split_limit_expectedSql =
+@"SELECT 
+    [Intersect1].[C1] AS [C1], 
+    [Intersect1].[Id] AS [C2]
+    FROM  (SELECT 
+        [Project1].[C1] AS [C1], 
+        [Project1].[Id] AS [Id]
+        FROM ( SELECT 
+            [Extent1].[Id] AS [Id], 
+            [Extent1].[Alias] AS [Alias], 
+            1 AS [C1]
+            FROM [dbo].[ArubaOwners] AS [Extent1]
+        )  AS [Project1]
+        ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC
+        OFFSET 3 ROWS FETCH NEXT 7 ROWS ONLY 
+    INTERSECT
+        SELECT 
+        [Project3].[C1] AS [C1], 
+        [Project3].[Id] AS [Id]
+        FROM ( SELECT 
+            [Extent2].[Id] AS [Id], 
+            [Extent2].[Alias] AS [Alias], 
+            1 AS [C1]
+            FROM [dbo].[ArubaOwners] AS [Extent2]
+        )  AS [Project3]
+        ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC
+        OFFSET 4 ROWS FETCH NEXT 6 ROWS ONLY ) AS [Intersect1]";
+
+                Nested_projections_list_expectedSql =
+@"SELECT 
+    [Project2].[Id] AS [Id], 
+    [Project2].[C1] AS [C1], 
+    [Project2].[Id1] AS [Id1]
+    FROM ( SELECT 
+        [Limit1].[Id] AS [Id], 
+        [Limit2].[Id] AS [Id1], 
+        CASE WHEN ([Limit2].[Id] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]
+        FROM   (SELECT [Extent1].[Id] AS [Id]
+            FROM [dbo].[ArubaOwners] AS [Extent1]
+            ORDER BY [Extent1].[Id] ASC
+            OFFSET 5 ROWS FETCH NEXT 2 ROWS ONLY  ) AS [Limit1]
+        OUTER APPLY  (SELECT TOP (2) [Project1].[Id] AS [Id]
+            FROM ( SELECT 
+                [Extent2].[Id] AS [Id]
+                FROM [dbo].[ArubaOwners] AS [Extent2]
+                WHERE [Extent2].[Id] > [Limit1].[Id]
+            )  AS [Project1]
+            ORDER BY [Project1].[Id] ASC ) AS [Limit2]
+    )  AS [Project2]
+    ORDER BY [Project2].[Id] ASC, [Project2].[C1] ASC";
+
+                Anyelement_over_skip_limit_expectedSql =
+@"SELECT 
+    [Element1].[Id] AS [Id]
+    FROM   ( SELECT 1 AS X ) AS [SingleRowTable1]
+    LEFT OUTER JOIN  (SELECT TOP (1) [element].[Id] AS [Id]
+        FROM ( SELECT 
+            [Extent1].[Id] AS [Id]
+            FROM [dbo].[ArubaOwners] AS [Extent1]
+            ORDER BY [Extent1].[Id] ASC
+            OFFSET 3 ROWS FETCH NEXT 2 ROWS ONLY 
+        )  AS [element] ) AS [Element1] ON 1 = 1";
+
+                Complicated_order_by_expectedSql =
+@"SELECT 
+    [Project1].[Id] AS [Id], 
+    [Project1].[C2] AS [C1]
+    FROM ( SELECT 
+        [Extent1].[Id] * -1 AS [C1], 
+        [Extent1].[Id] AS [Id], 
+        1 AS [C2]
+        FROM [dbo].[ArubaOwners] AS [Extent1]
+    )  AS [Project1]
+    ORDER BY [Project1].[C1] ASC
+    OFFSET 4 ROWS FETCH NEXT 3 ROWS ONLY ";
+
+                Skip_with_no_limit_and_multiset_expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id]
+    FROM [dbo].[ArubaOwners] AS [Extent1]
+    ORDER BY [Extent1].[Id] DESC
+    OFFSET 2 ROWS ";
+
+                Edge_case_column_name_expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id]
+    FROM [dbo].[ArubaOwners] AS [Extent1]
+    ORDER BY [Extent1].[Id] ASC
+    OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY ";
+
+                Skip_limit_over_skip_limit_intersect_expectedSql =
+@"SELECT 
+    [Intersect1].[C1] AS [C1], 
+    [Intersect1].[Id] AS [C2], 
+    [Intersect1].[Alias] AS [C3]
+    FROM  (SELECT 
+        [Project1].[C1] AS [C1], 
+        [Project1].[Id] AS [Id], 
+        [Project1].[Alias] AS [Alias]
+        FROM ( SELECT 
+            [Extent1].[Id] AS [Id], 
+            [Extent1].[Alias] AS [Alias], 
+            1 AS [C1]
+            FROM [dbo].[ArubaOwners] AS [Extent1]
+        )  AS [Project1]
+        ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC
+        OFFSET 3 ROWS FETCH NEXT 4 ROWS ONLY 
+    INTERSECT
+        SELECT 
+        [Project3].[C1] AS [C1], 
+        [Project3].[Id] AS [Id], 
+        [Project3].[Alias] AS [Alias]
+        FROM ( SELECT 
+            [Extent2].[Id] AS [Id], 
+            [Extent2].[Alias] AS [Alias], 
+            1 AS [C1]
+            FROM [dbo].[ArubaOwners] AS [Extent2]
+        )  AS [Project3]
+        ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC
+        OFFSET 5 ROWS FETCH NEXT 2 ROWS ONLY ) AS [Intersect1]
+    ORDER BY [Intersect1].[Id] ASC
+    OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY ";
+
+                Skip_limit_with_duplicates_expectedSql =
+@"SELECT 
+    [UnionAll4].[C1] AS [C1]
+    FROM  (SELECT 
+        1 AS [C1]
+        FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+    UNION ALL
+        SELECT 
+        1 AS [C1]
+        FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+    UNION ALL
+        SELECT 
+        1 AS [C1]
+        FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]
+    UNION ALL
+        SELECT 
+        2 AS [C1]
+        FROM  ( SELECT 1 AS X ) AS [SingleRowTable4]
+    UNION ALL
+        SELECT 
+        2 AS [C1]
+        FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll4]
+    ORDER BY [UnionAll4].[C1] ASC
+    OFFSET 2 ROWS FETCH NEXT 4 ROWS ONLY ";
+
+                Skip_limit_with_nulls_expectedSql =
+@"SELECT 
+    [Project4].[C2] AS [C1], 
+    [Project4].[C1] AS [C2]
+    FROM ( SELECT 
+        [UnionAll2].[C1] AS [C1], 
+        1 AS [C2]
+        FROM  (SELECT 
+            CAST(NULL AS int) AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]
+        UNION ALL
+            SELECT 
+            2 AS [C1]
+            FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]
+    )  AS [Project4]
+    ORDER BY [Project4].[C1] ASC
+    OFFSET 2 ROWS FETCH NEXT 4 ROWS ONLY ";
+            }
+
+            private void SetExpectedSqlForLegacySql()
+            {
+                Basic_skip_limit_expectedSql =
+@"SELECT TOP (2) 
+[Filter1].[Id] AS [Id], 
+[Filter1].[Address] AS [Address]
+FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[Address] AS [Address], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
+	FROM [dbo].[ArubaConfigs] AS [Extent1]
+	WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
+)  AS [Filter1]
+WHERE [Filter1].[row_number] > 3
+ORDER BY [Filter1].[Id] DESC";
+
+                Skip_limit_group_by_expectedSql =
+@"SELECT TOP (2) 
+[Project2].[C1] AS [C1], 
+[Project2].[FirstName] AS [FirstName]
+FROM ( SELECT [Project2].[FirstName] AS [FirstName], [Project2].[C1] AS [C1], row_number() OVER (ORDER BY [Project2].[FirstName] DESC) AS [row_number]
+	FROM ( SELECT 
+		[Distinct1].[FirstName] AS [FirstName], 
+		1 AS [C1]
+		FROM ( SELECT DISTINCT 
+			[Extent1].[FirstName] AS [FirstName]
+			FROM [dbo].[ArubaOwners] AS [Extent1]
+		)  AS [Distinct1]
+	)  AS [Project2]
+)  AS [Project2]
+WHERE [Project2].[row_number] > 1
+ORDER BY [Project2].[FirstName] DESC";
+
+                Skip_no_limit_with_inheritance_expectedSql =
+@"SELECT 
+[Filter1].[Id] AS [Id], 
+[Filter1].[Address] AS [Address]
+FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[Address] AS [Address], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
+	FROM [dbo].[ArubaConfigs] AS [Extent1]
+	WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
+)  AS [Filter1]
+WHERE [Filter1].[row_number] > 1
+ORDER BY [Filter1].[Id] DESC";
+
+                Skip_limit_distinct_expectedSql =
+@"SELECT TOP (1) 
+[Distinct1].[C1] AS [C1], 
+[Distinct1].[FirstName] AS [FirstName]
+FROM ( SELECT [Distinct1].[FirstName] AS [FirstName], [Distinct1].[C1] AS [C1], row_number() OVER (ORDER BY [Distinct1].[FirstName] ASC) AS [row_number]
+	FROM ( SELECT DISTINCT 
+		[Extent1].[FirstName] AS [FirstName], 
+		1 AS [C1]
+		FROM [dbo].[ArubaOwners] AS [Extent1]
+	)  AS [Distinct1]
+)  AS [Distinct1]
+WHERE [Distinct1].[row_number] > 1
+ORDER BY [Distinct1].[FirstName] ASC";
+
+                Multiple_sort_keys_expectedSql =
+@"SELECT TOP (4) 
+[Extent1].[Id] AS [Id], 
+[Extent1].[FirstName] AS [FirstName], 
+[Extent1].[LastName] AS [LastName]
+FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], row_number() OVER (ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC) AS [row_number]
+	FROM [dbo].[ArubaOwners] AS [Extent1]
+)  AS [Extent1]
+WHERE [Extent1].[row_number] > 3
+ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC";
+
+                Nested_skip_limits_in_select_expectedSql =
+@"SELECT 
+[Limit1].[Id] AS [Id], 
+[Project1].[C1] AS [C1], 
+[Project1].[Id] AS [Id1]
+FROM   (SELECT TOP (3) [Filter1].[Id] AS [Id]
+	FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
+		FROM [dbo].[ArubaOwners] AS [Extent1]
+		WHERE [Extent1].[Id] > 3
+	)  AS [Filter1]
+	WHERE [Filter1].[row_number] > 2
+	ORDER BY [Filter1].[Id] ASC ) AS [Limit1]
+LEFT OUTER JOIN  (SELECT TOP (2) 
+	[Extent2].[Id] AS [Id], 
+	1 AS [C1]
+	FROM ( SELECT [Extent2].[Id] AS [Id], row_number() OVER (ORDER BY [Extent2].[Id] ASC) AS [row_number]
+		FROM [dbo].[ArubaOwners] AS [Extent2]
+	)  AS [Extent2]
+	WHERE [Extent2].[row_number] > 1
+	ORDER BY [Extent2].[Id] ASC ) AS [Project1] ON 1 = 1
+ORDER BY [Limit1].[Id] ASC, [Project1].[C1] ASC";
+
+                Nested_skip_limits_in_from_expectedSql =
+@"SELECT TOP (2) 
+[Limit1].[Id] AS [Id]
+FROM ( SELECT [Limit1].[Id] AS [Id], row_number() OVER (ORDER BY [Limit1].[Id] ASC) AS [row_number]
+	FROM ( SELECT TOP (5) [Extent1].[Id] AS [Id]
+		FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
+			FROM [dbo].[ArubaOwners] AS [Extent1]
+		)  AS [Extent1]
+		WHERE [Extent1].[row_number] > 2
+		ORDER BY [Extent1].[Id] DESC
+	)  AS [Limit1]
+)  AS [Limit1]
+WHERE [Limit1].[row_number] > 1
+ORDER BY [Limit1].[Id] ASC";
+
+                Intersect_with_split_limit_expectedSql =
+@"SELECT 
+[Intersect1].[C1] AS [C1], 
+[Intersect1].[Id] AS [C2]
+FROM  (SELECT TOP (7) 
+	[Project1].[C1] AS [C1], 
+	[Project1].[Id] AS [Id]
+	FROM ( SELECT [Project1].[Id] AS [Id], [Project1].[Alias] AS [Alias], [Project1].[C1] AS [C1], row_number() OVER (ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC) AS [row_number]
+		FROM ( SELECT 
+			[Extent1].[Id] AS [Id], 
+			[Extent1].[Alias] AS [Alias], 
+			1 AS [C1]
+			FROM [dbo].[ArubaOwners] AS [Extent1]
+		)  AS [Project1]
+	)  AS [Project1]
+	WHERE [Project1].[row_number] > 3
+	ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC
+INTERSECT
+	SELECT TOP (6) 
+	[Project3].[C1] AS [C1], 
+	[Project3].[Id] AS [Id]
+	FROM ( SELECT [Project3].[Id] AS [Id], [Project3].[Alias] AS [Alias], [Project3].[C1] AS [C1], row_number() OVER (ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC) AS [row_number]
+		FROM ( SELECT 
+			[Extent2].[Id] AS [Id], 
+			[Extent2].[Alias] AS [Alias], 
+			1 AS [C1]
+			FROM [dbo].[ArubaOwners] AS [Extent2]
+		)  AS [Project3]
+	)  AS [Project3]
+	WHERE [Project3].[row_number] > 4
+	ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC) AS [Intersect1]";
+
+                Nested_projections_list_expectedSql =
+@"SELECT 
+[Project2].[Id] AS [Id], 
+[Project2].[C1] AS [C1], 
+[Project2].[Id1] AS [Id1]
+FROM ( SELECT 
+	[Limit1].[Id] AS [Id], 
+	[Limit2].[Id] AS [Id1], 
+	CASE WHEN ([Limit2].[Id] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]
+	FROM   (SELECT TOP (2) [Extent1].[Id] AS [Id]
+		FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
+			FROM [dbo].[ArubaOwners] AS [Extent1]
+		)  AS [Extent1]
+		WHERE [Extent1].[row_number] > 5
+		ORDER BY [Extent1].[Id] ASC ) AS [Limit1]
+	OUTER APPLY  (SELECT TOP (2) [Project1].[Id] AS [Id]
+		FROM ( SELECT 
+			[Extent2].[Id] AS [Id]
+			FROM [dbo].[ArubaOwners] AS [Extent2]
+			WHERE [Extent2].[Id] > [Limit1].[Id]
+		)  AS [Project1]
+		ORDER BY [Project1].[Id] ASC ) AS [Limit2]
+)  AS [Project2]
+ORDER BY [Project2].[Id] ASC, [Project2].[C1] ASC";
+
+                Anyelement_over_skip_limit_expectedSql =
+@"SELECT 
+[Element1].[Id] AS [Id]
+FROM   ( SELECT 1 AS X ) AS [SingleRowTable1]
+LEFT OUTER JOIN  (SELECT TOP (1) [element].[Id] AS [Id]
+	FROM ( SELECT TOP (2) 
+		[Extent1].[Id] AS [Id]
+		FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
+			FROM [dbo].[ArubaOwners] AS [Extent1]
+		)  AS [Extent1]
+		WHERE [Extent1].[row_number] > 3
+		ORDER BY [Extent1].[Id] ASC
+	)  AS [element] ) AS [Element1] ON 1 = 1";
+
+                Complicated_order_by_expectedSql =
+@"SELECT TOP (3) 
+[Project1].[Id] AS [Id], 
+[Project1].[C2] AS [C1]
+FROM ( SELECT [Project1].[C1] AS [C1], [Project1].[Id] AS [Id], [Project1].[C2] AS [C2], row_number() OVER (ORDER BY [Project1].[C1] ASC) AS [row_number]
+	FROM ( SELECT 
+		[Extent1].[Id] * -1 AS [C1], 
+		[Extent1].[Id] AS [Id], 
+		1 AS [C2]
+		FROM [dbo].[ArubaOwners] AS [Extent1]
+	)  AS [Project1]
+)  AS [Project1]
+WHERE [Project1].[row_number] > 4
+ORDER BY [Project1].[C1] ASC";
+
+                Skip_with_no_limit_and_multiset_expectedSql =
+@"SELECT 
+[Extent1].[Id] AS [Id]
+FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] DESC) AS [row_number]
+	FROM [dbo].[ArubaOwners] AS [Extent1]
+)  AS [Extent1]
+WHERE [Extent1].[row_number] > 2
+ORDER BY [Extent1].[Id] DESC";
+
+                Edge_case_column_name_expectedSql =
+@"SELECT TOP (3) 
+[Extent1].[Id] AS [Id]
+FROM ( SELECT [Extent1].[Id] AS [Id], row_number() OVER (ORDER BY [Extent1].[Id] ASC) AS [row_number]
+	FROM [dbo].[ArubaOwners] AS [Extent1]
+)  AS [Extent1]
+WHERE [Extent1].[row_number] > 2
+ORDER BY [Extent1].[Id] ASC";
+
+                Skip_limit_over_skip_limit_intersect_expectedSql =
+@"SELECT TOP (2) 
 [Intersect1].[C1] AS [C1], 
 [Intersect1].[Id] AS [C2], 
 [Intersect1].[Alias] AS [C3]
@@ -1016,26 +1407,8 @@ FROM ( SELECT [Intersect1].[C1] AS [C1], [Intersect1].[Id] AS [Id], [Intersect1]
 WHERE [Intersect1].[row_number] > 1
 ORDER BY [Intersect1].[Id] ASC";
 
-                // verifying that there is 1 result returned and it is an integer
-                using (var db = new ArubaContext())
-                {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
-                    {
-                        VerifyTypeAndCount(reader, 1, "Int32");
-                    }
-                }
-            }
-
-            [Fact]
-            public void Skip_limit_with_duplicates()
-            {
-                var query = @"
-SELECT i
-FROM  {1,1,1,2,2} as i
-ORDER BY i SKIP 2 LIMIT 4";
-
-                var expectedSql = @"
-SELECT TOP (4) 
+                Skip_limit_with_duplicates_expectedSql =
+@"SELECT TOP (4) 
     [UnionAll4].[C1] AS [C1]
     FROM ( SELECT [UnionAll4].[C1] AS [C1], row_number() OVER (ORDER BY [UnionAll4].[C1] ASC) AS [row_number]
         FROM  (SELECT 
@@ -1061,27 +1434,8 @@ SELECT TOP (4)
     WHERE [UnionAll4].[row_number] > 2
     ORDER BY [UnionAll4].[C1] ASC";
 
-                // verifying that there are 3 results returned and that they match the expected output
-                using (var db = new ArubaContext())
-                {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
-                    {
-                        var values = new List<int> { 1, 2, 2 };
-                        VerifyAgainstBaselineResults(reader, values);
-                    }
-                }
-            }
-
-            [Fact]
-            public void Skip_limit_with_nulls()
-            {
-                var query = @"
-SELECT i
-FROM  {null, 2,2} as i
-ORDER BY i SKIP 2 LIMIT 4";
-
-                var expectedSql = @"
-SELECT TOP (4) 
+                Skip_limit_with_nulls_expectedSql =
+@"SELECT TOP (4) 
     [Project4].[C2] AS [C1], 
     [Project4].[C1] AS [C2]
     FROM ( SELECT [Project4].[C1] AS [C1], [Project4].[C2] AS [C2], row_number() OVER (ORDER BY [Project4].[C1] ASC) AS [row_number]
@@ -1103,15 +1457,6 @@ SELECT TOP (4)
     )  AS [Project4]
     WHERE [Project4].[row_number] > 2
     ORDER BY [Project4].[C1] ASC";
-
-                // verifying that there is 1 result returned and it is an int
-                using (var db = new ArubaContext())
-                {
-                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
-                    {
-                        VerifyTypeAndCount(reader, 1, "Int32");
-                    }
-                }
             }
         }
 

@@ -15,6 +15,7 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
+    using System.Data.Entity.TestHelpers;
 
     public class QueryableExtensionsTests
     {
@@ -2065,12 +2066,21 @@ namespace System.Data.Entity
             [Fact]
             public void Parameterized_Skip_in_linq_to_entities_query_works_as_expected()
             {
-                using (var ctx = new Context())
+                string expectedSql = null;
+                var sqlVersion = DatabaseTestHelpers.GetSqlDatabaseVersion<Context>(() => new Context());
+                if (sqlVersion >= 11)
                 {
-                    var count = 2;
-                    var query = ctx.Entities.OrderBy(e => e.Name).Skip(() => count);
-
-                    Assert.Equal(
+                    expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Name] AS [Name]
+    FROM [dbo].[Entities] AS [Extent1]
+    ORDER BY [Extent1].[Name] ASC
+    OFFSET @p__linq__0 ROWS ";
+                }
+                else
+                {
+                    expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id], 
     [Extent1].[Name] AS [Name]
@@ -2078,8 +2088,16 @@ namespace System.Data.Entity
         FROM [dbo].[Entities] AS [Extent1]
     )  AS [Extent1]
     WHERE [Extent1].[row_number] > @p__linq__0
-    ORDER BY [Extent1].[Name] ASC",
-                       query.ToString());
+    ORDER BY [Extent1].[Name] ASC";
+                }
+
+                using (var ctx = new Context())
+                {
+
+                    var count = 2;
+                    var query = ctx.Entities.OrderBy(e => e.Name).Skip(() => count);
+
+                    Assert.Equal(expectedSql, query.ToString());
                 }
             }
 
@@ -2144,11 +2162,6 @@ namespace System.Data.Entity
 
             public class Context : DbContext
             {
-                public Context()
-                {
-                    Database.SetInitializer<Context>(null);
-                }
-
                 public DbSet<Entity> Entities { get; set; }
             }
         }

@@ -80,12 +80,4 @@ namespace System.Data.Entity.TestModels.ArubaModel
             modelBuilder.Entity<ArubaOwner>().Property(o => o.FirstName).HasMaxLength(30);
         }
     }
-
-    public class ArubaContext_2012 : ArubaContext 
-    {
-        static ArubaContext_2012()
-        {
-            Database.SetInitializer<ArubaContext_2012>(new ArubaInitializer());
-        }
-    }
 }

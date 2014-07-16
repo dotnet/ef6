@@ -26,10 +26,6 @@ namespace System.Data.Entity.Utilities
                 {
                     Assert.True(providerInfo.ProviderManifestToken == "2012.Azure");
                 }
-                else
-                {
-                    Assert.True(providerInfo.ProviderManifestToken == "2008");
-                }
             }
         }
     }

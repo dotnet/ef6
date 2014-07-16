@@ -174,7 +174,6 @@
     <Compile Include="TestHelpers\FakeProviderServicesResolver.cs" />
     <Compile Include="TestHelpers\FunctionalTestBase.cs" />
     <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
-    <Compile Include="TestHelpers\FunctionalTestsManifestTokenResolver.cs" />
     <Compile Include="TestHelpers\FunctionalTestsConfiguration.cs" />
     <Compile Include="TestHelpers\GenericConnection.cs">
       <SubType>Component</SubType>

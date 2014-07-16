@@ -65,7 +65,6 @@ namespace System.Data.Entity.TestHelpers
             SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
 
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
-            AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenResolver>(new FunctionalTestsManifestTokenResolver()));
 
             SetExecutionStrategy(
                 "System.Data.SqlClient", () => DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)

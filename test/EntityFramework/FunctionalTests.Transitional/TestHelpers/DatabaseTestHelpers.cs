@@ -43,5 +43,33 @@ namespace System.Data.Entity.TestHelpers
             return formattedConnectionString.Contains("persistsecurityinfo=true") ||
                 formattedConnectionString.Contains("persistsecurityinfo=yes");
         }
+
+        public static int GetSqlDatabaseVersion<TContext>(Func<TContext> contextCreator) 
+            where TContext : DbContext
+        {
+            string version = null;
+            using (var context = contextCreator())
+            {
+                context.Database.Initialize(false);
+                if (context.Database.Connection.State == ConnectionState.Closed)
+                {
+                    context.Database.Connection.Open();
+                    version = context.Database.Connection.ServerVersion;
+                    context.Database.Connection.Close();
+                }
+                else
+                {
+                    version = context.Database.Connection.ServerVersion;
+                }
+            }
+
+            int parsedVersion;
+            if (!int.TryParse(version.Substring(0, 2), out parsedVersion))
+            {
+                throw new InvalidOperationException("Could not parse server version: " + version);
+            }
+
+            return parsedVersion;
+        }
     }
 }
