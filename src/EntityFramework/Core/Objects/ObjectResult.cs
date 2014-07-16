@@ -19,7 +19,12 @@ namespace System.Data.Entity.Core.Objects
 #endif
 
     {
-        internal ObjectResult()
+        /// <summary>
+        ///     This constructor is intended only for use when creating test doubles that will override members
+        ///     with mocked or faked behavior. Use of this constructor for other purposes may result in unexpected
+        ///     behavior including but not limited to throwing <see cref="NullReferenceException" />.
+        /// </summary>
+        protected internal ObjectResult()
         {
         }
 
@@ -96,7 +101,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>Gets the next result set of a stored procedure.</summary>
         /// <returns>An ObjectResult that enumerates the values of the next result set. Null, if there are no more, or if the ObjectResult is not the result of a stored procedure call.</returns>
         /// <typeparam name="TElement">The type of the element.</typeparam>
-        public ObjectResult<TElement> GetNextResult<TElement>()
+        public virtual ObjectResult<TElement> GetNextResult<TElement>()
         {
             return GetNextResultInternal<TElement>();
         }

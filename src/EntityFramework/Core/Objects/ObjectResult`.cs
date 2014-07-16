@@ -33,6 +33,15 @@ namespace System.Data.Entity.Core.Objects
         private NextResultGenerator _nextResultGenerator;
         private Action<object, EventArgs> _onReaderDispose;
 
+        /// <summary>
+        ///     This constructor is intended only for use when creating test doubles that will override members
+        ///     with mocked or faked behavior. Use of this constructor for other purposes may result in unexpected
+        ///     behavior including but not limited to throwing <see cref="NullReferenceException" />.
+        /// </summary>
+        protected ObjectResult()
+        {
+        }
+
         internal ObjectResult(Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType)
             : this(shaper, singleEntitySet, resultItemType, readerOwned: true, shouldReleaseConnection: true)
         {
@@ -71,7 +80,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns an enumerator that iterates through the query results.</summary>
         /// <returns>An enumerator that iterates through the query results.</returns>
-        public IEnumerator<T> GetEnumerator()
+        public virtual IEnumerator<T> GetEnumerator()
         {
             return GetDbEnumerator();
         }
