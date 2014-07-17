@@ -21,6 +21,8 @@ namespace System.Data.Entity.Internal
             DebugCheck.NotNull(command);
             DebugCheck.NotNull(context);
 
+            GC.SuppressFinalize(this);
+
             _command = command;
 
             _interceptionContext = context;
