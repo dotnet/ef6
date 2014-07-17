@@ -1470,7 +1470,7 @@
     <value>Internal error. Unsupported projection expression type ({0}). Only DBNewInstanceExpression projections are supported in update mapping views.</value>
   </data>
   <data name="Update_ConcurrencyError" xml:space="preserve">
-    <value>Store update, insert, or delete statement affected an unexpected number of rows ({0}). Entities may have been modified or deleted since entities were loaded. Refresh ObjectStateManager entries.</value>
+    <value>Store update, insert, or delete statement affected an unexpected number of rows ({0}). Entities may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=472540 for information on understanding and handling optimistic concurrency exceptions.</value>
   </data>
   <data name="Update_MissingEntity" xml:space="preserve">
     <value>In order to update the AssociationSet '{0}', the corresponding entity from EntitySet '{1}' must be available in the ObjectStateManager.</value>

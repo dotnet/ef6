@@ -3223,7 +3223,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Store update, insert, or delete statement affected an unexpected number of rows ({0}). Entities may have been modified or deleted since entities were loaded. Refresh ObjectStateManager entries."
+        // A string like "Store update, insert, or delete statement affected an unexpected number of rows ({0}). Entities may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=472540 for information on understanding and handling optimistic concurrency exceptions."
         // </summary>
         internal static string Update_ConcurrencyError(object p0)
         {
