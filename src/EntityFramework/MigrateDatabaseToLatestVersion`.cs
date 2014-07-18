@@ -46,8 +46,27 @@ namespace System.Data.Entity
         /// using the default constructor or registered factory if applicable. 
         /// </param>
         public MigrateDatabaseToLatestVersion(bool useSuppliedContext)
+            : this(useSuppliedContext, new TMigrationsConfiguration())
         {
-            _config = new TMigrationsConfiguration();
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the MigrateDatabaseToLatestVersion class specifying whether to
+        /// use the connection information from the context that triggered initialization to perform the migration.
+        /// Also allows specifying migrations configuration to use during initialization.
+        /// </summary>
+        /// <param name="useSuppliedContext">
+        /// If set to <c>true</c> the initializer is run using the connection information from the context that
+        /// triggered initialization. Otherwise, the connection information will be taken from a context constructed
+        /// using the default constructor or registered factory if applicable.
+        /// </param>
+        /// <param name="configuration"> Migrations configuration to use during initialization. </param>
+        public MigrateDatabaseToLatestVersion(bool useSuppliedContext, TMigrationsConfiguration configuration)
+        {
+            Check.NotNull(configuration, "configuration");
+
+            _config = configuration;
             _useSuppliedContext = useSuppliedContext;
         }
 
