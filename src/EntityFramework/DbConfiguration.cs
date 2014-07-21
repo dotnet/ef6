@@ -769,6 +769,28 @@ namespace System.Data.Entity
             SetContextFactory(typeof(TContext), factory);
         }
 
+        /// <summary>
+        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register
+        /// a database table existence checker for a given provider.
+        /// </summary>
+        /// <remarks>
+        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        /// Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        /// <see cref="DbProviderServices" /> and also using AddDefaultResolver to add the provider as a default
+        /// resolver. This means that, if desired, the same functionality can be achieved using a custom resolver or a
+        /// resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
+        /// <param name="tableExistenceChecker"> The table existence checker to use. </param>
+        protected internal void SetTableExistenceChecker(string providerInvariantName, TableExistenceChecker tableExistenceChecker)
+        {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(tableExistenceChecker, "tableExistenceChecker");
+
+            _internalConfiguration.CheckNotLocked("SetTableExistenceChecker");
+            _internalConfiguration.RegisterSingleton(tableExistenceChecker, providerInvariantName);
+        }
+
         internal virtual InternalConfiguration InternalConfiguration
         {
             get { return _internalConfiguration; }

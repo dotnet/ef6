@@ -130,6 +130,7 @@
     <Compile Include="SqlGen\SkipClause.cs" />
     <Compile Include="SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="SqlSpatialFunctions.cs" />
+    <Compile Include="SqlTableExistenceChecker.cs" />
     <Compile Include="SqlTypesAssemblyLoader.cs" />
     <Compile Include="SqlVersionUtils.cs" />
     <Compile Include="Utilities\SqlDataReaderWrapper.cs" />

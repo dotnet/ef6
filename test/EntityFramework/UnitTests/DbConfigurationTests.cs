@@ -1036,6 +1036,52 @@ namespace System.Data.Entity
             }
         }
 
+        public class SetTableExistenceChecker
+        {
+            [Fact]
+            public void Throws_if_given_a_null_generator_or_bad_invariant_name()
+            {
+                Assert.Equal(
+                    "tableExistenceChecker",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetTableExistenceChecker("Karl", null)).ParamName);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetTableExistenceChecker(null, new Mock<TableExistenceChecker>().Object)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetTableExistenceChecker("", new Mock<TableExistenceChecker>().Object)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetTableExistenceChecker(" ", new Mock<TableExistenceChecker>().Object)).Message);
+            }
+
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetTableExistenceChecker"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetTableExistenceChecker("Karl", new Mock<TableExistenceChecker>().Object)).Message);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                var checker = new Mock<TableExistenceChecker>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetTableExistenceChecker("Karl", checker);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(checker, "Karl"));
+            }
+        }
+
         private static DbConfiguration CreatedLockedConfiguration()
         {
             var configuration = new DbConfiguration();

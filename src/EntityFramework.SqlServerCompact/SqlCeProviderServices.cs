@@ -63,6 +63,10 @@ namespace System.Data.Entity.SqlServerCompact
 
             AddDependencyResolver(new SingletonDependencyResolver<Func<MigrationSqlGenerator>>(
                 () => new SqlCeMigrationSqlGenerator(), ProviderInvariantName));
+
+            AddDependencyResolver(
+                new SingletonDependencyResolver<TableExistenceChecker>(
+                    new SqlCeTableExistenceChecker(), ProviderInvariantName));
         }
 
         #region CodeOnly Methods

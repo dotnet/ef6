@@ -3,16 +3,13 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
-    using System.Data.Common;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Text;
     using System.Transactions;
 
     internal class DatabaseTableChecker
@@ -22,7 +19,7 @@ namespace System.Data.Entity.Internal
         public DatabaseExistenceState AnyModelTableExists(InternalContext internalContext)
         {
             var exists = internalContext.DatabaseOperations.Exists(
-                internalContext.Connection, 
+                internalContext.Connection,
                 internalContext.CommandTimeout,
                 new Lazy<StoreItemCollection>(() => CreateStoreItemCollection(internalContext)));
 
@@ -41,22 +38,12 @@ namespace System.Data.Entity.Internal
                         return DatabaseExistenceState.Exists;
                     }
 
-                    var providerName = internalContext.ProviderName;
-                    IPseudoProvider provider;
+                    var provider = DbConfiguration.DependencyResolver.GetService<TableExistenceChecker>(internalContext.ProviderName);
 
-                    switch (providerName)
+                    if (provider == null)
                     {
-                        case "System.Data.SqlClient":
-                            provider = new SqlPseudoProvider();
-                            break;
-
-                        case "System.Data.SqlServerCe.4.0":
-                            provider = new SqlCePseudoProvider();
-                            break;
-
-                        default:
-                            // If we can't check for tables, then assume they exist as we did in older versions
-                            return DatabaseExistenceState.Exists;
+                        // If we can't check for tables, then assume they exist as we did in older versions
+                        return DatabaseExistenceState.Exists;
                     }
 
                     var modelTables = GetModelTables(internalContext).ToList();
@@ -77,8 +64,8 @@ namespace System.Data.Entity.Internal
                     // for this context, then treat this as a non-empty database, otherwise treat is as existing
                     // but empty.
                     return internalContext.HasHistoryTableEntry()
-                               ? DatabaseExistenceState.Exists
-                               : DatabaseExistenceState.ExistsConsideredEmpty;
+                        ? DatabaseExistenceState.Exists
+                        : DatabaseExistenceState.ExistsConsideredEmpty;
                 }
                 catch (Exception ex)
                 {
@@ -100,7 +87,7 @@ namespace System.Data.Entity.Internal
         }
 
         public virtual bool QueryForTableExistence(
-            IPseudoProvider provider, ClonedObjectContext clonedObjectContext, List<EntitySet> modelTables)
+            TableExistenceChecker provider, ClonedObjectContext clonedObjectContext, List<EntitySet> modelTables)
         {
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
@@ -127,144 +114,6 @@ namespace System.Data.Entity.Internal
                 .Where(
                     s => !s.MetadataProperties.Contains("Type")
                          || (string)s.MetadataProperties["Type"].Value == "Tables");
-        }
-
-        private static string GetTableName(EntitySet modelTable)
-        {
-            return modelTable.MetadataProperties.Contains("Table")
-                   && modelTable.MetadataProperties["Table"].Value != null
-                       ? (string)modelTable.MetadataProperties["Table"].Value
-                       : modelTable.Name;
-        }
-
-        internal interface IPseudoProvider
-        {
-            bool AnyModelTableExistsInDatabase(
-                ObjectContext context, DbConnection connection, List<EntitySet> modelTables, string edmMetadataContextTableName);
-        }
-
-        private class SqlPseudoProvider : IPseudoProvider
-        {
-            [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-            public bool AnyModelTableExistsInDatabase(
-                ObjectContext context, DbConnection connection, List<EntitySet> modelTables, string edmMetadataContextTableName)
-            {
-                var modelTablesListBuilder = new StringBuilder();
-                foreach (var modelTable in modelTables)
-                {
-                    modelTablesListBuilder.Append("'");
-                    modelTablesListBuilder.Append((string)modelTable.MetadataProperties["Schema"].Value);
-                    modelTablesListBuilder.Append(".");
-                    modelTablesListBuilder.Append(GetTableName(modelTable));
-                    modelTablesListBuilder.Append("',");
-                }
-                modelTablesListBuilder.Remove(modelTablesListBuilder.Length - 1, 1);
-
-                var dbCommand = connection.CreateCommand();
-                using (var command = new InterceptableDbCommand(dbCommand, context.InterceptionContext))
-                {
-                    command.CommandText = @"
-SELECT Count(*)
-FROM INFORMATION_SCHEMA.TABLES AS t
-WHERE t.TABLE_SCHEMA + '.' + t.TABLE_NAME IN (" + modelTablesListBuilder + @")
-    OR t.TABLE_NAME = '" + edmMetadataContextTableName + "'";
-
-                    var shouldClose = true;
-
-                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Open)
-                    {
-                        shouldClose = false;
-
-                        var entityTransaction = ((EntityConnection)context.Connection).CurrentTransaction;
-                        if (entityTransaction != null)
-                        {
-                            command.Transaction = entityTransaction.StoreTransaction;
-                        }
-                    }
-
-                    var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
-                    try
-                    {
-                        return executionStrategy.Execute(
-                            () =>
-                            {
-                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
-                                {
-                                    DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
-                                }
-
-                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
-                                {
-                                    DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
-                                }
-
-                                return (int)command.ExecuteScalar() > 0;
-                            });
-                    }
-                    finally
-                    {
-                        if (shouldClose && DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) != ConnectionState.Closed)
-                        {
-                            DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
-                        }
-                    }
-                }
-            }
-        }
-
-        private class SqlCePseudoProvider : IPseudoProvider
-        {
-            public bool AnyModelTableExistsInDatabase(
-                ObjectContext context, DbConnection connection, List<EntitySet> modelTables, string edmMetadataContextTableName)
-            {
-                var modelTablesListBuilder = new StringBuilder();
-                foreach (var modelTable in modelTables)
-                {
-                    modelTablesListBuilder.Append("'");
-                    modelTablesListBuilder.Append(GetTableName(modelTable));
-                    modelTablesListBuilder.Append("',");
-                }
-
-                modelTablesListBuilder.Append("'");
-                modelTablesListBuilder.Append("edmMetadataContextTableName");
-                modelTablesListBuilder.Append("'");
-
-                var dbCommand = connection.CreateCommand();
-                using (var command = new InterceptableDbCommand(dbCommand, context.InterceptionContext))
-                {
-                    command.CommandText = @"
-SELECT Count(*)
-FROM INFORMATION_SCHEMA.TABLES AS t
-WHERE t.TABLE_NAME IN (" + modelTablesListBuilder + @")";
-
-                    var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
-                    try
-                    {
-                        return executionStrategy.Execute(
-                            () =>
-                            {
-                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
-                                {
-                                    DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
-                                }
-
-                                if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
-                                {
-                                    DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
-                                }
-
-                                return (int)command.ExecuteScalar() > 0;
-                            });
-                    }
-                    finally
-                    {
-                        if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) != ConnectionState.Closed)
-                        {
-                            DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
-                        }
-                    }
-                }
-            }
         }
     }
 }

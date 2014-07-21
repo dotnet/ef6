@@ -172,7 +172,7 @@ namespace System.Data.Entity.Internal
             mockTableChecker.Setup(m => m.GetModelTables(It.IsAny<InternalContext>())).Returns(new[] { new EntitySet() });
             mockTableChecker.Setup(
                 m => m.QueryForTableExistence(
-                    It.IsAny<DatabaseTableChecker.IPseudoProvider>(),
+                    It.IsAny<TableExistenceChecker>(),
                     It.IsAny<ClonedObjectContext>(),
                     It.IsAny<List<EntitySet>>())).Returns(true);
 
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Internal
             mockTableChecker.Setup(m => m.GetModelTables(It.IsAny<InternalContext>())).Returns(new[] { new EntitySet() });
             mockTableChecker.Setup(
                 m => m.QueryForTableExistence(
-                    It.IsAny<DatabaseTableChecker.IPseudoProvider>(),
+                    It.IsAny<TableExistenceChecker>(),
                     It.IsAny<ClonedObjectContext>(),
                     It.IsAny<List<EntitySet>>())).Returns(false);
 
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Internal
             mockTableChecker.Setup(m => m.GetModelTables(It.IsAny<InternalContext>())).Returns(new[] { new EntitySet() });
             mockTableChecker.Setup(
                 m => m.QueryForTableExistence(
-                    It.IsAny<DatabaseTableChecker.IPseudoProvider>(),
+                    It.IsAny<TableExistenceChecker>(),
                     It.IsAny<ClonedObjectContext>(),
                     It.IsAny<List<EntitySet>>())).Returns(false);
 

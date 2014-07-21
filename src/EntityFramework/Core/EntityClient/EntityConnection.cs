@@ -506,10 +506,10 @@ namespace System.Data.Entity.Core.EntityClient
             return _metadataWorkspace;
         }
 
-        // <summary>
-        // Gets the current transaction that this connection is enlisted in
-        // </summary>
-        internal virtual EntityTransaction CurrentTransaction
+        /// <summary>
+        /// Gets the current transaction that this connection is enlisted in. May be null.
+        /// </summary>
+        public virtual EntityTransaction CurrentTransaction
         {
             get
             {

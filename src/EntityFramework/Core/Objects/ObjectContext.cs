@@ -481,10 +481,13 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        internal DbInterceptionContext InterceptionContext
+        /// <summary>
+        /// Returns the <see cref="DbInterceptionContext"/> being used for this context.
+        /// </summary>
+        public DbInterceptionContext InterceptionContext
         {
             get { return _interceptionContext; }
-            set
+            internal set
             {
                 DebugCheck.NotNull(_interceptionContext);
                 Debug.Assert(_interceptionContext.ObjectContexts.Contains(this));

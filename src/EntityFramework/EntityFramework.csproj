@@ -257,6 +257,7 @@
     <Compile Include="Infrastructure\Interception\DbConfigurationInterceptionContext.cs" />
     <Compile Include="Infrastructure\Interception\IDbConfigurationInterceptor.cs" />
     <Compile Include="Infrastructure\ConsolidatedIndex.cs" />
+    <Compile Include="Infrastructure\TableExistenceChecker.cs" />
     <Compile Include="Infrastructure\Transactions\CommitFailedException.cs" />
     <Compile Include="Infrastructure\DependencyResolution\AppConfigDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CachingDependencyResolver.cs" />

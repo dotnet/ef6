@@ -71,6 +71,10 @@ namespace System.Data.Entity.SqlServer
                 new SingletonDependencyResolver<Func<MigrationSqlGenerator>>(
                     () => new SqlServerMigrationSqlGenerator(), ProviderInvariantName));
 
+            AddDependencyResolver(
+                new SingletonDependencyResolver<TableExistenceChecker>(
+                    new SqlTableExistenceChecker(), ProviderInvariantName));
+
             // Spatial provider will be returned if the key is null (meaning that a default provider was requested)
             // or if a key was provided and the invariant name matches.
             AddDependencyResolver(

@@ -84,10 +84,10 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        // <summary>
-        // Gets the DbTransaction for the underlying provider transaction
-        // </summary>
-        internal virtual DbTransaction StoreTransaction
+        /// <summary>
+        /// Gets the DbTransaction for the underlying provider transaction.
+        /// </summary>
+        public virtual DbTransaction StoreTransaction
         {
             get { return _storeTransaction; }
         }
