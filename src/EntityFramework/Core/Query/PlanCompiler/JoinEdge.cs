@@ -117,7 +117,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             get
             {
                 return m_joinNode != null
-                       && (m_left.LastVisibleId < m_joinNode.Id
+                       && (m_joinNode.OtherPredicate != null
+                           || m_left.LastVisibleId < m_joinNode.Id
                            || m_right.LastVisibleId < m_joinNode.Id);
             }
         }

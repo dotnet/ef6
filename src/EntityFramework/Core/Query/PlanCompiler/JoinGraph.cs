@@ -439,11 +439,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Now handle the predicate
 
-            // Special cases. Nothing further if there exists anything other than 
-            // a set of equi-join predicates
+            // Special cases. Nothing further if full-outer join or no left-side equi-join vars.
             if (joinNode.Node.Op.OpType == OpType.FullOuterJoin
-                ||
-                joinNode.OtherPredicate != null
                 ||
                 joinNode.LeftVars.Count == 0)
             {
@@ -1241,7 +1238,80 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     return false;
                 }
             }
-            return true;
+
+            return MatchOtherPredicates(edge1, edge2);
+        }
+
+        // <summary>
+        // Matches the non equi-join predicate nodes of the specified join edges. Handles nulls.
+        // </summary>
+        private static bool MatchOtherPredicates(JoinEdge edge1, JoinEdge edge2)
+        {
+            if (edge1.JoinNode == null)
+            {
+                return edge2.JoinNode == null;
+            }
+
+            if (edge2.JoinNode == null)
+            {
+                return false;
+            }
+
+            if (edge1.JoinNode.OtherPredicate == null)
+            {
+                return edge2.JoinNode.OtherPredicate == null;
+            }
+
+            if (edge2.JoinNode.OtherPredicate == null)
+            {
+                return false;
+            }
+
+            return MatchOtherPredicates(edge1.JoinNode.OtherPredicate, edge2.JoinNode.OtherPredicate);
+        }
+
+        // <summary>
+        // Non equi-join predicate nodes match if their Ops match, and they have the same number of
+        // matching child nodes.
+        // In case of VarRefOp with ColumnVar the nodes match if they reference the same column.
+        // </summary>
+        private static bool MatchOtherPredicates(Node x, Node y)
+        {
+            if (x.Children.Count != y.Children.Count)
+            {
+                return false;
+            }
+
+            if (x.Op.IsEquivalent(y.Op))
+            {
+                return !x.Children.Where((t, i) => !MatchOtherPredicates(t, y.Children[i])).Any();
+            }
+
+            var xVarRefOp = x.Op as VarRefOp;
+            if (xVarRefOp == null)
+            {
+                return false;
+            }
+
+            var yVarRefOp = y.Op as VarRefOp;
+            if (yVarRefOp == null)
+            {
+                return false;
+            }
+
+            var xColumnVar = xVarRefOp.Var as ColumnVar;
+            if (xColumnVar == null)
+            {
+                return false;
+            }
+
+            var yColumnVar = yVarRefOp.Var as ColumnVar;
+            if (yColumnVar == null)
+            {
+                return false;
+            }
+
+            return xColumnVar.ColumnMetadata.Name.Equals(yColumnVar.ColumnMetadata.Name);
         }
 
         // <summary>
@@ -1272,7 +1342,39 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return false;
             }
+
+            if (joinEdge.JoinNode != null 
+                && joinEdge.JoinNode.OtherPredicate != null)
+            {
+                return QualifiesForStarSelfJoinGroup(
+                    joinEdge.JoinNode.OtherPredicate,
+                    m_command.GetExtendedNodeInfo(joinEdge.Right.Node).Definitions);
+            }
+
             return true;
+        }
+
+        // <summary>
+        // A non equi-join predicate node qualifies for star self join elimination if 
+        // it refers to columns from the right table only.
+        // </summary>
+        private static bool QualifiesForStarSelfJoinGroup(Node otherPredicateNode, VarVec rightTableColumnVars)
+        {
+            var varRefOp = otherPredicateNode.Op as VarRefOp;
+            if (varRefOp == null)
+            {
+                return true;
+            }
+
+            var columnVar = varRefOp.Var as ColumnVar;
+            if (columnVar == null)
+            {
+                return true;
+            }
+
+            return
+                rightTableColumnVars.IsSet(columnVar)
+                && otherPredicateNode.Children.All(node => QualifiesForStarSelfJoinGroup(node, rightTableColumnVars));
         }
 
         // <summary>

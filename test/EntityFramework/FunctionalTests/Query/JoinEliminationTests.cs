@@ -371,5 +371,102 @@ WHERE 1 = [Extent1].[Id]";
                 }
             }
         }
+
+        public class CodePlex2196 : FunctionalTestBase
+        {
+            public class Context : DbContext
+            {
+                static Context()
+                {
+                    Database.SetInitializer<Context>(null);
+                }
+
+                public DbSet<BaseType> BaseTypes { get; set; }
+                public DbSet<QueryType> QueryTypes { get; set; }
+            }
+
+            public abstract class BaseType
+            {
+                public int Id { get; set; }
+                public byte Type { get; set; }
+                public string Code { get; set; }
+                public string Name { get; set; }
+                public string Description { get; set; }
+                public DateTimeOffset RecordDate { get; set; }
+            }
+
+            public class QueryType
+            {
+                public int Id { get; set; }
+                public string Code { get; set; }
+                public string Name { get; set; }
+                public string Description { get; set; }
+                public DateTimeOffset RecordDate { get; set; }
+
+                public int RelatedTypeId { get; set; }
+
+                public virtual BaseType RelatedType { get; set; }
+            }
+
+            public class DerivedTypeA : BaseType
+            {
+                public string PropertyA { get; set; }
+            }
+
+            public class DerivedTypeB : BaseType
+            {
+                public string PropertyB { get; set; }
+            }
+
+            public class DerivedTypeC : BaseType
+            {
+                public string PropertyC { get; set; }
+            }
+
+            public class DerivedTypeD : BaseType
+            {
+                public string PropertyD { get; set; }
+            }
+
+            public class DerivedTypeE : BaseType
+            {
+                public string PropertyE { get; set; }
+            }
+
+            [Fact]
+            public void Duplicate_joins_with_non_equi_join_predicates_are_eliminated()
+            {
+                using (var context = new Context())
+                {
+                    var query
+                        = context.QueryTypes
+                            .OrderBy(x => x.Id)
+                            .Select(
+                                x =>
+                                    new
+                                    {
+                                        x.RelatedType.Id,
+                                        x.RelatedType.RecordDate,
+                                        x.RelatedType.Name,
+                                        x.RelatedType.Type,
+                                        x.RelatedType.Code
+                                    })
+                            .Take(10);
+
+                    QueryTestHelpers.VerifyQuery(
+                        query,
+@"SELECT TOP (10) 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[RelatedTypeId] AS [RelatedTypeId], 
+    [Extent2].[RecordDate] AS [RecordDate], 
+    [Extent2].[Name] AS [Name], 
+    [Extent2].[Type] AS [Type], 
+    [Extent2].[Code] AS [Code]
+    FROM  [dbo].[QueryTypes] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[BaseTypes] AS [Extent2] ON ([Extent1].[RelatedTypeId] = [Extent2].[Id]) AND ([Extent2].[Discriminator] IN (N'DerivedTypeA',N'DerivedTypeB',N'DerivedTypeC',N'DerivedTypeD',N'DerivedTypeE'))
+    ORDER BY [Extent1].[Id] ASC");
+                }
+            }
+        }
     }
 }
