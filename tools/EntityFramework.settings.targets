@@ -73,7 +73,7 @@ Project global pre-settings.
 
   <PropertyGroup>
     <NuGetOutputPath>$(AssemblyPath)Packages</NuGetOutputPath>
-    <NuGetSymbolsOutputPath>$(AssemblyPath)\SymbolPackages</NuGetSymbolsOutputPath>
+    <NuGetSymbolsOutputPath>$(AssemblyPath)SymbolPackages</NuGetSymbolsOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
