@@ -468,5 +468,54 @@ WHERE 1 = [Extent1].[Id]";
                 }
             }
         }
+
+        public class CodePlex2369 : FunctionalTestBase
+        {
+            public class A
+            {
+                public int Id { get; set; }
+
+                public B B { get; set; }
+            }
+
+            public class B
+            {
+                public int Id { get; set; }
+                public string Name { get; set; }
+
+                public A A { get; set; }
+            }
+
+            public class Context : DbContext
+            {
+                static Context()
+                {
+                    Database.SetInitializer<Context>(null);
+                }
+
+                public DbSet<A> As { get; set; }
+
+                protected override void OnModelCreating(DbModelBuilder builder)
+                {
+                    builder.Entity<B>().HasRequired(b => b.A).WithRequiredPrincipal(a => a.B);
+                }
+            }
+
+            [Fact]
+            public void Unnecessary_joins_are_eliminated_and_query_is_simplified()
+            {
+                using (var context = new Context())
+                {
+                    var query = from a in context.As select a.B.Name;
+
+                    QueryTestHelpers.VerifyQuery(
+                        query,
+@"SELECT
+    [Extent2].[Name] AS [Name]
+    FROM  [dbo].[A] AS [Extent1]
+    INNER JOIN [dbo].[B] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]");
+                }
+            }
+        }
     }
 }

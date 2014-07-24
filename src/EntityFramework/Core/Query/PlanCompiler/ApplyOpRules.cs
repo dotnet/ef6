@@ -46,6 +46,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool ProcessApplyOverFilter(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
+
+            var trc = (TransformationRulesContext)context;
+            if (trc.PlanCompiler.TransformationsDeferred)
+            {
+                return false;
+            }
+
             var filterNode = applyNode.Child1;
             var command = context.Command;
 
