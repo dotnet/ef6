@@ -364,7 +364,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Generates SQL for a <see cref="CreateTableOperation" />.
+        /// Generates SQL for a <see cref="CreateTableOperation" />. This method differs from
+        /// <see cref="WriteCreateTable(System.Data.Entity.Migrations.Model.CreateTableOperation)" /> in that it will
+        /// create the target database schema if it does not already exist.
         /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="createTableOperation"> The operation to produce SQL for. </param>
@@ -385,6 +387,18 @@ namespace System.Data.Entity.SqlServer
                 }
             }
 
+            WriteCreateTable(createTableOperation);
+        }
+
+        /// <summary>
+        /// Generates SQL for a <see cref="CreateTableOperation" />.
+        /// Generated SQL should be added using the Statement method.
+        /// </summary>
+        /// <param name="createTableOperation"> The operation to produce SQL for. </param>
+        protected virtual void WriteCreateTable(CreateTableOperation createTableOperation)
+        {
+            Check.NotNull(createTableOperation, "createTableOperation");
+
             using (var writer = Writer())
             {
                 WriteCreateTable(createTableOperation, writer);
@@ -393,10 +407,15 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private void WriteCreateTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
+        /// <summary>
+        /// Writes CREATE TABLE SQL to the target writer.
+        /// </summary>
+        /// <param name="createTableOperation"> The operation to produce SQL for. </param>
+        /// <param name="writer"> The target writer. </param>
+        protected virtual void WriteCreateTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
-            DebugCheck.NotNull(createTableOperation);
-            DebugCheck.NotNull(writer);
+            Check.NotNull(createTableOperation, "createTableOperation");
+            Check.NotNull(writer, "writer");
 
             writer.WriteLine("CREATE TABLE " + Name(createTableOperation.Name) + " (");
             writer.Indent++;
