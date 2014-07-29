@@ -48,7 +48,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private TypeUsage(EdmType edmType, IEnumerable<Facet> facets)
             : this(edmType)
         {
-            var facetCollection = new MetadataCollection<Facet>(facets);
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            var facetCollection = MetadataCollection<Facet>.Wrap(facets.ToList());
             facetCollection.SetReadOnly();
             _facets = facetCollection.AsReadOnlyMetadataCollection();
         }

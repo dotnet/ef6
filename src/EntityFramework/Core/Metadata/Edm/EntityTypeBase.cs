@@ -7,6 +7,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
+#if !NET40
+    using System.Runtime.CompilerServices;
+#endif
 
     /// <summary>
     /// Represents the Entity Type
@@ -14,6 +17,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public abstract class EntityTypeBase : StructuralType
     {
         private readonly ReadOnlyMetadataCollection<EdmMember> _keyMembers;
+        private readonly object _keyPropertiesSync = new object();
+        private ReadOnlyMetadataCollection<EdmProperty> _keyProperties;
         private string[] _keyMemberNames;
 
         // <summary>
@@ -57,7 +62,47 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>The list of all the key properties for this entity type.</returns>
         public virtual ReadOnlyMetadataCollection<EdmProperty> KeyProperties
         {
-            get { return new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList()); }
+            get
+            {
+                // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+                if (_keyProperties == null)
+                {
+                    lock (_keyPropertiesSync)
+                    {
+                        if (_keyProperties == null)
+                        {
+                            _keyProperties =
+                                new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList());
+                            KeyMembers.SourceAccessed += KeyMembersSourceAccessedEventHandler;
+                        }
+                    }
+                }
+                return _keyProperties;
+            }
+        }
+
+#if !NET40
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        internal void ResetKeyPropertiesCache()
+        {
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            if (_keyProperties != null)
+            {
+                lock (_keyPropertiesSync)
+                {
+                    if (_keyProperties != null)
+                    {
+                        _keyProperties = null;
+                        KeyMembers.SourceAccessed -= KeyMembersSourceAccessedEventHandler;
+                    }
+                }
+            }
+        }
+
+        private void KeyMembersSourceAccessedEventHandler(object sender, EventArgs e)
+        {
+            ResetKeyPropertiesCache();
         }
 
         // <summary>

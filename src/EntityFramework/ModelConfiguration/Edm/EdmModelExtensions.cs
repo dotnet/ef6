@@ -76,14 +76,22 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(tableName);
 
-            return database.EntityTypes.SingleOrDefault(
-                t =>
-                    {
-                        var databaseName = t.GetTableName();
-                        return databaseName != null
-                                   ? databaseName.Equals(tableName)
-                                   : string.Equals(t.Name, tableName.Name, StringComparison.Ordinal);
-                    });
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            var entityTypesList = database.EntityTypes as IList<EntityType> ?? database.EntityTypes.ToList();
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var entityTypesIterator = 0; entityTypesIterator < entityTypesList.Count; ++entityTypesIterator)
+            {
+                var t = entityTypesList[entityTypesIterator];
+                var databaseName = t.GetTableName();
+                if (databaseName != null ? databaseName.Equals(tableName)
+                    : string.Equals(t.Name, tableName.Name, StringComparison.Ordinal))
+                {
+                    return t;
+                }
+            }
+
+            return null;
         }
 
         public static bool HasCascadeDeletePath(
@@ -117,13 +125,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(model);
             DebugCheck.NotNull(propertyInfo);
 
-            var navigationProperties
-                = (from e in model.EntityTypes
-                   let np = e.GetNavigationProperty(propertyInfo)
-                   where np != null
-                   select np);
-
-            return navigationProperties.FirstOrDefault();
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            var entityTypesList = model.EntityTypes as IList<EntityType> ?? model.EntityTypes.ToList();
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var entityTypesListIterator = 0;
+                entityTypesListIterator < entityTypesList.Count;
+                ++entityTypesListIterator)
+            {
+                var np = entityTypesList[entityTypesListIterator].GetNavigationProperty(propertyInfo);
+                if (np != null)
+                {
+                    return np;
+                }
+            }
+            return null;
         }
 
         public static void ValidateAndSerializeCsdl(this EdmModel model, XmlWriter writer)
@@ -191,7 +207,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(model);
             DebugCheck.NotNull(clrType);
 
-            return model.EntityTypes.SingleOrDefault(e => e.GetClrType() == clrType);
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            var entityTypes = model.EntityTypes as IList<EntityType> ?? model.EntityTypes.ToList();
+            // ReSharper disable once ForCanBeConvertedToForeach
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var entityTypesIterator = 0; entityTypesIterator < entityTypes.Count; ++entityTypesIterator)
+            {
+                var entityType = entityTypes[entityTypesIterator];
+                if (entityType.GetClrType() == clrType)
+                {
+                    return entityType;
+                }
+            }
+
+            return null;
         }
 
         public static ComplexType GetComplexType(this EdmModel model, string name)

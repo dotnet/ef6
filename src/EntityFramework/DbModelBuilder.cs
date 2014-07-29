@@ -442,13 +442,29 @@ namespace System.Data.Entity
                                         _modelBuilderVersion,
                                         DbConfiguration.DependencyResolver.GetService<AttributeProvider>()));
 
-            _modelConfiguration.Entities
-                               .Where(type => typeMapper.MapEntityType(type) == null)
-                               .Each(t => { throw Error.InvalidEntityType(t); });
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            // ReSharper disable ForCanBeConvertedToForeach
+            var entityTypes = _modelConfiguration.Entities as IList<Type> ?? _modelConfiguration.Entities.ToList();
+            for (var entityTypesIterator = 0; entityTypesIterator < entityTypes.Count; ++entityTypesIterator)
+            {
+                var type = entityTypes[entityTypesIterator];
+                if (typeMapper.MapEntityType(type) == null)
+                {
+                    throw Error.InvalidEntityType(type);
+                }
+            }
 
-            _modelConfiguration.ComplexTypes
-                               .Where(type => typeMapper.MapComplexType(type) == null)
-                               .Each(t => { throw Error.CodeFirstInvalidComplexType(t); });
+            var complexTypes = _modelConfiguration.ComplexTypes as IList<Type> ??
+                               _modelConfiguration.ComplexTypes.ToList();
+            for (var complexTypesIterator = 0; complexTypesIterator < complexTypes.Count; ++complexTypesIterator)
+            {
+                var type = complexTypes[complexTypesIterator];
+                if (typeMapper.MapComplexType(type) == null)
+                {
+                    throw Error.CodeFirstInvalidComplexType(type);
+                }
+            }
+            // ReSharper restore ForCanBeConvertedToForeach
         }
 
         internal ModelConfiguration.Configuration.ModelConfiguration ModelConfiguration

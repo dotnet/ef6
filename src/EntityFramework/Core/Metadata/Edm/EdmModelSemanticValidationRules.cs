@@ -528,9 +528,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         if (edmNavigationProperty.Association != null
                             && (fromEnd = edmNavigationProperty.GetFromEnd()) != null)
                         {
-                            var parent
-                                = context.Model.EntityTypes
-                                         .Single(e => e.DeclaredNavigationProperties.Contains(edmNavigationProperty));
+                            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+                            EntityType parent = null;
+                            var entityTypesList = context.Model.EntityTypes as IList<EntityType> ??
+                                                  context.Model.EntityTypes.ToList();
+                            // ReSharper disable once LoopCanBeConvertedToQuery
+                            // ReSharper disable once ForCanBeConvertedToForeach
+                            for (var entityTypesListIterator = 0;
+                                entityTypesListIterator < entityTypesList.Count;
+                                ++entityTypesListIterator)
+                            {
+                                var entityType = entityTypesList[entityTypesListIterator];
+                                var declaredNavProps = entityType.DeclaredNavigationProperties;
+                                if (declaredNavProps.Contains(edmNavigationProperty))
+                                {
+                                    parent = entityType;
+                                    break;
+                                }
+                            }
 
                             var fromEndEntityType = fromEnd.GetEntityType();
 

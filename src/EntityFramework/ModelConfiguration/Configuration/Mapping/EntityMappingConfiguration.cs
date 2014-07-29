@@ -958,26 +958,74 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private static IEnumerable<EntityType> FindAllTypesUsingTable(
             DbDatabaseMapping databaseMapping, EntityType toTable)
         {
-            return databaseMapping.EntityContainerMappings
-                                  .SelectMany(ecm => ecm.EntitySetMappings)
-                                  .SelectMany(esm => esm.EntityTypeMappings)
-                                  .Where(etm => etm.MappingFragments.Any(tmf => tmf.Table == toTable))
-                                  .Select(etm => etm.EntityType);
+            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+            var types = new List<EntityType>();
+            var entityContainerMappings = databaseMapping.EntityContainerMappings;
+            // ReSharper disable ForCanBeConvertedToForeach
+            for (var entityContainerMappingsIterator = 0;
+                entityContainerMappingsIterator < entityContainerMappings.Count;
+                ++entityContainerMappingsIterator)
+            {
+                var entitySetMappings = entityContainerMappings[entityContainerMappingsIterator].EntitySetMappings.ToList();
+                for (var entitySetMappingsIterator = 0;
+                    entitySetMappingsIterator < entitySetMappings.Count;
+                    ++entitySetMappingsIterator)
+                {
+                    var entityTypeMappings = entitySetMappings[entitySetMappingsIterator].EntityTypeMappings;
+                    for (var entityTypeMappingsIterator = 0;
+                        entityTypeMappingsIterator < entityTypeMappings.Count;
+                        ++entityTypeMappingsIterator)
+                    {
+                        var entityTypeMapping = entityTypeMappings[entityTypeMappingsIterator];
+                        // ReSharper disable once LoopCanBeConvertedToQuery
+                        for (var mappingFragmentsIterator = 0;
+                            mappingFragmentsIterator < entityTypeMapping.MappingFragments.Count;
+                            ++mappingFragmentsIterator)
+                        {
+                            if (entityTypeMapping.MappingFragments[mappingFragmentsIterator].Table == toTable)
+                            {
+                                types.Add(entityTypeMapping.EntityType);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            // ReSharper restore ForCanBeConvertedToForeach
+            return types;
         }
 
         private static IEnumerable<AssociationType> FindAllOneToOneFKAssociationTypes(
             EdmModel model, EntityType entityType, EntityType candidateType)
         {
-            return model.Containers.SelectMany(ec => ec.AssociationSets)
-                        .Where(
-                            aset => (aset.ElementType.Constraint != null &&
-                                     aset.ElementType.SourceEnd.RelationshipMultiplicity == RelationshipMultiplicity.One &&
-                                     aset.ElementType.TargetEnd.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
-                                    ((aset.ElementType.SourceEnd.GetEntityType() == entityType
-                                      && aset.ElementType.TargetEnd.GetEntityType() == candidateType) ||
-                                     (aset.ElementType.TargetEnd.GetEntityType() == entityType
-                                      && aset.ElementType.SourceEnd.GetEntityType() == candidateType)))
-                        .Select(aset => aset.ElementType);
+            var associationTypes = new List<AssociationType>();
+            foreach (var container in model.Containers)
+            {
+                var associationSets = container.AssociationSets;
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (var associationSetIterator = 0;
+                    associationSetIterator < associationSets.Count;
+                    ++associationSetIterator)
+                {
+                    var aset = associationSets[associationSetIterator];
+                    var sourceEnd = aset.ElementType.SourceEnd;
+                    var targetEnd = aset.ElementType.TargetEnd;
+                    var sourceEndEntityType = sourceEnd.GetEntityType();
+                    var targetEndEntityType = targetEnd.GetEntityType();
+                    if ((aset.ElementType.Constraint != null &&
+                         sourceEnd.RelationshipMultiplicity == RelationshipMultiplicity.One &&
+                         targetEnd.RelationshipMultiplicity == RelationshipMultiplicity.One) &&
+                        ((sourceEndEntityType == entityType
+                          && targetEndEntityType == candidateType) ||
+                         (targetEndEntityType == entityType
+                          && sourceEndEntityType == candidateType)))
+                    {
+                        associationTypes.Add(aset.ElementType);
+                    }
+                }
+            }
+            return associationTypes;
         }
 
         private static bool UpdateColumnNamesForTableSharing(

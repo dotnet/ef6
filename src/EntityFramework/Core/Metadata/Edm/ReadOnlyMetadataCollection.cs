@@ -131,8 +131,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // </summary>
         internal MetadataCollection<T> Source
         {
-            get { return (MetadataCollection<T>)Items; }
+            get
+            {
+                // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
+                try
+                {
+                    return (MetadataCollection<T>)Items;
+                }
+                finally
+                {
+                    // local variable is used to avoid concurrency problems
+                    var sae = SourceAccessed;
+                    if (sae != null)
+                    {
+                        sae(this, null);
+                    }
+                }
+            }
         }
+
+        internal event EventHandler SourceAccessed;
 
         /// <summary>Retrieves an item from this collection by using the specified identity.</summary>
         /// <returns>An item from this collection.</returns>
