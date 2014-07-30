@@ -405,7 +405,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(
                     from at1 in sourceRemainingAssociationTypes
                     from at2 in targetRemainingAssociationTypes
-                    where at1.Name.EqualsIgnoreCase(at2.Name)
+                    where (at1.Name.EqualsIgnoreCase(at2.Name)
+                           || (at1.Constraint != null
+                               && at2.Constraint != null
+                               && at1.Constraint.PrincipalEnd.GetEntityType().EdmEquals(at2.Constraint.PrincipalEnd.GetEntityType())
+                               && at1.Constraint.DependentEnd.GetEntityType().EdmEquals(at2.Constraint.DependentEnd.GetEntityType())
+                               && at1.Constraint.ToProperties.SequenceEqual(at2.Constraint.ToProperties,
+                                   new DynamicEqualityComparer<EdmMember>((p1, p2) => p1.EdmEquals(p2)))))
                     select Tuple.Create(at1, at2));
         }
 

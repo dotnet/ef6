@@ -3535,9 +3535,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         #endregion
 
+        #region Bugs
+
         // issue 2157
         [MigrationsTheory]
-        public void Diffing_TPH_models_with_discriminator_based_on_nullability_rather_than_value_works() 
+        public void Diffing_TPH_models_with_discriminator_based_on_nullability_rather_than_value_works()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<Foo2157>();
@@ -3594,14 +3596,85 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder
                 .Entity<TenderAttachedFile>()
                 .ToTable("TenderAttachedFile");
-            
+
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer()
                     .Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(7, operations.Count);
+        }
+
+        // issue 2391
+        [MigrationsTheory]
+        public void Nav_prop_rename()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Nav_prop_rename_v1.Table>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Nav_prop_rename_v2.Table>();
+
+           var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(0, operations.Count);
+        }
+
+        #endregion
+    }
+
+    #region Fixtures
+
+    namespace Nav_prop_rename_v1
+    {
+        public class Table
+        {
+            public Guid Id { get; set; }
+
+            public int? ReturnedBy { get; set; }
+            public int? ReceivedBy { get; set; }
+
+            [ForeignKey("ReturnedBy")]
+            public User User1 { get; set; }
+
+            [ForeignKey("ReceivedBy")]
+            public User User2 { get; set; }
+        }
+
+        public class User
+        {
+            public int Id { get; set; }
+        }
+    }
+
+    namespace Nav_prop_rename_v2
+    {
+        public class Table
+        {
+            public Guid Id { get; set; }
+
+            public int? ReturnedBy { get; set; }
+            public int? ReceivedBy { get; set; }
+
+            [ForeignKey("ReturnedBy")]
+            public User ReturnedByUser { get; set; }
+
+            [ForeignKey("ReceivedBy")]
+            public User ReceivedByUser { get; set; }
+        }
+
+        public class User
+        {
+            public int Id { get; set; }
         }
     }
 
@@ -3668,4 +3741,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
             public int PrincipalId { get; set; }
         }
     }
+
+    #endregion
 }
