@@ -38,9 +38,9 @@ namespace System.Data.Entity.Internal
                         return DatabaseExistenceState.Exists;
                     }
 
-                    var provider = DbConfiguration.DependencyResolver.GetService<TableExistenceChecker>(internalContext.ProviderName);
+                    var checker = DbConfiguration.DependencyResolver.GetService<TableExistenceChecker>(internalContext.ProviderName);
 
-                    if (provider == null)
+                    if (checker == null)
                     {
                         // If we can't check for tables, then assume they exist as we did in older versions
                         return DatabaseExistenceState.Exists;
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Internal
                         return DatabaseExistenceState.Exists;
                     }
 
-                    if (QueryForTableExistence(provider, clonedObjectContext, modelTables))
+                    if (QueryForTableExistence(checker, clonedObjectContext, modelTables))
                     {
                         // If any table exists, then assume that this is a non-empty database
                         return DatabaseExistenceState.Exists;
@@ -87,11 +87,11 @@ namespace System.Data.Entity.Internal
         }
 
         public virtual bool QueryForTableExistence(
-            TableExistenceChecker provider, ClonedObjectContext clonedObjectContext, List<EntitySet> modelTables)
+            TableExistenceChecker checker, ClonedObjectContext clonedObjectContext, List<EntitySet> modelTables)
         {
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
-                if (provider.AnyModelTableExistsInDatabase(
+                if (checker.AnyModelTableExistsInDatabase(
                     clonedObjectContext.ObjectContext,
                     clonedObjectContext.Connection,
                     modelTables,
