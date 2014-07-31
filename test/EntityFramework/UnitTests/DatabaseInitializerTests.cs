@@ -88,6 +88,15 @@ namespace System.Data.Entity
                 Assert.Throws<InvalidOperationException>(() => init.InitializeDatabase(new EmptyContext())).Message);
         }
 
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_ctor_throws_when_given_null_migrations_configuration()
+        {
+            Assert.Equal(
+                "configuration",
+                Assert.Throws<ArgumentNullException>(() => new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(true, null)).
+                    ParamName);
+        }
+
         #endregion
 
         #region Positive DropCreateDatabaseAlways strategy tests
@@ -366,6 +375,16 @@ namespace System.Data.Entity
 
         }
 
+        private class CustomTestMigrationsConfiguration : TestMigrationsConfiguration
+        {
+            protected override void Seed(EmptyContext context)
+            {
+                CustomSeedDatabase = context.Database.Connection.Database;
+            }
+
+            public string CustomSeedDatabase { get; set; }
+        }
+
         private class TestNonConstructableMigrationsConfiguration : TestMigrationsConfiguration<EmptyNonConstructableContext>
         {
 
@@ -421,6 +440,17 @@ namespace System.Data.Entity
 
             Assert.NotEqual("MigrationInitFromConfig", TestMigrationsConfiguration.SeedDatabase);
             Assert.Equal("System.Data.Entity.DatabaseInitializerTests+EmptyContext", TestMigrationsConfiguration.SeedDatabase);
+        }
+
+        [Fact]
+        public void MigrateDatabaseToLatestVersion_uses_passed_migrations_configuration()
+        {
+            var configuration = new CustomTestMigrationsConfiguration();
+            var init = new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(false, configuration);
+
+            init.InitializeDatabase(new EmptyContext("MigrateDatabaseToLatestVersionNamedConnectionTest"));
+
+            Assert.Equal("System.Data.Entity.DatabaseInitializerTests+EmptyContext", configuration.CustomSeedDatabase);
         }
 
         private class FakeForMdtlvsgpsc : DbContext
