@@ -26,7 +26,7 @@ namespace System.Data.Entity.SqlServerCompact
             }
 
             modelTablesListBuilder.Append("'");
-            modelTablesListBuilder.Append("edmMetadataContextTableName");
+            modelTablesListBuilder.Append(edmMetadataContextTableName);
             modelTablesListBuilder.Append("'");
 
             using (var command = connection.CreateCommand())
