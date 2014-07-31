@@ -371,6 +371,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<Tuple<AssociationType, AssociationType>> FindAssociationTypePairs(
             ICollection<Tuple<EntityType, EntityType>> entityTypePairs)
         {
