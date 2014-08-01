@@ -2916,6 +2916,46 @@ namespace FunctionalTests
         }
 
         [Fact]
+        public void Two_entity_TPC_derived_first()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Ignore<AssocExtraDerived>();
+            modelBuilder.Entity<AssocDerived>()
+                .HasTableAnnotation("A0", "V02")
+                .Map(mc => mc.MapInheritedProperties().ToTable("Deriveds").HasTableAnnotation("A1", "V2"));
+            modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelated);
+            modelBuilder.Entity<AssocDerived>().Ignore(b => b.AssocRelatedId);
+
+            modelBuilder.Entity<AssocBase>()
+                .HasTableAnnotation("A0", "V01")
+                .Map(mc => mc.ToTable("Bases").HasTableAnnotation("A1", "V1"));
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBase);
+            modelBuilder.Entity<AssocBase>().Ignore(b => b.AssocRelatedBaseId);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+            Assert.Equal(
+                2,
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Single().EntityTypeMappings.
+                    Count());
+            databaseMapping.Assert<AssocBase>("Bases")
+                .HasAnnotation("A0", "V01")
+                .HasAnnotation("A1", "V1")
+                .HasColumns("Id", "Name", "BaseData");
+
+            databaseMapping.AssertMapping<AssocBase>("Bases", false);
+
+            databaseMapping.Assert<AssocDerived>("Deriveds")
+                .HasAnnotation("A0", "V02")
+                .HasAnnotation("A1", "V2")
+                .HasColumns("Id", "Name", "BaseData", "DerivedData1", "DerivedData2");
+
+            databaseMapping.AssertMapping<AssocDerived>("Deriveds", false);
+        }
+
+        [Fact]
         public void Two_entity_TPC_with_multiple_nonconflicting_configurations()
         {
             var modelBuilder = new AdventureWorksModelBuilder();

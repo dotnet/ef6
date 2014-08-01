@@ -272,10 +272,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(type, "type");
             Check.NotNull(propertyInfo, "propertyInfo");
 
-            var structuralTypeConfiguration = GetStructuralTypeConfiguration(type);
+            while (type != null)
+            {
+                var structuralTypeConfiguration = GetStructuralTypeConfiguration(type);
+                if (structuralTypeConfiguration != null
+                    && structuralTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(propertyInfo)))
+                {
+                    return true;
+                }
 
-            return structuralTypeConfiguration != null
-                   && structuralTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(propertyInfo));
+                if (propertyInfo.DeclaringType == type)
+                {
+                    break;
+                }
+
+                type = type.BaseType;
+            }
+
+            return false;
         }
 
         internal void Configure(EdmModel model)
@@ -690,6 +704,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         .SelectMany(e => e.MappingFragments)
                         .Where(f => f.Table == currentTable)
                         .SelectMany(f => f.ColumnMappings),
+                    currentTable,
                     databaseMapping.Database).RemoveDuplicateTphColumns();
             }
         }

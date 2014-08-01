@@ -49,9 +49,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             IsMaxLength = source.IsMaxLength;
         }
 
-        internal override void Configure(EdmProperty property)
+        protected override void ConfigureProperty(EdmProperty property)
         {
-            base.Configure(property);
+            base.ConfigureProperty(property);
 
             if (IsFixedLength != null)
             {
@@ -71,6 +71,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         internal override void Configure(EdmProperty column, FacetDescription facetDescription)
         {
+            base.Configure(column, facetDescription);
+
             switch (facetDescription.FacetName)
             {
                 case XmlConstants.FixedLengthElement:
@@ -116,18 +118,30 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        internal override void OverrideFrom(PrimitivePropertyConfiguration other)
+        internal override void MakeCompatibleWith(PrimitivePropertyConfiguration other, bool inCSpace)
         {
             DebugCheck.NotNull(other);
 
-            base.OverrideFrom(other);
+            base.MakeCompatibleWith(other, inCSpace);
 
             var lengthPropertyConfiguration = other as LengthPropertyConfiguration;
 
-            if (lengthPropertyConfiguration == null) return;
-            if (lengthPropertyConfiguration.IsFixedLength != null) IsFixedLength = null;
-            if (lengthPropertyConfiguration.MaxLength != null) MaxLength = null;
-            if (lengthPropertyConfiguration.IsMaxLength != null) IsMaxLength = null;
+            if (lengthPropertyConfiguration == null)
+            {
+                return;
+            }
+            if (lengthPropertyConfiguration.IsFixedLength != null)
+            {
+                IsFixedLength = null;
+            }
+            if (lengthPropertyConfiguration.MaxLength != null)
+            {
+                MaxLength = null;
+            }
+            if (lengthPropertyConfiguration.IsMaxLength != null)
+            {
+                IsMaxLength = null;
+            }
         }
 
         internal override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)

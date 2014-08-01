@@ -104,10 +104,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public void Configure_should_configure_properties()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
-            entityType.AddMember(property1);
-            var property = property1;
+            entityType.AddMember(property);
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             var mockPropertyConfiguration = new Mock<PrimitivePropertyConfiguration>();
             var mockPropertyInfo = new MockPropertyInfo();

@@ -36,9 +36,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return new DateTimePropertyConfiguration(this);
         }
 
-        internal override void Configure(EdmProperty property)
+        protected override void ConfigureProperty(EdmProperty property)
         {
-            base.Configure(property);
+            base.ConfigureProperty(property);
 
             if (Precision != null)
             {
@@ -79,11 +79,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        internal override void OverrideFrom(PrimitivePropertyConfiguration other)
+        internal override void MakeCompatibleWith(PrimitivePropertyConfiguration other, bool inCSpace)
         {
             DebugCheck.NotNull(other);
 
-            base.OverrideFrom(other);
+            base.MakeCompatibleWith(other, inCSpace);
 
             var dateTimePropertyConfiguration = other as DateTimePropertyConfiguration;
 

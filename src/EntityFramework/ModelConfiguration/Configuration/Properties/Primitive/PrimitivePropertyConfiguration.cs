@@ -125,50 +125,69 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             DebugCheck.NotNull(property);
             Debug.Assert(property.TypeUsage != null);
 
+            var clone = Clone();
+            var mergedConfiguration = clone.MergeWithExistingConfiguration(
+                property,
+                errorMessage =>
+                {
+                    var propertyInfo = property.GetClrPropertyInfo();
+                    var declaringTypeName = propertyInfo == null
+                        ? string.Empty
+                        : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).
+                            FullNameWithNesting();
+                    return Error.ConflictingPropertyConfiguration(property.Name, declaringTypeName, errorMessage);
+                },
+                inCSpace: true,
+                fillFromExistingConfiguration: false);
+
+            mergedConfiguration.ConfigureProperty(property);
+        }
+
+        private PrimitivePropertyConfiguration MergeWithExistingConfiguration(
+            EdmProperty property, Func<string, Exception> getConflictException, bool inCSpace, bool fillFromExistingConfiguration)
+        {
             var existingConfiguration = property.GetConfiguration() as PrimitivePropertyConfiguration;
             if (existingConfiguration != null)
             {
-                string errorMessage;
-                if ((existingConfiguration.OverridableConfigurationParts
-                     & OverridableConfigurationParts.OverridableInCSpace)
-                    != OverridableConfigurationParts.OverridableInCSpace
-                    && !existingConfiguration.IsCompatible(this, inCSpace: true, errorMessage: out errorMessage))
+                var space = inCSpace ? OverridableConfigurationParts.OverridableInCSpace : OverridableConfigurationParts.OverridableInSSpace;
+                if (existingConfiguration.OverridableConfigurationParts.HasFlag(space)
+                    || fillFromExistingConfiguration)
                 {
-                    if (OverridableConfigurationParts.HasFlag(OverridableConfigurationParts.OverridableInCSpace))
-                    {
-                        OverrideFrom(existingConfiguration);
-                    }
-                    else
-                    {
-                        var propertyInfo = property.GetClrPropertyInfo();
-                        var declaringTypeName = propertyInfo == null
-                            ? string.Empty
-                            : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).
-                                FullNameWithNesting();
-                        throw Error.ConflictingPropertyConfiguration(property.Name, declaringTypeName, errorMessage);
-                    }
+                    return existingConfiguration.OverrideFrom(this, inCSpace);
                 }
 
-                // Choose the more derived type for the merged configuration
-                PrimitivePropertyConfiguration mergedConfiguration;
-                if (existingConfiguration.GetType().IsAssignableFrom(GetType()))
+                string errorMessage;
+                if (OverridableConfigurationParts.HasFlag(space)
+                    || existingConfiguration.IsCompatible(this, inCSpace, errorMessage: out errorMessage))
                 {
-                    mergedConfiguration = Clone();
+                    return OverrideFrom(existingConfiguration, inCSpace);
                 }
-                else
-                {
-                    mergedConfiguration = existingConfiguration.Clone();
-                    mergedConfiguration.CopyFrom(this);
-                }
-                mergedConfiguration.FillFrom(existingConfiguration, inCSpace: true);
-                property.SetConfiguration(mergedConfiguration);
-                ConfigureAnnotations(property);
+
+                throw getConflictException(errorMessage);
+            }
+
+            return this;
+        }
+
+        private PrimitivePropertyConfiguration OverrideFrom(PrimitivePropertyConfiguration overridingConfiguration, bool inCSpace)
+        {
+            if (overridingConfiguration.GetType().IsAssignableFrom(GetType()))
+            {
+                MakeCompatibleWith(overridingConfiguration, inCSpace);
+                FillFrom(overridingConfiguration, inCSpace);
+
+                return this;
             }
             else
             {
-                property.SetConfiguration(this);
-            }
+                overridingConfiguration.FillFrom(this, inCSpace);
 
+                return overridingConfiguration;
+            }
+        }
+
+        protected virtual void ConfigureProperty(EdmProperty property)
+        {
             if (IsNullable != null)
             {
                 property.Nullable = IsNullable.Value;
@@ -189,9 +208,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     property.Nullable = false;
                 }
             }
+
+            property.SetConfiguration(this);
         }
 
-        internal virtual void Configure(
+        internal void Configure(
             IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
             bool allowOverride = false,
@@ -255,7 +276,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             parameter.SetConfiguration(this);
         }
 
-        internal virtual void Configure(
+        internal void Configure(
             EdmProperty column, EntityType table, DbProviderManifest providerManifest,
             bool allowOverride = false,
             bool fillFromExistingConfiguration = false)
@@ -264,34 +285,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             DebugCheck.NotNull(table);
             DebugCheck.NotNull(providerManifest);
 
-            var existingConfiguration = column.GetConfiguration() as PrimitivePropertyConfiguration;
-
-            if (existingConfiguration != null)
+            var clone = Clone();
+            if (allowOverride)
             {
-                var overridable = column.GetAllowOverride();
-
-                string errorMessage;
-                if ((existingConfiguration.OverridableConfigurationParts
-                     & OverridableConfigurationParts.OverridableInSSpace)
-                    != OverridableConfigurationParts.OverridableInSSpace
-                    && !overridable
-                    && !allowOverride
-                    && !fillFromExistingConfiguration
-                    && !existingConfiguration.IsCompatible(this, inCSpace: false, errorMessage: out errorMessage))
-                {
-                    if (OverridableConfigurationParts.HasFlag(OverridableConfigurationParts.OverridableInSSpace))
-                    {
-                        OverrideFrom(existingConfiguration);
-                    }
-                    else
-                    {
-                        throw Error.ConflictingColumnConfiguration(column.Name, table.Name, errorMessage);
-                    }
-                }
-
-                FillFrom(existingConfiguration, inCSpace: false);
+                clone.OverridableConfigurationParts |= OverridableConfigurationParts.OverridableInSSpace;
             }
 
+            var mergedConfiguration = clone.MergeWithExistingConfiguration(
+                column,
+                errorMessage => Error.ConflictingColumnConfiguration(column.Name, table.Name, errorMessage),
+                /* inCSpace: */ false,
+                fillFromExistingConfiguration);
+
+            mergedConfiguration.ConfigureColumn(column, table, providerManifest);
+        }
+
+        protected virtual void ConfigureColumn(EdmProperty column, EntityType table, DbProviderManifest providerManifest)
+        {
             ConfigureColumnName(column, table);
 
             ConfigureAnnotations(column);
@@ -316,7 +326,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
 
             column.SetConfiguration(this);
-            column.SetAllowOverride(allowOverride);
         }
 
         private void ConfigureColumnName(EdmProperty column, EntityType table)
@@ -384,6 +393,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             IsNullable = other.IsNullable;
             OverridableConfigurationParts = other.OverridableConfigurationParts;
 
+            _annotations.Clear();
             foreach (var annotation in other._annotations)
             {
                 _annotations[annotation.Key] = annotation.Value;
@@ -392,13 +402,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         internal virtual void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
         {
-
             if (ReferenceEquals(this, other))
             {
                 return;
             }
 
-            if (!inCSpace)
+            if (inCSpace)
+            {
+                if (ConcurrencyMode == null)
+                {
+                    ConcurrencyMode = other.ConcurrencyMode;
+                }
+
+                if (DatabaseGeneratedOption == null)
+                {
+                    DatabaseGeneratedOption = other.DatabaseGeneratedOption;
+                }
+
+                if (IsNullable == null)
+                {
+                    IsNullable = other.IsNullable;
+                }
+
+                if (!other.OverridableConfigurationParts.HasFlag(OverridableConfigurationParts.OverridableInCSpace))
+                {
+                    OverridableConfigurationParts &= ~OverridableConfigurationParts.OverridableInCSpace;
+                }
+            }
+            else
             {
                 if (ColumnName == null)
                 {
@@ -435,27 +466,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                         _annotations[annotation.Key] = annotation.Value;
                     }
                 }
-            }
-            
-            if (ConcurrencyMode == null)
-            {
-                ConcurrencyMode = other.ConcurrencyMode;
-            }
-            
-            if (DatabaseGeneratedOption == null)
-            {
-                DatabaseGeneratedOption = other.DatabaseGeneratedOption;
-            }
-            
-            if (IsNullable == null && inCSpace)
-            {
-                IsNullable = other.IsNullable;
-            }
 
-            OverridableConfigurationParts &= other.OverridableConfigurationParts;
+                if (!other.OverridableConfigurationParts.HasFlag(OverridableConfigurationParts.OverridableInSSpace))
+                {
+                    OverridableConfigurationParts &= ~OverridableConfigurationParts.OverridableInSSpace;
+                }
+            }
         }
 
-        internal virtual void OverrideFrom(PrimitivePropertyConfiguration other)
+        internal virtual void MakeCompatibleWith(PrimitivePropertyConfiguration other, bool inCSpace)
         {
             DebugCheck.NotNull(other);
 
@@ -464,19 +483,51 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 return;
             }
 
-            if (other.ColumnName != null) ColumnName = null;
-            if (other.ParameterName != null) ParameterName = null;
-            if (other.ColumnOrder != null) ColumnOrder = null;
-            if (other.ColumnType != null) ColumnType = null;
-            if (other.ConcurrencyMode != null) ConcurrencyMode = null;
-            if (other.DatabaseGeneratedOption != null) DatabaseGeneratedOption = null;
-            if (other.IsNullable != null) IsNullable = null;
-
-            foreach (var annotationName in other._annotations.Keys)
+            if (inCSpace)
             {
-                if (_annotations.ContainsKey(annotationName))
+                if (other.ConcurrencyMode != null)
                 {
-                    _annotations.Remove(annotationName);
+                    ConcurrencyMode = null;
+                }
+                if (other.DatabaseGeneratedOption != null)
+                {
+                    DatabaseGeneratedOption = null;
+                }
+                if (other.IsNullable != null)
+                {
+                    IsNullable = null;
+                }
+            }
+            else
+            {
+                if (other.ColumnName != null)
+                {
+                    ColumnName = null;
+                }
+                if (other.ParameterName != null)
+                {
+                    ParameterName = null;
+                }
+                if (other.ColumnOrder != null)
+                {
+                    ColumnOrder = null;
+                }
+                if (other.ColumnType != null)
+                {
+                    ColumnType = null;
+                }
+
+                foreach (var annotationName in other._annotations.Keys)
+                {
+                    if (_annotations.ContainsKey(annotationName))
+                    {
+                        var mergeableAnnotation = _annotations[annotationName] as IMergeableAnnotation;
+                        if (mergeableAnnotation == null
+                            || !mergeableAnnotation.IsCompatibleWith(other._annotations[annotationName]))
+                        {
+                            _annotations.Remove(annotationName);
+                        }
+                    }
                 }
             }
         }
@@ -485,7 +536,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         internal virtual bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             errorMessage = string.Empty;
-            if (other == null || ReferenceEquals(this, other))
+            if (other == null
+                || ReferenceEquals(this, other))
             {
                 return true;
             }

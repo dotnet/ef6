@@ -2,9 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Xunit;
 
     public sealed class DecimalPropertyConfigurationTests : PrimitivePropertyConfigurationTests
@@ -20,10 +23,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             Assert.Equal((byte)8, property.Precision);
             Assert.Equal(null, property.Scale);
+
+            var edmPropertyMapping =
+                new ColumnMappingBuilder(
+                    new EdmProperty(
+                        "C", TypeUsage.Create(ProviderRegistry.Sql2008_ProviderManifest.GetStoreTypes().First(t => t.Name == "decimal"))),
+                    new List<EdmProperty>());
+
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal((byte)8, edmPropertyMapping.ColumnProperty.Precision);
         }
 
         [Fact]
-        public void Configure_should_update_model_decimal_scale_but_not_precision()
+        public void Configure_should_update_model_decimal_scale()
         {
             var configuration = CreateConfiguration();
             configuration.Scale = 70;
@@ -33,6 +48,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             Assert.Equal((byte)70, property.Scale);
             Assert.Equal(null, property.Precision);
+
+            var edmPropertyMapping =
+                new ColumnMappingBuilder(
+                    new EdmProperty(
+                        "C", TypeUsage.Create(ProviderRegistry.Sql2008_ProviderManifest.GetStoreTypes().First(t => t.Name == "decimal"))),
+                    new List<EdmProperty>());
+
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal((byte)70, edmPropertyMapping.ColumnProperty.Scale);
         }
 
         [Fact]
@@ -86,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_Precision()
+        public void FillFrom_overwrites_null_Precision_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -98,7 +125,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_Precision()
+        public void FillFrom_does_not_overwrite_non_null_Precision_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.Precision = 16;
@@ -136,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_Scale()
+        public void FillFrom_overwrites_null_Scale_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -148,7 +175,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_Scale()
+        public void FillFrom_does_not_overwrite_non_null_Scale_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.Scale = 16;
@@ -183,6 +210,106 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             configurationA.FillFrom(configurationB, inCSpace: true);
 
             Assert.Equal((byte)16, configurationA.Scale);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_Precision_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Precision = 1;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal((byte)1, configurationA.Precision);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_Precision_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Precision = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.Precision = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.Precision);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_Precision_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Precision = 1;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal((byte)1, configurationA.Precision);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_Precision_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Precision = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.Precision = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.Precision);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_Scale_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Scale = 1;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal((byte)1, configurationA.Scale);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_Scale_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Scale = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.Scale = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.Scale);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_Scale_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Scale = 1;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal((byte)1, configurationA.Scale);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_Scale_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.Scale = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.Scale = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.Scale);
         }
 
         [Fact]

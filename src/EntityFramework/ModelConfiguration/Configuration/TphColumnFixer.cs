@@ -14,14 +14,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     internal class TphColumnFixer
     {
         private readonly IList<ColumnMappingBuilder> _columnMappings;
+        private readonly EntityType _table;
         private readonly EdmModel _storeModel;
 
-        public TphColumnFixer(IEnumerable<ColumnMappingBuilder> columnMappings, EdmModel storeModel)
+        public TphColumnFixer(IEnumerable<ColumnMappingBuilder> columnMappings, EntityType table, EdmModel storeModel)
         {
             DebugCheck.NotNull(columnMappings);
+            DebugCheck.NotNull(table);
             DebugCheck.NotNull(storeModel);
 
             _columnMappings = columnMappings.OrderBy(m => m.ColumnProperty.Name).ToList();
+            _table = table;
             _storeModel = storeModel;
         }
 
@@ -56,17 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     {
                         if (toChangeConfig != null)
                         {
-                            if (columnConfig == null)
-                            {
-                                columnConfig = toChangeConfig;
-                                column.SetConfiguration(columnConfig);
-                            }
-                            else
-                            {
-                                columnConfig.FillFrom(toChangeConfig, inCSpace: false);
-                            }
-
-                            columnConfig.Configure(column);
+                            toChangeConfig.Configure(column, _table, _storeModel.ProviderManifest);
                         }
                     }
                     else

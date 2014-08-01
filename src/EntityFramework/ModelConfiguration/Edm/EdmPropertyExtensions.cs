@@ -13,7 +13,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         private const string OrderAnnotation = "Order";
         private const string PreferredNameAnnotation = "PreferredName";
         private const string UnpreferredUniqueNameAnnotation = "UnpreferredUniqueName";
-        private const string AllowOverrideAnnotation = "AllowOverride";
 
         public static void CopyFrom(this EdmProperty column, EdmProperty other)
         {
@@ -101,20 +100,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             {
                 tableColumn.StoreGeneratedPattern = StoreGeneratedPattern.None;
             }
-        }
-
-        public static bool GetAllowOverride(this EdmProperty column)
-        {
-            DebugCheck.NotNull(column);
-
-            return (bool)column.Annotations.GetAnnotation(AllowOverrideAnnotation);
-        }
-
-        public static void SetAllowOverride(this EdmProperty column, bool allowOverride)
-        {
-            DebugCheck.NotNull(column);
-
-            column.GetMetadataProperties().SetAnnotation(AllowOverrideAnnotation, allowOverride);
         }
 
         public static bool HasStoreGeneratedPattern(this EdmProperty property)

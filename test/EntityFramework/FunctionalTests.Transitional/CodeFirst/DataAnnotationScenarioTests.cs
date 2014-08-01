@@ -867,9 +867,31 @@ namespace FunctionalTests
 
             // one thing configured because of key property
             Assert.Equal(1, modelBuilder.ModelConfiguration.Entity(typeof(OKeyBase)).ConfiguredProperties.Count());
+            Assert.Equal(1, modelBuilder.ModelConfiguration.Entity(typeof(OKeyBase)).KeyProperties.Count());
 
-            // should be nothing configured on derived type
-            Assert.Equal(0, modelBuilder.ModelConfiguration.Entity(typeof(DODerived)).ConfiguredProperties.Count());
+            // derived type should have equivalent configuration, but no key property
+            Assert.Equal(1, modelBuilder.ModelConfiguration.Entity(typeof(DODerived)).ConfiguredProperties.Count());
+            Assert.Equal(0, modelBuilder.ModelConfiguration.Entity(typeof(DODerived)).KeyProperties.Count());
+        }
+
+        [Fact]
+        public void Key_from_base_type_is_recognized_if_base_discovered_first()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<OKeyBase>();
+            modelBuilder.Entity<SRelated>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            databaseMapping.AssertValid();
+
+            // one thing configured because of key property
+            Assert.Equal(1, modelBuilder.ModelConfiguration.Entity(typeof(OKeyBase)).ConfiguredProperties.Count());
+            Assert.Equal(1, modelBuilder.ModelConfiguration.Entity(typeof(OKeyBase)).KeyProperties.Count());
+
+            // derived type should have equivalent configuration, but no key property
+            Assert.Equal(1, modelBuilder.ModelConfiguration.Entity(typeof(DODerived)).ConfiguredProperties.Count());
+            Assert.Equal(0, modelBuilder.ModelConfiguration.Entity(typeof(DODerived)).KeyProperties.Count());
         }
 
         public class SRelated

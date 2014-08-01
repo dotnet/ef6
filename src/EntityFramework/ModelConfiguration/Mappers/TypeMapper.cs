@@ -105,7 +105,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     type,
                     complexType.GetMetadataProperties(),
                     (m, p) => m.Map(p, complexType, complexTypeConfiguration),
-                    false,
                     complexTypeConfiguration);
             }
 
@@ -173,22 +172,19 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                             navigationProperties.Add(p);
                         }
                     },
-                    entityType.BaseType != null,
                     entityTypeConfiguration);
 
-                var propertyInfos = (IEnumerable<PropertyInfo>)navigationProperties;
+                var navigationPropertyInfos = (IEnumerable<PropertyInfo>)navigationProperties;
                 if (_mappingContext.ModelBuilderVersion.IsEF6OrHigher())
                 {
-                    propertyInfos = propertyInfos.OrderBy(p => p.Name);
+                    navigationPropertyInfos = navigationPropertyInfos.OrderBy(p => p.Name);
                 }
 
-                foreach (var propertyInfo in propertyInfos)
+                foreach (var propertyInfo in navigationPropertyInfos)
                 {
                     new NavigationPropertyMapper(this).Map(propertyInfo, entityType, entityTypeConfiguration);
                 }
 
-                // If the base type was discovered through a navigation property
-                // then the inherited properties mapped afterwards need to be lifted
                 if (entityType.BaseType != null)
                 {
                     LiftInheritedProperties(type, entityType);
@@ -215,7 +211,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             Type type,
             ICollection<MetadataProperty> annotations,
             Action<PropertyMapper, PropertyInfo> propertyMappingAction,
-            bool mapDeclaredPropertiesOnly,
             Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
@@ -233,7 +228,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             foreach (var propertyInfo in new PropertyFilter(_mappingContext.ModelBuilderVersion)
                 .GetProperties(
                     type,
-                    mapDeclaredPropertiesOnly,
+                    /*declaredOnly:*/ false,
                     _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
                     _mappingContext.ModelConfiguration.StructuralTypes))
             {
@@ -316,24 +311,15 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 }
             }
 
-            LiftInheritedProperties(type, entityType, entityTypeConfiguration);
-        }
-
-        private void LiftInheritedProperties(
-            Type type, EntityType entityType, EntityTypeConfiguration entityTypeConfiguration)
-        {
-            DebugCheck.NotNull(type);
-            DebugCheck.NotNull(entityType);
-
             var members = entityType.DeclaredMembers.ToList();
 
             var declaredProperties
-                = new PropertyFilter(_mappingContext.ModelBuilderVersion)
+                = new HashSet<PropertyInfo>(new PropertyFilter(_mappingContext.ModelBuilderVersion)
                     .GetProperties(
                         type,
                         /*declaredOnly:*/ true,
                         _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
-                        _mappingContext.ModelConfiguration.StructuralTypes);
+                        _mappingContext.ModelConfiguration.StructuralTypes));
 
             foreach (var member in members)
             {
@@ -349,11 +335,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     }
 
                     entityType.RemoveMember(member);
-
-                    if (entityTypeConfiguration != null)
-                    {
-                        entityTypeConfiguration.RemoveProperty(new PropertyPath(propertyInfo));
-                    }
                 }
             }
         }

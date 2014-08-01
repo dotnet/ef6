@@ -3,9 +3,13 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -26,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
 
-            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
+            new TphColumnFixer(mappings, mockTableType.Object, mockModel.Object).RemoveDuplicateTphColumns();
 
             Assert.Equal(1, removed.Select(m => m.Name).Count(n => n == "Moist"));
 
@@ -51,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
 
-            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
+            new TphColumnFixer(mappings, mockTableType.Object, mockModel.Object).RemoveDuplicateTphColumns();
 
             Assert.Equal(5, removed.Count);
             Assert.Equal(2, removed.Select(m => m.Name).Count(n => n == "Nanny"));
@@ -80,7 +84,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
 
-            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
+            new TphColumnFixer(mappings, mockTableType.Object, mockModel.Object).RemoveDuplicateTphColumns();
 
             Assert.Equal(1, removed.Count);
             Assert.Equal(1, removed.Select(m => m.Name).Count(n => n == "Nanny"));
@@ -121,7 +125,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
 
-            var fixer = new TphColumnFixer(mappings, mockModel.Object);
+            var fixer = new TphColumnFixer(mappings, mockTableType.Object, mockModel.Object);
 
             Assert.Equal(
                 Strings.BadTphMappingToSharedColumn(
@@ -152,7 +156,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
 
-            var fixer = new TphColumnFixer(mappings, mockModel.Object);
+            var fixer = new TphColumnFixer(mappings, mockTableType.Object, mockModel.Object);
 
             Assert.Equal(
                 Strings.BadTphMappingToSharedColumn(
@@ -188,9 +192,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 };
             var mappings = CreateMappings(columns, "Sam", "Vimes", "Rules");
 
-            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+            var model = EdmModel.CreateStoreModel(new DbProviderInfo("I", ""), EdmProviderManifest.Instance);
 
-            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
+            new TphColumnFixer(mappings, mockTableType.Object, model).RemoveDuplicateTphColumns();
 
             Assert.Equal(256, mappings[0].ColumnProperty.MaxLength);
             Assert.Equal(false, mappings[0].ColumnProperty.IsUnicode);
@@ -213,7 +217,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
 
-            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
+            new TphColumnFixer(mappings, mockTableType.Object, mockModel.Object).RemoveDuplicateTphColumns();
 
             mockTableType.Verify(m => m.RemoveMember(It.IsAny<EdmMember>()), Times.Never());
         }
@@ -232,7 +236,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
 
-            new TphColumnFixer(mappings, mockModel.Object).RemoveDuplicateTphColumns();
+            new TphColumnFixer(mappings, mockTableType.Object, mockModel.Object).RemoveDuplicateTphColumns();
 
             mockTableType.Verify(m => m.RemoveMember(It.IsAny<EdmMember>()), Times.Never());
         }
@@ -240,8 +244,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact] // CodePlex 1964
         public void RemoveDuplicateTphColumns_removes_associations_when_FK_is_shared()
         {
+            var mockTableType = CreateMockType("Lancre");
+
             var columns = CreateColumns(
-                CreateMockType("Lancre"),
+                mockTableType,
                 "Nanny", "Ogg", "Nanny", "Nanny", "Granny", "Magrat", "Weatherwax", "Weatherwax", "Magrat", "Garlik", "Tiffany", "Tiffany");
 
             var mappings = CreateMappings(
@@ -259,7 +265,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new[] { "SetNanny0", "SetOgg1", "SetNanny2", "SetIA3", "SetNanny4", "SetWeatherwax5", "SetWeatherwax6", "SetGarlik7" },
                 model.Container.AssociationSets.Select(a => a.Name).ToArray());
 
-            new TphColumnFixer(mappings, model).RemoveDuplicateTphColumns();
+            new TphColumnFixer(mappings, mockTableType.Object, model).RemoveDuplicateTphColumns();
 
             Assert.Equal(
                 new[] { "Ogg1", "IA3", "Garlik7" },

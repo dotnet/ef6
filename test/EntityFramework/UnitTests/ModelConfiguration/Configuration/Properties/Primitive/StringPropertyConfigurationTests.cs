@@ -2,9 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Xunit;
 
     public sealed class StringPropertyConfigurationTests : LengthPropertyConfigurationTests
@@ -19,6 +22,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             configuration.Configure(property);
 
             Assert.Equal(true, property.IsUnicode);
+
+            var edmPropertyMapping =
+                new ColumnMappingBuilder(
+                    new EdmProperty(
+                        "C", TypeUsage.Create(ProviderRegistry.Sql2008_ProviderManifest.GetStoreTypes().First(t => t.Name == "nvarchar"))),
+                    new List<EdmProperty>());
+
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal(true, edmPropertyMapping.ColumnProperty.IsUnicode);
         }
 
         [Fact]
@@ -94,6 +109,56 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             configurationA.FillFrom(configurationB, inCSpace: true);
 
             Assert.Equal(false, configurationA.IsUnicode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsUnicode_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsUnicode = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(false, configurationA.IsUnicode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsUnicode_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsUnicode = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsUnicode = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.IsUnicode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsUnicode_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsUnicode = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(false, configurationA.IsUnicode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsUnicode_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsUnicode = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsUnicode = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.IsUnicode);
         }
 
         [Fact]

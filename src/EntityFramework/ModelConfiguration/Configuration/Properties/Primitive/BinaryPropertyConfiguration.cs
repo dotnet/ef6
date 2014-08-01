@@ -40,11 +40,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return new BinaryPropertyConfiguration(this);
         }
 
-        internal override void Configure(EdmProperty property)
+        protected override void ConfigureProperty(EdmProperty property)
         {
-            if (IsRowVersion != null)
+            if (IsRowVersion != null
+                && IsRowVersion.Value)
             {
-                ColumnType = ColumnType ?? "rowversion";
                 ConcurrencyMode = ConcurrencyMode ?? Core.Metadata.Edm.ConcurrencyMode.Fixed;
                 DatabaseGeneratedOption
                     = DatabaseGeneratedOption
@@ -53,26 +53,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 MaxLength = MaxLength ?? 8;
             }
 
-            base.Configure(property);
+            base.ConfigureProperty(property);
         }
 
-        internal override void Configure(
-            IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
-            DbProviderManifest providerManifest,            
-            bool allowOverride = false,
-            bool fillFromExistingConfiguration = false)
+        protected override void ConfigureColumn(EdmProperty column, EntityType table, DbProviderManifest providerManifest)
         {
-            base.Configure(propertyMappings, providerManifest, allowOverride, fillFromExistingConfiguration);
+            if (IsRowVersion != null
+                && IsRowVersion.Value)
+            {
+                ColumnType = ColumnType ?? "rowversion";
+            }
 
-            propertyMappings
-                .Each(
-                    pm =>
-                        {
-                            if (IsRowVersion != null)
-                            {
-                                pm.Item1.ColumnProperty.MaxLength = null;
-                            }
-                        });
+            base.ConfigureColumn(column, table, providerManifest);
+
+            if (IsRowVersion != null
+                && IsRowVersion.Value)
+            {
+                column.MaxLength = null;
+            }
         }
 
         internal override void CopyFrom(PrimitivePropertyConfiguration other)
@@ -96,11 +94,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
-        internal override void OverrideFrom(PrimitivePropertyConfiguration other)
+        internal override void MakeCompatibleWith(PrimitivePropertyConfiguration other, bool inCSpace)
         {
             DebugCheck.NotNull(other);
 
-            base.OverrideFrom(other);
+            base.MakeCompatibleWith(other, inCSpace);
 
             var binaryPropertyConfiguration = other as BinaryPropertyConfiguration;
 

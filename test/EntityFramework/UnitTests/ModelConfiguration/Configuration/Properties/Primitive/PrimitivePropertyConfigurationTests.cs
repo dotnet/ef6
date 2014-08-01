@@ -93,6 +93,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void ConfigureFunctionParameters_should_not_configure_parameter_name_if_empty()
+        {
+            var configuration = CreateConfiguration();
+
+            configuration.ParameterName = "";
+
+            var functionParameter1
+                = new FunctionParameter(
+                    "P1",
+                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    ParameterMode.In);
+
+            new EdmFunction(
+                "F", "N", DataSpace.SSpace,
+                new EdmFunctionPayload
+                {
+                    Parameters = new[] { functionParameter1 }
+                });
+
+            configuration.ConfigureFunctionParameters(new[] { functionParameter1 });
+
+            Assert.Equal("P1", functionParameter1.Name);
+        }
+
+        [Fact]
         public void HasColumnOrder_should_throw_when_argument_out_of_range()
         {
             var configuration = new PrimitivePropertyConfiguration(new Properties.Primitive.PrimitivePropertyConfiguration());
@@ -133,7 +158,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             configuration.Configure(property);
 
-            Assert.Same(configuration, property.GetConfiguration());
+            Assert.NotNull(property.GetConfiguration());
         }
 
         [Fact]
@@ -161,11 +186,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Configure_should_preserve_the_most_derived_configuration()
+        public void Configure_should_merge_CSpace_configurations_if_existing_is_not_overridable()
         {
             var configurationA = CreateConfiguration();
             configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
-            var configurationB = new Properties.Primitive.PrimitivePropertyConfiguration();
+            configurationA.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInSSpace;
+            var configurationB = CreateConfiguration();
             configurationB.IsNullable = false;
 
             var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
@@ -178,6 +204,49 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
 
             configurationB.Configure(property);
+
+            Assert.Equal(
+                ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(
+                OverridableConfigurationParts.OverridableInSSpace, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).OverridableConfigurationParts);
+            Assert.Equal(false, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
+        }
+
+        [Fact]
+        public void Configure_should_preserve_the_most_derived_existing_configuration()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
+            var configurationB = new Properties.Primitive.PrimitivePropertyConfiguration();
+            configurationB.IsNullable = false;
+
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            Assert.Null(property.GetConfiguration());
+
+            configurationA.Configure(property);
+            configurationB.Configure(property);
+
+            Assert.Equal(
+                ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(false, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
+            Assert.Equal(GetConfigurationType(), property.GetConfiguration().GetType());
+        }
+
+        [Fact]
+        public void Configure_should_preserve_the_most_derived_new_configuration()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
+            var configurationB = new Properties.Primitive.PrimitivePropertyConfiguration();
+            configurationB.IsNullable = false;
+
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            Assert.Null(property.GetConfiguration());
+
+            configurationB.Configure(property);
+            configurationA.Configure(property);
 
             Assert.Equal(
                 ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
@@ -242,14 +311,40 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     },
                 ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.Same(configuration, edmPropertyMapping.ColumnProperty.GetConfiguration());
+            Assert.NotNull(edmPropertyMapping.ColumnProperty.GetConfiguration());
+        }
+        
+        [Fact]
+        public void Configure_should_set_SSpace_configuration_annotation_with_forced_overridability()
+        {
+            var configuration = CreateConfiguration();
+            configuration.OverridableConfigurationParts = OverridableConfigurationParts.None;
+
+            var edmPropertyMapping = new ColumnMappingBuilder(new EdmProperty("C"), new List<EdmProperty>());
+
+            Assert.Null(edmPropertyMapping.ColumnProperty.GetConfiguration());
+
+            configuration.Configure(
+                new[]
+                    {
+                        Tuple.Create(
+                            edmPropertyMapping,
+                            new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace))
+                    },
+                ProviderRegistry.Sql2008_ProviderManifest,
+                allowOverride: true);
+
+            configuration = (Properties.Primitive.PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration();
+            Assert.NotNull(configuration);
+            Assert.Equal(OverridableConfigurationParts.OverridableInSSpace, configuration.OverridableConfigurationParts);
         }
 
         [Fact]
-        public void Configure_should_merge_SSpace_configurations()
+        public void Configure_should_merge_SSpace_configurations_if_existing_is_not_overridable()
         {
             var configurationA = CreateConfiguration();
             configurationA.ColumnName = "foo";
+            configurationA.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace;
             var configurationB = CreateConfiguration();
             configurationB.ColumnType = "nvarchar";
 
@@ -270,6 +365,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.Equal(
                 "foo",
                 ((Properties.Primitive.PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnName);
+            Assert.Equal(
+                OverridableConfigurationParts.OverridableInCSpace,
+                ((Properties.Primitive.PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).OverridableConfigurationParts);
             Assert.Equal(
                 "nvarchar",
                 ((Properties.Primitive.PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnType);
@@ -322,7 +420,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             var configuration = CreateConfiguration();
             configuration.ColumnOrder = 2;
-            configuration.ColumnType = "nvarchar";
 
             var edmPropertyMapping = new ColumnMappingBuilder(new EdmProperty("C"), new List<EdmProperty>());
 
@@ -559,13 +656,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             configurationA.CopyFrom(configurationB);
 
-            Assert.Equal(2, configurationA.Annotations.Count);
+            Assert.Equal(1, configurationA.Annotations.Count);
             Assert.Equal("V3", configurationA.Annotations["A1"]);
-            Assert.Equal("V2", configurationA.Annotations["A2"]);
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_ColumnName()
+        public void FillFrom_overwrites_null_ColumnName_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -577,7 +673,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_ColumnName()
+        public void FillFrom_does_not_overwrite_non_null_ColumnName_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.ColumnName = "bar";
@@ -615,7 +711,57 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_ColumnOrder()
+        public void FillFrom_overwrites_null_ParameterName_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            var configurationB = CreateConfiguration();
+            configurationB.ParameterName = "foo";
+
+            configurationA.FillFrom(configurationB, inCSpace: false);
+
+            Assert.Equal("foo", configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void FillFrom_does_not_overwrite_non_null_ParameterName_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ParameterName = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ParameterName = "foo";
+
+            configurationA.FillFrom(configurationB, inCSpace: false);
+
+            Assert.Equal("bar", configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void FillFrom_does_not_overwrite_null_ParameterName_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            var configurationB = CreateConfiguration();
+            configurationB.ParameterName = "foo";
+
+            configurationA.FillFrom(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void FillFrom_does_not_overwrite_non_null_ParameterName_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ParameterName = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ParameterName = "foo";
+
+            configurationA.FillFrom(configurationB, inCSpace: true);
+
+            Assert.Equal("bar", configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void FillFrom_overwrites_null_ColumnOrder_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -627,7 +773,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_ColumnOrder()
+        public void FillFrom_does_not_overwrite_non_null_ColumnOrder_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.ColumnOrder = 1;
@@ -665,7 +811,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_ColumnType()
+        public void FillFrom_overwrites_null_ColumnType_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -677,7 +823,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_ColumnType()
+        public void FillFrom_does_not_overwrite_non_null_ColumnType_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.ColumnType = "bar";
@@ -715,7 +861,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_ConcurrencyMode()
+        public void FillFrom_does_not_overwrite_null_ConcurrencyMode_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -723,11 +869,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             configurationA.FillFrom(configurationB, inCSpace: false);
 
-            Assert.Equal(ConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
+            Assert.Equal(null, configurationA.ConcurrencyMode);
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_ConcurrencyMode()
+        public void FillFrom_does_not_overwrite_non_null_ConcurrencyMode_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.ConcurrencyMode = ConcurrencyMode.None;
@@ -765,7 +911,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_DatabaseGeneratedOption()
+        public void FillFrom_does_not_overwrite_null_DatabaseGeneratedOption_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -773,11 +919,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             configurationA.FillFrom(configurationB, inCSpace: false);
 
-            Assert.Equal(DatabaseGeneratedOption.Identity, configurationA.DatabaseGeneratedOption);
+            Assert.Equal(null, configurationA.DatabaseGeneratedOption);
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_DatabaseGeneratedOption()
+        public void FillFrom_does_not_overwrite_non_null_DatabaseGeneratedOption_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Computed;
@@ -815,19 +961,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_Nullable()
+        public void FillFrom_does_not_overwrite_null_Nullable_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
             configurationB.IsNullable = false;
 
-            configurationA.FillFrom(configurationB, inCSpace: true);
+            configurationA.FillFrom(configurationB, inCSpace: false);
 
-            Assert.Equal(false, configurationA.IsNullable);
+            Assert.Equal(null, configurationA.IsNullable);
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_Nullable()
+        public void FillFrom_does_not_overwrite_non_null_Nullable_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.IsNullable = true;
@@ -837,6 +983,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             configurationA.FillFrom(configurationB, inCSpace: false);
 
             Assert.Equal(true, configurationA.IsNullable);
+        }
+
+        [Fact]
+        public void FillFrom_overwrites_null_Nullable_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            var configurationB = CreateConfiguration();
+            configurationB.IsNullable = false;
+
+            configurationA.FillFrom(configurationB, inCSpace: true);
+
+            Assert.Equal(false, configurationA.IsNullable);
         }
 
         [Fact]
@@ -853,7 +1011,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_overwrites_OverridableConfigurationParts_set_to_both()
+        public void FillFrom_overwrites_OverridableConfigurationParts_set_to_both_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace
@@ -863,11 +1021,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             configurationA.FillFrom(configurationB, inCSpace: false);
 
-            Assert.Equal(OverridableConfigurationParts.None, configurationA.OverridableConfigurationParts);
+            Assert.Equal(OverridableConfigurationParts.OverridableInCSpace, configurationA.OverridableConfigurationParts);
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_OverridableConfigurationParts_set_to_None()
+        public void FillFrom_does_not_overwrite_OverridableConfigurationParts_set_to_None_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.OverridableConfigurationParts = OverridableConfigurationParts.None;
@@ -891,7 +1049,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             configurationA.FillFrom(configurationB, inCSpace: true);
 
-            Assert.Equal(OverridableConfigurationParts.None, configurationA.OverridableConfigurationParts);
+            Assert.Equal(OverridableConfigurationParts.OverridableInSSpace, configurationA.OverridableConfigurationParts);
         }
 
         [Fact]
@@ -927,7 +1085,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_adds_missing_annotations_only()
+        public void FillFrom_adds_missing_annotations_only_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.SetAnnotation("A1", "V1");
@@ -946,7 +1104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void FillFrom_merges_annotations_that_implement_IMergeableAnnotation()
+        public void FillFrom_merges_annotations_that_implement_IMergeableAnnotation_in_SSpace()
         {
             var mockMergable1M = new Mock<IMergeableAnnotation>();
             var mockMergable1A = new Mock<IMergeableAnnotation>();
@@ -977,7 +1135,357 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void OverrideFrom_removes_annotations_set_in_other()
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ColumnName_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnName = "foo";
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal("foo", configurationA.ColumnName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_ColumnName_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnName = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ColumnName = "foo";
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.ColumnName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ColumnName_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnName = "foo";
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal("foo", configurationA.ColumnName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_clear_non_null_ColumnName_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnName = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ColumnName = "foo";
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal("bar", configurationA.ColumnName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ParameterName_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ParameterName = "foo";
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal("foo", configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_ParameterName_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ParameterName = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ParameterName = "foo";
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ParameterName_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ParameterName = "foo";
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal("foo", configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_clear_non_null_ParameterName_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ParameterName = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ParameterName = "foo";
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal("bar", configurationA.ParameterName);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ColumnOrder_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnOrder = 2;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(2, configurationA.ColumnOrder);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_ColumnOrder_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnOrder = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.ColumnOrder = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.ColumnOrder);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ColumnOrder_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnOrder = 2;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(2, configurationA.ColumnOrder);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_clear_non_null_ColumnOrder_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnOrder = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.ColumnOrder = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(1, configurationA.ColumnOrder);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ColumnType_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnType = "foo";
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal("foo", configurationA.ColumnType);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_ColumnType_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnType = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ColumnType = "foo";
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.ColumnType);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ColumnType_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnType = "foo";
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal("foo", configurationA.ColumnType);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_clear_non_null_ColumnType_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ColumnType = "bar";
+            var configurationB = CreateConfiguration();
+            configurationB.ColumnType = "foo";
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal("bar", configurationA.ColumnType);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ConcurrencyMode_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(ConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_clear_non_null_ConcurrencyMode_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
+            var configurationB = CreateConfiguration();
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(ConcurrencyMode.None, configurationA.ConcurrencyMode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_ConcurrencyMode_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(ConcurrencyMode.Fixed, configurationA.ConcurrencyMode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_ConcurrencyMode_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.ConcurrencyMode = ConcurrencyMode.None;
+            var configurationB = CreateConfiguration();
+            configurationB.ConcurrencyMode = ConcurrencyMode.Fixed;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.ConcurrencyMode);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_DatabaseGeneratedOption_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(DatabaseGeneratedOption.Identity, configurationA.DatabaseGeneratedOption);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_clear_DatabaseGeneratedOption_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Computed;
+            var configurationB = CreateConfiguration();
+            configurationB.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(DatabaseGeneratedOption.Computed, configurationA.DatabaseGeneratedOption);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_DatabaseGeneratedOption_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(DatabaseGeneratedOption.Identity, configurationA.DatabaseGeneratedOption);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_DatabaseGeneratedOption_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.DatabaseGeneratedOption = DatabaseGeneratedOption.Computed;
+            var configurationB = CreateConfiguration();
+            configurationB.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.DatabaseGeneratedOption);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_Nullable_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsNullable = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(false, configurationA.IsNullable);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_clear_non_null_Nullable_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsNullable = true;
+            var configurationB = CreateConfiguration();
+            configurationB.IsNullable = false;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(true, configurationA.IsNullable);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_Nullable_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsNullable = true;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(true, configurationA.IsNullable);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_with_null_Nullable_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsNullable = true;
+            var configurationB = CreateConfiguration();
+            configurationB.IsNullable = false;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.IsNullable);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_removes_annotations_set_in_other_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.SetAnnotation("A1", "V1");
@@ -987,10 +1495,42 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             configurationB.SetAnnotation("A1", "V3");
             configurationB.SetAnnotation("A3", "V4");
 
-            configurationA.OverrideFrom(configurationB);
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
 
             Assert.Equal(1, configurationA.Annotations.Count);
             Assert.Equal("V2", configurationA.Annotations["A2"]);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_remove_annotations_set_in_other_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", "V1");
+            configurationA.SetAnnotation("A2", "V2");
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", "V3");
+            configurationB.SetAnnotation("A3", "V4");
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(2, configurationA.Annotations.Count);
+            Assert.Equal("V1", configurationA.Annotations["A1"]);
+            Assert.Equal("V2", configurationA.Annotations["A2"]);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_OverridableConfigurationParts_set_to_None()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.OverridableConfigurationParts = OverridableConfigurationParts.None;
+            var configurationB = CreateConfiguration();
+            configurationB.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace
+                                                           | OverridableConfigurationParts.OverridableInSSpace;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(OverridableConfigurationParts.None, configurationA.OverridableConfigurationParts);
         }
 
         [Fact]

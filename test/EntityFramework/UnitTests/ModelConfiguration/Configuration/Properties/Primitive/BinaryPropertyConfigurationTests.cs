@@ -8,6 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Xunit;
 
     public sealed class BinaryPropertyConfigurationTests : LengthPropertyConfigurationTests
@@ -33,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 ProviderRegistry.Sql2008_ProviderManifest);
             Assert.Equal("rowversion", edmPropertyMapping.ColumnProperty.TypeName);
         }
-
+        
         [Fact]
         public void CopyFrom_overwrites_null_IsRowVersion()
         {
@@ -60,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_IsRowVersion()
+        public void FillFrom_overwrites_null_IsRowVersion_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -72,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_IsRowVersion()
+        public void FillFrom_does_not_overwrite_non_null_IsRowVersion_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.IsRowVersion = false;
@@ -107,6 +108,56 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             configurationA.FillFrom(configurationB, inCSpace: true);
 
             Assert.Equal(false, configurationA.IsRowVersion);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsRowVersion_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsRowVersion = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(false, configurationA.IsRowVersion);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsRowVersion_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsRowVersion = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsRowVersion = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.IsRowVersion);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsRowVersion_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsRowVersion = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(false, configurationA.IsRowVersion);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsRowVersion_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsRowVersion = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsRowVersion = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.IsRowVersion);
         }
 
         [Fact]

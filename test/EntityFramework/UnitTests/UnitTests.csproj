@@ -705,7 +705,6 @@
     <Compile Include="ModelConfiguration\Edm\Common\DataModelAnnotationExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Common\INamedDataModelItemExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\EdmModelExtensionsTests.cs" />
-    <Compile Include="ModelConfiguration\Edm\Db\EdmPropertyExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\EntityTypeExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\Mapping\StorageAssociationSetMappingExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\Mapping\StorageEntityTypeMappingExtensionsTests.cs" />

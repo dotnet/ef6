@@ -2,11 +2,18 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Utilities;
+    using Moq;
     using Xunit;
     using BinaryPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration;
 
@@ -109,13 +116,35 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private void Assert_Timestamp(BinaryPropertyConfiguration binaryPropertyConfiguration)
         {
-            binaryPropertyConfiguration.Configure(EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            binaryPropertyConfiguration.Configure(property);
 
-            Assert.Equal("rowversion", binaryPropertyConfiguration.ColumnType);
-            Assert.Equal(false, binaryPropertyConfiguration.IsNullable);
-            Assert.Equal(ConcurrencyMode.Fixed, binaryPropertyConfiguration.ConcurrencyMode);
-            Assert.Equal(DatabaseGeneratedOption.Computed, binaryPropertyConfiguration.DatabaseGeneratedOption);
-            Assert.Equal(8, binaryPropertyConfiguration.MaxLength.Value);
+            Assert.Equal("String", property.TypeName);
+            Assert.Equal(false, property.Nullable);
+            Assert.Equal(ConcurrencyMode.Fixed, property.ConcurrencyMode);
+            Assert.Equal(StoreGeneratedPattern.Computed, property.GetStoreGeneratedPattern());
+            Assert.Equal(8, property.MaxLength.Value);
+            
+            var primitiveType = new PrimitiveType();
+            EdmType.Initialize(primitiveType, "rowversion", "N", DataSpace.SSpace, false, null);
+            var mockDbProviderManifest = new Mock<DbProviderManifest>();
+            mockDbProviderManifest.Setup(m => m.GetStoreTypes())
+                .Returns(new ReadOnlyCollection<PrimitiveType>(new List<PrimitiveType> { primitiveType }));
+            mockDbProviderManifest.Setup(m => m.GetFacetDescriptions(It.IsAny<EdmType>()))
+                .Returns(new ReadOnlyCollection<FacetDescription>(new List<FacetDescription>()));
+            PrimitiveType.Initialize(primitiveType, PrimitiveTypeKind.Binary, mockDbProviderManifest.Object);
+
+            var column = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            binaryPropertyConfiguration.Configure(
+                column,
+                new EntityType("E", "N", DataSpace.SSpace),
+                mockDbProviderManifest.Object);
+
+            Assert.Equal("rowversion", column.TypeName);
+            Assert.Equal(true, column.Nullable);
+            Assert.Equal(ConcurrencyMode.None, column.ConcurrencyMode);
+            Assert.Null(column.GetStoreGeneratedPattern());
+            Assert.Null(column.MaxLength);
         }
     }
 }

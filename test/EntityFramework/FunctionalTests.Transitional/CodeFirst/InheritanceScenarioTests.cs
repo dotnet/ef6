@@ -1042,6 +1042,20 @@ namespace FunctionalTests
         }
 
         [Fact]
+        public void TPT_model_can_map_PK_property_to_different_columns_in_different_tables_if_derived_types_configured_first()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<ColoredProduct>().ToTable("ColoredProducts");
+            modelBuilder.Entity<StyledProduct>().ToTable("StyledProducts");
+            modelBuilder.Entity<Product>();
+
+            SetDerivedEntityColumnNames(modelBuilder);
+
+            ValidateTPTOrTPCWithRenamedColumns(modelBuilder);
+        }
+
+        [Fact]
         public void TPT_model_using_Map_can_map_PK_property_to_different_columns_in_different_tables()
         {
             var modelBuilder = new AdventureWorksModelBuilder();

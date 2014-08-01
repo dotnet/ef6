@@ -2,8 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Xunit;
 
     public abstract class LengthPropertyConfigurationTests : PrimitivePropertyConfigurationTests
@@ -19,6 +22,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             configuration.Configure(property);
 
             Assert.Equal(1, property.MaxLength);
+
+            var edmPropertyMapping =
+                new ColumnMappingBuilder(
+                    new EdmProperty(
+                        "C", TypeUsage.Create(ProviderRegistry.Sql2008_ProviderManifest.GetStoreTypes().First(t => t.Name == "nvarchar"))),
+                    new List<EdmProperty>());
+
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal(1, edmPropertyMapping.ColumnProperty.MaxLength);
         }
 
         [Fact]
@@ -32,6 +47,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             configuration.Configure(property);
 
             Assert.Equal(true, property.IsFixedLength);
+
+            var edmPropertyMapping =
+                new ColumnMappingBuilder(
+                    new EdmProperty(
+                        "C", TypeUsage.Create(ProviderRegistry.Sql2008_ProviderManifest.GetStoreTypes().First(t => t.Name == "binary"))),
+                    new List<EdmProperty>());
+
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal(true, edmPropertyMapping.ColumnProperty.IsFixedLength);
         }
 
         [Fact]
@@ -45,6 +72,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             configuration.Configure(property);
 
             Assert.Equal(true, property.IsMaxLength);
+
+            var edmPropertyMapping =
+                new ColumnMappingBuilder(
+                    new EdmProperty(
+                        "C", TypeUsage.Create(ProviderRegistry.Sql2008_ProviderManifest.GetStoreTypes().First(t => t.Name == "nvarchar"))),
+                    new List<EdmProperty>());
+
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal(true, edmPropertyMapping.ColumnProperty.IsMaxLength);
         }
 
         [Fact]
@@ -123,7 +162,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_MaxLength()
+        public void FillFrom_overwrites_null_MaxLength_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -135,7 +174,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_MaxLength()
+        public void FillFrom_does_not_overwrite_non_null_MaxLength_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.MaxLength = 1;
@@ -173,7 +212,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_IsFixedLength()
+        public void FillFrom_overwrites_null_IsFixedLength_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -185,7 +224,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_IsFixedLength()
+        public void FillFrom_does_not_overwrite_non_null_IsFixedLength_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.IsFixedLength = false;
@@ -223,7 +262,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_overwrites_null_IsMaxLength()
+        public void FillFrom_overwrites_null_IsMaxLength_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             var configurationB = CreateConfiguration();
@@ -235,7 +274,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void FillFrom_does_not_overwrite_non_null_IsMaxLength()
+        public void FillFrom_does_not_overwrite_non_null_IsMaxLength_in_SSpace()
         {
             var configurationA = CreateConfiguration();
             configurationA.IsMaxLength = false;
@@ -272,6 +311,155 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             Assert.Equal(false, configurationA.IsMaxLength);
         }
 
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_MaxLength_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.MaxLength = 1;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(1, configurationA.MaxLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_MaxLength_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.MaxLength = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.MaxLength = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.MaxLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_MaxLength_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.MaxLength = 1;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(1, configurationA.MaxLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_MaxLength_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.MaxLength = 1;
+            var configurationB = CreateConfiguration();
+            configurationB.MaxLength = 2;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.MaxLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsFixedLength_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsFixedLength = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(false, configurationA.IsFixedLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsFixedLength_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsFixedLength = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsFixedLength = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.IsFixedLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsFixedLength_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsFixedLength = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(false, configurationA.IsFixedLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsFixedLength_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsFixedLength = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsFixedLength = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.IsFixedLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsMaxLength_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsMaxLength = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(false, configurationA.IsMaxLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsMaxLength_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsMaxLength = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsMaxLength = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: false);
+
+            Assert.Equal(null, configurationA.IsMaxLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_does_not_overwrite_with_null_IsMaxLength_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsMaxLength = false;
+            var configurationB = CreateConfiguration();
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(false, configurationA.IsMaxLength);
+        }
+
+        [Fact]
+        public void MakeCompatibleWith_clears_non_null_IsMaxLength_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.IsMaxLength = false;
+            var configurationB = CreateConfiguration();
+            configurationB.IsMaxLength = true;
+
+            configurationA.MakeCompatibleWith(configurationB, inCSpace: true);
+
+            Assert.Equal(null, configurationA.IsMaxLength);
+        }
         [Fact]
         public void IsCompatible_returns_true_for_matching_MaxLength()
         {
