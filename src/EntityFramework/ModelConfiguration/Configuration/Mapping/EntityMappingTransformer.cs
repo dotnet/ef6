@@ -499,7 +499,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static void UpdatePropertyMapping(
-            EdmModel database,
+            DbDatabaseMapping databaseMapping,
             Dictionary<EdmProperty, IList<ColumnMappingBuilder>> columnMappingIndex,
             ColumnMappingBuilder propertyMappingBuilder,
             EntityType fromTable,
@@ -508,9 +508,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             propertyMappingBuilder.ColumnProperty
                 = TableOperations.CopyColumnAndAnyConstraints(
-                    database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, GetPropertyPathMatcher(columnMappingIndex, propertyMappingBuilder), useExisting);
+                    databaseMapping.Database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, GetPropertyPathMatcher(columnMappingIndex, propertyMappingBuilder), useExisting);
 
-            propertyMappingBuilder.SyncNullabilityCSSpace();
+            propertyMappingBuilder.SyncNullabilityCSSpace(databaseMapping, toTable);
         }
 
         private static Func<EdmProperty, bool> GetPropertyPathMatcher(Dictionary<EdmProperty, IList<ColumnMappingBuilder>> columnMappingIndex, ColumnMappingBuilder propertyMappingBuilder)
@@ -597,7 +597,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             {
                 var columnMappingIndex = GetColumnMappingIndex(databaseMapping);
                 fragment.ColumnMappings.Each(
-                    pm => UpdatePropertyMapping(databaseMapping.Database, columnMappingIndex, pm, fromTable, fragment.Table, useExisting));
+                    pm => UpdatePropertyMapping(databaseMapping, columnMappingIndex, pm, fromTable, fragment.Table, useExisting));
             }
         }
 
@@ -612,7 +612,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             // move the column from the formTable to the table in fragment
             if (requiresUpdate && fromFragment.Table != toFragment.Table)
             {
-                UpdatePropertyMapping(databaseMapping.Database, GetColumnMappingIndex(databaseMapping), propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
+                UpdatePropertyMapping(databaseMapping, GetColumnMappingIndex(databaseMapping), propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
             }
 
             // move the propertyMapping

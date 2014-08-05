@@ -1731,6 +1731,81 @@ namespace FunctionalTests
             public string SomeInt { get; set; }
         }
 
+        [Fact] // CodePlex 2254
+        public void Non_nullable_columns_in_intermediate_class_with_pure_TPH_mapping_are_made_nullable()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Base2254>().ToTable("Concretes");
+            modelBuilder.Entity<Intermediate2254>().ToTable("Concretes");
+            modelBuilder.Entity<Concrete2254A>().ToTable("Concretes");
+            modelBuilder.Entity<Concrete2254B>().ToTable("Concretes");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Base2254>("Concretes").Column("Id").DbEqual(false, p => p.Nullable);
+            databaseMapping.Assert<Base2254>("Concretes").Column("BaseString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Base2254>("Concretes").Column("BaseInteger").DbEqual(false, p => p.Nullable);
+            databaseMapping.Assert<Base2254>("Concretes").Column("IntermediateString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Base2254>("Concretes").Column("IntermediateInteger").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254A>("Concretes").Column("Concrete1String").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254A>("Concretes").Column("Concrete1Integer").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254B>("Concretes").Column("Concrete2String").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254B>("Concretes").Column("Concrete2Integer").DbEqual(true, p => p.Nullable);
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 2254
+        public void Non_nullable_columns_in_intermediate_class_with_hybrid_TPT_TPH_mapping_are_made_nullable()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Base2254>();
+            modelBuilder.Entity<Intermediate2254>().ToTable("Concretes");
+            modelBuilder.Entity<Concrete2254A>().ToTable("Concretes");
+            modelBuilder.Entity<Concrete2254B>().ToTable("Concretes");
+            
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Base2254>("Base2254").Column("Id").DbEqual(false, p => p.Nullable);
+            databaseMapping.Assert<Base2254>("Base2254").Column("BaseString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Base2254>("Base2254").Column("BaseInteger").DbEqual(false, p => p.Nullable);
+            databaseMapping.Assert<Intermediate2254>("Concretes").Column("IntermediateString").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Intermediate2254>("Concretes").Column("IntermediateInteger").DbEqual(false, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254A>("Concretes").Column("Concrete1String").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254A>("Concretes").Column("Concrete1Integer").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254B>("Concretes").Column("Concrete2String").DbEqual(true, p => p.Nullable);
+            databaseMapping.Assert<Concrete2254B>("Concretes").Column("Concrete2Integer").DbEqual(true, p => p.Nullable);
+
+            databaseMapping.AssertValid();
+        }
+
+        public abstract class Base2254
+        {
+            public int Id { get; set; }
+            public string BaseString { get; set; }
+            public int BaseInteger { get; set; }
+        }
+
+        public abstract class Intermediate2254 : Base2254
+        {
+            public string IntermediateString { get; set; }
+            public int IntermediateInteger { get; set; }
+        }
+
+        public class Concrete2254A : Intermediate2254
+        {
+            public string Concrete1String { get; set; }
+            public int Concrete1Integer { get; set; }
+        }
+
+        public class Concrete2254B : Intermediate2254
+        {
+            public string Concrete2String { get; set; }
+            public int Concrete2Integer { get; set; }
+        }
+
         [Fact] // CodePlex 1964
         public void Subclasses_can_map_different_FKs_to_same_column_using_TPH()
         {
