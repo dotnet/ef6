@@ -65,21 +65,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get
             {
                 // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
-                if (_keyProperties == null)
+                var keyProperties = _keyProperties;
+                if (keyProperties == null)
                 {
                     lock (_keyPropertiesSync)
                     {
                         if (_keyProperties == null)
                         {
+                            // This event handler has to be set before _keyProperties is set in order to
+                            // avoid concurrency issues. See unit test KeyProperties_is_thread_safe for
+                            // more details.
+                            KeyMembers.SourceAccessed += KeyMembersSourceAccessedEventHandler;
                             _keyProperties =
                                 new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList());
-                            KeyMembers.SourceAccessed += KeyMembersSourceAccessedEventHandler;
                         }
+                        keyProperties = _keyProperties;
                     }
                 }
-                return _keyProperties;
+                return keyProperties;
             }
         }
+
 
 #if !NET40
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
