@@ -877,9 +877,12 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.SequentialAccess);
                 Assert.True(correctParameters);
 
+                dbCommandMock.Protected().Verify("Dispose", Times.Never(), true);
+
                 result.Dispose();
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
+                dbCommandMock.Protected().Verify("Dispose", Times.Once(), true);
             }
 
             [Fact]
@@ -922,9 +925,12 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
                 Assert.True(correctParameters);
 
+                dbCommandMock.Protected().Verify("Dispose", Times.Never(), true);
+
                 result.Dispose();
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
+                dbCommandMock.Protected().Verify("Dispose", Times.Once(), true);
             }
 
             [Fact]
@@ -1081,6 +1087,7 @@ namespace System.Data.Entity.Core.Objects
                         () => objectContext.ExecuteStoreQuery<object>("Bar")).Message);
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
+                dbCommandMock.Protected().Verify("Dispose", Times.Once(), true);
             }
 
             [Fact]
@@ -1110,6 +1117,7 @@ namespace System.Data.Entity.Core.Objects
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
                 Mock.Get(dataReader).Protected().Verify("Dispose", Times.Once(), true);
+                dbCommandMock.Protected().Verify("Dispose", Times.Once(), true);
             }
 
             [Fact]

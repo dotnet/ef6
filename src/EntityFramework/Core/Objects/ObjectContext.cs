@@ -4396,21 +4396,21 @@ namespace System.Data.Entity.Core.Objects
             string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
         {
             DbDataReader reader = null;
+            DbCommand command = null;
             EntitySet entitySet;
             TypeUsage edmType;
             ShaperFactory<TElement> shaperFactory;
             try
             {
-                using (var command = CreateStoreCommand(commandText, parameters))
-                {
-                    reader = command.ExecuteReader(
-                        executionOptions.UserSpecifiedStreaming.Value
-                            ? CommandBehavior.Default
-                            : CommandBehavior.SequentialAccess);
-                }
+                command = CreateStoreCommand(commandText, parameters);
+                reader = command.ExecuteReader(
+                    executionOptions.UserSpecifiedStreaming.Value
+                        ? CommandBehavior.Default
+                        : CommandBehavior.SequentialAccess);
 
                 shaperFactory = InternalTranslate<TElement>(
-                    reader, entitySetName, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value, out entitySet, out edmType);
+                    reader, entitySetName, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value, out entitySet,
+                    out edmType);
             }
             catch
             {
@@ -4419,6 +4419,11 @@ namespace System.Data.Entity.Core.Objects
                 if (reader != null)
                 {
                     reader.Dispose();
+                }
+
+                if (command != null)
+                {
+                    command.Dispose();
                 }
 
                 throw;
@@ -4447,7 +4452,15 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            return ShapeResult(reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.UserSpecifiedStreaming.Value, shaperFactory, entitySet, edmType);
+            return ShapeResult(
+                reader, 
+                executionOptions.MergeOption, 
+                /*readerOwned:*/ true, 
+                executionOptions.UserSpecifiedStreaming.Value, 
+                shaperFactory, 
+                entitySet, 
+                edmType, 
+                command);
         }
 
 #if !NET40
@@ -4734,22 +4747,22 @@ namespace System.Data.Entity.Core.Objects
             CancellationToken cancellationToken, params object[] parameters)
         {
             DbDataReader reader = null;
+            DbCommand command = null;
             EntitySet entitySet;
             TypeUsage edmType;
             ShaperFactory<TElement> shaperFactory;
             try
             {
-                using (var command = CreateStoreCommand(commandText, parameters))
-                {
-                    reader = await command.ExecuteReaderAsync(
-                        executionOptions.UserSpecifiedStreaming.Value
-                            ? CommandBehavior.Default
-                            : CommandBehavior.SequentialAccess,
-                        cancellationToken).WithCurrentCulture();
-                }
+                command = CreateStoreCommand(commandText, parameters);
+                reader = await command.ExecuteReaderAsync(
+                    executionOptions.UserSpecifiedStreaming.Value
+                        ? CommandBehavior.Default
+                        : CommandBehavior.SequentialAccess,
+                    cancellationToken).WithCurrentCulture();
 
                 shaperFactory = InternalTranslate<TElement>(
-                    reader, entitySetName, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value, out entitySet, out edmType);
+                    reader, entitySetName, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value, out entitySet,
+                    out edmType);
             }
             catch
             {
@@ -4758,6 +4771,11 @@ namespace System.Data.Entity.Core.Objects
                 if (reader != null)
                 {
                     reader.Dispose();
+                }
+
+                if (command != null)
+                {
+                    command.Dispose();
                 }
 
                 throw;
@@ -4788,7 +4806,14 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return ShapeResult(
-                reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.UserSpecifiedStreaming.Value, shaperFactory, entitySet, edmType);
+                reader,
+                executionOptions.MergeOption, 
+                /*readerOwned:*/ true, 
+                executionOptions.UserSpecifiedStreaming.Value, 
+                shaperFactory, 
+                entitySet, 
+                edmType,
+                command);
         }
 
 #endif
@@ -4910,12 +4935,12 @@ namespace System.Data.Entity.Core.Objects
 
         private ObjectResult<TElement> ShapeResult<TElement>(
             DbDataReader reader, MergeOption mergeOption, bool readerOwned, bool streaming, ShaperFactory<TElement> shaperFactory, EntitySet entitySet,
-            TypeUsage edmType)
+            TypeUsage edmType, DbCommand command = null)
         {
             var shaper = shaperFactory.Create(
                 reader, this, MetadataWorkspace, mergeOption, readerOwned, streaming);
             return new ObjectResult<TElement>(
-                shaper, entitySet, MetadataHelper.GetElementType(edmType), readerOwned, streaming);
+                shaper, entitySet, MetadataHelper.GetElementType(edmType), readerOwned, streaming, command);
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]

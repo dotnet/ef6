@@ -25,6 +25,7 @@ namespace System.Data.Entity.Core.Objects
     {
         private Shaper<T> _shaper;
         private DbDataReader _reader;
+        private DbCommand _command;
         private readonly EntitySet _singleEntitySet;
         private readonly TypeUsage _resultItemType;
         private readonly bool _readerOwned;
@@ -48,19 +49,21 @@ namespace System.Data.Entity.Core.Objects
         }
 
         internal ObjectResult(
-            Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned, bool shouldReleaseConnection)
+            Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned, bool shouldReleaseConnection, DbCommand command = null)
             : this(
                 shaper, singleEntitySet, resultItemType, readerOwned, shouldReleaseConnection, nextResultGenerator: null,
-                onReaderDispose: null)
+                onReaderDispose: null, command: command)
         {
         }
 
         internal ObjectResult(
             Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned,
-            bool shouldReleaseConnection, NextResultGenerator nextResultGenerator, Action<object, EventArgs> onReaderDispose)
+            bool shouldReleaseConnection, NextResultGenerator nextResultGenerator, Action<object, EventArgs> onReaderDispose,
+            DbCommand command = null)
         {
             _shaper = shaper;
             _reader = _shaper.Reader;
+            _command = command;
             _singleEntitySet = singleEntitySet;
             _resultItemType = resultItemType;
             _readerOwned = readerOwned;
@@ -138,6 +141,12 @@ namespace System.Data.Entity.Core.Objects
                     _shaper.Context.ReleaseConnection();
                 }
                 _shaper = null;
+            }
+
+            if (_command != null)
+            {
+                _command.Dispose();
+                _command = null;
             }
         }
 
