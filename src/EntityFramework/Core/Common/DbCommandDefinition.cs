@@ -13,26 +13,8 @@ namespace System.Data.Entity.Core.Common
     /// </summary>
     public class DbCommandDefinition
     {
-        private readonly ICloneable _prototype;
-
-        // <summary>
-        // Internal factory method to create the default Command Definition object
-        // based on a prototype command. The prototype command is cloned
-        // before the protected constructor is invoked
-        // </summary>
-        // <param name="prototype"> prototype DbCommand </param>
-        // <returns> the DbCommandDefinition </returns>
-        internal static DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
-        {
-            Check.NotNull(prototype, "prototype");
-            var cloneablePrototype = prototype as ICloneable;
-            if (null == cloneablePrototype)
-            {
-                throw new ProviderIncompatibleException(Strings.EntityClient_CannotCloneStoreProvider);
-            }
-            var clonedPrototype = (DbCommand)(cloneablePrototype.Clone());
-            return new DbCommandDefinition(clonedPrototype);
-        }
+        private readonly DbCommand _prototype;
+        private readonly Func<DbCommand, DbCommand> _cloneMethod;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbCommandDefinition" /> class using the supplied
@@ -43,14 +25,13 @@ namespace System.Data.Entity.Core.Common
         /// <param name="prototype">
         /// The supplied <see cref="T:System.Data.Common.DbCommand" />.
         /// </param>
-        protected DbCommandDefinition(DbCommand prototype)
+        /// <param name="cloneMethod"> method used to clone the <see cref="T:System.Data.Common.DbCommand" /> </param>
+        protected internal DbCommandDefinition(DbCommand prototype, Func<DbCommand, DbCommand> cloneMethod)
         {
             Check.NotNull(prototype, "prototype");
-            _prototype = prototype as ICloneable;
-            if (null == _prototype)
-            {
-                throw new ProviderIncompatibleException(Strings.EntityClient_CannotCloneStoreProvider);
-            }
+            Check.NotNull(cloneMethod, "cloneMethod");
+            _prototype = prototype;
+            _cloneMethod = cloneMethod;
         }
 
         /// <summary>
@@ -66,7 +47,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns>The command for database.</returns>
         public virtual DbCommand CreateCommand()
         {
-            return (DbCommand)_prototype.Clone();
+            return _cloneMethod(_prototype);
         }
 
         internal static void PopulateParameterFromTypeUsage(DbParameter parameter, TypeUsage type, bool isOutParam)

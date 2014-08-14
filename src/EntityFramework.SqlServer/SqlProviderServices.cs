@@ -171,6 +171,37 @@ namespace System.Data.Entity.SqlServer
             return result;
         }
 
+        /// <summary>
+        /// See issue 2390 - cloning the DesignTimeVisible property on the
+        /// <see cref="T:System.Data.Common.DbCommand" /> can cause deadlocks.
+        /// So here overriding to provide a method that does not clone DesignTimeVisible.
+        /// </summary>
+        /// <param name="fromDbCommand"> the <see cref="T:System.Data.Common.DbCommand" /> object to clone (must be a <see cref="T:System.Data.SqlClient.SqlCommand" />) </param>
+        /// <returns >a clone of the <see cref="T:System.Data.Common.DbCommand" /> </returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities",
+            Justification="Not changing the CommandText at all - simply providing a clone of the DbCommand with the same CommandText")]
+        protected override DbCommand CloneDbCommand(DbCommand fromDbCommand)
+        {
+            Check.NotNull(fromDbCommand, "fromDbCommand");
+            var fromSqlCommand = (SqlCommand)fromDbCommand;
+            var clonedCommand = new SqlCommand();
+            clonedCommand.CommandText = fromSqlCommand.CommandText;
+            clonedCommand.CommandTimeout = fromSqlCommand.CommandTimeout;
+            clonedCommand.CommandType = fromSqlCommand.CommandType;
+            clonedCommand.Connection = fromSqlCommand.Connection;
+            clonedCommand.Transaction = fromSqlCommand.Transaction;
+            clonedCommand.UpdatedRowSource = fromSqlCommand.UpdatedRowSource;
+            foreach (var parameter in fromSqlCommand.Parameters)
+            {
+                var cloneableParameter = parameter as ICloneable;
+                clonedCommand.Parameters.Add(cloneableParameter  == null ? parameter : cloneableParameter.Clone());
+            }
+
+            return clonedCommand;
+        }
+
+
         // <summary>
         // Create a SqlCommand object, given the provider manifest and command tree
         // </summary>

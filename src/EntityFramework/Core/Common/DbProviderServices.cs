@@ -189,7 +189,24 @@ namespace System.Data.Entity.Core.Common
         /// <returns> an executable command definition object </returns>
         public virtual DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
-            return DbCommandDefinition.CreateCommandDefinition(prototype);
+            return new DbCommandDefinition(prototype, CloneDbCommand);
+        }
+
+        /// <summary>
+        /// See issue 2390 - cloning the DesignTimeVisible property on the
+        /// DbCommand can cause deadlocks. So here allow sub-classes to override.
+        /// </summary>
+        /// <param name="fromDbCommand"> the <see cref="T:System.Data.Common.DbCommand" /> object to clone </param>
+        /// <returns >a clone of the <see cref="T:System.Data.Common.DbCommand" /> </returns>
+        protected virtual DbCommand CloneDbCommand(DbCommand fromDbCommand)
+        {
+            Check.NotNull(fromDbCommand, "fromDbCommand");
+            var cloneablePrototype = fromDbCommand as ICloneable;
+            if (null == cloneablePrototype)
+            {
+                throw new ProviderIncompatibleException(Strings.EntityClient_CannotCloneStoreProvider);
+            }
+            return (DbCommand)cloneablePrototype.Clone();
         }
 
         /// <summary>Returns provider manifest token given a connection.</summary>
