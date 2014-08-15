@@ -214,6 +214,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
+            // PERF: this code is part of a critical section, consider its performance when refactoring
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(annotations);
             DebugCheck.NotNull(propertyMappingAction);
@@ -225,13 +226,16 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             var propertyMapper = new PropertyMapper(this);
 
-            foreach (var propertyInfo in new PropertyFilter(_mappingContext.ModelBuilderVersion)
+            var properties = new PropertyFilter(_mappingContext.ModelBuilderVersion)
                 .GetProperties(
                     type,
                     /*declaredOnly:*/ false,
                     _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
-                    _mappingContext.ModelConfiguration.StructuralTypes))
+                    _mappingContext.ModelConfiguration.StructuralTypes).ToList();
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < properties.Count; ++i)
             {
+                var propertyInfo = properties[i];
                 _mappingContext.ConventionsConfiguration.ApplyPropertyConfiguration(
                     propertyInfo, _mappingContext.ModelConfiguration);
                 _mappingContext.ConventionsConfiguration.ApplyPropertyTypeConfiguration(
@@ -265,8 +269,11 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 derivedTypes = derivedTypes.OrderBy(t => t.FullName);
             }
 
-            foreach (var derivedType in derivedTypes.ToList())
+            var derivedTypesList = derivedTypes.ToList();
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < derivedTypesList.Count; ++i)
             {
+                var derivedType = derivedTypesList[i];
                 var derivedEntityType = MapEntityType(derivedType);
 
                 if (derivedEntityType != null)

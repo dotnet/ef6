@@ -224,6 +224,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void Configure(
             DbDatabaseMapping databaseMapping,
+            ICollection<EntitySet> entitySets,
             DbProviderManifest providerManifest,
             EntityType entityType,
             ref EntityTypeMapping entityTypeMapping,
@@ -348,7 +349,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     {
                         // move the property mapping from toFragment to extraFragment
                         EntityMappingOperations.MovePropertyMapping(
-                            databaseMapping, fragment, extraFragment, pm, requiresUpdate, true);
+                            databaseMapping, entitySets, fragment, extraFragment, pm, requiresUpdate, true);
                     }
                 }
                 else
@@ -381,7 +382,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                         var requiresUpdate = extraTable != fromTable;
                         EntityMappingOperations.MovePropertyMapping(
-                            databaseMapping, fragment, extraFragment, pm, requiresUpdate, true);
+                            databaseMapping, entitySets, fragment, extraFragment, pm, requiresUpdate, true);
                     }
                 }
             }
@@ -391,7 +392,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             //           FK names should be uniquified
             //           declared properties are moved, inherited ones are copied (duplicated)
             EntityMappingOperations.UpdatePropertyMappings(
-                databaseMapping, fromTable, fragment, !isTableSharing);
+                databaseMapping, entitySets, fromTable, fragment, !isTableSharing);
 
             // Configure Conditions for the fragment
             ConfigureDefaultDiscriminator(entityType, fragment);

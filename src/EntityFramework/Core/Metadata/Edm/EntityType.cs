@@ -126,6 +126,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetDeclaredOnlyMembers<NavigationProperty>(); }
         }
 
+        private readonly object _navigationPropertiesCacheLock = new object();
+        private ReadOnlyMetadataCollection<NavigationProperty> _navigationPropertiesCache;
+
         /// <summary>
         /// Gets the navigation properties of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>
@@ -139,8 +142,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                return new FilteredReadOnlyMetadataCollection<NavigationProperty, EdmMember>(
-                    Members, Helper.IsNavigationProperty);
+                // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring
+                var navigationProperties = _navigationPropertiesCache;
+                if (navigationProperties == null)
+                {
+                    lock (_navigationPropertiesCacheLock)
+                    {
+                        if (_navigationPropertiesCache == null)
+                        {
+                            Members.SourceAccessed += ResetNavigationProperties;
+                            _navigationPropertiesCache = new FilteredReadOnlyMetadataCollection
+                                <NavigationProperty, EdmMember>(
+                                Members, Helper.IsNavigationProperty);
+                        }
+                        navigationProperties = _navigationPropertiesCache;
+                    }
+                }
+                return navigationProperties;
+            }
+        }
+
+        private void ResetNavigationProperties(object sender, EventArgs e)
+        {
+            if (_navigationPropertiesCache != null)
+            {
+                lock (_navigationPropertiesCacheLock)
+                {
+                    if (_navigationPropertiesCache != null)
+                    {
+                        _navigationPropertiesCache = null;
+                        Members.SourceAccessed -= ResetNavigationProperties;
+                    }
+                }
             }
         }
 

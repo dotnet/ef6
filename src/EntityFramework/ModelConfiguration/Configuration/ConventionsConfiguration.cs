@@ -420,8 +420,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
+            // PERF: this code is part of a critical path, consider its performance when refactoring
+            for (var i = _configurationConventions.Count - 1; i >= 0; --i)
             {
+                var convention = _configurationConventions[i];
                 var configurationConvention
                     = convention as IConfigurationConvention;
 
@@ -445,8 +447,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
+            // PERF: this code is part of a critical path, consider its performance when refactoring
+            for (var i = _configurationConventions.Count - 1; i >= 0; --i)
             {
+                var convention = _configurationConventions[i];
                 var modelConfigurationConvention
                     = convention as IConfigurationConvention<Type>;
 
@@ -474,8 +478,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(structuralTypeConfiguration);
 
-            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
+            // PERF: this code is part of a critical path, consider its performance when refactoring
+            for (var i = _configurationConventions.Count - 1; i >= 0; --i)
             {
+                var convention = _configurationConventions[i];
                 var propertyTypeConfigurationConvention
                     = convention as IConfigurationConvention<Type, TStructuralTypeConfiguration>;
 
@@ -507,8 +513,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
+            // PERF: this code is part of a critical path, consider its performance when refactoring
+            for (var i = _configurationConventions.Count - 1; i >= 0; --i)
             {
+                var convention = _configurationConventions[i];
                 var propertyConfigurationConvention
                     = convention as IConfigurationConvention<PropertyInfo>;
 
@@ -536,8 +544,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var propertyConfigurationType
                 = StructuralTypeConfiguration.GetPropertyConfigurationType(propertyInfo.PropertyType);
 
-            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
+            // PERF: this code is part of a critical path, consider its performance when refactoring
+            for (var i = _configurationConventions.Count - 1; i >= 0; --i)
             {
+                var convention = _configurationConventions[i];
                 new PropertyConfigurationConventionDispatcher(
                     convention, propertyConfigurationType, propertyInfo, propertyConfiguration, modelConfiguration)
                     .Dispatch();
@@ -561,8 +571,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(structuralTypeConfiguration);
 
-            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
+            // PERF: this code is part of a critical path, consider its performance when refactoring
+            for (var i = _configurationConventions.Count - 1; i >=0; --i)
             {
+                var convention = _configurationConventions[i];
                 var propertyTypeConfigurationConvention
                     = convention as IConfigurationConvention<PropertyInfo, TStructuralTypeConfiguration>;
 

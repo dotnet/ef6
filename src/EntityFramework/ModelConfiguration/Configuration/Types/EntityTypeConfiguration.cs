@@ -539,6 +539,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         internal void ConfigureTablesAndConditions(
             EntityTypeMapping entityTypeMapping,
             DbDatabaseMapping databaseMapping,
+            ICollection<EntitySet> entitySets,
             DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -556,6 +557,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     _entityMappingConfigurations[i]
                         .Configure(
                             databaseMapping,
+                            entitySets,
                             providerManifest,
                             entityType,
                             ref entityTypeMapping,
@@ -567,7 +569,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
             else
             {
-                ConfigureUnconfiguredType(databaseMapping, providerManifest, entityType, _annotations);
+                ConfigureUnconfiguredType(databaseMapping, entitySets, providerManifest, entityType, _annotations);
             }
         }
 
@@ -582,7 +584,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         internal static void ConfigureUnconfiguredType(
-            DbDatabaseMapping databaseMapping, 
+            DbDatabaseMapping databaseMapping,
+            ICollection<EntitySet> entitySets,
             DbProviderManifest providerManifest, 
             EntityType entityType, 
             IDictionary<string, object> commonAnnotations)
@@ -590,7 +593,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var c = new EntityMappingConfiguration();
             var entityTypeMapping
                 = databaseMapping.GetEntityTypeMapping(entityType.GetClrType());
-            c.Configure(databaseMapping, providerManifest, entityType, ref entityTypeMapping, false, 0, 1, commonAnnotations);
+            c.Configure(databaseMapping, entitySets, providerManifest, entityType, ref entityTypeMapping, false, 0, 1, commonAnnotations);
         }
 
         internal void Configure(

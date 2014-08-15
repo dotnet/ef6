@@ -387,7 +387,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     providerManifest);
             }
 
-            ConfigureEntityTypes(databaseMapping, providerManifest);
+            ConfigureEntityTypes(databaseMapping, databaseMapping.Model.Container.EntitySets, providerManifest);
             RemoveRedundantColumnConditions(databaseMapping);
             RemoveRedundantTables(databaseMapping);
             ConfigureTables(databaseMapping.Database);
@@ -513,7 +513,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                            .Each(f => f.Schema = DefaultSchema ?? EdmModelExtensions.DefaultSchema);
         }
 
-        private void ConfigureEntityTypes(DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest)
+        private void ConfigureEntityTypes(
+            DbDatabaseMapping databaseMapping,
+            ICollection<EntitySet> entitySets,
+            DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(providerManifest);
@@ -527,11 +530,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     = databaseMapping.GetEntityTypeMapping(entityTypeConfiguration.ClrType);
 
                 entityTypeConfiguration.ConfigureTablesAndConditions(
-                    entityTypeMapping, databaseMapping, providerManifest);
+                    entityTypeMapping, databaseMapping, entitySets, providerManifest);
 
                 // run through all unconfigured derived types of the current entityType to make sure the property mappings now point to the right places
                 ConfigureUnconfiguredDerivedTypes(
                     databaseMapping,
+                    entitySets,
                     providerManifest,
                     databaseMapping.Model.GetEntityType(entityTypeConfiguration.ClrType),
                     sortedEntityConfigurations);
@@ -549,6 +553,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private static void ConfigureUnconfiguredDerivedTypes(
             DbDatabaseMapping databaseMapping,
+            ICollection<EntitySet> entitySets,
             DbProviderManifest providerManifest,
             EntityType entityType,
             IList<EntityTypeConfiguration> sortedEntityConfigurations)
@@ -565,7 +570,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     && sortedEntityConfigurations.All(etc => etc.ClrType != currentType.GetClrType()))
                 {
                     // run through mapping configuration to make sure property mappings point to where the base type is now mapping them
-                    EntityTypeConfiguration.ConfigureUnconfiguredType(databaseMapping, providerManifest, currentType, new Dictionary<string, object>());
+                    EntityTypeConfiguration.ConfigureUnconfiguredType(databaseMapping, entitySets, providerManifest, currentType, new Dictionary<string, object>());
                     derivedTypes.AddRange(databaseMapping.Model.GetDerivedTypes(currentType));
                 }
             }

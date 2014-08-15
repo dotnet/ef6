@@ -500,6 +500,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static void UpdatePropertyMapping(
             DbDatabaseMapping databaseMapping,
+            IEnumerable<EntitySet> entitySets,
             Dictionary<EdmProperty, IList<ColumnMappingBuilder>> columnMappingIndex,
             ColumnMappingBuilder propertyMappingBuilder,
             EntityType fromTable,
@@ -510,7 +511,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 = TableOperations.CopyColumnAndAnyConstraints(
                     databaseMapping.Database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, GetPropertyPathMatcher(columnMappingIndex, propertyMappingBuilder), useExisting);
 
-            propertyMappingBuilder.SyncNullabilityCSSpace(databaseMapping, toTable);
+            propertyMappingBuilder.SyncNullabilityCSSpace(databaseMapping, entitySets, toTable);
         }
 
         private static Func<EdmProperty, bool> GetPropertyPathMatcher(Dictionary<EdmProperty, IList<ColumnMappingBuilder>> columnMappingIndex, ColumnMappingBuilder propertyMappingBuilder)
@@ -547,6 +548,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static Dictionary<EdmProperty, IList<ColumnMappingBuilder>> GetColumnMappingIndex(DbDatabaseMapping databaseMapping)
         {
+            // PERF: This code is highly sensitive to performance degradation when converted to Linq or lambdas.
+            // PERF: Be aware of its performance when refactoring.
             var columnMappingIndex = new Dictionary<EdmProperty, IList<ColumnMappingBuilder>>();
             var entitySetMappings = databaseMapping.EntityContainerMappings.Single().EntitySetMappings;
             if (entitySetMappings == null) return columnMappingIndex;
@@ -588,21 +591,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public static void UpdatePropertyMappings(
             DbDatabaseMapping databaseMapping,
+            IEnumerable<EntitySet> entitySets,
             EntityType fromTable,
             MappingFragment fragment,
             bool useExisting)
         {
+            // PERF: this code is part of a hotpath, consider its performance when refactoring
             // move the column from the fromTable to the table in fragment
             if (fromTable != fragment.Table)
             {
                 var columnMappingIndex = GetColumnMappingIndex(databaseMapping);
-                fragment.ColumnMappings.Each(
-                    pm => UpdatePropertyMapping(databaseMapping, columnMappingIndex, pm, fromTable, fragment.Table, useExisting));
+                var columnMappings = fragment.ColumnMappings.ToList();
+                for (var i = 0; i < columnMappings.Count; ++i)
+                {
+                    UpdatePropertyMapping(databaseMapping, entitySets, columnMappingIndex, columnMappings[i], fromTable, fragment.Table, useExisting);
+                }
             }
         }
 
         public static void MovePropertyMapping(
             DbDatabaseMapping databaseMapping,
+            IEnumerable<EntitySet> entitySets,
             MappingFragment fromFragment,
             MappingFragment toFragment,
             ColumnMappingBuilder propertyMappingBuilder,
@@ -612,7 +621,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             // move the column from the formTable to the table in fragment
             if (requiresUpdate && fromFragment.Table != toFragment.Table)
             {
-                UpdatePropertyMapping(databaseMapping, GetColumnMappingIndex(databaseMapping), propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
+                UpdatePropertyMapping(databaseMapping, entitySets, GetColumnMappingIndex(databaseMapping), propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
             }
 
             // move the propertyMapping

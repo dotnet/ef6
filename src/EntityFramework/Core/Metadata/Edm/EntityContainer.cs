@@ -100,16 +100,50 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _baseEntitySets; }
         }
 
+        private readonly object _baseEntitySetsLock = new object();
+        private ReadOnlyMetadataCollection<AssociationSet> _associationSetsCache;
+
         /// <summary> Gets the association sets for this entity container. </summary>
         /// <returns> The association sets for this entity container .</returns>
         public ReadOnlyMetadataCollection<AssociationSet> AssociationSets
         {
             get
             {
-                return new FilteredReadOnlyMetadataCollection<AssociationSet, EntitySetBase>(
-                    _baseEntitySets, Helper.IsAssociationSet);
+                // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring
+                var assiationSets = _associationSetsCache;
+                if (assiationSets == null)
+                {
+                    lock (_baseEntitySetsLock)
+                    {
+                        if (_associationSetsCache == null)
+                        {
+                            _baseEntitySets.SourceAccessed += ResetAssociationSetsCache;
+                            _associationSetsCache = new FilteredReadOnlyMetadataCollection<AssociationSet, EntitySetBase>(
+                                _baseEntitySets, Helper.IsAssociationSet);
+                        }
+                        assiationSets = _associationSetsCache;
+                    }
+                }
+                return assiationSets;
             }
         }
+
+        private void ResetAssociationSetsCache(object sender, EventArgs e)
+        {
+            if (_associationSetsCache != null)
+            {
+                lock (_baseEntitySetsLock)
+                {
+                    if (_associationSetsCache != null)
+                    {
+                        _associationSetsCache = null;
+                        _baseEntitySets.SourceAccessed -= ResetAssociationSetsCache;
+                    }
+                }
+            }
+        }
+
+        private ReadOnlyMetadataCollection<EntitySet> _entitySetsCache;
 
         /// <summary> Gets the entity sets for this entity container. </summary>
         /// <returns> The entity sets for this entity container .</returns>
@@ -117,8 +151,37 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                return new FilteredReadOnlyMetadataCollection<EntitySet, EntitySetBase>(
-                    _baseEntitySets, Helper.IsEntitySet);
+                // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring
+                var entitySets = _entitySetsCache;
+                if (entitySets == null)
+                {
+                    lock (_baseEntitySetsLock)
+                    {
+                        if (_entitySetsCache == null)
+                        {
+                            _baseEntitySets.SourceAccessed += ResetEntitySetsCache;
+                            _entitySetsCache = new FilteredReadOnlyMetadataCollection<EntitySet, EntitySetBase>(
+                                _baseEntitySets, Helper.IsEntitySet);
+                        }
+                        entitySets = _entitySetsCache;
+                    }
+                }
+                return entitySets;
+            }
+        }
+
+        private void ResetEntitySetsCache(object sender, EventArgs e)
+        {
+            if (_entitySetsCache != null)
+            {
+                lock (_baseEntitySetsLock)
+                {
+                    if (_entitySetsCache != null)
+                    {
+                        _entitySetsCache = null;
+                        _baseEntitySets.SourceAccessed -= ResetEntitySetsCache;
+                    }
+                }
             }
         }
 

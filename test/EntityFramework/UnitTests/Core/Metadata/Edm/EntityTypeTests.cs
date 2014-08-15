@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Moq;
     using Xunit;
 
@@ -177,6 +179,47 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.NotNull(entityType.DeclaredMembers["Id"]);
             Assert.NotNull(entityType.DeclaredMembers["Title"]);
+        }
+
+        [Fact]
+        public void NavigationProperties_is_thread_safe()
+        {
+
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+
+            var property = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)));
+
+            entityType.AddMember(property);
+
+            const int cycles = 100;
+            const int threadCount = 30;
+
+            Action readNavigationProperties = () =>
+            {
+                for (var i = 0; i < cycles; ++i)
+                {
+                    var navProps = entityType.NavigationProperties;
+
+                    //touching Members.Source triggers a reset to NavigationProperties
+                    var sourceCount = entityType.Members.Source.Count;
+                    Assert.True(sourceCount == 1);
+
+                    var navigationPropertiesAfterReset = entityType.NavigationProperties;
+
+                    Assert.True(navProps != null, "First reference to NavigationProperties should not be null");
+                    Assert.True(navigationPropertiesAfterReset != null, "Second reference to NavigationProperties should not be null");
+                    Assert.False(ReferenceEquals(navProps, navigationPropertiesAfterReset), "The NavigationProperties instances should be different");
+                }
+            };
+
+            var tasks = new List<Thread>();
+            for (var i = 0; i < threadCount; ++i)
+            {
+                tasks.Add(new Thread(new ThreadStart(readNavigationProperties)));
+            }
+
+            tasks.ForEach(t => t.Start());
+            tasks.ForEach(t => t.Join());
         }
     }
 }

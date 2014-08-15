@@ -6,12 +6,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Collections.Generic;
 
     internal static class ColumnMappingBuilderExtensions
     {
         public static void SyncNullabilityCSSpace(
             this ColumnMappingBuilder propertyMappingBuilder,
             DbDatabaseMapping databaseMapping,
+            IEnumerable<EntitySet> entitySets,
             EntityType toTable)
         {
             DebugCheck.NotNull(propertyMappingBuilder);
@@ -23,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var baseType = (EntityType)property.DeclaringType.BaseType;
             if (baseType != null)
             {
-                setMapping = GetEntitySetMapping(databaseMapping, baseType);
+                setMapping = GetEntitySetMapping(databaseMapping, baseType, entitySets);
             }
 
             while (baseType != null)
@@ -41,19 +43,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             propertyMappingBuilder.ColumnProperty.Nullable = property.Nullable;
         }
 
-        private static EntitySetMapping GetEntitySetMapping(DbDatabaseMapping databaseMapping, EntityType cSpaceEntityType)
+        private static EntitySetMapping GetEntitySetMapping(
+            DbDatabaseMapping databaseMapping,
+            EntityType cSpaceEntityType,
+            IEnumerable<EntitySet> entitySets)
         {
             while (cSpaceEntityType.BaseType != null)
             {
                 cSpaceEntityType = (EntityType)cSpaceEntityType.BaseType;
             }
 
-            var cSpaceEntitySet = databaseMapping
-                .Model
-                .Container
-                .EntitySets
-                .First(s => s.ElementType == cSpaceEntityType);
-
+            var cSpaceEntitySet = entitySets.First(s => s.ElementType == cSpaceEntityType);
+            
             return databaseMapping
                 .EntityContainerMappings
                 .First()

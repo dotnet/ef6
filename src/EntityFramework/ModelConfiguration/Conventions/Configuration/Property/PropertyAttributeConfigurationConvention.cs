@@ -2,13 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Collections.Generic;
     using System.Data.Entity.Infrastructure.DependencyResolution;
-    using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Mappers;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
-    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -33,11 +31,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Types().Configure(
                 ec =>
                     {
+                        // PERF: this code is part of a critical section, consider its performance when refactoring
                         foreach (var propertyInfo in ec.ClrType.GetInstanceProperties())
                         {
-                            foreach (var attribute in _attributeProvider.GetAttributes(propertyInfo).OfType<TAttribute>())
+                            var attributes = (IList<Attribute>)_attributeProvider.GetAttributes(propertyInfo);
+                            // ReSharper disable once ForCanBeConvertedToForeach
+                            for(var i = 0; i < attributes.Count; ++i)
                             {
-                                Apply(propertyInfo, ec, attribute);
+                                var attribute = attributes[i] as TAttribute;
+                                if (attribute != null)
+                                {
+                                    Apply(propertyInfo, ec, attribute);
+                                }
                             }
                         }
                     });

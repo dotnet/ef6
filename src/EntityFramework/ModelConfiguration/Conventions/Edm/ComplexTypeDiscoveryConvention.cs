@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                   where ((entityTypeConfiguration == null) // (2)
                          || (!entityTypeConfiguration.IsExplicitEntity
                              && entityTypeConfiguration.IsStructuralConfigurationOnly)) // (2)
-                        && !entityType.NavigationProperties.Any()
+                        && !entityType.Members.Where(Helper.IsNavigationProperty).Any()
                   // (3)
                   let matchingAssociations
                       = from associationType in item.AssociationTypes
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         let declaringEntity
                             = associationType.GetOtherEnd(declaringEnd).GetEntityType()
                         let navigationProperties
-                            = declaringEntity.NavigationProperties
+                            = declaringEntity.Members.Where(Helper.IsNavigationProperty).Cast<NavigationProperty>()
                                              .Where(n => n.ResultEnd.GetEntityType() == entityType)
                         select new
                             {
@@ -98,7 +98,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 {
                     foreach (var navigationProperty in association.NavigationProperties)
                     {
-                        if (association.DeclaringEntityType.NavigationProperties.Contains(navigationProperty))
+                        if (association.DeclaringEntityType.Members.Where(Helper.IsNavigationProperty).Contains(navigationProperty))
                         {
                             association.DeclaringEntityType.RemoveMember(navigationProperty);
 

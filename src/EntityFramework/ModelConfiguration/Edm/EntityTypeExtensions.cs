@@ -71,8 +71,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             List<EdmProperty> keyProps = null;
 
-            foreach (var declaringType in entityType.ToHierarchy().Reverse())
+            // PERF: this code is part of a critical path, consider its performance when refactoring
+            var hierarchy = entityType.ToHierarchy().ToList();
+            for (var i = hierarchy.Count - 1; i >=0; --i)
             {
+                var declaringType = hierarchy[i];
                 if (declaringType.BaseType == null
                     && declaringType.KeyProperties.Count > 0)
                 {
@@ -88,8 +91,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                     var entityProps =
                         new HashSet<EdmProperty>(declaringType.DeclaredProperties.Where(p => p != null));
 
-                    foreach (var keyProp in declaringType.KeyProperties)
+                    // ReSharper disable once ForCanBeConvertedToForeach
+                    for(var j = 0; j < declaringType.KeyProperties.Count; ++j)
                     {
+                        var keyProp = declaringType.KeyProperties[j];
                         if (keyProp != null
                             && !duplicateKeyProps.Contains(keyProp)
                             && entityProps.Contains(keyProp)

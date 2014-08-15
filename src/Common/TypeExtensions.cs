@@ -89,9 +89,9 @@ namespace System.Data.Entity.Utilities
 
             if (!type.IsGenericTypeDefinition())
             {
-                var types = GetGenericTypeImplementations(type, interfaceOrBaseType).ToArray();
+                var types = GetGenericTypeImplementations(type, interfaceOrBaseType).ToList();
 
-                return types.Length == 1 ? types[0].GetGenericArguments().FirstOrDefault() : null;
+                return types.Count == 1 ? types[0].GetGenericArguments().FirstOrDefault() : null;
             }
 
             return null;

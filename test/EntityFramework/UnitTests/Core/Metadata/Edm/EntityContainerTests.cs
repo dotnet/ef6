@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Xunit;
 
     public class EntityContainerTests
@@ -176,6 +178,63 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Equal(
                 Resources.Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(() => container.AddFunctionImport(function)).Message);
+        }
+
+        public void AssociationSets_and_EntitySets_are_thread_safe()
+        {
+            var entityContainer = new EntityContainer("C", DataSpace.CSpace);
+
+            entityContainer.AddEntitySetBase(new AssociationSet("A", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)));
+            entityContainer.AddEntitySetBase(new EntitySet("E", null, null, null, new EntityType("E", "N", DataSpace.CSpace)));
+
+            const int cycles = 200;
+            const int threadCount = 30;
+
+            Action readAssociationSets = () =>
+            {
+                for (var i = 0; i < cycles; ++i)
+                {
+                    var associationSets = entityContainer.AssociationSets;
+
+                    //touching BaseEntitySets.Source triggers a reset to AssociationSets
+                    var sourceCount = entityContainer.BaseEntitySets.Source.Count;
+                    Assert.True(sourceCount == 1);
+
+                    var associationSetsAfterReset = entityContainer.AssociationSets;
+
+                    Assert.True(associationSets != null, "First reference to AssociationSets should not be null");
+                    Assert.True(associationSetsAfterReset != null, "Second reference to AssociationSets should not be null");
+                    Assert.False(ReferenceEquals(associationSets, associationSetsAfterReset), "The AssociationSets instances should be different");
+                }
+            };
+
+            Action readEntitySets = () =>
+            {
+                for (var i = 0; i < cycles; ++i)
+                {
+                    var entitySets = entityContainer.EntitySets;
+
+                    //touching BaseEntitySets.Source triggers a reset to EntitySets
+                    var sourceCount = entityContainer.BaseEntitySets.Source.Count;
+                    Assert.True(sourceCount == 1);
+
+                    var entitySetsAfterReset = entityContainer.EntitySets;
+
+                    Assert.True(entitySets != null, "First reference to EntitySets should not be null");
+                    Assert.True(entitySetsAfterReset != null, "Second reference to EntitySets should not be null");
+                    Assert.False(ReferenceEquals(entitySets, entitySetsAfterReset), "The EntitySets instances should be different");
+                }
+            };
+
+            var tasks = new List<Thread>();
+            for (var i = 0; i < (threadCount/2); ++i)
+            {
+                tasks.Add(new Thread(new ThreadStart(readEntitySets)));
+                tasks.Add(new Thread(new ThreadStart(readAssociationSets)));
+            }
+
+            tasks.ForEach(t => t.Start());
+            tasks.ForEach(t => t.Join());
         }
     }
 }
