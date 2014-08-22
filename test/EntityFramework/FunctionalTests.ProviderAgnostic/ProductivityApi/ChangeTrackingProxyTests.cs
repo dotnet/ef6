@@ -8,6 +8,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Configuration;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
@@ -391,5 +392,27 @@ namespace ProductivityApiTests
                 ProviderAgnosticConfiguration.SuspendExecutionStrategy = false;
             }
         }
+        
+        [Fact] // CodePlex #2435
+        public void IsPropertyChanged_returns_modified_status_for_change_tracking_entities()
+        {
+            using (var context = new GranniesContext())
+            {
+                var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+                var objectSet = objectContext.CreateObjectSet<Child>();
+                var entity = objectSet.CreateObject();
+
+                objectSet.Attach(entity);
+
+                var entry = objectContext.ObjectStateManager.GetObjectStateEntry(entity);
+
+                Assert.False(entry.IsPropertyChanged("Name"));
+
+                entity.Name = "Nolan Sorrento";
+
+                Assert.True(entry.IsPropertyChanged("Name"));
+            }
+        }
+
     }
 }

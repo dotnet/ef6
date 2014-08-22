@@ -1930,7 +1930,14 @@ namespace System.Data.Entity.Core.Objects
             else if (!detectOnlyComplexProperties)
             {
                 var originalValueIndex = FindOriginalValueIndex(member, _wrappedEntity.Entity);
-                Debug.Assert(originalValueIndex >= 0, "Original value not found even after snapshot.");
+
+                if (originalValueIndex < 0)
+                {
+                    // This must be a change-tracking proxy or EntityObject entity, which means we are not keeping track
+                    // of original values and have no way of knowing if the value is actually modified or just marked
+                    // as modified. Therefore, we assume that if the property was marked as modified then it is modified.
+                    return GetModifiedProperties().Contains(member.CLayerName);
+                }
 
                 var originalValue = _originalValues[originalValueIndex].OriginalValue;
 

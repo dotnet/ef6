@@ -184,6 +184,12 @@ namespace System.Data.Entity.Core.Objects
         public abstract void RejectPropertyChanges(string propertyName);
 
         /// <summary>Uses DetectChanges to determine whether or not the current value of the property with the given name is different from its original value. Note that this may be different from the property being marked as modified since a property which has not changed can still be marked as modified.</summary>
+        /// <remarks>
+        /// Note that this property always returns the same result as the modified state of the property for change tracking 
+        /// proxies and entities that derive from the EntityObject base class. This is because original values are not tracked 
+        /// for these entity types and hence there is no way to know if the current value is really different from the 
+        /// original value.
+        /// </remarks>
         /// <returns>true if the property has changed; otherwise, false.</returns>
         /// <param name="propertyName">The name of the property.</param>
         public abstract bool IsPropertyChanged(string propertyName);
