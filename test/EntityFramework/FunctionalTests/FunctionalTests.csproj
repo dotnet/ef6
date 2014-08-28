@@ -247,6 +247,7 @@
     <Compile Include="ProductivityApi\DeadlockTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForSqlCe35.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
+    <Compile Include="Query\Bug952621.cs" />
     <Compile Include="Query\ComparisonTestst.cs" />
     <Compile Include="Query\ConditionalTranslatorTests.cs" />
     <Compile Include="Query\FilterOpRulesTests.cs" />

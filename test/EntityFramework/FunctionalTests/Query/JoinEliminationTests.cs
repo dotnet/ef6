@@ -463,7 +463,7 @@ WHERE 1 = [Extent1].[Id]";
     [Extent2].[Type] AS [Type], 
     [Extent2].[Code] AS [Code]
     FROM  [dbo].[QueryTypes] AS [Extent1]
-    LEFT OUTER JOIN [dbo].[BaseTypes] AS [Extent2] ON ([Extent1].[RelatedTypeId] = [Extent2].[Id]) AND ([Extent2].[Discriminator] IN (N'DerivedTypeA',N'DerivedTypeB',N'DerivedTypeC',N'DerivedTypeD',N'DerivedTypeE'))
+    LEFT OUTER JOIN [dbo].[BaseTypes] AS [Extent2] ON ([Extent2].[Discriminator] IN (N'DerivedTypeA',N'DerivedTypeB',N'DerivedTypeC',N'DerivedTypeD',N'DerivedTypeE')) AND ([Extent1].[RelatedTypeId] = [Extent2].[Id])
     ORDER BY [Extent1].[Id] ASC");
                 }
             }

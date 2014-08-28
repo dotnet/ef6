@@ -48,6 +48,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly Dictionary<EntitySetBase, DiscriminatorMapInfo> m_discriminatorMaps =
             new Dictionary<EntitySetBase, DiscriminatorMapInfo>();
 
+        private readonly Dictionary<NavigationPropertyOpInfo, Node> _navigationPropertyOpRewrites
+            = new Dictionary<NavigationPropertyOpInfo, Node>();
+
         #endregion
 
         #region constructors
@@ -1236,45 +1239,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             ValidateNavPropertyOp(op);
 
-            //
-            // In this special case we visit the parent before the child to avoid TSQL regressions. 
-            // In particular, a subquery coming out of the child would need to be attached to the closest rel-op parent
-            // and if the parent is already visited that rel op parent would be part of the subtree resulting from the parent.
-            // If the parent is not visited it would be a rel op parent higher in the tree (also valid), and leaves less room 
-            // for join elimination. 
-            // The original out-of-order visitation was put in place to work around a bug that has been fixed.
-            //
-            var visitChildLater = IsNavigationPropertyOverVarRef(n.Child0);
-            if (!visitChildLater)
+            var nodeInfo = new NavigationPropertyOpInfo(n, FindRelOpAncestor(), m_command);
+            Node rewrite;
+
+            if (_navigationPropertyOpRewrites.TryGetValue(nodeInfo, out rewrite))
             {
-                VisitScalarOpDefault(op, n);
+                return OpCopier.Copy(m_command, rewrite);
             }
 
-            var navProperty = (NavigationProperty)op.PropertyInfo;
-            var ret = RewriteNavigationProperty(navProperty, n.Child0, op.Type);
-            ret = VisitNode(ret);
+            rewrite = RewriteNavigationProperty((NavigationProperty) op.PropertyInfo, n.Child0, op.Type);
+            rewrite = VisitNode(rewrite);
 
-            return ret;
-        }
+            _navigationPropertyOpRewrites.Add(nodeInfo, rewrite);
 
-        // <summary>
-        // Is the given node of shape NavigationProperty(SoftCast(VarRef)), or NavigationProperty(VarRef)
-        // </summary>
-        private static bool IsNavigationPropertyOverVarRef(Node n)
-        {
-            if (n.Op.OpType != OpType.Property
-                || (!Helper.IsNavigationProperty(((PropertyOp)n.Op).PropertyInfo)))
-            {
-                return false;
-            }
-
-            var currentNode = n.Child0;
-            if (currentNode.Op.OpType
-                == OpType.SoftCast)
-            {
-                currentNode = currentNode.Child0;
-            }
-            return currentNode.Op.OpType == OpType.VarRef;
+            return rewrite;
         }
 
         // <summary>
@@ -2360,5 +2338,47 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         #endregion
+
+        private class NavigationPropertyOpInfo
+        {
+            private readonly Node _node;
+            private readonly Node _root;
+            private readonly Command _command;
+
+            public NavigationPropertyOpInfo(Node node, Node root, Command command)
+            {
+                _node = node;
+                _root = root;
+                _command = command;
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return
+                        ((_root != null ? _root.GetHashCode() : 0)*397
+                         ^ GetProperty(_node).GetHashCode())*397
+                        ^ _node.GetNodeInfo(_command).HashValue;
+                }
+            }
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as NavigationPropertyOpInfo;
+
+                return
+                    other != null
+                    && _root != null
+                    && ReferenceEquals(_root, other._root)
+                    && ReferenceEquals(GetProperty(_node), GetProperty(other._node))
+                    && _node.IsEquivalent(other._node);
+            }
+
+            private static EdmMember GetProperty(Node node)
+            {
+                return ((PropertyOp) node.Op).PropertyInfo;
+            }
+        }
     }
 }
