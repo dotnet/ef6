@@ -48,6 +48,44 @@ namespace System.Data.Entity.Utilities
             }
         }
 
+        [Fact]
+        public void NonGeneric_WithCurrentCulture_preserves_ui_culture()
+        {
+            var originalCulture = Thread.CurrentThread.CurrentUICulture;
+            var expectedCulture = new CultureInfo("de-DE");
+            Thread.CurrentThread.CurrentUICulture = expectedCulture;
+
+            try
+            {
+                var culture = GetCurrentUICultureAsync().Result;
+
+                Assert.Equal(expectedCulture, culture);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentUICulture = originalCulture;
+            }
+        }
+
+        [Fact]
+        public void Generic_WithCurrentCulture_preserves_ui_culture()
+        {
+            var originalCulture = Thread.CurrentThread.CurrentUICulture;
+            var expectedCulture = new CultureInfo("de-DE");
+            Thread.CurrentThread.CurrentUICulture = expectedCulture;
+
+            try
+            {
+                var culture = GetCurrentUICultureAsync<object>().Result;
+
+                Assert.Equal(expectedCulture, culture);
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentUICulture = originalCulture;
+            }
+        }
+
         private async Task<CultureInfo> GetCurrentCultureAsync()
         {
             await ConfigurableYield().WithCurrentCulture();
@@ -58,6 +96,18 @@ namespace System.Data.Entity.Utilities
         {
             await ConfigurableYield<T>().WithCurrentCulture();
             return Thread.CurrentThread.CurrentCulture;
+        }
+
+        private async Task<CultureInfo> GetCurrentUICultureAsync()
+        {
+            await ConfigurableYield().WithCurrentCulture();
+            return Thread.CurrentThread.CurrentUICulture;
+        }
+
+        private async Task<CultureInfo> GetCurrentUICultureAsync<T>()
+        {
+            await ConfigurableYield<T>().WithCurrentCulture();
+            return Thread.CurrentThread.CurrentUICulture;
         }
 
         private async Task ConfigurableYield()
