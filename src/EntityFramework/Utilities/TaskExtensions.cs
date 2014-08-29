@@ -7,6 +7,7 @@ namespace System.Data.Entity.SqlServer.Utilities
 namespace System.Data.Entity.Utilities
 #endif
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
@@ -51,6 +52,9 @@ namespace System.Data.Entity.Utilities
         /// The type of the result produced by the associated <see cref="Task{TResult}"/>.
         /// </typeparam>
         /// <remarks>This type is intended for compiler use only.</remarks>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter")]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
+        [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
         public struct CultureAwaiter<T> : ICriticalNotifyCompletion
         {
             private readonly Task<T> _task;
@@ -67,6 +71,8 @@ namespace System.Data.Entity.Utilities
             /// <summary>Gets an awaiter used to await this <see cref="Task{TResult}" />.</summary>
             /// <returns>An awaiter instance.</returns>
             /// <remarks>This method is intended for compiler user rather than use directly in code.</remarks>
+            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter")]
+            [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
             public CultureAwaiter<T> GetAwaiter()
             {
                 return this;
@@ -91,6 +97,7 @@ namespace System.Data.Entity.Utilities
             /// <exception cref="System.NullReferenceException">The awaiter was not properly initialized.</exception>
             /// <exception cref="TaskCanceledException">The task was canceled.</exception>
             /// <exception cref="System.Exception">The task completed in a Faulted state.</exception>
+            [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
             public T GetResult()
             {
                 return _task.GetAwaiter().GetResult();
@@ -143,6 +150,9 @@ namespace System.Data.Entity.Utilities
         /// preserve the culture.
         /// </summary>
         /// <remarks>This type is intended for compiler use only.</remarks>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter")]
+        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
+        [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
         public struct CultureAwaiter : ICriticalNotifyCompletion
         {
             private readonly Task _task;
@@ -159,6 +169,8 @@ namespace System.Data.Entity.Utilities
             /// <summary>Gets an awaiter used to await this <see cref="Task" />.</summary>
             /// <returns>An awaiter instance.</returns>
             /// <remarks>This method is intended for compiler user rather than use directly in code.</remarks>
+            [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Awaiter")]
+            [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
             public CultureAwaiter GetAwaiter()
             {
                 return this;
