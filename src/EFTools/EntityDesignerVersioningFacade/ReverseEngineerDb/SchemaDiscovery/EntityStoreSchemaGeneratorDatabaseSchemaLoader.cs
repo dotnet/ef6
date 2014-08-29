@@ -5,7 +5,11 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Data.Common;
+    using System.Data.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -18,6 +22,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private readonly EntityConnection _connection;
         private readonly Version _storeSchemaModelVersion;
 
+        private const string ProviderNameSqlclient = "System.Data.SqlClient";
+
         public EntityStoreSchemaGeneratorDatabaseSchemaLoader(EntityConnection entityConnection, Version storeSchemaModelVersion)
         {
             Debug.Assert(entityConnection != null, "entityConnection != null");
@@ -28,14 +34,30 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _storeSchemaModelVersion = storeSchemaModelVersion;
         }
 
+        internal class QueryTraceOn9481Interceptor : DbCommandInterceptor
+        {
+            [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities",
+                Justification = "The only SQL passed to this method consists of pre-defined queries over which the user has no control")]
+            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+            {
+                // Enables the 9481 trace flag to deal with Sql Server 2014 performance regression
+                // See Codeplex #2445
+                command.CommandText = command.CommandText + " OPTION (QUERYTRACEON 9481)";
+                base.ReaderExecuting(command, interceptionContext);
+            }
+        }
+
         // virtual for testing
         public virtual StoreSchemaDetails LoadStoreSchemaDetails(IList<EntityStoreSchemaFilterEntry> filters)
         {
             Debug.Assert(filters != null, "filters != null");
 
+            QueryTraceOn9481Interceptor interceptor = null;
             try
             {
                 _connection.Open();
+
+                interceptor = CreateAndRegisterTrace9481InterceptorIfSqlServer();
 
                 return new StoreSchemaDetails(
                     LoadTableDetails(filters),
@@ -48,8 +70,24 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             }
             finally
             {
+                if (interceptor != null)
+                {
+                    DbInterception.Remove(interceptor);
+                }
                 _connection.Close();
             }
+        }
+
+        private QueryTraceOn9481Interceptor CreateAndRegisterTrace9481InterceptorIfSqlServer()
+        {
+            QueryTraceOn9481Interceptor interceptor = null;
+            var providerInvariantName = _connection.StoreProviderFactory.GetProviderInvariantName();
+            if (string.CompareOrdinal(providerInvariantName, ProviderNameSqlclient) == 0)
+            {
+                interceptor = new QueryTraceOn9481Interceptor();
+                DbInterception.Add(interceptor);
+            }
+            return interceptor;
         }
 
         // internal virtual for testing
