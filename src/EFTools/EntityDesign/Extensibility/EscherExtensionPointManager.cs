@@ -20,18 +20,17 @@ namespace Microsoft.Data.Entity.Design.Extensibility
         private static EscherExtensionPointManager _instance;
 
         // This is the source that the app pulls MEF components from
-        private readonly CompositionContainer _compositionContainer;
+        private readonly ExportProvider _exportProvider;
 
         private EscherExtensionPointManager()
         {
             var componentModelService = (IComponentModel)PackageManager.Package.GetService(typeof(SComponentModel));
-            var catalog = componentModelService.DefaultCatalog;
-            _compositionContainer = new CompositionContainer(catalog);
+            _exportProvider = componentModelService.DefaultExportProvider;
         }
 
-        internal CompositionContainer CompositionContainer
+        internal ExportProvider ExportProvider
         {
-            get { return _compositionContainer; }
+            get { return _exportProvider; }
         }
 
         internal static LayerManager LayerManager
@@ -85,7 +84,7 @@ namespace Microsoft.Data.Entity.Design.Extensibility
             // if a layer manager exists, then use it to filter the extension based on what layers are enabled
             // or not. Otherwise, remove all layer-specific extensions from the list we're going to return.
             var extensions = new List<Lazy<T, IEntityDesignerLayerData>>();
-            extensions.AddRange(Instance.CompositionContainer.GetExports<T, IEntityDesignerLayerData>());
+            extensions.AddRange(Instance.ExportProvider.GetExports<T, IEntityDesignerLayerData>());
             var layerManager = LayerManager;
             if (layerManager != null)
             {
@@ -99,7 +98,7 @@ namespace Microsoft.Data.Entity.Design.Extensibility
         {
             // if a layer manager exists, then use it to filter the extension based on what layers are enabled
             // or not. Otherwise, remove all layer-specific extensions from the list we're going to return.
-            var extensions = Instance.CompositionContainer.GetExports<T, M>();
+            var extensions = Instance.ExportProvider.GetExports<T, M>();
             var layerManager = LayerManager;
             if (layerManager != null)
             {
@@ -116,7 +115,7 @@ namespace Microsoft.Data.Entity.Design.Extensibility
 
         internal static IEnumerable<Lazy<IEntityDesignerLayer>> LoadLayerExtensions()
         {
-            return Instance.CompositionContainer.GetExports<IEntityDesignerLayer>();
+            return Instance.ExportProvider.GetExports<IEntityDesignerLayer>();
         }
 
         #region Helpers
