@@ -15,6 +15,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     {
         private TextWriter _writer;
         private DatabaseLogFormatter _formatter;
+        private readonly object _lock = new object();
 
         /// <summary>
         /// Creates a new logger that will send log output to the console.
@@ -116,11 +117,18 @@ namespace System.Data.Entity.Infrastructure.Interception
             if (_formatter == null)
             {
                 _formatter = resolver.GetService<Func<DbContext, Action<string>, DatabaseLogFormatter>>()(
-                    null, _writer == null ? (Action<string>)Console.Write : _writer.Write);
+                    null, _writer == null ? (Action<string>)Console.Write : WriteThreadSafe);
 
                 DbInterception.Add(_formatter);
             }
         }
 
+        private void WriteThreadSafe(string value)
+        {
+            lock (_lock)
+            {
+                _writer.Write(value);
+            }
+        }
     }
 }

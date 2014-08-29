@@ -169,7 +169,39 @@ namespace System.Data.Entity.Interception
             }
         }
 
-        private string CaptureConsoleOutput(Action test)
+        /// <summary>
+        /// This test makes calls from multiple threads such that we have at least some chance of finding threading
+        /// issues. As with any test of this type just because the test passes does not mean that the code is
+        /// correct. On the other hand if this test ever fails (EVEN ONCE) then we know there is a problem to
+        /// be investigated. DON'T just re-run and think things are okay if the test then passes.
+        /// </summary>
+        [Fact] // CodePlex 2568
+        public void DatabaseLogger_can_be_used_concurrently()
+        {
+            CaptureFileOutput(
+                f =>
+                {
+                    using (var logger = new DatabaseLogger(f))
+                    {
+                        logger.StartLogging();
+
+                        ExecuteInParallel(
+                            () =>
+                            {
+                                using (var context = new SimpleModelContext())
+                                {
+                                    for (var i = 0; i < 200; i++)
+                                    {
+                                        context.Products.AsNoTracking().Load();
+                                    }
+                                }
+                            }, 30);
+                    }
+                });
+        }
+
+        private
+            string CaptureConsoleOutput(Action test)
         {
             var consoleOut = Console.Out;
             try
