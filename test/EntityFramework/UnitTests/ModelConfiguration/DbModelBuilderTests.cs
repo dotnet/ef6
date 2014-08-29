@@ -33,6 +33,16 @@ namespace System.Data.Entity.ModelConfiguration
 
     public sealed class DbModelBuilderTests
     {
+        [Fact] // CodePlex 2447
+        public void Can_register_an_entity_type_with_non_generic_method()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.RegisterEntityType(typeof(AType1));
+
+            Assert.Same(typeof(AType1), modelBuilder.ModelConfiguration.Entities.Single());
+        }
+
         [Fact]
         public void Can_set_default_schema()
         {

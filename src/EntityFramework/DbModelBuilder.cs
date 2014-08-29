@@ -222,6 +222,23 @@ namespace System.Data.Entity
                     _modelConfiguration.Entity(typeof(TEntityType), explicitEntity: true));
         }
 
+        /// <summary>
+        /// Registers an entity type as part of the model.
+        /// </summary>
+        /// <param name="entityType"> The type to be registered. </param>
+        /// <remarks>
+        /// This method is provided as a convenience to allow entity types to be registered dynamically
+        /// without the need to use MakeGenericMethod in order to call the normal generic Entity method.
+        /// This method does not allow further configuration of the entity type using the fluent APIs since
+        /// these APIs make extensive use of generic type parameters.
+        /// </remarks>
+        public virtual void RegisterEntityType(Type entityType)
+        {
+            Check.NotNull(entityType, "entityType");
+
+            Entity(entityType);
+        }
+
         // <summary>
         // Registers a type as an entity in the model and returns an object that can be used to
         // configure the entity. This method can be called multiple times for the same type to
