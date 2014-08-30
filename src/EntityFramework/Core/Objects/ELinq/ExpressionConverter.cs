@@ -967,6 +967,30 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 return GetLambdaExpression(((UnaryExpression)argument).Operand);
             }
+            else if (ExpressionType.Call 
+                     == argument.NodeType)
+            {
+                var methodCallExpression = (MethodCallExpression) argument;
+
+                if (typeof(Expression).IsAssignableFrom(methodCallExpression.Method.ReturnType))
+                {
+                    Delegate expressionMethod = Expression.Lambda(argument).Compile();
+
+                    return GetLambdaExpression(
+                        (Expression) expressionMethod.DynamicInvoke());
+                }
+            } 
+            else if (ExpressionType.Invoke
+                     == argument.NodeType)
+            {
+                var expressionMethod = Expression.Lambda(argument).Compile();
+
+                if (typeof(Expression).IsAssignableFrom(expressionMethod.Method.ReturnType))
+                {
+                    return GetLambdaExpression(
+                        (Expression) expressionMethod.DynamicInvoke());
+                }
+            }
 
             throw new InvalidOperationException(
                 Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.UnexpectedLinqLambdaExpressionFormat));

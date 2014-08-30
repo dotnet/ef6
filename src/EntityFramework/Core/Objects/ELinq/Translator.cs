@@ -17,6 +17,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
 
     internal sealed partial class ExpressionConverter
     {
@@ -200,6 +201,23 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // from this one
                 if (linq.Expression != null)
                 {
+                    // Handle special case where the member access is on a closured variable
+                    if (ExpressionType.Constant ==
+                        linq.Expression.NodeType)
+                    {
+                        var constantExpression = (ConstantExpression) linq.Expression;
+                        
+                        // Compiler generated types should have their members accessed locally 
+                        //   and the value returned treated as a constant.
+                        if (constantExpression.Type.GetCustomAttribute<CompilerGeneratedAttribute>() != null)
+                        {
+                            var valueDelegate = Expression.Lambda(linq).Compile();
+
+                            return parent.TranslateExpression(
+                                Expression.Constant(valueDelegate.DynamicInvoke()));
+                        }
+                    }
+
                     var instance = parent.TranslateExpression(linq.Expression);
                     if (TryResolveAsProperty(
                         parent, memberInfo,

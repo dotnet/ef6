@@ -252,6 +252,7 @@
     <Compile Include="Query\ConditionalTranslatorTests.cs" />
     <Compile Include="Query\FilterOpRulesTests.cs" />
     <Compile Include="Query\LinqToEntities\ConvertEliminationTests.cs" />
+    <Compile Include="Query\LinqToEntities\ExpressionTests.cs" />
     <Compile Include="Query\LinqToEntities\JoinTests.cs" />
     <Compile Include="Query\LinqToEntities\OrderByTests.cs" />
     <Compile Include="Query\PredicateScalarizationTests.cs" />
