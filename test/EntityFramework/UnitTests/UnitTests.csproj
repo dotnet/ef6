@@ -460,6 +460,7 @@
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionsConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfiguration`Tests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Mapping\Codeplex2465.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\ConventionNavigationPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\ConventionPrimitivePropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\PropertyMappingConfigurationTests.cs" />
