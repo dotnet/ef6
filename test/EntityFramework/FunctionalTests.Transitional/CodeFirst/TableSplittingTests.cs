@@ -189,5 +189,91 @@ namespace System.Data.Entity.CodeFirst
             databaseMapping.Assert<Z>("Z")
                 .HasColumn("Id");
         }
+        
+        public class E4
+        {
+            [Key]
+            public virtual int Id { get; set; }
+
+            public virtual string P4 { get; set; }
+
+            [Required]
+            public virtual E5 E5 { get; set; }
+        }
+
+        public class E5
+        {
+            [Key]
+            public virtual int E5Id { get; set; }
+
+            public virtual string P5 { get; set; }
+
+            [Required]
+            public virtual E4 E4 { get; set; }
+        }
+        
+        [Fact]
+        // Issue2267
+        public void Table_splitting_when_key_properties_have_different_names_dependent_first()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<E5>().ToTable("T3");
+            modelBuilder.Entity<E4>().ToTable("T3");
+            modelBuilder.Entity<E4>().HasRequired(e => e.E5).WithRequiredPrincipal(e => e.E4);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Equal(2, databaseMapping.Model.EntityTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
+            Assert.Equal(1, databaseMapping.Database.EntityTypes.Count());
+            Assert.Equal(0, databaseMapping.Database.AssociationTypes.Count());
+
+            databaseMapping.Assert<E4>("T3")
+                .HasColumn("Id")
+                .HasColumn("P4")
+                .HasColumn("P5")
+                .ColumnCountEquals(3);
+
+            databaseMapping.Assert<E5>("T3")
+                .HasColumn("Id")
+                .HasColumn("P4")
+                .HasColumn("P5")
+                .ColumnCountEquals(3);
+        }
+
+        [Fact]
+        // Issue2267
+        public void Table_splitting_when_key_properties_have_different_names_principal_first()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<E4>().ToTable("T3");
+            modelBuilder.Entity<E4>().HasRequired(e => e.E5).WithRequiredPrincipal(e => e.E4);
+            modelBuilder.Entity<E5>().ToTable("T3");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Equal(2, databaseMapping.Model.EntityTypes.Count());
+            Assert.Equal(1, databaseMapping.Model.AssociationTypes.Count());
+            Assert.Equal(1, databaseMapping.Database.EntityTypes.Count());
+            Assert.Equal(0, databaseMapping.Database.AssociationTypes.Count());
+
+            databaseMapping.Assert<E4>("T3")
+                .HasColumn("Id")
+                .HasColumn("P4")
+                .HasColumn("P5")
+                .ColumnCountEquals(3);
+
+            databaseMapping.Assert<E5>("T3")
+                .HasColumn("Id")
+                .HasColumn("P4")
+                .HasColumn("P5")
+                .ColumnCountEquals(3);
+        }
     }
 }

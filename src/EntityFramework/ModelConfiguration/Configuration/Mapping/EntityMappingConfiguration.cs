@@ -757,7 +757,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                 fragment.TableSet = databaseMapping.Database.GetEntitySet(toTable);
 
-                // Make sure that the fragment points to any existing key columns as these shouldn't be duplicated
+                // Make sure that the key column mappings point to existing key columns, no duplicates should be present
                 foreach (var columnMapping in fragment.ColumnMappings.Where(cm => cm.ColumnProperty.IsPrimaryKeyColumn))
                 {
                     var column = toTable.Properties.SingleOrDefault(
@@ -956,11 +956,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return new[] { EdmPropertyPath.Empty };
         }
 
-        private static IEnumerable<EntityType> FindAllTypesUsingTable(
+        private static List<EntityTypeMapping> FindAllTypeMappingsUsingTable(
             DbDatabaseMapping databaseMapping, EntityType toTable)
         {
             // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
-            var types = new List<EntityType>();
+            var types = new List<EntityTypeMapping>();
             var entityContainerMappings = databaseMapping.EntityContainerMappings;
             // ReSharper disable ForCanBeConvertedToForeach
             for (var entityContainerMappingsIterator = 0;
@@ -985,7 +985,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         {
                             if (entityTypeMapping.MappingFragments[mappingFragmentsIterator].Table == toTable)
                             {
-                                types.Add(entityTypeMapping.EntityType);
+                                types.Add(entityTypeMapping);
                                 break;
                             }
                         }
@@ -1037,11 +1037,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             //  1. The table is not used by any other type
             //  2. The table is used only by types in the same type hierarchy (TPH)
             //  3. There is a 1:1 relationship and the PK count and types match (Table Splitting)
-            var typesSharingTable = FindAllTypesUsingTable(databaseMapping, toTable);
+            var typeMappingsSharingTable = FindAllTypeMappingsUsingTable(databaseMapping, toTable);
             var associationsToSharedTable = new Dictionary<EntityType, List<AssociationType>>();
 
-            foreach (var candidateType in typesSharingTable)
+            foreach (var candidateTypeMapping in typeMappingsSharingTable)
             {
+                var candidateType = candidateTypeMapping.EntityType;
                 var oneToOneAssocations = FindAllOneToOneFKAssociationTypes(
                     databaseMapping.Model, entityType, candidateType);
 
@@ -1072,25 +1073,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             var allAssociations = associationsToSharedTable.Values.SelectMany(l => l);
             if (allAssociations.Any())
             {
-                var principalKeyNamesType = toTable.GetKeyNamesType();
-                if (principalKeyNamesType == null)
-                {
-                    // grab a candidate
-                    var association = allAssociations.First();
-                    principalKeyNamesType = association.Constraint.FromRole.GetEntityType();
+                // grab a candidate
+                var association = allAssociations.First();
+                var principalKeyNamesType = association.Constraint.FromRole.GetEntityType();
 
-                    if (allAssociations.All(x => x.Constraint.FromRole.GetEntityType() == principalKeyNamesType))
-                    {
-                        toTable.SetKeyNamesType(principalKeyNamesType);
-                    }
-                }
+                var dependentEntityType = entityType == principalKeyNamesType
+                    ? association.Constraint.ToRole.GetEntityType()
+                    : entityType;
 
+                var dependentMappingFragment = entityType == principalKeyNamesType
+                    ? typeMappingsSharingTable.Single(etm => etm.EntityType == dependentEntityType).Fragments.Single(mf => mf.Table == toTable)
+                    : fragment;
+                
                 // rename the columns in the fragment to match the principal keys
                 var principalKeys = principalKeyNamesType.KeyProperties().ToArray();
                 var i = 0;
-                foreach (var k in entityType.KeyProperties())
+                foreach (var k in dependentEntityType.KeyProperties())
                 {
-                    var dependentColumn = fragment.ColumnMappings.Single(pm => pm.PropertyPath.First() == k).ColumnProperty;
+                    var dependentColumn = dependentMappingFragment.ColumnMappings.Single(pm => pm.PropertyPath.First() == k).ColumnProperty;
                     dependentColumn.Name = principalKeys[i].Name;
                     i++;
                 }

@@ -11,7 +11,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     internal static class EntityTypeExtensions
     {
         private const string TableNameAnnotation = "TableName";
-        private const string KeyNamesTypeAnnotation = "KeyNamesType";
 
         public static void AddColumn(this EntityType table, EdmProperty column)
         {
@@ -45,21 +44,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(tableName);
 
             table.GetMetadataProperties().SetAnnotation(TableNameAnnotation, tableName);
-        }
-
-        public static EntityType GetKeyNamesType(this EntityType table)
-        {
-            DebugCheck.NotNull(table);
-
-            return (EntityType)table.Annotations.GetAnnotation(KeyNamesTypeAnnotation);
-        }
-
-        public static void SetKeyNamesType(this EntityType table, EntityType entityType)
-        {
-            DebugCheck.NotNull(table);
-            DebugCheck.NotNull(entityType);
-
-            table.GetMetadataProperties().SetAnnotation(KeyNamesTypeAnnotation, entityType);
         }
 
         internal static IEnumerable<EntityType> ToHierarchy(this EntityType edmType)
