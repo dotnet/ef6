@@ -496,16 +496,33 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Except(associationTypePairs.Select(t => t.Item2))
                     .ToList();
 
-            return
-                from at1 in sourceRemainingAssociationTypes
-                from at2 in targetRemainingAssociationTypes
-                where tablePairs.Any(
-                    t => t.Item1.ElementType == at1.Constraint.PrincipalEnd.GetEntityType()
-                         && t.Item2.ElementType == at2.Constraint.PrincipalEnd.GetEntityType())
-                      && tablePairs.Any(
-                          t => t.Item1.ElementType == at1.Constraint.DependentEnd.GetEntityType()
-                               && t.Item2.ElementType == at2.Constraint.DependentEnd.GetEntityType())
-                select Tuple.Create(at1, at2);
+            var pairs = new List<Tuple<AssociationType, AssociationType>>();
+
+            while (sourceRemainingAssociationTypes.Any())
+            {
+                var associationType1 = sourceRemainingAssociationTypes[0];
+
+                for (var i = 0; i < targetRemainingAssociationTypes.Count; i++)
+                {
+                    var associationType2 = targetRemainingAssociationTypes[i];
+
+                    if (tablePairs.Any(t => t.Item1.ElementType == associationType1.Constraint.PrincipalEnd.GetEntityType()
+                                            && t.Item2.ElementType == associationType2.Constraint.PrincipalEnd.GetEntityType())
+                        && tablePairs.Any(t => t.Item1.ElementType == associationType1.Constraint.DependentEnd.GetEntityType()
+                                               && t.Item2.ElementType == associationType2.Constraint.DependentEnd.GetEntityType()))
+                    {
+                        pairs.Add(Tuple.Create(associationType1, associationType2));
+
+                        targetRemainingAssociationTypes.RemoveAt(i);
+
+                        break;
+                    }
+                }
+
+                sourceRemainingAssociationTypes.RemoveAt(0);
+            }
+
+            return pairs;
         }
 
         private static string GetStoreAssociationIdentity(string associationName)

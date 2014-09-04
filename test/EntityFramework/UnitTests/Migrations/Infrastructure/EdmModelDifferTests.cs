@@ -3537,6 +3537,27 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         #region Bugs
 
+        // issue #2433
+        [MigrationsTheory]
+        public void Sequence_contains_no_elements_when_nav_props_renamed()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Bug2433_v1.Foob>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+            
+            modelBuilder.Entity<Bug2433_v2.Foob>();
+            
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(4, operations.Count());
+        }
+
         // issue 2157
         [MigrationsTheory]
         public void Diffing_TPH_models_with_discriminator_based_on_nullability_rather_than_value_works()
@@ -3633,6 +3654,38 @@ namespace System.Data.Entity.Migrations.Infrastructure
     }
 
     #region Fixtures
+
+    namespace Bug2433_v1
+    {
+        public class Foob
+        {
+            public int Id { get; set; }
+
+            public Barb Bar1 { get; set; }
+            public Barb Bar2 { get; set; }
+        }
+
+        public class Barb
+        {
+            public int Id { get; set; }
+        }
+    }
+
+    namespace Bug2433_v2
+    {
+        public class Foob
+        {
+            public int Id { get; set; }
+
+            public Barb Bars1 { get; set; }
+            public Barb Bars2 { get; set; }
+        }
+
+        public class Barb
+        {
+            public int Id { get; set; }
+        }
+    }
 
     namespace Nav_prop_rename_v1
     {
