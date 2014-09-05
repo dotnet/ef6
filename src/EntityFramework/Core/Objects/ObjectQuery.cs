@@ -177,8 +177,8 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public bool Streaming
         {
-            get { return _state.EffectiveStreamingBehaviour; }
-            set { _state.UserSpecifiedStreamingBehaviour = value; }
+            get { return _state.EffectiveStreamingBehavior; }
+            set { _state.UserSpecifiedStreamingBehavior = value; }
         }
 
         /// <summary>Gets the parameter collection for this object query.</summary>

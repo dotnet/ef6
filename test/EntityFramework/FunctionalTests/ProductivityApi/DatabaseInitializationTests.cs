@@ -281,6 +281,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void CreateDatabaseIfNotExists_in_local_transaction_does_nothing_if_database_exists_and_model_matches()
         {
             Database.Delete(SimpleConnection<SimpleContextForCreateDatabaseIfNotExists>());
@@ -309,6 +310,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DropCreateDatabaseIfModelChanges_in_local_transaction_does_nothing_if_database_exists_and_model_matches()
         {
             Database.Delete(SimpleConnection<SimpleContextForDropCreateDatabaseIfModelChanges>());

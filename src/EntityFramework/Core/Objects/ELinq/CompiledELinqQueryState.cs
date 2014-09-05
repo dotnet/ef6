@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var tree = DbQueryCommandTree.FromValidExpression(
                         ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !useCSharpNullComparisonBehavior);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
-                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, parameters,
+                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehavior, converter.PropagatedSpan, parameters,
                         converter.AliasGenerator);
 
                     // Update and retrieve the execution plan
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     {
                         // The plan is not present, so prepare it now using the computed effective merge option
                         plan = _objectQueryExecutionPlanFactory.Prepare(
-                            ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, parameters,
+                            ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehavior, converter.PropagatedSpan, parameters,
                             converter.AliasGenerator);
 
                         // Update the execution plan on the cache entry.

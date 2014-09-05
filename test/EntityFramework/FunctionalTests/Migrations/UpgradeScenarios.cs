@@ -125,7 +125,7 @@ namespace System.Data.Entity.Migrations
                 .Verify(m => m.Generate(It.IsAny<IEnumerable<MigrationOperation>>(), It.IsAny<string>()), Times.Never());
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SkipForSqlAzure = true, Justification = "Tables without a clustered index are not supported in Sql Azure")]
         public void Can_upgrade_from_5_to_6_1_and_no_diffs_produced_when_model_unchanged_automatic()
         {
             ResetDatabase();
@@ -163,7 +163,7 @@ namespace System.Data.Entity.Migrations
                 .Verify(m => m.Generate(It.IsAny<IEnumerable<MigrationOperation>>(), It.IsAny<string>()), Times.Once()); 
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SkipForSqlAzure = true, Justification = "Tables without a clustered index are not supported in Sql Azure")]
         public void Can_upgrade_from_5_to_6_1_and_no_diffs_produced_when_model_unchanged_generated()
         {
             ResetDatabase();

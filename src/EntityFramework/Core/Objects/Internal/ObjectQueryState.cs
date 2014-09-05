@@ -97,18 +97,18 @@ namespace System.Data.Entity.Core.Objects.Internal
             : this(elementType, query.Context, null, null)
         {
             _cachingEnabled = query.EnablePlanCaching;
-            UserSpecifiedStreamingBehaviour = query.QueryState.UserSpecifiedStreamingBehaviour;
+            UserSpecifiedStreamingBehavior = query.QueryState.UserSpecifiedStreamingBehavior;
             ExecutionStrategy = query.QueryState.ExecutionStrategy;
         }
 
-        internal bool EffectiveStreamingBehaviour
+        internal bool EffectiveStreamingBehavior
         {
-            get { return UserSpecifiedStreamingBehaviour ?? DefaultStreamingBehaviour; }
+            get { return UserSpecifiedStreamingBehavior ?? DefaultStreamingBehavior; }
         }
 
-        internal bool? UserSpecifiedStreamingBehaviour { get; set; }
+        internal bool? UserSpecifiedStreamingBehavior { get; set; }
 
-        internal bool DefaultStreamingBehaviour
+        internal bool DefaultStreamingBehavior
         {
             get
             {

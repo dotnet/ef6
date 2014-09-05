@@ -124,12 +124,16 @@ namespace System.Data.Entity.Interception
                     new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
             }
 
+            var isSqlAzure = DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString);
             if (useExecutionStrategy)
             {
                 MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
                     key =>
                         (Func<IDbExecutionStrategy>)
-                            (() => new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
+                            (() => isSqlAzure
+                                ? new TestSqlAzureExecutionStrategy()
+                                : (IDbExecutionStrategy)
+                                    new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
             }
 
             try
@@ -148,16 +152,19 @@ namespace System.Data.Entity.Interception
                     context.Blogs.Add(new BlogContext.Blog());
                     verifySaveChanges(() => context.SaveChanges());
 
+                    var expectedCommitCount = useTransactionHandler
+                        ? useExecutionStrategy
+                            ? 6
+                            : rollbackOnFail
+                                ? 4
+                                : 3
+                        : 4;
+
                     failingTransactionInterceptorMock.Verify(
                         m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
-                        Times.Exactly(
-                            useTransactionHandler
-                                ? useExecutionStrategy
-                                    ? 6
-                                    : rollbackOnFail
-                                        ? 4
-                                        : 3
-                                : 4));
+                        isSqlAzure
+                            ? Times.AtLeast(expectedCommitCount)
+                            : Times.Exactly(expectedCommitCount));
                 }
 
                 using (var context = new BlogContextCommit())
@@ -249,10 +256,13 @@ namespace System.Data.Entity.Interception
             var failingTransactionInterceptor = failingTransactionInterceptorMock.Object;
             DbInterception.Add(failingTransactionInterceptor);
 
+            var isSqlAzure = DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString);
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
                 key =>
                     (Func<IDbExecutionStrategy>)
-                        (() => new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
+                        (() => isSqlAzure
+                            ? new TestSqlAzureExecutionStrategy()
+                            : (IDbExecutionStrategy)new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
 
             try
             {
@@ -270,7 +280,10 @@ namespace System.Data.Entity.Interception
                     runAndVerify(context);
 
                     failingTransactionInterceptorMock.Verify(
-                        m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()), Times.Exactly(3));
+                        m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                        isSqlAzure
+                            ? Times.AtLeast(3)
+                            : Times.Exactly(3));
                 }
 
                 using (var context = new BlogContextCommit())
@@ -315,9 +328,6 @@ namespace System.Data.Entity.Interception
             CommitFailureHandler_with_ExecutionStrategy_test(
                 (c, executionStrategyMock) =>
                 {
-                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                        key => (Func<IDbExecutionStrategy>)(() => new SimpleExecutionStrategy()));
-
                     using (var transactionContext = new TransactionContext(((EntityConnection)c.Connection).StoreConnection))
                     {
                         foreach (var tran in transactionContext.Set<TransactionRow>().ToList())
@@ -428,6 +438,8 @@ namespace System.Data.Entity.Interception
                         Assert.Throws<EntityException>(
                             () => ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistory());
 
+                        MutableResolver.ClearResolvers();
+
                         AssertTransactionHistoryCount(c, 1);
 
                         ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistory();
@@ -474,6 +486,8 @@ namespace System.Data.Entity.Interception
 
                         Assert.Throws<EntityException>(
                             () => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistory());
+
+                        MutableResolver.ClearResolvers();
 
                         AssertTransactionHistoryCount(c, 1);
 
@@ -525,6 +539,8 @@ namespace System.Data.Entity.Interception
                             () => ExceptionHelpers.UnwrapAggregateExceptions(
                                 () => ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistoryAsync().Wait()));
 
+                        MutableResolver.ClearResolvers();
+
                         AssertTransactionHistoryCount(c, 1);
 
                         ((MyCommitFailureHandler)c.TransactionHandler).ClearTransactionHistoryAsync().Wait();
@@ -574,6 +590,8 @@ namespace System.Data.Entity.Interception
                             () => ExceptionHelpers.UnwrapAggregateExceptions(
                                 () => ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait()));
 
+                        MutableResolver.ClearResolvers();
+
                         AssertTransactionHistoryCount(c, 1);
 
                         ((MyCommitFailureHandler)c.TransactionHandler).PruneTransactionHistoryAsync().Wait();
@@ -589,12 +607,12 @@ namespace System.Data.Entity.Interception
 #endif
 
         private void CommitFailureHandler_with_ExecutionStrategy_test(
-            Action<ObjectContext, Mock<SimpleExecutionStrategy>> pruneAndVerify)
+            Action<ObjectContext, Mock<TestSqlAzureExecutionStrategy>> pruneAndVerify)
         {
             MutableResolver.AddResolver<Func<TransactionHandler>>(
                 new TransactionHandlerResolver(() => new MyCommitFailureHandler(c => new TransactionContext(c)), null, null));
 
-            var executionStrategyMock = new Mock<SimpleExecutionStrategy> { CallBase = true };
+            var executionStrategyMock = new Mock<TestSqlAzureExecutionStrategy> { CallBase = true };
 
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
                 key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
@@ -613,8 +631,10 @@ namespace System.Data.Entity.Interception
                     AssertTransactionHistoryCount(context, 1);
 
                     executionStrategyMock.Verify(e => e.Execute(It.IsAny<Func<int>>()), Times.Exactly(3));
+#if !NET40
                     executionStrategyMock.Verify(
                         e => e.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Never());
+#endif
 
                     var objectContext = ((IObjectContextAdapter)context).ObjectContext;
                     pruneAndVerify(objectContext, executionStrategyMock);
@@ -661,6 +681,7 @@ namespace System.Data.Entity.Interception
                 return operation();
             }
 
+#if !NET40
             public virtual Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
             {
                 return operation();
@@ -670,6 +691,7 @@ namespace System.Data.Entity.Interception
             {
                 return operation();
             }
+#endif
         }
 
         public class MyCommitFailureHandler : CommitFailureHandler
@@ -748,7 +770,7 @@ namespace System.Data.Entity.Interception
                 new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
 
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                key => (Func<IDbExecutionStrategy>)(() => new SqlAzureExecutionStrategy()));
+                key => (Func<IDbExecutionStrategy>)(() => new TestSqlAzureExecutionStrategy()));
 
             try
             {
@@ -935,6 +957,10 @@ namespace System.Data.Entity.Interception
 
             public void Committed(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)
             {
+                if (interceptionContext.Exception != null)
+                {
+                    _timesToFail--;
+                }
             }
 
             public void Disposing(DbTransaction transaction, DbTransactionInterceptionContext interceptionContext)

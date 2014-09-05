@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             (null == Parameters ? null : Parameters.GetCacheKey()),
                             (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
                             mergeOption,
-                            EffectiveStreamingBehaviour,
+                            EffectiveStreamingBehavior,
                             _useCSharpNullComparisonBehavior,
                             ElementType);
 
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var tree = DbQueryCommandTree.FromValidExpression(
                         ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !_useCSharpNullComparisonBehavior);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
-                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, null,
+                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehavior, converter.PropagatedSpan, null,
                         converter.AliasGenerator);
 
                     // If caching is enabled then update the cache now.

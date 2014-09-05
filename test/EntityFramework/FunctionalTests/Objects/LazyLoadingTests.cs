@@ -629,7 +629,8 @@ namespace System.Data.Entity.Objects
             }
         }
 
-        [Fact] // CodePlex 2172
+        // CodePlex 2172
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Sharing transactions between contexts is not supported for SqlAzure")]
         public void Fixup_of_two_relationships_that_share_a_key_results_in_correct_removal_of_dangling_foreign_keys()
         {
             using (var context = new Context2172())

@@ -387,7 +387,14 @@ END");
 
             using (var context = new NoMasterPermissionContext(connectionString))
             {
-                Assert.True(context.Database.Exists());
+                if (DatabaseTestHelpers.IsSqlAzure(connectionString))
+                {
+                    Assert.False(context.Database.Exists());
+                }
+                else
+                {
+                    Assert.True(context.Database.Exists());
+                }
             }
         }
 

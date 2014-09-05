@@ -691,7 +691,7 @@ namespace System.Data.Entity.Core.Objects
                                         QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
-                && QueryState.EffectiveStreamingBehaviour)
+                && QueryState.EffectiveStreamingBehavior)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
@@ -701,7 +701,7 @@ namespace System.Data.Entity.Core.Objects
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .Execute<T>(QueryState.ObjectContext, QueryState.Parameters),
                     executionStrategy, startLocalTransaction: false,
-                    releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehaviour));
+                    releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehavior));
         }
 
 #if !NET40
@@ -717,7 +717,7 @@ namespace System.Data.Entity.Core.Objects
                                         QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
-                && QueryState.EffectiveStreamingBehaviour)
+                && QueryState.EffectiveStreamingBehavior)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
@@ -743,7 +743,7 @@ namespace System.Data.Entity.Core.Objects
                         () => QueryState.GetExecutionPlan(forMergeOption)
                                         .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
                               executionStrategy,
-                              /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehaviour,
+                              /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehavior,
                         cancellationToken),
                     cancellationToken).WithCurrentCulture();
             }

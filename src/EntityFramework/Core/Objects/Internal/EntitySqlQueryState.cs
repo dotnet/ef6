@@ -136,13 +136,14 @@ namespace System.Data.Entity.Core.Objects
             // 3. The global default merge option.
             var mergeOption = EnsureMergeOption(forMergeOption, UserSpecifiedMergeOption);
 
-            // If a cached plan is present, then it can be reused if it has the required merge option
+            // If a cached plan is present, then it can be reused if it has the required merge option and streaming behavior
             // (since span and parameters cannot change between executions). However, if the cached
             // plan does not have the required merge option we proceed as if it were not present.
             var plan = _cachedPlan;
             if (plan != null)
             {
-                if (plan.MergeOption == mergeOption)
+                if (plan.MergeOption == mergeOption
+                    && plan.Streaming == EffectiveStreamingBehavior)
                 {
                     return plan;
                 }
@@ -167,7 +168,7 @@ namespace System.Data.Entity.Core.Objects
                     (null == Parameters ? null : Parameters.GetCacheKey()),
                     (null == Span ? null : Span.GetCacheKey()),
                     mergeOption,
-                    EffectiveStreamingBehaviour,
+                    EffectiveStreamingBehavior,
                     ElementType);
 
                 cacheManager = ObjectContext.MetadataWorkspace.GetQueryCacheManager();
@@ -187,7 +188,7 @@ namespace System.Data.Entity.Core.Objects
                     ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression,
                     useDatabaseNullSemantics: true);
                 plan = _objectQueryExecutionPlanFactory.Prepare(
-                    ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, Span, null,
+                    ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehavior, Span, null,
                     DbExpressionBuilder.AliasGenerator);
 
                 // If caching is enabled then update the cache now.

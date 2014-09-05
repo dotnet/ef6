@@ -13,8 +13,19 @@ namespace System.Data.Entity.TestHelpers
         {
             // try to guess if we are targeting SQL Azure
             // heuristic - connection string contains: "...User ID=user@server..."
-            var isAzureConnectionString = new Regex("User ID.*=.*@", RegexOptions.IgnoreCase);
-            return isAzureConnectionString.IsMatch(connectionString);
+            var isAzureUser = new Regex("User ID.*=.*@", RegexOptions.IgnoreCase);
+            if (isAzureUser.IsMatch(connectionString))
+            {
+                 return true;
+            }
+            
+            var isAzureServer = new Regex(@"Data Source\s*=\s*\w*\.database\.windows\.net", RegexOptions.IgnoreCase);
+            if (isAzureServer.IsMatch(connectionString))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public static bool IsLocalDb(string connectionString)

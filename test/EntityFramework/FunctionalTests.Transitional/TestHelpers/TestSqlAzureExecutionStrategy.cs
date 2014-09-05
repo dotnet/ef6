@@ -7,9 +7,9 @@ namespace System.Data.Entity.TestHelpers
     using System.Threading;
     using System.Threading.Tasks;
 
-    internal class TestSqlAzureExecutionStrategy : IDbExecutionStrategy
+    public class TestSqlAzureExecutionStrategy : IDbExecutionStrategy
     {
-        private IDbExecutionStrategy azureExecutionStrategy;
+        private readonly IDbExecutionStrategy azureExecutionStrategy;
 
         public TestSqlAzureExecutionStrategy()
         {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.TestHelpers
             }
         }
 
-        public void Execute(Action operation)
+        public virtual void Execute(Action operation)
         {
             Check.NotNull(operation, "operation");
 
@@ -36,7 +36,7 @@ namespace System.Data.Entity.TestHelpers
                 });
         }
 
-        public TResult Execute<TResult>(Func<TResult> operation)
+        public virtual TResult Execute<TResult>(Func<TResult> operation)
         {
             if (!RetriesOnFailure)
             {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.TestHelpers
 
 #if !NET40
 
-        public Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
+        public virtual Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
         {
             if (!RetriesOnFailure)
             {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.TestHelpers
             return azureExecutionStrategy.ExecuteAsync(operation, cancellationToken);
         }
 
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
+        public virtual Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
             if (!RetriesOnFailure)
             {
