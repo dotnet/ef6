@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.CompilerServices;
 
     // <summary>
     // The PreProcessor module is responsible for performing any required preprocessing
@@ -2344,23 +2345,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             private readonly Node _node;
             private readonly Node _root;
             private readonly Command _command;
+            private readonly int _hashCode;
 
             public NavigationPropertyOpInfo(Node node, Node root, Command command)
             {
                 _node = node;
                 _root = root;
                 _command = command;
+
+                unchecked
+                {
+                    _hashCode
+                        = ((_root != null ? RuntimeHelpers.GetHashCode(_root) : 0) * 397
+                           ^ RuntimeHelpers.GetHashCode(GetProperty(_node))) * 397
+                          ^ _node.GetNodeInfo(_command).HashValue;
+                }
             }
 
             public override int GetHashCode()
             {
-                unchecked
-                {
-                    return
-                        ((_root != null ? _root.GetHashCode() : 0)*397
-                         ^ GetProperty(_node).GetHashCode())*397
-                        ^ _node.GetNodeInfo(_command).HashValue;
-                }
+                return _hashCode;
             }
 
             public override bool Equals(object obj)
