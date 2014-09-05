@@ -1240,6 +1240,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             ValidateNavPropertyOp(op);
 
+            // Cache and reuse the rewritten nodes to avoid duplicate joins. 
+            // The logic for cache hits is implemented in the NavigationPropertyOpInfo class. Basically two navigation property nodes 
+            // are considered equivalent from the cache point of view if they have the same RelOp ancestor (not null), same navigation 
+            // property (EdmMember) and the subtrees having them as root are equivalent. For fast retrieval a hash code is computed
+            // using the RelOp ancestor's hash code, the navigation property's hash code and the node's computed hash value.
+
             var nodeInfo = new NavigationPropertyOpInfo(n, FindRelOpAncestor(), m_command);
             Node rewrite;
 
@@ -1247,6 +1253,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 return OpCopier.Copy(m_command, rewrite);
             }
+
+            // Seal the nodeInfo instance to ensure the immutability of the fields used to implement NavigationPropertyOpInfo.Equals.
+            // The implementation replaces the original node referenced by nodeInfo with a clone. Potential changes to the original  
+            // will not affect the result of Equals. This is needed to make the dictionary lookups reliable.
+            nodeInfo.Seal();
 
             rewrite = RewriteNavigationProperty((NavigationProperty) op.PropertyInfo, n.Child0, op.Type);
             rewrite = VisitNode(rewrite);
@@ -2342,7 +2353,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         private class NavigationPropertyOpInfo
         {
-            private readonly Node _node;
+            private Node _node;
             private readonly Node _root;
             private readonly Command _command;
             private readonly int _hashCode;
@@ -2377,6 +2388,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     && ReferenceEquals(_root, other._root)
                     && ReferenceEquals(GetProperty(_node), GetProperty(other._node))
                     && _node.IsEquivalent(other._node);
+            }
+
+            public void Seal()
+            {
+                _node = OpCopier.Copy(_command, _node);
             }
 
             private static EdmMember GetProperty(Node node)
