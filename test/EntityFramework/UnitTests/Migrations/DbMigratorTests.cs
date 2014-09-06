@@ -528,7 +528,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        public void Uses_interception()
+        public void Uses_interception_when_migration_statement_with_suppress_transaction_false()
         {
             DropDatabase();
 
@@ -559,7 +559,7 @@ namespace System.Data.Entity.Migrations
                     m => m.DatabaseGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
                     Times.AtLeast(4));
 
-                migrator.ExecuteStatements(Enumerable.Empty<MigrationStatement>());
+                migrator.ExecuteStatements(new[] { new MigrationStatement { Sql = ";" } });
 
                 dbConnectionInterceptorMock.Verify(
                     m => m.BeginningTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
@@ -638,6 +638,223 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+        [MigrationsTheory]
+        public void Uses_interception_when_migration_statement_with_suppress_transaction_true()
+        {
+            DropDatabase();
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                context.Database.Create();
+            }
+
+            var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+            DbInterception.Add(dbConnectionInterceptorMock.Object);
+            var transactionInterceptorMock = new Mock<IDbTransactionInterceptor>();
+            DbInterception.Add(transactionInterceptorMock.Object);
+            try
+            {
+                var migrator = CreateMigrator<ShopContext_v1>();
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DatabaseGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DatabaseGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+
+                migrator.ExecuteStatements(new[] { new MigrationStatement { Sql = ";", SuppressTransaction = true } });
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.BeginningTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
+                    Times.Never());
+                dbConnectionInterceptorMock.Verify(
+                    m => m.BeganTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
+                    Times.Never());
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.Opening(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                    Times.Once());
+                dbConnectionInterceptorMock.Verify(
+                    m => m.Opened(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                    Times.Once());
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.Disposing(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                    Times.AtLeast(4));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.Disposed(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()),
+                    Times.AtLeast(4));
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(6));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(6));
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringSetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionPropertyInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.ConnectionStringSet(It.IsAny<DbConnection>(), It.IsAny<DbConnectionPropertyInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(6));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DataSourceGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(6));
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DatabaseGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.DatabaseGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<string>>()),
+                    Times.AtLeast(4));
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.StateGetting(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<ConnectionState>>()),
+                    Times.AtLeast(4));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.StateGot(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext<ConnectionState>>()),
+                    Times.AtLeast(4));
+
+                transactionInterceptorMock.Verify(
+                    m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Never());
+                transactionInterceptorMock.Verify(
+                    m => m.Committed(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Never());
+
+                transactionInterceptorMock.Verify(
+                    m => m.Disposing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Never());
+                transactionInterceptorMock.Verify(
+                    m => m.Disposed(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Never());
+            }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                DbInterception.Remove(transactionInterceptorMock.Object);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Migration_statements_with_suppress_transaction_true_trigger_commit_of_current_transaction()
+        {
+            DropDatabase();
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                context.Database.Create();
+            }
+
+            var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+            var transactionInterceptorMock = new Mock<IDbTransactionInterceptor>();
+            var dbCommandInterceptorMock = new Mock<DbCommandInterceptor>();
+
+            DbTransaction lastTransaction = null;
+
+            dbCommandInterceptorMock.Setup(
+                m => m.NonQueryExecuting(It.IsAny<DbCommand>(), It.IsAny<DbCommandInterceptionContext<int>>()))
+                .Callback<DbCommand, DbCommandInterceptionContext<int>>(
+                    (c, b) =>
+                    {
+                        switch (c.CommandText)
+                        {
+                            case "1":
+                                Assert.Null(lastTransaction);
+                                Assert.Null(c.Transaction);
+                                break;
+                            case "4":
+                            case "7":
+                                Assert.NotNull(lastTransaction);
+                                Assert.Null(c.Transaction);
+                                break;
+                            case "2":
+                            case "5":
+                                Assert.Null(lastTransaction);
+                                Assert.NotNull(c.Transaction);
+                                break;
+                            case "3":
+                            case "6":
+                                Assert.NotNull(lastTransaction);
+                                Assert.Same(lastTransaction, c.Transaction);
+                                break;
+                            default:
+                                Assert.False(true);
+                                break;
+                        }
+
+                        lastTransaction = c.Transaction;
+                        c.CommandText = ";";
+                    });
+
+            DbInterception.Add(dbConnectionInterceptorMock.Object);
+            DbInterception.Add(transactionInterceptorMock.Object);
+            DbInterception.Add(dbCommandInterceptorMock.Object);
+
+            try
+            {
+                var migrator = CreateMigrator<ShopContext_v1>();
+
+                migrator.ExecuteStatements(
+                    new[]
+                    {
+                        new MigrationStatement { Sql = "1", SuppressTransaction = true },
+                        new MigrationStatement { Sql = "2", SuppressTransaction = false },
+                        new MigrationStatement { Sql = "3", SuppressTransaction = false },
+                        new MigrationStatement { Sql = "4", SuppressTransaction = true },
+                        new MigrationStatement { Sql = "5", SuppressTransaction = false },
+                        new MigrationStatement { Sql = "6", SuppressTransaction = false },
+                        new MigrationStatement { Sql = "7", SuppressTransaction = true }
+                    });
+
+                dbConnectionInterceptorMock.Verify(
+                    m => m.BeginningTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
+                    Times.Exactly((2)));
+                dbConnectionInterceptorMock.Verify(
+                    m => m.BeganTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
+                    Times.Exactly((2)));
+
+                transactionInterceptorMock.Verify(
+                    m => m.Committing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Exactly((2)));
+                transactionInterceptorMock.Verify(
+                    m => m.Committed(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Exactly((2)));
+
+                transactionInterceptorMock.Verify(
+                    m => m.Disposing(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Exactly((2)));
+                transactionInterceptorMock.Verify(
+                    m => m.Disposed(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext>()),
+                    Times.Exactly((2)));
+
+                dbCommandInterceptorMock.Verify(
+                    m => m.NonQueryExecuting(It.IsAny<DbCommand>(), It.IsAny<DbCommandInterceptionContext<int>>()),
+                    Times.Exactly((7)));
+                dbCommandInterceptorMock.Verify(
+                    m => m.NonQueryExecuted(It.IsAny<DbCommand>(), It.IsAny<DbCommandInterceptionContext<int>>()),
+                    Times.Exactly((7)));
+            }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+                DbInterception.Remove(transactionInterceptorMock.Object);
+                DbInterception.Remove(dbCommandInterceptorMock.Object);
+            }
+        }
 
         [MigrationsTheory]
         [UseDefaultExecutionStrategy]
@@ -663,7 +880,7 @@ namespace System.Data.Entity.Migrations
             {
                 var migrator = CreateMigrator<ShopContext_v1>();
 
-                Assert.Throws<TimeoutException>(() => migrator.ExecuteStatements(Enumerable.Empty<MigrationStatement>()));
+                Assert.Throws<TimeoutException>(() => migrator.ExecuteStatements(new[] { new MigrationStatement { Sql = "SomeSql" } }));
 
                 dbConnectionInterceptorMock.Verify(
                     m => m.BeginningTransaction(It.IsAny<DbConnection>(), It.IsAny<BeginTransactionInterceptionContext>()),
@@ -705,7 +922,7 @@ namespace System.Data.Entity.Migrations
             DbInterception.Add(transactionInterceptorMock.Object);
             try
             {
-                migrator.ExecuteSql(mockTransaction.Object, statement, new DbInterceptionContext());
+                migrator.ExecuteSql(statement, mockConnection.Object, mockTransaction.Object, new DbInterceptionContext());
             }
             finally
             {
@@ -718,11 +935,11 @@ namespace System.Data.Entity.Migrations
 
             transactionInterceptorMock.Verify(
                 m => m.ConnectionGetting(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext<DbConnection>>()),
-                Times.Once());
+                Times.Never());
             transactionInterceptorMock.Verify(
                 m => m.ConnectionGot(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext<DbConnection>>()),
-                Times.Once());
-            mockTransaction.Protected().Verify<DbConnection>("DbConnection", Times.Once());
+                Times.Never());
+            mockTransaction.Protected().Verify<DbConnection>("DbConnection", Times.Never());
         }
 
         [Fact]
@@ -758,7 +975,7 @@ namespace System.Data.Entity.Migrations
 
             try
             {
-                migrator.ExecuteSql(mockTransaction.Object, statement, objectContext.InterceptionContext);
+                migrator.ExecuteSql(statement, mockConnection.Object, mockTransaction.Object, objectContext.InterceptionContext);
             }
             finally
             {

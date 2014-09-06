@@ -50,7 +50,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             try
             {
                 new MigratorLoggingDecorator(migrator, new Mock<MigrationsLogger>().Object)
-                    .ExecuteSql(mockTransaction.Object, statement, new DbInterceptionContext());
+                    .ExecuteSql(statement, mockConnection.Object, mockTransaction.Object, new DbInterceptionContext());
             }
             finally
             {
@@ -64,11 +64,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             transactionInterceptorMock.Verify(
                 m => m.ConnectionGetting(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext<DbConnection>>()),
-                Times.Exactly(2));
+                Times.Never());
             transactionInterceptorMock.Verify(
                 m => m.ConnectionGot(It.IsAny<DbTransaction>(), It.IsAny<DbTransactionInterceptionContext<DbConnection>>()),
-                Times.Exactly(2));
-            mockTransaction.Protected().Verify<DbConnection>("DbConnection", Times.Exactly(2));
+                Times.Never());
+            mockTransaction.Protected().Verify<DbConnection>("DbConnection", Times.Never());
         }
     }
 }

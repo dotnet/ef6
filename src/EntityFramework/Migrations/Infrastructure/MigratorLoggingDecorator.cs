@@ -49,14 +49,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
             base.AutoMigrate(migrationId, sourceModel, targetModel, downgrading);
         }
 
-        internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
+        internal override void ExecuteSql(
+            MigrationStatement migrationStatement, DbConnection connection, DbTransaction transaction,
+            DbInterceptionContext interceptionContext)
         {
-            DebugCheck.NotNull(transaction);
             DebugCheck.NotNull(migrationStatement);
+            DebugCheck.NotNull(connection);
 
             _logger.Verbose(migrationStatement.Sql);
 
-            var connection = DbInterception.Dispatch.Transaction.GetConnection(transaction, interceptionContext);
             var providerServices = DbProviderServices.GetProviderServices(connection);
 
             if (providerServices != null)
@@ -75,7 +76,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         });
             }
 
-            base.ExecuteSql(transaction, migrationStatement, interceptionContext);
+            base.ExecuteSql(migrationStatement, connection, transaction, interceptionContext);
         }
 
         internal override void Upgrade(

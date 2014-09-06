@@ -166,12 +166,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return _this.CreateDiscoveryQueryTrees();
         }
 
-        internal virtual void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
+        internal virtual void ExecuteSql(
+            MigrationStatement migrationStatement, DbConnection connection, DbTransaction transaction,
+            DbInterceptionContext interceptionContext)
         {
-            DebugCheck.NotNull(transaction);
             DebugCheck.NotNull(migrationStatement);
+            DebugCheck.NotNull(connection);
 
-            _this.ExecuteSql(transaction, migrationStatement, interceptionContext);
+            _this.ExecuteSql(migrationStatement, connection, transaction, interceptionContext);
         }
 
         internal virtual void Upgrade(

@@ -982,7 +982,7 @@ namespace System.Data.Entity.Migrations
                 {
                     var interceptionContext = new DbInterceptionContext();
                     interceptionContext = interceptionContext.WithDbContext(_usersContext);
-                    ExecuteStatementsInternal(migrationStatements, existingTransaction, interceptionContext);
+                    ExecuteStatementsWithinTransaction(migrationStatements, existingTransaction, interceptionContext);
                 }
                 else
                 {
@@ -1042,28 +1042,9 @@ namespace System.Data.Entity.Migrations
                     }
                 }
 
-                var beginTransactionInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext)
-                    .WithIsolationLevel(IsolationLevel.Serializable);
+                ExecuteStatementsInternal(migrationStatements, connection, interceptionContext);
 
-                DbTransaction transaction = null;
-                try
-                {
-                    transaction = DbInterception.Dispatch.Connection.BeginTransaction(
-                        connection,
-                        beginTransactionInterceptionContext);
-
-                    ExecuteStatementsInternal(migrationStatements, transaction, interceptionContext);
-
-                    DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
-                    _committedStatements = true;
-                }
-                finally
-                {
-                    if (transaction != null)
-                    {
-                        DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
-                    }
-                }
+                _committedStatements = true;
             }
             finally
             {
@@ -1081,61 +1062,119 @@ namespace System.Data.Entity.Migrations
 
         private void ExecuteStatementsInternal(
             IEnumerable<MigrationStatement> migrationStatements,
+            DbConnection connection,
             DbTransaction transaction,
+            DbInterceptionContext interceptionContext)
+        {
+            DebugCheck.NotNull(migrationStatements);
+            DebugCheck.NotNull(connection);
+
+            foreach (var migrationStatement in migrationStatements)
+            {
+                base.ExecuteSql(migrationStatement, connection, transaction, interceptionContext);
+            }
+        }
+
+        private void ExecuteStatementsInternal(
+            IEnumerable<MigrationStatement> migrationStatements, DbConnection connection,
+            DbInterceptionContext interceptionContext)
+        {
+            DebugCheck.NotNull(migrationStatements);
+            DebugCheck.NotNull(connection);
+
+            var pendingStatements = new List<MigrationStatement>();
+
+            foreach (var statement in migrationStatements.Where(s => !string.IsNullOrEmpty(s.Sql)))
+            {
+                if (!statement.SuppressTransaction)
+                {
+                    pendingStatements.Add(statement);
+
+                    continue;
+                }
+
+                if (pendingStatements.Any())
+                {
+                    ExecuteStatementsWithinNewTransaction(pendingStatements, connection, interceptionContext);
+
+                    pendingStatements.Clear();
+                }
+
+                base.ExecuteSql(statement, connection, null, interceptionContext);
+            }
+
+            if (pendingStatements.Any())
+            {
+                ExecuteStatementsWithinNewTransaction(pendingStatements, connection, interceptionContext);
+            }
+        }
+
+        private void ExecuteStatementsWithinTransaction(
+            IEnumerable<MigrationStatement> migrationStatements, DbTransaction transaction,
             DbInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(migrationStatements);
             DebugCheck.NotNull(transaction);
 
-            foreach (var migrationStatement in migrationStatements)
+            var connection = DbInterception.Dispatch.Transaction.GetConnection(transaction, interceptionContext);
+
+            ExecuteStatementsInternal(migrationStatements, connection, transaction, interceptionContext);
+        }
+
+        private void ExecuteStatementsWithinNewTransaction(
+            IEnumerable<MigrationStatement> migrationStatements, DbConnection connection,
+            DbInterceptionContext interceptionContext)
+        {
+            DebugCheck.NotNull(migrationStatements);
+            DebugCheck.NotNull(connection);
+
+            var beginTransactionInterceptionContext
+                = new BeginTransactionInterceptionContext(interceptionContext)
+                    .WithIsolationLevel(IsolationLevel.Serializable);
+
+            DbTransaction transaction = null;
+            try
             {
-                base.ExecuteSql(transaction, migrationStatement, interceptionContext);
+                transaction
+                    = DbInterception.Dispatch.Connection.BeginTransaction(
+                        connection, beginTransactionInterceptionContext);
+
+                ExecuteStatementsWithinTransaction(migrationStatements, transaction, interceptionContext);
+
+                DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
+            }
+            finally
+            {
+                if (transaction != null)
+                {
+                    DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
+                }
             }
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         internal override void ExecuteSql(
-            DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
+            MigrationStatement migrationStatement, DbConnection connection, DbTransaction transaction,
+            DbInterceptionContext interceptionContext)
         {
-            DebugCheck.NotNull(transaction);
             DebugCheck.NotNull(migrationStatement);
+            DebugCheck.NotNull(connection);
 
             if (string.IsNullOrWhiteSpace(migrationStatement.Sql))
             {
                 return;
             }
 
-            if (!migrationStatement.SuppressTransaction)
+            var dbCommand = connection.CreateCommand();
+
+            using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql, interceptionContext))
             {
-                var dbCommand = DbInterception.Dispatch.Transaction.GetConnection(transaction, interceptionContext).CreateCommand();
-                using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql, interceptionContext))
+                if (transaction != null)
                 {
                     command.Transaction = transaction;
+                }
 
-                    command.ExecuteNonQuery();
-                }
-            }
-            else
-            {
-                DbConnection connection = null;
-                try
-                {
-                    connection = CreateConnection();
-                    var dbCommand = connection.CreateCommand();
-                    using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql, interceptionContext))
-                    {
-                        DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
-
-                        command.ExecuteNonQuery();
-                    }
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        DbInterception.Dispatch.Connection.Dispose(connection, interceptionContext);
-                    }
-                }
+                command.ExecuteNonQuery();
             }
         }
 
