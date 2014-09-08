@@ -247,7 +247,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var parameterBindings
                 = parameterMappingGenerator
                     .Generate(
-                        modificationOperator,
+                        modificationOperator == ModificationOperator.Insert
+                            && IsTableSplitDependent(entityTypeBase, databaseMapping)
+                                ? ModificationOperator.Update 
+                                : modificationOperator,
                         parameterProperties,
                         columnMappings,
                         new List<EdmProperty>(),
@@ -291,6 +294,26 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         : null);
 
             return functionMapping;
+        }
+
+        private static bool IsTableSplitDependent(EntityTypeBase entityTypeBase, DbDatabaseMapping databaseMapping)
+        {
+            DebugCheck.NotNull(entityTypeBase);
+
+            var associationType
+                = databaseMapping
+                    .Model.AssociationTypes
+                    .SingleOrDefault(
+                        at => at.IsForeignKey
+                              && at.IsRequiredToRequired()
+                              && !at.IsSelfReferencing()
+                              && (at.SourceEnd.GetEntityType().IsAssignableFrom(entityTypeBase)
+                                  || at.TargetEnd.GetEntityType().IsAssignableFrom(entityTypeBase))
+                              && databaseMapping.Database.AssociationTypes
+                                  .All(fk => fk.Name != at.Name)); // no store FK == shared table
+
+            return associationType != null
+                   && associationType.TargetEnd.GetEntityType() == entityTypeBase;
         }
 
         private static void UniquifyParameterNames(IList<FunctionParameter> parameters)

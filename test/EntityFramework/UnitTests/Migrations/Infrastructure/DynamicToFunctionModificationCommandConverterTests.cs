@@ -11,6 +11,37 @@ namespace System.Data.Entity.Migrations.Infrastructure
     public class DynamicToFunctionModificationCommandConverterTests
     {
         [Fact]
+        public void Can_convert_insert_command_trees_when_table_splitting()
+        {
+            var model = TestContext.CreateDynamicUpdateModel();
+
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("JobTask");
+
+            var converter
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2);
+
+            var modificationCommandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = modificationCommandTreeGenerator
+                    .GenerateInsert(modificationFunctionMapping.Item1.EntityType.FullName)
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+
+            var resultTrees = converter.Convert(commandTrees).ToList();
+
+            Assert.Equal(1, resultTrees.Count());
+
+            var firstCommandTree = (DbUpdateCommandTree)resultTrees.First();
+
+            Assert.Equal(2, firstCommandTree.Parameters.Count());
+        }
+
+        [Fact]
         public void Can_convert_insert_command_trees_when_many_to_many()
         {
             var model = TestContext.CreateDynamicUpdateModel();
