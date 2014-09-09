@@ -3449,6 +3449,82 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+    // CodePlex #2382
+    public class AutoAndGenerateScenarios_CompositeKeyAndIndex :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_CompositeKeyAndIndex.V1, AutoAndGenerateScenarios_CompositeKeyAndIndex.V2>
+    {
+        public override void Init(DatabaseProvider provider, ProgrammingLanguage language)
+        {
+            base.Init(provider, language);
+
+            IsDownDataLoss = true;
+            UpDataLoss = false;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Parent2382>()
+                    .HasRequired(p => p.GrandParent)
+                    .WithMany(gp => gp.Parents)
+                    .HasForeignKey(p => p.GrandParent2382Id)
+                    .WillCascadeOnDelete(false);
+
+                modelBuilder.Entity<Child2382>()
+                    .HasRequired(c => c.Parent)
+                    .WithMany(p => p.Children)
+                    .HasForeignKey(c => new { c.GrandParent2382Id, c.Parent2382Id })
+                    .WillCascadeOnDelete(false);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(3, operations.OfType<CreateIndexOperation>().Count());
+
+            var createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IX_GrandParent2382Id_Parent2382Id");
+            Assert.Equal("dbo.Child2382", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "GrandParent2382Id", "Parent2382Id" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IX_ParentId_Value");
+            Assert.Equal("dbo.Child2382", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.True(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "Parent2382Id", "Value" }, createOperation.Columns);
+
+            createOperation = operations.OfType<CreateIndexOperation>().Single(o => o.Name == "IX_GrandParent2382Id");
+            Assert.Equal("dbo.Parent2382", createOperation.Table);
+            Assert.False(createOperation.IsClustered);
+            Assert.False(createOperation.IsUnique);
+            Assert.Equal(new List<string> { "GrandParent2382Id" }, createOperation.Columns);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            var operations = migrationOperations.ToArray();
+
+            Assert.Equal(3, operations.OfType<DropIndexOperation>().Count());
+
+            var dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_GrandParent2382Id_Parent2382Id");
+            Assert.Equal("dbo.Child2382", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_ParentId_Value");
+            Assert.Equal("dbo.Child2382", dropOperation.Table);
+
+            dropOperation = operations.OfType<DropIndexOperation>().Single(o => o.Name == "IX_GrandParent2382Id");
+            Assert.Equal("dbo.Parent2382", dropOperation.Table);
+        }
+    }
+
     public class AutoAndGenerateScenarios_ImplicitIndexChanges :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_ImplicitIndexChanges.V1, AutoAndGenerateScenarios_ImplicitIndexChanges.V2>
     {

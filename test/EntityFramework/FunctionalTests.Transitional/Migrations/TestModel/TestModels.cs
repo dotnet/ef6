@@ -98,6 +98,56 @@ namespace System.Data.Entity.Migrations
         public byte[] Image { get; set; }
     }
 
+    public class Child2382
+    {
+        [Key, Column(Order = 0)]
+        public int GrandParent2382Id { get; set; }
+
+        [Key, Column(Order = 1)]
+        [Index("IX_ParentId_Value", Order = 1, IsUnique = true)]
+        public int Parent2382Id { get; set; }
+
+        [Key, Column(Order = 2)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Child2382Id { get; set; }
+
+        [Required]
+        [Index("IX_ParentId_Value", Order = 2, IsUnique = true)]
+        public int Value { get; set; }
+
+        // Navigation
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Parent2382 Parent { get; set; }
+    }
+
+    public class Parent2382
+    {
+        [Key, Column(Order = 1)]
+        public int GrandParent2382Id { get; set; }
+
+        [Key, Column(Order = 2)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Parent2382Id { get; set; }
+
+        // Navigation
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [ForeignKey("GrandParentId")]
+        public virtual GrandParent2382 GrandParent { get; set; }
+
+        virtual public List<Child2382> Children { get; set; }
+    }
+
+    public class GrandParent2382
+    {
+        public int GrandParent2382Id { get; set; }
+
+        [Required]
+        public string Stuff { get; set; }
+
+        // Navigation
+        virtual public List<Parent2382> Parents { get; set; }
+    }
+
     public class MigrationsStore
     {
         public int Id { get; set; }

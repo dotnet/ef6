@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -39,9 +40,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var order = 0;
                 foreach (var dependentColumn in item.Constraint.ToProperties)
                 {
-                    dependentColumn.AddAnnotation(
-                        XmlConstants.CustomAnnotationPrefix + IndexAnnotation.AnnotationName,
-                        new IndexAnnotation(new IndexAttribute(name, order++)));
+                    var newAnnotation = new IndexAnnotation(new IndexAttribute(name, order++));
+
+                    var existingAnnotation = dependentColumn.Annotations.GetAnnotation(XmlConstants.IndexAnnotationWithPrefix);
+                    if (existingAnnotation != null)
+                    {
+                        newAnnotation = (IndexAnnotation)((IndexAnnotation)existingAnnotation).MergeWith(newAnnotation);
+                    }
+
+                    dependentColumn.AddAnnotation(XmlConstants.IndexAnnotationWithPrefix, newAnnotation);
                 }
             }
         }
