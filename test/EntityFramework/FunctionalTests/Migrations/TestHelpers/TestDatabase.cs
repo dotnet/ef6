@@ -87,15 +87,19 @@ namespace System.Data.Entity.Migrations
 
         public override void EnsureDatabase()
         {
-            var databaseExistsSql = "SELECT Count(*) FROM sys.databases WHERE name = N'" + _name + "'";
-            var databaseExists = ExecuteScalar<int>(databaseExistsSql, ModelHelpers.SimpleConnectionString("master")) == 1;
-            if (!databaseExists)
-            {
-                var createDatabaseSql = "CREATE DATABASE [" + _name + "]";
-                ExecuteNonQuery(createDatabaseSql, ModelHelpers.SimpleConnectionString("master"));
-            }
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    var databaseExistsSql = "SELECT Count(*) FROM sys.databases WHERE name = N'" + _name + "'";
+                    var databaseExists = ExecuteScalar<int>(databaseExistsSql, ModelHelpers.SimpleConnectionString("master")) == 1;
+                    if (!databaseExists)
+                    {
+                        var createDatabaseSql = "CREATE DATABASE [" + _name + "]";
+                        ExecuteNonQuery(createDatabaseSql, ModelHelpers.SimpleConnectionString("master"));
+                    }
 
-            ResetDatabase();
+                    ResetDatabase();
+                });
         }
 
         public override void ResetDatabase()

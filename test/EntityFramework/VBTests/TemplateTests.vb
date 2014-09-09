@@ -44,28 +44,31 @@ Public Class TemplateTests
     Public Sub Read_and_write_using_AdvancedPatternsModelFirst_created_from_Visual_Basic_T4_template()
 
         Dim building18 = CreateBuilding()
+        ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+            Function()
+                Using New TransactionScope()
+                    Using context = New AdvancedPatternsModelFirstContext()
+                        context.Buildings.Add(building18)
 
-        Using New TransactionScope()
-            Using context = New AdvancedPatternsModelFirstContext()
-                context.Buildings.Add(building18)
+                        Dim foundBuilding = context.Buildings.Find(New Guid(Building18Id))
+                        Assert.Equal("Building 18", foundBuilding.Name)
 
-                Dim foundBuilding = context.Buildings.Find(New Guid(Building18Id))
-                Assert.Equal("Building 18", foundBuilding.Name)
+                        context.SaveChanges()
+                    End Using
 
-                context.SaveChanges()
-            End Using
+                    Using context = New AdvancedPatternsModelFirstContext()
+                        Dim foundBuilding = context.Buildings.Find(New Guid(Building18Id))
+                        Assert.Equal("Building 18", foundBuilding.Name)
+                        Assert.Equal(3, context.Entry(foundBuilding).Collection(Function(b) b.Offices).Query().Count())
 
-            Using context = New AdvancedPatternsModelFirstContext()
-                Dim foundBuilding = context.Buildings.Find(New Guid(Building18Id))
-                Assert.Equal("Building 18", foundBuilding.Name)
-                Assert.Equal(3, context.Entry(foundBuilding).Collection(Function(b) b.Offices).Query().Count())
-
-                Dim arthursOffice = context.Offices.[Single](Function(o) o.Number = "1/1125")
-                Assert.Same(foundBuilding, arthursOffice.GetBuilding())
-            End Using
-        End Using
-
+                        Dim arthursOffice = context.Offices.[Single](Function(o) o.Number = "1/1125")
+                        Assert.Same(foundBuilding, arthursOffice.GetBuilding())
+                    End Using
+                End Using
+                Return 0
+            End Function)
     End Sub
+
 
     Private Const Building18Id As String = "18181818-1818-1818-1818-181818181818"
 
@@ -88,29 +91,34 @@ Public Class TemplateTests
 
     End Function
 
-    <Fact(), AutoRollback(), UseDefaultExecutionStrategy()> _
+    <Fact(), UseDefaultExecutionStrategy()> _
     Public Sub Read_and_write_using_MonsterModel_created_from_Visual_Basic_T4_template()
 
         Dim orderId As Integer
         Dim customerId As System.Nullable(Of Integer)
 
-        Using context = New MonsterModel()
-            Dim entry = context.Entry(CreateOrder())
-            entry.State = EntityState.Added
+        ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+            Function()
+                Using New TransactionScope()
+                    Using context = New MonsterModel()
+                        Dim entry = context.Entry(CreateOrder())
+                        entry.State = EntityState.Added
 
-            context.SaveChanges()
+                        context.SaveChanges()
 
-            orderId = entry.Entity.OrderId
-            customerId = entry.Entity.CustomerId
-        End Using
+                        orderId = entry.Entity.OrderId
+                        customerId = entry.Entity.CustomerId
+                    End Using
 
-        Using context = New MonsterModel()
-            Dim order = context.Order.Include(Function(o) o.Customer).[Single](Function(o) CBool(o.CustomerId = customerId))
+                    Using context = New MonsterModel()
+                        Dim order = context.Order.Include(Function(o) o.Customer).[Single](Function(o) CBool(o.CustomerId = customerId))
 
-            Assert.Equal(orderId, order.OrderId)
-            Assert.True(order.Customer.Orders.Contains(order))
-        End Using
-
+                        Assert.Equal(orderId, order.OrderId)
+                        Assert.True(order.Customer.Orders.Contains(order))
+                    End Using
+                End Using
+                Return 0
+            End Function)
     End Sub
 
     Private Shared Function CreateOrder() As OrderMm

@@ -5,12 +5,10 @@ namespace System.Data.Entity.Interception
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
 

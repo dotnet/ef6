@@ -12,6 +12,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Transactions;
     using AdvancedPatternsModel;
     using Moq;
     using SimpleModel;
@@ -200,8 +201,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
@@ -217,8 +217,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
@@ -234,8 +233,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void Non_generic_SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
@@ -252,8 +250,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void
             Non_generic_SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
@@ -285,8 +282,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
@@ -303,8 +299,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
@@ -321,8 +316,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
@@ -338,8 +332,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
@@ -627,8 +620,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming()
         {
             using (var context = new SimpleModelContext())
@@ -661,8 +653,7 @@ namespace ProductivityApiTests
         }
 
 #pragma warning disable 612, 618
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming_async()
         {
             using (var context = new SimpleModelContext())
@@ -956,7 +947,6 @@ namespace ProductivityApiTests
         #region SQL command tests
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SQL_commands_can_be_executed_against_the_database()
         {
@@ -966,7 +956,6 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SQL_commands_can_be_executed_against_the_database_async()
         {
@@ -977,20 +966,26 @@ namespace ProductivityApiTests
 
         private void SQL_commands_can_be_executed_against_the_database_implementation(Func<Database, string, int> execute)
         {
-            using (var context = new SimpleModelContext())
-            {
-                var result = execute(
-                    context.Database,
-                    "update Products set Name = 'Vegemite' where Name = 'Marmite'");
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (var context = new SimpleModelContext())
+                    {
+                        using (new TransactionScope())
+                        {
+                            var result = execute(
+                                context.Database,
+                                "update Products set Name = 'Vegemite' where Name = 'Marmite'");
 
-                Assert.Equal(1, result);
+                            Assert.Equal(1, result);
 
-                Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
-            }
+                            Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
+                        }
+                    }
+                });
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database()
         {
@@ -1000,7 +995,6 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database_async()
         {
@@ -1013,17 +1007,24 @@ namespace ProductivityApiTests
         private void SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(
             Func<Database, string, object[], int> execute)
         {
-            using (var context = new SimpleModelContext())
-            {
-                var result = execute(
-                    context.Database,
-                    "update Products set Name = {0} where Name = {1}",
-                    new object[] { "Vegemite", "Marmite" });
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (var context = new SimpleModelContext())
+                    {
+                        using (new TransactionScope())
+                        {
+                            var result = execute(
+                                context.Database,
+                                "update Products set Name = {0} where Name = {1}",
+                                new object[] { "Vegemite", "Marmite" });
 
-                Assert.Equal(1, result);
+                            Assert.Equal(1, result);
 
-                Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
-            }
+                            Assert.NotNull(context.Products.SingleOrDefault(p => p.Name == "Vegemite"));
+                        }
+                    }
+                });
         }
 
         #endregion

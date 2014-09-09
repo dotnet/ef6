@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Interception
 {
     using System.Collections.Generic;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
 
@@ -13,42 +14,58 @@ namespace System.Data.Entity.Interception
 
         public static void DoStuff(BlogContext context)
         {
-            var blog = context.Blogs.Single();
-            Assert.Equal("Half a Unicorn", blog.Title);
+            Blog blog = null;
+            Post post = null;
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    blog = context.Blogs.Single();
+                    Assert.Equal("Half a Unicorn", blog.Title);
 
-            var post = blog.Posts.Single();
-            Assert.Equal("Wrap it up...", post.Title);
+                    post = blog.Posts.Single();
+                    Assert.Equal("Wrap it up...", post.Title);
+                });
 
-            using (context.Database.BeginTransaction())
-            {
-                blog.Posts.Add(
-                    new Post
-                        {
-                            Title = "Throw it away..."
-                        });
-                Assert.Equal(1, context.SaveChanges());
-                Assert.Equal(
-                    new[] { "Throw it away...", "Wrap it up..." },
-                    context.Posts.AsNoTracking().Select(p => p.Title).OrderBy(t => t));
-            }
+            blog.Posts.Add(
+                new Post
+                {
+                    Title = "Throw it away..."
+                });
+
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (context.Database.BeginTransaction())
+                    {
+                        Assert.Equal(1, context.SaveChanges());
+                        Assert.Equal(
+                            new[] { "Throw it away...", "Wrap it up..." },
+                            context.Posts.AsNoTracking().Select(p => p.Title).OrderBy(t => t));
+                    }
+                });
 
 #if !NET40
-            using (context.Database.BeginTransaction())
-            {
-                post.Title = "I'm a logger and I'm okay...";
 
-                var saveTask = context.SaveChangesAsync();
-                saveTask.Wait();
-                Assert.Equal(1, saveTask.Result);
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (context.Database.BeginTransaction())
+                    {
+                        post.Title = "I'm a logger and I'm okay...";
 
-                var queryTask = context.Posts
-                                       .AsNoTracking()
-                                       .Select(p => p.Title).OrderBy(t => t)
-                                       .ToListAsync();
-                queryTask.Wait();
+                        var saveTask = context.SaveChangesAsync();
+                        saveTask.Wait();
+                        Assert.Equal(1, saveTask.Result);
 
-                Assert.Equal(new[] { "I'm a logger and I'm okay..." }, queryTask.Result);
-            }
+                        var queryTask = context.Posts
+                            .AsNoTracking()
+                            .Select(p => p.Title).OrderBy(t => t)
+                            .ToListAsync();
+                        queryTask.Wait();
+
+                        Assert.Equal(new[] { "I'm a logger and I'm okay..." }, queryTask.Result);
+                    }
+                });
 #endif
         }
 

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Objects
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.TestHelpers;
     using System.Transactions;
     using ConcurrencyModel;
     using System.Data.Entity.Infrastructure;
@@ -630,32 +631,38 @@ namespace System.Data.Entity.Objects
         }
 
         // CodePlex 2172
-        [ExtendedFact(SkipForSqlAzure = true, Justification = "Sharing transactions between contexts is not supported for SqlAzure")]
+        [Fact]
+        [UseDefaultExecutionStrategy]
         public void Fixup_of_two_relationships_that_share_a_key_results_in_correct_removal_of_dangling_foreign_keys()
         {
-            using (var context = new Context2172())
-            {
-                context.Database.Initialize(force: false);
-            }
-
-            using (new TransactionScope())
-            {
-                using (var context = new Context2172())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var user = context.Users.Add(new User2172 { Id = 1 });
-                    context.SaveChanges();
+                    using (var context = new Context2172())
+                    {
+                        context.Database.Initialize(force: false);
+                    }
 
-                    var message = context.Messages.Add(new Message2172 { Id = 1, CreatedById = 1, ModifiedById = 1 });
-                    context.SaveChanges();
+                    using (new TransactionScope())
+                    {
+                        using (var context = new Context2172())
+                        {
+                            var user = context.Users.Add(new User2172 { Id = 1 });
+                            context.SaveChanges();
 
-                    context.Messages.Remove(message);
-                    context.SaveChanges();
+                            var message =
+                                context.Messages.Add(new Message2172 { Id = 1, CreatedById = 1, ModifiedById = 1 });
+                            context.SaveChanges();
 
-                    context.Entry(user).State = EntityState.Detached;
+                            context.Messages.Remove(message);
+                            context.SaveChanges();
 
-                    Assert.NotNull(context.Users.First(u => u.Id == user.Id));
-                }
-            }
+                            context.Entry(user).State = EntityState.Detached;
+
+                            Assert.NotNull(context.Users.First(u => u.Id == user.Id));
+                        }
+                    }
+                });
         }
 
         public class Context2172 : DbContext

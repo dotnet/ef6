@@ -749,7 +749,6 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        [UseDefaultExecutionStrategy]
         public void Migration_statements_with_suppress_transaction_true_trigger_commit_of_current_transaction()
         {
             DropDatabase();

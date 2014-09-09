@@ -6,51 +6,47 @@ namespace System.Data.Entity.Update
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
-    using System.Text.RegularExpressions;
+    using System.Transactions;
     using Xunit;
-    using Xunit.Extensions;
 
     public class GuidIdentityColumnUpdateTests : FunctionalTestBase
     {
-        private static bool _isSqlAzure;
-        
         public GuidIdentityColumnUpdateTests()
         {
             using (var context = new GuidIdentityColumnContext())
             {
-                _isSqlAzure = DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString);
-                if (!_isSqlAzure)
-                {
-                    context.Customers.ToList();
-                }
+                context.Customers.ToList();
             }
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
-        public void Verify_insert_update_detele_for_guid_identity_column()
+        public void Verify_insert_update_delete_for_guid_identity_column()
         {
-            if (!_isSqlAzure)
-            {
-                using (var context = new GuidIdentityColumnContext())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var customer = context.Customers.Single();
-                    var orders = customer.Orders.ToList();
-                    orders[0].Name = "Changed Name";
-                    context.Orders.Remove(orders[1]);
-                    context.SaveChanges();
-                }
+                    using (new TransactionScope())
+                    {
+                        using (var context = new GuidIdentityColumnContext())
+                        {
+                            var customer = context.Customers.Single();
+                            var orders = customer.Orders.ToList();
+                            orders[0].Name = "Changed Name";
+                            context.Orders.Remove(orders[1]);
+                            context.SaveChanges();
+                        }
 
-                using (var context = new GuidIdentityColumnContext())
-                {
-                    var customer = context.Customers.Single();
-                    var orders = customer.Orders;
+                        using (var context = new GuidIdentityColumnContext())
+                        {
+                            var customer = context.Customers.Single();
+                            var orders = customer.Orders;
 
-                    Assert.Equal(1, orders.Count());
-                    Assert.Equal("Changed Name", orders.Single().Name);
-                }
-            }
+                            Assert.Equal(1, orders.Count());
+                            Assert.Equal("Changed Name", orders.Single().Name);
+                        }
+                    }
+                });
         }
 
         public class Customer

@@ -9,23 +9,14 @@ namespace System.Data.Entity.TestHelpers
     /// </summary>
     public static class DatabaseTestHelpers
     {
+        private static readonly Regex _isAzureServer = new Regex(
+            @"(Data Source|Server)\s*=\s*(tcp:)?\s*\w*\.database\.windows\.net", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         public static bool IsSqlAzure(string connectionString)
         {
             // try to guess if we are targeting SQL Azure
-            // heuristic - connection string contains: "...User ID=user@server..."
-            var isAzureUser = new Regex("User ID.*=.*@", RegexOptions.IgnoreCase);
-            if (isAzureUser.IsMatch(connectionString))
-            {
-                 return true;
-            }
-            
-            var isAzureServer = new Regex(@"Data Source\s*=\s*\w*\.database\.windows\.net", RegexOptions.IgnoreCase);
-            if (isAzureServer.IsMatch(connectionString))
-            {
-                return true;
-            }
-
-            return false;
+            // heuristic - connection string contains: "Data Source=abcd1234.database.windows.net"
+            return _isAzureServer.IsMatch(connectionString);
         }
 
         public static bool IsLocalDb(string connectionString)

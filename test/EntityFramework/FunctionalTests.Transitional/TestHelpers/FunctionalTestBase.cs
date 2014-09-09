@@ -4,6 +4,7 @@ namespace System.Data.Entity
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Globalization;
     using System.Text.RegularExpressions;
     using SimpleModel;
@@ -43,7 +44,8 @@ namespace System.Data.Entity
         {
             using (var context = createContext())
             {
-                context.Database.Initialize(force: false);
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () => context.Database.Initialize(force: false));
             }
         }
 
@@ -55,7 +57,8 @@ namespace System.Data.Entity
         {
             using (var context = createContext())
             {
-                context.Database.Delete();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () => context.Database.Delete());
             }
         }
 

@@ -189,7 +189,7 @@
     <Compile Include="TestHelpers\SqlServerMigrationSqlGeneratorWtihCollations.cs" />
     <Compile Include="TestHelpers\TestGroup.cs" />
     <Compile Include="TestHelpers\TestLoadedInterceptor.cs" />
-    <Compile Include="TestHelpers\TestSqlAzureExecutionStrategy.cs" />
+    <Compile Include="TestHelpers\SuspendableSqlAzureExecutionStrategy.cs" />
     <Compile Include="TestModels\ConcurrencyModel\Chassis.cs" />
     <Compile Include="TestModels\ConcurrencyModel\ConcurrencyModelInitializer.cs" />
     <Compile Include="TestModels\ConcurrencyModel\Driver.cs" />

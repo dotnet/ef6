@@ -9,6 +9,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
+    using System.Transactions;
     using AdvancedPatternsModel;
     using ConcurrencyModel;
     using SimpleModel;
@@ -164,42 +165,48 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded()
         {
-            using (var context = new F1Context())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-
-                var team = context.Teams.Find(Team.McLaren);
-                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
-
-                // Load drivers for the first time
-                driversCollection.Load();
-
-                Assert.True(driversCollection.IsLoaded);
-                Assert.Equal(3, team.Drivers.Count);
-
-                // Add a new driver to the database
-                using (var innerContext = new F1Context())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    innerContext.Drivers.Add(
-                        new Driver
+                    using (var context = new F1Context())
+                    {
+                        using (new TransactionScope())
+                        {
+                            context.Configuration.LazyLoadingEnabled = false;
+
+                            var team = context.Teams.Find(Team.McLaren);
+                            var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                            // Load drivers for the first time
+                            driversCollection.Load();
+
+                            Assert.True(driversCollection.IsLoaded);
+                            Assert.Equal(3, team.Drivers.Count);
+
+                            // Add a new driver to the database
+                            using (var innerContext = new F1Context())
                             {
-                                Name = "Larry David",
-                                TeamId = Team.McLaren
-                            });
-                    innerContext.SaveChanges();
-                }
+                                innerContext.Drivers.Add(
+                                    new Driver
+                                    {
+                                        Name = "Larry David",
+                                        TeamId = Team.McLaren
+                                    });
+                                innerContext.SaveChanges();
+                            }
 
-                // Now force load again
-                Assert.True(driversCollection.IsLoaded);
-                driversCollection.Load();
+                            // Now force load again
+                            Assert.True(driversCollection.IsLoaded);
+                            driversCollection.Load();
 
-                Assert.True(driversCollection.IsLoaded);
-                Assert.Equal(4, team.Drivers.Count);
-            }
+                            Assert.True(driversCollection.IsLoaded);
+                            Assert.Equal(4, team.Drivers.Count);
+                        }
+                    }
+                });
         }
 
         [Fact]
@@ -585,42 +592,48 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded_asynchronously()
         {
-            using (var context = new F1Context())
-            {
-                context.Configuration.LazyLoadingEnabled = false;
-
-                var team = context.Teams.Find(Team.McLaren);
-                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
-
-                // Load drivers for the first time
-                driversCollection.LoadAsync().Wait();
-
-                Assert.True(driversCollection.IsLoaded);
-                Assert.Equal(3, team.Drivers.Count);
-
-                // Add a new driver to the database
-                using (var innerContext = new F1Context())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    innerContext.Drivers.Add(
-                        new Driver
+                    using (var context = new F1Context())
+                    {
+                        using (new TransactionScope())
                         {
-                            Name = "Larry David",
-                            TeamId = Team.McLaren
-                        });
-                    innerContext.SaveChanges();
-                }
+                            context.Configuration.LazyLoadingEnabled = false;
 
-                // Now force load again
-                Assert.True(driversCollection.IsLoaded);
-                driversCollection.LoadAsync().Wait();
+                            var team = context.Teams.Find(Team.McLaren);
+                            var driversCollection = context.Entry(team).Collection(t => t.Drivers);
 
-                Assert.True(driversCollection.IsLoaded);
-                Assert.Equal(4, team.Drivers.Count);
-            }
+                            // Load drivers for the first time
+                            driversCollection.LoadAsync().Wait();
+
+                            Assert.True(driversCollection.IsLoaded);
+                            Assert.Equal(3, team.Drivers.Count);
+
+                            // Add a new driver to the database
+                            using (var innerContext = new F1Context())
+                            {
+                                innerContext.Drivers.Add(
+                                    new Driver
+                                    {
+                                        Name = "Larry David",
+                                        TeamId = Team.McLaren
+                                    });
+                                innerContext.SaveChanges();
+                            }
+
+                            // Now force load again
+                            Assert.True(driversCollection.IsLoaded);
+                            driversCollection.LoadAsync().Wait();
+
+                            Assert.True(driversCollection.IsLoaded);
+                            Assert.Equal(4, team.Drivers.Count);
+                        }
+                    }
+                });
         }
 
         [Fact]

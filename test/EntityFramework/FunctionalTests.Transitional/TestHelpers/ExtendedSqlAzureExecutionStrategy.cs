@@ -5,8 +5,39 @@ namespace System.Data.Entity.TestHelpers
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
 
-    internal class ExtendedSqlAzureExecutionStrategy : SqlAzureExecutionStrategy
+    public class ExtendedSqlAzureExecutionStrategy : SqlAzureExecutionStrategy
     {
+        public ExtendedSqlAzureExecutionStrategy()
+            : base(maxRetryCount: 6, maxDelay: TimeSpan.FromMinutes(1))
+        {
+        }
+
+        public static void ExecuteNew(Action action)
+        {
+            if (DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString))
+            {
+                var executionStrategy = new ExtendedSqlAzureExecutionStrategy();
+                executionStrategy.Execute(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        public static T ExecuteNew<T>(Func<T> func)
+        {
+            if (DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString))
+            {
+                var executionStrategy = new ExtendedSqlAzureExecutionStrategy();
+                return executionStrategy.Execute(func);
+            }
+            else
+            {
+                return func();
+            }
+        }
+
         protected override bool ShouldRetryOn(Exception exception)
         {
             var sqlException = exception as SqlException;

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Update
     using System.Data.Entity.TestModels.ArubaCeModel;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
+    using System.Transactions;
     using Xunit;
     using Xunit.Extensions;
 
@@ -21,7 +22,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_truncate_continues_to_work_by_default()
         {
@@ -31,7 +31,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_truncate_behaves_differently_when_flag_is_changed()
         {
@@ -42,7 +41,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_round_continues_to_work_by_default()
         {
@@ -52,7 +50,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_round_behaves_differently_when_flag_is_changed()
         {
@@ -63,7 +60,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_rounds_continues_to_work_by_default()
         {
@@ -73,7 +69,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_rounds_continues_to_work_when_flag_is_changed()
         {
@@ -84,7 +79,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_truncates_continues_to_work_by_default()
         {
@@ -94,7 +88,6 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_truncates_continues_to_work_when_flag_is_changed()
         {
@@ -121,20 +114,27 @@ namespace System.Data.Entity.Update
         private static void InsertAndUpdateWithDecimals(
             decimal insertValue, decimal insertExpected, decimal updateValue, decimal updateExpected)
         {
-            using (var context = new ArubaContext())
-            {
-                // Insert
-                var allTypes = context.AllTypes.Add(CreateArubaAllTypes(insertValue));
-                context.SaveChanges();
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (new TransactionScope())
+                    {
+                        using (var context = new ArubaContext())
+                        {
+                            // Insert
+                            var allTypes = context.AllTypes.Add(CreateArubaAllTypes(insertValue));
+                            context.SaveChanges();
 
-                ValidateSavedValues(context, allTypes, insertExpected);
+                            ValidateSavedValues(context, allTypes, insertExpected);
 
-                // Update
-                UpdateArubaAllTypes(allTypes, updateValue);
-                context.SaveChanges();
+                            // Update
+                            UpdateArubaAllTypes(allTypes, updateValue);
+                            context.SaveChanges();
 
-                ValidateSavedValues(context, allTypes, updateExpected);
-            }
+                            ValidateSavedValues(context, allTypes, updateExpected);
+                        }
+                    }
+                });
         }
 
         private static void ValidateSavedValues(ArubaContext context, ArubaAllTypes allTypes, decimal value)

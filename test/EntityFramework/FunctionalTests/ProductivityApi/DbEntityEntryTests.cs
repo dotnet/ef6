@@ -259,104 +259,120 @@ namespace ProductivityApiTests
         [UseDefaultExecutionStrategy]
         public void DbEntityEntry_State_calls_DetectChanges_for_detached_modified_entities()
         {
-            using (var context = new SimpleModelContext())
-            {
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var entry = context.Entry((object)new Product());
-                    context.Products.Add((Product)entry.Entity);
-                    context.SaveChanges();
+                    using (var context = new SimpleModelContext())
+                    {
+                        using (new TransactionScope())
+                        {
+                            var entry = context.Entry((object)new Product());
+                            context.Products.Add((Product)entry.Entity);
+                            context.SaveChanges();
 
-                    // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(
-                        entry.Entity.GetType(),
-                        ObjectContext.GetObjectType(entry.Entity.GetType()));
+                            // Ensure that the entity doesn't have a change tracking proxy
+                            Assert.Equal(
+                                entry.Entity.GetType(),
+                                ObjectContext.GetObjectType(entry.Entity.GetType()));
 
-                    ((Product)entry.Entity).Name = "foo";
+                            ((Product)entry.Entity).Name = "foo";
 
-                    // DetectChanges is called the first time the state is queried for a detached entity
-                    Assert.Equal(EntityState.Modified, entry.State);
-                }
-            }
+                            // DetectChanges is called the first time the state is queried for a detached entity
+                            Assert.Equal(EntityState.Modified, entry.State);
+                        }
+                    }
+                });
         }
 
         [Fact]
         [UseDefaultExecutionStrategy]
         public void DbEntityEntry_State_calls_DetectChanges_for_detached_unchanged_entities()
         {
-            using (var context = new SimpleModelContext())
-            {
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var entry = context.Entry((object)new Product());
-                    context.Products.Add((Product)entry.Entity);
-                    context.SaveChanges();
+                    using (var context = new SimpleModelContext())
+                    {
+                        using (new TransactionScope())
+                        {
+                            var entry = context.Entry((object)new Product());
+                            context.Products.Add((Product)entry.Entity);
+                            context.SaveChanges();
 
-                    // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(
-                        entry.Entity.GetType(),
-                        ObjectContext.GetObjectType(entry.Entity.GetType()));
+                            // Ensure that the entity doesn't have a change tracking proxy
+                            Assert.Equal(
+                                entry.Entity.GetType(),
+                                ObjectContext.GetObjectType(entry.Entity.GetType()));
 
-                    // DetectChanges is called the first time the state is queried for a detached entity
-                    Assert.Equal(EntityState.Unchanged, entry.State);
+                            // DetectChanges is called the first time the state is queried for a detached entity
+                            Assert.Equal(EntityState.Unchanged, entry.State);
 
-                    ((Product)entry.Entity).Name = "foo";
+                            ((Product)entry.Entity).Name = "foo";
 
-                    Assert.Equal(EntityState.Unchanged, entry.State);
-                }
-            }
+                            Assert.Equal(EntityState.Unchanged, entry.State);
+                        }
+                    }
+                });
         }
 
         [Fact]
         [UseDefaultExecutionStrategy]
         public void Generic_DbEntityEntry_State_calls_DetectChanges_for_detached_modified_entities()
         {
-            using (var context = new SimpleModelContext())
-            {
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var entry = context.Entry(new Product());
-                    context.Products.Add(entry.Entity);
-                    context.SaveChanges();
+                    using (var context = new SimpleModelContext())
+                    {
+                        using (new TransactionScope())
+                        {
+                            var entry = context.Entry(new Product());
+                            context.Products.Add(entry.Entity);
+                            context.SaveChanges();
 
-                    // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(
-                        entry.Entity.GetType(),
-                        ObjectContext.GetObjectType(entry.Entity.GetType()));
+                            // Ensure that the entity doesn't have a change tracking proxy
+                            Assert.Equal(
+                                entry.Entity.GetType(),
+                                ObjectContext.GetObjectType(entry.Entity.GetType()));
 
-                    entry.Entity.Name = "foo";
+                            entry.Entity.Name = "foo";
 
-                    // DetectChanges is called the first time the state is queried for a detached entity
-                    Assert.Equal(EntityState.Modified, entry.State);
-                }
-            }
+                            // DetectChanges is called the first time the state is queried for a detached entity
+                            Assert.Equal(EntityState.Modified, entry.State);
+                        }
+                    }
+                });
         }
 
         [Fact]
         [UseDefaultExecutionStrategy]
         public void Generic_DbEntityEntry_State_calls_DetectChanges_for_detached_unchanged_entities()
         {
-            using (var context = new SimpleModelContext())
-            {
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var entry = context.Entry(new Product());
-                    context.Products.Add(entry.Entity);
-                    context.SaveChanges();
+                    using (var context = new SimpleModelContext())
+                    {
+                        using (new TransactionScope())
+                        {
+                            var entry = context.Entry(new Product());
+                            context.Products.Add(entry.Entity);
+                            context.SaveChanges();
 
-                    // Ensure that the entity doesn't have a change tracking proxy
-                    Assert.Equal(
-                        entry.Entity.GetType(),
-                        ObjectContext.GetObjectType(entry.Entity.GetType()));
+                            // Ensure that the entity doesn't have a change tracking proxy
+                            Assert.Equal(
+                                entry.Entity.GetType(),
+                                ObjectContext.GetObjectType(entry.Entity.GetType()));
 
-                    // DetectChanges is called the first time the state is queried for a detached entity
-                    Assert.Equal(EntityState.Unchanged, entry.State);
+                            // DetectChanges is called the first time the state is queried for a detached entity
+                            Assert.Equal(EntityState.Unchanged, entry.State);
 
-                    entry.Entity.Name = "foo";
+                            entry.Entity.Name = "foo";
 
-                    Assert.Equal(EntityState.Unchanged, entry.State);
-                }
-            }
+                            Assert.Equal(EntityState.Unchanged, entry.State);
+                        }
+                    }
+                });
         }
 
         [Fact]

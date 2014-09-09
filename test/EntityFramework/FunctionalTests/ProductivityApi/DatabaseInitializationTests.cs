@@ -190,32 +190,44 @@ namespace ProductivityApiTests
         [UseDefaultExecutionStrategy]
         public void Transaction_can_be_started_after_database_initialization_has_happened()
         {
-            Database.Delete(SimpleConnection<SimpleContextForDropCreateDatabaseAlways>());
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    Database.Delete(SimpleConnection<SimpleContextForDropCreateDatabaseAlways>());
+                });
             Database.SetInitializer(new SimpleDropCreateDatabaseAlways());
 
-            using (var context = new SimpleContextForDropCreateDatabaseAlways())
-            {
-                // SQL Server doesn't allow Create/Drop Database actions within a transaction.
-                context.Database.Initialize(force: true);
-
-                // Database Initializer shouldn't start a transaction on it's own
-                Assert.Equal(0, GetTransactionCount(context.Database.Connection));
-
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    // Now add some more data
-                    context.Categories.Add(new Category("Watchers2"));
-                    context.SaveChanges();
+                    using (var context = new SimpleContextForDropCreateDatabaseAlways())
+                    {
+                        // SQL Server doesn't allow Create/Drop Database actions within a transaction.
+                        context.Database.Initialize(force: true);
 
-                    Assert.Equal(1, GetTransactionCount(context.Database.Connection));
-                    Assert.True(context.Categories.Where(c => c.Id == "Watchers2").AsNoTracking().Any());
-                }
-            }
+                        // Database Initializer shouldn't start a transaction on it's own
+                        Assert.Equal(0, GetTransactionCount(context.Database.Connection));
 
-            using (var context = new SimpleContextForDropCreateDatabaseAlways())
-            {
-                Assert.False(context.Categories.Where(c => c.Id == "Watchers2").AsNoTracking().Any());
-            }
+                        using (new TransactionScope())
+                        {
+                            // Now add some more data
+                            context.Categories.Add(new Category("Watchers2"));
+                            context.SaveChanges();
+
+                            Assert.Equal(1, GetTransactionCount(context.Database.Connection));
+                            Assert.True(context.Categories.Where(c => c.Id == "Watchers2").AsNoTracking().Any());
+                        }
+                    }
+                });
+
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (var context = new SimpleContextForDropCreateDatabaseAlways())
+                    {
+                        Assert.False(context.Categories.Where(c => c.Id == "Watchers2").AsNoTracking().Any());
+                    }
+                });
         }
 
         #endregion
@@ -330,7 +342,7 @@ namespace ProductivityApiTests
             bool useLocal = false,
             bool skipAdd = false)
         {
-            context.Database.Initialize(force: true);
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(() => context.Database.Initialize(force: true));
 
             // Check that the database is created and seeded
             Assert.Equal("Watchers", context.Categories.Single().Id);
@@ -339,7 +351,7 @@ namespace ProductivityApiTests
             if (!skipAdd)
             {
                 context.Categories.Add(new Category("Slayers"));
-                context.SaveChanges();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(() => context.SaveChanges());
             }
 
             DbTransaction localTransaction = null;
@@ -349,28 +361,36 @@ namespace ProductivityApiTests
             {
                 if (useLocal)
                 {
-                    // Begin a local transaction
-                    localTransaction = BeginLocalTransaction(context);
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            // Begin a local transaction
+                            localTransaction = BeginLocalTransaction(context);
 
-                    // This call should succeed even under transaction since database initialization does nothing here.
-                    context.Database.Initialize(force: true);
+                            // This call should succeed even under transaction since database initialization does nothing here.
+                            context.Database.Initialize(force: true);
 
-                    // Even if transaction is committed nothing should have changed.
-                    localTransaction.Commit();
+                            // Even if transaction is committed nothing should have changed.
+                            localTransaction.Commit();
+                        });
                 }
 
-                using (var transaction = new TransactionScope())
-                {
-                    // This call should succeed even under transaction since database initialization does nothing here.
-                    context.Database.Initialize(force: true);
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var transaction = new TransactionScope())
+                        {
+                            // This call should succeed even under transaction since database initialization does nothing here.
+                            context.Database.Initialize(force: true);
 
-                    // Even if transaction is committed nothing should have changed.
-                    transaction.Complete();
-                }
+                            // Even if transaction is committed nothing should have changed.
+                            transaction.Complete();
+                        }
+                    });
             }
             else
             {
-                context.Database.Initialize(force: true);
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(() => context.Database.Initialize(force: true));
             }
 
             var categoriesInDatabase = context.Categories.AsNoTracking();
@@ -521,13 +541,18 @@ namespace ProductivityApiTests
                 // Database Initializer shouldn't start a transaction on it's own
                 Assert.Equal(0, GetTransactionCount(context.Database.Connection));
 
-                // Begin a local transaction
-                var transaction = BeginLocalTransaction(context);
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        // Begin a local transaction
+                        var transaction = BeginLocalTransaction(context);
 
-                context.Categories.Find("Watchers").DetailedDescription = "those Watching";
-                context.SaveChanges();
+                        context.Categories.Find("Watchers").DetailedDescription = "those Watching";
+                        context.SaveChanges();
 
-                transaction.Commit();
+                        transaction.Commit();
+                    });
+
                 CloseEntityConnection(context);
 
                 Assert.Equal("those Watching", context.Categories.AsNoTracking().Single().DetailedDescription);

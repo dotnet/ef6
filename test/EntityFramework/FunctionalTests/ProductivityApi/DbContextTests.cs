@@ -608,95 +608,98 @@ namespace ProductivityApiTests
         #region Positive SaveChanges tests
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SaveChanges_saves_Added_Modified_Deleted_entities()
         {
-            SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChanges());
+            SaveChanges_saves_Added_Modified_Deleted_entities_implementation(c => c.SaveChanges());
         }
 
 #if !NET40
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SaveChangesAsync_saves_Added_Modified_Deleted_entities()
         {
-            SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChangesAsync().Result);
+            SaveChanges_saves_Added_Modified_Deleted_entities_implementation(c => c.SaveChangesAsync().Result);
         }
 
 #endif
 
         private void SaveChanges_saves_Added_Modified_Deleted_entities_implementation(Func<DbContext, int> saveChanges)
         {
-            using (var context = new SimpleModelContext())
-            {
-                // Modified
-                var product1 = context.Products.Find(1);
-                product1.Name = "Smarties";
-
-                // Deleted
-                var product2 = context.Products.Find(2);
-                context.Products.Remove(product2);
-
-                // Added
-                var product3 = new Product
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    Name = "Branston Pickle"
-                };
-                context.Products.Add(product3);
+                    using (var context = new SimpleModelContext("SimpleModel_Added_Modified_Deleted"))
+                    {
+                        context.Database.Delete();
+                        context.Database.Initialize(force: false);
 
-                // Validate state before Save
-                Assert.Equal(3, GetStateEntries(context).Count());
-                Assert.Equal(EntityState.Modified, GetStateEntry(context, product1).State);
-                Assert.Equal(EntityState.Deleted, GetStateEntry(context, product2).State);
-                Assert.Equal(EntityState.Added, GetStateEntry(context, product3).State);
+                        // Modified
+                        var product1 = context.Products.Find(1);
+                        product1.Name = "Smarties";
 
-                // Save
-                var savedCount = saveChanges(context);
-                Assert.Equal(3, savedCount);
+                        // Deleted
+                        var product2 = context.Products.Find(2);
+                        context.Products.Remove(product2);
 
-                // Validate state after Save
-                Assert.Equal(2, GetStateEntries(context).Count());
-                Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product1).State);
-                Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product3).State);
+                        // Added
+                        var product3 = new Product
+                        {
+                            Name = "Branston Pickle"
+                        };
+                        context.Products.Add(product3);
 
-                using (var context2 = new SimpleModelContext())
-                {
-                    var product1s = context2.Products.Find(product1.Id);
-                    var product2s = context2.Products.Find(product2.Id);
-                    var product3s = context2.Products.Find(product3.Id);
+                        // Validate state before Save
+                        Assert.Equal(3, GetStateEntries(context).Count());
+                        Assert.Equal(EntityState.Modified, GetStateEntry(context, product1).State);
+                        Assert.Equal(EntityState.Deleted, GetStateEntry(context, product2).State);
+                        Assert.Equal(EntityState.Added, GetStateEntry(context, product3).State);
 
-                    Assert.NotNull(product1s);
-                    Assert.Null(product2s);
-                    Assert.NotNull(product3s);
+                        // Save
+                        var savedCount = saveChanges(context);
+                        Assert.Equal(3, savedCount);
 
-                    Assert.Equal("Smarties", product1s.Name);
-                    Assert.Equal("Branston Pickle", product3s.Name);
+                        // Validate state after Save
+                        Assert.Equal(2, GetStateEntries(context).Count());
+                        Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product1).State);
+                        Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product3).State);
 
-                    Assert.Equal(2, GetStateEntries(context).Count());
-                    Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product1s).State);
-                    Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product3s).State);
-                }
-            }
+                        using (var context2 = new SimpleModelContext("SimpleModel_Added_Modified_Deleted"))
+                        {
+                            var product1s = context2.Products.Find(product1.Id);
+                            var product2s = context2.Products.Find(product2.Id);
+                            var product3s = context2.Products.Find(product3.Id);
+
+                            Assert.NotNull(product1s);
+                            Assert.Null(product2s);
+                            Assert.NotNull(product3s);
+
+                            Assert.Equal("Smarties", product1s.Name);
+                            Assert.Equal("Branston Pickle", product3s.Name);
+
+                            Assert.Equal(2, GetStateEntries(context).Count());
+                            Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product1s).State);
+                            Assert.Equal(EntityState.Unchanged, GetStateEntry(context2, product3s).State);
+                        }
+                    }
+                });
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SaveChanges_performs_DetectChanges()
         {
-            SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChanges());
+            SaveChanges_performs_DetectChanges_implementation(c => c.SaveChanges());
         }
 
 #if !NET40
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void SaveChangesAsync_performs_DetectChanges()
         {
-            SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChangesAsync().Result);
+            SaveChanges_performs_DetectChanges_implementation(c => c.SaveChangesAsync().Result);
         }
 
 #endif
@@ -707,13 +710,20 @@ namespace ProductivityApiTests
             //       it is important no other APIs are called between the modification 
             //       and calling SaveChanges due to other APIs calling DetectChanges implicitly
 
-            using (var context = new SimpleModelContext())
-            {
-                var prod = context.Products.Find(1);
-                prod.Name = "Cascade Draught";
-                var savedCount = saveChanges(context);
-                Assert.Equal(1, savedCount);
-            }
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (var context = new SimpleModelContext())
+                    {
+                        using (context.Database.BeginTransaction())
+                        {
+                            var prod = context.Products.Find(1);
+                            prod.Name = "Cascade Draught";
+                            var savedCount = saveChanges(context);
+                            Assert.Equal(1, savedCount);
+                        }
+                    }
+                });
         }
 
         [Fact]
@@ -833,7 +843,7 @@ namespace ProductivityApiTests
         [Fact]
         public void SaveChanges_bubbles_presave_exception()
         {
-            SaveChanges_bubbles_presave_exception_implementation((c) => c.SaveChanges());
+            SaveChanges_bubbles_presave_exception_implementation(c => c.SaveChanges());
         }
 
 #if !NET40
@@ -842,12 +852,12 @@ namespace ProductivityApiTests
         public void SaveChangesAsync_bubbles_presave_exception()
         {
             SaveChanges_bubbles_presave_exception_implementation(
-                (c) => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
+                c => ExceptionHelpers.UnwrapAggregateExceptions(() => c.SaveChangesAsync().Result));
         }
 
 #endif
 
-        private void SaveChanges_bubbles_presave_exception_implementation(Func<DbContext, int> saveChanges)
+        private void SaveChanges_bubbles_presave_exception_implementation(Action<DbContext> saveChanges)
         {
             EnsureDatabaseInitialized(() => new AdvancedPatternsMasterContext());
 
@@ -870,7 +880,7 @@ namespace ProductivityApiTests
                     // Create a conceptual null
                     GetObjectContext(context).ObjectStateManager.ChangeObjectState(emp, EntityState.Deleted);
 
-                    Assert.Throws<InvalidOperationException>(() => context.SaveChanges()).ValidateMessage(
+                    Assert.Throws<InvalidOperationException>(() => saveChanges(context)).ValidateMessage(
                         "ObjectContext_CommitWithConceptualNull");
                 }
             }
@@ -899,18 +909,22 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                using (context.Database.BeginTransaction())
-                {
-                    var prod = new Product
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        Name = "Wallaby Sausages",
-                        CategoryId = "AUSSIE FOODS"
-                    };
-                    context.Products.Add(prod);
+                        using (context.Database.BeginTransaction())
+                        {
+                            var prod = new Product
+                            {
+                                Name = "Wallaby Sausages",
+                                CategoryId = "AUSSIE FOODS"
+                            };
+                            context.Products.Add(prod);
 
-                    Assert.Throws<DbUpdateException>(() => saveChanges(context)).ValidateMessage(
-                        "Update_GeneralExecutionException");
-                }
+                            Assert.Throws<DbUpdateException>(() => saveChanges(context)).ValidateMessage(
+                                "Update_GeneralExecutionException");
+                        }
+                    });
             }
         }
 
@@ -3096,29 +3110,33 @@ namespace ProductivityApiTests
 
         private void TestDetectChangesWithSaveChanges(bool autoDetectChanges)
         {
-            using (var context = new F1Context())
-            {
-                context.Database.Initialize(force: false);
-
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    context.Configuration.AutoDetectChangesEnabled = autoDetectChanges;
+                    using (var context = new F1Context())
+                    {
+                        context.Database.Initialize(force: false);
 
-                    var mclaren = context.Teams.Find(Team.McLaren);
-                    var larryEntry = context.Entry(
-                        new Driver
+                        using (new TransactionScope())
                         {
-                            Name = "Larry David"
-                        });
-                    mclaren.Drivers.Add(larryEntry.Entity);
+                            context.Configuration.AutoDetectChangesEnabled = autoDetectChanges;
 
-                    Assert.Equal(autoDetectChanges ? EntityState.Added : EntityState.Detached, larryEntry.State);
+                            var mclaren = context.Teams.Find(Team.McLaren);
+                            var larryEntry = context.Entry(
+                                new Driver
+                                {
+                                    Name = "Larry David"
+                                });
+                            mclaren.Drivers.Add(larryEntry.Entity);
 
-                    context.SaveChanges();
+                            Assert.Equal(autoDetectChanges ? EntityState.Added : EntityState.Detached, larryEntry.State);
 
-                    Assert.Equal(autoDetectChanges ? EntityState.Unchanged : EntityState.Detached, larryEntry.State);
-                }
-            }
+                            context.SaveChanges();
+
+                            Assert.Equal(autoDetectChanges ? EntityState.Unchanged : EntityState.Detached, larryEntry.State);
+                        }
+                    }
+                });
         }
 
         #endregion
@@ -3264,29 +3282,33 @@ namespace ProductivityApiTests
 
         private void TestValidateEntityWithSaveChanges(bool validateOnSaveEnabled)
         {
-            using (var context = new ValidationTestContext())
-            {
-                context.Database.Initialize(force: false);
-
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    context.Configuration.ValidateOnSaveEnabled = validateOnSaveEnabled;
-                    var validateCalled = false;
-
-                    context.ValidateEntityFunc = (entry) =>
+                    using (var context = new ValidationTestContext())
                     {
-                        validateCalled = true;
-                        return new DbEntityValidationResult(
-                            entry,
-                            Enumerable.Empty
-                                <DbValidationError>());
-                    };
-                    context.Categories.Add(new Category("FOOD"));
-                    context.SaveChanges();
+                        context.Database.Initialize(force: false);
 
-                    Assert.True(validateOnSaveEnabled == validateCalled);
-                }
-            }
+                        using (new TransactionScope())
+                        {
+                            context.Configuration.ValidateOnSaveEnabled = validateOnSaveEnabled;
+                            var validateCalled = false;
+
+                            context.ValidateEntityFunc = (entry) =>
+                            {
+                                validateCalled = true;
+                                return new DbEntityValidationResult(
+                                    entry,
+                                    Enumerable.Empty
+                                        <DbValidationError>());
+                            };
+                            context.Categories.Add(new Category("FOOD"));
+                            context.SaveChanges();
+
+                            Assert.True(validateOnSaveEnabled == validateCalled);
+                        }
+                    }
+                });
         }
 
         [Fact]
@@ -3305,56 +3327,59 @@ namespace ProductivityApiTests
 
         private void TestDetectChangesWithSaveChangesAndValidation(bool validateOnSaveEnabled)
         {
-            using (var context = new ValidationTestContext())
-            {
-                context.Database.Initialize(force: false);
-
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    context.Configuration.ValidateOnSaveEnabled = validateOnSaveEnabled;
-
-                    var food = context.Entry(new Category("FOOD"));
-                    context.Categories.Add(food.Entity);
-                    context.SaveChanges();
-
-                    Assert.Equal(null, food.Entity.DetailedDescription);
-                    Assert.Equal(EntityState.Unchanged, food.State);
-
-                    food.Entity.DetailedDescription = "foo";
-                    Assert.Equal(EntityState.Unchanged, food.State);
-
-                    context.ValidateEntityFunc = (entry) =>
+                    using (var context = new ValidationTestContext())
                     {
-                        Assert.Equal(
-                            validateOnSaveEnabled
-                                ? EntityState.Modified
-                                : EntityState.Unchanged, entry.State);
-                        entry.State = EntityState.Unchanged;
+                        context.Database.Initialize(force: false);
 
-                        food.Entity.DetailedDescription = "bar";
-                        Assert.Equal(EntityState.Unchanged, entry.State);
+                        using (new TransactionScope())
+                        {
+                            context.Configuration.ValidateOnSaveEnabled = validateOnSaveEnabled;
 
-                        return new DbEntityValidationResult(
-                            entry,
-                            Enumerable.Empty
-                                <DbValidationError>());
-                    };
+                            var food = context.Entry(new Category("FOOD"));
+                            context.Categories.Add(food.Entity);
+                            context.SaveChanges();
 
-                    context.SaveChanges();
-                    Assert.Equal(validateOnSaveEnabled ? "bar" : "foo", food.Entity.DetailedDescription);
+                            Assert.Equal(null, food.Entity.DetailedDescription);
+                            Assert.Equal(EntityState.Unchanged, food.State);
 
-                    food.Reload();
-                    Assert.Equal(validateOnSaveEnabled ? null : "foo", food.Entity.DetailedDescription);
-                }
-            }
+                            food.Entity.DetailedDescription = "foo";
+                            Assert.Equal(EntityState.Unchanged, food.State);
+
+                            context.ValidateEntityFunc = (entry) =>
+                            {
+                                Assert.Equal(
+                                    validateOnSaveEnabled
+                                        ? EntityState.Modified
+                                        : EntityState.Unchanged, entry.State);
+                                entry.State = EntityState.Unchanged;
+
+                                food.Entity.DetailedDescription = "bar";
+                                Assert.Equal(EntityState.Unchanged, entry.State);
+
+                                return new DbEntityValidationResult(
+                                    entry,
+                                    Enumerable.Empty
+                                        <DbValidationError>());
+                            };
+
+                            context.SaveChanges();
+                            Assert.Equal(validateOnSaveEnabled ? "bar" : "foo", food.Entity.DetailedDescription);
+
+                            food.Reload();
+                            Assert.Equal(validateOnSaveEnabled ? null : "foo", food.Entity.DetailedDescription);
+                        }
+                    }
+                });
         }
 
         #endregion
 
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
-
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
         {
             using (var context = new SimpleModelContext())
@@ -3408,8 +3433,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
-        [UseDefaultExecutionStrategy]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]
         public void Implicit_EntityConnection_throws_if_close_EntityConnection_during_query()
         {
             using (var context = new SimpleModelContext())
@@ -3503,7 +3527,7 @@ namespace ProductivityApiTests
             using (var context = new TransactionTestsContext())
             {
                 // force context initialization
-                context.Entities.Count();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(() => context.Entities.Count());
                 connectionString = context.Database.Connection.ConnectionString;
             }
 
@@ -3512,18 +3536,23 @@ namespace ProductivityApiTests
             if (DatabaseTestHelpers.IsIntegratedSecutity(connectionString) ||
                 DatabaseTestHelpers.PersistsSecurityInfo(connectionString))
             {
-                using (new TransactionScope())
-                {
-                    using (var connection = new SqlConnection(connectionString))
+
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        connection.Open();
-                        connection.EnlistTransaction(Transaction.Current);
-                        using (var context = new TransactionTestsContext(connection, false))
+                        using (new TransactionScope())
                         {
-                            context.Entities.Count();
+                            using (var connection = new SqlConnection(connectionString))
+                            {
+                                connection.Open();
+                                connection.EnlistTransaction(Transaction.Current);
+                                using (var context = new TransactionTestsContext(connection, false))
+                                {
+                                    context.Entities.Count();
+                                }
+                            }
                         }
-                    }
-                }
+                    });
             }
         }
 
@@ -3535,7 +3564,7 @@ namespace ProductivityApiTests
             using (var context = new TransactionTestsContext())
             {
                 // force context initialization
-                context.Entities.Count();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(() => context.Entities.Count());
                 connectionString = context.Database.Connection.ConnectionString;
             }
 
@@ -3546,15 +3575,19 @@ namespace ProductivityApiTests
             {
                 using (var connection = new SqlConnection(connectionString))
                 {
-                    connection.Open();
-                    using (var transaction = connection.BeginTransaction())
-                    {
-                        using (var context = new TransactionTestsContext(connection, false))
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
                         {
-                            context.Database.UseTransaction(transaction);
-                            context.Entities.Count();
-                        }
-                    }
+                            connection.Open();
+                            using (var transaction = connection.BeginTransaction())
+                            {
+                                using (var context = new TransactionTestsContext(connection, false))
+                                {
+                                    context.Database.UseTransaction(transaction);
+                                    context.Entities.Count();
+                                }
+                            }
+                        });
                 }
             }
         }

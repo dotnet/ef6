@@ -66,10 +66,14 @@ namespace System.Data.Entity.TestHelpers
 
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
 
-            SetExecutionStrategy(
-                "System.Data.SqlClient", () => DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)
-                    ? new TestSqlAzureExecutionStrategy()
-                    : (IDbExecutionStrategy)new DefaultExecutionStrategy());
+            if (DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString))
+            {
+                SetExecutionStrategy("System.Data.SqlClient", () => new SuspendableSqlAzureExecutionStrategy());
+            }
+            else
+            {
+                SetExecutionStrategy("System.Data.SqlClient", () => new DefaultExecutionStrategy());
+            }
 
             SetContextFactory(() => new CodeFirstScaffoldingContext("Foo"));
             SetContextFactory(() => new CodeFirstScaffoldingContextWithConnection("Bar"));

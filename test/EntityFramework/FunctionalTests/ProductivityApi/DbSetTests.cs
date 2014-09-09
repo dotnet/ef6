@@ -13,6 +13,7 @@ namespace ProductivityApiTests
     using System.Linq;
     using System.Reflection;
     using System.Threading;
+    using System.Transactions;
     using AdvancedPatternsModel;
     using ConcurrencyModel;
     using SimpleModel;
@@ -3600,44 +3601,51 @@ namespace ProductivityApiTests
             }
 
             [Fact]
-            [AutoRollback]
             [UseDefaultExecutionStrategy]
             public void RemoveRange_honours_cascade_delete()
             {
-                using (var context = new FantasyModel.FantasyContext())
-                {
-                    var provinceCount = context.Provinces.Count();
-                    var cityCount = context.Cities.Count();
-
-                    for (var i = 0; i < 5; i++)
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        context.Provinces.Add(
-                            new FantasyModel.Province
+                        using (var context = new FantasyModel.FantasyContext())
+                        {
+                            using (new TransactionScope())
                             {
-                                Name = "CodePlex1796_" + i,
-                                Cities = new List<FantasyModel.City> { 
-                                    new FantasyModel.City(),
-                                    new FantasyModel.City()
+                                var provinceCount = context.Provinces.Count();
+                                var cityCount = context.Cities.Count();
+
+                                for (var i = 0; i < 5; i++)
+                                {
+                                    context.Provinces.Add(
+                                        new FantasyModel.Province
+                                        {
+                                            Name = "CodePlex1796_" + i,
+                                            Cities = new List<FantasyModel.City>
+                                            {
+                                                new FantasyModel.City(),
+                                                new FantasyModel.City()
+                                            }
+                                        });
                                 }
-                            });
-                    }
 
-                    context.SaveChanges();
+                                context.SaveChanges();
 
-                    Assert.Equal(provinceCount + 5, context.Provinces.Count());
-                    Assert.Equal(cityCount + 10, context.Cities.Count());
+                                Assert.Equal(provinceCount + 5, context.Provinces.Count());
+                                Assert.Equal(cityCount + 10, context.Cities.Count());
 
-                    var provinces = context.Provinces
-                        .Where(c => c.Name.StartsWith("CodePlex1796_"))
-                        .Include(c => c.Cities);
+                                var provinces = context.Provinces
+                                    .Where(c => c.Name.StartsWith("CodePlex1796_"))
+                                    .Include(c => c.Cities);
 
-                    context.Provinces.RemoveRange(provinces);
+                                context.Provinces.RemoveRange(provinces);
 
-                    Assert.DoesNotThrow(() => context.SaveChanges());
+                                Assert.DoesNotThrow(() => context.SaveChanges());
 
-                    Assert.Equal(provinceCount, context.Provinces.Count());
-                    Assert.Equal(cityCount, context.Cities.Count());
-                }
+                                Assert.Equal(provinceCount, context.Provinces.Count());
+                                Assert.Equal(cityCount, context.Cities.Count());
+                            }
+                        }
+                    });
             }
         }
     }

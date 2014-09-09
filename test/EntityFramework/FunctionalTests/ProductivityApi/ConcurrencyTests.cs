@@ -46,7 +46,6 @@ namespace ProductivityApiTests
         #region Concurrency resolution with FK associations
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values()
         {
@@ -59,7 +58,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values()
         {
@@ -74,7 +72,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values()
         {
@@ -88,7 +85,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values_using_objects()
         {
@@ -102,7 +98,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_objects()
         {
@@ -117,7 +112,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values_using_objects()
         {
@@ -131,7 +125,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values_using_cloned_property_values()
         {
@@ -145,7 +138,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_cloned_property_values()
         {
@@ -160,7 +152,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values_using_cloned_property_values()
         {
@@ -174,7 +165,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_equivalent_of_accept_changes()
         {
@@ -188,7 +178,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_Reload()
         {
@@ -196,7 +185,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Two_concurrency_issues_in_one_to_one_related_entities_can_be_handled_by_dealing_with_dependent_first()
         {
@@ -241,7 +229,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void
             Two_concurrency_issues_in_one_to_many_related_entities_can_be_handled_by_dealing_with_dependent_first()
@@ -287,7 +274,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Concurrency_issue_where_the_FK_is_the_concurrency_token_can_be_handled()
         {
@@ -327,7 +313,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Change_in_independent_association_results_in_independent_association_exception()
         {
@@ -343,7 +328,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void
             Change_in_independent_association_after_change_in_different_concurrency_token_results_in_independent_association_exception()
@@ -363,7 +347,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void
             Attempting_to_delete_same_relationship_twice_for_many_to_many_results_in_independent_association_exception()
@@ -381,7 +364,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void
             Attempting_to_add_same_relationship_twice_for_many_to_many_results_in_independent_association_exception()
@@ -403,7 +385,6 @@ namespace ProductivityApiTests
         #region Concurrency exceptions with complex types
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Concurrency_issue_where_a_complex_type_nested_member_is_the_concurrency_token_can_be_handled()
         {
@@ -426,7 +407,6 @@ namespace ProductivityApiTests
         #region Tests for update exceptions involving adding and deleting entities
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Adding_the_same_entity_twice_results_in_DbUpdateException()
         {
@@ -452,7 +432,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Deleting_the_same_entity_twice_results_in_DbUpdateConcurrencyException()
         {
@@ -471,7 +450,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void
             Deleting_the_same_entity_twice_when_entity_has_independent_association_results_in_DbIndependentAssociationUpdateException()
@@ -488,7 +466,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Updating_then_deleting_the_same_entity_results_in_DbUpdateConcurrencyException()
         {
@@ -508,7 +485,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Updating_then_deleting_the_same_entity_results_in_DbUpdateConcurrencyException_which_can_be_resolved_with_store_values()
         {
@@ -532,7 +508,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Deleting_then_updating_the_same_entity_results_in_DbUpdateConcurrencyException()
         {
@@ -552,7 +527,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Deleting_then_updating_the_same_entity_results_in_DbUpdateConcurrencyException_which_can_be_resolved_with_store_values()
         {
@@ -732,7 +706,6 @@ namespace ProductivityApiTests
         #region Serialization of exceptions
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void DbUpdateException_can_be_serialized_but_does_not_serialize_entries()
         {
@@ -754,7 +727,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void DbUpdateConcurrencyException_can_be_serialized_but_does_not_serialize_entries()
         {
@@ -780,7 +752,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void DbUpdateException_for_independent_association_error_can_be_serialized()
         {
@@ -806,61 +777,67 @@ namespace ProductivityApiTests
         #region Multiple entities in an update exception
 
         // See DevDiv2 93724
-        public void Multiple_entities_in_excecption_from_update_pipeline_can_be_handled()
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Multiple_entities_in_exception_from_update_pipeline_can_be_handled()
         {
-            using (new TransactionScope())
-            {
-                using (var context = new AdvancedPatternsMasterContext())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    // Create two entities which both have dependencies on each other
-                    // to force a dependency ordering exception from the update pipeline.
-
-                    var building = new Building
+                    using (new TransactionScope())
                     {
-                        BuildingId = new Guid("14C62AB6-A49C-40BD-BD5C-D374E070D3D7"),
-                        Name = "Building 18",
-                        Value = 1m,
-                        PrincipalMailRoomId = -1,
-                        Address =
-                            new Address
+                        using (var context = new AdvancedPatternsMasterContext())
+                        {
+                            // Create two entities which both have dependencies on each other
+                            // to force a dependency ordering exception from the update pipeline.
+
+                            var building = new Building
                             {
-                                Street = "100 Work St",
-                                City = "Redmond",
-                                State = "WA",
-                                ZipCode = "98052",
-                                SiteInfo = new SiteInfo
-                                {
-                                    Zone = 1,
-                                    Environment = "Clean"
-                                }
-                            },
-                    };
+                                BuildingId = new Guid("14C62AB6-A49C-40BD-BD5C-D374E070D3D7"),
+                                Name = "Building 18",
+                                Value = 1m,
+                                PrincipalMailRoomId = -1,
+                                Address =
+                                    new Address
+                                    {
+                                        Street = "100 Work St",
+                                        City = "Redmond",
+                                        State = "WA",
+                                        ZipCode = "98052",
+                                        SiteInfo = new SiteInfo
+                                        {
+                                            Zone = 1,
+                                            Environment = "Clean"
+                                        }
+                                    },
+                            };
 
-                    var mailRoom = new MailRoom
-                    {
-                        id = (int)building.PrincipalMailRoomId,
-                        BuildingId = building.BuildingId
-                    };
+                            var mailRoom = new MailRoom
+                            {
+                                id = (int)building.PrincipalMailRoomId,
+                                BuildingId = building.BuildingId
+                            };
 
-                    context.Buildings.Add(building);
-                    context.Set<MailRoom>().Add(mailRoom);
+                            context.Buildings.Add(building);
+                            context.Set<MailRoom>().Add(mailRoom);
 
-                    try
-                    {
-                        context.SaveChanges();
-                        Assert.True(false);
+                            try
+                            {
+                                context.SaveChanges();
+                                Assert.True(false);
+                            }
+                            catch (DbUpdateException ex)
+                            {
+                                Assert.IsType<UpdateException>(ex.InnerException);
+
+                                var entries = ex.Entries.ToList();
+                                Assert.Equal(2, entries.Count());
+                                Assert.True(entries.Any(e => ReferenceEquals(e.Entity, building)));
+                                Assert.True(entries.Any(e => ReferenceEquals(e.Entity, mailRoom)));
+                            }
+                        }
                     }
-                    catch (DbUpdateException ex)
-                    {
-                        Assert.IsType<UpdateException>(ex.InnerException);
-
-                        var entries = ex.Entries.ToList();
-                        Assert.Equal(2, entries.Count());
-                        Assert.True(entries.Any(e => ReferenceEquals(e.Entity, building)));
-                        Assert.True(entries.Any(e => ReferenceEquals(e.Entity, mailRoom)));
-                    }
-                }
-            }
+                });
         }
 
         #endregion
@@ -1287,38 +1264,45 @@ namespace ProductivityApiTests
             Action<F1Context> storeChange, Action<F1Context> clientChange,
             Action<F1Context, DbUpdateException> resolver, Action<F1Context> validator)
         {
-            using (var context = new F1Context())
-            {
-                clientChange(context);
-
-                using (var innerContext = new F1Context())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    storeChange(innerContext);
-                    innerContext.SaveChanges();
-                }
-
-                try
-                {
-                    context.SaveChanges();
-                    Assert.True(false);
-                }
-                catch (DbUpdateException ex)
-                {
-                    Assert.IsAssignableFrom<UpdateException>(ex.InnerException);
-
-                    resolver(context, ex);
-
-                    if (validator != null)
+                    using (new TransactionScope())
                     {
-                        context.SaveChanges();
-
-                        using (var validationContext = new F1Context())
+                        using (var context = new F1Context())
                         {
-                            validator(validationContext);
+                            clientChange(context);
+
+                            using (var innerContext = new F1Context())
+                            {
+                                storeChange(innerContext);
+                                innerContext.SaveChanges();
+                            }
+
+                            try
+                            {
+                                context.SaveChanges();
+                                Assert.True(false);
+                            }
+                            catch (DbUpdateException ex)
+                            {
+                                Assert.IsAssignableFrom<UpdateException>(ex.InnerException);
+
+                                resolver(context, ex);
+
+                                if (validator != null)
+                                {
+                                    context.SaveChanges();
+
+                                    using (var validationContext = new F1Context())
+                                    {
+                                        validator(validationContext);
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-            }
+                });
         }
 
         #endregion

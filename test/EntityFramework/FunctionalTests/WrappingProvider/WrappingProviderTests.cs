@@ -122,25 +122,29 @@ namespace System.Data.Entity.WrappingProvider
             var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
             log.Clear();
 
-            using (var context = new AdoLevelBlogContext())
-            {
-                var blog = context.Blogs.Single();
-                Assert.Equal("Half a Unicorn", blog.Title);
-                Assert.Equal("Wrap it up...", blog.Posts.Single().Title);
-
-                using (context.Database.BeginTransaction())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    blog.Posts.Add(
-                        new Post
-                            {
-                                Title = "Throw it away..."
-                            });
-                    Assert.Equal(1, context.SaveChanges());
-                    Assert.Equal(
-                        new[] { "Throw it away...", "Wrap it up..." },
-                        context.Posts.AsNoTracking().Select(p => p.Title).OrderBy(t => t));
-                }
-            }
+                    using (var context = new AdoLevelBlogContext())
+                    {
+                        var blog = context.Blogs.Single();
+                        Assert.Equal("Half a Unicorn", blog.Title);
+                        Assert.Equal("Wrap it up...", blog.Posts.Single().Title);
+
+                        using (context.Database.BeginTransaction())
+                        {
+                            blog.Posts.Add(
+                                new Post
+                                {
+                                    Title = "Throw it away..."
+                                });
+                            Assert.Equal(1, context.SaveChanges());
+                            Assert.Equal(
+                                new[] { "Throw it away...", "Wrap it up..." },
+                                context.Posts.AsNoTracking().Select(p => p.Title).OrderBy(t => t));
+                        }
+                    }
+                });
 
             // Sanity check that the wrapping provider really did get used
             var methods = log.Select(i => i.Method).ToList();
@@ -161,26 +165,30 @@ namespace System.Data.Entity.WrappingProvider
             var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
             log.Clear();
 
-            using (var context = new EfLevelBlogContext())
-            {
-                var blog = context.Blogs.Single();
-                Assert.Equal("Half a Unicorn", blog.Title);
-                Assert.Equal("Wrap it up...", blog.Posts.Single().Title);
-
-                using (context.Database.BeginTransaction())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    blog.Posts.Add(
-                        new Post
-                            {
-                                Title = "Throw it away..."
-                            });
-                    Assert.Equal(1, context.SaveChanges());
+                    using (var context = new EfLevelBlogContext())
+                    {
+                        var blog = context.Blogs.Single();
+                        Assert.Equal("Half a Unicorn", blog.Title);
+                        Assert.Equal("Wrap it up...", blog.Posts.Single().Title);
 
-                    Assert.Equal(
-                        new[] { "Throw it away...", "Wrap it up..." },
-                        context.Posts.AsNoTracking().Select(p => p.Title).OrderBy(t => t));
-                }
-            }
+                        using (context.Database.BeginTransaction())
+                        {
+                            blog.Posts.Add(
+                                new Post
+                                {
+                                    Title = "Throw it away..."
+                                });
+                            Assert.Equal(1, context.SaveChanges());
+
+                            Assert.Equal(
+                                new[] { "Throw it away...", "Wrap it up..." },
+                                context.Posts.AsNoTracking().Select(p => p.Title).OrderBy(t => t));
+                        }
+                    }
+                });
 
             // Sanity check that the wrapping provider really did get used
             var methods = log.Select(i => i.Method).ToList();
@@ -193,7 +201,6 @@ namespace System.Data.Entity.WrappingProvider
         }
 
         [Fact] // CodePlex 2320
-        [UseDefaultExecutionStrategy]
         public void Model_is_available_in_DatabaseExists()
         {
             WrappingAdoNetProvider<SqlClientFactory>.WrapProviders();

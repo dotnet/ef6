@@ -42,28 +42,32 @@ namespace ProductivityApiTests
         {
             var building18 = CreateBuilding();
 
-            using (new TransactionScope())
-            {
-                using (var context = new AdvancedPatternsModelFirstContext())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    context.Buildings.Add(building18);
+                    using (new TransactionScope())
+                    {
+                        using (var context = new AdvancedPatternsModelFirstContext())
+                        {
+                            context.Buildings.Add(building18);
 
-                    var foundBuilding = context.Buildings.Find(new Guid(Building18Id));
-                    Assert.Equal("Building 18", foundBuilding.Name);
+                            var foundBuilding = context.Buildings.Find(new Guid(Building18Id));
+                            Assert.Equal("Building 18", foundBuilding.Name);
 
-                    context.SaveChanges();
-                }
+                            context.SaveChanges();
+                        }
 
-                using (var context = new AdvancedPatternsModelFirstContext())
-                {
-                    var foundBuilding = context.Buildings.Find(new Guid(Building18Id));
-                    Assert.Equal("Building 18", foundBuilding.Name);
-                    Assert.Equal(3, context.Entry(foundBuilding).Collection(b => b.Offices).Query().Count());
+                        using (var context = new AdvancedPatternsModelFirstContext())
+                        {
+                            var foundBuilding = context.Buildings.Find(new Guid(Building18Id));
+                            Assert.Equal("Building 18", foundBuilding.Name);
+                            Assert.Equal(3, context.Entry(foundBuilding).Collection(b => b.Offices).Query().Count());
 
-                    var arthursOffice = context.Offices.Single(o => o.Number == "1/1125");
-                    Assert.Same(foundBuilding, arthursOffice.GetBuilding());
-                }
-            }
+                            var arthursOffice = context.Offices.Single(o => o.Number == "1/1125");
+                            Assert.Same(foundBuilding, arthursOffice.GetBuilding());
+                        }
+                    }
+                });
         }
 
         private static BuildingMf CreateBuilding()
@@ -95,31 +99,37 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
         [UseDefaultExecutionStrategy]
         public void Read_and_write_using_MonsterModel_created_from_T4_template()
         {
             int orderId;
             int? customerId;
 
-            using (var context = new MonsterModel())
-            {
-                var entry = context.Entry(CreateOrder());
-                entry.State = EntityState.Added;
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
+                {
+                    using (new TransactionScope())
+                    {
+                        using (var context = new MonsterModel())
+                        {
+                            var entry = context.Entry(CreateOrder());
+                            entry.State = EntityState.Added;
 
-                context.SaveChanges();
+                            context.SaveChanges();
 
-                orderId = entry.Entity.OrderId;
-                customerId = entry.Entity.CustomerId;
-            }
+                            orderId = entry.Entity.OrderId;
+                            customerId = entry.Entity.CustomerId;
+                        }
 
-            using (var context = new MonsterModel())
-            {
-                var order = context.Order.Include(o => o.Customer).Single(o => o.CustomerId == customerId);
+                        using (var context = new MonsterModel())
+                        {
+                            var order = context.Order.Include(o => o.Customer).Single(o => o.CustomerId == customerId);
 
-                Assert.Equal(orderId, order.OrderId);
-                Assert.True(order.Customer.Orders.Contains(order));
-            }
+                            Assert.Equal(orderId, order.OrderId);
+                            Assert.True(order.Customer.Orders.Contains(order));
+                        }
+                    }
+                });
         }
 
         private static OrderMm CreateOrder()

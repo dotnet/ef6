@@ -7,13 +7,13 @@ namespace System.Data.Entity.TestHelpers
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class TestSqlAzureExecutionStrategy : IDbExecutionStrategy
+    public class SuspendableSqlAzureExecutionStrategy : IDbExecutionStrategy
     {
-        private readonly IDbExecutionStrategy azureExecutionStrategy;
+        private readonly IDbExecutionStrategy _azureExecutionStrategy;
 
-        public TestSqlAzureExecutionStrategy()
+        public SuspendableSqlAzureExecutionStrategy()
         {
-            azureExecutionStrategy = new ExtendedSqlAzureExecutionStrategy();
+            _azureExecutionStrategy = new ExtendedSqlAzureExecutionStrategy();
         }
 
         public bool RetriesOnFailure
@@ -42,7 +42,7 @@ namespace System.Data.Entity.TestHelpers
             {
                 return operation();
             }
-            return azureExecutionStrategy.Execute(operation);
+            return _azureExecutionStrategy.Execute(operation);
         }
 
 #if !NET40
@@ -53,7 +53,7 @@ namespace System.Data.Entity.TestHelpers
             {
                 return operation();
             }
-            return azureExecutionStrategy.ExecuteAsync(operation, cancellationToken);
+            return _azureExecutionStrategy.ExecuteAsync(operation, cancellationToken);
         }
 
         public virtual Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ namespace System.Data.Entity.TestHelpers
             {
                 return operation();
             }
-            return azureExecutionStrategy.ExecuteAsync(operation, cancellationToken);
+            return _azureExecutionStrategy.ExecuteAsync(operation, cancellationToken);
         }
 
 #endif

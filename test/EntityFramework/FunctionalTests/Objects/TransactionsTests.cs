@@ -137,7 +137,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_does_not_own_connection()
         {
             try
@@ -165,7 +164,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_owns_connection()
         {
             try
@@ -194,7 +192,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_does_not_own_connection()
         {
             try
@@ -228,21 +225,25 @@ namespace System.Data.Entity.Objects
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
-                sqlConnection.Open();
-
-                using (var sqlTransaction = sqlConnection.BeginTransaction())
-                {
-                    using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        // set up EntityConnection with a transaction which we test we can subsequently clear below
-                        ctx.Database.UseTransaction(sqlTransaction);
-                        var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
-                        Assert.NotNull(GetCurrentEntityTransaction(entityConnection));
+                        sqlConnection.Open();
 
-                        ctx.Database.UseTransaction(null);
-                        Assert.Null(GetCurrentEntityTransaction(entityConnection));
-                    }
-                }
+                        using (var sqlTransaction = sqlConnection.BeginTransaction())
+                        {
+                            using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                            {
+                                // set up EntityConnection with a transaction which we test we can subsequently clear below
+                                ctx.Database.UseTransaction(sqlTransaction);
+                                var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
+                                Assert.NotNull(GetCurrentEntityTransaction(entityConnection));
+
+                                ctx.Database.UseTransaction(null);
+                                Assert.Null(GetCurrentEntityTransaction(entityConnection));
+                            }
+                        }
+                    });
             }
         }
 
@@ -269,12 +270,17 @@ namespace System.Data.Entity.Objects
                 using (var ctx = CreateTransactionDbContext())
                 {
                     Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                    using (var txn = ctx.Database.BeginTransaction())
-                    {
-                        Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
-                        AddLogEntryToDatabase(ctx);
-                        txn.Commit();
-                    }
+
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            using (var txn = ctx.Database.BeginTransaction())
+                            {
+                                Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                                AddLogEntryToDatabase(ctx);
+                                txn.Commit();
+                            }
+                        });
 
                     Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
                     Assert.Equal(1, LogEntriesCount());
@@ -295,12 +301,17 @@ namespace System.Data.Entity.Objects
                 using (var ctx = CreateTransactionDbContext())
                 {
                     Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                    using (var txn = ctx.Database.BeginTransaction())
-                    {
-                        Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
-                        AddLogEntryToDatabase(ctx);
-                        txn.Rollback();
-                    }
+
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            using (var txn = ctx.Database.BeginTransaction())
+                            {
+                                Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                                AddLogEntryToDatabase(ctx);
+                                txn.Rollback();
+                            }
+                        });
 
                     Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
                     Assert.Equal(0, LogEntriesCount());
@@ -319,11 +330,16 @@ namespace System.Data.Entity.Objects
             {
                 var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
                 Assert.Null(GetCurrentEntityTransaction(entityConnection));
-                using (var transaction = ctx.Database.BeginTransaction(IsolationLevel.Serializable))
-                {
-                    Assert.Equal(transaction.UnderlyingTransaction, GetCurrentStoreTransaction(entityConnection));
-                    Assert.Equal(IsolationLevel.Serializable, GetCurrentStoreTransaction(entityConnection).IsolationLevel);
-                }
+
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var transaction = ctx.Database.BeginTransaction(IsolationLevel.Serializable))
+                        {
+                            Assert.Equal(transaction.UnderlyingTransaction, GetCurrentStoreTransaction(entityConnection));
+                            Assert.Equal(IsolationLevel.Serializable, GetCurrentStoreTransaction(entityConnection).IsolationLevel);
+                        }
+                    });
             }
         }
 
@@ -337,23 +353,29 @@ namespace System.Data.Entity.Objects
                 {
                     sqlConnection.Open();
 
-                    using (var sqlTransaction = sqlConnection.BeginTransaction())
-                    {
-                        // add entry using the external SqlConnection
-                        AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
 
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
                         {
-                            ctx.Database.UseTransaction(sqlTransaction);
-                            // add entry using the DbContext
-                            AddLogEntryToDatabase(ctx);
-                            Assert.Equal<DbTransaction>(
-                                sqlTransaction,
-                                GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
-                        }
+                            using (var sqlTransaction = sqlConnection.BeginTransaction())
+                            {
+                                // add entry using the external SqlConnection
+                                AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
 
-                        sqlTransaction.Commit();
-                    }
+                                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                                {
+                                    ctx.Database.UseTransaction(sqlTransaction);
+                                    // add entry using the DbContext
+                                    AddLogEntryToDatabase(ctx);
+                                    Assert.Equal<DbTransaction>(
+                                        sqlTransaction,
+                                        GetCurrentStoreTransaction(
+                                            ((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+                                }
+
+                                sqlTransaction.Commit();
+                            }
+                        });
 
                     // check that both entries were inserted on the DB
                     Assert.Equal(2, CountLogEntriesUsingAdoNet(sqlConnection));
@@ -373,25 +395,31 @@ namespace System.Data.Entity.Objects
             {
                 using (var sqlConnection = new SqlConnection(_connectionString))
                 {
-                    sqlConnection.Open();
 
-                    using (var sqlTransaction = sqlConnection.BeginTransaction())
-                    {
-                        // add entry using the external SqlConnection
-                        AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
-
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
                         {
-                            ctx.Database.UseTransaction(sqlTransaction);
-                            // add entry using the DbContext
-                            AddLogEntryToDatabase(ctx);
-                            Assert.Equal<DbTransaction>(
-                                sqlTransaction,
-                                GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
-                        }
+                            sqlConnection.Open();
 
-                        sqlTransaction.Rollback();
-                    }
+                            using (var sqlTransaction = sqlConnection.BeginTransaction())
+                            {
+                                // add entry using the external SqlConnection
+                                AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
+
+                                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                                {
+                                    ctx.Database.UseTransaction(sqlTransaction);
+                                    // add entry using the DbContext
+                                    AddLogEntryToDatabase(ctx);
+                                    Assert.Equal<DbTransaction>(
+                                        sqlTransaction,
+                                        GetCurrentStoreTransaction(
+                                            ((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+                                }
+
+                                sqlTransaction.Rollback();
+                            }
+                        });
 
                     // check that neither entry was inserted on the DB
                     Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
@@ -411,24 +439,29 @@ namespace System.Data.Entity.Objects
             {
                 using (var sqlConnection = new SqlConnection(_connectionString))
                 {
-                    sqlConnection.Open();
-
-                    using (var sqlTransaction = sqlConnection.BeginTransaction())
-                    {
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
                         {
-                            ctx.Database.UseTransaction(sqlTransaction);
+                            sqlConnection.Open();
 
-                            var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
-                            var commandText = @"INSERT INTO TransactionLog Values(-1)";
-                            Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
-                            Assert.Equal<DbTransaction>(
-                                sqlTransaction,
-                                GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
-                        }
+                            using (var sqlTransaction = sqlConnection.BeginTransaction())
+                            {
+                                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                                {
+                                    ctx.Database.UseTransaction(sqlTransaction);
 
-                        sqlTransaction.Commit();
-                    }
+                                    var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
+                                    var commandText = @"INSERT INTO TransactionLog Values(-1)";
+                                    Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
+                                    Assert.Equal<DbTransaction>(
+                                        sqlTransaction,
+                                        GetCurrentStoreTransaction(
+                                            ((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+                                }
+
+                                sqlTransaction.Commit();
+                            }
+                        });
 
                     Assert.Equal(1, CountLogEntriesUsingAdoNet(sqlConnection));
                 }
@@ -484,26 +517,31 @@ namespace System.Data.Entity.Objects
             {
                 using (var sqlConnection = new SqlConnection(_connectionString))
                 {
-                    sqlConnection.Open();
-
-                    using (var sqlTransaction = sqlConnection.BeginTransaction())
-                    {
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
                         {
-                            ctx.Database.UseTransaction(sqlTransaction);
+                            sqlConnection.Open();
 
-                            sqlTransaction.Rollback();
+                            using (var sqlTransaction = sqlConnection.BeginTransaction())
+                            {
+                                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                                {
+                                    ctx.Database.UseTransaction(sqlTransaction);
 
-                            Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
+                                    sqlTransaction.Rollback();
 
-                            Assert.Null(
-                                GetCurrentEntityTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+                                    Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
 
-                            var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
-                            var commandText = @"INSERT INTO TransactionLog Values(-1)";
-                            Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
-                        }
-                    }
+                                    Assert.Null(
+                                        GetCurrentEntityTransaction(
+                                            ((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+
+                                    var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
+                                    var commandText = @"INSERT INTO TransactionLog Values(-1)";
+                                    Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
+                                }
+                            }
+                        });
 
                     Assert.Equal(1, CountLogEntriesUsingAdoNet(sqlConnection));
                 }
@@ -596,12 +634,16 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateTransactionDbContext())
                 {
-                    ctx.Database.Connection.Open();
-                    using (var txn = ctx.Database.BeginTransaction())
-                    {
-                        AddLogEntryToDatabase(ctx);
-                        txn.Commit();
-                    }
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            ctx.Database.Connection.Open();
+                            using (var txn = ctx.Database.BeginTransaction())
+                            {
+                                AddLogEntryToDatabase(ctx);
+                                txn.Commit();
+                            }
+                        });
 
                     Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
                     Assert.Equal(1, LogEntriesCount());
@@ -625,12 +667,16 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateTransactionDbContext())
                 {
-                    ctx.Database.Connection.Open();
-                    using (var txn = ctx.Database.BeginTransaction())
-                    {
-                        AddLogEntryToDatabase(ctx);
-                        txn.Rollback();
-                    }
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            ctx.Database.Connection.Open();
+                            using (var txn = ctx.Database.BeginTransaction())
+                            {
+                                AddLogEntryToDatabase(ctx);
+                                txn.Rollback();
+                            }
+                        });
 
                     Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
                     Assert.Equal(0, LogEntriesCount());
@@ -654,13 +700,17 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateTransactionDbContext())
                 {
-                    ctx.Database.Connection.Open();
-                    using (var txn = ctx.Database.Connection.BeginTransaction())
-                    {
-                        ctx.Database.UseTransaction(txn);
-                        AddLogEntryToDatabase(ctx);
-                        txn.Commit();
-                    }
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            ctx.Database.Connection.Open();
+                            using (var txn = ctx.Database.Connection.BeginTransaction())
+                            {
+                                ctx.Database.UseTransaction(txn);
+                                AddLogEntryToDatabase(ctx);
+                                txn.Commit();
+                            }
+                        });
 
                     Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
                     Assert.Equal(1, LogEntriesCount());
@@ -679,7 +729,8 @@ namespace System.Data.Entity.Objects
             {
                 using (var sqlConnection = new SqlConnection(_connectionString))
                 {
-                    sqlConnection.Open();
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () => sqlConnection.Open());
 
                     var sqlTransaction = sqlConnection.BeginTransaction();
                     AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
@@ -688,7 +739,7 @@ namespace System.Data.Entity.Objects
                     using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                     {
                         Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction))
-                              .ValidateMessage("DbContext_InvalidTransactionNoConnection");
+                            .ValidateMessage("DbContext_InvalidTransactionNoConnection");
                     }
                 }
             }
@@ -706,7 +757,8 @@ namespace System.Data.Entity.Objects
             {
                 using (var sqlConnection = new SqlConnection(_connectionString))
                 {
-                    sqlConnection.Open();
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () => sqlConnection.Open());
 
                     var sqlTransaction = sqlConnection.BeginTransaction();
                     AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
@@ -715,7 +767,7 @@ namespace System.Data.Entity.Objects
                     using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                     {
                         Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction))
-                              .ValidateMessage("DbContext_InvalidTransactionNoConnection");
+                            .ValidateMessage("DbContext_InvalidTransactionNoConnection");
                     }
                 }
             }
@@ -731,23 +783,27 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var txnScope = new TransactionScope())
-                {
-                    using (var ctx = CreateTransactionDbContext())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                        using (var txn = ctx.Database.BeginTransaction())
+                        using (var txnScope = new TransactionScope())
                         {
-                            Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
-                            AddLogEntryToDatabase(ctx);
-                            txn.Commit();
+                            using (var ctx = CreateTransactionDbContext())
+                            {
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                                using (var txn = ctx.Database.BeginTransaction())
+                                {
+                                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                                    AddLogEntryToDatabase(ctx);
+                                    txn.Commit();
+                                }
+
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                            }
+
+                            txnScope.Complete();
                         }
-
-                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                    }
-
-                    txnScope.Complete();
-                }
+                    });
 
                 Assert.Equal(1, LogEntriesCount());
             }
@@ -763,23 +819,27 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (new TransactionScope())
-                {
-                    using (var ctx = CreateTransactionDbContext())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                        using (var txn = ctx.Database.BeginTransaction())
+                        using (new TransactionScope())
                         {
-                            Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
-                            AddLogEntryToDatabase(ctx);
-                            txn.Commit();
+                            using (var ctx = CreateTransactionDbContext())
+                            {
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                                using (var txn = ctx.Database.BeginTransaction())
+                                {
+                                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                                    AddLogEntryToDatabase(ctx);
+                                    txn.Commit();
+                                }
+
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                            }
+
+                            // here do not call txnScope.Complete() - so TransactionScope will roll back
                         }
-
-                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                    }
-
-                    // here do not call txnScope.Complete() - so TransactionScope will roll back
-                }
+                    });
 
                 Assert.Equal(0, LogEntriesCount());
             }
@@ -796,7 +856,8 @@ namespace System.Data.Entity.Objects
             try
             {
                 Assert.Throws<TransactionAbortedException>(
-                    () =>
+                    () => ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
                         {
                             using (var txnScope = new TransactionScope())
                             {
@@ -815,8 +876,7 @@ namespace System.Data.Entity.Objects
 
                                 txnScope.Complete();
                             }
-                        }
-                    );
+                        }));
             }
             finally
             {
@@ -830,23 +890,27 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (new TransactionScope())
-                {
-                    using (var ctx = CreateTransactionDbContext())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                        using (var txn = ctx.Database.BeginTransaction())
+                        using (new TransactionScope())
                         {
-                            Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
-                            AddLogEntryToDatabase(ctx);
-                            txn.Rollback();
+                            using (var ctx = CreateTransactionDbContext())
+                            {
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                                using (var txn = ctx.Database.BeginTransaction())
+                                {
+                                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                                    AddLogEntryToDatabase(ctx);
+                                    txn.Rollback();
+                                }
+
+                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                            }
+
+                            // here do not call txnScope.Complete() - so TransactionScope will roll back
                         }
-
-                        Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                    }
-
-                    // here do not call txnScope.Complete() - so TransactionScope will roll back
-                }
+                    });
 
                 Assert.Equal(0, LogEntriesCount());
             }
@@ -864,11 +928,15 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateTransactionDbContext())
                 {
-                    using (var txn = ctx.Database.BeginTransaction())
-                    {
-                        ctx.LogEntries.ToList();
-                        txn.Commit();
-                    }
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            using (var txn = ctx.Database.BeginTransaction())
+                            {
+                                ctx.LogEntries.ToList();
+                                txn.Commit();
+                            }
+                        });
                 }
             }
             finally
@@ -885,11 +953,15 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateTransactionDbContext())
                 {
-                    ctx.Database.Connection.Open();
-                    var txn = ctx.Database.Connection.BeginTransaction();
-                    ctx.Database.UseTransaction(txn);
-                    ctx.LogEntries.ToList();
-                    txn.Commit();
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            ctx.Database.Connection.Open();
+                            var txn = ctx.Database.Connection.BeginTransaction();
+                            ctx.Database.UseTransaction(txn);
+                            ctx.LogEntries.ToList();
+                            txn.Commit();
+                        });
                 }
             }
             finally
@@ -906,12 +978,16 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateObjectContext())
                 {
-                    ctx.Connection.Open();
-                    using (var txn = ctx.Connection.BeginTransaction())
-                    {
-                        var qu = ctx.CreateQuery<TransactionLogEntry>("Entities.TransactionLog").ToList();
-                        txn.Commit();
-                    }
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            ctx.Connection.Open();
+                            using (var txn = ctx.Connection.BeginTransaction())
+                            {
+                                var qu = ctx.CreateQuery<TransactionLogEntry>("Entities.TransactionLog").ToList();
+                                txn.Commit();
+                            }
+                        });
                 }
             }
             finally
@@ -921,7 +997,6 @@ namespace System.Data.Entity.Objects
         }
 
         [ExtendedFact(SkipForSqlAzure = true, Justification = "Sharing transactions between contexts is not supported for SqlAzure")]
-        [UseDefaultExecutionStrategy]
         public void Can_share_transaction_between_DbContexts()
         {
             using (var ctx = new SimpleModelContext())
@@ -948,17 +1023,21 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Can_not_share_transaction_between_DbContext_and_ObjectContext()
         {
-            using (var ctx1 = CreateObjectContext())
+            using (var ctx = CreateObjectContext())
             {
-                ctx1.Connection.Open();
-                using (var txn = ctx1.Connection.BeginTransaction())
-                {
-                    using (var ctx2 = new TransactionDbContext((EntityConnection)ctx1.Connection, false))
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        Assert.Throws<InvalidOperationException>(() => ctx2.Database.UseTransaction(txn))
-                              .ValidateMessage("DbContext_TransactionAlreadyStarted");
-                    }
-                }
+                        ctx.Connection.Open();
+                        using (var txn = ctx.Connection.BeginTransaction())
+                        {
+                            using (var ctx2 = new TransactionDbContext((EntityConnection)ctx.Connection, false))
+                            {
+                                Assert.Throws<InvalidOperationException>(() => ctx2.Database.UseTransaction(txn))
+                                    .ValidateMessage("DbContext_TransactionAlreadyStarted");
+                            }
+                        }
+                    });
             }
         }
 
@@ -969,14 +1048,18 @@ namespace System.Data.Entity.Objects
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed()
         {
             var entityConnection = new EntityConnection(_entityConnectionString);
-            using (new TransactionScope())
-            {
-                using (var ctx = CreateTransactionDbContext(entityConnection, true))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        using (var ctx = CreateTransactionDbContext(entityConnection, true))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                        }
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -987,14 +1070,18 @@ namespace System.Data.Entity.Objects
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_SqlConnection_is_closed()
         {
             var connection = new SqlConnection(_connectionString);
-            using (new TransactionScope())
-            {
-                using (var ctx = CreateTransactionDbContext(connection, _compiledModel, contextOwnsConnection: true))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        using (var ctx = CreateTransactionDbContext(connection, _compiledModel, contextOwnsConnection: true))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                        }
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1005,15 +1092,19 @@ namespace System.Data.Entity.Objects
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_inside_transaction_scope()
         {
             var connection = new EntityConnection(_entityConnectionString);
-            using (new TransactionScope())
-            {
-                connection.Open();
-                using (var ctx = CreateTransactionDbContext(connection, contextOwnsConnection: true))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        connection.Open();
+                        using (var ctx = CreateTransactionDbContext(connection, contextOwnsConnection: true))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                        }
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1024,15 +1115,19 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var ctx = CreateTransactionContext())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount());
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
+                            // Implicit transaction committed. 1 entity expected.
+                            Assert.Equal(1, LogEntriesCount());
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                    });
             }
             finally
             {
@@ -1047,15 +1142,19 @@ namespace System.Data.Entity.Objects
             try
             {
                 var connection = new EntityConnection(_entityConnectionString);
-                using (var ctx = CreateTransactionContext(connection))
-                {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var ctx = CreateTransactionContext(connection))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount(connection));
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
+                            // Implicit transaction committed. 1 entity expected.
+                            Assert.Equal(1, LogEntriesCount(connection));
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                    });
             }
             finally
             {
@@ -1069,17 +1168,21 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    ctx.Connection.Open();
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var ctx = CreateTransactionContext())
+                        {
+                            ctx.Connection.Open();
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount());
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                    ctx.Connection.Close();
-                }
+                            // Implicit transaction committed. 1 entity expected.
+                            Assert.Equal(1, LogEntriesCount());
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            ctx.Connection.Close();
+                        }
+                    });
             }
             finally
             {
@@ -1116,15 +1219,19 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed()
         {
-            using (new TransactionScope())
-            {
-                using (var ctx = CreateTransactionContext())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        using (var ctx = CreateTransactionContext())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                    }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1134,16 +1241,20 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed()
         {
-            using (new TransactionScope())
-            {
-                var connection = new EntityConnection(_entityConnectionString);
-                using (var ctx = CreateTransactionContext(connection))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        var connection = new EntityConnection(_entityConnectionString);
+                        using (var ctx = CreateTransactionContext(connection))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                    }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1153,18 +1264,22 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed_plus_AdoNet_calls()
         {
-            using (new TransactionScope())
-            {
-                var connection = new EntityConnection(_entityConnectionString);
-                AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
-
-                using (var ctx = CreateTransactionContext(connection))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        var connection = new EntityConnection(_entityConnectionString);
+                        AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
+
+                        using (var ctx = CreateTransactionContext(connection))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                    }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1175,15 +1290,19 @@ namespace System.Data.Entity.Objects
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed()
         {
             var connection = new EntityConnection(_entityConnectionString);
-            using (new TransactionScope())
-            {
-                using (var ctx = CreateTransactionContext(connection))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        using (var ctx = CreateTransactionContext(connection))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                    }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1194,16 +1313,20 @@ namespace System.Data.Entity.Objects
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls()
         {
             var connection = new EntityConnection(_entityConnectionString);
-            using (new TransactionScope())
-            {
-                AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
-                using (var ctx = CreateTransactionContext(connection))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
+                        using (var ctx = CreateTransactionContext(connection))
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                    }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1216,22 +1339,27 @@ namespace System.Data.Entity.Objects
             try
             {
                 var connection = new EntityConnection(_entityConnectionString);
-                using (var transactionScope = new TransactionScope())
-                {
-                    AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
-                    using (var ctx = CreateTransactionContext(connection))
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                        transactionScope.Complete();
-                        Assert.Equal(1, transactionLogEntry.TransactionCount);
-                        Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                    }
-                }
+                        using (var transactionScope = new TransactionScope())
+                        {
+                            AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
+                            using (var ctx = CreateTransactionContext(connection))
+                            {
+                                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                                transactionScope.Complete();
+                                Assert.Equal(1, transactionLogEntry.TransactionCount);
+                                Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                            }
+                        }
+                    });
 
                 // verify that there are two entries (one for AdoNet and one for EF, but only one transaction
                 using (var ctx = CreateTransactionContext())
                 {
-                    var transactionCountEntries = ctx.LogEntries.Select(e => e.TransactionCount).OrderBy(c => c).ToList();
+                    var transactionCountEntries = ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () => ctx.LogEntries.Select(e => e.TransactionCount).OrderBy(c => c).ToList());
                     Assert.Equal(2, transactionCountEntries.Count());
                     Assert.Equal(-1, transactionCountEntries[0]);
                     Assert.Equal(1, transactionCountEntries[1]);
@@ -1247,17 +1375,21 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_open()
         {
-            using (new TransactionScope())
-            {
-                using (var ctx = CreateTransactionContext())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    ctx.Connection.Open();
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                    ctx.Connection.Close();
-                }
-            }
+                    using (new TransactionScope())
+                    {
+                        using (var ctx = CreateTransactionContext())
+                        {
+                            ctx.Connection.Open();
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            ctx.Connection.Close();
+                        }
+                    }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1267,19 +1399,23 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_open()
         {
-            using (new TransactionScope())
-            {
-                using (var connection = new EntityConnection(_entityConnectionString))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    connection.Open();
-                    using (var ctx = CreateTransactionContext(connection))
+                    using (new TransactionScope())
                     {
-                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                        Assert.Equal(1, transactionLogEntry.TransactionCount);
-                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        using (var connection = new EntityConnection(_entityConnectionString))
+                        {
+                            connection.Open();
+                            using (var ctx = CreateTransactionContext(connection))
+                            {
+                                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                                Assert.Equal(1, transactionLogEntry.TransactionCount);
+                                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            }
+                        }
                     }
-                }
-            }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1289,21 +1425,25 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_executing_multiple_operations_in_the_same_TransactionScope()
         {
-            using (new TransactionScope())
-            {
-                using (var ctx = CreateTransactionContext())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    ctx.Connection.Open();
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    using (new TransactionScope())
+                    {
+                        using (var ctx = CreateTransactionContext())
+                        {
+                            ctx.Connection.Open();
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
 
-                    transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                    ctx.Connection.Close();
-                }
-            }
+                            transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            ctx.Connection.Close();
+                        }
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1313,19 +1453,23 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_explicitly_using_CommittableTransaction()
         {
-            using (var ctx = CreateTransactionContext())
-            {
-                ctx.Connection.Open();
-                using (var committableTransaction = new CommittableTransaction())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    ctx.Connection.EnlistTransaction(committableTransaction);
+                    using (var ctx = CreateTransactionContext())
+                    {
+                        ctx.Connection.Open();
+                        using (var committableTransaction = new CommittableTransaction())
+                        {
+                            ctx.Connection.EnlistTransaction(committableTransaction);
 
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
-                ctx.Connection.Close();
-            }
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
+                        ctx.Connection.Close();
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1335,19 +1479,23 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_enlists_TransactionScope()
         {
-            using (var ctx = CreateTransactionContext())
-            {
-                ctx.Connection.Open();
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    ctx.Connection.EnlistTransaction(Transaction.Current);
+                    using (var ctx = CreateTransactionContext())
+                    {
+                        ctx.Connection.Open();
+                        using (new TransactionScope())
+                        {
+                            ctx.Connection.EnlistTransaction(Transaction.Current);
 
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
-                ctx.Connection.Close();
-            }
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
+                        ctx.Connection.Close();
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1357,22 +1505,26 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_ambient_CommittableTransaction()
         {
-            using (var ctx = CreateTransactionContext())
-            {
-                ctx.Connection.Open();
-                using (var committableTransaction = new CommittableTransaction(new TimeSpan(1, 0, 0)))
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    ctx.Connection.EnlistTransaction(committableTransaction);
-                    Transaction.Current = committableTransaction;
+                    using (var ctx = CreateTransactionContext())
+                    {
+                        ctx.Connection.Open();
+                        using (var committableTransaction = new CommittableTransaction(new TimeSpan(1, 0, 0)))
+                        {
+                            ctx.Connection.EnlistTransaction(committableTransaction);
+                            Transaction.Current = committableTransaction;
 
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
 
-                    Transaction.Current = null;
-                }
-                ctx.Connection.Close();
-            }
+                            Transaction.Current = null;
+                        }
+                        ctx.Connection.Close();
+                    }
+                });
 
             // Transaction not commited. No entities should be saved to the database.
             Assert.Equal(0, LogEntriesCount());
@@ -1382,17 +1534,21 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_starts_DbTransaction_explicitly()
         {
-            using (var ctx = CreateTransactionContext())
-            {
-                ctx.Connection.Open();
-                using (ctx.Connection.BeginTransaction())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
-                ctx.Connection.Close();
-            }
+                    using (var ctx = CreateTransactionContext())
+                    {
+                        ctx.Connection.Open();
+                        using (ctx.Connection.BeginTransaction())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
+                        ctx.Connection.Close();
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1404,22 +1560,26 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    ctx.Connection.Open();
-                    using (ctx.Connection.BeginTransaction())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        using (new TransactionScope())
+                        using (var ctx = CreateTransactionContext())
                         {
-                            var transactionLogEntry = new TransactionLogEntry();
-                            ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
+                            ctx.Connection.Open();
+                            using (ctx.Connection.BeginTransaction())
+                            {
+                                using (new TransactionScope())
+                                {
+                                    var transactionLogEntry = new TransactionLogEntry();
+                                    ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
 
-                            Assert.Throws<EntityException>(() => ctx.SaveChanges())
-                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                    Assert.Throws<EntityException>(() => ctx.SaveChanges())
+                                        .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                }
+                            }
+                            ctx.Connection.Close();
                         }
-                    }
-                    ctx.Connection.Close();
-                }
+                    });
             }
             finally
             {
@@ -1433,19 +1593,23 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    ctx.Connection.Open();
-                    using (ctx.Connection.BeginTransaction())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        using (var committableTransaction = new CommittableTransaction())
+                        using (var ctx = CreateTransactionContext())
                         {
-                            Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(committableTransaction))
-                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                            ctx.Connection.Open();
+                            using (ctx.Connection.BeginTransaction())
+                            {
+                                using (var committableTransaction = new CommittableTransaction())
+                                {
+                                    Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(committableTransaction))
+                                        .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                }
+                            }
+                            ctx.Connection.Close();
                         }
-                    }
-                    ctx.Connection.Close();
-                }
+                    });
             }
             finally
             {
@@ -1457,20 +1621,24 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_using_TransactionScope_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
         {
-            using (var ctx = CreateTransactionContext())
-            {
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    ctx.Connection.Open();
-                    using (ctx.Connection.BeginTransaction())
+                    using (var ctx = CreateTransactionContext())
                     {
-                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                        Assert.Equal(2, transactionLogEntry.TransactionCount);
-                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        using (new TransactionScope())
+                        {
+                            ctx.Connection.Open();
+                            using (ctx.Connection.BeginTransaction())
+                            {
+                                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                                Assert.Equal(2, transactionLogEntry.TransactionCount);
+                                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            }
+                            ctx.Connection.Close();
+                        }
                     }
-                    ctx.Connection.Close();
-                }
-            }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1478,24 +1646,29 @@ namespace System.Data.Entity.Objects
 
         [Fact]
         [UseDefaultExecutionStrategy]
-        public void Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
+        public void
+            Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
         {
-            using (var ctx = CreateTransactionContext())
-            {
-                ctx.Connection.Open();
-                using (var committableTransaction = new CommittableTransaction())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    ctx.Connection.EnlistTransaction(committableTransaction);
-
-                    using (ctx.Connection.BeginTransaction())
+                    using (var ctx = CreateTransactionContext())
                     {
-                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                        Assert.Equal(2, transactionLogEntry.TransactionCount);
-                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        ctx.Connection.Open();
+                        using (var committableTransaction = new CommittableTransaction())
+                        {
+                            ctx.Connection.EnlistTransaction(committableTransaction);
+
+                            using (ctx.Connection.BeginTransaction())
+                            {
+                                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                                Assert.Equal(2, transactionLogEntry.TransactionCount);
+                                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            }
+                        }
+                        ctx.Connection.Close();
                     }
-                }
-                ctx.Connection.Close();
-            }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1507,19 +1680,23 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    using (new TransactionScope())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        ctx.Connection.Open();
-                        using (var committableTransaction = new CommittableTransaction())
+                        using (var ctx = CreateTransactionContext())
                         {
-                            Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(committableTransaction))
-                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                            using (new TransactionScope())
+                            {
+                                ctx.Connection.Open();
+                                using (var committableTransaction = new CommittableTransaction())
+                                {
+                                    Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(committableTransaction))
+                                        .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                }
+                                ctx.Connection.Close();
+                            }
                         }
-                        ctx.Connection.Close();
-                    }
-                }
+                    });
             }
             finally
             {
@@ -1533,23 +1710,27 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    ctx.Connection.Open();
-                    using (var committableTransaction = new CommittableTransaction())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        ctx.Connection.EnlistTransaction(committableTransaction);
-                        using (new TransactionScope())
+                        using (var ctx = CreateTransactionContext())
                         {
-                            var transactionLogEntry = new TransactionLogEntry();
-                            ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
+                            ctx.Connection.Open();
+                            using (var committableTransaction = new CommittableTransaction())
+                            {
+                                ctx.Connection.EnlistTransaction(committableTransaction);
+                                using (new TransactionScope())
+                                {
+                                    var transactionLogEntry = new TransactionLogEntry();
+                                    ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
 
-                            Assert.Throws<EntityException>(() => ctx.SaveChanges())
-                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                    Assert.Throws<EntityException>(() => ctx.SaveChanges())
+                                        .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                }
+                            }
+                            ctx.Connection.Close();
                         }
-                    }
-                    ctx.Connection.Close();
-                }
+                    });
             }
             finally
             {
@@ -1565,23 +1746,27 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateObjectContext())
                 {
-                    ctx.Connection.Open();
-                    using (new TransactionScope())
-                    {
-                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                        Assert.Equal(1, transactionLogEntry.TransactionCount);
-                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                    }
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            ctx.Connection.Open();
+                            using (new TransactionScope())
+                            {
+                                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                                Assert.Equal(1, transactionLogEntry.TransactionCount);
+                                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            }
 
-                    // "Transaction not commited. No entities should be saved to the database."
-                    Assert.Equal(0, LogEntriesCount());
+                            // "Transaction not commited. No entities should be saved to the database."
+                            Assert.Equal(0, LogEntriesCount());
 
-                    AddLogEntryToDatabase(ctx);
+                            AddLogEntryToDatabase(ctx);
 
-                    // "Implicit transaction committed. 1 entity expected."
-                    Assert.Equal(1, LogEntriesCount());
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                    ctx.Connection.Close();
+                            // "Implicit transaction committed. 1 entity expected."
+                            Assert.Equal(1, LogEntriesCount());
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                            ctx.Connection.Close();
+                        });
                 }
             }
             finally
@@ -1596,13 +1781,17 @@ namespace System.Data.Entity.Objects
         {
             using (var ctx = CreateObjectContext())
             {
-                ctx.Connection.Open();
-                using (new TransactionScope())
-                {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        ctx.Connection.Open();
+                        using (new TransactionScope())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
+                    });
 
                 // "Transaction not commited. No entities should be saved to the database."
                 Assert.Equal(0, LogEntriesCount());
@@ -1629,17 +1818,25 @@ namespace System.Data.Entity.Objects
             {
                 using (var ctx = CreateObjectContext())
                 {
-                    using (new TransactionScope())
-                    {
-                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                        Assert.Equal(1, transactionLogEntry.TransactionCount);
-                        Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                    }
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            using (new TransactionScope())
+                            {
+                                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                                Assert.Equal(1, transactionLogEntry.TransactionCount);
+                                Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                            }
+                        });
 
                     // "Transaction not commited. No entities should be saved to the database."
                     Assert.Equal(0, LogEntriesCount());
 
-                    AddLogEntryToDatabase(ctx);
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            AddLogEntryToDatabase(ctx);
+                        });
 
                     // "Implicit transaction committed. 1 entity expected."
                     Assert.Equal(1, LogEntriesCount());
@@ -1658,26 +1855,30 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateObjectContext())
-                {
-                    ctx.Connection.Open();
-
-                    using (var committableTransaction = new CommittableTransaction())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        ctx.Connection.EnlistTransaction(committableTransaction);
-                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                        Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    }
+                        using (var ctx = CreateObjectContext())
+                        {
+                            ctx.Connection.Open();
 
-                    // "Transaction not commited. No entities should be saved to the database."
-                    Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+                            using (var committableTransaction = new CommittableTransaction())
+                            {
+                                ctx.Connection.EnlistTransaction(committableTransaction);
+                                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                                Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            }
 
-                    AddLogEntryToDatabase(ctx);
+                            // "Transaction not commited. No entities should be saved to the database."
+                            Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
 
-                    // "Implicit transaction committed. 1 entity expected."
-                    Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
-                    ctx.Connection.Close();
-                }
+                            AddLogEntryToDatabase(ctx);
+
+                            // "Implicit transaction committed. 1 entity expected."
+                            Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
+                            ctx.Connection.Close();
+                        }
+                    });
             }
             finally
             {
@@ -1689,25 +1890,29 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_no_implicit_transaction_created_when_transactions_change_between_requests()
         {
-            using (var ctx = CreateObjectContext())
-            {
-                ctx.Connection.Open();
-
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
+                    using (var ctx = CreateObjectContext())
+                    {
+                        ctx.Connection.Open();
 
-                using (new TransactionScope())
-                {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
-                ctx.Connection.Close();
-            }
+                        using (new TransactionScope())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
+
+                        using (new TransactionScope())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
+                        ctx.Connection.Close();
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1717,27 +1922,31 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_no_implicit_transaction_created_when_enlisting_in_transaction_between_requests()
         {
-            using (var ctx = CreateObjectContext())
-            {
-                ctx.Connection.Open();
-
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
+                    using (var ctx = CreateObjectContext())
+                    {
+                        ctx.Connection.Open();
 
-                using (var committableTransaction = new CommittableTransaction())
-                {
-                    ctx.Connection.EnlistTransaction(committableTransaction);
+                        using (new TransactionScope())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
 
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-                }
-                ctx.Connection.Close();
-            }
+                        using (var committableTransaction = new CommittableTransaction())
+                        {
+                            ctx.Connection.EnlistTransaction(committableTransaction);
+
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        }
+                        ctx.Connection.Close();
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1747,25 +1956,29 @@ namespace System.Data.Entity.Objects
         [UseDefaultExecutionStrategy]
         public void Verify_no_implicit_transaction_created_when_transaction_change_and_connection_is_closed_between_requests()
         {
-            using (var ctx = CreateObjectContext())
-            {
-                ctx.Connection.Open();
-
-                using (new TransactionScope())
+            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                () =>
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    ctx.Connection.Close();
-                }
+                    using (var ctx = CreateObjectContext())
+                    {
+                        ctx.Connection.Open();
 
-                using (new TransactionScope())
-                {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
-                }
-                ctx.Connection.Close();
-            }
+                        using (new TransactionScope())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            ctx.Connection.Close();
+                        }
+
+                        using (new TransactionScope())
+                        {
+                            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                            Assert.Equal(1, transactionLogEntry.TransactionCount);
+                            Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
+                        }
+                        ctx.Connection.Close();
+                    }
+                });
 
             // "Transaction not commited. No entities should be saved to the database."
             Assert.Equal(0, LogEntriesCount());
@@ -1776,21 +1989,25 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    ctx.Connection.Open();
-                    using (var committableTransaction = new CommittableTransaction())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        using (var newCommittableTransaction = new CommittableTransaction())
+                        using (var ctx = CreateTransactionContext())
                         {
-                            ctx.Connection.EnlistTransaction(committableTransaction);
+                            ctx.Connection.Open();
+                            using (var committableTransaction = new CommittableTransaction())
+                            {
+                                using (var newCommittableTransaction = new CommittableTransaction())
+                                {
+                                    ctx.Connection.EnlistTransaction(committableTransaction);
 
-                            Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(newCommittableTransaction))
-                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                    Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(newCommittableTransaction))
+                                        .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                }
+                            }
+                            ctx.Connection.Close();
                         }
-                    }
-                    ctx.Connection.Close();
-                }
+                    });
             }
             finally
             {
@@ -1803,22 +2020,26 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var ctx = CreateTransactionContext())
-                {
-                    ctx.Connection.Open();
-                    using (var committableTransaction = new CommittableTransaction())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        ctx.Connection.EnlistTransaction(committableTransaction);
-                        ctx.Connection.Close();
-
-                        ctx.Connection.Open();
-                        using (var newCommittableTransaction = new CommittableTransaction())
+                        using (var ctx = CreateTransactionContext())
                         {
-                            ctx.Connection.EnlistTransaction(newCommittableTransaction);
+                            ctx.Connection.Open();
+                            using (var committableTransaction = new CommittableTransaction())
+                            {
+                                ctx.Connection.EnlistTransaction(committableTransaction);
+                                ctx.Connection.Close();
+
+                                ctx.Connection.Open();
+                                using (var newCommittableTransaction = new CommittableTransaction())
+                                {
+                                    ctx.Connection.EnlistTransaction(newCommittableTransaction);
+                                }
+                            }
+                            ctx.Connection.Close();
                         }
-                    }
-                    ctx.Connection.Close();
-                }
+                    });
             }
             finally
             {
@@ -1827,7 +2048,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommand_by_default_uses_transaction()
         {
             try
@@ -1866,7 +2086,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_does_not_use_transaction()
         {
             try
@@ -1891,16 +2110,21 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (new TransactionScope())
-                {
-                    using (var ctx = CreateTransactionDbContext())
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        ctx.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
-                        var transactionCount = ctx.LogEntries.Single().TransactionCount;
+                        using (new TransactionScope())
+                        {
+                            using (var ctx = CreateTransactionDbContext())
+                            {
+                                ctx.Database.ExecuteSqlCommand(
+                                    TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
+                                var transactionCount = ctx.LogEntries.Single().TransactionCount;
 
-                        Assert.Equal(1, transactionCount);
-                    }
-                }
+                                Assert.Equal(1, transactionCount);
+                            }
+                        }
+                    });
             }
             finally
             {
@@ -1910,18 +2134,24 @@ namespace System.Data.Entity.Objects
 
         [Fact]
         [UseDefaultExecutionStrategy]
-        public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction()
+        public void
+            ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction()
         {
             try
             {
-                using (var ctx = CreateTransactionDbContext())
-                {
-                    ctx.Database.BeginTransaction();
-                    ctx.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
-                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var ctx = CreateTransactionDbContext())
+                        {
+                            ctx.Database.BeginTransaction();
+                            ctx.Database.ExecuteSqlCommand(
+                                TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
+                            var transactionCount = ctx.LogEntries.Single().TransactionCount;
 
-                    Assert.Equal(1, transactionCount);
-                }
+                            Assert.Equal(1, transactionCount);
+                        }
+                    });
             }
             finally
             {
@@ -1931,7 +2161,6 @@ namespace System.Data.Entity.Objects
 
 #if !NET40
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommandAsync_by_default_uses_transaction()
         {
             try
@@ -1951,7 +2180,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommandAsync_with_TransactionalBehavior_EnsureTransaction_uses_transaction()
         {
             try
@@ -1971,7 +2199,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommandAsync_with_TransactionalBehavior_DoNotEnsureTransaction_does_not_use_transaction()
         {
             try
@@ -1992,18 +2219,25 @@ namespace System.Data.Entity.Objects
 
         [Fact]
         [UseDefaultExecutionStrategy]
-        public void ExecuteSqlCommandAsync_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction()
+        public void
+            ExecuteSqlCommandAsync_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction
+            ()
         {
             try
             {
-                using (var ctx = CreateTransactionDbContext())
-                {
-                    ctx.Database.BeginTransaction();
-                    ctx.Database.ExecuteSqlCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]").Wait();
-                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var ctx = CreateTransactionDbContext())
+                        {
+                            ctx.Database.BeginTransaction();
+                            ctx.Database.ExecuteSqlCommandAsync(
+                                TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]").Wait();
+                            var transactionCount = ctx.LogEntries.Single().TransactionCount;
 
-                    Assert.Equal(1, transactionCount);
-                }
+                            Assert.Equal(1, transactionCount);
+                        }
+                    });
             }
             finally
             {
@@ -2077,7 +2311,8 @@ namespace System.Data.Entity.Objects
         {
             using (var ctx = CreateTransactionContext())
             {
-                return ctx.LogEntries.Count();
+                return ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () => ctx.LogEntries.Count());
             }
         }
 
@@ -2085,7 +2320,8 @@ namespace System.Data.Entity.Objects
         {
             using (var ctx = CreateTransactionContext(connection))
             {
-                return ctx.LogEntries.Count();
+                return ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () => ctx.LogEntries.Count());
             }
         }
 

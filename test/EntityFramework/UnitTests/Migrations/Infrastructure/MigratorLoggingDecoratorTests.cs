@@ -13,7 +13,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class MigratorLoggingDecoratorTests : DbTestCase
     {
-        [MigrationsTheory]
+        [Fact]
         public void Ctor_should_validate_preconditions()
         {
             Assert.Equal("innerMigrator", Assert.Throws<ArgumentNullException>(() => new MigratorLoggingDecorator(null, null)).ParamName);

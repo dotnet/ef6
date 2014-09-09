@@ -76,19 +76,24 @@ namespace ProductivityApiTests
                 Assert.Equal(64, cheese.Info.Image.Length);
                 Assert.Equal(new[] { "Branston", "Piccalilli" }, cheese.Pickles.Select(p => p.Name).OrderBy(n => n));
 
-                using (moon.Database.BeginTransaction())
-                {
-                    cheese.Pickles.Add(
-                        new TheMoon.Pickle
-                            {
-                                Name = "Gromit Special"
-                            });
-                    moon.SaveChanges();
+                cheese.Pickles.Add(
+                    new TheMoon.Pickle
+                    {
+                        Name = "Gromit Special"
+                    });
 
-                    Assert.Equal(
-                        new[] { "Branston", "Gromit Special", "Piccalilli" },
-                        moon.Pickles.AsNoTracking().Select(p => p.Name).OrderBy(n => n));
-                }
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (moon.Database.BeginTransaction())
+                        {
+                            moon.SaveChanges();
+
+                            Assert.Equal(
+                                new[] { "Branston", "Gromit Special", "Piccalilli" },
+                                moon.Pickles.AsNoTracking().Select(p => p.Name).OrderBy(n => n));
+                        }
+                    });
             }
 
             using (var earth = createEarth())
@@ -100,25 +105,29 @@ namespace ProductivityApiTests
                 Assert.Equal(64, cheese.Info.Image.Length);
                 Assert.Equal(new[] { "Dill", "Relish" }, cheese.Pickles.Select(p => p.Name).OrderBy(n => n));
 
-                using (earth.Database.BeginTransaction())
-                {
-                    earth.Cheeses.Add(
-                        new TheEarth.Cheese
-                            {
-                                Name = "Swiss",
-                                Info = new TheEarth.CheeseInfo(TheEarth.Maturity.Todler, new byte[32]),
-                                Pickles = cheese.Pickles.ToList()
-                            });
+                earth.Cheeses.Add(
+                    new TheEarth.Cheese
+                    {
+                        Name = "Swiss",
+                        Info = new TheEarth.CheeseInfo(TheEarth.Maturity.Todler, new byte[32]),
+                        Pickles = cheese.Pickles.ToList()
+                    });
 
-                    earth.SaveChanges();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (earth.Database.BeginTransaction())
+                        {
+                            earth.SaveChanges();
 
-                    cheese = earth.Cheeses.Single(c => c.Name == "Swiss");
+                            cheese = earth.Cheeses.Single(c => c.Name == "Swiss");
 
-                    Assert.Equal("Swiss", cheese.Name);
-                    Assert.Equal(TheEarth.Maturity.Todler, cheese.Info.Maturity);
-                    Assert.Equal(32, cheese.Info.Image.Length);
-                    Assert.Equal(new[] { "Dill", "Relish" }, cheese.Pickles.Select(p => p.Name).OrderBy(n => n));
-                }
+                            Assert.Equal("Swiss", cheese.Name);
+                            Assert.Equal(TheEarth.Maturity.Todler, cheese.Info.Maturity);
+                            Assert.Equal(32, cheese.Info.Image.Length);
+                            Assert.Equal(new[] { "Dill", "Relish" }, cheese.Pickles.Select(p => p.Name).OrderBy(n => n));
+                        }
+                    });
             }
         }
 
@@ -255,19 +264,24 @@ namespace ProductivityApiTests
                 Assert.Equal(16, cheese.Info.Image.Length);
                 Assert.Equal(new[] { "Ketchup", "Mustard" }, cheese.Pickles.Select(p => p.Name).OrderBy(n => n));
 
-                using (nested.Database.BeginTransaction())
-                {
-                    cheese.Pickles.Add(
-                        new Pickle
-                            {
-                                Name = "Not Pickles"
-                            });
-                    nested.SaveChanges();
+                cheese.Pickles.Add(
+                    new Pickle
+                    {
+                        Name = "Not Pickles"
+                    });
 
-                    Assert.Equal(
-                        new[] { "Ketchup", "Mustard", "Not Pickles" },
-                        nested.Pickles.AsNoTracking().Select(p => p.Name).OrderBy(n => n));
-                }
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (nested.Database.BeginTransaction())
+                        {
+                            nested.SaveChanges();
+
+                            Assert.Equal(
+                                new[] { "Ketchup", "Mustard", "Not Pickles" },
+                                nested.Pickles.AsNoTracking().Select(p => p.Name).OrderBy(n => n));
+                        }
+                    });
             }
         }
 

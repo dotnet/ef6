@@ -25,8 +25,8 @@ namespace System.Data.Entity.Interception
         public void No_TransactionHandler_and_no_ExecutionStrategy_throws_CommitFailedException_on_commit_fail()
         {
             Execute_commit_failure_test(
-                c => Assert.Throws<DataException>(() => c()).InnerException.ValidateMessage("CommitFailed"),
-                c => Assert.Throws<CommitFailedException>(() => c()).ValidateMessage("CommitFailed"),
+                c => Assert.Throws<DataException>(() => ExtendedSqlAzureExecutionStrategy.ExecuteNew(c)).InnerException.ValidateMessage("CommitFailed"),
+                c => Assert.Throws<CommitFailedException>(() => ExtendedSqlAzureExecutionStrategy.ExecuteNew(c)).ValidateMessage("CommitFailed"),
                 expectedBlogs: 1,
                 useTransactionHandler: false,
                 useExecutionStrategy: false,
@@ -37,8 +37,8 @@ namespace System.Data.Entity.Interception
         public void No_TransactionHandler_and_no_ExecutionStrategy_throws_CommitFailedException_on_false_commit_fail()
         {
             Execute_commit_failure_test(
-                c => Assert.Throws<DataException>(() => c()).InnerException.ValidateMessage("CommitFailed"),
-                c => Assert.Throws<CommitFailedException>(() => c()).ValidateMessage("CommitFailed"),
+                c => Assert.Throws<DataException>(() => ExtendedSqlAzureExecutionStrategy.ExecuteNew(c)).InnerException.ValidateMessage("CommitFailed"),
+                c => Assert.Throws<CommitFailedException>(() => ExtendedSqlAzureExecutionStrategy.ExecuteNew(c)).ValidateMessage("CommitFailed"),
                 expectedBlogs: 2,
                 useTransactionHandler: false,
                 useExecutionStrategy: false,
@@ -46,11 +46,21 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
-        [UseDefaultExecutionStrategy]
         public void TransactionHandler_and_no_ExecutionStrategy_rethrows_original_exception_on_commit_fail()
         {
             Execute_commit_failure_test(
-                c => Assert.Throws<TimeoutException>(() => c()),
+                c =>
+                {
+                    try
+                    {
+                        c();
+                        Assert.True(false, "Expected an exception");
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.True(SqlAzureRetriableExceptionDetector.ShouldRetryOn(ex), "Expected a retryable exception, but got: " + ex.ToString());
+                    }
+                },
                 c =>
                 {
                     var exception = Assert.Throws<EntityException>(() => c());
@@ -66,8 +76,8 @@ namespace System.Data.Entity.Interception
         public void TransactionHandler_and_no_ExecutionStrategy_does_not_throw_on_false_commit_fail()
         {
             Execute_commit_failure_test(
-                c => c(),
-                c => c(),
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew,
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew,
                 expectedBlogs: 2,
                 useTransactionHandler: true,
                 useExecutionStrategy: false,
@@ -114,6 +124,15 @@ namespace System.Data.Entity.Interception
             Action<Action> verifyInitialization, Action<Action> verifySaveChanges, int expectedBlogs, bool useTransactionHandler,
             bool useExecutionStrategy, bool rollbackOnFail)
         {
+
+            using (var context = new BlogContextCommit())
+            {
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        context.Database.Delete();
+                    });
+            }
             var failingTransactionInterceptorMock = new Mock<FailingTransactionInterceptor> { CallBase = true };
             var failingTransactionInterceptor = failingTransactionInterceptorMock.Object;
             DbInterception.Add(failingTransactionInterceptor);
@@ -131,22 +150,29 @@ namespace System.Data.Entity.Interception
                     key =>
                         (Func<IDbExecutionStrategy>)
                             (() => isSqlAzure
-                                ? new TestSqlAzureExecutionStrategy()
+                                ? new SuspendableSqlAzureExecutionStrategy()
                                 : (IDbExecutionStrategy)
                                     new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
+            }
+            else
+            {
+                FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             }
 
             try
             {
                 using (var context = new BlogContextCommit())
                 {
-                    context.Database.Delete();
                     failingTransactionInterceptor.ShouldFailTimes = 1;
                     failingTransactionInterceptor.ShouldRollBack = rollbackOnFail;
                     verifyInitialization(() => context.Blogs.Count());
 
                     failingTransactionInterceptor.ShouldFailTimes = 0;
-                    Assert.Equal(1, context.Blogs.Count());
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            Assert.Equal(1, context.Blogs.Count());
+                        });
 
                     failingTransactionInterceptor.ShouldFailTimes = 1;
                     context.Blogs.Add(new BlogContext.Blog());
@@ -155,7 +181,7 @@ namespace System.Data.Entity.Interception
                     var expectedCommitCount = useTransactionHandler
                         ? useExecutionStrategy
                             ? 6
-                            : rollbackOnFail
+                            : rollbackOnFail && !isSqlAzure
                                 ? 4
                                 : 3
                         : 4;
@@ -169,21 +195,30 @@ namespace System.Data.Entity.Interception
 
                 using (var context = new BlogContextCommit())
                 {
-                    Assert.Equal(expectedBlogs, context.Blogs.Count());
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            Assert.Equal(expectedBlogs, context.Blogs.Count());
+                        });
 
                     using (var transactionContext = new TransactionContext(context.Database.Connection))
                     {
                         using (var infoContext = GetInfoContext(transactionContext))
                         {
-                            Assert.True(
-                                !infoContext.TableExists("__Transactions")
-                                || !transactionContext.Transactions.Any());
+                            ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                                () =>
+                                {
+                                    Assert.True(
+                                        !infoContext.TableExists("__Transactions")
+                                        || !transactionContext.Transactions.Any());
+                                });
                         }
                     }
                 }
             }
             finally
             {
+                FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
                 DbInterception.Remove(failingTransactionInterceptor);
                 MutableResolver.ClearResolvers();
             }
@@ -261,7 +296,7 @@ namespace System.Data.Entity.Interception
                 key =>
                     (Func<IDbExecutionStrategy>)
                         (() => isSqlAzure
-                            ? new TestSqlAzureExecutionStrategy()
+                            ? new SuspendableSqlAzureExecutionStrategy()
                             : (IDbExecutionStrategy)new SqlAzureExecutionStrategy(maxRetryCount: 2, maxDelay: TimeSpan.FromMilliseconds(1))));
 
             try
@@ -607,12 +642,12 @@ namespace System.Data.Entity.Interception
 #endif
 
         private void CommitFailureHandler_with_ExecutionStrategy_test(
-            Action<ObjectContext, Mock<TestSqlAzureExecutionStrategy>> pruneAndVerify)
+            Action<ObjectContext, Mock<SuspendableSqlAzureExecutionStrategy>> pruneAndVerify)
         {
             MutableResolver.AddResolver<Func<TransactionHandler>>(
                 new TransactionHandlerResolver(() => new MyCommitFailureHandler(c => new TransactionContext(c)), null, null));
 
-            var executionStrategyMock = new Mock<TestSqlAzureExecutionStrategy> { CallBase = true };
+            var executionStrategyMock = new Mock<SuspendableSqlAzureExecutionStrategy> { CallBase = true };
 
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
                 key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
@@ -728,32 +763,45 @@ namespace System.Data.Entity.Interception
             {
                 using (var context = new BlogContextCommit())
                 {
-                    context.Database.Delete();
-                    Assert.Equal(1, context.Blogs.Count());
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            context.Database.Delete();
+                            Assert.Equal(1, context.Blogs.Count());
+                        });
 
                     context.Blogs.Add(new BlogContext.Blog());
-                    using (var transaction = context.Database.BeginTransaction())
-                    {
-                        using (var innerContext = new BlogContextCommit())
+
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
                         {
-                            using (var innerTransaction = innerContext.Database.BeginTransaction())
+                            using (var transaction = context.Database.BeginTransaction())
                             {
-                                Assert.Equal(1, innerContext.Blogs.Count());
-                                innerContext.Blogs.Add(new BlogContext.Blog());
-                                innerContext.SaveChanges();
-                                innerTransaction.Commit();
+                                using (var innerContext = new BlogContextCommit())
+                                {
+                                    using (var innerTransaction = innerContext.Database.BeginTransaction())
+                                    {
+                                        Assert.Equal(1, innerContext.Blogs.Count());
+                                        innerContext.Blogs.Add(new BlogContext.Blog());
+                                        innerContext.SaveChanges();
+                                        innerTransaction.Commit();
+                                    }
+                                }
+
+                                context.SaveChanges();
+                                transaction.Commit();
                             }
+                        });
+                }
+
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (var context = new BlogContextCommit())
+                        {
+                            Assert.Equal(3, context.Blogs.Count());
                         }
-
-                        context.SaveChanges();
-                        transaction.Commit();
-                    }
-                }
-
-                using (var context = new BlogContextCommit())
-                {
-                    Assert.Equal(3, context.Blogs.Count());
-                }
+                    });
             }
             finally
             {
@@ -770,7 +818,7 @@ namespace System.Data.Entity.Interception
                 new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
 
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
-                key => (Func<IDbExecutionStrategy>)(() => new TestSqlAzureExecutionStrategy()));
+                key => (Func<IDbExecutionStrategy>)(() => new SuspendableSqlAzureExecutionStrategy()));
 
             try
             {

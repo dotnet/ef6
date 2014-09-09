@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.CodeFirst
 {
@@ -8,10 +8,10 @@ namespace System.Data.Entity.CodeFirst
     using System.Data.Entity.Migrations;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
+    using System.Transactions;
     using System.Xml;
     using FunctionalTests;
     using Xunit;
-    using Xunit.Extensions;
 
     public class FunctionsScenarioTests
     {
@@ -34,35 +34,41 @@ namespace System.Data.Entity.CodeFirst
                 }
 
                 [Fact]
-                [AutoRollback]
                 [UseDefaultExecutionStrategy]
                 public void Can_insert_update_and_delete_when_table_splitting()
                 {
-                    using (var context = CreateContext())
-                    {
-                        var jobTaskState = new JobTaskState { State = "Foo" };
-                        var jobTask = new JobTask { Description = "Foo", State = jobTaskState };
+                    ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                        () =>
+                        {
+                            using (new TransactionScope())
+                            {
+                                using (var context = CreateContext())
+                                {
+                                    var jobTaskState = new JobTaskState { State = "Foo" };
+                                    var jobTask = new JobTask { Description = "Foo", State = jobTaskState };
 
-                        Assert.Equal(0, context.Set<JobTask>().Count());
-                        Assert.Equal(0, context.Set<JobTaskState>().Count());
+                                    Assert.Equal(0, context.Set<JobTask>().Count());
+                                    Assert.Equal(0, context.Set<JobTaskState>().Count());
 
-                        context.Set<JobTask>().Add(jobTask);
+                                    context.Set<JobTask>().Add(jobTask);
 
-                        context.SaveChanges();
+                                    context.SaveChanges();
 
-                        Assert.Equal(1, context.Set<JobTask>().Count());
-                        Assert.Equal(1, context.Set<JobTaskState>().Count());
+                                    Assert.Equal(1, context.Set<JobTask>().Count());
+                                    Assert.Equal(1, context.Set<JobTaskState>().Count());
 
-                        jobTask.Description = "Bar";
+                                    jobTask.Description = "Bar";
 
-                        context.SaveChanges();
+                                    context.SaveChanges();
 
-                        context.Set<JobTaskState>().Remove(jobTaskState);
-                        context.SaveChanges();
+                                    context.Set<JobTaskState>().Remove(jobTaskState);
+                                    context.SaveChanges();
 
-                        Assert.Equal(0, context.Set<JobTask>().Count());
-                        Assert.Equal(0, context.Set<JobTaskState>().Count());
-                    }
+                                    Assert.Equal(0, context.Set<JobTask>().Count());
+                                    Assert.Equal(0, context.Set<JobTaskState>().Count());
+                                }
+                            }
+                        });
                 }
 
                 protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -76,98 +82,128 @@ namespace System.Data.Entity.CodeFirst
             }
             
             [Fact]
-            [AutoRollback]
             [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_generated_property()
             {
-                using (var context = CreateContext())
-               {
-                    var order = new Order
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        Type = "Foo"
-                    };
+                        using (new TransactionScope())
+                        {
+                            using (var context = CreateContext())
+                            {
+                                var order = new Order
+                                {
+                                    Type = "Foo"
+                                };
 
-                    Assert.Equal(0, context.Set<Order>().Count());
+                                Assert.Equal(0, context.Set<Order>().Count());
 
-                    // Insert
-                    context.Set<Order>().Add(order);
-                    context.SaveChanges();
+                                // Insert
+                                context.Set<Order>().Add(order);
+                                context.SaveChanges();
 
-                    Assert.Equal(1, context.Set<Order>().Count());
-                    Assert.NotNull(context.Set<Order>().Select(ol => ol.Version).First());
+                                Assert.Equal(1, context.Set<Order>().Count());
+                                Assert.NotNull(context.Set<Order>().Select(ol => ol.Version).First());
 
-                    // Update
-                    order.Type = "Bar";
-                    context.SaveChanges();
+                                // Update
+                                order.Type = "Bar";
+                                context.SaveChanges();
 
-                    // Delete
-                    context.Set<Order>().Remove(order);
-                    context.SaveChanges();
+                                // Delete
+                                context.Set<Order>().Remove(order);
+                                context.SaveChanges();
 
-                    Assert.Equal(0, context.Set<OrderLine>().Count());
-                }
+                                Assert.Equal(0, context.Set<OrderLine>().Count());
+                            }
+                        }
+                    });
             }
 
             [Fact]
-            [AutoRollback]
             [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tph_inheritance()
             {
-                using (var context = CreateContext())
-                {
-                    var customer = new SpecialCustomer();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (new TransactionScope())
+                        {
+                            using (var context = CreateContext())
+                            {
+                                var customer = new SpecialCustomer();
 
-                    Assert.Equal(0, context.Set<SpecialCustomer>().Count());
+                                Assert.Equal(0, context.Set<SpecialCustomer>().Count());
 
-                    // Insert
-                    context.Set<SpecialCustomer>().Add(customer);
-                    context.SaveChanges();
+                                // Insert
+                                context.Set<SpecialCustomer>().Add(customer);
+                                context.SaveChanges();
 
-                    Assert.Equal(1, context.Set<SpecialCustomer>().Count());
+                                Assert.Equal(1, context.Set<SpecialCustomer>().Count());
 
-                    // Update
-                    customer.Points = 1;
-                    context.SaveChanges();
+                                // Update
+                                customer.Points = 1;
+                                context.SaveChanges();
 
-                    Assert.Equal(1, context.Set<SpecialCustomer>().Select(c => c.Points).First());
+                                Assert.Equal(1, context.Set<SpecialCustomer>().Select(c => c.Points).First());
 
-                    // Delete
-                    context.Set<SpecialCustomer>().Remove(customer);
-                    context.SaveChanges();
+                                // Delete
+                                context.Set<SpecialCustomer>().Remove(customer);
+                                context.SaveChanges();
 
-                    Assert.Equal(0, context.Set<SpecialCustomer>().Count());
-                }
+                                Assert.Equal(0, context.Set<SpecialCustomer>().Count());
+                            }
+                        }
+                    });
             }
 
             [Fact]
-            [AutoRollback]
             [UseDefaultExecutionStrategy]
             public void Can_insert_and_delete_when_many_to_many()
             {
-                using (var context = CreateContext())
-                {
-                    var tag = new FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
                     {
-                        Products = new List<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.ProductA>
+                        using (new TransactionScope())
                         {
-                            new FunctionalTests.FunctionsScenarioTests.ModificationFunctions.ProductA()
+                            using (var context = CreateContext())
+                            {
+                                var tag = new FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag
+                                {
+                                    Products = new List<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.ProductA>
+                                    {
+                                        new FunctionalTests.FunctionsScenarioTests.ModificationFunctions.ProductA()
+                                    }
+                                };
+
+                                Assert.Equal(
+                                    0,
+                                    context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>()
+                                        .SelectMany(t => t.Products)
+                                        .Count());
+
+                                // Insert
+                                context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>().Add(tag);
+                                context.SaveChanges();
+
+                                Assert.Equal(
+                                    1,
+                                    context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>()
+                                        .SelectMany(t => t.Products)
+                                        .Count());
+
+                                // Delete
+                                tag.Products.Clear();
+                                context.SaveChanges();
+
+                                Assert.Equal(
+                                    0,
+                                    context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>()
+                                        .SelectMany(t => t.Products)
+                                        .Count());
+                            }
                         }
-                    };
-
-                    Assert.Equal(0, context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>().SelectMany(t => t.Products).Count());
-
-                    // Insert
-                    context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>().Add(tag);
-                    context.SaveChanges();
-
-                    Assert.Equal(1, context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>().SelectMany(t => t.Products).Count());
-
-                    // Delete
-                    tag.Products.Clear();
-                    context.SaveChanges();
-
-                    Assert.Equal(0, context.Set<FunctionalTests.FunctionsScenarioTests.ModificationFunctions.Tag>().SelectMany(t => t.Products).Count());
-                }
+                    });
             }
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -187,34 +223,40 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEntWithTPT : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback]
             [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tpt_inheritance()
             {
-                using (var context = CreateContext())
-                {
-                    var customer = new SpecialCustomer();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (new TransactionScope())
+                        {
+                            using (var context = CreateContext())
+                            {
+                                var customer = new SpecialCustomer();
 
-                    Assert.Equal(0, context.Set<SpecialCustomer>().Count());
+                                Assert.Equal(0, context.Set<SpecialCustomer>().Count());
 
-                    // Insert
-                    context.Set<SpecialCustomer>().Add(customer);
-                    context.SaveChanges();
+                                // Insert
+                                context.Set<SpecialCustomer>().Add(customer);
+                                context.SaveChanges();
 
-                    Assert.Equal(1, context.Set<SpecialCustomer>().Count());
+                                Assert.Equal(1, context.Set<SpecialCustomer>().Count());
 
-                    // Update
-                    customer.Points = 1;
-                    context.SaveChanges();
+                                // Update
+                                customer.Points = 1;
+                                context.SaveChanges();
 
-                    Assert.Equal(1, context.Set<SpecialCustomer>().Select(c => c.Points).First());
+                                Assert.Equal(1, context.Set<SpecialCustomer>().Select(c => c.Points).First());
 
-                    // Delete
-                    context.Set<SpecialCustomer>().Remove(customer);
-                    context.SaveChanges();
+                                // Delete
+                                context.Set<SpecialCustomer>().Remove(customer);
+                                context.SaveChanges();
 
-                    Assert.Equal(0, context.Set<SpecialCustomer>().Count());
-                }
+                                Assert.Equal(0, context.Set<SpecialCustomer>().Count());
+                            }
+                        }
+                    });
             }
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -232,34 +274,40 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEntWithTPC : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback]
             [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tpt_inheritance()
             {
-                using (var context = CreateContext())
-                {
-                    var customer = new SpecialCustomer();
+                ExtendedSqlAzureExecutionStrategy.ExecuteNew(
+                    () =>
+                    {
+                        using (new TransactionScope())
+                        {
+                            using (var context = CreateContext())
+                            {
+                                var customer = new SpecialCustomer();
 
-                    Assert.Equal(0, context.Set<SpecialCustomer>().Count());
+                                Assert.Equal(0, context.Set<SpecialCustomer>().Count());
 
-                    // Insert
-                    context.Set<SpecialCustomer>().Add(customer);
-                    context.SaveChanges();
+                                // Insert
+                                context.Set<SpecialCustomer>().Add(customer);
+                                context.SaveChanges();
 
-                    Assert.Equal(1, context.Set<SpecialCustomer>().Count());
+                                Assert.Equal(1, context.Set<SpecialCustomer>().Count());
 
-                    // Update
-                    customer.Points = 1;
-                    context.SaveChanges();
+                                // Update
+                                customer.Points = 1;
+                                context.SaveChanges();
 
-                    Assert.Equal(1, context.Set<SpecialCustomer>().Select(c => c.Points).First());
+                                Assert.Equal(1, context.Set<SpecialCustomer>().Select(c => c.Points).First());
 
-                    // Delete
-                    context.Set<SpecialCustomer>().Remove(customer);
-                    context.SaveChanges();
+                                // Delete
+                                context.Set<SpecialCustomer>().Remove(customer);
+                                context.SaveChanges();
 
-                    Assert.Equal(0, context.Set<SpecialCustomer>().Count());
-                }
+                                Assert.Equal(0, context.Set<SpecialCustomer>().Count());
+                            }
+                        }
+                    });
             }
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)

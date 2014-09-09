@@ -39,38 +39,38 @@ namespace ProductivityApiTests
 
         #region Positive DbContext Construction
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_for_SQLCE_when_constructed_via_parameterless_ctor()
         {
             Verify_DbContext_construction_for_SQLCE(DbContextConstructorArgumentType.Parameterless);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_for_SQLCE_when_constructed_via_DbCompiledModel_ctor()
         {
             Verify_DbContext_construction_for_SQLCE(DbContextConstructorArgumentType.DbCompiledModel);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_for_SQLCE_when_constructed_via_Connection_string_ctor()
         {
             Verify_DbContext_construction_for_SQLCE(DbContextConstructorArgumentType.ConnectionString);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_for_SQLCE_when_constructed_via_Connection_ctor()
         {
             Verify_DbContext_construction_for_SQLCE(DbContextConstructorArgumentType.Connection);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_for_SQLCE_when_constructed_via_Connection_string_and_DbCompiledModel_ctor()
         {
             Verify_DbContext_construction_for_SQLCE(DbContextConstructorArgumentType.ConnectionStringAndDbCompiledModel);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_for_SQLCE_when_constructed_via_Connection_and_DbCompiledModel_ctor()
         {
             Verify_DbContext_construction_for_SQLCE(DbContextConstructorArgumentType.ConnectionAndDbCompiledModel);
@@ -97,7 +97,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Database_Name_in_CE_is_from_App_config_if_named_connection_string_matches_convention_name_when_using_empty_constructor_on_DbContext
             ()
@@ -105,7 +105,7 @@ namespace ProductivityApiTests
             Database_Name_is_from_App_Config_if_convention_name_matches_named_connection_string();
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Database_Name_in_CE_is_from_App_Config_if_named_connection_string_matches_convention_name_when_using_named_connection_string_when_using_model_constructor_on_DbContext
             ()
@@ -127,7 +127,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Sets_are_initialized_for_DbContext_constructor_when_using_empty_DbCompiledModel_on_SqlCe()
         {
             VerifySetsAreInitialized<SimpleModelContextWithNoData>(
@@ -135,7 +135,7 @@ namespace ProductivityApiTests
                 ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Sets_are_initialized_for_DbContext_constructor_when_using_subset_DbCompiledModel_on_SqlCe()
         {
             VerifySetsAreInitialized<SimpleModelContextWithNoData>(
@@ -143,7 +143,7 @@ namespace ProductivityApiTests
                 ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Sets_are_initialized_for_DbContext_constructor_when_using_superset_DbCompiledModel_on_SqlCe()
         {
             VerifySetsAreInitialized<SimpleModelContextWithNoData>(
@@ -151,7 +151,7 @@ namespace ProductivityApiTests
                 ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Sets_are_initialized_for_DbContext_constructor_when_using_DbCompiledModel_that_matches_the_context_on_SqlCe()
         {
@@ -160,7 +160,7 @@ namespace ProductivityApiTests
                 ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Sets_are_initialized_for_DbContext_constructor_when_using_DbCompiledModel_that_doesnt_match_context_definitions_on_SqlCe
             ()
         {
@@ -169,7 +169,7 @@ namespace ProductivityApiTests
                 ProviderRegistry.SqlCe4_ProviderInfo);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Model_Tweaking_is_ignored_when_using_model_ctor_on_DbContext_on_SqlCe()
         {
             // Arrange
@@ -192,7 +192,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_using_connection_string_ctor_when_string_is_database_name_on_SqlCe()
         {
             Verify_DbContext_construction_using_connection_string_ctor(
@@ -200,7 +200,7 @@ namespace ProductivityApiTests
                 expectedDatabaseName: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DefaultCEDatabaseNameDb.sdf"));
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_using_connection_string_ctor_when_string_is_provider_connection_string_on_SqlCe()
         {
             Verify_DbContext_construction_using_connection_string_ctor(
@@ -224,7 +224,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Sets_are_initialized_but_do_not_change_model_using_name_and_model_constructor_on_DbContext_on_SqlCe()
         {
             var model = new DbModelBuilder().Build(ProviderRegistry.SqlCe4_ProviderInfo).Compile();
@@ -237,7 +237,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe(
             
             )
@@ -247,7 +247,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.IsSubset);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe()
         {
@@ -256,7 +256,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.IsSuperset);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe()
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
@@ -264,7 +264,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.Match);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_db_name_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe()
         {
@@ -273,7 +273,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.DontMatch);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_is_empty_on_SqlCe()
         {
@@ -281,7 +281,7 @@ namespace ProductivityApiTests
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.IsEmpty);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe
             ()
@@ -290,7 +290,7 @@ namespace ProductivityApiTests
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.IsSubset);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe
             ()
@@ -299,7 +299,7 @@ namespace ProductivityApiTests
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.IsSuperset);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe(
             
@@ -309,7 +309,7 @@ namespace ProductivityApiTests
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.Match);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_valid_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe
             ()
@@ -318,7 +318,7 @@ namespace ProductivityApiTests
                 ConnectionStringFormat.ProviderConnectionString, DbCompiledModelContents.DontMatch);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Verify_DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_is_empty_on_SqlCe()
         {
@@ -327,7 +327,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.IsEmpty);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context_on_SqlCe
             ()
@@ -337,7 +337,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.IsSubset);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_superset_of_entities_on_context_on_SqlCe
             ()
@@ -347,7 +347,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.IsSuperset);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_matches_the_entities_on_context_on_SqlCe
             ()
         {
@@ -356,7 +356,7 @@ namespace ProductivityApiTests
                 DbCompiledModelContents.Match);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_has_no_entities_matching_those_on_context_on_SqlCe
             ()
@@ -372,11 +372,10 @@ namespace ProductivityApiTests
             // Act
             // Setup connection string
             string connectionString = null;
-            string dbName = null;
             switch (connStringFormat)
             {
                 case ConnectionStringFormat.DatabaseName:
-                    connectionString = dbName = DefaultDbName<SimpleModelContextWithNoData>();
+                    connectionString = DefaultDbName<SimpleModelContextWithNoData>();
                     break;
                 case ConnectionStringFormat.NamedConnectionString:
                     connectionString = "Scenario_Use_SqlCe_AppConfig_connection_string";
@@ -467,7 +466,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_construction_using_existing_connection_and_model_constructor_on_DbContext_where_model_is_empty_on_SqlCe()
         {
             using (var connection = SimpleCeConnection<SimpleModelContextWithNoData>())
@@ -478,7 +477,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_construction_using_existing_connection_and_model_constructor_on_DbContext_where_model_is_a_subset_on_SqlCe()
         {
             using (var connection = SimpleCeConnection<SimpleModelContextWithNoData>())
@@ -489,7 +488,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_is_a_superset_on_SqlCe
             ()
@@ -502,7 +501,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_matches_on_SqlCe
             ()
@@ -513,7 +512,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             Sets_are_initialized_but_do_not_change_model_using_existing_connection_and_model_constructor_on_DbContext_where_model_doesnt_match_on_SqlCe
             ()
@@ -610,34 +609,34 @@ namespace ProductivityApiTests
 
         #region Dispose Semantics of the various constructors for SQL CE
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_parameterless_ctor_will_dispose_the_underlying_object_context_and_connection_on_SqlCe()
         {
             DbContext_disposal_behavior_wrt_to_object_context_and_connection(
                 DbContextConstructorArgumentType.Parameterless);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_constructed_with_DbCompiledModel_ctor_will_dispose_the_underlying_object_context_and_connection_on_SqlCe()
         {
             DbContext_disposal_behavior_wrt_to_object_context_and_connection(
                 DbContextConstructorArgumentType.DbCompiledModel);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_constructed_with_connection_string_ctor_will_dispose_underlying_object_context_and_connection_on_SqlCe()
         {
             DbContext_disposal_behavior_wrt_to_object_context_and_connection(
                 DbContextConstructorArgumentType.ConnectionString);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_constructed_with_connection_ctor_will_dispose_underlying_object_context_but_not_the_connection_on_SqlCe()
         {
             DbContext_disposal_behavior_wrt_to_object_context_and_connection(DbContextConstructorArgumentType.Connection);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             DbContext_constructed_with_connection_and_DbCompiledModel_ctor_will_dispose_underlying_object_context_but_not_the_connection_on_SqlCe
             ()
@@ -646,7 +645,7 @@ namespace ProductivityApiTests
                 DbContextConstructorArgumentType.ConnectionAndDbCompiledModel);
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void
             DbContext_constructed_with_connection_string_and_DbCompiledModel_ctor_will_dispose_underlying_object_context_and_the_connection_on_SqlCe
             ()
@@ -701,7 +700,7 @@ namespace ProductivityApiTests
 
         #region Negative DbContext Construction
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true)]
         public void DbContext_construction_does_not_throw_but_subsequent_calls_using_connection_throw_for_invalid_SqlCE_connection_string()
         {
             var sqlCeAssembly =
