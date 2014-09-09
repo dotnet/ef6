@@ -1090,8 +1090,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 var i = 0;
                 foreach (var k in dependentEntityType.KeyProperties())
                 {
+                    k.SetStoreGeneratedPattern(StoreGeneratedPattern.None);
+                    
                     var dependentColumn = dependentMappingFragment.ColumnMappings.Single(pm => pm.PropertyPath.First() == k).ColumnProperty;
                     dependentColumn.Name = principalKeys[i].Name;
+                    
                     i++;
                 }
                 return true;

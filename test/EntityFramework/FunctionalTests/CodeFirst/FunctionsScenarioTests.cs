@@ -3,9 +3,12 @@
 namespace System.Data.Entity.CodeFirst
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
+    using System.Xml;
     using FunctionalTests;
     using Xunit;
     using Xunit.Extensions;
@@ -14,6 +17,64 @@ namespace System.Data.Entity.CodeFirst
     {
         public class EndToEnd : EndToEndFunctionsTest
         {
+            public class EndToEndWithTableSplitting : EndToEndFunctionsTest
+            {
+                public class JobTask
+                {
+                    public long Id { get; set; }
+                    public string Description { get; set; }
+                    public virtual JobTaskState State { get; set; }
+                }
+
+                public class JobTaskState
+                {
+                    public long Id { get; set; }
+                    public string State { get; set; }
+                    public virtual JobTask Task { get; set; }
+                }
+
+                [Fact]
+                [AutoRollback]
+                [UseDefaultExecutionStrategy]
+                public void Can_insert_update_and_delete_when_table_splitting()
+                {
+                    using (var context = CreateContext())
+                    {
+                        var jobTaskState = new JobTaskState { State = "Foo" };
+                        var jobTask = new JobTask { Description = "Foo", State = jobTaskState };
+
+                        Assert.Equal(0, context.Set<JobTask>().Count());
+                        Assert.Equal(0, context.Set<JobTaskState>().Count());
+
+                        context.Set<JobTask>().Add(jobTask);
+
+                        context.SaveChanges();
+
+                        Assert.Equal(1, context.Set<JobTask>().Count());
+                        Assert.Equal(1, context.Set<JobTaskState>().Count());
+
+                        jobTask.Description = "Bar";
+
+                        context.SaveChanges();
+
+                        context.Set<JobTaskState>().Remove(jobTaskState);
+                        context.SaveChanges();
+
+                        Assert.Equal(0, context.Set<JobTask>().Count());
+                        Assert.Equal(0, context.Set<JobTaskState>().Count());
+                    }
+                }
+
+                protected override void OnModelCreating(DbModelBuilder modelBuilder)
+                {
+                    base.OnModelCreating(modelBuilder);
+
+                    modelBuilder.Entity<JobTask>().ToTable("Tasks");
+                    modelBuilder.Entity<JobTaskState>().ToTable("Tasks");
+                    modelBuilder.Entity<JobTask>().HasRequired(t => t.State).WithRequiredDependent(t => t.Task);
+                }
+            }
+            
             [Fact]
             [AutoRollback]
             [UseDefaultExecutionStrategy]
