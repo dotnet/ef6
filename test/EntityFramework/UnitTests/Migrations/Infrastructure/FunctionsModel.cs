@@ -103,6 +103,22 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
         public DateTime BirthDate { get; set; }
     }
 
+    public class JobTask
+    {
+        public long Id { get; set; }
+        public string Title { get; set; }
+        public virtual JobTaskState State { get; set; }
+    }
+
+    public class JobTaskState
+    {
+        public long Id { get; set; }
+        public string Code { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; }
+        public virtual JobTask Task { get; set; }
+    }
+
     public class TestContext : DbContext
     {
         static TestContext()
@@ -278,6 +294,10 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
             modelBuilder
                 .Entity<Person>()
                 .MapToStoredProcedures();
+
+            modelBuilder.Entity<JobTask>().ToTable("Tasks").MapToStoredProcedures();
+            modelBuilder.Entity<JobTaskState>().ToTable("Tasks").MapToStoredProcedures();
+            modelBuilder.Entity<JobTask>().HasRequired(t => t.State).WithRequiredDependent(t => t.Task);
         }
     }
 
