@@ -79,8 +79,9 @@ namespace System.Data.Entity.Core.Common
         /// </param>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)
         {
-            Debug.Assert(edmType is PrimitiveType, "DbXmlEnabledProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
-            return GetReadOnlyCollection(edmType as PrimitiveType, _facetDescriptions, Helper.EmptyFacetDescriptionEnumerable);
+            var primitiveType = edmType as PrimitiveType;
+            Debug.Assert(primitiveType != null, "DbXmlEnabledProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
+            return GetReadOnlyCollection(primitiveType, _facetDescriptions, Helper.EmptyFacetDescriptionEnumerable);
         }
 
         /// <summary>Returns the list of primitive types supported by the storage provider.</summary>

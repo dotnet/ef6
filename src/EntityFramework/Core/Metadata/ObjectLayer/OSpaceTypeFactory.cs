@@ -36,7 +36,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(cspaceType);
-            Debug.Assert(cspaceType is StructuralType || Helper.IsEnumType(cspaceType), "Structural or enum type expected");
 
             // if one of the types is an enum while the other is not there is no match
             if (Helper.IsEnumType(cspaceType)
@@ -55,7 +54,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return newOSpaceType;
             }
 
-            Debug.Assert(cspaceType is StructuralType);
             TryCreateStructuralType(type, (StructuralType)cspaceType, out newOSpaceType);
             return newOSpaceType;
         }

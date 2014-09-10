@@ -83,6 +83,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
 #if DEBUG
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal static string ToXml(ColumnMap columnMap)
         {
             var stream = new MemoryStream();

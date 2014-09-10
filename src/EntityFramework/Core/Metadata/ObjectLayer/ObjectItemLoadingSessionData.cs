@@ -161,10 +161,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             KnownAssembliesSet knownAssemblies, LockedAssemblyCache lockedAssemblyCache, EdmItemCollection edmItemCollection,
             Action<String> logLoadMessage, object loaderCookie)
         {
-            Debug.Assert(
-                loaderCookie == null || loaderCookie is Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader>,
-                "This is a bad loader cookie");
-
             _typesInLoading = new Dictionary<string, EdmType>(StringComparer.Ordinal);
             _errors = new List<EdmItemError>();
             _knownAssemblies = knownAssemblies;

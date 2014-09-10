@@ -203,7 +203,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
             else
             {
-                Debug.Assert(_unresolvedUnderlyingTypeName != string.Empty);
+                Debug.Assert(!string.IsNullOrEmpty(_unresolvedUnderlyingTypeName));
                 Schema.ResolveTypeName(this, _unresolvedUnderlyingTypeName, out _underlyingType);
             }
         }

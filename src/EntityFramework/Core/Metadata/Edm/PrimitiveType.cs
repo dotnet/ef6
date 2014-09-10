@@ -57,6 +57,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="clrType"> The CLR type object for this primitive type </param>
         // <param name="baseType"> The base type for this primitive type </param>
         // <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
+#if DEBUG
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+#endif
         internal PrimitiveType(
             Type clrType,
             PrimitiveType baseType,

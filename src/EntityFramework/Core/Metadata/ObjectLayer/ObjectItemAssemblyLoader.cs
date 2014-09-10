@@ -111,10 +111,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal static bool IsAttributeLoader(object loaderCookie)
         {
-            Debug.Assert(
-                loaderCookie == null || loaderCookie is Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader>,
-                "Non loader cookie passed in");
-            return IsAttributeLoader(loaderCookie as Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader>);
+            var func = loaderCookie as Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader>;
+            Debug.Assert(loaderCookie == null || func != null, "Non loader cookie passed in");
+            return IsAttributeLoader(func);
         }
 
         internal static bool IsAttributeLoader(Func<Assembly, ObjectItemLoadingSessionData, ObjectItemAssemblyLoader> loaderFactory)

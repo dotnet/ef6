@@ -1220,24 +1220,31 @@ namespace System.Data.Entity.Core
         // </summary>
         // <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
         [Conditional("DEBUG")]
-        private void AssertCorrectState(EntitySetBase entitySet, bool isTemporary)
+        private void AssertCorrectState(EntitySetBase entitySetBase, bool isTemporary)
         {
+#if DEBUG
+            var entitySet = (EntitySet)entitySetBase;
+#endif
             if (_singletonKeyValue != null)
             {
                 Debug.Assert(!isTemporary);
                 Debug.Assert(_compositeKeyValues == null);
-                if (entitySet != null)
+                if (entitySetBase != null)
                 {
-                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == 1);
+#if DEBUG
+                    Debug.Assert(entitySet.ElementType.KeyMembers.Count == 1);
+#endif
                 }
             }
             else if (_compositeKeyValues != null)
             {
                 Debug.Assert(!isTemporary);
-                if (entitySet != null)
+                if (entitySetBase != null)
                 {
-                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count > 1);
-                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == _compositeKeyValues.Length);
+#if DEBUG
+                    Debug.Assert(entitySet.ElementType.KeyMembers.Count > 1);
+                    Debug.Assert(entitySet.ElementType.KeyMembers.Count == _compositeKeyValues.Length);
+#endif
                 }
                 for (var i = 0; i < _compositeKeyValues.Length; ++i)
                 {
@@ -1257,9 +1264,9 @@ namespace System.Data.Entity.Core
             }
         }
 
-        #endregion
+#endregion
 
-        #region Serialization
+#region Serialization
 
         /// <summary>
         /// Helper method that is used to deserialize an <see cref="T:System.Data.Entity.Core.EntityKey" />.
@@ -1329,7 +1336,7 @@ namespace System.Data.Entity.Core
             }
         }
 
-        #endregion
+#endregion
 
         private class KeyValueReader : IEnumerable<KeyValuePair<string, object>>
         {
@@ -1340,7 +1347,7 @@ namespace System.Data.Entity.Core
                 _enumerator = enumerator;
             }
 
-            #region IEnumerable<KeyValuePair<string,object>> Members
+#region IEnumerable<KeyValuePair<string,object>> Members
 
             public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
             {
@@ -1353,16 +1360,16 @@ namespace System.Data.Entity.Core
                 }
             }
 
-            #endregion
+#endregion
 
-            #region IEnumerable Members
+#region IEnumerable Members
 
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
             }
 
-            #endregion
+#endregion
         }
     }
 }

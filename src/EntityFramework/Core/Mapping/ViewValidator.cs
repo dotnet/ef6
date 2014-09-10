@@ -318,7 +318,6 @@ namespace System.Data.Entity.Core.Mapping
 
             private DbExpressionEntitySetInfo VisitExpressionBinding(DbExpressionBinding binding)
             {
-                var result = binding;
                 if (binding != null)
                 {
                     return VisitExpression(binding.Expression);

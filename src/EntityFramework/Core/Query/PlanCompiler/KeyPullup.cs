@@ -176,6 +176,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="op"> the UnionAllOp </param>
         // <param name="n"> current subtree </param>
+#if DEBUG
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
+#endif
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(UnionAllOp op, Node n)

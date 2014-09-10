@@ -11,6 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -111,6 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             return complexType;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public EntityType MapEntityType(Type type)
         {
             DebugCheck.NotNull(type);

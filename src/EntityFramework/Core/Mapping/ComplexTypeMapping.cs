@@ -26,6 +26,7 @@ namespace System.Data.Entity.Core.Mapping
         //Condition property mappings for this complex type
 
 #if DEBUG
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private readonly bool m_isPartial; //Whether the property mapping representation is 
 #endif
 

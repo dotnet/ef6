@@ -54,9 +54,10 @@ namespace System.Data.Entity.Core.Mapping
         {
             DebugCheck.NotNull(type);
 
-            Debug.Assert(type is StructuralType, "we can only rename structural type");
+            var structuralType = type as StructuralType;
+            Debug.Assert(structuralType != null, "we can only rename structural type");
 
-            var rename = _renameCache.Evaluate(type as StructuralType);
+            var rename = _renameCache.Evaluate(structuralType);
             lineInfo = rename.LineInfo;
             return rename.ColumnName;
         }

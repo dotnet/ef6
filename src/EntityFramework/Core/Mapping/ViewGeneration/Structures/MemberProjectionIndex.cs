@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 memberType is RefType, // for association ends
                 "GatherPartialSignature can be called only for complex types, entity sets, association ends");
 
-            if (memberType is ComplexType && needKeysOnly)
+            if (complexTypemember != null && needKeysOnly)
             {
                 // Check if the complex type needs to be traversed or not. If not, just return 
                 // from here. Else we need to continue to the code below. Right now, we do not

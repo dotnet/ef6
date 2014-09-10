@@ -82,13 +82,14 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         // <returns> The FacetDescriptions for the type given. </returns>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
         {
-            Debug.Assert(type is PrimitiveType, "EdmProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
+            var primitiveType = type as PrimitiveType;
+            Debug.Assert(primitiveType != null, "EdmProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
 
             InitializeFacetDescriptions();
 
             // Some types may not have facets, so just try to get them, if there aren't any, just return an empty list
             ReadOnlyCollection<FacetDescription> collection = null;
-            if (_facetDescriptions.TryGetValue(type as PrimitiveType, out collection))
+            if (_facetDescriptions.TryGetValue(primitiveType, out collection))
             {
                 return collection;
             }

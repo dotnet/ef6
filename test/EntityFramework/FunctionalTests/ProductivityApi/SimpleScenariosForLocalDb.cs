@@ -18,13 +18,19 @@ namespace ProductivityApiTests
         #region Infrastructure/setup
 
         private readonly object _previousDataDirectory;
+        private readonly string _localDbType;
 
         public SimpleScenariosForLocalDb()
         {
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
 
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
-            MutableResolver.AddResolver<IDbConnectionFactory>(k => new LocalDbConnectionFactory("v11.0"));
+#if (VS11 || VS12)
+            _localDbType = "v11.0";
+#else
+            _localDbType = "MSSQLLocalDB";
+#endif
+            MutableResolver.AddResolver<IDbConnectionFactory>(k => new LocalDbConnectionFactory(_localDbType));
         }
 
         public void Dispose()
@@ -49,7 +55,11 @@ namespace ProductivityApiTests
                 }
 
                 Database.Delete("Scenario_CodeFirstWithModelBuilder");
+#if (VS11 || VS12)
                 Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string");
+#else
+                Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string_MSSQLLocalDB");
+#endif
             }
             finally
             {
@@ -58,9 +68,9 @@ namespace ProductivityApiTests
             }
         }
 
-        #endregion
+#endregion
 
-        #region Scenarios for SQL Server LocalDb using LocalDbConnectionFactory
+#region Scenarios for SQL Server LocalDb using LocalDbConnectionFactory
 
         [ExtendedFact(SkipForSqlAzure = true)]
         public void SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
@@ -139,7 +149,7 @@ namespace ProductivityApiTests
                 Assert.Same(category, product.Category);
                 Assert.True(category.Products.Contains(product));
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -161,7 +171,7 @@ namespace ProductivityApiTests
                 Assert.NotEqual(0, product.Id);
                 Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product).State);
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -180,7 +190,7 @@ namespace ProductivityApiTests
                 Assert.Equal("iSnack 2.0", product.Name);
                 Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product).State);
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -195,7 +205,7 @@ namespace ProductivityApiTests
                 Assert.Equal(7, products.Count);
                 Assert.True(products.TrueForAll(p => GetStateEntry(context, p).State == EntityState.Unchanged));
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -226,7 +236,7 @@ namespace ProductivityApiTests
                 Assert.Same(category, product.Category);
                 Assert.True(category.Products.Contains(product));
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -250,7 +260,7 @@ namespace ProductivityApiTests
                 Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product).State);
                 Assert.Equal("Foods", product.CategoryId);
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -293,7 +303,7 @@ namespace ProductivityApiTests
             Assert.Same(category, product.Category);
             Assert.True(category.Products.Contains(product));
 
-            Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+            Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
         }
 
         private void InsertIntoCleanContext(SimpleLocalDbModelContextWithNoData context)
@@ -311,7 +321,7 @@ namespace ProductivityApiTests
                     });
             context.SaveChanges();
 
-            Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+            Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
         }
 
         [ExtendedFact(SkipForSqlAzure = true)]
@@ -334,7 +344,7 @@ namespace ProductivityApiTests
                 Assert.Same(login, context.Logins.Find(login.Id));
                 Assert.Equal(EntityState.Unchanged, GetStateEntry(context, login).State);
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
 
             using (var context = new SimpleLocalDbModelContext())
@@ -358,7 +368,7 @@ namespace ProductivityApiTests
                 Assert.Same(category, product.Category);
                 Assert.True(category.Products.Contains(product));
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -367,13 +377,18 @@ namespace ProductivityApiTests
         {
             Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string");
 
-            using (var context = new SimpleLocalDbModelContextWithNoData("Scenario_Use_AppConfig_LocalDb_connection_string"))
+#if (VS11 || VS12)
+            var connectionStringName = "Scenario_Use_AppConfig_LocalDb_connection_string";
+#else
+            var connectionStringName = "Scenario_Use_AppConfig_LocalDb_connection_string_MSSQLLocalDB";
+#endif
+            using (var context = new SimpleLocalDbModelContextWithNoData(connectionStringName))
             {
                 Assert.Equal("Scenario_Use_AppConfig_LocalDb", context.Database.Connection.Database);
                 InsertIntoCleanContext(context);
             }
 
-            using (var context = new SimpleLocalDbModelContextWithNoData("Scenario_Use_AppConfig_LocalDb_connection_string"))
+            using (var context = new SimpleLocalDbModelContextWithNoData(connectionStringName))
             {
                 ValidateFromCleanContext(context);
             }
@@ -393,7 +408,7 @@ namespace ProductivityApiTests
                     Assert.NotNull(product.Category);
                 }
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
@@ -411,11 +426,11 @@ namespace ProductivityApiTests
                     Assert.NotNull(product.Category);
                 }
 
-                Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
+                Assert.Equal(@"(localdb)\" + _localDbType, context.Database.Connection.DataSource);
             }
         }
 
-        #endregion
+#endregion
     }
 }
 

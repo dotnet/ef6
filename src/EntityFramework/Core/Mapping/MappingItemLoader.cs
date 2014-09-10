@@ -1012,7 +1012,6 @@ namespace System.Data.Entity.Core.Mapping
                 }
                 if (!(Helper.IsAssignableFrom(rootEntityType, entityType)))
                 {
-                    var lineInfo = xmlLineInfoNav;
                     AddToSchemaErrorWithMessage(
                         typeNotAssignableMessage(entityType),
                         MappingErrorCode.InvalidEntityType, m_sourceLocation, xmlLineInfoNav, m_parsingErrors);
@@ -2071,7 +2070,6 @@ namespace System.Data.Entity.Core.Mapping
 
             if (!Helper.IsAssignableFrom(resultComplexType, complexType))
             {
-                var lineInfo = xmlLineInfoNav;
                 AddToSchemaErrorWithMessage(
                     Strings.Mapping_FunctionImport_ResultMapping_MappedTypeDoesNotMatchReturnType(
                         functionImport.Identity, complexType.FullName),
@@ -2092,7 +2090,6 @@ namespace System.Data.Entity.Core.Mapping
             var lineInfo = new LineInfo(nav);
 
             // Process entity type.
-            var entityTypeString = GetAttributeValue(nav.Clone(), MslConstructs.EntitySetMappingTypeNameAttribute);
             Set<EntityType> isOfTypeEntityTypes;
             Set<EntityType> entityTypes;
             {

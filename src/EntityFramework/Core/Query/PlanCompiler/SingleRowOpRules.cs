@@ -28,7 +28,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool ProcessSingleRowOpOverAnything(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;
-            var trc = (TransformationRulesContext)context;
             var childNodeInfo = context.Command.GetExtendedNodeInfo(singleRowNode.Child0);
 
             // If the input to this Op can produce at most one row, then we don't need the

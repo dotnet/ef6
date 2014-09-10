@@ -408,7 +408,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             var associationMetadata = (AssociationType)_relationMetadata;
 
-            var ownerEntitySet = ((AssociationSet)_relationshipSet).AssociationSetEnds[_fromEndMember.Name].EntitySet;
             var targetEntitySet = ((AssociationSet)_relationshipSet).AssociationSetEnds[_toEndMember.Name].EntitySet;
 
             var targetEntityType = MetadataHelper.GetEntityTypeForEnd((AssociationEndMember)_toEndMember);

@@ -281,7 +281,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             out List<Predicate> singleTablePredicates, out Predicate otherPredicates)
         {
             singleTablePredicates = new List<Predicate>();
-            foreach (var vec in tableDefinitions)
+            for (int i = 0; i < tableDefinitions.Count; i++)
             {
                 singleTablePredicates.Add(new Predicate(m_command));
             }
