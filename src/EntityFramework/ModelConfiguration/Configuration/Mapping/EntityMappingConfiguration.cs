@@ -1029,6 +1029,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return associationTypes;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static bool UpdateColumnNamesForTableSharing(
             DbDatabaseMapping databaseMapping, EntityType entityType, EntityType toTable,
             MappingFragment fragment)
