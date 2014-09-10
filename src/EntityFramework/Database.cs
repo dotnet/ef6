@@ -54,6 +54,17 @@ namespace System.Data.Entity
         #region Transactions
 
         /// <summary>
+        /// Gets the transaction the underlying store connection is enlisted in.  May be null.
+        /// </summary>
+        public DbTransaction CurrentTransaction
+        {
+            get
+            {
+                return ((EntityConnection)_internalContext.GetObjectContextWithoutDatabaseInitialization().Connection).CurrentTransaction;
+            }
+        }
+
+        /// <summary>
         /// Enables the user to pass in a database transaction created outside of the <see cref="Database" /> object
         /// if you want the Entity Framework to execute commands within that external transaction.
         /// Alternatively, pass in null to clear the framework's knowledge of that transaction.
