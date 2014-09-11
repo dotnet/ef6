@@ -1390,47 +1390,50 @@ namespace System.Data.Entity.SqlServer
             var interceptionContext = new DbInterceptionContext();
             // remember the connection string so that we can reset if credentials are wiped
             var holdConnectionString = DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext);
-            var openingConnection = DbInterception.Dispatch.Connection.GetState(sqlConnection, interceptionContext)
-                                    == ConnectionState.Closed;
-            if (openingConnection)
-            {
-                GetExecutionStrategy(sqlConnection, ProviderInvariantName).Execute(
-                        () =>
+
+            GetExecutionStrategy(sqlConnection, ProviderInvariantName).Execute(
+                () =>
+                {
+                    var openingConnection = DbInterception.Dispatch.Connection.GetState(sqlConnection, interceptionContext)
+                                            == ConnectionState.Closed;
+                    if (openingConnection)
+                    {
+                        // If Open() fails the original credentials need to be restored before retrying
+                        if (DbInterception.Dispatch.Connection.GetState(sqlConnection, new DbInterceptionContext())
+                            == ConnectionState.Closed
+                            && !DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext)
+                                .Equals(holdConnectionString, StringComparison.Ordinal))
                         {
-                            // If Open() fails the original credentials need to be restored before retrying
-                            if (DbInterception.Dispatch.Connection.GetState(sqlConnection, new DbInterceptionContext())
-                                == ConnectionState.Closed
-                                && !DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext)
-                                    .Equals(holdConnectionString, StringComparison.Ordinal))
+                            DbInterception.Dispatch.Connection.SetConnectionString(
+                                sqlConnection,
+                                new DbConnectionPropertyInterceptionContext<string>().WithValue(holdConnectionString));
+                        }
+
+                        DbInterception.Dispatch.Connection.Open(sqlConnection, interceptionContext);
+                    }
+                    try
+                    {
+                        act(sqlConnection);
+                    }
+                    finally
+                    {
+                        if (openingConnection
+                            && DbInterception.Dispatch.Connection.GetState(sqlConnection, interceptionContext) == ConnectionState.Open)
+                        {
+                            // if we opened the connection, we should close it
+                            DbInterception.Dispatch.Connection.Close(sqlConnection, interceptionContext);
+
+                            // Can only change the connection string if the connection is closed
+                            if (!DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext)
+                                .Equals(holdConnectionString, StringComparison.Ordinal))
                             {
                                 DbInterception.Dispatch.Connection.SetConnectionString(
                                     sqlConnection,
                                     new DbConnectionPropertyInterceptionContext<string>().WithValue(holdConnectionString));
                             }
-
-                            DbInterception.Dispatch.Connection.Open(sqlConnection, interceptionContext);
-                        });
-            }
-            try
-            {
-                act(sqlConnection);
-            }
-            finally
-            {
-                if (openingConnection && DbInterception.Dispatch.Connection.GetState(sqlConnection, interceptionContext) == ConnectionState.Open)
-                {
-                    // if we opened the connection, we should close it
-                    DbInterception.Dispatch.Connection.Close(sqlConnection, interceptionContext);
-
-                    // Can only change the connection string if the connection is closed
-                    if (!DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext)
-                        .Equals(holdConnectionString, StringComparison.Ordinal))
-                    {
-                        DbInterception.Dispatch.Connection.SetConnectionString(sqlConnection,
-                            new DbConnectionPropertyInterceptionContext<string>().WithValue(holdConnectionString));
+                        }
                     }
-                }
-            }
+                });
         }
 
         private static void UsingMasterConnection(DbConnection sqlConnection, Action<DbConnection> act)
