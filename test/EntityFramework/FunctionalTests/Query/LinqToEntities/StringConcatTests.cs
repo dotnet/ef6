@@ -698,5 +698,59 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         () => db.Entities.Select(b => string.Concat((string[])null)).ToString()).ParamName);
             }
         }
+
+        public class CodePlex2457 : FunctionalTestBase
+        {
+            public class Customer
+            {
+                public int Id { get; set; }
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
+            }
+
+            public class Context : DbContext
+            {
+                static Context()
+                {
+                    Database.SetInitializer<Context>(null);
+                }
+
+                public DbSet<Customer> Customers { get; set; }
+            }
+
+            [Fact]
+            public void Concatenated_strings_are_checked_if_null_with_csharp_null_semantics()
+            {
+                using (var context = new Context())
+                {
+                    context.Configuration.UseDatabaseNullSemantics = false;
+
+                    var query = context.Customers.Select(c => c.FirstName + c.LastName);
+
+                    QueryTestHelpers.VerifyDbQuery(
+                        query,
+@"SELECT 
+    CASE WHEN ([Extent1].[FirstName] IS NULL) THEN N'' ELSE [Extent1].[FirstName] END + CASE WHEN ([Extent1].[LastName] IS NULL) THEN N'' ELSE [Extent1].[LastName] END AS [C1]
+    FROM [dbo].[Customers] AS [Extent1]");
+                }
+            }
+
+            [Fact]
+            public void Concatenated_strings_are_not_checked_if_null_with_database_null_semantics()
+            {
+                using (var context = new Context())
+                {
+                    context.Configuration.UseDatabaseNullSemantics = true;
+
+                    var query = context.Customers.Select(c => c.FirstName + c.LastName);
+
+                    QueryTestHelpers.VerifyDbQuery(
+                        query,
+@"SELECT 
+    [Extent1].[FirstName] + [Extent1].[LastName] AS [C1]
+    FROM [dbo].[Customers] AS [Extent1]");
+                }
+            }
+        }
     }
 }

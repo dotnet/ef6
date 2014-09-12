@@ -79,7 +79,7 @@
             }
 
             internal static CqtExpression StripNull(LinqExpression sourceExpression, 
-                DbExpression inputExpression, DbExpression outputExpression)
+                DbExpression inputExpression, DbExpression outputExpression, bool useDatabaseNullSemantics)
             {
                 if (sourceExpression.IsNullConstant())
                 {
@@ -89,6 +89,11 @@
                 if (sourceExpression.NodeType == ExpressionType.Constant)
                 {
                     return outputExpression;
+                }
+
+                if (useDatabaseNullSemantics)
+                {
+                    return inputExpression;
                 }
 
                 // converts evaluated null values to empty string, nullable primitive properties etc.
@@ -114,6 +119,7 @@
 
                 var expression = parent.TranslateExpression(linqExpression);
                 var clrType = TypeSystem.GetNonNullableType(linqExpression.Type);
+                var useDatabaseNullSemantics = !parent._funcletizer.RootContext.ContextOptions.UseCSharpNullComparisonBehavior;
 
                 if (clrType.IsEnum)
                 {
@@ -161,11 +167,11 @@
                 }
                 else if (TypeSemantics.IsPrimitiveType(expression.ResultType, PrimitiveTypeKind.String))
                 {
-                    return StripNull(linqExpression, expression, expression);
+                    return StripNull(linqExpression, expression, expression, useDatabaseNullSemantics);
                 }
                 else if (TypeSemantics.IsPrimitiveType(expression.ResultType, PrimitiveTypeKind.Guid))
                 {
-                    return StripNull(linqExpression, expression, expression.CastTo(parent.GetValueLayerType(typeof(string))).ToLower());
+                    return StripNull(linqExpression, expression, expression.CastTo(parent.GetValueLayerType(typeof(string))).ToLower(), useDatabaseNullSemantics);
                 }
                 else if (TypeSemantics.IsPrimitiveType(expression.ResultType, PrimitiveTypeKind.Boolean))
                 {
@@ -199,7 +205,7 @@
                     }
 
                     //treat all other types as a simple cast
-                    return StripNull(linqExpression, expression, expression.CastTo(parent.GetValueLayerType(typeof(string))));
+                    return StripNull(linqExpression, expression, expression.CastTo(parent.GetValueLayerType(typeof(string))), useDatabaseNullSemantics);
                 }
             }
 
