@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -978,12 +979,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         ++entityTypeMappingsIterator)
                     {
                         var entityTypeMapping = entityTypeMappings[entityTypeMappingsIterator];
+                        var entityTypeConfig = entityTypeMapping.EntityType.GetConfiguration() as EntityTypeConfiguration;
                         // ReSharper disable once LoopCanBeConvertedToQuery
                         for (var mappingFragmentsIterator = 0;
                             mappingFragmentsIterator < entityTypeMapping.MappingFragments.Count;
                             ++mappingFragmentsIterator)
                         {
-                            if (entityTypeMapping.MappingFragments[mappingFragmentsIterator].Table == toTable)
+                            var isTableNameConfigured = entityTypeConfig != null
+                                                   && entityTypeConfig.IsTableNameConfigured;
+
+                            if ((!isTableNameConfigured && entityTypeMapping.MappingFragments[mappingFragmentsIterator].Table == toTable)
+                                || (isTableNameConfigured && IsTableNameEqual(toTable, entityTypeConfig.GetTableName())))
                             {
                                 types.Add(entityTypeMapping);
                                 break;
@@ -994,6 +1000,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
             // ReSharper restore ForCanBeConvertedToForeach
             return types;
+        }
+
+        private static bool IsTableNameEqual(EntityType table, DatabaseName otherTableName)
+        {
+            var tableName = table.GetTableName();
+            if (tableName != null)
+            {
+                return otherTableName.Equals(tableName);
+            }
+            else
+            {
+                return otherTableName.Name.Equals(table.Name, StringComparison.Ordinal) && otherTableName.Schema == null;
+            }
         }
 
         private static IEnumerable<AssociationType> FindAllOneToOneFKAssociationTypes(
@@ -1044,6 +1063,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             foreach (var candidateTypeMapping in typeMappingsSharingTable)
             {
                 var candidateType = candidateTypeMapping.EntityType;
+                if (entityType == candidateType)
+                {
+                    continue;
+                }
+
                 var oneToOneAssocations = FindAllOneToOneFKAssociationTypes(
                     databaseMapping.Model, entityType, candidateType);
 
@@ -1057,18 +1081,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     associationsToSharedTable[rootType].AddRange(oneToOneAssocations);
                 }
             }
+
+            var unrelatedEntityTypes = new List<EntityType>();
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var candidateTypePair in associationsToSharedTable)
             {
                 // Check if these types are in a TPH hierarchy
                 if (candidateTypePair.Key != entityType.GetRootType()
                     && candidateTypePair.Value.Count == 0)
                 {
-                    var tableName = toTable.GetTableName();
-
-                    throw Error.EntityMappingConfiguration_InvalidTableSharing(
-                        entityType.Name, candidateTypePair.Key.Name,
-                        tableName != null ? tableName.Name : databaseMapping.Database.GetEntitySet(toTable).Table);
+                    unrelatedEntityTypes.Add(candidateTypePair.Key);
                 }
+            }
+
+            // Only throw if all entity types mapped to this table are unrelated to the current one (not in TPH or table splitting)
+            if (unrelatedEntityTypes.Count > 0
+                && unrelatedEntityTypes.Count == associationsToSharedTable.Count)
+            {
+                var tableName = toTable.GetTableName();
+
+                throw Error.EntityMappingConfiguration_InvalidTableSharing(
+                    entityType.Name, unrelatedEntityTypes.First().Name,
+                    tableName != null ? tableName.Name : databaseMapping.Database.GetEntitySet(toTable).Table);
             }
 
             var allAssociations = associationsToSharedTable.Values.SelectMany(l => l);
@@ -1083,20 +1117,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     : entityType;
 
                 var dependentMappingFragment = entityType == principalKeyNamesType
-                    ? typeMappingsSharingTable.Single(etm => etm.EntityType == dependentEntityType).Fragments.Single(mf => mf.Table == toTable)
+                    ? typeMappingsSharingTable.Single(etm => etm.EntityType == dependentEntityType).Fragments.SingleOrDefault(mf => mf.Table == toTable)
                     : fragment;
-                
-                // rename the columns in the fragment to match the principal keys
-                var principalKeys = principalKeyNamesType.KeyProperties().ToArray();
-                var i = 0;
-                foreach (var k in dependentEntityType.KeyProperties())
+
+                // If principal type is configured first dependentMappingFragment will be null, so the columns will be renamed when the dependent type is configured
+                if (dependentMappingFragment != null)
                 {
-                    k.SetStoreGeneratedPattern(StoreGeneratedPattern.None);
-                    
-                    var dependentColumn = dependentMappingFragment.ColumnMappings.Single(pm => pm.PropertyPath.First() == k).ColumnProperty;
-                    dependentColumn.Name = principalKeys[i].Name;
-                    
-                    i++;
+                    // rename the columns in the fragment to match the principal keys
+                    var principalKeys = principalKeyNamesType.KeyProperties().ToList();
+                    var dependentKeys = dependentEntityType.KeyProperties().ToList();
+                    for (int keyIterator = 0; keyIterator < principalKeys.Count; keyIterator++)
+                    {
+                        var dependentKey = dependentKeys[keyIterator];
+                        dependentKey.SetStoreGeneratedPattern(StoreGeneratedPattern.None);
+
+                        var dependentColumn = dependentMappingFragment
+                            .ColumnMappings
+                            .Single(pm => pm.PropertyPath.First() == dependentKey)
+                            .ColumnProperty;
+                        dependentColumn.Name = principalKeys[keyIterator].Name;
+                    }
                 }
                 return true;
             }

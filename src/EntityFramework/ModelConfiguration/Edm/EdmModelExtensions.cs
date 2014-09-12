@@ -85,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 var t = entityTypesList[entityTypesIterator];
                 var databaseName = t.GetTableName();
                 if (databaseName != null ? databaseName.Equals(tableName)
-                    : string.Equals(t.Name, tableName.Name, StringComparison.Ordinal))
+                    : string.Equals(t.Name, tableName.Name, StringComparison.Ordinal) && tableName.Schema == null)
                 {
                     return t;
                 }

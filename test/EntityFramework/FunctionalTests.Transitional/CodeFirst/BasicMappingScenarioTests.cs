@@ -5877,6 +5877,36 @@ namespace FunctionalTests
         }
 
         [Fact]
+        public void Table_split_first_base_on_TPH()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<TSBaseDetail>().Map(mc => mc.ToTable("TS"));
+            modelBuilder.Entity<TSBase>()
+                .HasRequired(i => i.BaseDetail).WithRequiredPrincipal();
+
+            modelBuilder.Entity<TSBase>()
+                .Map(
+                    mc =>
+                    {
+                        mc.ToTable("TS");
+                        mc.Requires("disc").HasValue("TSBase");
+                    });
+            modelBuilder.Entity<TSDerived>().Map(
+                mc =>
+                {
+                    mc.ToTable("TS");
+                    mc.Requires("disc").HasValue("TSDerived");
+                });
+            modelBuilder.Entity<TSDerived>().Ignore(x => x.Detail);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            databaseMapping.Assert<TSBase>("TS").HasColumns("Id", "BaseDetail", "BaseData", "disc", "DerivedData");
+            databaseMapping.Assert<TSDerived>("TS").HasColumns("Id", "BaseDetail", "BaseData", "disc", "DerivedData");
+            databaseMapping.Assert<TSBaseDetail>("TS").HasColumns("Id", "BaseDetail", "BaseData", "disc", "DerivedData");
+        }
+
+        [Fact]
         public void Table_split_base_on_default_TPH()
         {
             var modelBuilder = new AdventureWorksModelBuilder();

@@ -636,6 +636,42 @@ namespace FunctionalTests
             databaseMapping.Assert<Product>().DbEqual("tbl", t => t.Table);
         }
 
+        // Issue 1641
+        [Fact]
+        public void Build_model_for_mapping_to_duplicate_tables_different_schemas_one_unconfigured()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Product>().ToTable("Customers", "other");
+            modelBuilder.Entity<Customer>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "other"));
+
+            databaseMapping.Assert<Customer>().DbEqual("Customers", t => t.Table);
+            databaseMapping.Assert<Product>().DbEqual("Customers", t => t.Table);
+        }
+
+        // Issue 1641
+        [Fact]
+        public void Build_model_for_mapping_to_the_default_table_name_different_schema()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Product>().ToTable("Customer", "other");
+            modelBuilder.Entity<Customer>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "dbo"));
+            Assert.True(databaseMapping.Database.GetEntitySets().Any(s => s.Schema == "other"));
+
+            databaseMapping.Assert<Customer>().DbEqual("Customers", t => t.Table);
+            databaseMapping.Assert<Product>().DbEqual("Customer", t => t.Table);
+        }
+
         [Fact]
         public void Build_model_after_configuring_entity_set_name()
         {
