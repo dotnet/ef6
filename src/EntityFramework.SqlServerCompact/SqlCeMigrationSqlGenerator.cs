@@ -840,6 +840,7 @@ namespace System.Data.Entity.SqlServerCompact
             return BuildPropertyType(columnModel);
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private string BuildPropertyType(PropertyModel propertyModel)
         {
             DebugCheck.NotNull(propertyModel);
