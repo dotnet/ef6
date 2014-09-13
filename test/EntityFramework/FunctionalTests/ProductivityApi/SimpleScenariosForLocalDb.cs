@@ -25,11 +25,10 @@ namespace ProductivityApiTests
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
 
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
-#if (VS11 || VS12)
+            // TODO: Need to change this to MSSQLLocalDB on VS14 box but at the
+            // moment CI machine not setting the VS11, VS12 flags - so #if depending on those fails
+            // Need to investigate an alternative way to make these tests work on a VS14 box.
             _localDbType = "v11.0";
-#else
-            _localDbType = "MSSQLLocalDB";
-#endif
             MutableResolver.AddResolver<IDbConnectionFactory>(k => new LocalDbConnectionFactory(_localDbType));
         }
 
@@ -55,11 +54,7 @@ namespace ProductivityApiTests
                 }
 
                 Database.Delete("Scenario_CodeFirstWithModelBuilder");
-#if (VS11 || VS12)
                 Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string");
-#else
-                Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string_MSSQLLocalDB");
-#endif
             }
             finally
             {
@@ -377,11 +372,7 @@ namespace ProductivityApiTests
         {
             Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string");
 
-#if (VS11 || VS12)
             var connectionStringName = "Scenario_Use_AppConfig_LocalDb_connection_string";
-#else
-            var connectionStringName = "Scenario_Use_AppConfig_LocalDb_connection_string_MSSQLLocalDB";
-#endif
             using (var context = new SimpleLocalDbModelContextWithNoData(connectionStringName))
             {
                 Assert.Equal("Scenario_Use_AppConfig_LocalDb", context.Database.Connection.Database);
