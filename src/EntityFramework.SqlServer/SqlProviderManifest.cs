@@ -232,6 +232,7 @@ namespace System.Data.Entity.SqlServer
             return _functions;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static bool IsKatmaiOrNewer(EdmFunction edmFunction)
         {
             // Spatial types are only supported from Katmai onward; any functions using them must therefore also be Katmai or newer.
