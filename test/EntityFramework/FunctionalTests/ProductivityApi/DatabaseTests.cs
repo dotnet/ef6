@@ -1212,9 +1212,6 @@ END");
         [Fact]
         public void If_connection_is_changed_to_point_to_different_server_then_operations_that_use_OriginalConnectionString_pick_up_this_change()
         {
-            // TODO: Need to change "(localdb)\v11.0" to "(localdb)\MSSQLLocalDB" on VS14 box but at the
-            // moment CI machine not setting the VS11, VS12 flags - so #if depending on those fails
-            // Need to investigate an alternative way to make these tests work on a VS14 box.
             var changedServer = DatabaseTestHelpers.IsLocalDb(SimpleConnectionString("")) ? @".\SQLEXPRESS" : @"(localdb)\v11.0";
             var changedConnectionString = string.Format(
                 CultureInfo.InvariantCulture,

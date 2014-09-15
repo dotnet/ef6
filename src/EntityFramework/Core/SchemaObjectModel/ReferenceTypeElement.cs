@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         internal override void WriteIdentity(StringBuilder builder)
         {
-            Debug.Assert(UnresolvedType != null && !string.IsNullOrEmpty(UnresolvedType.Trim()));
+            Debug.Assert(UnresolvedType != null && !UnresolvedType.Trim().Equals(String.Empty));
             builder.Append("Ref(" + UnresolvedType + ")");
         }
 

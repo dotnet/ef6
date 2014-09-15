@@ -400,6 +400,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 if (BuiltInTypeKind.CollectionType
                     == propertyExpression.ResultType.EdmType.BuiltInTypeKind)
                 {
+                    Debug.Assert(clrMember is PropertyInfo, "Navigation property was not a property; should not be allowed by metadata.");
                     var propertyType = ((PropertyInfo)clrMember).PropertyType;
                     if (propertyType.IsGenericType()
                         && propertyType.GetGenericTypeDefinition() == typeof(EntityCollection<>))
@@ -818,7 +819,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     string memberName;
                     Type memberType;
-                    TypeSystem.PropertyOrField(linq.Members[i], out memberName, out memberType);
+                    var memberInfo = TypeSystem.PropertyOrField(linq.Members[i], out memberName, out memberType);
                     var memberValue = parent.TranslateExpression(linq.Arguments[i]);
                     memberNames.Add(memberName);
                     recordColumns.Add(new KeyValuePair<string, DbExpression>(memberName, memberValue));
@@ -1260,6 +1261,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             protected override DbExpression TypedTranslate(ExpressionConverter parent, TypeBinaryExpression linq)
             {
                 var operand = parent.TranslateExpression(linq.Expression);
+                var fromType = operand.ResultType;
                 var toType = parent.GetIsOrAsTargetType(ExpressionType.TypeIs, linq.TypeOperand, linq.Expression.Type);
                 return operand.IsOf(toType);
             }
@@ -1548,6 +1550,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             protected override DbExpression TranslateUnary(ExpressionConverter parent, UnaryExpression unary, DbExpression operand)
             {
+                var fromType = operand.ResultType;
                 var toType = parent.GetIsOrAsTargetType(ExpressionType.TypeAs, unary.Type, unary.Operand.Type);
                 return operand.TreatAs(toType);
             }

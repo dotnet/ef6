@@ -152,12 +152,10 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void SqlSpatialServices_Singleton_uses_SQL_2008_types_on_dev_machine()
         {
-            var assemblyQualifiedName =
-                SqlSpatialServices.Instance.GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName;
             Assert.True(
-                assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types")
-                    && !assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=10."),
-                "Invalid assembly qualified name " + assemblyQualifiedName);
+                SqlSpatialServices.Instance.GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName
+                    .StartsWith(
+                        "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11."));
         }
 
         [Fact]
@@ -225,11 +223,10 @@ namespace System.Data.Entity.SqlServer
 
                 Assert.Equal(90, geometry.XCoordinate);
                 Assert.Equal(50, geometry.YCoordinate);
-                var assemblyQualifiedName = geometry.ProviderValue.GetType().AssemblyQualifiedName;
                 Assert.True(
-                    assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types")
-                        && !assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=10."),
-                    "Invalid assembly qualified name " + assemblyQualifiedName);
+                    geometry.ProviderValue.GetType().AssemblyQualifiedName
+                        .StartsWith(
+                            "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11."));
             }
         }
     }

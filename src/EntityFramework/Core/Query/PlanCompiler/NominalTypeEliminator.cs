@@ -1171,7 +1171,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var newTableMD = m_command.CreateFlatTableDefinition(properties, keyProperties, op.Table.TableMetadata.Extent);
             var newTable = m_command.CreateTableInstance(newTableMD);
 
-            m_varInfoMap.CreateStructuredVarInfo(columnVar, newRowType, newTable.Columns, properties);
+            var varInfo = m_varInfoMap.CreateStructuredVarInfo(columnVar, newRowType, newTable.Columns, properties);
 
             n.Op = m_command.CreateScanTableOp(newTable);
             return n;
@@ -1262,6 +1262,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             // we must be dealing with a structured column here
             var svarInfo = (StructuredVarInfo)varInfo;
+
+            var typeInfo = m_typeInfo.GetTypeInfo(columnVar.Type);
 
             // if this view does not represent an entityset, then we're pretty much
             // done. We simply add a mapping from the columnVar to the list of flattened

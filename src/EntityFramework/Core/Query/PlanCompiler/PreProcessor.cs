@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Runtime.CompilerServices;
 
     // <summary>
@@ -1383,8 +1382,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             // Count sub types
             var subTypeCount = 0;
-            MetadataHelper.GetTypeAndSubtypesOf(testType, m_command.MetadataWorkspace, true /*includeAbstractTypes*/)
-                .TakeWhile(_ => (subTypeCount++) < 2);
+            foreach (
+                var subType in MetadataHelper.GetTypeAndSubtypesOf(testType, m_command.MetadataWorkspace, true /*includeAbstractTypes*/))
+            {
+                subTypeCount++;
+                if (2 == subTypeCount)
+                {
+                    break;
+                }
+            }
 
             return 1 == subTypeCount; // no children types
         }

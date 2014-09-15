@@ -13,6 +13,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             DebugCheck.NotEmpty(name);
             DebugCheck.NotNull(value);
+            Debug.Assert(value is Type);
 
             return ((Type)value).AssemblyQualifiedName;
         }

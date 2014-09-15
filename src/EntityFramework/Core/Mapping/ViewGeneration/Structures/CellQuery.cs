@@ -740,7 +740,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return GetConjunctsFromWhereClause(m_originalWhereClause);
         }
 
-        private static IEnumerable<MemberRestriction> GetConjunctsFromWhereClause(BoolExpression whereClause)
+        private IEnumerable<MemberRestriction> GetConjunctsFromWhereClause(BoolExpression whereClause)
         {
             foreach (var boolExpr in whereClause.Atoms)
             {

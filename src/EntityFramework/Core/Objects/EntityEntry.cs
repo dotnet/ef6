@@ -2191,6 +2191,9 @@ namespace System.Data.Entity.Core.Objects
                         if (_cache.TryGetObjectStateEntry(principal, out principalEntry)
                             && (principalEntry.State == EntityState.Modified || principalEntry.State == EntityState.Unchanged))
                         {
+                            Debug.Assert(
+                                principalEntry is EntityEntry,
+                                "Existing entry for an entity must be an EntityEntry, not a RelationshipEntry");
                             reference.UpdateForeignKeyValues(
                                 WrappedEntity, ((EntityEntry)principalEntry).WrappedEntity, changedFKs, forceChange: false);
                         }

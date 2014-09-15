@@ -29,7 +29,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
     // Step 4: From the constructed relational expression (OpCellTree), we can tell whether a top-level WHERE clause is needed or not.
     // (Usually, it's needed only in certain cases for OfType() views.)
     // </summary>
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class QueryRewriter
     {
         // The following fields are copied from ViewGenContext

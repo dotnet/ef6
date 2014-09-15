@@ -205,7 +205,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="vars"> input var sequence </param>
         // <param name="varMap"> var->var map </param>
         // <returns> the mapped var sequence </returns>
-        private static IEnumerable<Var> RemapVars(IEnumerable<Var> vars, Dictionary<Var, Var> varMap)
+        private IEnumerable<Var> RemapVars(IEnumerable<Var> vars, Dictionary<Var, Var> varMap)
         {
             foreach (var v in vars)
             {
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Produce a "mapped" varList
         // </summary>
-        private static VarList RemapVarList(VarList varList, Dictionary<Var, Var> varMap)
+        private VarList RemapVarList(VarList varList, Dictionary<Var, Var> varMap)
         {
             var newVarList = Command.CreateVarList(RemapVars(varList, varMap));
             return newVarList;
@@ -585,9 +585,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return NestingNotSupported(op, n);
         }
 
-#if DEBUG
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
-#endif
         // <summary>
         // FilterOp
         // </summary>
@@ -700,10 +697,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return ApplyOpJoinOp(op, n);
         }
 
-#if DEBUG
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size")]
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
-#endif
         // <summary>
         // ProjectOp
         // </summary>
@@ -815,10 +808,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // not referred to by the top level-NestOp, we can safely remove it from
         // the merged NestOp we produce.
         // </summary>
-#if DEBUG
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size")]
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
-#endif
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Vars")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "collectionVar")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -914,10 +903,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Remove CollectOps from projection, constructing a NestOp
         // over the ProjectOp.
         // </summary>
-#if DEBUG
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size")]
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
-#endif
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -1258,10 +1243,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // (9) Set ProjectOp's input to NestOp's input
         // (10) Set NestOp's input to ProjectOp.
         // </summary>
-#if DEBUG
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size")]
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
-#endif
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ProjectOpCase2(Node projectNode)
@@ -1281,7 +1262,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             Command.RecomputeNodeInfo(projectNode);
             var projectNodeInfo = Command.GetExtendedNodeInfo(projectNode);
-            Command.GetExtendedNodeInfo(nestNode);
+            var nestNodeInfo = Command.GetExtendedNodeInfo(nestNode);
 
             foreach (var chi in projectNode.Child1.Children)
             {
@@ -1293,7 +1274,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 {
                     var varRefOp = (VarRefOp)definingExprNode.Op;
                     PlanCompiler.Assert(
-                        varRefOp.Var == varDefOp.Var || !projectNodeInfo.LocalDefinitions.IsSet(varRefOp.Var), "need to remap variables!");
+                        varRefOp.Var == varDefOp.Var || !projectNodeInfo.LocalDefinitions.IsSet(varRefOp.Var), "need to remap vars!");
 
                     //if (!projectToNestVarMap.ContainsKey(varRefOp.Var)) {
                     //    projectToNestVarMap.Add(varRefOp.Var, varDefOp.Var);
@@ -1569,7 +1550,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             else
             {
-                Command.CreateVarVec();
+                var sortVars = Command.CreateVarVec();
 
                 // First add the sort keys from the SortBaseOp, then the NestOp keys
                 var sortKeyList = ConsolidateSortKeys(sortKeys, inputNestOp.PrefixSortKeys);
@@ -1648,10 +1629,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // all Vars from the UnnestOp; and has no local definitions. This allows us to
         // restrict the Var->Var replacement to just ProjectOp.
         // </remarks>
-#if DEBUG
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size")]
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
-#endif
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1664,6 +1641,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //DEBUG
             // First, visit my children
             VisitChildren(n);
+
+            // If we're unnesting a UDT, then simply return - we cannot eliminate this unnest
+            // It must be handled by the store
+            var collType = TypeHelpers.GetEdmType<md.CollectionType>(op.Var.Type);
 
             // Find the VarDef node for the var we're supposed to unnest.
             PlanCompiler.Assert(n.Child0.Op.OpType == OpType.VarDef, "Un-nest without VarDef input?");
@@ -1797,9 +1778,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return newNode;
         }
 
-#endregion
+        #endregion
 
-#region PhysicalOp Visitors
+        #region PhysicalOp Visitors
 
         // <summary>
         // MultiStreamNestOp/SingleStreamNestOp common processing.
@@ -1833,10 +1814,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // (2) Convert SingleStreamNestOp(...) => SortOp(...)
         // (3) Fixup the column maps.
         // </remarks>
-#if DEBUG
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size")]
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
-#endif
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2017,11 +1994,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Y1...Yn     are the columns from the second nested collection
         // nY1...nYn   are null values for all columns from the second nested collection
         // </remarks>
-#if DEBUG
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size")]
-        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output")]
-#endif
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private Node ConvertToSingleStreamNest(
             Node nestNode, Dictionary<Var, ColumnMap> varRefReplacementMap, VarList flattenedOutputVarList,
             out SimpleColumnMap[] parentKeyColumnMaps)
@@ -2562,8 +2534,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return unionAllVars;
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
     }
 }

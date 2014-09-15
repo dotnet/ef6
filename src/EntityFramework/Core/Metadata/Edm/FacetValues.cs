@@ -194,7 +194,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public static FacetValues Create(IEnumerable<Facet> facets)
         {
             var facetValues = new FacetValues();

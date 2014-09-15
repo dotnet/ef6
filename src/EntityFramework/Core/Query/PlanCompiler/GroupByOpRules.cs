@@ -454,8 +454,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             var nodeInfo = command.GetExtendedNodeInfo(n.Child0);
             var newOp = command.CreateProjectOp(op.Keys);
+
             var varDefListOp = command.CreateVarDefListOp();
-            command.CreateNode(varDefListOp);
+            var varDefListNode = command.CreateNode(varDefListOp);
 
             newNode = command.CreateNode(newOp, n.Child0, n.Child1);
 

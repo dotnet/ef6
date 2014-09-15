@@ -543,6 +543,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private static DbExpression GeneratePropertyMappingView(PropertyMapping mapping, DbExpression row)
         {
+            Debug.Assert(mapping is ScalarPropertyMapping, "Complex property mapping is not supported in function imports.");
             var scalarPropertyMapping = (ScalarPropertyMapping)mapping;
             return GenerateScalarPropertyMappingView(scalarPropertyMapping.Property, scalarPropertyMapping.Column, row);
         }

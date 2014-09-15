@@ -280,6 +280,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal Dictionary<Var, Node> GetVarMap(Node varDefListNode, Dictionary<Var, int> varRefMap)
         {
+            var varDefListOp = (VarDefListOp)varDefListNode.Op;
+
             var varMap = new Dictionary<Var, Node>();
             foreach (var chi in varDefListNode.Children)
             {

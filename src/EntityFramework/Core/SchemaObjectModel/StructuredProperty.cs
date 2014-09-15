@@ -137,6 +137,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 return null;
             }
 
+            var structuredType = element;
+
             return element;
         }
 

@@ -40,8 +40,7 @@ namespace System.Data.Entity.Migrations.Utilities
             {
                 now = lastNow.AddMilliseconds(100);
 
-                Debug.Assert(!now.ToString(MigrationIdFormat, CultureInfo.InvariantCulture)
-                    .Equals(lastNow.ToString(MigrationIdFormat, CultureInfo.InvariantCulture), StringComparison.Ordinal));
+                Debug.Assert(!now.ToString(MigrationIdFormat).Equals(lastNow.ToString(MigrationIdFormat), StringComparison.Ordinal));
             }
 
             _lastNow.Value = now;

@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using CellConstantSet = System.Data.Entity.Core.Common.Utils.Set<Constant>;
@@ -49,7 +48,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_edmItemCollection = edmItemCollection;
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         // effects: Creates a map with all the condition member constants
         // from extentCells. viewtarget determines whether the view is an
         // update or query view

@@ -12,7 +12,6 @@ namespace System.Data.Entity
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -7703,7 +7702,7 @@ namespace System.Data.Entity
             }
 
             Debug.Assert(
-                false, String.Format(CultureInfo.CurrentCulture,
+                false, String.Format(
                     "Method '{0}' with parameters '{1}' not found", methodName, PrettyPrint(getParameterTypesMethod, genericArgumentsCount)));
 
             return null;

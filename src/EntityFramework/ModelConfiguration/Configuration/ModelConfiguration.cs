@@ -20,7 +20,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     // <summary>
     // Allows configuration to be performed for a model.
     // </summary>
-    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     internal class ModelConfiguration : ConfigurationBase
     {

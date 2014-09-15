@@ -282,6 +282,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
+                    Debug.Assert(typeMapping is FunctionImportComplexTypeMapping, "Unexpected mapping kind.");
+
                     WriteFunctionImportComplexTypeMappingElement((FunctionImportComplexTypeMapping)typeMapping);
                 }
             }
@@ -356,6 +358,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
+                Debug.Assert(condition is FunctionImportEntityTypeMappingConditionValue, "Unexpected condition type");
+
                 WriteConditionValue(((FunctionImportEntityTypeMappingConditionValue)condition).Value);
             }
 

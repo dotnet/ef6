@@ -241,7 +241,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // </summary>
         // <param name="entitySetMapping"> Set mapping to examine </param>
         // <returns> All result bindings </returns>
-        private static IEnumerable<EdmMember> GetMembersWithResultBinding(EntitySetMapping entitySetMapping)
+        private IEnumerable<EdmMember> GetMembersWithResultBinding(EntitySetMapping entitySetMapping)
         {
             foreach (var typeFunctionMapping in entitySetMapping.ModificationFunctionMappings)
             {

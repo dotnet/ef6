@@ -864,6 +864,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             foreach (var p in m_relPropertyHelper.GetDeclaredOnlyRelProperties(entityType))
             {
+                var refType = p.ToEnd.TypeUsage.EdmType;
                 var refTypeInfo = GetTypeInfo(p.ToEnd.TypeUsage);
 
                 //

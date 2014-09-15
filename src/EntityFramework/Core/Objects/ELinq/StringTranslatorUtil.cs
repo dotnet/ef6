@@ -104,7 +104,6 @@
                 return castNullToEmptyString;
             }
 
-            [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
             [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", 
                 Justification = "the same linqExpression value is never cast to ConstantExpression twice")]
             internal static DbExpression ConvertToString(ExpressionConverter parent,  LinqExpression linqExpression)

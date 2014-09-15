@@ -247,7 +247,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         // effects: Given a sequence of boolean expressions, yields the
         // corresponding trees in it in the same order
-        private static IEnumerable<DomainBoolExpr> ToBoolExprList(IEnumerable<BoolExpression> nodes)
+        private IEnumerable<DomainBoolExpr> ToBoolExprList(IEnumerable<BoolExpression> nodes)
         {
             foreach (var node in nodes)
             {

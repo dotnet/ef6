@@ -11,12 +11,10 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void TryGetSqlTypesAssembly_on_dev_machine_returns_assembly_for_SQL_2008_native_types()
         {
-            var assemblyQualifiedName =
-                new SqlTypesAssemblyLoader().TryGetSqlTypesAssembly().SqlGeographyType.AssemblyQualifiedName;
             Assert.True(
-                assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeography, Microsoft.SqlServer.Types")
-                    && !assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeography, Microsoft.SqlServer.Types, Version=10."),
-                "Invalid assembly qualified name " + assemblyQualifiedName);
+                new SqlTypesAssemblyLoader().TryGetSqlTypesAssembly().SqlGeographyType.AssemblyQualifiedName
+                    .StartsWith(
+                        "Microsoft.SqlServer.Types.SqlGeography, Microsoft.SqlServer.Types, Version=11."));
         }
 
         [Fact]
@@ -28,12 +26,10 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void GetSqlTypesAssembly_on_dev_machine_returns_assembly_for_SQL_2008_native_types()
         {
-            var assemblyQualifiedName =
-                new SqlTypesAssemblyLoader().TryGetSqlTypesAssembly().SqlGeographyType.AssemblyQualifiedName;
             Assert.True(
-                assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeography, Microsoft.SqlServer.Types")
-                    && !assemblyQualifiedName.StartsWith("Microsoft.SqlServer.Types.SqlGeography, Microsoft.SqlServer.Types, Version=10."),
-                "Invalid assembly qualified name " + assemblyQualifiedName);
+                new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType.AssemblyQualifiedName
+                    .StartsWith(
+                        "Microsoft.SqlServer.Types.SqlGeography, Microsoft.SqlServer.Types, Version=11."));
         }
 
         [Fact]

@@ -78,7 +78,7 @@ namespace System.Data.Entity.SqlServer
             return ExecuteAsyncImplementation(operation);
         }
 
-        private static async Task<TResult> ExecuteAsyncImplementation<TResult>(Func<Task<TResult>> func)
+        private async Task<TResult> ExecuteAsyncImplementation<TResult>(Func<Task<TResult>> func)
         {
             try
             {

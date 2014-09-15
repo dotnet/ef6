@@ -66,6 +66,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         {
             DebugCheck.NotNull(reader);
 
+            var relationshipKind = ParentElement.ParentElement.RelationshipKind;
+
             switch (reader.Value.Trim())
             {
                 case "None":

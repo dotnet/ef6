@@ -21,9 +21,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal override void Evaluate(EdmModelValidationContext context, MetadataItem item)
         {
-            var tItem = item as TItem;
-            Debug.Assert(tItem != null);
-            _validate(context, tItem);
+            Debug.Assert(item is TItem);
+            _validate(context, item as TItem);
         }
     }
 }

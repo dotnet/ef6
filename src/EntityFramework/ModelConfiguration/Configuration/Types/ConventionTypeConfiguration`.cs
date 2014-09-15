@@ -9,7 +9,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
 
@@ -58,8 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             Debug.Assert(
                 typeof(T).IsAssignableFrom(type),
-                string.Format(CultureInfo.CurrentCulture,
-                    "The type '{0}' is invalid. The specified type must derive from '{1}'.", type, typeof(T)));
+                string.Format("The type '{0}' is invalid. The specified type must derive from '{1}'.", type, typeof(T)));
         }
 
         /// <summary>

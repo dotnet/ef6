@@ -746,7 +746,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1500:VariableNamesShouldNotMatchFieldNames", MessageId = "<>h__TransparentIdentifier0")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<CreateProcedureOperation> FindAddedModificationFunctions(
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
@@ -1370,7 +1369,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return parameterModel;
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1500:VariableNamesShouldNotMatchFieldNames", MessageId = "<>h__TransparentIdentifier0")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<DropProcedureOperation> FindDroppedModificationFunctions()
         {

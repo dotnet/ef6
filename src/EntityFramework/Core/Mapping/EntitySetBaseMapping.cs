@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     foreach (var mapFragment in typeMap.MappingFragments)
                     {
-                        if (mapFragment.AllProperties.Any())
+                        foreach (var propertyMap in mapFragment.AllProperties)
                         {
                             return false;
                         }

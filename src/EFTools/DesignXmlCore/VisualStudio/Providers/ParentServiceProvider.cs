@@ -38,13 +38,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Providers
                     {
                         var parentFrame = (IVsWindowFrame)@var;
                         hr = parentFrame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out @var);
-                        if (NativeMethods.Succeeded(hr))
+                        Debug.Assert(NativeMethods.Succeeded(hr));
+                        var parentViewProvider = @var as IServiceProvider;
+                        if (parentViewProvider != null)
                         {
-                            var parentViewProvider = @var as IServiceProvider;
-                            if (parentViewProvider != null)
-                            {
-                                service = parentViewProvider.GetService(typeof(ServiceType));
-                            }
+                            service = parentViewProvider.GetService(typeof(ServiceType));
                         }
                     }
                 }

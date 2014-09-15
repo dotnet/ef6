@@ -33,6 +33,8 @@ namespace System.Data.Entity.Infrastructure
         // <returns> A new instance. </returns>
         internal static ReplacementDbQueryWrapper<TElement> Create(ObjectQuery query)
         {
+            Debug.Assert(query is ObjectQuery<TElement>);
+
             return new ReplacementDbQueryWrapper<TElement>((ObjectQuery<TElement>)query);
         }
 

@@ -269,7 +269,3 @@ using System.Diagnostics.CodeAnalysis;
         Target = "System.ComponentModel.DataAnnotations.Schema")]
 [assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", 
         Target = "System.Data.Entity.Utilities")]
-[assembly:
-    SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "v", Scope = "member", 
-        Target = "System.Data.Entity.Core.Query.InternalTrees.VarVec.#Count")]
-

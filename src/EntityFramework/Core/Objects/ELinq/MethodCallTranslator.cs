@@ -2113,6 +2113,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var returnType = GetReturnType(parent, call);
                     var function = FindFunction(parent, call, returnType);
 
+                    //Save the unwrapped operand for the optimized translation
+                    var unwrappedOperand = operand;
+
                     operand = WrapCollectionOperand(parent, operand, returnType);
                     var arguments = new List<DbExpression>(1);
                     arguments.Add(operand);

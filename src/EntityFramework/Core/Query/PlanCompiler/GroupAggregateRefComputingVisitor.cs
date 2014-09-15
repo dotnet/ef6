@@ -156,6 +156,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
             PlanCompiler.Assert(n.Children.Count == 1, "Aggregate Function must have one argument");
 
+            var argumentNode = n.Child0;
+
             GroupAggregateVarInfo referencedGroupAggregateVarInfo;
             Node templateNode;
             bool isUnnested;

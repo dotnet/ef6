@@ -92,6 +92,7 @@ namespace System.Data.Entity.Internal
         private static void SetValueOnEntityReference<TRelatedEntity>(IRelatedEnd entityReference, object value)
             where TRelatedEntity : class
         {
+            Debug.Assert(entityReference is EntityReference<TRelatedEntity>);
             Debug.Assert(value == null || value is TRelatedEntity);
 
             ((EntityReference<TRelatedEntity>)entityReference).Value = (TRelatedEntity)value;

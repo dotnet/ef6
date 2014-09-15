@@ -139,6 +139,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             // 3. A non-null RelationshipManager can be retrieved (this is asserted).
             // 4. The EntityCollection is not already loaded.
 
+            Debug.Assert(wrapperObject == null || wrapperObject is IEntityWrapper, "wrapperObject must be an IEntityWrapper");
             var wrapper = (IEntityWrapper)wrapperObject; // We want an exception if the cast fails.
 
             if (wrapper != null

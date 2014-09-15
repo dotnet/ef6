@@ -847,7 +847,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        private static IEnumerable<AssociationEndMember> GetAllTargetEnds(EntityType ownerEntityType, EntitySet ownerEntitySet)
+        private IEnumerable<AssociationEndMember> GetAllTargetEnds(EntityType ownerEntityType, EntitySet ownerEntitySet)
         {
             foreach (var assocSet in MetadataHelper.GetAssociationsForEntitySet(ownerEntitySet))
             {
@@ -1355,6 +1355,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             var dependentEnd = relatedEnd.GetOtherEndOfRelationship(dependent);
                             if (dependentEnd.IsDependentEndOfReferentialConstraint(checkIdentifying: false))
                             {
+                                Debug.Assert(
+                                    dependentEnd is EntityReference, "Dependent end in FK relationship should always be a reference.");
                                 dependentEndsToProcess.Add((EntityReference)dependentEnd);
                             }
                         }

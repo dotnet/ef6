@@ -1317,7 +1317,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static bool TryConvertAsFunctionAggregate(
             MethodExpr methodExpr,
             MetadataFunctionGroup metadataFunctionGroup,
@@ -3968,7 +3967,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (null != queryExpr.HavingClause
                 && queryExpr.HavingClause.HasMethodCall)
             {
-                ConvertValueExpression(queryExpr.HavingClause.HavingPredicate, sr);
+                var converted = ConvertValueExpression(queryExpr.HavingClause.HavingPredicate, sr);
             }
 
             //
@@ -4045,7 +4044,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                     sr.CurrentScopeRegion.WasResolutionCorrelated = false;
 
-                    ConvertValueExpression(orderItem.OrderExpr, sr);
+                    var converted = ConvertValueExpression(orderItem.OrderExpr, sr);
 
                     //
                     // Ensure key expression is correlated.

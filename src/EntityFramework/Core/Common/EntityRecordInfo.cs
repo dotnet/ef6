@@ -44,9 +44,6 @@ namespace System.Data.Entity.Core.Common
             ValidateEntityType(entitySet);
         }
 
-#if DEBUG
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-#endif
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(EntityType metadata, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata))
@@ -71,11 +68,7 @@ namespace System.Data.Entity.Core.Common
         // Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
         // but with a different EntityKey instance.
         // </summary>
-#if DEBUG
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-#else
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
-#endif
         internal EntityRecordInfo(DataRecordInfo info, EntityKey entityKey, EntitySet entitySet)
             : base(info)
         {

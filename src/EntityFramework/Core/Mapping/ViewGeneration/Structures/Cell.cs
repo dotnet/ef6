@@ -173,6 +173,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 Debug.Assert(sSlot != null, "Has cell query been normalized?");
 
                 // These slots better be MemberProjectedSlots. We do not have constants etc at this point.
+                Debug.Assert(cSlot is MemberProjectedSlot, "cSlot is expected to be MemberProjectedSlot");
+                Debug.Assert(sSlot is MemberProjectedSlot, "sSlot is expected to be MemberProjectedSlot");
+
                 var cJoinSlot = (MemberProjectedSlot)cSlot;
                 var sJoinSlot = (MemberProjectedSlot)sSlot;
 

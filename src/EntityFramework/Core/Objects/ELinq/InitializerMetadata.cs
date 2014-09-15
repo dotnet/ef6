@@ -308,6 +308,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // Create expression of the form:
                 // _newExpression(children)
 
+                // (ClrType)null
+                Expression nullProjection = Expression.Constant(null, ClrType);
+
                 // _newExpression with members rebound
                 return Expression.New(_newExpression.Constructor, GetPropertyReaders(propertyTranslatorResults));
             }
@@ -481,6 +484,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var elementType = GetElementType();
                 var createEntityCollectionMethod = CreateEntityCollectionMethod.MakeGenericMethod(elementType);
 
+                Expression shaper = CodeGenEmitter.Shaper_Parameter;
                 var owner = propertyTranslatorResults[0].Expression;
 
                 var collectionResult = propertyTranslatorResults[1] as CollectionTranslatorResult;
