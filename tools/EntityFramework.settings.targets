@@ -20,8 +20,8 @@ Project global pre-settings.
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
     <VersionReleasePrefix>2</VersionReleasePrefix>
-    <VersionRelease>$(VersionReleasePrefix)-alpha1</VersionRelease>
-    <VersionReleaseName>Alpha 1</VersionReleaseName>
+    <VersionRelease>$(VersionReleasePrefix)-beta1</VersionRelease>
+    <VersionReleaseName>Beta 1</VersionReleaseName>
   </PropertyGroup>
 
   <PropertyGroup>
