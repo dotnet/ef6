@@ -25,8 +25,8 @@ Project global pre-settings.
   </PropertyGroup>
 
   <PropertyGroup>
-    <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">512112</ProjectUrlFwLinkID>
-    <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">320539</LicenseUrlFwLinkID>
+    <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">389132</ProjectUrlFwLinkID>
+    <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">389134</LicenseUrlFwLinkID>
     <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
   </PropertyGroup>
 
