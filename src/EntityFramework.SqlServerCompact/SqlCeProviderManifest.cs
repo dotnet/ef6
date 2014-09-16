@@ -130,6 +130,7 @@ namespace System.Data.Entity.SqlServerCompact
         // <param name="storeType"> A TypeUsage encapsulating a store type and a set of facets </param>
         // <returns> A TypeUsage encapsulating an EDM type and a set of facets </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetEdmType(TypeUsage storeType)
         {
             Check.NotNull(storeType, "storeType");

@@ -847,7 +847,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        private IEnumerable<AssociationEndMember> GetAllTargetEnds(EntityType ownerEntityType, EntitySet ownerEntitySet)
+        private static IEnumerable<AssociationEndMember> GetAllTargetEnds(EntityType ownerEntityType, EntitySet ownerEntitySet)
         {
             foreach (var assocSet in MetadataHelper.GetAssociationsForEntitySet(ownerEntitySet))
             {

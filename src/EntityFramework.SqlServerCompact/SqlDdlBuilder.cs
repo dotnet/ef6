@@ -225,6 +225,7 @@ namespace System.Data.Entity.SqlServerCompact
             AppendIdentifier(builder, identifier.Replace("\r", "\r--").Replace("\n", "\n--"));
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static void AppendType(StringBuilder builder, EdmProperty column)
         {
             var type = column.TypeUsage;

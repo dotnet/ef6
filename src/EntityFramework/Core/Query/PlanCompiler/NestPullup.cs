@@ -205,7 +205,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="vars"> input var sequence </param>
         // <param name="varMap"> var->var map </param>
         // <returns> the mapped var sequence </returns>
-        private IEnumerable<Var> RemapVars(IEnumerable<Var> vars, Dictionary<Var, Var> varMap)
+        private static IEnumerable<Var> RemapVars(IEnumerable<Var> vars, Dictionary<Var, Var> varMap)
         {
             foreach (var v in vars)
             {
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Produce a "mapped" varList
         // </summary>
-        private VarList RemapVarList(VarList varList, Dictionary<Var, Var> varMap)
+        private static VarList RemapVarList(VarList varList, Dictionary<Var, Var> varMap)
         {
             var newVarList = Command.CreateVarList(RemapVars(varList, varMap));
             return newVarList;
