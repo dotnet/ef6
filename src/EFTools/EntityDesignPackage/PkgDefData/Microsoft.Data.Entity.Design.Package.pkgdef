@@ -170,3 +170,13 @@
 // Register the Include path for T4 Templates 
 [$RootKey$\TextTemplating\IncludeFolders\.tt]
 "Include67826F5E-E1F5-4618-B91C-957E4A34F0D9"="$RootFolder$Common7\IDE\Extensions\Microsoft\Entity Framework Tools\Templates\Includes\"
+
+// Enables the EntityDataSource connection wizard to work against Entity Framework 5 by registering a dependency
+// assembly codebase in the registry to hint Visual Studio (or its express flavors) as to where to go look for
+// the Entity Framework assembly when version 5 is required.
+[$RootKey$\RuntimeConfiguration\dependentAssembly\codeBase\{29A768DC-8850-4C53-BC56-32D9E7925E00}]
+"Name"="EntityFramework"
+"PublicKeyToken"="b77a5c561934e089"
+"Culture"="neutral"
+"Version"="5.0.0.0"
+"CodeBase"="$PackageFolder$\NuGet Packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll"
