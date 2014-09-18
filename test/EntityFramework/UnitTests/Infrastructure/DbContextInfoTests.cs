@@ -1000,12 +1000,12 @@ namespace System.Data.Entity.Infrastructure
                     var contextInfo = new DbContextInfo(contextType, config);
 
                     Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                    Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
+                    Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"), "Connection string does not contain \"Initial Catalog=foo\", Actual ConnectionString: " + contextInfo.ConnectionString);
                     Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
                     if (!DatabaseTestHelpers.IsSqlAzure(contextInfo.ConnectionString)
                         && !DatabaseTestHelpers.IsLocalDb(contextInfo.ConnectionString))
                     {
-                        Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
+                        Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"), "Connection string does not target .\\SQLEXPRESS, Actual ConnectionString: " + contextInfo.ConnectionString);
                     }
                 });
         }

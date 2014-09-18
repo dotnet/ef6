@@ -492,7 +492,7 @@ END");
                         "Password1",
                         useInitialcatalog)))
                 {
-                    Assert.True(context.Database.Exists());
+                    Assert.True(context.Database.Exists(), "context.Database does not exist, actual connection string: " + context.Database.Connection.ConnectionString);
                 }
             }
             finally

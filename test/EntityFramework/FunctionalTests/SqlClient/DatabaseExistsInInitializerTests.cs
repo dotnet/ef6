@@ -554,8 +554,8 @@ namespace System.Data.Entity.SqlServer
             {
                 context.Database.Initialize(force: false);
 
-                Assert.True(context.InitializerCalled);
-                Assert.False(context.Exists);
+                Assert.True(context.InitializerCalled, "Expected initializer to be called");
+                Assert.True(context.Exists, "Expected context to exist"); ;
             }
         }
 
@@ -581,8 +581,8 @@ namespace System.Data.Entity.SqlServer
         {
             context.Database.Initialize(force: false);
 
-            Assert.True(context.InitializerCalled);
-            Assert.True(context.Exists);
+            Assert.True(context.InitializerCalled, "Expected initializer to be called");
+            Assert.True(context.Exists, "Expected context to exist");
 
             if (databaseName == DatabaseWithMigrationHistory)
             {
@@ -625,8 +625,8 @@ namespace System.Data.Entity.SqlServer
                 {
                     context.Database.Initialize(force: false);
 
-                    Assert.True(context.InitializerCalled);
-                    Assert.False(context.Exists);
+                    Assert.True(context.InitializerCalled, "Expected initializer to be called");
+                    Assert.True(context.Exists, "Expected context to exist");
                 }
 
                 connection.Close();
