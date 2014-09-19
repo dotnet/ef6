@@ -555,7 +555,7 @@ namespace System.Data.Entity.SqlServer
                 context.Database.Initialize(force: false);
 
                 Assert.True(context.InitializerCalled, "Expected initializer to be called");
-                Assert.True(context.Exists, "Expected context to exist"); ;
+                Assert.False(context.Exists, "Expected context to not exist"); ;
             }
         }
 
@@ -626,7 +626,7 @@ namespace System.Data.Entity.SqlServer
                     context.Database.Initialize(force: false);
 
                     Assert.True(context.InitializerCalled, "Expected initializer to be called");
-                    Assert.True(context.Exists, "Expected context to exist");
+                    Assert.False(context.Exists, "Expected context to not exist");
                 }
 
                 connection.Close();
