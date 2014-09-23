@@ -706,6 +706,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 public int Id { get; set; }
                 public string FirstName { get; set; }
                 public string LastName { get; set; }
+                public int ContactInfoId { get; set; }
+            }
+
+            public class ContactInfo
+            {
+                public int Id { get; set; }
+                public int CustomerId { get; set; }
+                public int PhoneNumber { get; set; }
+                public string Address { get; set; }
             }
 
             public class Context : DbContext
@@ -716,6 +725,53 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 public DbSet<Customer> Customers { get; set; }
+                public DbSet<ContactInfo> ContactInfos { get; set; }
+            }
+
+            [Fact]
+            public void Concatenated_strings_use_CSharpNullSemantics_for_table_joins()
+            {
+                using (var context = new Context())
+                {
+                    context.Configuration.UseDatabaseNullSemantics = false;
+
+                    var query = from r in context.Customers
+                                join lkp in context.ContactInfos on r.ContactInfoId equals lkp.CustomerId into lkpOut
+                                from lkp in lkpOut.DefaultIfEmpty()
+                                select new { r.FirstName, string_concat_field = lkp.PhoneNumber + " - " + lkp.Address };
+
+                    QueryTestHelpers.VerifyDbQuery(
+                        query,
+    @"SELECT
+    [Extent1].[ContactInfoId] AS [ContactInfoId],
+    [Extent1].[FirstName] AS [FirstName],
+    CASE WHEN([Extent2].[PhoneNumber]IS NULL) THEN N'' ELSE CAST([Extent2].[PhoneNumber] AS nvarchar(max)) END + N'-' + CASE WHEN([Extent2].[Address]IS NULL) THEN N'' ELSE[Extent2].[Address]END AS [C1]
+    FROM[dbo].[Customers]AS[Extent1]
+    LEFTOUTERJOIN [dbo].[ContactInfoes] AS [Extent2] ON [Extent1].[ContactInfoId] = [Extent2].[CustomerId]");
+                }
+            }
+
+            [Fact]
+            public void Concatenated_strings_use_SQLNullSemantics_for_table_joins()
+            {
+                using (var context = new Context())
+                {
+                    context.Configuration.UseDatabaseNullSemantics = true;
+
+                    var query = from r in context.Customers
+                                join lkp in context.ContactInfos on r.ContactInfoId equals lkp.CustomerId into lkpOut
+                                from lkp in lkpOut.DefaultIfEmpty()
+                                select new { r.FirstName, string_concat_field = lkp.PhoneNumber + " - " + lkp.Address };
+
+                    QueryTestHelpers.VerifyDbQuery(
+                        query,
+@"SELECT
+    [Extent1].[ContactInfoId] AS [ContactInfoId],
+    [Extent1].[FirstName] AS [FirstName],
+    CAST ([Extent2].[PhoneNumber] AS nvarchar(max)) + N '-' + [Extent2].[Address] AS [C1]
+    FROM [dbo].[Customers]AS[Extent1]
+    LEFT OUTER JOIN [dbo].[ContactInfoes] AS [Extent2] ON [Extent1].[ContactInfoId] = [Extent2].[CustomerId]");
+                }
             }
 
             [Fact]

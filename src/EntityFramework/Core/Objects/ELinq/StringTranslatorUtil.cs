@@ -93,7 +93,7 @@
 
                 if (useDatabaseNullSemantics)
                 {
-                    return inputExpression;
+                    return outputExpression;
                 }
 
                 // converts evaluated null values to empty string, nullable primitive properties etc.
