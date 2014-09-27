@@ -553,7 +553,12 @@ namespace System.Data.Entity.Migrations.History
             {
                 connection = CreateConnection();
 
-                const string tableName = "dbo." + HistoryContext.DefaultTableName;
+                var tableName = "dbo." + HistoryContext.DefaultTableName;
+                if (connection.GetType().Name.StartsWith(
+                    "SqlCeConnection", StringComparison.OrdinalIgnoreCase))
+                {
+                    tableName = HistoryContext.DefaultTableName;
+                }
 
                 using (var context = new LegacyHistoryContext(connection))
                 {
