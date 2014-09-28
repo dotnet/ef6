@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.EntityClient;
@@ -554,8 +555,9 @@ namespace System.Data.Entity.Migrations.History
                 connection = CreateConnection();
 
                 var tableName = "dbo." + HistoryContext.DefaultTableName;
-                if (connection.GetType().Name.StartsWith(
-                    "SqlCeConnection", StringComparison.OrdinalIgnoreCase))
+
+                DbProviderManifest providerManifest;
+                if (connection.GetProviderInfo(out providerManifest).IsSqlCe())
                 {
                     tableName = HistoryContext.DefaultTableName;
                 }
