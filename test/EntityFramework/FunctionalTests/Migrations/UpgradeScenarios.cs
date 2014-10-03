@@ -475,9 +475,13 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
-        private static IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()
+        private IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()
         {
-            const string tableName = "dbo." + HistoryContext.DefaultTableName;
+            var tableName = "dbo." + HistoryContext.DefaultTableName;
+            if (IsSqlCe)
+            {
+               tableName = HistoryContext.DefaultTableName;
+            }
 
             var createTableOperation
                 = new CreateTableOperation(tableName);
