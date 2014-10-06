@@ -61,6 +61,9 @@ namespace System.Data.Entity
         // Handles lazy creation of an underlying ObjectContext
         private InternalContext _internalContext;
 
+        private Database _database;
+
+        
         /// <summary>
         /// Constructs a new context instance using conventions to create the name of the database to
         /// which a connection will be made.  The by-convention name is the full name (namespace + class name)
@@ -244,7 +247,15 @@ namespace System.Data.Entity
         /// </summary>
         public Database Database
         {
-            get { return new Database(InternalContext); }
+            get 
+            { 
+                if (_database == null)
+                {
+                    _database = new Database(InternalContext);
+                }
+
+                return _database; 
+            }
         }
 
         #endregion

@@ -38,6 +38,10 @@ namespace System.Data.Entity
         // The context that backs this instance.
         private readonly InternalContext _internalContext;
 
+        // The cached transactions
+        private EntityTransaction _entityTransaction;
+        private DbContextTransaction _dbContextTransaction;
+
         // <summary>
         // Creates a Database backed by the given context.  This object can be used to create a database,
         // check for database existence, and delete a database.
@@ -56,11 +60,28 @@ namespace System.Data.Entity
         /// <summary>
         /// Gets the transaction the underlying store connection is enlisted in.  May be null.
         /// </summary>
-        public DbTransaction CurrentTransaction
+        public DbContextTransaction CurrentTransaction
         {
             get
             {
-                return ((EntityConnection)_internalContext.GetObjectContextWithoutDatabaseInitialization().Connection).CurrentTransaction;
+                var currentEntityTransaction = ((EntityConnection)_internalContext.ObjectContext.Connection).CurrentTransaction;
+
+                if (_dbContextTransaction == null || _entityTransaction != currentEntityTransaction)
+                {
+                    // Cache EntityTransaction and the resulting DbContextTransaction
+                    _entityTransaction = currentEntityTransaction;
+
+                    if (currentEntityTransaction != null)
+                    {
+                        _dbContextTransaction = new DbContextTransaction(currentEntityTransaction);
+                    }
+                    else
+                    {
+                        _dbContextTransaction = null;
+                    }
+                }
+
+                return _dbContextTransaction;
             }
         }
 
@@ -83,7 +104,8 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
         public void UseTransaction(DbTransaction transaction)
         {
-            ((EntityConnection)_internalContext.GetObjectContextWithoutDatabaseInitialization().Connection).UseStoreTransaction(transaction);
+            _entityTransaction = ((EntityConnection)_internalContext.GetObjectContextWithoutDatabaseInitialization().Connection).UseStoreTransaction(transaction);
+            _dbContextTransaction = null;
         }
 
         /// <summary>
@@ -94,7 +116,12 @@ namespace System.Data.Entity
         /// </returns>
         public DbContextTransaction BeginTransaction()
         {
-            return new DbContextTransaction((EntityConnection)_internalContext.ObjectContext.Connection);
+            var entityConnection = (EntityConnection)_internalContext.ObjectContext.Connection;
+
+            _dbContextTransaction = new DbContextTransaction(entityConnection);
+            _entityTransaction = entityConnection.CurrentTransaction;
+
+            return _dbContextTransaction;
         }
 
         /// <summary>
@@ -106,7 +133,12 @@ namespace System.Data.Entity
         /// </returns>
         public DbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
-            return new DbContextTransaction((EntityConnection)_internalContext.ObjectContext.Connection, isolationLevel);
+            var entityConnection = (EntityConnection)_internalContext.ObjectContext.Connection;
+
+            _dbContextTransaction = new DbContextTransaction(entityConnection, isolationLevel);
+            _entityTransaction = entityConnection.CurrentTransaction;
+
+            return _dbContextTransaction;
         }
 
         #endregion

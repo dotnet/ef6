@@ -49,6 +49,18 @@ namespace System.Data.Entity
             _entityTransaction = _connection.BeginTransaction(isolationLevel);
         }
 
+        // <summary>
+        // Constructs the DbContextTransaction object with the associated transaction object
+        // </summary>
+        // <param name="transaction">The EntityTransaction object to use</param>
+        internal DbContextTransaction(EntityTransaction transaction)
+        {
+            DebugCheck.NotNull(transaction);
+            _connection = transaction.Connection;
+            EnsureOpenConnection();
+            _entityTransaction = transaction;
+        }
+
         private void EnsureOpenConnection()
         {
             if (ConnectionState.Open != _connection.State)

@@ -262,6 +262,60 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        public void Entity_Framework_allows_access_to_transaction_from_Database_BeginTransaction()
+        {
+            using (var ctx = CreateTransactionDbContext())
+            {
+                var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
+                Assert.Null(GetCurrentEntityTransaction(entityConnection));
+                using (var transaction = ctx.Database.BeginTransaction())
+                {
+                    Assert.Equal(transaction, ctx.Database.CurrentTransaction);
+                }
+            }
+        }
+
+        [Fact]
+        public void Entity_Framework_allows_access_to_transaction_from_Database_UseTransaction()
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                using (var sqlTransaction = sqlConnection.BeginTransaction())
+                {
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                    {
+                        Assert.Null(ctx.Database.CurrentTransaction);
+
+                        ctx.Database.UseTransaction(sqlTransaction);
+                        Assert.NotNull(ctx.Database.CurrentTransaction);
+                    }
+                }
+                
+            }
+        }
+
+
+        [Fact]
+        public void Entity_Framework_allows_access_to_transaction_from_implicit_transaction()
+        {
+            using (var ctx = CreateTransactionDbContext())
+            {
+                var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
+                Assert.Null(GetCurrentEntityTransaction(entityConnection));
+                Assert.Null(ctx.Database.CurrentTransaction);
+
+                entityConnection.Open();
+
+                using (var sqlTransaction = entityConnection.BeginTransaction())
+                {
+                    Assert.NotNull(ctx.Database.CurrentTransaction);
+                }
+            }
+        }
+
+        [Fact]
         [UseDefaultExecutionStrategy]
         public void Verify_simple_commit_DbContextTransaction_works()
         {
