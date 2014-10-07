@@ -308,7 +308,7 @@ namespace System.Data.Entity.Objects
 
                 entityConnection.Open();
 
-                using (var sqlTransaction = entityConnection.BeginTransaction())
+                using (var entityTransaction = entityConnection.BeginTransaction())
                 {
                     Assert.NotNull(ctx.Database.CurrentTransaction);
                 }

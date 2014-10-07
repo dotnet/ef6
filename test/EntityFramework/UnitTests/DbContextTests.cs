@@ -245,6 +245,21 @@ namespace ProductivityApiUnitTests
 
         #endregion
 
+        #region Database
+
+        public class DatabaseTests : TestBase
+        {
+            [Fact]
+            public void Get_caches_created_Database()
+            {
+                var dbContext = new SimpleContextClass();
+
+                Assert.Equal(dbContext.Database, dbContext.Database);
+            }
+        }
+
+        #endregion
+
         #region Tests for DbModelBuilderVersionAttribute
 
         [Fact]

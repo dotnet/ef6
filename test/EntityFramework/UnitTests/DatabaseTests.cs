@@ -13,6 +13,8 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.EntityClient;
 
     public class DatabaseTests : TestBase
     {
@@ -81,6 +83,85 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     "existingConnection", Assert.Throws<ArgumentNullException>(() => Database.Delete((DbConnection)null)).ParamName);
+            }
+        }
+
+        public class CurrentTransaction : TestBase
+        {
+            [Fact]
+            public void Get_caches_created_DbContextTransaction()
+            {
+                var mockInternalContext = new Mock<InternalContext>();
+                var mockObjectContext = new Mock<ObjectContext>(null, null, null, null);
+                var mockEntityConnection = new Mock<EntityConnection>();
+                var mockEntityTransaction = new Mock<EntityTransaction>();
+                mockEntityTransaction.SetupGet(m => m.Connection).Returns(() => mockEntityConnection.Object);
+                mockEntityConnection.SetupGet(m => m.CurrentTransaction).Returns(mockEntityTransaction.Object);
+                mockObjectContext.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+                mockInternalContext.SetupGet(m => m.ObjectContext).Returns(mockObjectContext.Object);
+
+                var database = new Database(mockInternalContext.Object);
+                Assert.Equal(database.CurrentTransaction, database.CurrentTransaction);
+            }
+
+            [Fact]
+            public void Get_invalidates_cached_DbContextTransaction_properly()
+            {
+                var mockInternalContext = new Mock<InternalContext>();
+                var mockObjectContext = new Mock<ObjectContext>(null, null, null, null);
+                var mockEntityConnection = new Mock<EntityConnection>();
+                var mockEntityTransaction = new Mock<EntityTransaction>();
+                var mockEntityTransaction2 = new Mock<EntityTransaction>();
+                
+                var entityTransactionReadCounter = 0;
+                mockEntityConnection.SetupGet(m => m.CurrentTransaction).Returns(() => 
+                    (entityTransactionReadCounter++ >= 2 ? mockEntityTransaction.Object : mockEntityTransaction2.Object));
+
+                mockEntityTransaction.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+                mockEntityTransaction2.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+                mockObjectContext.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+                mockInternalContext.SetupGet(m => m.ObjectContext).Returns(mockObjectContext.Object);
+
+
+                var database = new Database(mockInternalContext.Object);
+                var originalDbContextTransaction = database.CurrentTransaction;
+
+                Assert.Equal(originalDbContextTransaction, database.CurrentTransaction);
+                Assert.NotEqual(originalDbContextTransaction, database.CurrentTransaction);
+            }
+
+            [Fact]
+            public void Get_returns_instance_cached_from_BeginTransaction()
+            {
+                var mockInternalContext = new Mock<InternalContext>();
+                var mockObjectContext = new Mock<ObjectContext>(null, null, null, null);
+                var mockEntityConnection = new Mock<EntityConnection>();
+                var mockEntityTransaction = new Mock<EntityTransaction>();
+                mockEntityConnection.SetupGet(m => m.CurrentTransaction).Returns(mockEntityTransaction.Object);
+                mockObjectContext.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+                mockInternalContext.SetupGet(m => m.ObjectContext).Returns(mockObjectContext.Object);
+
+
+                var database = new Database(mockInternalContext.Object);
+                var originalDbContextTransaction = database.BeginTransaction();
+                Assert.Equal(originalDbContextTransaction, database.CurrentTransaction);
+            }
+
+            [Fact]
+            public void Get_returns_instance_cached_from_BeginTransaction_with_IsolationLevel()
+            {
+                var mockInternalContext = new Mock<InternalContext>();
+                var mockObjectContext = new Mock<ObjectContext>(null, null, null, null);
+                var mockEntityConnection = new Mock<EntityConnection>();
+                var mockEntityTransaction = new Mock<EntityTransaction>();
+                mockEntityConnection.SetupGet(m => m.CurrentTransaction).Returns(mockEntityTransaction.Object);
+                mockObjectContext.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+                mockInternalContext.SetupGet(m => m.ObjectContext).Returns(mockObjectContext.Object);
+
+
+                var database = new Database(mockInternalContext.Object);
+                var originalDbContextTransaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
+                Assert.Equal(originalDbContextTransaction, database.CurrentTransaction);
             }
         }
 

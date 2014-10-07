@@ -41,6 +41,19 @@ namespace System.Data.Entity
         }
 
         [Fact]
+        public void Creating_DbContextTransaction_specifying_EntityTransaction_does_not_open_connection_if_already_open()
+        {
+            var mockEntityTransaction = new Mock<EntityTransaction>();
+            var mockEntityConnection = new Mock<EntityConnection>();
+            mockEntityConnection.SetupGet(m => m.State).Returns(ConnectionState.Open);
+            mockEntityTransaction.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+
+            var dbContextTransaction = new DbContextTransaction(mockEntityTransaction.Object);
+
+            mockEntityConnection.Verify(m => m.Open(), Times.Never());
+        }
+
+        [Fact]
         public void Creating_DbContextTransaction_opens_connection_if_closed()
         {
             var connectionState = ConnectionState.Closed;
@@ -67,6 +80,22 @@ namespace System.Data.Entity
             mockEntityConnection.Setup(m => m.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(mockEntityTransaction.Object);
 
             var dbContextTransaction = new DbContextTransaction(mockEntityConnection.Object, IsolationLevel.RepeatableRead);
+
+            mockEntityConnection.Verify(m => m.Open(), Times.Once());
+            Assert.Equal(ConnectionState.Open, connectionState);
+        }
+
+        [Fact]
+        public void Creating_DbContextTransaction_specifying_EntityTransaction_opens_connection_if_closed()
+        {
+            var connectionState = ConnectionState.Closed;
+            var mockEntityTransaction = new Mock<EntityTransaction>();
+            var mockEntityConnection = new Mock<EntityConnection>();
+            mockEntityConnection.SetupGet(m => m.State).Returns(() => connectionState);
+            mockEntityConnection.Setup(m => m.Open()).Callback(() => connectionState = ConnectionState.Open);
+            mockEntityTransaction.SetupGet(m => m.Connection).Returns(mockEntityConnection.Object);
+
+            var dbContextTransaction = new DbContextTransaction(mockEntityTransaction.Object);
 
             mockEntityConnection.Verify(m => m.Open(), Times.Once());
             Assert.Equal(ConnectionState.Open, connectionState);
