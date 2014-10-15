@@ -69,7 +69,7 @@
              Text="RestoreLocalPackages: Using package input directory $(LocalPackageSourceDir)" />
     
     <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
-             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackageRestoreOutputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true" />
+             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackageRestoreOutputDir);LocalPackageId=$([System.String]::Copy('%(LocalPackages.Filename)').Replace(&quot;.$(EF6NuGetPackageVersion)&quot;,&quot;&quot;));LocalPackageSource=$(LocalPackageSourceDir);RequireNoCache=true;IncludePreRelease=true" />
              
   </Target>
 
