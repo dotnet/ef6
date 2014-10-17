@@ -24,6 +24,8 @@ namespace System.Data.Entity
     /// Note that deletion and checking for existence of a database can be performed using just a
     /// connection (i.e. without a full context) by using the static methods of this class.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
+        Justification = "The DbContextTransaction and EntityTransaction should never be disposed by this class")]
     public class Database
     {
         #region Fields and constructors
