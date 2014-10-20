@@ -210,8 +210,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return metadataProperty;
         }
 
-        internal static MetadataProperty CreateAnnotation(string name, object value)
+        /// <summary>
+        /// Creates a metadata annotation having the specified name and value.
+        /// </summary>
+        /// <param name="name">The annotation name.</param>
+        /// <param name="value">The annotation value.</param>
+        /// <returns>A MetadataProperty instance representing the created annotation.</returns>
+        public static MetadataProperty CreateAnnotation(string name, object value)
         {
+            Check.NotEmpty(name, "name");
+
             return new MetadataProperty(name, value);
         }
     }

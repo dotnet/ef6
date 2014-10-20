@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -23,15 +22,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // mocking only
         }
 
-        // <summary>
-        // The constructor for constructing the EntityContainer object with the name, namespaceName, and version.
-        // </summary>
-        // <param name="name"> The name of this entity container </param>
-        // <param name="dataSpace"> dataSpace in which this entity container belongs to </param>
-        // <exception cref="System.ArgumentNullException">Thrown if the name argument is null</exception>
-        // <exception cref="System.ArgumentException">Thrown if the name argument is empty string</exception>
+        /// <summary>
+        /// Creates an entity container with the specified name and data space.
+        /// </summary>
+        /// <param name="name">The entity container name.</param>
+        /// <param name="dataSpace">The entity container data space.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown if the name argument is null.</exception>
+        /// <exception cref="System.ArgumentException">Thrown if the name argument is empty string.</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        internal EntityContainer(string name, DataSpace dataSpace)
+        public EntityContainer(string name, DataSpace dataSpace)
         {
             Check.NotEmpty(name, "name");
 
@@ -310,9 +309,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Name;
         }
 
-        internal void AddEntitySetBase(EntitySetBase entitySetBase)
+        /// <summary>
+        /// Adds the specified entity set to the container.
+        /// </summary>
+        /// <param name="entitySetBase">The entity set to add.</param>
+        public void AddEntitySetBase(EntitySetBase entitySetBase)
         {
+            Check.NotNull(entitySetBase, "entitySetBase");
+            Util.ThrowIfReadOnly(this);
+
             _baseEntitySets.Source.Add(entitySetBase);
+            entitySetBase.ChangeEntityContainerWithoutCollectionFixup(this);
         }
 
         /// <summary>Removes a specific entity set from the container.</summary>

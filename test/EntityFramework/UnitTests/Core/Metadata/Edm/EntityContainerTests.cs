@@ -236,5 +236,73 @@ namespace System.Data.Entity.Core.Metadata.Edm
             tasks.ForEach(t => t.Start());
             tasks.ForEach(t => t.Join());
         }
+
+        [Fact]
+        public void Can_create_and_initialize_instance()
+        {
+            var container = new EntityContainer("Container", DataSpace.SSpace);
+
+            Assert.Equal("Container", container.Name);
+            Assert.Equal(DataSpace.SSpace, container.DataSpace);
+            Assert.Equal(0, container.EntitySets.Count);
+            Assert.Equal(0, container.AssociationSets.Count);
+            Assert.Equal(0, container.FunctionImports.Count);
+            Assert.False(container.IsReadOnly);
+        }
+
+        [Fact]
+        public void Can_add_entity_set_to_container()
+        {
+            var entityContainer = new EntityContainer("Container", DataSpace.CSpace);
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var typeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var entitySet = EntitySet.Create("S", "dbo", "T", "Q", entityType, new[] { new MetadataProperty("P", typeUsage, "V") });
+
+            Assert.Equal(0, entityContainer.EntitySets.Count);
+            Assert.Null(entitySet.EntityContainer);
+
+            entityContainer.AddEntitySetBase(entitySet);
+
+            Assert.Equal(1, entityContainer.EntitySets.Count);
+            Assert.Same(entitySet, entityContainer.EntitySets.Single());
+            Assert.Same(entityContainer, entitySet.EntityContainer);
+        }
+
+        [Fact]
+        public void Can_add_association_set_to_container()
+        {
+            var entityContainer = new EntityContainer("Container", DataSpace.CSpace);
+            var associationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
+                {
+                    SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace)),
+                    TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace))
+                };
+            var associationSet = new AssociationSet("A", associationType);
+
+            Assert.Equal(0, entityContainer.EntitySets.Count);
+            Assert.Null(associationSet.EntityContainer);
+
+            entityContainer.AddEntitySetBase(associationSet);
+
+            Assert.Equal(1, entityContainer.AssociationSets.Count);
+            Assert.Same(associationSet, entityContainer.AssociationSets.Single());
+            Assert.Same(entityContainer, associationSet.EntityContainer);
+        }
+
+        [Fact]
+        public void Cannot_add_entity_set_to_readonly_container()
+        {
+            var entityContainer = new EntityContainer("Container", DataSpace.CSpace);
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var typeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var entitySet = EntitySet.Create("S", "dbo", "T", "Q", entityType, new[] { new MetadataProperty("P", typeUsage, "V") });
+
+            entityContainer.SetReadOnly();
+
+            Assert.Equal(
+                Resources.Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(() => entityContainer.AddEntitySetBase(entitySet)).Message);
+        }
     }
 }
