@@ -517,5 +517,120 @@ WHERE 1 = [Extent1].[Id]";
                 }
             }
         }
+
+        public class Codeplex2548 : FunctionalTestBase
+        {
+            public class Main
+            {
+                public int Id { get; set; }
+                public string Value { get; set; }
+
+                public int Link1Id { get; set; }
+                public Link Link1 { get; set; }
+
+                public int Link2Id { get; set; }
+                public Link Link2 { get; set; }
+            }
+
+            public class Link
+            {
+                public int Id { get; set; }
+                public string Value { get; set; }
+
+                public int SublinkId { get; set; }
+                public SubLink Sublink { get; set; }
+            }
+
+            public class SubLink
+            {
+                public int Id { get; set; }
+                public string Value { get; set; }
+            }
+
+            public class Context : DbContext
+            {
+                static Context()
+                {
+                    Database.SetInitializer<Context>(null);
+                }
+
+                public DbSet<Main> MainEntities { get; set; }
+                public DbSet<Link> LinkedEntities { get; set; }
+                public DbSet<SubLink> SubLinkedEntities { get; set; }
+            }
+
+            [Fact]
+            public void Joins_are_not_eliminated_if_parent_navigation_properties_are_not_equivalent()
+            {
+                using (var context = new Context())
+                {
+                    var query = context.MainEntities.Select(
+                        x => new
+                             {
+                                 x.Value,
+                                 Linked1 = x.Link1,
+                                 Linked2 = x.Link2,
+                                 Sub1 = x.Link1.Sublink.Value,
+                                 Sub2 = x.Link2.Sublink.Value
+                             });
+
+                    QueryTestHelpers.VerifyQuery(
+                        query,
+@"SELECT 
+    [Extent1].[Link1Id] AS [Link1Id], 
+    [Extent1].[Value] AS [Value], 
+    [Extent2].[Id] AS [Id], 
+    [Extent2].[Value] AS [Value1], 
+    [Extent2].[SublinkId] AS [SublinkId], 
+    [Extent3].[Id] AS [Id1], 
+    [Extent3].[Value] AS [Value2], 
+    [Extent3].[SublinkId] AS [SublinkId1], 
+    [Extent4].[Value] AS [Value3], 
+    [Extent5].[Value] AS [Value4]
+    FROM     [dbo].[Mains] AS [Extent1]
+    INNER JOIN [dbo].[Links] AS [Extent2] ON [Extent1].[Link1Id] = [Extent2].[Id]
+    INNER JOIN [dbo].[Links] AS [Extent3] ON [Extent1].[Link2Id] = [Extent3].[Id]
+    INNER JOIN [dbo].[SubLinks] AS [Extent4] ON [Extent2].[SublinkId] = [Extent4].[Id]
+    INNER JOIN [dbo].[SubLinks] AS [Extent5] ON [Extent3].[SublinkId] = [Extent5].[Id]");
+                }
+            }
+
+            [Fact]
+            public void Joins_are_not_eliminated_if_parent_navigation_properties_are_not_equivalent_in_query_with_include()
+            {
+                using (var context = new Context())
+                {
+                    var query =
+                        context.MainEntities
+                            .Include("Link1")
+                            .Include("Link1.Sublink")
+                            .Include("Link2")
+                            .Include("Link2.Sublink");
+
+                    QueryTestHelpers.VerifyQuery(
+                        query,
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Value] AS [Value], 
+    [Extent1].[Link1Id] AS [Link1Id], 
+    [Extent1].[Link2Id] AS [Link2Id], 
+    [Extent2].[Id] AS [Id1], 
+    [Extent2].[Value] AS [Value1], 
+    [Extent2].[SublinkId] AS [SublinkId], 
+    [Extent3].[Id] AS [Id2], 
+    [Extent3].[Value] AS [Value2], 
+    [Extent4].[Id] AS [Id3], 
+    [Extent4].[Value] AS [Value3], 
+    [Extent4].[SublinkId] AS [SublinkId1], 
+    [Extent5].[Id] AS [Id4], 
+    [Extent5].[Value] AS [Value4]
+    FROM     [dbo].[Mains] AS [Extent1]
+    INNER JOIN [dbo].[Links] AS [Extent2] ON [Extent1].[Link1Id] = [Extent2].[Id]
+    INNER JOIN [dbo].[SubLinks] AS [Extent3] ON [Extent2].[SublinkId] = [Extent3].[Id]
+    INNER JOIN [dbo].[Links] AS [Extent4] ON [Extent1].[Link2Id] = [Extent4].[Id]
+    INNER JOIN [dbo].[SubLinks] AS [Extent5] ON [Extent4].[SublinkId] = [Extent5].[Id]");
+                }
+            }
+        }
     }
 }

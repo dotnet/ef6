@@ -80,6 +80,16 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return v.Visit(this, n);
         }
 
+        internal override bool IsEquivalent(Op other)
+        {
+            var otherPropertyOp = other as PropertyOp;
+
+            return
+                otherPropertyOp != null
+                && otherPropertyOp.PropertyInfo.EdmEquals(PropertyInfo)
+                && base.IsEquivalent(other);
+        }
+
         #endregion
     }
 }
