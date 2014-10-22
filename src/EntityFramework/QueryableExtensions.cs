@@ -7672,22 +7672,22 @@ namespace System.Data.Entity
 
         private static MethodInfo GetMethod(string methodName, Func<Type[]> getParameterTypes)
         {
-            return GetMethod(methodName, getParameterTypes.Method, 0);
+            return GetMethod(methodName, getParameterTypes, 0);
         }
 
         private static MethodInfo GetMethod(string methodName, Func<Type, Type, Type[]> getParameterTypes)
         {
-            return GetMethod(methodName, getParameterTypes.Method, 2);
+            return GetMethod(methodName, getParameterTypes, 2);
         }
 
 #endif
 
         private static MethodInfo GetMethod(string methodName, Func<Type, Type[]> getParameterTypes)
         {
-            return GetMethod(methodName, getParameterTypes.Method, 1);
+            return GetMethod(methodName, getParameterTypes, 1);
         }
 
-        private static MethodInfo GetMethod(string methodName, MethodInfo getParameterTypesMethod, int genericArgumentsCount)
+        private static MethodInfo GetMethod(string methodName, Delegate getParameterTypesDelegate, int genericArgumentsCount)
         {
             var candidates = typeof(Queryable).GetDeclaredMethods(methodName);
 
@@ -7695,7 +7695,7 @@ namespace System.Data.Entity
             {
                 var genericArguments = candidate.GetGenericArguments();
                 if (genericArguments.Length == genericArgumentsCount
-                    && Matches(candidate, (Type[])getParameterTypesMethod.Invoke(null, genericArguments)))
+                    && Matches(candidate, (Type[])getParameterTypesDelegate.DynamicInvoke(genericArguments)))
                 {
                     return candidate;
                 }
@@ -7703,7 +7703,7 @@ namespace System.Data.Entity
 
             Debug.Assert(
                 false, String.Format(
-                    "Method '{0}' with parameters '{1}' not found", methodName, PrettyPrint(getParameterTypesMethod, genericArgumentsCount)));
+                    "Method '{0}' with parameters '{1}' not found", methodName, PrettyPrint(getParameterTypesDelegate.Method, genericArgumentsCount)));
 
             return null;
         }
