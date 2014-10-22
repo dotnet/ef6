@@ -76,6 +76,35 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         }
 
         [Fact]
+        public void GetTextBoxConnectionStringValue_returns_entity_connection_string_for_EDMX_ModelFirst()
+        {
+            var guid = new Guid("42424242-4242-4242-4242-424242424242");
+
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
+            mockDte.SetProjectProperties(new Dictionary<string, object> { { "FullPath", @"C:\Project" } });
+            var mockParentProjectItem = new Mock<ProjectItem>();
+            mockParentProjectItem.Setup(p => p.Collection).Returns(Mock.Of<ProjectItems>());
+            mockParentProjectItem.Setup(p => p.Name).Returns("Folder");
+
+            var mockModelProjectItem = new Mock<ProjectItem>();
+            var mockCollection = new Mock<ProjectItems>();
+            mockCollection.Setup(p => p.Parent).Returns(mockParentProjectItem.Object);
+            mockModelProjectItem.Setup(p => p.Collection).Returns(mockCollection.Object);
+
+            var wizardPageDbConfig =
+                new WizardPageDbConfig(
+                    ModelBuilderWizardFormHelper.CreateWizard(ModelGenerationOption.GenerateDatabaseScript, mockDte.Project, @"C:\Project\myModel.edmx"));
+
+            Assert.Equal(
+                "metadata=res://*/myModel.csdl|res://*/myModel.ssdl|res://*/myModel.msl;provider=System.Data.SqlClient;" +
+                "provider connection string=\"integrated security=SSPI;MultipleActiveResultSets=True;App=EntityFramework\"",
+                wizardPageDbConfig.GetTextBoxConnectionStringValue(
+                    CreateDataProviderManager(guid),
+                    guid,
+                    "Integrated Security=SSPI"));
+        }
+
+        [Fact]
         public void GetTextBoxConnectionStringValue_returns_regular_connection_string_for_CodeFirst_from_Database()
         {
             var guid = new Guid("42424242-4242-4242-4242-424242424242");
