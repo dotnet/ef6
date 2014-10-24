@@ -173,10 +173,10 @@ namespace System.Data.Entity.SqlServer
 
         /// <summary>
         /// See issue 2390 - cloning the DesignTimeVisible property on the
-        /// <see cref="T:System.Data.Common.DbCommand" /> can cause deadlocks.
+        /// <see cref="T:System.Data.SqlClient.SqlCommand" /> can cause deadlocks.
         /// So here overriding to provide a method that does not clone DesignTimeVisible.
         /// </summary>
-        /// <param name="fromDbCommand"> the <see cref="T:System.Data.Common.DbCommand" /> object to clone (must be a <see cref="T:System.Data.SqlClient.SqlCommand" />) </param>
+        /// <param name="fromDbCommand"> the <see cref="T:System.Data.Common.DbCommand" /> object to clone </param>
         /// <returns >a clone of the <see cref="T:System.Data.Common.DbCommand" /> </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities",
@@ -184,7 +184,16 @@ namespace System.Data.Entity.SqlServer
         protected override DbCommand CloneDbCommand(DbCommand fromDbCommand)
         {
             Check.NotNull(fromDbCommand, "fromDbCommand");
-            var fromSqlCommand = (SqlCommand)fromDbCommand;
+
+            var fromSqlCommand = fromDbCommand as SqlCommand;
+            if (fromSqlCommand == null)
+            {
+                // sometimes providers use a wrapping model that uses SqlProviderServices but
+                // does not use a SqlCommand. Here just revert to the base behavior if the
+                // command passed in is not a SqlCommand.
+                return base.CloneDbCommand(fromDbCommand);
+            }
+
             var clonedCommand = new SqlCommand();
             clonedCommand.CommandText = fromSqlCommand.CommandText;
             clonedCommand.CommandTimeout = fromSqlCommand.CommandTimeout;
