@@ -69,7 +69,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
     if (collectionProperties.Any())
     {
 
-            this.Write("        public ");
+            this.Write("        [System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Usage\", \"CA22" +
+                    "14:DoNotCallOverridableMethodsInConstructors\")]\r\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(entityType)));
             this.Write("()\r\n        {\r\n");
 
@@ -131,6 +132,13 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
             first = false;
         }
 
+            if (navigationProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            {
+
+            this.Write("        [System.Diagnostics.CodeAnalysis.SuppressMessage(\"Microsoft.Usage\", \"CA22" +
+                    "27:CollectionPropertiesShouldBeReadOnly\")]\r\n");
+
+            }
 
             this.Write("        public virtual ");
             this.Write(this.ToStringHelper.ToStringWithCulture(code.Type(navigationProperty)));

@@ -52,6 +52,7 @@ namespace <#= Namespace #>
     if (collectionProperties.Any())
     {
 #>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public <#= code.Type(entityType) #>()
         {
 <#
@@ -104,6 +105,12 @@ namespace <#= Namespace #>
             first = false;
         }
 
+            if (navigationProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            {
+#>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+<#
+            }
 #>
         public virtual <#= code.Type(navigationProperty) #> <#= code.Property(navigationProperty) #> { get; set; }
 <#
