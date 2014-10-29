@@ -970,25 +970,23 @@ namespace System.Data.Entity.Core.Objects.ELinq
             else if (ExpressionType.Call 
                      == argument.NodeType)
             {
-                var methodCallExpression = (MethodCallExpression) argument;
-
-                if (typeof(Expression).IsAssignableFrom(methodCallExpression.Method.ReturnType))
+                if (typeof(Expression).IsAssignableFrom(argument.Type))
                 {
-                    Delegate expressionMethod = Expression.Lambda(argument).Compile();
+                    var expressionMethod = Expression.Lambda<Func<Expression>>(argument).Compile();
 
                     return GetLambdaExpression(
-                        (Expression) expressionMethod.DynamicInvoke());
+                        expressionMethod.Invoke());
                 }
             } 
             else if (ExpressionType.Invoke
                      == argument.NodeType)
             {
-                var expressionMethod = Expression.Lambda(argument).Compile();
-
-                if (typeof(Expression).IsAssignableFrom(expressionMethod.Method.ReturnType))
+                if (typeof(Expression).IsAssignableFrom(argument.Type))
                 {
+                    var expressionMethod = Expression.Lambda<Func<Expression>>(argument).Compile();
+
                     return GetLambdaExpression(
-                        (Expression) expressionMethod.DynamicInvoke());
+                        expressionMethod.Invoke());
                 }
             }
 

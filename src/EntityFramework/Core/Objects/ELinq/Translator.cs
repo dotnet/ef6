@@ -209,7 +209,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         
                         // Compiler generated types should have their members accessed locally 
                         //   and the value returned treated as a constant.
-                        if (constantExpression.Type.GetCustomAttribute<CompilerGeneratedAttribute>() != null)
+                        if (constantExpression.Type
+                            .GetCustomAttributes(typeof(CompilerGeneratedAttribute), inherit: false)
+                            .FirstOrDefault() != null)
                         {
                             var valueDelegate = Expression.Lambda(linq).Compile();
 
@@ -227,8 +229,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     }
                 }
 
-                if (memberInfo.MemberType
-                    == MemberTypes.Property)
+                if (memberInfo.MemberType == MemberTypes.Property)
                 {
                     // Check whether it is one of the special properties that we know how to translate
                     PropertyTranslator propertyTranslator;

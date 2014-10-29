@@ -2,11 +2,9 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
-    using SimpleModel;
-    using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
+    using SimpleModel;
     using Xunit;
 
     public class ExpressionTests : FunctionalTestBase
@@ -14,14 +12,13 @@ namespace System.Data.Entity.Query.LinqToEntities
         [Fact]
         public void Expression_from_variable()
         {
-            Expression<Func<SimpleModel.Product, bool>> testExpression = p => p.Id == 1;
+            Expression<Func<Product, bool>> testExpression = p => p.Id == 1;
 
             using (var context = new SimpleModelContext())
             {
                 var products = context.Products.Where(testExpression);
 
-                Assert.DoesNotThrow(() => 
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -32,8 +29,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 var products = context.Products.Where(StaticExpressions.Member);
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -44,8 +40,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 var products = context.Products.Where(StaticExpressions.Property);
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -56,8 +51,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 var products = context.Products.Where(StaticExpressions.Delegate());
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -68,8 +62,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 var products = context.Products.Where(StaticExpressions.DelegateWithParameter(1));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -80,8 +73,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 var products = context.Products.Where(StaticExpressions.Method());
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -92,8 +84,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 var products = context.Products.Where(StaticExpressions.MethodWithVariable());
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -109,8 +100,6 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-
-
         [Fact]
         public void Expression_from_instance_member()
         {
@@ -119,8 +108,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var testInstance = new InstanceExpressions();
                 var products = context.Products.Where(testInstance.Member);
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -132,8 +120,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var testInstance = new InstanceExpressions();
                 var products = context.Products.Where(testInstance.Property);
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -145,8 +132,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var testInstance = new InstanceExpressions();
                 var products = context.Products.Where(testInstance.Delegate());
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -158,8 +144,21 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var testInstance = new InstanceExpressions();
                 var products = context.Products.Where(testInstance.DelegateWithParameter(1));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
+            }
+        }
+
+        [Fact]
+        public void Expression_from_instance_delegate_with_variable_parameter()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var testInstance = new InstanceExpressions();
+                var foo = 1;
+
+                var products = context.Products.Where(testInstance.DelegateWithParameter(foo));
+
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -171,8 +170,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var testInstance = new InstanceExpressions();
                 var products = context.Products.Where(testInstance.Method());
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -184,8 +182,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var testInstance = new InstanceExpressions();
                 var products = context.Products.Where(testInstance.MethodWithVariable());
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -197,12 +194,9 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var testInstance = new InstanceExpressions();
                 var products = context.Products.Where(testInstance.MethodWithParameter(1));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
-
-
 
         [Fact]
         public void Expression_embedded_variable()
@@ -214,8 +208,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testExpression)
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -228,8 +221,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(StaticExpressions.Member)
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -242,8 +234,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(StaticExpressions.Property)
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -256,8 +247,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(StaticExpressions.Delegate())
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -270,8 +260,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(StaticExpressions.DelegateWithParameter(1))
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -284,8 +273,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(StaticExpressions.Method())
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -298,8 +286,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(StaticExpressions.MethodWithVariable())
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -312,11 +299,9 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(StaticExpressions.MethodWithParameter(1))
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
-
 
         [Fact]
         public void Expression_embedded_instance_member()
@@ -328,8 +313,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testInstance.Member)
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -343,8 +327,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testInstance.Property)
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -358,8 +341,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testInstance.Delegate())
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -373,8 +355,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testInstance.DelegateWithParameter(1))
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -388,8 +369,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testInstance.Method())
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -403,8 +383,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testInstance.MethodWithVariable())
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
@@ -418,23 +397,74 @@ namespace System.Data.Entity.Query.LinqToEntities
                     .Where(p => context.Products.Where(testInstance.MethodWithParameter(1))
                         .Contains(p));
 
-                Assert.DoesNotThrow(() =>
-                    products.ToList());
+                Assert.DoesNotThrow(() => products.ToList());
             }
         }
 
+        [Fact]
+        public void Non_expression_embedded_static_delegate_throws()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var testInstance = new InstanceExpressions();
+                var products = context.Products
+                    .Where(p => p.Id == StaticExpressions.NonExpressionDelegate());
 
+                Assert.Throws<NotSupportedException>(() => products.ToList());
+            }
+        }
+
+        [Fact]
+        public void Non_expression_embedded_static_method_throws()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Products
+                    .Where(p => p.Id == StaticExpressions.NonExpressionMethod());
+
+                Assert.Throws<NotSupportedException>(() => products.ToList());
+            }
+        }
+
+        [Fact]
+        public void Non_expression_embedded_instance_delegate_throws()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var testInstance = new InstanceExpressions();
+                var products = context.Products
+                    .Where(p => p.Id == testInstance.NonExpressionDelegate());
+
+                Assert.Throws<NotSupportedException>(() => products.ToList());
+            }
+        }
+
+        [Fact]
+        public void Non_expression_embedded_instance_method_throws()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var testInstance = new InstanceExpressions();
+                var products = context.Products
+                    .Where(p => p.Id == testInstance.NonExpressionMethod());
+
+                Assert.Throws<NotSupportedException>(() => products.ToList());
+            }
+        }
 
         private static class StaticExpressions
         {
             public static readonly Expression<Func<Product, bool>> Member = (p => p.Id == 1);
 
-            public static Expression<Func<Product, bool>> Property { get { return (p => p.Id == 1); } }
-
+            public static Expression<Func<Product, bool>> Property
+            {
+                get { return (p => p.Id == 1); }
+            }
 
             public static readonly Func<Expression<Func<Product, bool>>> Delegate = () => (p => p.Id == 1);
             public static readonly Func<int, Expression<Func<Product, bool>>> DelegateWithParameter = i => (p => p.Id == i);
 
+            public static readonly Func<int> NonExpressionDelegate = () => 1;
 
             public static Expression<Func<Product, bool>> Method()
             {
@@ -451,19 +481,26 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 return p => p.Id == x;
             }
-        }
 
+            public static int NonExpressionMethod()
+            {
+                return 1;
+            }
+        }
 
         private class InstanceExpressions
         {
             public readonly Expression<Func<Product, bool>> Member = (p => p.Id == 1);
 
-            public Expression<Func<Product, bool>> Property { get { return (p => p.Id == 1); } }
-
+            public Expression<Func<Product, bool>> Property
+            {
+                get { return (p => p.Id == 1); }
+            }
 
             public readonly Func<Expression<Func<Product, bool>>> Delegate = () => (p => p.Id == 1);
             public readonly Func<int, Expression<Func<Product, bool>>> DelegateWithParameter = i => (p => p.Id == i);
 
+            public readonly Func<int> NonExpressionDelegate = () => 1;
 
             public Expression<Func<Product, bool>> Method()
             {
@@ -480,7 +517,11 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 return p => p.Id == i;
             }
+
+            public int NonExpressionMethod()
+            {
+                return 1;
+            }
         }
     }
-
 }
