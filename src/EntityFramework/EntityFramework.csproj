@@ -252,6 +252,7 @@
     <Compile Include="Infrastructure\Annotations\IndexAttributeExtensions.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolver.cs" />
+    <Compile Include="Infrastructure\Design\AppConfigReader.cs" />
     <Compile Include="Infrastructure\Interception\DatabaseLogger.cs" />
     <Compile Include="Infrastructure\Interception\DbConfigurationDispatcher.cs" />
     <Compile Include="Infrastructure\Interception\DbConfigurationInterceptionContext.cs" />

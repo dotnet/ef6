@@ -46,48 +46,5 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 AppDomain.Unload(domain);
             }
         }
-
-        [Fact]
-        public void GetProviderServices_returns_null_when_no_project_assembly()
-        {
-            var domain = AppDomain.CreateDomain("ExecutorWrapperTests", null, AppDomain.CurrentDomain.SetupInformation);
-            try
-            {
-                var executor = new ExecutorWrapper(
-                    domain,
-                    "UnknownProject.dll");
-
-                Assert.Null(executor.GetProviderServices("System.Data.SqlClient"));
-            }
-            finally
-            {
-                AppDomain.Unload(domain);
-            }
-        }
-
-        [Fact]
-        public void GetProviderServices_returns_null_when_no_EntityFramework_assembly()
-        {
-            var domain = AppDomain.CreateDomain(
-                "ExecutorWrapperTests",
-                null,
-                new AppDomainSetup
-                    {
-                        // NOTE: This will cause assembly resolution for EntityFramework to fail
-                        ApplicationBase = Path.GetTempPath()
-                    });
-            try
-            {
-                var executor = new ExecutorWrapper(
-                    domain,
-                    Path.GetFileName(GetType().Assembly.CodeBase));
-
-                Assert.Null(executor.GetProviderServices("System.Data.SqlClient"));
-            }
-            finally
-            {
-                AppDomain.Unload(domain);
-            }
-        }
     }
 }

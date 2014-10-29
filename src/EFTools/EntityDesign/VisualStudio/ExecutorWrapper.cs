@@ -61,16 +61,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(invariantName), "invariantName is null or empty.");
 
-            string providerServicesTypeName = null;
-            try
-            {
-                providerServicesTypeName = Invoke<string>("GetProviderServices", new[] { invariantName });
-            }
-            catch
-            {
-            }
-
-            return providerServicesTypeName;
+            return Invoke<string>("GetProviderServices", new[] { invariantName });
         }
 
         private TResult Invoke<TResult>(string operation, IEnumerable<object> args, object anonymousArguments = null)

@@ -43,18 +43,23 @@ namespace System.Data.Entity.Infrastructure.Design
         {
             DebugCheck.NotEmpty(invariantName);
 
-            string providerServicesTypeName = null;
+            DbConfiguration.LoadConfiguration(_assembly);
+            var dependencyResolver = DbConfiguration.DependencyResolver;
+
+            DbProviderServices providerServices = null;
             try
             {
-                DbConfiguration.LoadConfiguration(_assembly);
-                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(invariantName);
-                providerServicesTypeName = providerServices.GetType().AssemblyQualifiedName;
+                providerServices = dependencyResolver.GetService<DbProviderServices>(invariantName);
             }
             catch
             {
             }
+            if (providerServices == null)
+            {
+                return null;
+            }
 
-            return providerServicesTypeName;
+            return providerServices.GetType().AssemblyQualifiedName;
         }
 
         // <summary>

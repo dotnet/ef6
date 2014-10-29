@@ -4,9 +4,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Design;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.Diagnostics;
@@ -38,6 +40,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     using VSLangProj80;
     using VsWebSite;
     using VsWebSite90;
+    using ConfigurationManager = System.Configuration.ConfigurationManager;
     using Constants = EnvDTE.Constants;
     using PrjKind = VSLangProj.PrjKind;
     using Resources = Microsoft.Data.Entity.Design.Resources;
@@ -374,13 +377,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         {
             ErrorListHelper.MiscErrorList.AddItem(
                 new ErrorTask
-                    {
-                        Document = filePath,
-                        Text = message,
-                        Line = lineNumber,
-                        Column = columnNumber,
-                        ErrorCategory = category
-                    });
+                {
+                    Document = filePath,
+                    Text = message,
+                    Line = lineNumber,
+                    Column = columnNumber,
+                    ErrorCategory = category
+                });
         }
 
         // <summary>
@@ -2196,12 +2199,32 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                     providerServicesTypeName = context.Executor.GetProviderServices(invariantName);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.Fail(ex.ToString());
+                try
+                {
+                    providerServicesTypeName = GetProviderServicesFromConfig(invariantName, project, serviceProvider);
+                }
+                catch (Exception ex)
+                {
+                    Debug.Fail(ex.ToString());
+                }
             }
 
             return providerServicesTypeName;
+        }
+
+        private static string GetProviderServicesFromConfig(
+            string invariantName,
+            Project project,
+            IServiceProvider serviceProvider)
+        {
+            var configurationFile = GetProjectConfigurationFile(project, serviceProvider);
+            var configuration = ConfigurationManager.OpenMappedExeConfiguration(
+                new ExeConfigurationFileMap { ExeConfigFilename = configurationFile },
+                ConfigurationUserLevel.None);
+
+            return new AppConfigReader(configuration).GetProviderServices(invariantName);
         }
 
         internal static string GetProviderManifestTokenConnected(

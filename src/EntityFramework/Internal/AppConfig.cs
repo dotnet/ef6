@@ -18,7 +18,7 @@ namespace System.Data.Entity.Internal
     // </summary>
     internal class AppConfig
     {
-        private const string EFSectionName = "entityFramework";
+        public const string EFSectionName = "entityFramework";
 
         private static readonly AppConfig _defaultInstance = new AppConfig();
         private readonly KeyValueConfigurationCollection _appSettings;
