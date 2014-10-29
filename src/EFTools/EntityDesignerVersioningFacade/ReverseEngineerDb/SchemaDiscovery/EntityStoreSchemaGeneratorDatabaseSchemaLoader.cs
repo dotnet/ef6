@@ -81,11 +81,15 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private QueryTraceOn9481Interceptor CreateAndRegisterTrace9481InterceptorIfSqlServer()
         {
             QueryTraceOn9481Interceptor interceptor = null;
-            var providerInvariantName = _connection.StoreProviderFactory.GetProviderInvariantName();
-            if (string.CompareOrdinal(providerInvariantName, ProviderNameSqlclient) == 0)
+            var storeProviderFactory = _connection.StoreProviderFactory;
+            if (storeProviderFactory != null)
             {
-                interceptor = new QueryTraceOn9481Interceptor();
-                DbInterception.Add(interceptor);
+                var providerInvariantName = storeProviderFactory.GetProviderInvariantName();
+                if (string.CompareOrdinal(providerInvariantName, ProviderNameSqlclient) == 0)
+                {
+                    interceptor = new QueryTraceOn9481Interceptor();
+                    DbInterception.Add(interceptor);
+                }
             }
             return interceptor;
         }
