@@ -688,7 +688,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var runtimeConnectionString = ConnectionManager.TranslateConnectionString(ServiceProvider,
                 Wizard.Project, designTimeProviderInvariantName, maskedConnectionString, true);
 
-            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
+            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
+                || Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateDatabaseScript)
             {
                 var metadataFiles = ConnectionManager.GetMetadataFileNamesFromArtifactFileName(
                     Wizard.Project, Wizard.ModelBuilderSettings.ModelPath, ServiceProvider);
