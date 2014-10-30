@@ -78,7 +78,12 @@ namespace System.Data.Entity.SqlServer
         private SqlTypesAssembly BindToLatest()
         {
             Assembly sqlTypesAssembly = null;
-            foreach (var assemblyFullName in _preferredSqlTypesAssemblies)
+            var candidateAssemblies =
+                SqlProviderServices.SqlServerTypesAssemblyName != null
+                    ? new[] { SqlProviderServices.SqlServerTypesAssemblyName }
+                    : _preferredSqlTypesAssemblies;
+
+            foreach (var assemblyFullName in candidateAssemblies)
             {
                 var asmName = new AssemblyName(assemblyFullName);
                 try

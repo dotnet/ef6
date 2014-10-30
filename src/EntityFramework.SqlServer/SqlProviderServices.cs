@@ -110,6 +110,11 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
+        /// Set to the full name of the Microsoft.SqlServer.Types assembly to override the default selection
+        /// </summary>
+        public static string SqlServerTypesAssemblyName { get; set; }
+
+        /// <summary>
         /// Set this flag to false to prevent <see cref="decimal" /> values from being truncated to
         /// the scale (number of decimal places) defined for the column. The default value is true,
         /// indicating that decimal values will be truncated, in order to prevent breaking existing
