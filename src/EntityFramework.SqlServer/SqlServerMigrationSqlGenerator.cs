@@ -768,32 +768,14 @@ namespace System.Data.Entity.SqlServer
 
             var column = alterColumnOperation.Column;
 
-            if ((column.DefaultValue != null)
-                || !string.IsNullOrWhiteSpace(column.DefaultValueSql))
-            {
-                using (var writer = Writer())
-                {
-                    DropDefaultConstraint(alterColumnOperation.Table, column.Name, writer);
-
-                    writer.Write("ALTER TABLE ");
-                    writer.Write(Name(alterColumnOperation.Table));
-                    writer.Write(" ADD CONSTRAINT ");
-                    writer.Write(Quote("DF_" + alterColumnOperation.Table + "_" + column.Name));
-                    writer.Write(" DEFAULT ");
-                    writer.Write(
-                        (column.DefaultValue != null)
-                            ? Generate((dynamic)column.DefaultValue)
-                            : column.DefaultValueSql
-                        );
-                    writer.Write(" FOR ");
-                    writer.Write(Quote(column.Name));
-
-                    Statement(writer);
-                }
-            }
-
             using (var writer = Writer())
             {
+                if ((column.DefaultValue != null)
+                    || !string.IsNullOrWhiteSpace(column.DefaultValueSql))
+                {
+                    DropDefaultConstraint(alterColumnOperation.Table, column.Name, writer);
+                }
+
                 writer.Write("ALTER TABLE ");
                 writer.Write(Name(alterColumnOperation.Table));
                 writer.Write(" ALTER COLUMN ");
@@ -808,6 +790,24 @@ namespace System.Data.Entity.SqlServer
                 }
 
                 writer.Write(" NULL");
+
+                if ((column.DefaultValue != null)
+                    || !string.IsNullOrWhiteSpace(column.DefaultValueSql))
+                {
+                    writer.WriteLine();
+                    writer.Write("ALTER TABLE ");
+                    writer.Write(Name(alterColumnOperation.Table));
+                    writer.Write(" ADD CONSTRAINT ");
+                    writer.Write(Quote("DF_" + alterColumnOperation.Table + "_" + column.Name));
+                    writer.Write(" DEFAULT ");
+                    writer.Write(
+                        (column.DefaultValue != null)
+                            ? Generate((dynamic)column.DefaultValue)
+                            : column.DefaultValueSql
+                        );
+                    writer.Write(" FOR ");
+                    writer.Write(Quote(column.Name));
+                }
 
                 Statement(writer);
             }
