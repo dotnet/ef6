@@ -212,7 +212,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 if (foreignKeyColumn.Nullable)
                 {
                     associationSetMapping.AddCondition(
-                        new ConditionPropertyMapping(null, foreignKeyColumn, null, false));
+                        new IsNullConditionMapping(foreignKeyColumn, false));
                 }
             }
 

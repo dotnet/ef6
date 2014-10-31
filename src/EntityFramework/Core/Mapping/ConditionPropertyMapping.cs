@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping
     /// This class represents the metadata for all the condition property map elements in the
     /// above example.
     /// </example>
-    public abstract class ConditionPropertyMapping : PropertyMapping
+    public class ConditionPropertyMapping : PropertyMapping
     {
         // <summary>
         // Column EdmMember for which the condition is specified.
