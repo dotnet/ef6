@@ -3075,8 +3075,10 @@ namespace System.Data.Entity.Core.Mapping
                 return null;
             }
 
-            var conditionPropertyMapping = new ConditionPropertyMapping(member, columnMember, value, isNullValue);
-            return conditionPropertyMapping;
+            return
+                value != null
+                    ? (ConditionPropertyMapping)new ValueConditionMapping(conditionMember, value)
+                    : new IsNullConditionMapping(conditionMember, isNullValue.Value);
         }
 
         internal static bool IsTypeSupportedForCondition(PrimitiveTypeKind primitiveTypeKind)

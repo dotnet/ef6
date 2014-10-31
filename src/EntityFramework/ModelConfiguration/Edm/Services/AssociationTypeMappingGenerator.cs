@@ -279,7 +279,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 if (foreignKeyColumn.Nullable)
                 {
                     associationSetMapping
-                        .AddCondition(new ConditionPropertyMapping(null, foreignKeyColumn, null, false));
+                        .AddCondition(new IsNullConditionMapping(foreignKeyColumn, false));
                 }
             }
         }

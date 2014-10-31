@@ -373,12 +373,12 @@ namespace System.Data.Entity.Core.Mapping
             var property1 = new EdmProperty("A", typeUsage);
             var property2 = new EdmProperty("B", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
-            PropertyMapping mapping = new ConditionPropertyMapping(property1, null, "V", null);
+            PropertyMapping mapping = new ValueConditionMapping(property1, "V");
 
             Assert.Equal("ConditionProperty(Identity=A)",
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));
 
-            mapping = new ConditionPropertyMapping(null, property2, "V", null);
+            mapping = new ValueConditionMapping(property2, "V");
 
             Assert.Equal("ConditionProperty(ColumnIdentity=B)",
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));

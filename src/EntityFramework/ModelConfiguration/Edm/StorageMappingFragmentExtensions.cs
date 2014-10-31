@@ -105,7 +105,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             entityTypeMapppingFragment
                 .AddConditionProperty(
-                    new ConditionPropertyMapping(null, discriminatorColumn, value, null));
+                    new ValueConditionMapping(discriminatorColumn, value));
         }
 
         public static void AddNullabilityCondition(
@@ -118,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             entityTypeMapppingFragment
                 .AddConditionProperty(
-                    new ConditionPropertyMapping(null, column, null, isNull));
+                    new IsNullConditionMapping(column, isNull));
         }
 
         public static bool IsConditionOnlyFragment(this MappingFragment entityTypeMapppingFragment)

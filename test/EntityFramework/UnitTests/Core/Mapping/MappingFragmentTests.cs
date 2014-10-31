@@ -372,7 +372,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(mappingFragment.ColumnConditions);
 
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
+                = new ValueConditionMapping(new EdmProperty("C", TypeUsage.Create(new PrimitiveType { DataSpace = DataSpace.SSpace })), 42);
 
             mappingFragment.AddConditionProperty(conditionPropertyMapping);
 

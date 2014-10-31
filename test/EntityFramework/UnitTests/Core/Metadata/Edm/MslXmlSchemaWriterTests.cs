@@ -500,7 +500,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var structuralTypeMapping =
                 new Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>(
                     entityType, new List<ConditionPropertyMapping>(), new List<PropertyMapping>());
-            structuralTypeMapping.Item2.Add(new ConditionPropertyMapping(rowTypeProperty1, null, false));
+            structuralTypeMapping.Item2.Add(new IsNullConditionMapping(rowTypeProperty1, false));
 
             structuralTypeMapping.Item3.Add(new ScalarPropertyMapping(entityTypeProperty1, rowTypeProperty1));
             structuralTypeMapping.Item3.Add(new ScalarPropertyMapping(entityTypeProperty2, rowTypeProperty2));

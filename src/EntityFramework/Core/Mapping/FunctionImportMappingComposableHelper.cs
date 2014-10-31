@@ -293,7 +293,10 @@ namespace System.Data.Entity.Core.Mapping
                             }
                             isNull = null;
                         }
-                        typeConditions.Add(new ConditionPropertyMapping(null, column, value, isNull));
+                        typeConditions.Add(
+                            value != null
+                                ? (ConditionPropertyMapping)new ValueConditionMapping(column, value)
+                                : new IsNullConditionMapping(column, isNull.Value));
                     }
                     else
                     {

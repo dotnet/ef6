@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(associationSetMapping.Conditions);
 
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
+                = new ValueConditionMapping(new EdmProperty("C", TypeUsage.Create(new PrimitiveType { DataSpace = DataSpace.SSpace })), 42);
 
             associationSetMapping.AddCondition(conditionPropertyMapping);
 
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Mapping
             var associationSetMapping
                 = new AssociationSetMapping(associationSet, entitySet);
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
+                = new ValueConditionMapping(new EdmProperty("C", TypeUsage.Create(new PrimitiveType { DataSpace = DataSpace.SSpace })), 42);
 
             associationSetMapping.SetReadOnly();
 
@@ -197,7 +197,7 @@ namespace System.Data.Entity.Core.Mapping
             var associationSetMapping
                 = new AssociationSetMapping(associationSet, entitySet);
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
+                = new ValueConditionMapping(new EdmProperty("C", TypeUsage.Create(new PrimitiveType { DataSpace = DataSpace.SSpace })), 42);
 
             associationSetMapping.AddCondition(conditionPropertyMapping);
             associationSetMapping.SetReadOnly();
