@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading;
@@ -154,24 +154,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Util.ThrowIfReadOnly(this);
 
-                // Check to make sure there won't be a loop in the inheritance
-                var type = value;
-                while (type != null)
-                {
-                    Debug.Assert(type != this, "Cannot set the given type as base type because it would introduce a loop in inheritance");
-
-                    type = type.BaseType;
-                }
-
-                // Also if the base type is EntityTypeBase, make sure it doesn't have keys
-                Debug.Assert(
-                    value == null ||
-                    !Helper.IsEntityTypeBase(this) ||
-                    ((EntityTypeBase)this).KeyMembers.Count == 0 ||
-                    ((EntityTypeBase)value).KeyMembers.Count == 0,
-                    " For EntityTypeBase, both base type and derived types cannot have keys defined");
+                CheckBaseType(value);
 
                 _baseType = value;
+            }
+        }
+
+        private void CheckBaseType(EdmType baseType)
+        {
+            for (var type = baseType; type != null; type = type.BaseType)
+            {
+                if (type == this)
+                {
+                    throw new ArgumentException(Strings.CannotSetBaseTypeCyclicInheritance(baseType.Name, Name));
+                }
+            }
+
+            if (baseType != null
+                && Helper.IsEntityTypeBase(this)
+                && ((EntityTypeBase)baseType).KeyMembers.Count != 0
+                && ((EntityTypeBase)this).KeyMembers.Count != 0)
+            {
+                throw new ArgumentException(Strings.CannotDefineKeysOnBothBaseAndDerivedTypes);
             }
         }
 

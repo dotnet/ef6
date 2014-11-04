@@ -5564,4 +5564,10 @@
   <data name="UnableToLoadEmbeddedResource" xml:space="preserve">
     <value>Unable to load embedded resource '{1}' from assembly '{0}'.</value>
   </data>
+  <data name="CannotSetBaseTypeCyclicInheritance" xml:space="preserve">
+    <value>Cannot set the base type '{0}' on type '{1}' because it creates cyclic inheritance.</value>
+  </data>
+  <data name="CannotDefineKeysOnBothBaseAndDerivedTypes" xml:space="preserve">
+    <value>Cannot define key members on both the base and the derived types.</value>
+  </data>
 </root>

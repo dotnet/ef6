@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
     using Moq;
@@ -220,6 +221,158 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             tasks.ForEach(t => t.Start());
             tasks.ForEach(t => t.Join());
+        }
+
+        [Fact]
+        public void Create_entity_type_having_base_type_without_key_members()
+        {
+            var baseType =
+                EntityType.Create(
+                    "Base",
+                    "MyModel",
+                    DataSpace.CSpace,
+                    null,
+                    null,
+                    null);
+
+            var entity =
+                EntityType.Create(
+                    "Derived",
+                    "MyModel",
+                    DataSpace.CSpace,
+                    baseType,
+                    new[] { "Id" },
+                    new[]
+                    {
+                        EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                        EdmProperty.CreatePrimitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                    },
+                    new[]
+                    {
+                        new MetadataProperty(
+                            "TestProperty",
+                            TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                            "value")
+                    });
+
+            Assert.Same(baseType, entity.BaseType);
+            Assert.Equal("MyModel.Derived", entity.FullName);
+            Assert.Equal(DataSpace.CSpace, entity.DataSpace);
+            Assert.True(new[] { "Id" }.SequenceEqual(entity.KeyMemberNames));
+            Assert.True(new[] { "Id", "Name" }.SequenceEqual(entity.Members.Select(m => m.Name)));
+            Assert.True(entity.IsReadOnly);
+
+            var metadataProperty = entity.MetadataProperties.SingleOrDefault(p => p.Name == "TestProperty");
+            Assert.NotNull(metadataProperty);
+            Assert.Equal("value", metadataProperty.Value);
+        }
+
+        [Fact]
+        public void Create_entity_type_having_base_type_with_key_members()
+        {
+            var baseType =
+                EntityType.Create(
+                    "Base",
+                    "MyModel",
+                    DataSpace.CSpace,
+                    new[] { "Id" },
+                    new[]
+                    {
+                        EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                    },
+                    null);
+
+            var entity =
+                EntityType.Create(
+                    "Derived",
+                    "MyModel",
+                    DataSpace.CSpace,
+                    baseType,
+                    null,
+                    new[]
+                    {
+                        EdmProperty.CreatePrimitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                    },
+                    new[]
+                    {
+                        new MetadataProperty(
+                            "TestProperty",
+                            TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                            "value")
+                    });
+
+            Assert.Same(baseType, entity.BaseType);
+            Assert.Equal("MyModel.Derived", entity.FullName);
+            Assert.Equal(DataSpace.CSpace, entity.DataSpace);
+            Assert.True(new[] { "Id" }.SequenceEqual(entity.KeyMemberNames));
+            Assert.True(new[] { "Id", "Name" }.SequenceEqual(entity.Members.Select(m => m.Name)));
+            Assert.True(entity.IsReadOnly);
+
+            var metadataProperty = entity.MetadataProperties.SingleOrDefault(p => p.Name == "TestProperty");
+            Assert.NotNull(metadataProperty);
+            Assert.Equal("value", metadataProperty.Value);
+        }
+
+        [Fact]
+        public void Create_entity_type_throws_if_key_members_defined_on_both_base_and_derived_types()
+        {
+            var baseType =
+                EntityType.Create(
+                    "Base",
+                    "MyModel",
+                    DataSpace.CSpace,
+                    new[] { "Id" },
+                    new[]
+                    {
+                        EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                    },
+                    null);
+
+            Assert.Equal(
+                Strings.CannotDefineKeysOnBothBaseAndDerivedTypes,
+                Assert.Throws<ArgumentException>(
+                    () =>
+                        EntityType.Create(
+                            "Derived",
+                            "MyModel",
+                            DataSpace.CSpace,
+                            baseType,
+                            new[] { "Id" },
+                            new[]
+                            {
+                                EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                EdmProperty.CreatePrimitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                            },
+                            null))
+                    .Message);
+        }
+
+        [Fact]
+        public void BaseType_setter_throws_if_entity_type_and_base_type_are_the_same()
+        {
+            var entity = new EntityType("ET", "MyModel", DataSpace.CSpace);
+
+            Assert.Equal(
+                Strings.CannotSetBaseTypeCyclicInheritance("ET", "ET"),
+                Assert.Throws<ArgumentException>(
+                    () => entity.BaseType = entity)
+                    .Message);
+        }
+
+        [Fact]
+        public void BaseType_setter_throws_if_cyclic_inheritance()
+        {
+            var entity1 = new EntityType("ET1", "MyModel", DataSpace.CSpace);
+            var entity2 = new EntityType("ET2", "MyModel", DataSpace.CSpace);
+            var entity3 = new EntityType("ET3", "MyModel", DataSpace.CSpace);
+            entity2.BaseType = entity1;
+            entity3.BaseType = entity2;
+
+            Assert.Equal(
+                Strings.CannotSetBaseTypeCyclicInheritance("ET3", "ET1"),
+                Assert.Throws<ArgumentException>(
+                    () => entity1.BaseType = entity3)
+                    .Message);
         }
     }
 }

@@ -14005,6 +14005,22 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.UnableToLoadEmbeddedResource, p0, p1);
         }
+
+        // <summary>
+        // A string like "Cannot set the base type '{0}' on type '{1}' because it creates cyclic inheritance."
+        // </summary>
+        internal static string CannotSetBaseTypeCyclicInheritance(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.CannotSetBaseTypeCyclicInheritance, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Cannot define key members on both the base and the derived types."
+        // </summary>
+        internal static string CannotDefineKeysOnBothBaseAndDerivedTypes
+        {
+            get { return EntityRes.GetString(EntityRes.CannotDefineKeysOnBothBaseAndDerivedTypes); }
+        }
     }
 
     // <summary>
@@ -17395,6 +17411,8 @@ namespace System.Data.Entity.Resources
         internal const string ConnectionDisposedLog = "ConnectionDisposedLog";
         internal const string TransactionDisposedLog = "TransactionDisposedLog";
         internal const string UnableToLoadEmbeddedResource = "UnableToLoadEmbeddedResource";
+        internal const string CannotSetBaseTypeCyclicInheritance = "CannotSetBaseTypeCyclicInheritance";
+        internal const string CannotDefineKeysOnBothBaseAndDerivedTypes = "CannotDefineKeysOnBothBaseAndDerivedTypes";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

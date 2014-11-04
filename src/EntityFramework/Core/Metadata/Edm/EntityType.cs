@@ -321,6 +321,43 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
+        /// The factory method for constructing the EntityType object.
+        /// </summary>
+        /// <param name="name">The name of the entity type.</param>
+        /// <param name="namespaceName">The namespace of the entity type.</param>
+        /// <param name="dataSpace">The dataspace in which the EntityType belongs to.</param>
+        /// <param name="baseType">The base type.</param>
+        /// <param name="keyMemberNames">Name of key members for the type.</param>
+        /// <param name="members">Members of the entity type (primitive and navigation properties).</param>
+        /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
+        /// <returns>The EntityType object.</returns>
+        /// <exception cref="System.ArgumentException">Thrown if either name, namespace arguments are null.</exception>
+        /// <remarks>The newly created EntityType will be read only.</remarks>
+        public static EntityType Create(
+            string name,
+            string namespaceName,
+            DataSpace dataSpace,
+            EntityType baseType,
+            IEnumerable<string> keyMemberNames,
+            IEnumerable<EdmMember> members,
+            IEnumerable<MetadataProperty> metadataProperties)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(namespaceName, "namespaceName");
+            Check.NotNull(baseType, "baseType");
+
+            var entity = new EntityType(name, namespaceName, dataSpace, keyMemberNames, members) { BaseType = baseType };
+
+            if (metadataProperties != null)
+            {
+                entity.AddMetadataProperties(metadataProperties.ToList());
+            }
+
+            entity.SetReadOnly();
+            return entity;
+        }
+
+        /// <summary>
         /// Adds the specified navigation property to the members of this type.
         /// The navigation property is added regardless of the read-only flag.
         /// </summary>
