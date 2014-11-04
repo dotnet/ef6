@@ -1850,7 +1850,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 protected override CqtExpression TranslatePagingOperator(
                     ExpressionConverter parent, CqtExpression operand, CqtExpression count)
                 {
-                    return parent.Limit(operand, count);
+                    var constant = count as DbConstantExpression;
+                    return constant == null || !constant.Value.Equals(0)
+                        ? parent.Limit(operand, count)
+                        : parent.Filter(operand.BindAs(parent.AliasGenerator.Next()), DbExpressionBuilder.False);
                 }
             }
 

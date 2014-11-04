@@ -521,6 +521,36 @@ namespace PlanCompilerTests
         }
 
         [Fact]
+        public void Limit_SimpleModel_Take_Zero()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query =
+                    context.Owners.Include(o => o.OwnedRun)
+                        .Where(o => o.FirstName == "Diego")
+                        .Select(o => o)
+                        .Take(0);
+
+                Assert.Equal(0, query.Count());
+                Assert.Equal(
+@"SELECT 
+    1 AS [C1], 
+    CAST(NULL AS int) AS [C2], 
+    CAST(NULL AS varchar(1)) AS [C3], 
+    CAST(NULL AS varchar(1)) AS [C4], 
+    CAST(NULL AS varchar(1)) AS [C5], 
+    CAST(NULL AS int) AS [C6], 
+    CAST(NULL AS varchar(1)) AS [C7], 
+    CAST(NULL AS int) AS [C8], 
+    CAST(NULL AS geometry) AS [C9]
+    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+    WHERE 1 = 0",
+                    query.ToString());
+
+            }
+        }
+
+        [Fact]
         public void Limit_SimpleModel_OrderBy_Take()
         {
             var log = new StringWriter();
@@ -563,6 +593,37 @@ namespace PlanCompilerTests
         }
 
         [Fact]
+        public void Limit_SimpleModel_OrderBy_Take_Zero()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query =
+                    context.Owners.Include(o => o.OwnedRun)
+                        .Where(o => o.FirstName == "Diego")
+                        .OrderBy(o => o.LastName)
+                        .Select(o => o)
+                        .Take(0);
+
+                Assert.Equal(0, query.Count());
+                Assert.Equal(
+@"SELECT 
+    1 AS [C1], 
+    CAST(NULL AS int) AS [C2], 
+    CAST(NULL AS varchar(1)) AS [C3], 
+    CAST(NULL AS varchar(1)) AS [C4], 
+    CAST(NULL AS varchar(1)) AS [C5], 
+    CAST(NULL AS int) AS [C6], 
+    CAST(NULL AS varchar(1)) AS [C7], 
+    CAST(NULL AS int) AS [C8], 
+    CAST(NULL AS geometry) AS [C9]
+    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+    WHERE 1 = 0",
+                    query.ToString());
+
+            }
+        }
+
+        [Fact]
         public void Limit_SimpleModel_OrderBy_Skip_Take()
         {
             var log = new StringWriter();
@@ -586,6 +647,38 @@ namespace PlanCompilerTests
                 QueryTestHelpers.StripFormatting(log.ToString())
                     .Contains(QueryTestHelpers.StripFormatting(_limit_SimpleModel_OrderBy_Skip_Take_expectedSql)),
                 "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_SimpleModel_OrderBy_Skip_Take_Zero()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query =
+                    context.Owners.Include(o => o.OwnedRun)
+                        .Where(o => o.FirstName == "Diego")
+                        .OrderBy(o => o.LastName)
+                        .Select(o => o)
+                        .Skip(2)
+                        .Take(0);
+
+                Assert.Equal(0, query.Count());
+                Assert.Equal(
+@"SELECT 
+    1 AS [C1], 
+    CAST(NULL AS int) AS [C2], 
+    CAST(NULL AS varchar(1)) AS [C3], 
+    CAST(NULL AS varchar(1)) AS [C4], 
+    CAST(NULL AS varchar(1)) AS [C5], 
+    CAST(NULL AS int) AS [C6], 
+    CAST(NULL AS varchar(1)) AS [C7], 
+    CAST(NULL AS int) AS [C8], 
+    CAST(NULL AS geometry) AS [C9]
+    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+    WHERE 1 = 0",
+                    query.ToString());
+
+            }
         }
 
         #endregion
@@ -1244,6 +1337,41 @@ namespace PlanCompilerTests
         }
 
         [Fact]
+        public void Limit_ComplexModel_Take_Zero()
+        {
+            using (var context = new AdvancedPatternsMasterContext())
+            {
+                var query =
+                    (from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                        where building.Name == "Building One"
+                        select building)
+                        .Take(0);
+
+                Assert.Equal(0, query.Count());
+                Assert.Equal(
+@"SELECT 
+    1 AS [C1], 
+    CAST(NULL AS uniqueidentifier) AS [C2], 
+    CAST(NULL AS varchar(1)) AS [C3], 
+    CAST(NULL AS decimal(18,2)) AS [C4], 
+    CAST(NULL AS int) AS [C5], 
+    CAST(NULL AS varchar(1)) AS [C6], 
+    CAST(NULL AS varchar(1)) AS [C7], 
+    CAST(NULL AS varchar(1)) AS [C8], 
+    CAST(NULL AS varchar(1)) AS [C9], 
+    CAST(NULL AS int) AS [C10], 
+    CAST(NULL AS varchar(1)) AS [C11], 
+    CAST(NULL AS int) AS [C12], 
+    CAST(NULL AS int) AS [C13], 
+    CAST(NULL AS uniqueidentifier) AS [C14]
+    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+    WHERE 1 = 0",
+                    query.ToString());
+
+            }
+        }
+
+        [Fact]
         public void Limit_ComplexModel_OrderBy_Take()
         {
             var log = new StringWriter();
@@ -1306,6 +1434,42 @@ namespace PlanCompilerTests
         }
 
         [Fact]
+        public void Limit_ComplexModel_OrderBy_Take_Zero()
+        {
+            using (var context = new AdvancedPatternsMasterContext())
+            {
+                var query =
+                    (from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                        where building.Name == "Building One"
+                        orderby building.Address.ZipCode
+                        select building)
+                        .Take(0);
+
+                Assert.Equal(0, query.Count());
+                Assert.Equal(
+@"SELECT 
+    1 AS [C1], 
+    CAST(NULL AS uniqueidentifier) AS [C2], 
+    CAST(NULL AS varchar(1)) AS [C3], 
+    CAST(NULL AS decimal(18,2)) AS [C4], 
+    CAST(NULL AS int) AS [C5], 
+    CAST(NULL AS varchar(1)) AS [C6], 
+    CAST(NULL AS varchar(1)) AS [C7], 
+    CAST(NULL AS varchar(1)) AS [C8], 
+    CAST(NULL AS varchar(1)) AS [C9], 
+    CAST(NULL AS int) AS [C10], 
+    CAST(NULL AS varchar(1)) AS [C11], 
+    CAST(NULL AS int) AS [C12], 
+    CAST(NULL AS int) AS [C13], 
+    CAST(NULL AS uniqueidentifier) AS [C14]
+    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+    WHERE 1 = 0",
+                    query.ToString());
+
+            }
+        }
+
+        [Fact]
         public void Limit_ComplexModel_OrderBy_Skip_Take()
         {
             var log = new StringWriter();
@@ -1329,6 +1493,43 @@ namespace PlanCompilerTests
                 QueryTestHelpers.StripFormatting(log.ToString())
                     .Contains(QueryTestHelpers.StripFormatting(_limit_ComplexModel_OrderBy_Skip_Take_expectedSql)),
                 "The resulting query is different from the expected value");
+        }
+
+        [Fact]
+        public void Limit_ComplexModel_OrderBy_Skip_Take_Zero()
+        {
+            using (var context = new AdvancedPatternsMasterContext())
+            {
+                var query =
+                    (from building in context.Buildings.Include(b => b.PrincipalMailRoom)
+                        where building.Name == "Building One"
+                        orderby building.Address.ZipCode
+                        select building)
+                        .Skip(2)
+                        .Take(0);
+
+                Assert.Equal(0, query.Count());
+                Assert.Equal(
+@"SELECT 
+    1 AS [C1], 
+    CAST(NULL AS uniqueidentifier) AS [C2], 
+    CAST(NULL AS varchar(1)) AS [C3], 
+    CAST(NULL AS decimal(18,2)) AS [C4], 
+    CAST(NULL AS int) AS [C5], 
+    CAST(NULL AS varchar(1)) AS [C6], 
+    CAST(NULL AS varchar(1)) AS [C7], 
+    CAST(NULL AS varchar(1)) AS [C8], 
+    CAST(NULL AS varchar(1)) AS [C9], 
+    CAST(NULL AS int) AS [C10], 
+    CAST(NULL AS varchar(1)) AS [C11], 
+    CAST(NULL AS int) AS [C12], 
+    CAST(NULL AS int) AS [C13], 
+    CAST(NULL AS uniqueidentifier) AS [C14]
+    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+    WHERE 1 = 0",
+                    query.ToString());
+
+            }
         }
 
         #endregion
