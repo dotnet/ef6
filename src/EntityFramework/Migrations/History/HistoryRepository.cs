@@ -125,7 +125,7 @@ namespace System.Data.Entity.Migrations.History
         {
             get { return _migrationIdMaxLength; }
         }
-
+        
         public string CurrentSchema
         {
             get { return _currentSchema; }
@@ -652,10 +652,10 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        public virtual MigrationOperation CreateInsertOperation(string migrationId, XDocument model)
+        public virtual MigrationOperation CreateInsertOperation(string migrationId, VersionedModel versionedModel)
         {
             DebugCheck.NotEmpty(migrationId);
-            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(versionedModel);
 
             DbConnection connection = null;
             try
@@ -669,8 +669,8 @@ namespace System.Data.Entity.Migrations.History
                             {
                                 MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
                                 ContextKey = _contextKey,
-                                Model = new ModelCompressor().Compress(model),
-                                ProductVersion = _productVersion
+                                Model = new ModelCompressor().Compress(versionedModel.Model),
+                                ProductVersion = versionedModel.Version ?? _productVersion
                             });
 
                     using (var commandTracer = new CommandTracer(context))
@@ -810,9 +810,9 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        public virtual void BootstrapUsingEFProviderDdl(XDocument model)
+        public virtual void BootstrapUsingEFProviderDdl(VersionedModel versionedModel)
         {
-            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(versionedModel);
 
             DbConnection connection = null;
             try
@@ -831,8 +831,8 @@ namespace System.Data.Entity.Migrations.History
                                     .CreateMigrationId(Strings.InitialCreate)
                                     .RestrictTo(_migrationIdMaxLength),
                                 ContextKey = _contextKey,
-                                Model = new ModelCompressor().Compress(model),
-                                ProductVersion = _productVersion
+                                Model = new ModelCompressor().Compress(versionedModel.Model),
+                                ProductVersion = versionedModel.Version ?? _productVersion
                             });
 
                     context.SaveChanges();

@@ -475,7 +475,7 @@ namespace System.Data.Entity.Migrations
                 CheckLegacyCompatibility(
                     () => ExecuteOperations(
                         MigrationAssembly.CreateBootstrapMigrationId(),
-                        _currentModel,
+                        new VersionedModel(_currentModel),
                         Enumerable.Empty<MigrationOperation>(),
                         _modelDiffer.Diff(
                             _emptyModel.Value,
@@ -725,7 +725,7 @@ namespace System.Data.Entity.Migrations
 
             migration.Down();
 
-            ExecuteOperations(migrationId, targetModel, migration.Operations, systemOperations, downgrading: true);
+            ExecuteOperations(migrationId, new VersionedModel(targetModel), migration.Operations, systemOperations, downgrading: true);
         }
 
         internal override void ApplyMigration(DbMigration migration, DbMigration lastMigration)
@@ -773,7 +773,7 @@ namespace System.Data.Entity.Migrations
 
             migration.Up();
 
-            ExecuteOperations(migrationMetadata.Id, targetModel.Model, migration.Operations, systemOperations, false);
+            ExecuteOperations(migrationMetadata.Id, targetModel, migration.Operations, systemOperations, false);
         }
 
         private static string GetDefaultSchema(DbMigration migration)
@@ -871,12 +871,12 @@ namespace System.Data.Entity.Migrations
                 throw Error.AutomaticStaleFunctions(migrationId);
             }
 
-            ExecuteOperations(migrationId, targetModel.Model, operations, systemOperations, downgrading, auto: true);
+            ExecuteOperations(migrationId, targetModel, operations, systemOperations, downgrading, auto: true);
         }
 
         private void ExecuteOperations(
             string migrationId,
-            XDocument targetModel,
+            VersionedModel targetModel,
             IEnumerable<MigrationOperation> operations,
             IEnumerable<MigrationOperation> systemOperations,
             bool downgrading,
@@ -887,7 +887,7 @@ namespace System.Data.Entity.Migrations
             DebugCheck.NotNull(operations);
             DebugCheck.NotNull(systemOperations);
 
-            FillInForeignKeyOperations(operations, targetModel);
+            FillInForeignKeyOperations(operations, targetModel.Model);
 
             var newTableForeignKeys
                 = (from ct in operations.OfType<CreateTableOperation>()

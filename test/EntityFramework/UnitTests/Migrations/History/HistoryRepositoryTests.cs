@@ -180,7 +180,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -207,7 +207,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -235,7 +235,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -290,7 +290,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -324,7 +324,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -365,7 +365,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -396,7 +396,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -426,7 +426,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     new[]
@@ -481,7 +481,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(),
@@ -508,7 +508,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(),
@@ -535,7 +535,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(),
@@ -601,7 +601,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model1 = context.GetModel();
+                var model1 = new VersionedModel(context.GetModel());
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(),
@@ -614,7 +614,7 @@ namespace System.Data.Entity.Migrations.History
                 var model2 = historyRepository.GetLastModel(out migrationId, out productVersion);
 
                 Assert.NotNull(model2);
-                Assert.True(XNode.DeepEquals(model1, model2));
+                Assert.True(XNode.DeepEquals(model1.Model, model2));
                 Assert.Equal("Migration 2", migrationId);
                 Assert.Equal(typeof(DbContext).Assembly().GetInformationalVersion(), productVersion);
             }
@@ -631,24 +631,25 @@ namespace System.Data.Entity.Migrations.History
             using (var context = CreateContext<ShopContext_v1>())
             {
                 var model = context.GetModel();
+                var versionedModel = new VersionedModel(model);
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(),
-                    historyRepository1.CreateInsertOperation("Migration 1", model));
+                    historyRepository1.CreateInsertOperation("Migration 1", versionedModel));
 
                 var historyRepository2
                     = new HistoryRepository(Mock.Of<InternalContextForMock>(), ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
                 ExecuteOperations(
-                    new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
+                    new[] { historyRepository2.CreateInsertOperation("Migration 2", versionedModel) });
 
-                string migrationId, _;
-                model = historyRepository1.GetLastModel(out migrationId, out _);
+                string migrationId, productVersion;
+                model = historyRepository1.GetLastModel(out migrationId, out productVersion);
 
                 Assert.NotNull(model);
                 Assert.Equal("Migration 1", migrationId);
 
-                model = historyRepository2.GetLastModel(out migrationId, out _);
+                model = historyRepository2.GetLastModel(out migrationId, out productVersion);
 
                 Assert.NotNull(model);
                 Assert.Equal("Migration 2", migrationId);
@@ -666,19 +667,20 @@ namespace System.Data.Entity.Migrations.History
             using (var context = CreateContext<ShopContext_v1>())
             {
                 var model = context.GetModel();
+                var versionedModel = new VersionedModel(model);
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(),
-                    historyRepository1.CreateInsertOperation("Migration 1", model));
+                    historyRepository1.CreateInsertOperation("Migration 1", versionedModel));
 
                 var historyRepository2
                     = new HistoryRepository(Mock.Of<InternalContextForMock>(), ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
                 ExecuteOperations(
-                    new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
+                    new[] { historyRepository2.CreateInsertOperation("Migration 2", versionedModel) });
 
-                string migrationId, _;
-                model = historyRepository1.GetLastModel(out migrationId, out _, "Key2");
+                string migrationId, productVersion;
+                model = historyRepository1.GetLastModel(out migrationId, out productVersion, "Key2");
 
                 Assert.NotNull(model);
                 Assert.Equal("Migration 2", migrationId);
@@ -699,10 +701,11 @@ namespace System.Data.Entity.Migrations.History
             using (var context = CreateContext<ShopContext_v1>())
             {
                 var model = context.GetModel();
+                var versionedModel = new VersionedModel(model);
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(historyRepository.CurrentSchema),
-                    historyRepository.CreateInsertOperation("Migration", model));
+                    historyRepository.CreateInsertOperation("Migration", versionedModel));
 
                 historyRepository
                     = new HistoryRepository(Mock.Of<InternalContextForMock>(), 
@@ -732,16 +735,17 @@ namespace System.Data.Entity.Migrations.History
             using (var context = CreateContext<ShopContext_v1>())
             {
                 var model = context.GetModel();
+                var versionedModel = new VersionedModel(model);
 
                 ExecuteOperations(
                     GetCreateHistoryTableOperation(),
-                    historyRepository1.CreateInsertOperation("Migration 1", model));
+                    historyRepository1.CreateInsertOperation("Migration 1", versionedModel));
 
                 var historyRepository2
                     = new HistoryRepository(Mock.Of<InternalContextForMock>(), ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
                 ExecuteOperations(
-                    new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
+                    new[] { historyRepository2.CreateInsertOperation("Migration 2", versionedModel) });
 
                 string productVersion;
                 model = historyRepository1.GetModel("Migration 1", out productVersion);
@@ -872,7 +876,7 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository = new HistoryRepository(Mock.Of<InternalContextForMock>(), ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var historyOperation
-                = (HistoryOperation)historyRepository.CreateInsertOperation("Migration1", modelDocument);
+                = (HistoryOperation)historyRepository.CreateInsertOperation("Migration1", new VersionedModel(modelDocument));
 
             Assert.NotEmpty(historyOperation.CommandTrees);
             Assert.Equal(DbCommandTreeKind.Insert, historyOperation.CommandTrees.Single().CommandTreeKind);
@@ -931,7 +935,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext<ShopContext_v1>())
             {
-                var model = context.GetModel();
+                var model = new VersionedModel(context.GetModel());
 
                 var clonedConnection = DbProviderServices.GetProviderFactory(context.Database.Connection).CreateConnection();
                 clonedConnection.ConnectionString = context.Database.Connection.ConnectionString;
@@ -948,7 +952,7 @@ namespace System.Data.Entity.Migrations.History
                             {
                                 MigrationId = "227309030010001_Migration1",
                                 ContextKey = "MyKey",
-                                Model = new ModelCompressor().Compress(model),
+                                Model = new ModelCompressor().Compress(model.Model),
                                 ProductVersion = "",
                             });
 
@@ -957,7 +961,7 @@ namespace System.Data.Entity.Migrations.History
                             {
                                 MigrationId = "227209030010001_Migration2",
                                 ContextKey = "MyKey",
-                                Model = new ModelCompressor().Compress(model),
+                                Model = new ModelCompressor().Compress(model.Model),
                                 ProductVersion = "",
                             });
 

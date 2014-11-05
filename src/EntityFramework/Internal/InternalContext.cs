@@ -312,7 +312,7 @@ namespace System.Data.Entity.Internal
             if (CodeFirstModel != null)
             {
                 PerformInitializationAction(
-                    () => CreateHistoryRepository().BootstrapUsingEFProviderDdl(Owner.GetModel()));
+                    () => CreateHistoryRepository().BootstrapUsingEFProviderDdl(new VersionedModel(Owner.GetModel())));
             }
         }
 
