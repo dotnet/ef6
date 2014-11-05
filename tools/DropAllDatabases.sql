@@ -13,7 +13,7 @@ INTO @name;
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
-    PRINT 'DROP DATABASE [' + @name + ']'
+    PRINT 'DROP DATABASE [' + REPLACE( @name, ']', ']]' ) + ']'
     PRINT 'GO'
     
     FETCH NEXT FROM db 
