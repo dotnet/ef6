@@ -124,7 +124,7 @@
             <TestHostInstalled>$(TestHostQuery.StartsWith('VS IDE Test Host for Visual Studio'))</TestHostInstalled>
         </PropertyGroup>
         <Exec Condition="'$(TestHostInstalled)'!='True'"
-              Command='msiexec /qb /i $(SolutionDir)\bin\$(Configuration)\VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log' />
+              Command='msiexec /qb /i $(OutputPath)VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log' />
     </Target>
 
     <Target Name="UninstallTestHost">
