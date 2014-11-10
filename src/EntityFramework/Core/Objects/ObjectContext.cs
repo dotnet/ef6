@@ -2922,10 +2922,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Persists all updates to the database and resets change tracking in the object context.</summary>
         /// <returns>
-        /// The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// The number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges()
@@ -2941,11 +2941,11 @@ namespace System.Data.Entity.Core.Objects
         /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <returns>
-        /// A task that represents the asynchronous operation.
-        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous save operation.
+        /// The task result contains the number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync()
@@ -2962,11 +2962,11 @@ namespace System.Data.Entity.Core.Objects
         /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous operation.
-        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous save operation.
+        /// The task result contains the number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
@@ -2984,10 +2984,10 @@ namespace System.Data.Entity.Core.Objects
         /// method after <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />.
         /// </param>
         /// <returns>
-        /// The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// The number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -3006,10 +3006,10 @@ namespace System.Data.Entity.Core.Objects
         /// A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
         /// </param>
         /// <returns>
-        /// The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// The number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges(SaveOptions options)
@@ -3055,11 +3055,11 @@ namespace System.Data.Entity.Core.Objects
         /// A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous operation.
-        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous save operation.
+        /// The task result contains the number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options)
@@ -3079,11 +3079,11 @@ namespace System.Data.Entity.Core.Objects
         /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous operation.
-        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous save operation.
+        /// The task result contains the number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)

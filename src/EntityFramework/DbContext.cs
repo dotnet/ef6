@@ -305,7 +305,12 @@ namespace System.Data.Entity
         /// <summary>
         /// Saves all changes made in this context to the underlying database.
         /// </summary>
-        /// <returns> The number of objects written to the underlying database. </returns>
+        /// <returns> 
+        /// The number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
+        /// </returns>
         /// <exception cref="DbUpdateException">An error occurred sending updates to the database.</exception>
         /// <exception cref="DbUpdateConcurrencyException">
         /// A database command did not affect the expected number of rows. This usually indicates an optimistic 
@@ -338,7 +343,10 @@ namespace System.Data.Entity
         /// </remarks>
         /// <returns>
         /// A task that represents the asynchronous save operation.
-        /// The task result contains the number of objects written to the underlying database.
+        /// The task result contains the number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="DbUpdateException">An error occurred sending updates to the database.</exception>
         /// <exception cref="DbUpdateConcurrencyException">
@@ -373,7 +381,10 @@ namespace System.Data.Entity
         /// </param>
         /// <returns>
         /// A task that represents the asynchronous save operation.
-        /// The task result contains the number of objects written to the underlying database.
+        /// The task result contains the number of state entries written to the underlying database. This can include
+        /// state entries for entities and/or relationships. Relationship state entries are created for 
+        /// many-to-many relationships and relationships where there is no foreign key property
+        /// included in the entity class (often referred to as independent associations).
         /// </returns>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
