@@ -3603,10 +3603,12 @@ namespace System.Data.Entity.Core.Objects
                 executionOptions = new ExecutionOptions(executionOptions.MergeOption, !executionStrategy.RetriesOnFailure);
             }
 
+            var startLocalTransaction = !executionOptions.UserSpecifiedStreaming.Value
+                                        && _options.EnsureTransactionsForFunctionsAndCommands;
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions),
-                    executionStrategy, startLocalTransaction: !executionOptions.UserSpecifiedStreaming.Value,
+                    executionStrategy, startLocalTransaction: startLocalTransaction,
                     releaseConnectionOnSuccess: !executionOptions.UserSpecifiedStreaming.Value));
         }
 
@@ -3634,7 +3636,8 @@ namespace System.Data.Entity.Core.Objects
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => ExecuteFunctionCommand(entityCommand), executionStrategy,
-                    startLocalTransaction: true, releaseConnectionOnSuccess: true));
+                    startLocalTransaction: _options.EnsureTransactionsForFunctionsAndCommands,
+                    releaseConnectionOnSuccess: true));
         }
 
         private static int ExecuteFunctionCommand(EntityCommand entityCommand)
@@ -4067,7 +4070,10 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of rows affected.</returns>
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
-            return ExecuteStoreCommand(TransactionalBehavior.EnsureTransaction, commandText, parameters);
+            return ExecuteStoreCommand(
+                _options.EnsureTransactionsForFunctionsAndCommands ? TransactionalBehavior.EnsureTransaction : TransactionalBehavior.DoNotEnsureTransaction,
+                commandText,
+                parameters);
         }
 
         /// <summary>
@@ -4122,7 +4128,11 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
         {
-            return ExecuteStoreCommandAsync(TransactionalBehavior.EnsureTransaction, commandText, CancellationToken.None, parameters);
+            return ExecuteStoreCommandAsync(
+                _options.EnsureTransactionsForFunctionsAndCommands ? TransactionalBehavior.EnsureTransaction : TransactionalBehavior.DoNotEnsureTransaction,
+                commandText,
+                CancellationToken.None,
+                parameters);
         }
 
         /// <summary>
@@ -4178,7 +4188,11 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
-            return ExecuteStoreCommandAsync(TransactionalBehavior.EnsureTransaction, commandText, cancellationToken, parameters);
+            return ExecuteStoreCommandAsync(
+                _options.EnsureTransactionsForFunctionsAndCommands ? TransactionalBehavior.EnsureTransaction : TransactionalBehavior.DoNotEnsureTransaction,
+                commandText,
+                cancellationToken,
+                parameters);
         }
 
         /// <summary>

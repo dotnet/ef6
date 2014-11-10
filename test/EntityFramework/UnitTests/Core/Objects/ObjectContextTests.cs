@@ -770,16 +770,28 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true, useDefaultTransactionalBehavior: false);
             }
 
             [Fact]
             public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false, useDefaultTransactionalBehavior: false);
             }
 
-            private void Executes_in_a_transaction_using_ExecutionStrategy_implementation(bool startTransaction)
+            [Fact]
+            public void Executes_in_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_true()
+            {
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true, useDefaultTransactionalBehavior: true);
+            }
+
+            [Fact]
+            public void Executes_without_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_false()
+            {
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false, useDefaultTransactionalBehavior: true);
+            }
+
+            private void Executes_in_a_transaction_using_ExecutionStrategy_implementation(bool startTransaction, bool useDefaultTransactionalBehavior)
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQuery()).Returns(1);
@@ -799,6 +811,8 @@ namespace System.Data.Entity.Core.Objects
                                              dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Once());
                                              return result;
                                          });
+
+                objectContextMock.Object.ContextOptions.EnsureTransactionsForFunctionsAndCommands = startTransaction;
 
                 // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>()))
@@ -821,10 +835,17 @@ namespace System.Data.Entity.Core.Objects
                 MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
-                    objectContextMock.Object.ExecuteStoreCommand(
-                        startTransaction
-                            ? TransactionalBehavior.EnsureTransaction
-                            : TransactionalBehavior.DoNotEnsureTransaction, "foo");
+                    if (useDefaultTransactionalBehavior)
+                    {
+                        objectContextMock.Object.ExecuteStoreCommand("foo");
+                    }
+                    else
+                    {
+                        objectContextMock.Object.ExecuteStoreCommand(
+                            startTransaction
+                                ? TransactionalBehavior.EnsureTransaction
+                                : TransactionalBehavior.DoNotEnsureTransaction, "foo");
+                    }
                 }
                 finally
                 {
@@ -1563,7 +1584,18 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
-            public void Generic_Executes_in_a_transaction_using_ExecutionStrategy()
+            public void Generic_executes_in_a_transaction_using_ExecutionStrategy()
+            {
+                Generic_executes_in_a_transaction_using_ExecutionStrategy_implementation(ensureTransaction: true);
+            }
+
+            [Fact]
+            public void Generic_execute_without_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_false()
+            {
+                Generic_executes_in_a_transaction_using_ExecutionStrategy_implementation(ensureTransaction: false);
+            }
+
+            private void Generic_executes_in_a_transaction_using_ExecutionStrategy_implementation(bool ensureTransaction)
             {
                 var dataReaderMock = Mock.Get(Common.Internal.Materialization.MockHelper.CreateDbDataReader());
                 dataReaderMock.Setup(m => m.FieldCount).Returns(1);
@@ -1585,6 +1617,8 @@ namespace System.Data.Entity.Core.Objects
                 var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
+                objectContextMock.Object.ContextOptions.EnsureTransactionsForFunctionsAndCommands = ensureTransaction;
+
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteDataReader
                 objectContextMock.Setup(
                     m =>
@@ -1602,22 +1636,28 @@ namespace System.Data.Entity.Core.Objects
 
                 // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<object>>>()))
-                                     .Returns<Func<ObjectResult<object>>>(
-                                         f =>
-                                             {
-                                                 objectContextMock.Verify(
-                                                     m =>
-                                                     m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), true, true),
-                                                     Times.Never());
-                                                 var result = f();
-                                                 objectContextMock.Verify(
-                                                     m =>
-                                                     m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), true, true),
-                                                     Times.Once());
-                                                 return result;
-                                             });
+                    .Returns<Func<ObjectResult<object>>>(
+                        f =>
+                        {
+                            objectContextMock.Verify(
+                                m =>
+                                    m.ExecuteInTransaction(
+                                        It.IsAny<Func<ObjectResult<object>>>(),
+                                        It.IsAny<IDbExecutionStrategy>(),
+                                        /*startLocalTransaction:*/ ensureTransaction,
+                                        true),
+                                Times.Never());
+                            var result = f();
+                            objectContextMock.Verify(
+                                m =>
+                                    m.ExecuteInTransaction(
+                                        It.IsAny<Func<ObjectResult<object>>>(),
+                                        It.IsAny<IDbExecutionStrategy>(),
+                                        /*startLocalTransaction:*/ ensureTransaction,
+                                        true),
+                                Times.Once());
+                            return result;
+                        });
 
                 FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
                 MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
@@ -1636,7 +1676,18 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
-            public void NonGeneric_Executes_in_a_transaction_using_ExecutionStrategy()
+            public void NonGeneric_executes_in_a_transaction_using_ExecutionStrategy()
+            {
+                NonGeneric_executes_in_a_transaction_using_ExecutionStrategy_implementation(ensureTransaction: true);
+            }
+
+            [Fact]
+            public void NonGeneric_executes_without_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_false()
+            {
+                NonGeneric_executes_in_a_transaction_using_ExecutionStrategy_implementation(ensureTransaction: false);
+            }
+
+            private void NonGeneric_executes_in_a_transaction_using_ExecutionStrategy_implementation(bool ensureTransaction)
             {
                 var dataReaderMock = Mock.Get(Common.Internal.Materialization.MockHelper.CreateDbDataReader());
                 dataReaderMock.Setup(m => m.FieldCount).Returns(1);
@@ -1650,6 +1701,8 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
 
                 var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+
+                objectContextMock.Object.ContextOptions.EnsureTransactionsForFunctionsAndCommands = ensureTransaction;
 
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteNonQuery
                 objectContextMock.Setup(
@@ -1665,18 +1718,26 @@ namespace System.Data.Entity.Core.Objects
 
                 // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>()))
-                                     .Returns<Func<int>>(
-                                         f =>
-                                             {
-                                                 objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), true, true),
-                                                     Times.Never());
-                                                 var result = f();
-                                                 objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), true, true),
-                                                     Times.Once());
-                                                 return result;
-                                             });
+                    .Returns<Func<int>>(
+                        f =>
+                        {
+                            objectContextMock.Verify(
+                                m => m.ExecuteInTransaction(
+                                    It.IsAny<Func<int>>(),
+                                    It.IsAny<IDbExecutionStrategy>(),
+                                    /*startLocalTransaction:*/ ensureTransaction,
+                                    true),
+                                Times.Never());
+                            var result = f();
+                            objectContextMock.Verify(
+                                m => m.ExecuteInTransaction(
+                                    It.IsAny<Func<int>>(),
+                                    It.IsAny<IDbExecutionStrategy>(),
+                                    /*startLocalTransaction:*/ ensureTransaction,
+                                    true),
+                                Times.Once());
+                            return result;
+                        });
 
                 FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
                 MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
@@ -2532,16 +2593,28 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true, useDefaultTransactionalBehavior: false);
             }
 
             [Fact]
             public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false, useDefaultTransactionalBehavior: false);
             }
 
-            private static void Executes_in_a_transaction_using_ExecutionStrategy_implementation(bool startTransaction)
+            [Fact]
+            public void Executes_in_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_true()
+            {
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true, useDefaultTransactionalBehavior: true);
+            }
+
+            [Fact]
+            public void Executes_without_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_false()
+            {
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false, useDefaultTransactionalBehavior: true);
+            }
+
+            private static void Executes_in_a_transaction_using_ExecutionStrategy_implementation(bool startTransaction, bool useDefaultTransactionalBehavior)
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
@@ -2563,6 +2636,8 @@ namespace System.Data.Entity.Core.Objects
                                              dbCommandMock.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()), Times.Once());
                                              return result;
                                          });
+
+                objectContextMock.Object.ContextOptions.EnsureTransactionsForFunctionsAndCommands = startTransaction;
 
                 // Verify that ExecutionStrategy.ExecuteAsync calls ExecuteInTransactionAsync
                 executionStrategyMock.Setup(
@@ -2589,11 +2664,19 @@ namespace System.Data.Entity.Core.Objects
                 MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
-                    Assert.NotNull(
-                        objectContextMock.Object.ExecuteStoreCommandAsync(
-                            startTransaction
-                                ? TransactionalBehavior.EnsureTransaction
-                                : TransactionalBehavior.DoNotEnsureTransaction, "foo").Result);
+                    if (useDefaultTransactionalBehavior)
+                    {
+                        Assert.NotNull(
+                            objectContextMock.Object.ExecuteStoreCommandAsync("foo").Result);
+                    }
+                    else
+                    {
+                        Assert.NotNull(
+                            objectContextMock.Object.ExecuteStoreCommandAsync(
+                                startTransaction
+                                    ? TransactionalBehavior.EnsureTransaction
+                                    : TransactionalBehavior.DoNotEnsureTransaction, "foo").Result);
+                    }
                 }
                 finally
                 {

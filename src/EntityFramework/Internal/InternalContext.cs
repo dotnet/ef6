@@ -588,6 +588,11 @@ namespace System.Data.Entity.Internal
         #region Context options
 
         // <summary>
+        // Gets or sets the value that determines whether SQL functions and commands should be always executed in a transaction.
+        // </summary>
+        public abstract bool EnsureTransactionsForFunctionsAndCommands { get; set; }
+
+        // <summary>
         // Gets or sets a value indicating whether lazy loading is enabled.
         // </summary>
         public abstract bool LazyLoadingEnabled { get; set; }

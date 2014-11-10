@@ -3377,6 +3377,54 @@ namespace ProductivityApiTests
 
         #endregion
 
+
+        #region Transactional behavior tests
+
+        [Fact]
+        public void EnsureTransactionsForFunctionsAndCommands_is_true_by_default()
+        {
+            using (var context = new DbContext("TransactionalBehavior"))
+            {
+                Assert.True(context.Configuration.EnsureTransactionsForFunctionsAndCommands);
+            }
+
+            using (var context = new ObjectContext(new EntityConnection(SimpleModelEntityConnectionString)))
+            {
+                Assert.True(context.ContextOptions.EnsureTransactionsForFunctionsAndCommands);
+            }
+        }
+
+        [Fact]
+        public void EnsureTransactionsForFunctionsAndCommands_is_passed_through_to_implicit_ObjectContext()
+        {
+            using (var context = new DbContext("TransactionalBehavior"))
+            {
+                context.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+
+                var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+                Assert.False(objectContext.ContextOptions.EnsureTransactionsForFunctionsAndCommands);
+
+                objectContext.ContextOptions.EnsureTransactionsForFunctionsAndCommands = true;
+                Assert.True(context.Configuration.EnsureTransactionsForFunctionsAndCommands);
+            }
+        }
+
+        [Fact]
+        public void EnsureTransactionsForFunctionsAndCommands_is_passed_through_to_existing_ObjectContext()
+        {
+            var objectContext = new ObjectContext(new EntityConnection(SimpleModelEntityConnectionString));
+            using (var context = new DbContext(objectContext, dbContextOwnsObjectContext: false))
+            {
+                context.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+                Assert.False(objectContext.ContextOptions.EnsureTransactionsForFunctionsAndCommands);
+
+                objectContext.ContextOptions.EnsureTransactionsForFunctionsAndCommands = true;
+                Assert.True(context.Configuration.EnsureTransactionsForFunctionsAndCommands);
+            }
+        }
+
+        #endregion
+
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
         
         [ExtendedFact(SkipForSqlAzure = true, Justification = "Streaming queries are not reliable on SQL Azure")]

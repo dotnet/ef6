@@ -12,7 +12,21 @@ namespace System.Data.Entity.Core.Objects
         internal ObjectContextOptions()
         {
             ProxyCreationEnabled = true;
+            EnsureTransactionsForFunctionsAndCommands = true;
         }
+
+        /// <summary>
+        /// Gets or sets the value that determines whether SQL functions and commands should be always executed in a transaction.
+        /// </summary>
+        /// <remarks>
+        /// This flag determines whether a new transaction will be started when methods such as <see cref="ObjectContext.ExecuteFunction"/>
+        /// and <see cref="ObjectContext.ExecuteStoreCommand(string,object[])"/> are executed outside of a transaction.
+        /// Note that this does not change the behavior of <see cref="ObjectContext.SaveChanges()"/>.
+        /// </remarks>
+        /// <value>
+        /// The default transactional behavior.
+        /// </value>
+        public bool EnsureTransactionsForFunctionsAndCommands { get; set; }
 
         /// <summary>Gets or sets a Boolean value that determines whether related objects are loaded automatically when a navigation property is accessed.</summary>
         /// <returns>true if lazy loading is enabled; otherwise, false.</returns>

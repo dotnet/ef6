@@ -62,6 +62,9 @@ namespace System.Data.Entity.Internal
         // Set to true if the context was created with an existing DbCompiledModel instance.
         private readonly bool _createdWithExistingModel;
 
+        // This flag is used to keep the user's selected default transactional behavior option before the ObjectContext is initialized.  
+        private bool _initialEnsureTransactionsForFunctionsAndCommands = true;
+
         // This flag is used to keep the user's selected lazy loading option before the ObjectContext is initialized.  
         private bool _initialLazyLoadingFlag = true;
 
@@ -449,6 +452,7 @@ namespace System.Data.Entity.Internal
                         }
                     }
 
+                    _objectContext.ContextOptions.EnsureTransactionsForFunctionsAndCommands = _initialEnsureTransactionsForFunctionsAndCommands;
                     _objectContext.ContextOptions.LazyLoadingEnabled = _initialLazyLoadingFlag;
                     _objectContext.ContextOptions.ProxyCreationEnabled = _initialProxyCreationFlag;
                     _objectContext.ContextOptions.UseCSharpNullComparisonBehavior = !_useDatabaseNullSemanticsFlag;
@@ -659,7 +663,28 @@ namespace System.Data.Entity.Internal
 
         #endregion
 
-        #region Lazy Loading
+        #region Context options
+
+        public override bool EnsureTransactionsForFunctionsAndCommands
+        {
+            get
+            {
+                var objectContext = ObjectContextInUse;
+                return objectContext != null ? objectContext.ContextOptions.EnsureTransactionsForFunctionsAndCommands : _initialEnsureTransactionsForFunctionsAndCommands;
+            }
+            set
+            {
+                var objectContext = ObjectContextInUse;
+                if (objectContext != null)
+                {
+                    objectContext.ContextOptions.EnsureTransactionsForFunctionsAndCommands = value;
+                }
+                else
+                {
+                    _initialEnsureTransactionsForFunctionsAndCommands = value;
+                }
+            }
+        }
 
         // <summary>
         // Gets or sets a value indicating whether lazy loading is enabled.

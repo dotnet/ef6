@@ -2121,6 +2121,45 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        public void ExecuteSqlCommand_with_no_TransactionalBehavior_uses_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommand("[dbo].[TransactionLogEntry_Insert]");
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommand_with_EnsureTransactionsForFunctionsAndCommands_set_to_false_does_not_use_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+                    ctx.Database.ExecuteSqlCommand("[dbo].[TransactionLogEntry_Insert]");
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(0, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
         public void ExecuteSqlCommand_with_TransactionalBehavior_EnsureTransaction_uses_transaction()
         {
             try
@@ -2214,6 +2253,46 @@ namespace System.Data.Entity.Objects
         }
 
 #if !NET40
+
+        [Fact]
+        public void ExecuteSqlCommandAsync_with_no_TransactionalBehavior_uses_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommandAsync("[dbo].[TransactionLogEntry_Insert]").Wait();
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommandAsync_with_EnsureTransactionsForFunctionsAndCommands_set__to_false_does_not_use_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Configuration.EnsureTransactionsForFunctionsAndCommands = false;
+                    ctx.Database.ExecuteSqlCommandAsync("[dbo].[TransactionLogEntry_Insert]").Wait();
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(0, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
         [Fact]
         public void ExecuteSqlCommandAsync_by_default_uses_transaction()
         {

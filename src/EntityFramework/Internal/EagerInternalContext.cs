@@ -209,7 +209,13 @@ namespace System.Data.Entity.Internal
 
         #endregion
 
-        #region Lazy Loading
+        #region Context options
+
+        public override bool EnsureTransactionsForFunctionsAndCommands
+        {
+            get { return ObjectContextInUse.ContextOptions.EnsureTransactionsForFunctionsAndCommands; }
+            set { ObjectContextInUse.ContextOptions.EnsureTransactionsForFunctionsAndCommands = value; }
+        }
 
         // <summary>
         // Gets or sets a value indicating whether lazy loading is enabled.  This is just a wrapper

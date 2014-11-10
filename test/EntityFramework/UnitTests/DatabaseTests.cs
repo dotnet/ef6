@@ -209,6 +209,7 @@ namespace System.Data.Entity
             public void With_valid_arguments_doesnt_throw()
             {
                 var internalContextMock = new Mock<InternalContextForMock>();
+                internalContextMock.Setup(m => m.EnsureTransactionsForFunctionsAndCommands).Returns(true);
                 var database = new Database(internalContextMock.Object);
                 var parameters = new object[1];
 
@@ -273,6 +274,7 @@ namespace System.Data.Entity
                     m =>
                     m.ExecuteSqlCommandAsync(It.IsAny<TransactionalBehavior>(), It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
                                    .Returns(Task.FromResult(1));
+                internalContextMock.Setup(m => m.EnsureTransactionsForFunctionsAndCommands).Returns(true);
                 var database = new Database(internalContextMock.Object);
                 var cancellationToken = new CancellationTokenSource().Token;
                 var parameters = new object[1];

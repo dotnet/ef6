@@ -579,7 +579,10 @@ namespace System.Data.Entity
         /// <returns> The result returned by the database after executing the command. </returns>
         public int ExecuteSqlCommand(string sql, params object[] parameters)
         {
-            return ExecuteSqlCommand(TransactionalBehavior.EnsureTransaction, sql, parameters);
+            return ExecuteSqlCommand(
+                _internalContext.EnsureTransactionsForFunctionsAndCommands ? TransactionalBehavior.EnsureTransaction : TransactionalBehavior.DoNotEnsureTransaction,
+                sql,
+                parameters);
         }
 
         /// <summary>
@@ -627,7 +630,7 @@ namespace System.Data.Entity
         /// </returns>
         public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
         {
-            return ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, sql, CancellationToken.None, parameters);
+            return ExecuteSqlCommandAsync(sql, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -680,7 +683,11 @@ namespace System.Data.Entity
         /// </returns>
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
         {
-            return ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, sql, cancellationToken, parameters);
+            return ExecuteSqlCommandAsync(
+                _internalContext.EnsureTransactionsForFunctionsAndCommands ? TransactionalBehavior.EnsureTransaction : TransactionalBehavior.DoNotEnsureTransaction,
+                sql,
+                cancellationToken,
+                parameters);
         }
 
         /// <summary>
