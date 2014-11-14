@@ -889,6 +889,57 @@ namespace System.Data.Entity.Migrations
                 DbInterception.Remove(dbConnectionInterceptorMock.Object);
             }
         }
+        
+        [MigrationsTheory]
+        public void Disposes_temporary_context_on_connection_exception()
+        {
+            DropDatabase();
+
+            using (var context = CreateContext<DisposableContext>())
+            {
+                context.Database.Create();
+            }
+
+            var dbConnectionInterceptorMock = new Mock<IDbConnectionInterceptor>();
+            dbConnectionInterceptorMock.Setup(c => c.Opening(It.IsAny<DbConnection>(), It.IsAny<DbConnectionInterceptionContext>()))
+                .Callback<DbConnection, DbConnectionInterceptionContext>(
+                    (c, ic) =>
+                    {
+                        ic.Exception = new InvalidProgramException();
+                    });
+
+            DbInterception.Add(dbConnectionInterceptorMock.Object);
+            try
+            {
+                var migrator = CreateMigrator<DisposableContext>();
+
+                migrator.ExecuteStatements(new[] { new MigrationStatement { Sql = ";" } });
+            }
+            catch (InvalidProgramException) { }
+            finally
+            {
+                DbInterception.Remove(dbConnectionInterceptorMock.Object);
+            }
+
+            Assert.Equal(DisposableContext.TimesCreated, DisposableContext.TimesDisposed);
+        }
+
+        public class DisposableContext : DbContext
+        {
+            public static int TimesCreated;
+            public static int TimesDisposed;
+
+            public DisposableContext()
+            {
+                TimesCreated++;
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                TimesDisposed++;
+                base.Dispose(disposing);
+            }
+        }
     }
 
     public class ExecuteSql : TestBase
