@@ -128,7 +128,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.False(contextInfo.IsConstructible);
             Assert.Null(contextInfo.CreateInstance());
-            Assert.Null(DbContextInfo.TryGetInfoForContext(typeof(DbContext)));
+            Assert.Null(DbContextInfo.CurrentInfo);
         }
 
         [Fact]
@@ -1197,7 +1197,7 @@ namespace System.Data.Entity.Infrastructure
                 Assert.Throws<InvalidOperationException>(
                     () => new DbContextInfo(contextType, CreateEmptyConfig(), connection)).Message);
 
-            Assert.Null(DbContextInfo.TryGetInfoForContext(contextType));
+            Assert.Null(DbContextInfo.CurrentInfo);
         }
 
         [DbConfigurationType(typeof(FunctionalTestsConfiguration))]
@@ -1330,26 +1330,19 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void Context_type_can_be_assoictaed_with_DbContextInfo_and_then_later_unsuppressed()
         {
-            Assert.Null(DbContextInfo.TryGetInfoForContext(typeof(ContextToAssociate)));
-            Assert.Null(DbContextInfo.TryGetInfoForContext(typeof(ContextToNotAssociate)));
+            Assert.Null(DbContextInfo.CurrentInfo);
 
             var contextInfo = new DbContextInfo(typeof(ContextToAssociate));
-            DbContextInfo.MapContextToInfo(typeof(ContextToAssociate), contextInfo);
+            DbContextInfo.CurrentInfo = contextInfo;
 
-            Assert.Same(contextInfo, DbContextInfo.TryGetInfoForContext(typeof(ContextToAssociate)));
-            Assert.Null(DbContextInfo.TryGetInfoForContext(typeof(ContextToNotAssociate)));
+            Assert.Same(contextInfo, DbContextInfo.CurrentInfo);
 
-            DbContextInfo.ClearInfoForContext(typeof(ContextToAssociate));
+            DbContextInfo.CurrentInfo = null;
 
-            Assert.Null(DbContextInfo.TryGetInfoForContext(typeof(ContextToAssociate)));
-            Assert.Null(DbContextInfo.TryGetInfoForContext(typeof(ContextToNotAssociate)));
+            Assert.Null(DbContextInfo.CurrentInfo);
         }
 
         public class ContextToAssociate : DbContext
-        {
-        }
-
-        public class ContextToNotAssociate : DbContext
         {
         }
     }

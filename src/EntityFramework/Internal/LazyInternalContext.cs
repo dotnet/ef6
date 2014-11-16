@@ -398,7 +398,7 @@ namespace System.Data.Entity.Internal
                 }
                 try
                 {
-                    var contextInfo = DbContextInfo.TryGetInfoForContext(Owner.GetType());
+                    var contextInfo = DbContextInfo.CurrentInfo;
                     if (contextInfo != null)
                     {
                         ApplyContextInfo(contextInfo);

@@ -155,14 +155,14 @@ namespace System.Data.Entity.Internal
             {
                 var internalContext = CreateMockContextForMigrator().Object;
 
-                DbContextInfo.ClearInfoForContext(internalContext.Owner.GetType());
+                DbContextInfo.CurrentInfo = null;
                 
                 new DatabaseCreator().CreateDatabase(
                     internalContext,
                     (config, context) => new Mock<DbMigrator>(config, context, DatabaseExistenceState.Unknown, true).Object,
                     null);
 
-                Assert.Null(DbContextInfo.TryGetInfoForContext(internalContext.Owner.GetType()));
+                Assert.Null(DbContextInfo.CurrentInfo);
             }
 
             [Fact]

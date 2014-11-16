@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Collections.Concurrent;
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
@@ -23,8 +22,8 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     public class DbContextInfo
     {
-        private static readonly ConcurrentDictionary<Type, DbContextInfo> _infoMapping
-            = new ConcurrentDictionary<Type, DbContextInfo>();
+        [ThreadStatic]
+        private static DbContextInfo _currentInfo;
 
         private readonly Type _contextType;
         private readonly DbProviderInfo _modelProviderInfo;
@@ -298,7 +297,7 @@ namespace System.Data.Entity.Infrastructure
         public virtual DbContext CreateInstance()
         {
             var configPushed = DbConfigurationManager.Instance.PushConfiguration(_appConfig, _contextType);
-            MapContextToInfo(_contextType, this);
+            CurrentInfo = this;
 
             DbContext context = null;
             try
@@ -321,7 +320,7 @@ namespace System.Data.Entity.Infrastructure
                     return null;
                 }
 
-                context.InternalContext.OnDisposing += (_, __) => ClearInfoForContext(_contextType);
+                context.InternalContext.OnDisposing += (_, __) => CurrentInfo = null;
 
                 if (configPushed)
                 {
@@ -346,7 +345,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 if (context == null)
                 {
-                    ClearInfoForContext(_contextType);
+                    CurrentInfo = null;
 
                     if (configPushed)
                     {
@@ -422,28 +421,10 @@ namespace System.Data.Entity.Infrastructure
             return ((IDbContextFactory<DbContext>)Activator.CreateInstance(factoryType)).Create;
         }
 
-        internal static void MapContextToInfo(Type contextType, DbContextInfo info)
+        internal static DbContextInfo CurrentInfo
         {
-            DebugCheck.NotNull(contextType);
-            DebugCheck.NotNull(info);
-
-            _infoMapping.AddOrUpdate(contextType, info, (t, i) => info);
-        }
-
-        internal static void ClearInfoForContext(Type contextType)
-        {
-            DebugCheck.NotNull(contextType);
-
-            DbContextInfo _;
-            _infoMapping.TryRemove(contextType, out _);
-        }
-
-        internal static DbContextInfo TryGetInfoForContext(Type contextType)
-        {
-            DebugCheck.NotNull(contextType);
-
-            DbContextInfo info;
-            return _infoMapping.TryGetValue(contextType, out info) ? info : null;
+            get { return _currentInfo; }
+            set { _currentInfo = value; }
         }
     }
 }
