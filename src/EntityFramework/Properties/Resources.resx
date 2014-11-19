@@ -5574,4 +5574,7 @@
     <value>The store type '{0}' could not be found in the {1} provider manifest</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="ProviderDoesNotSupportEscapingLikeArgument" xml:space="preserve">
+    <value>Escaping within like expressions is not supported by the provider.</value>
+  </data>
 </root>

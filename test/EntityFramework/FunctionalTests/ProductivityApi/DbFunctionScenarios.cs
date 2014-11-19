@@ -508,6 +508,52 @@ namespace FunctionalTests.ProductivityApi
             }
 
             [Fact]
+            public void Like_can_be_used_in_DbQuery_or_ObjectQuery()
+            {
+                using (var context = new EntityFunctionContext())
+                {
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        context.WithTypes.OrderBy(e => e.Id).Where(e => DbFunctions.Like(e.String, "Magic%Roll")).Select(e => e.String).First());
+
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => DbFunctions.Like(e.String, "Magic%Roll%")).Select(e => e.String).First());
+
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        context.WithTypes.OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll")).Select(e => e.String).First());
+
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll%")).Select(e => e.String).First());
+                }
+            }
+            
+            [Fact]
+            public void Like_with_string_escapeCharacter_can_be_used_in_DbQuery_or_ObjectQuery()
+            {
+                using (var context = new EntityFunctionContext())
+                {
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        context.WithTypes.OrderBy(e => e.Id).Where(e => DbFunctions.Like(e.String, "Magic%Roll", "~")).Select(e => e.String).First());
+
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => DbFunctions.Like(e.String, "Magic%Roll", "~")).Select(e => e.String).First());
+
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        context.WithTypes.OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll", "~")).Select(e => e.String).First());
+
+                    Assert.Equal(
+                        "Magic Unicorns Roll",
+                        GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll", "~")).Select(e => e.String).First());
+                }
+            }
+
+            [Fact]
             public void AsUnicode_can_be_used_in_DbQuery_or_ObjectQuery()
             {
                 using (var context = new EntityFunctionContext())
@@ -2074,6 +2120,36 @@ namespace FunctionalTests.ProductivityApi
                         Assert.Equal(
                             "kcoR snrocinU cigaM",
                             GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(e => EntityFunctions.Reverse(e.String)).First());
+                    }
+                }
+
+                [Fact]
+                public void Like_can_be_used_in_DbQuery_or_ObjectQuery()
+                {
+                    using (var context = new EntityFunctionContext())
+                    {
+                        Assert.Equal(
+                            "Magic Unicorns Roll",
+                            context.WithTypes.OrderBy(e => e.Id).Where(e => EntityFunctions.Like(e.String, "Magic%Roll")).Select(e => e.String).First());
+
+                        Assert.Equal(
+                            "Magic Unicorns Roll",
+                            GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => EntityFunctions.Like(e.String, "Magic%Roll%")).Select(e => e.String).First());
+                    }
+                }
+                
+                [Fact]
+                public void Like_with_string_escapeCharacter_can_be_used_in_DbQuery_or_ObjectQuery()
+                {
+                    using (var context = new EntityFunctionContext())
+                    {
+                        Assert.Equal(
+                            "Magic Unicorns Roll",
+                            context.WithTypes.OrderBy(e => e.Id).Where(e => EntityFunctions.Like(e.String, "Magic%Roll", "~")).Select(e => e.String).First());
+
+                        Assert.Equal(
+                            "Magic Unicorns Roll",
+                            GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => EntityFunctions.Like(e.String, "Magic%Roll", "~")).Select(e => e.String).First());
                     }
                 }
 

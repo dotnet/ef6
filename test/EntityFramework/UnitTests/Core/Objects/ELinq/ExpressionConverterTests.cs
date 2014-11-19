@@ -59,6 +59,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         [Fact]
+        public void LikeTranslator_finds_all_expected_methods()
+        {
+            var methods = new ExpressionConverter.MethodCallTranslator.LikeFunctionTranslator().Methods;
+
+            Assert.Equal(4, methods.Count());
+            Assert.True(methods.All(m => m != null));
+        }
+
+        [Fact]
         public void AsUnicodeFunctionTranslator_finds_all_expected_methods()
         {
             var methods = new ExpressionConverter.MethodCallTranslator.AsUnicodeFunctionTranslator().Methods;

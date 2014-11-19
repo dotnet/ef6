@@ -207,6 +207,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         new MathTruncateTranslator(),
                         new MathPowerTranslator(),
                         new GuidNewGuidTranslator(),
+                        new LikeFunctionTranslator(),
                         new StringContainsTranslator(),
                         new StartsWithTranslator(),
                         new EndsWithTranslator(),
@@ -890,6 +891,36 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         linqArguments = call.Arguments.ToArray();
                     }
                     return parent.TranslateIntoCanonicalFunction(call.Method.Name, call, linqArguments);
+                }
+            }
+
+            internal sealed class LikeFunctionTranslator : CallTranslator
+            {
+                internal LikeFunctionTranslator()
+                    : base(GetMethods())
+                {
+                }
+
+                private static IEnumerable<MethodInfo> GetMethods()
+                {
+                    yield return
+                        typeof(DbFunctions).GetDeclaredMethod(Like, typeof(string), typeof(string));
+                    yield return
+                        typeof(DbFunctions).GetDeclaredMethod(Like, typeof(string), typeof(string), typeof(string));
+#pragma warning disable 612,618
+                    yield return
+                        typeof(EntityFunctions).GetDeclaredMethod(Like, typeof(string), typeof(string));
+                    yield return
+                        typeof(EntityFunctions).GetDeclaredMethod(Like, typeof(string), typeof(string), typeof(string));
+#pragma warning restore 612,618
+                }
+
+                // Translation:
+                // object.Like(likeExpression[, escapeCharacter]) ->  
+                //      object like likeExpression [escape escapeCharacter]
+                internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
+                {
+                    return parent.TranslateLike(call);
                 }
             }
 

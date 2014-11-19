@@ -109,6 +109,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #region Additional Entity function names
 
+        private const string Like = "Like";
         private const string AsUnicode = "AsUnicode";
         private const string AsNonUnicode = "AsNonUnicode";
 
@@ -1456,6 +1457,35 @@ namespace System.Data.Entity.Core.Objects.ELinq
         #endregion
 
         #region Helper Methods Shared by Translators
+
+        // <summary>
+        // Helper method for String.Like
+        // object.Like(likeExpression[, escapeCharacter]) is translated to:
+        // object like likeExpression [escape escapeCharacter]
+        // </summary>
+        // <returns> The translation </returns>
+        private DbExpression TranslateLike(MethodCallExpression call)
+        {
+            char dummyEscapeChar;
+            var providerSupportsEscapingLikeArgument = ProviderManifest.SupportsEscapingLikeArgument(out dummyEscapeChar);
+
+            var inputExpression = call.Arguments[0];
+            var patternExpression = call.Arguments[1];
+            var escapeExpression = (call.Arguments.Count > 2 ? call.Arguments[2] : null);
+            
+            if (!providerSupportsEscapingLikeArgument && (escapeExpression != null))
+            {
+                throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportEscapingLikeArgument);
+            }
+
+            var translatedPatternExpression = TranslateExpression(patternExpression);
+            var translatedEscapeExpression = (escapeExpression != null ? TranslateExpression(escapeExpression) : null);
+            var translatedInputExpression = TranslateExpression(inputExpression);
+
+            return escapeExpression != null ?
+                translatedInputExpression.Like(translatedPatternExpression, translatedEscapeExpression) :
+                translatedInputExpression.Like(translatedPatternExpression);
+        }
 
         // <summary>
         // Helper method for String.StartsWith, String.EndsWith and String.Contains
