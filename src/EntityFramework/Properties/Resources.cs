@@ -14029,6 +14029,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.StoreTypeNotFound, p0, p1);
         }
+
+        // <summary>
+        // A string like "EscapeLikeArgument is not supported by the provider."
+        // </summary>
+        internal static string ProviderDoesNotSupportEscapingLikeArgument
+        {
+            get { return EntityRes.GetString(EntityRes.ProviderDoesNotSupportEscapingLikeArgument); }
+        }
     }
 
     // <summary>
@@ -17430,6 +17438,7 @@ namespace System.Data.Entity.Resources
         internal const string CannotSetBaseTypeCyclicInheritance = "CannotSetBaseTypeCyclicInheritance";
         internal const string CannotDefineKeysOnBothBaseAndDerivedTypes = "CannotDefineKeysOnBothBaseAndDerivedTypes";
         internal const string StoreTypeNotFound = "StoreTypeNotFound";
+        internal const string ProviderDoesNotSupportEscapingLikeArgument = "ProviderDoesNotSupportEscapingLikeArgument";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
