@@ -1409,49 +1409,63 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         // <summary>
         // TruncateTime(DateTime X)
-        // PreKatmai:    TRUNCATETIME(X) => CONVERT(DATETIME, CONVERT(VARCHAR(255), expression, 102),  102)
-        // Katmai:    TRUNCATETIME(X) => CONVERT(DATETIME2, CONVERT(VARCHAR(255), expression, 102),  102)
+        // PreKatmai:    TRUNCATETIME(X) => DATEADD(d, DATEDIFF(d, 0, expression), 0)
+        // Katmai:       TRUNCATETIME(X) => CAST(CAST(expression AS DATE) as DATETIME2)
         // TruncateTime(DateTimeOffset X)
-        // TRUNCATETIME(X) => CONVERT(datetimeoffset, CONVERT(VARCHAR(255), expression,  102)
-        // + ' 00:00:00 ' +  Right(convert(varchar(255), @arg, 121), 6),  102)
+        // Katmai only: TRUNCATETIME(X) => TODATETIMEOFFSET(CAST(expression AS DATE), DATEPART(tz, expression)))
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionTruncateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             //The type that we need to return is based on the argument type.
-            string typeName = null;
-            var isDateTimeOffset = false;
-
             var typeKind = e.Arguments[0].ResultType.GetPrimitiveTypeKind();
+            var isDateTimeOffset = (typeKind == PrimitiveTypeKind.DateTimeOffset);
 
-            if (typeKind == PrimitiveTypeKind.DateTime)
-            {
-                typeName = sqlgen.IsPreKatmai ? "datetime" : "datetime2";
-            }
-            else if (typeKind == PrimitiveTypeKind.DateTimeOffset)
-            {
-                typeName = "datetimeoffset";
-                isDateTimeOffset = true;
-            }
-            else
+            if (!isDateTimeOffset && typeKind != PrimitiveTypeKind.DateTime)
             {
                 Debug.Assert(true, "Unexpected type to TruncateTime" + typeKind.ToString());
             }
 
-            var result = new SqlBuilder();
-            result.Append("convert (");
-            result.Append(typeName);
-            result.Append(", convert(varchar(255), ");
-            result.Append(e.Arguments[0].Accept(sqlgen));
-            result.Append(", 102) ");
 
-            if (isDateTimeOffset)
+            var result = new SqlBuilder();
+
+            if (sqlgen.IsPreKatmai)
             {
-                result.Append("+ ' 00:00:00 ' +  Right(convert(varchar(255), ");
+                if (isDateTimeOffset)
+                {
+                    throw new NotSupportedException(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
+                }
+
+                result.Append("dateadd(d, datediff(d, 0, ");
                 result.Append(e.Arguments[0].Accept(sqlgen));
-                result.Append(", 121), 6)  ");
+                result.Append("), 0)");
+            }
+            else
+            {
+                if (!isDateTimeOffset)
+                {
+                    result.Append("cast(");
+                }
+                else
+                {
+                    result.Append("todatetimeoffset(");
+                }
+
+                result.Append("cast(");
+                result.Append(e.Arguments[0].Accept(sqlgen));
+                result.Append(" as date)");
+
+                if (!isDateTimeOffset)
+                {
+                    result.Append(" as datetime2)");
+                }
+                else
+                {
+                    result.Append(", datepart(tz, ");
+                    result.Append(e.Arguments[0].Accept(sqlgen));
+                    result.Append("))");
+                }
             }
 
-            result.Append(",  102)");
             return result;
         }
 
