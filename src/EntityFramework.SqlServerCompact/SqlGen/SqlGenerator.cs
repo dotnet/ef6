@@ -3148,13 +3148,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
         // <summary>
         // TruncateTime(DateTime X)
-        // TRUNCATETIME(X) => CONVERT(DATETIME, CONVERT(VARCHAR(255), expression, 102),  102)
+        // TRUNCATETIME(X) => DATEADD(d, DATEDIFF(d, 0, expression), 0)
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionTruncateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
-            //The type that we need to return is based on the argument type.
-            string typeName = "datetime";
-
             PrimitiveTypeKind typeKind;
             TypeHelpers.TryGetPrimitiveTypeKind(e.ResultType, out typeKind);
 
@@ -3164,13 +3161,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
 
             var result = new SqlBuilder();
-            result.Append("convert (");
-            result.Append(typeName);
-            result.Append(", convert(nvarchar(255), ");
+            result.Append("dateadd(d, datediff(d, 0, ");
             result.Append(e.Arguments[0].Accept(sqlgen));
-            result.Append(", 102) ");
+            result.Append("), 0)");
 
-            result.Append(",  102)");
             return result;
         }
 
