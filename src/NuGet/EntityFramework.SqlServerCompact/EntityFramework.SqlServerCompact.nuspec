@@ -7,7 +7,7 @@
     <iconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</iconUrl>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
-    <tags>Microsoft EF SQL Compact CE</tags>
+    <tags>Microsoft EntityFramework EF SQL Compact CE</tags>
     <projectUrl>http://go.microsoft.com/fwlink/?LinkID=$ProjectUrlFwLinkID$</projectUrl>
     <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=$LicenseUrlFwLinkID$</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
