@@ -19,9 +19,9 @@ Project global pre-settings.
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '14.0'">0</ToolingVersionMinor>
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
-    <VersionReleasePrefix>2</VersionReleasePrefix>
-    <VersionRelease>$(VersionReleasePrefix)-beta3</VersionRelease>
-    <VersionReleaseName>Beta 3</VersionReleaseName>
+    <VersionReleasePrefix>3</VersionReleasePrefix>
+    <VersionRelease>$(VersionReleasePrefix)-alpha1</VersionRelease>
+    <VersionReleaseName>Alpha 1</VersionReleaseName>
   </PropertyGroup>
 
   <PropertyGroup>
