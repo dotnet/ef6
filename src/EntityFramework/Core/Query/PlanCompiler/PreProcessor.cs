@@ -1240,6 +1240,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             ValidateNavPropertyOp(op);
 
+            //
+            // In this special case we visit the parent before the child to avoid TSQL regressions. 
+            // In particular, a subquery coming out of the child would need to be attached to the closest rel-op parent
+            // and if the parent is already visited that rel op parent would be part of the subtree resulting from the parent.
+            // If the parent is not visited it would be a rel op parent higher in the tree (also valid), and leaves less room 
+            // for join elimination. 
+            // The original out-of-order visitation was put in place to work around a bug that has been fixed.
+            //
+            var visitChildLater = IsNavigationPropertyOverVarRef(n.Child0);
+            if (!visitChildLater)
+            {
+                VisitScalarOpDefault(op, n);
+            }
+
             // Cache and reuse the rewritten nodes to avoid duplicate joins. 
             // The logic for cache hits is implemented in the NavigationPropertyOpInfo class. Basically two navigation property nodes 
             // are considered equivalent from the cache point of view if they have the same RelOp ancestor (not null), same navigation 
@@ -1265,6 +1279,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             _navigationPropertyOpRewrites.Add(nodeInfo, rewrite);
 
             return rewrite;
+        }
+
+        // <summary>
+        // Is the given node of shape NavigationProperty(SoftCast(VarRef)), or NavigationProperty(VarRef)
+        // </summary>
+        private static bool IsNavigationPropertyOverVarRef(Node n)
+        {
+            if (n.Op.OpType != OpType.Property
+                || (!Helper.IsNavigationProperty(((PropertyOp)n.Op).PropertyInfo)))
+            {
+                return false;
+            }
+
+            var currentNode = n.Child0;
+            if (currentNode.Op.OpType == OpType.SoftCast)
+            {
+                currentNode = currentNode.Child0;
+            }
+
+            return currentNode.Op.OpType == OpType.VarRef;
         }
 
         // <summary>
