@@ -4,6 +4,7 @@ namespace System.Data.Entity.Utilities
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
 
     internal static class DbProviderManifestExtensions
@@ -13,8 +14,14 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(providerManifest);
             DebugCheck.NotEmpty(name);
 
-            return providerManifest.GetStoreTypes()
-                                   .Single(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
+            var primitiveType = providerManifest.GetStoreTypes()
+                .SingleOrDefault(p => string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase));
+
+            if (primitiveType == null)
+            {
+	            throw Error.StoreTypeNotFound(name, providerManifest.NamespaceName);
+            }
+            return primitiveType;
         }
     }
 }

@@ -5570,4 +5570,8 @@
   <data name="CannotDefineKeysOnBothBaseAndDerivedTypes" xml:space="preserve">
     <value>Cannot define key members on both the base and the derived types.</value>
   </data>
+  <data name="StoreTypeNotFound" xml:space="preserve">
+    <value>The store type '{0}' could not be found in the {1} provider manifest</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>
