@@ -11,6 +11,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     internal class ContextElement : ConfigurationElement
     {
         private const string TypeKey = "type";
+        private const string CommandTimeoutKey = "commandTimeout";
         private const string DisableDatabaseInitializationKey = "disableDatabaseInitialization";
         private const string DatabaseInitializerKey = "databaseInitializer";
 
@@ -20,6 +21,14 @@ namespace System.Data.Entity.Internal.ConfigFile
         {
             get { return (string)this[TypeKey]; }
             set { this[TypeKey] = value; }
+        }
+        
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [ConfigurationProperty(CommandTimeoutKey)]
+        public virtual int? CommandTimeout
+        {
+            get { return (int?)this[CommandTimeoutKey]; }
+            set { this[CommandTimeoutKey] = value; }
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]

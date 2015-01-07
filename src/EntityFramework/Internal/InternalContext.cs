@@ -619,6 +619,13 @@ namespace System.Data.Entity.Internal
         // </summary>
         public bool ValidateOnSaveEnabled { get; set; }
 
+        protected void LoadContextConfigs()
+        {
+            var configCommandTimeout = AppConfig.ContextConfigs.TryGetCommandTimeout(Owner.GetType());
+            if (configCommandTimeout.HasValue)
+                CommandTimeout = configCommandTimeout.Value;
+        }
+
         #endregion
 
         #region Dispose

@@ -158,6 +158,11 @@ namespace System.Data.Entity.Internal
             return settings;
         }
 
+        public virtual ContextConfig ContextConfigs
+        {
+            get { return new ContextConfig(_entityFrameworkSettings); }
+        }
+
         public virtual InitializerConfig Initializers
         {
             get { return new InitializerConfig(_entityFrameworkSettings, _appSettings); }

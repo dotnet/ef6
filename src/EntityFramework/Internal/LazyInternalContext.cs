@@ -117,6 +117,8 @@ namespace System.Data.Entity.Internal
             _objectContext = objectContext;
 
             _createdWithExistingModel = model != null;
+
+            LoadContextConfigs();
         }
 
         #endregion

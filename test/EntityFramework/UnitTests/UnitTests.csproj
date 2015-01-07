@@ -397,6 +397,7 @@
     <Compile Include="Internal\DatabaseTableCheckerTests.cs" />
     <Compile Include="Internal\DbHelpersTests.cs" />
     <Compile Include="Internal\EagerInternalContextTests.cs" />
+    <Compile Include="Internal\ContextConfigTests.cs" />
     <Compile Include="Internal\InitializerConfigTests.cs" />
     <Compile Include="Internal\InterceptableDbCommandTests.cs" />
     <Compile Include="Internal\InternalCollectionEntryTests.cs" />

@@ -422,6 +422,15 @@ namespace System.Data.Entity.ProductivityApi
             }
         }
 
+        [Fact]
+        public void Command_timeout_can_be_can_be_set_in_config()
+        {
+            using (var context = new ConfiguredTimeoutContext())
+            {
+                Assert.Equal(66, context.Database.CommandTimeout);
+            }
+        }
+
         private IEnumerable<string> GetAllLoggedTimeouts()
         {
             return _log.Where(i => i.Method == "Set CommandTimeout")
@@ -472,6 +481,11 @@ namespace System.Data.Entity.ProductivityApi
 
             public DbSet<SomeSpace> Space { get; set; }
             public DbSet<SomeTime> Time { get; set; }
+        }
+
+        public class ConfiguredTimeoutContext : TimeoutContext
+        {
+
         }
     }
 }

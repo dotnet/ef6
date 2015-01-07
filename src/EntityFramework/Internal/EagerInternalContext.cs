@@ -57,6 +57,7 @@ namespace System.Data.Entity.Internal
 
             _objectContext.InterceptionContext = _objectContext.InterceptionContext.WithDbContext(owner);
 
+            LoadContextConfigs();
             ResetDbSets();
 
             _objectContext.InitializeMappingViewCacheFactory(Owner);
