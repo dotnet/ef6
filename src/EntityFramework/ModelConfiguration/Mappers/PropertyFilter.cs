@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             ValidatePropertiesForModelVersion(type, explicitlyMappedProperties);
 
             var propertyInfos
-                = from p in declaredOnly ? type.GetDeclaredProperties() : type.GetRuntimeProperties()
+                = from p in declaredOnly ? type.GetDeclaredProperties() : type.GetNonHiddenProperties()
                   where !p.IsStatic() && p.IsValidStructuralProperty()
                   let m = p.Getter()
                   where (includePrivate || (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType)))

@@ -236,9 +236,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             EntityProxyTypeInfo proxyTypeInfo;
             var clrEntityType = (ClrEntityType)ospaceEntityType;
 
-            var proxyIdentiy = new Tuple<Type, string>(clrEntityType.ClrType, clrEntityType.HashedDescription);
+            var proxyIdentity = new Tuple<Type, string>(clrEntityType.ClrType, clrEntityType.HashedDescription);
 
-            if (!_proxyNameMap.TryGetValue(proxyIdentiy, out proxyTypeInfo)
+            if (!_proxyNameMap.TryGetValue(proxyIdentity, out proxyTypeInfo)
                 && CanProxyType(ospaceEntityType))
             {
                 try
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     _typeMapLock.EnterWriteLock();
                     try
                     {
-                        _proxyNameMap[proxyIdentiy] = proxyTypeInfo;
+                        _proxyNameMap[proxyIdentity] = proxyTypeInfo;
                         if (proxyTypeInfo != null)
                         {
                             // If there is a proxy type, create the reverse lookup
@@ -316,9 +316,9 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var objectParameter = Expression.Parameter(typeof(object), "instance");
             var nonProxyGetter = Expression.Lambda<Func<object, object>>(
-                Expression.PropertyOrField(
+                Expression.Property(
                     Expression.Convert(objectParameter, declaringType),
-                    propertyInfo.Name),
+                    propertyInfo),
                 objectParameter).Compile();
 
             var propertyName = propertyInfo.Name;

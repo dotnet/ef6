@@ -8,7 +8,6 @@ namespace System.Data.Entity.Functionals.Utilities
 namespace System.Data.Entity.Utilities
 #endif
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -293,9 +292,10 @@ namespace System.Data.Entity.Utilities
             while (type != typeof(object))
             {
                 if (type.GetDeclaredMethods()
-                    .Any(m => (m.Name == "Equals" || m.Name == "GetHashCode")
-                        && m.DeclaringType != typeof(object)
-                        && m.GetBaseDefinition().DeclaringType == typeof(object)))
+                    .Any(
+                        m => (m.Name == "Equals" || m.Name == "GetHashCode")
+                             && m.DeclaringType != typeof(object)
+                             && m.GetBaseDefinition().DeclaringType == typeof(object)))
                 {
                     return true;
                 }
@@ -451,6 +451,32 @@ namespace System.Data.Entity.Utilities
             return type.GetRuntimeProperties().Where(p => !p.IsStatic());
         }
 
+        public static IEnumerable<PropertyInfo> GetNonHiddenProperties(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            return from property in type.GetRuntimeProperties()
+                group property by property.Name
+                into propertyGroup
+                select MostDerived(propertyGroup);
+        }
+
+        private static PropertyInfo MostDerived(IEnumerable<PropertyInfo> properties)
+        {
+            PropertyInfo mostDerivedProperty = null;
+            foreach (var property in properties)
+            {
+                if (mostDerivedProperty == null
+                    || (mostDerivedProperty.DeclaringType != null
+                        && mostDerivedProperty.DeclaringType.IsAssignableFrom(property.DeclaringType)))
+                {
+                    mostDerivedProperty = property;
+                }
+            }
+
+            return mostDerivedProperty;
+        }
+
 #if NET40
         public static IEnumerable<PropertyInfo> GetRuntimeProperties(this Type type)
         {
@@ -532,13 +558,15 @@ namespace System.Data.Entity.Utilities
 #else
                 var typeInfo = type.GetTypeInfo();
                 var propertyInfo = typeInfo.GetDeclaredProperty(name);
-                if (propertyInfo != null && !(propertyInfo.GetMethod ?? propertyInfo.SetMethod).IsStatic)
+                if (propertyInfo != null
+                    && !(propertyInfo.GetMethod ?? propertyInfo.SetMethod).IsStatic)
                 {
                     return propertyInfo;
                 }
                 type = typeInfo.BaseType;
 #endif
-            } while (type != null);
+            }
+            while (type != null);
 
             return null;
         }

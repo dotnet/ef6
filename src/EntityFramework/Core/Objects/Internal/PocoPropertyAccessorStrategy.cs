@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (relatedEnd.TargetAccessor.CollectionAdd == null)
                 {
                     relatedEnd.TargetAccessor.CollectionAdd = CreateCollectionAddFunction(
-                        entity.GetType(), relatedEnd.TargetAccessor.PropertyName);
+                        GetDeclaringType(relatedEnd), relatedEnd.TargetAccessor.PropertyName);
                 }
 
                 relatedEnd.TargetAccessor.CollectionAdd(collection, value);
@@ -238,7 +238,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     if (relatedEnd.TargetAccessor.CollectionRemove == null)
                     {
                         relatedEnd.TargetAccessor.CollectionRemove = CreateCollectionRemoveFunction(
-                            entity.GetType(), relatedEnd.TargetAccessor.PropertyName);
+                            GetDeclaringType(relatedEnd), relatedEnd.TargetAccessor.PropertyName);
                     }
 
                     return relatedEnd.TargetAccessor.CollectionRemove(collection, value);
@@ -293,7 +293,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 if (relatedEnd.TargetAccessor.CollectionCreate == null)
                 {
-                    var entityType = _entity.GetType();
+                    var entityType = GetDeclaringType(relatedEnd);
                     var propName = relatedEnd.TargetAccessor.PropertyName;
                     var navPropType = GetNavigationPropertyType(entityType, propName);
                     relatedEnd.TargetAccessor.CollectionCreate = CreateCollectionCreateDelegate(navPropType, propName);

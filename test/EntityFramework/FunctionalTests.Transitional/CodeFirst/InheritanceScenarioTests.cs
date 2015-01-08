@@ -9,7 +9,9 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Linq;
     using FunctionalTests.Model;
     using SimpleModel;
@@ -2501,7 +2503,7 @@ namespace FunctionalTests
 
     #endregion
 
-    #region BugDevDiv#178590
+    #region Bug DevDiv#178590
 
     namespace BugDevDiv_178590
     {
@@ -2550,14 +2552,12 @@ namespace FunctionalTests
                 modelBuilder.Entity<A>();
                 modelBuilder
                     .Entity<B>()
-                    .Map(mapping => mapping.MapInheritedProperties())
-                    ;
+                    .Map(mapping => mapping.MapInheritedProperties());
 
                 modelBuilder
                     .Entity<C>()
                     .Map(mapping => mapping.MapInheritedProperties())
-                    .ToTable("C", "dbo")
-                    ;
+                    .ToTable("C", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2607,6 +2607,330 @@ namespace FunctionalTests
     }
 
     #endregion
+
+    public sealed class Issue2616Test : FunctionalTestBase
+    {
+        [Fact]
+        public void Can_hide_navigation_property_and_new_property_is_used()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<CustomStaffAccount>();
+            modelBuilder.Entity<CustomDomain>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            var association = databaseMapping.GetAssociationSetMappings().Single().AssociationSet.ElementType;
+            Assert.Equal(typeof(CustomStaffAccount).Name, association.TargetEnd.GetEntityType().Name);
+            Assert.Equal(typeof(CustomDomain).Name, association.SourceEnd.GetEntityType().Name);
+
+            using (var context = CreateContext(modelBuilder))
+            {
+                context.Database.Delete();
+                context.Database.Initialize(force: false);
+
+                var account = new CustomStaffAccount { Domain = new CustomDomain(), Name = "one" };
+                ((StaffAccount)account).Name = 1;
+                context.Set<CustomStaffAccount>().Add(account);
+                context.SaveChanges();
+            }
+
+            using (var context = CreateContext(modelBuilder))
+            {
+                var account = context.Set<CustomStaffAccount>().Single();
+                var domain = account.Domain;
+                Assert.NotNull(domain);
+                Assert.Null(((StaffAccount)account).Domain);
+                Assert.Same(account, domain.Accounts.Single());
+                Assert.Empty(((Domain)domain).Accounts);
+                Assert.Equal("one", account.Name);
+                Assert.Null(((StaffAccount)account).Name);
+
+                context.Database.Delete();
+            }
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_if_StaffAccount_mapped_without_proxies_base_property_is_used()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<StaffAccount>();
+            modelBuilder.Entity<CustomStaffAccount>();
+            modelBuilder.Entity<CustomDomain>();
+
+            VerifyBasePropertiesAreUsed(modelBuilder);
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_if_Domain_mapped_without_proxies_base_property_is_used()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Domain>();
+            modelBuilder.Entity<CustomStaffAccount>();
+            modelBuilder.Entity<CustomDomain>();
+
+            VerifyBasePropertiesAreUsed(modelBuilder);
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_both_bases_mapped_without_proxies_base_property_is_used()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<StaffAccount>();
+            modelBuilder.Entity<Domain>();
+            modelBuilder.Entity<CustomStaffAccount>();
+            modelBuilder.Entity<CustomDomain>();
+
+            VerifyBasePropertiesAreUsed(modelBuilder);
+        }
+
+        private void VerifyBasePropertiesAreUsed(DbModelBuilder modelBuilder)
+        {
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            var association = databaseMapping.GetAssociationSetMappings().Single().AssociationSet.ElementType;
+            var targetIsDependent = association.TargetEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many;
+            var dependentEnd = targetIsDependent ? association.TargetEnd : association.SourceEnd;
+            var principalEnd = targetIsDependent ? association.SourceEnd : association.TargetEnd;
+            Assert.Equal(typeof(StaffAccount).Name, dependentEnd.GetEntityType().Name);
+            Assert.Equal(typeof(Domain).Name, principalEnd.GetEntityType().Name);
+
+            using (var context = CreateContext(modelBuilder))
+            {
+                context.Database.Delete();
+                context.Database.Initialize(force: false);
+
+                var account = new CustomStaffAccount();
+                account.Name = "one";
+                ((StaffAccount)account).Name = 1;
+                ((StaffAccount)account).Domain = new CustomDomain();
+                context.Set<CustomStaffAccount>().Add(account);
+                context.SaveChanges();
+            }
+
+            using (var context = CreateContext(modelBuilder))
+            {
+                context.Configuration.ProxyCreationEnabled = false;
+
+                var lazyAccount = context.Set<CustomStaffAccount>().AsNoTracking().Single();
+                Assert.Null(((StaffAccount)lazyAccount).Domain);
+                Assert.Null(lazyAccount.Domain);
+
+                var lazyDomain = context.Set<CustomDomain>().AsNoTracking().Single();
+                Assert.Empty(((Domain)lazyDomain).Accounts);
+                Assert.Empty(lazyDomain.Accounts);
+
+                var account = context.Set<CustomStaffAccount>().Include(a => ((StaffAccount)a).Domain).Single();
+                var domain = ((StaffAccount)account).Domain;
+                Assert.NotNull(domain);
+                Assert.Null(account.Domain);
+                Assert.Same(account, domain.Accounts.Single());
+                Assert.Empty(((CustomDomain)domain).Accounts);
+                Assert.Null(account.Name);
+                Assert.Equal(1, ((StaffAccount)account).Name);
+
+                context.Database.Delete();
+            }
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_both_bases_mapped_with_proxies_base_property_is_used()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<StaffAccount>().HasOptional(a => a.Domain).WithMany();
+            modelBuilder.Entity<Domain>().Ignore(d => d.Accounts);
+            modelBuilder.Entity<CustomStaffAccountSameField>();
+            modelBuilder.Entity<CustomDomainNonVirtual>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            var association = databaseMapping.GetAssociationSetMappings().Single().AssociationSet.ElementType;
+            Assert.Equal(typeof(Domain).Name, association.TargetEnd.GetEntityType().Name);
+            Assert.Equal(typeof(StaffAccount).Name, association.SourceEnd.GetEntityType().Name);
+
+            using (var context = CreateContext(modelBuilder))
+            {
+                context.Database.Delete();
+                context.Database.Initialize(force: false);
+
+                var account = new CustomStaffAccountSameField();
+                account.Name = "1";
+                account.Domain = new CustomDomainNonVirtual();
+                context.Set<CustomStaffAccountSameField>().Add(account);
+                context.SaveChanges();
+            }
+
+            using (var context = CreateContext(modelBuilder))
+            {
+                var account = context.Set<CustomStaffAccountSameField>().Single();
+
+                var domain = account.Domain;
+                Assert.NotNull(domain);
+                Assert.NotNull(((StaffAccount)account).Domain);
+                Assert.Empty(((Domain)domain).Accounts);
+                Assert.Empty(domain.Accounts);
+                Assert.Equal("1", account.Name);
+                Assert.Equal(1, ((StaffAccount)account).Name);
+
+                context.Database.Delete();
+            }
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_ignore_new_property()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<CustomStaffAccount>().Ignore(c => c.Domain);
+            modelBuilder.Entity<CustomDomain>().Ignore(d => d.Accounts);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Empty(databaseMapping.GetAssociationSetMappings());
+        }
+
+        [Fact]
+        public void If_hidden_navigation_property_and_bases_mapped_ignoring_new_property_throws()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<StaffAccount>();
+            modelBuilder.Entity<Domain>();
+            modelBuilder.Entity<CustomStaffAccount>().Ignore(c => c.Domain);
+            modelBuilder.Entity<CustomDomain>().Ignore(d => d.Accounts);
+
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
+                .ValidateMessage("CannotIgnoreMappedBaseProperty", "Accounts", typeof(CustomDomain).FullName, typeof(Domain).FullName);
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_ignore_it()
+        {
+            DbConfiguration.DependencyResolver.GetService<AttributeProvider>().ClearCache();
+
+            using (var staffConfiguration = new DynamicTypeDescriptionConfiguration<StaffAccount>())
+            {
+                using (var domainConfiguration = new DynamicTypeDescriptionConfiguration<Domain>())
+                {
+                    staffConfiguration.SetPropertyAttributes(b => b.Domain, new NotMappedAttribute());
+                    domainConfiguration.SetPropertyAttributes(b => b.Accounts, new NotMappedAttribute());
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder.Entity<CustomStaffAccount>();
+                    modelBuilder.Entity<CustomDomain>();
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.Empty(databaseMapping.GetAssociationSetMappings());
+                }
+            }
+
+            DbConfiguration.DependencyResolver.GetService<AttributeProvider>().ClearCache();
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_ignore_it_if_bases_mapped()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<StaffAccount>().Ignore(c => c.Domain);
+            modelBuilder.Entity<Domain>().Ignore(d => d.Accounts);
+            modelBuilder.Entity<CustomStaffAccount>();
+            modelBuilder.Entity<CustomDomain>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Empty(databaseMapping.GetAssociationSetMappings());
+        }
+
+        private DbContext CreateContext(DbModelBuilder modelBuilder)
+        {
+            return new DbContext("Bug2616Test", modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile());
+        }
+
+        public abstract class Domain
+        {
+            protected Domain()
+            {
+                Accounts = new List<StaffAccount>();
+            }
+
+            public int Id { get; private set; }
+
+            public virtual ICollection<StaffAccount> Accounts { get; set; }
+        }
+        
+        public class CustomDomain
+            : Domain
+        {
+            public CustomDomain()
+            {
+                Accounts = new List<CustomStaffAccount>();
+            }
+
+            public new virtual ICollection<CustomStaffAccount> Accounts { get; set; }
+        }
+
+        public class CustomDomainNonVirtual
+            : Domain
+        {
+            public CustomDomainNonVirtual()
+            {
+                Accounts = new List<CustomStaffAccountSameField>();
+            }
+
+            public new ICollection<CustomStaffAccountSameField> Accounts { get; set; }
+        }
+
+        public abstract class StaffAccount
+        {
+            public int Id { get; private set; }
+
+            public virtual Domain Domain { get; set; }
+
+            public virtual int? Name { get; set; }
+        }
+
+        public class CustomStaffAccount
+            : StaffAccount
+        {
+            public new virtual CustomDomain Domain { get; set; }
+
+            public new virtual string Name { get; set; }
+        }
+
+        public class CustomStaffAccountSameField
+            : StaffAccount
+        {
+            public new virtual CustomDomainNonVirtual Domain
+            {
+                get { return base.Domain as CustomDomainNonVirtual; }
+                set { base.Domain = value; }
+            }
+
+            public new virtual string Name
+            {
+                get { return base.Name == null ? null : base.Name.ToString(); }
+                set { base.Name = value == null ? null : (int?)Int32.Parse(value); }
+            }
+        }
+    }
 
     #region Bug165027
 
