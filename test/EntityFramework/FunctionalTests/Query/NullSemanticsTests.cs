@@ -582,6 +582,35 @@ namespace System.Data.Entity.Query
         }
 
         [Fact]
+        public void Equality_comparison_is_expanded_correctly_for_comparison_case_statement()
+        {
+            using (var context = new ABContext())
+            {
+                var aId = 1;
+                var query =
+                    from a in context.As
+                    select a.NullableId > aId;
+                var expectedSql =
+@"SELECT 
+    CASE 
+    WHEN ([Extent1].[NullableId] > @p__linq__0) 
+        THEN cast(1 as bit) 
+    WHEN ( NOT (([Extent1].[NullableId] > @p__linq__0) AND ((
+            CASE 
+            WHEN ([Extent1].[NullableId] IS NULL) 
+                THEN cast(1 as bit)
+            ELSE 
+                cast(0 as bit) 
+            END) = 0)))
+        THEN cast(0 as bit) 
+    END AS [C1]
+    FROM [dbo].[A] AS [Extent1]";
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
+        [Fact]
         public void Null_checks_for_non_nullable_columns_are_eliminated_from_case_statement()
         {
             using (var context = new ABContext())
