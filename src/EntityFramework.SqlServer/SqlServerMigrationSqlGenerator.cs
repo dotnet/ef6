@@ -1500,8 +1500,8 @@ namespace System.Data.Entity.SqlServer
 
             // Handle batch splitting utility statement (see http://technet.microsoft.com/en-us/library/ms188037.aspx)
             var batches = Regex.Split(sqlBatch,
-                String.Format(CultureInfo.InvariantCulture, @"\s+({0}[ \t]+[0-9]+|{0})(?:\s+|$)", BatchTerminator), 
-                RegexOptions.IgnoreCase);
+                String.Format(CultureInfo.InvariantCulture, @"^\s*({0}[ \t]+[0-9]+|{0})(?:\s+|$)", BatchTerminator), 
+                RegexOptions.IgnoreCase | RegexOptions.Multiline);
             
             for (int i = 0; i < batches.Length; ++i)
             {

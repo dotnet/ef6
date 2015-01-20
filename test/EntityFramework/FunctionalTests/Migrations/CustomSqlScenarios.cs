@@ -32,5 +32,30 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(TableExists("Foo"));
         }
+
+        private class CustomSqlWithGoMigration : DbMigration
+        {
+            public override void Up()
+            {
+                Sql("create table [SomeTable] (id int, msg nvarchar(100));");
+                Sql("insert into [SomeTable] (id, msg) values (1, 'click here to go to the next page');");
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_update_when_migration_contains_custom_sql_with_go()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new CustomSqlWithGoMigration());
+
+            migrator.Update();
+
+            Assert.True(TableExists("SomeTable"));
+        }
     }
 }
