@@ -441,6 +441,7 @@ namespace Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal static List<XElement> ConstructAssociations(EdmItemCollection edm, string ssdlNamespace)
         {
             var associations = new List<XElement>();
