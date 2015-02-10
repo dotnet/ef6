@@ -506,8 +506,22 @@ namespace System.Data.Entity.SqlServerCompact
         // containing instances of DbInExpression.
         // The SqlCe provider handles instances of DbInExpression.
         // </summary>
-        // <returns> <c>true</c>. </returns>
+        // <returns> 
+        // <c>true</c> 
+        // </returns>
         public override bool SupportsInExpression()
+        {
+            return true;
+        }
+
+        // <summary>
+        // Returns a boolean that specifies whether the provider can process expression trees not having DbProjectExpression 
+        // nodes directly under both Left and Right sides of DbUnionAllExpression and DbIntersectExpression
+        // </summary>
+        // <returns> 
+        // <c>true</c>
+        // </returns>
+        public override bool SupportsIntersectAndUnionAllFlattening()
         {
             return true;
         }
