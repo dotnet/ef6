@@ -38,6 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> _foreignKeyDependents;
         private ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> _foreignKeyPrincipals;
+        private ReadOnlyCollection<AssociationSet> _associationSets;
         private volatile bool _hasForeignKeyRelationships;
         private volatile bool _hasIndependentRelationships;
 
@@ -101,6 +102,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        internal ReadOnlyCollection<AssociationSet> AssociationSets
+        {
+            get
+            {
+                if (_foreignKeyPrincipals == null)
+                {
+                    InitializeForeignKeyLists();
+                }
+                return _associationSets;
+            }
+        }
+
         // <summary>
         // True if this entity set participates in any foreign key relationships, otherwise false.
         // </summary>
@@ -137,7 +150,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var principals = new List<Tuple<AssociationSet, ReferentialConstraint>>();
             var foundFkRelationship = false;
             var foundIndependentRelationship = false;
-            foreach (var associationSet in MetadataHelper.GetAssociationsForEntitySet(this))
+            var associationsForEntitySet = new ReadOnlyCollection<AssociationSet>(MetadataHelper.GetAssociationsForEntitySet(this));
+            foreach (var associationSet in associationsForEntitySet)
             {
                 if (associationSet.ElementType.IsForeignKey)
                 {
@@ -173,6 +187,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Interlocked.CompareExchange(ref _foreignKeyDependents, readOnlyDependents, null);
             Interlocked.CompareExchange(ref _foreignKeyPrincipals, readOnlyPrincipals, null);
+            Interlocked.CompareExchange(ref _associationSets, associationsForEntitySet, null);
         }
 
         /// <summary>

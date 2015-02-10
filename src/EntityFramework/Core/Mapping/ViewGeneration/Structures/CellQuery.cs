@@ -317,7 +317,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                             var rightExtent = rightCellQuery.Extent as EntitySet;
                             if (rightExtent != null)
                             {
-                                var associations = MetadataHelper.GetAssociationsForEntitySet(rightCellQuery.Extent as EntitySet);
+                                var associations = (rightCellQuery.Extent as EntitySet).AssociationSets;
                                 foreach (
                                     var association in
                                         associations.Where(

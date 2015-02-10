@@ -849,7 +849,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         private static IEnumerable<AssociationEndMember> GetAllTargetEnds(EntityType ownerEntityType, EntitySet ownerEntitySet)
         {
-            foreach (var assocSet in MetadataHelper.GetAssociationsForEntitySet(ownerEntitySet))
+            foreach (var assocSet in ownerEntitySet.AssociationSets)
             {
                 var end2EntityType = (assocSet.ElementType).AssociationEndMembers[1].GetEntityType();
                 if (end2EntityType.IsAssignableFrom(ownerEntityType))
@@ -1656,7 +1656,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Debug.Assert(entitySet != null, "Unable to find entity set");
 
             // Get association types in which current entity's type is one of the ends.
-            var associations = MetadataHelper.GetAssociationsForEntitySet(entitySet);
+            var associations = entitySet.AssociationSets;
 
             var skippedFK = false;
             // Find key property names which are part of referential integrity constraints

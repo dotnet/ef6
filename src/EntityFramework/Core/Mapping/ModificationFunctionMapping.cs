@@ -160,7 +160,7 @@ namespace System.Data.Entity.Core.Mapping
 
                 // If there is a referential constraint, it counts as an implicit mapping of
                 // the association set
-                foreach (var assocationSet in MetadataHelper.GetAssociationsForEntitySet(entitySet))
+                foreach (var assocationSet in entitySet.AssociationSets)
                 {
                     var constraints = assocationSet.ElementType.ReferentialConstraints;
                     if (null != constraints)
