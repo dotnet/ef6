@@ -2264,6 +2264,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return sourceInfo.Publisher;
         }
 
+        private DbProviderManifest _providerManifest = null;
+        // <summary>
+        // Obtains DbProviderManifest in force to reason about its capabilities 
+        // </summary>
+        private DbProviderManifest ProviderManifest
+        {
+            get
+            {
+                return _providerManifest ??
+                    (_providerManifest =
+                        ((StoreItemCollection)_iqtCommand
+                        .MetadataWorkspace
+                        .GetItemCollection(DataSpace.SSpace))
+                        .ProviderManifest);
+            }
+        }
+
         // <summary>
         // Called by UnionAll, Intersect and Except (SetOp) visitor pattern methods
         // </summary>
@@ -2282,14 +2299,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // To be convertible to a CQT Except/Intersect/DbUnionAllExpression, the SetOp must have exactly 2 arguments.
             //
             AssertBinary(n);
-
+            
+            //
+            // We only flatten UnionAll and Intersect, which are safe to flatten (i. e. you can do A UNION ALL B UNION ALL C) 
+            // but not EXCEPT which is order-dependent. And we only flatten if the provider can handle it.
+            //
+            var opSupportsFlattening = (op.OpType == OpType.UnionAll || op.OpType == OpType.Intersect)
+                                       && ProviderManifest.SupportsIntersectAndUnionAllFlattening();
+            
             //
             // Convert the left and right arguments to expressions.
             //
-
-            // UnionAll and Intersect are safe to flatten (i. e. you can do A UNION ALL B UNION ALL C)
-            // whereas EXCEPT is not because it's order-dependent
-            var opSupportsFlattening = op.OpType == OpType.UnionAll || op.OpType == OpType.Intersect;
             var left = opSupportsFlattening && n.Child0.Op.OpType == op.OpType
                 ? VisitSetOp((SetOp)n.Child0.Op, n.Child0, alias, setOpExpressionBuilder)
                 : VisitSetOpArgument(n.Child0, op.Outputs, op.VarMap[0]);

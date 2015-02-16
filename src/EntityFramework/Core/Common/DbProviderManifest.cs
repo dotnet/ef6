@@ -200,5 +200,18 @@ namespace System.Data.Entity.Core.Common
         {
             return false;
         }
+
+        /// <summary>
+        /// Returns a boolean that specifies whether the provider can process expression trees not having DbProjectExpression 
+        /// nodes directly under both Left and Right sides of DbUnionAllExpression and DbIntersectExpression
+        /// </summary>
+        /// <returns> 
+        /// <c>false</c>
+        /// </returns>
+
+        public virtual bool SupportsIntersectAndUnionAllFlattening()
+        {
+            return false;
+        }
     }
 }
