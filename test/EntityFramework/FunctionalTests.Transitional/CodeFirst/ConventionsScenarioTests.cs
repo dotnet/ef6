@@ -1238,7 +1238,7 @@ namespace FunctionalTests
             {
                 var modelBuilder = new DbModelBuilder();
 
-                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+                modelBuilder.Entity<LightweightEntityWithAnnotations>().Property(e => e.IntProperty1);
                 modelBuilder.Properties()
                     .Where(p => p.Name == "IntProperty1")
                     .Configure(c => c.HasColumnOrder(1).IsKey());

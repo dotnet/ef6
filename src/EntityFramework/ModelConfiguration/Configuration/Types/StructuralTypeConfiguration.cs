@@ -129,7 +129,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                                                                                 .CreateInstance(
                                                                                     GetPropertyConfigurationType(
                                                                                         propertyPath.Last().PropertyType));
-                        configuration.TypeConfiguration = this;
 
                         if (overridableConfigurationParts.HasValue)
                         {
@@ -153,8 +152,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             PrimitivePropertyConfiguration primitivePropertyConfiguration;
             if (!_primitivePropertyConfigurations.TryGetValue(propertyPath, out primitivePropertyConfiguration))
             {
-                _primitivePropertyConfigurations.Add(
-                    propertyPath, primitivePropertyConfiguration = primitivePropertyConfigurationCreator());
+                primitivePropertyConfiguration = primitivePropertyConfigurationCreator();
+                primitivePropertyConfiguration.TypeConfiguration = this;
+                _primitivePropertyConfigurations.Add(propertyPath, primitivePropertyConfiguration);
             }
 
             return (TPrimitivePropertyConfiguration)primitivePropertyConfiguration;
