@@ -4,7 +4,6 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using Moq;
@@ -26,7 +25,7 @@ namespace System.Data.Entity.Internal
             Assert.Null(
                 new ContextConfig(
                     CreateEfSection(
-                        typeof(DbContext).AssemblyQualifiedName, 
+                        typeof(DbContext).AssemblyQualifiedName,
                         null))
                     .TryGetCommandTimeout(typeof(DbContext)));
         }
@@ -56,13 +55,13 @@ namespace System.Data.Entity.Internal
             Assert.IsType<TypeLoadException>(exception.InnerException);
         }
 
-        
+
         private static EntityFrameworkSection CreateEfSection(string contextTypeName, int? commandTimeout = null)
         {
             var mockContextElement = new Mock<ContextElement>();
             mockContextElement.Setup(m => m.ContextTypeName).Returns(contextTypeName);
             mockContextElement.SetupGet(m => m.CommandTimeout).Returns(commandTimeout);
-            
+
             var mockContextCollection = new Mock<ContextCollection>();
             mockContextCollection.As<IEnumerable>().Setup(m => m.GetEnumerator()).Returns(
                 new List<ContextElement>

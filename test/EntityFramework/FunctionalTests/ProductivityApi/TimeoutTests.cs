@@ -406,7 +406,7 @@ namespace System.Data.Entity.ProductivityApi
             {
                 var objectContext = ((IObjectContextAdapter)outerContext).ObjectContext;
                 objectContext.CommandTimeout = 77;
-                
+
                 using (var context = new TimeoutContext(objectContext))
                 {
                     Assert.Equal(77, context.Database.CommandTimeout);
@@ -485,7 +485,6 @@ namespace System.Data.Entity.ProductivityApi
 
         public class ConfiguredTimeoutContext : TimeoutContext
         {
-
         }
     }
 }

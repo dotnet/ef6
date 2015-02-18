@@ -22,7 +22,7 @@ namespace UnitTests
         // http://schemas.microsoft.com/XML-Document-Transform namespace
         private static readonly XmlSchema FakeXmlDocumentTransformationSchema;
 
-        private const string EntityFrameworkConfigSchemaName = "EntityFrameworkConfig_6_1_0.xsd";
+        private const string EntityFrameworkConfigSchemaName = "EntityFrameworkConfig_6_1_4.xsd";
         private const string EntityFrameworkCatalogFileName = "EntityFrameworkCatalog.xml";
 
         static ConfigurationFileSchemaTests()

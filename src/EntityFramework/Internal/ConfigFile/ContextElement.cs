@@ -22,7 +22,7 @@ namespace System.Data.Entity.Internal.ConfigFile
             get { return (string)this[TypeKey]; }
             set { this[TypeKey] = value; }
         }
-        
+
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [ConfigurationProperty(CommandTimeoutKey)]
         public virtual int? CommandTimeout

@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
-    using System.Configuration;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -13,7 +12,7 @@ namespace System.Data.Entity.Internal
     {
         private readonly EntityFrameworkSection _entityFrameworkSettings;
 
-        private readonly ConcurrentDictionary<Type, int?> _commandTimeouts = new ConcurrentDictionary<Type,int?>();
+        private readonly ConcurrentDictionary<Type, int?> _commandTimeouts = new ConcurrentDictionary<Type, int?>();
 
         public ContextConfig()
         {
@@ -26,21 +25,18 @@ namespace System.Data.Entity.Internal
             _entityFrameworkSettings = entityFrameworkSettings;
         }
 
-
-
         public virtual int? TryGetCommandTimeout(Type contextType)
         {
             DebugCheck.NotNull(contextType);
 
             return _commandTimeouts.GetOrAdd(
-                contextType, 
+                contextType,
                 (requiredContextType) => _entityFrameworkSettings.Contexts
                     .OfType<ContextElement>()
                     .Where(e => e.CommandTimeout.HasValue)
                     .Select(e => TryGetCommandTimeout(contextType, e.ContextTypeName, e.CommandTimeout.Value))
                     .FirstOrDefault(i => i.HasValue));
         }
-
 
         private static int? TryGetCommandTimeout(
             Type requiredContextType,
@@ -64,6 +60,5 @@ namespace System.Data.Entity.Internal
 
             return null;
         }
-
     }
 }

@@ -181,7 +181,7 @@ namespace System.Data.Entity.Internal
 
             return new ClonedObjectContext(
                 new ObjectContextProxy(
-                    GetObjectContextWithoutDatabaseInitialization()), 
+                    GetObjectContextWithoutDatabaseInitialization()),
                     Connection,
                     OriginalConnectionString,
                     transferLoadedAssemblies: false);
@@ -300,7 +300,7 @@ namespace System.Data.Entity.Internal
         {
             string _, productVersion;
             var lastModel = CreateHistoryRepository(existenceState).GetLastModel(out _, out productVersion);
-            
+
             return lastModel != null ? new VersionedModel(lastModel, productVersion) : null;
         }
 
@@ -340,7 +340,7 @@ namespace System.Data.Entity.Internal
         public virtual DbTransaction TryGetCurrentStoreTransaction()
         {
             var entityTransaction = ((EntityConnection)GetObjectContextWithoutDatabaseInitialization().Connection).CurrentTransaction;
-         
+
             return entityTransaction != null ? entityTransaction.StoreTransaction : null;
         }
 
@@ -623,7 +623,9 @@ namespace System.Data.Entity.Internal
         {
             var configCommandTimeout = AppConfig.ContextConfigs.TryGetCommandTimeout(Owner.GetType());
             if (configCommandTimeout.HasValue)
+            {
                 CommandTimeout = configCommandTimeout.Value;
+            }
         }
 
         #endregion

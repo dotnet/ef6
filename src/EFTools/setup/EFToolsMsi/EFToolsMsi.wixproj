@@ -44,7 +44,7 @@
     <Content Include="Resources\License.rtf" />
     <Content Include="Resources\Setup.ico" />
     <Content Include="XmlSchemas\EntityFrameworkCatalog.xml" />
-    <Content Include="XmlSchemas\EntityFrameworkConfig_6_1_0.xsd" />
+    <Content Include="XmlSchemas\EntityFrameworkConfig_6_1_4.xsd" />
     <Content Include="XmlSchemas\System.Data.Resources.AnnotationSchema.xsd" />
     <Content Include="XmlSchemas\System.Data.Resources.CodeGenerationSchema.xsd" />
     <Content Include="XmlSchemas\System.Data.Resources.CSDLSchema_1.xsd" />

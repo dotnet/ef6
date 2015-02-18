@@ -6,7 +6,7 @@
         <File Source="XmlSchemas\EntityFrameworkCatalog.xml" />
       </Component>
       <Component>
-        <File Source="XmlSchemas\EntityFrameworkConfig_6_1_0.xsd" />
+        <File Source="XmlSchemas\EntityFrameworkConfig_6_1_4.xsd" />
       </Component>
       <Component>
         <File Source="$(var.TargetDir)\EntityDesigner\Schemas\Microsoft.Data.Entity.Design.Edmx_1.xsd" />

@@ -20,13 +20,13 @@
     </xs:sequence>
     <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
   </xs:complexType>
-  
+
   <xs:complexType name="Provider_Type">
     <xs:attribute name="invariantName" type="NonEmptyString_Type" use="required" />
     <xs:attribute name="type" type="NonEmptyString_Type" use="required" />
     <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
   </xs:complexType>
-  
+
   <xs:complexType name="ContextList_Type">
     <xs:sequence>
       <xs:element name="context" type="Context_Type" minOccurs="0" maxOccurs="unbounded" />
@@ -40,6 +40,7 @@
     </xs:choice>
     <xs:attribute name="type" type="NonEmptyString_Type" use="required" />
     <xs:attribute name="disableDatabaseInitialization" type="SmallBoolean_Type" use="optional" />
+    <xs:attribute name="commandTimeout" type="xs:int" use="optional" />
     <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
   </xs:complexType>
 
@@ -57,7 +58,7 @@
     <xs:attribute name="type" type="NonEmptyString_Type" use="required" />
     <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
   </xs:complexType>
-  
+
   <xs:complexType name="ParameterList_Type">
     <xs:sequence>
       <xs:element name="parameter" type="Parameter_Type" minOccurs="0" maxOccurs="unbounded" />
