@@ -525,12 +525,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                                 changedFKs[dependentOrdinal] = value;
                             }
                         }
-                        dependentEntity.SetCurrentValue(
-                            dependentEntity.ObjectStateEntry,
-                            dependentTypeMetadata.Member(dependentOrdinal),
-                            -1,
-                            dependentEntity.Entity,
-                            value);
+
+                        if (valueChanging)
+                        {
+                            dependentEntity.SetCurrentValue(
+                                dependentEntity.ObjectStateEntry,
+                                dependentTypeMetadata.Member(dependentOrdinal),
+                                -1,
+                                dependentEntity.Entity,
+                                value);
+                        }
                     }
 
                     if (numValues > 1)

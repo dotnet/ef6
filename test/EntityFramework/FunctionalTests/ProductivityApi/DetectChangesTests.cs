@@ -607,6 +607,62 @@ namespace ProductivityApiTests
                 });
         }
 
+        [Fact] //Codeplex 2628
+        public void DetectChanges_can_handle_changing_fks_that_are_part_of_pk_if_value_does_not_change()
+        {
+            DetectChanges_for_changing_fks_that_are_part_of_pk(new CompositeBlog663 { Id1 = 2, Id2 = 1 });
+        }
+
+        [Fact]
+        public void DetectChanges_throws_for_changing_fks_that_are_part_of_pk_if_value_does_change()
+        {
+            Assert.Throws<InvalidOperationException>(
+                () => DetectChanges_for_changing_fks_that_are_part_of_pk(new CompositeBlog663 { Id1 = 1, Id2 = 2 }))
+                .ValidateMessage("ObjectStateEntry_CannotModifyKeyProperty", "BlogId2");
+        }
+
+        private void DetectChanges_for_changing_fks_that_are_part_of_pk(CompositeBlog663 blog)
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder
+                .Entity<CompositeBlog663>()
+                .HasKey(e => new { e.Id1, e.Id2 })
+                .HasMany(e => e.Posts)
+                .WithOptional(e => e.Blog)
+                .HasForeignKey(e => new { e.BlogId1, e.BlogId2 });
+
+            modelBuilder.Entity<CompositePost663>()
+                .HasKey(e => new { e.Id, e.BlogId2 });
+
+            using (var context = new DbContext("Context2628", modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile()))
+            {
+                context.Configuration.AutoDetectChangesEnabled = false;
+                context.Database.Initialize(force: false);
+
+                context.Set<CompositeBlog663>().Add(blog);
+                var post = context.Set<CompositePost663>().Add(new CompositePost663());
+                post.Id = 1;
+                post.BlogId1 = 1;
+                post.BlogId2 = 1;
+
+                Assert.Equal(EntityState.Added, context.Entry(blog).State);
+                Assert.Equal(EntityState.Added, context.Entry(post).State);
+
+                ((IObjectContextAdapter)context).ObjectContext.AcceptAllChanges();
+
+                post.Blog = blog;
+
+                context.ChangeTracker.DetectChanges();
+
+                Assert.Equal(EntityState.Unchanged, context.Entry(blog).State);
+                Assert.Same(post, blog.Posts.First());
+                Assert.Equal(EntityState.Modified, context.Entry(post).State);
+
+                Assert.Equal(blog.Id1, post.BlogId1);
+                Assert.Equal(blog.Id2, post.BlogId2);
+            }
+        }
+
         public class BlogContext663 : DbContext
         {
             static BlogContext663()
