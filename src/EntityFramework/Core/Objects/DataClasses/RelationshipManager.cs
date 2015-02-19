@@ -1557,12 +1557,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal void CheckReferentialConstraintProperties(EntityEntry ownerEntry)
         {
             DebugCheck.NotNull(ownerEntry);
-
-            List<string> propertiesToRetrieve; // used to check if the owner is a dependent end of some RI Constraint
-            bool propertiesToPropagateExist; // used to check if the owner is a principal end of some RI Constraint
-            FindNamesOfReferentialConstraintProperties(out propertiesToRetrieve, out propertiesToPropagateExist, skipFK: false);
-
-            if ((propertiesToRetrieve != null || propertiesToPropagateExist)
+            if (HasReferentialConstraintPropertiesToCheck()
                 && _relationships != null)
             {
                 // Not using defensive copy here since CheckReferentialConstraintProperties should not cause change in underlying
@@ -1692,6 +1687,53 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
             }
             return skippedFK;
+        }
+
+        // <summary>
+        // Replaces FindNamesOfReferentialConstraintProperties where it was used to simply check if referential constraint properties 
+        // exist while the list of properties created by FindNamesOfReferentialConstraintProperties was discarded. 
+        // This method returns true or false indicating whether CheckReferentialConstraintProperties should be called for all relationships
+        // </summary>
+        internal bool HasReferentialConstraintPropertiesToCheck()
+        {
+            var wrappedOwner = WrappedOwner;
+            Debug.Assert(wrappedOwner.Entity != null);
+            var ownerKey = wrappedOwner.EntityKey;
+            if ((object)ownerKey == null)
+            {
+                throw Error.EntityKey_UnexpectedNull();
+            }
+
+            if (wrappedOwner.Context == null)
+            {
+                throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNullContext);
+            }
+            var entitySet = ownerKey.GetEntitySet(wrappedOwner.Context.MetadataWorkspace);
+            Debug.Assert(entitySet != null, "Unable to find entity set");
+
+            // Get association types in which current entity's type is one of the ends.
+            var associations = entitySet.AssociationSets;
+
+            // Find key property names which are part of referential integrity constraints
+            foreach (var association in associations)
+            {
+                    foreach (var constraint in association.ElementType.ReferentialConstraints)
+                    {
+                        if (constraint.ToRole.TypeUsage.EdmType
+                            == entitySet.ElementType.GetReferenceType())
+                        {
+                            return true;
+                        }
+                        // There are schemas, in which relationship has the same entitySet on both ends
+                        // that is why following 'if' statement is not inside of 'else' of previous 'if' statement
+                        if (constraint.FromRole.TypeUsage.EdmType
+                            == entitySet.ElementType.GetReferenceType())
+                        {
+                            return true;
+                        }
+                    }
+            }
+            return false;
         }
 
         // <summary>

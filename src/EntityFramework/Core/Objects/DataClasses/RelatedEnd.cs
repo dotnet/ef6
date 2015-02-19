@@ -2594,13 +2594,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
 
             // find the RelationshipSet
-            foreach (var entitySetBase in entitySet.EntityContainer.BaseEntitySets)
+            foreach (var entitySetBase in entitySet.AssociationSets)
             {
                 if (entitySetBase.ElementType == relationshipType)
                 {
-                    if (((AssociationSet)entitySetBase).AssociationSetEnds[navigation.From].EntitySet == entitySet)
+                    if (entitySetBase.AssociationSetEnds[navigation.From].EntitySet == entitySet)
                     {
-                        relationshipSet = (RelationshipSet)entitySetBase;
+                        relationshipSet = entitySetBase;
                         return;
                     }
                 }
