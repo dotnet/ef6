@@ -6,6 +6,9 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
     using AdvancedPatternsModel;
@@ -656,6 +659,73 @@ namespace ProductivityApiTests
             public int? BlogId1 { get; set; }
             public int? BlogId2 { get; set; }
             public CompositeBlog663 Blog { get; set; }
+        }
+
+        [Fact] // CodePlex 2606
+        public void DetectChanges_sets_FKs_if_entity_added_to_two_navigations_on_both_ends()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Transaction>();
+            modelBuilder.Entity<TransactionDetail>();
+            modelBuilder.Entity<Note>();
+
+            using (var context = new DbContext("Context2606", modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile()))
+            {
+                new DropCreateDatabaseIfModelChanges<DbContext>().InitializeDatabase(context);
+
+                var note = new Note();
+                context.Set<Note>().Add(note);
+                context.Entry(note).State = EntityState.Unchanged;
+
+                var transaction = new Transaction();
+                context.Set<Transaction>().Add(transaction);
+
+                var transactionDetail = new TransactionDetail();
+                transactionDetail.Transaction = transaction;
+                transactionDetail.Notes.Add(note);
+                transaction.TransactionDetails.Add(transactionDetail);
+                note.TransactionDetail = transactionDetail;
+
+                Assert.Null(transactionDetail.TransactionId);
+                Assert.Null(note.TransactionDetailId);
+
+                context.ChangeTracker.DetectChanges();
+
+                Assert.NotNull(transactionDetail.TransactionId);
+                Assert.NotNull(note.TransactionDetailId);
+                Assert.Equal(EntityState.Modified, context.Entry(note).State);
+            }
+        }
+
+        public class Transaction
+        {
+            public Transaction()
+            {
+                TransactionDetails = new HashSet<TransactionDetail>();
+            }
+            public int TransactionId { get; set; }
+            public virtual ICollection<TransactionDetail> TransactionDetails { get; set; }
+        }
+
+        public class TransactionDetail
+        {
+            public TransactionDetail()
+            {
+                Notes = new HashSet<Note>();
+            }
+
+            public int TransactionDetailId { get; set; }
+            public int? TransactionId { get; set; }
+            public virtual ICollection<Note> Notes { get; set; }
+            public virtual Transaction Transaction { get; set; }
+        }
+
+        public class Note
+        {
+            public int NoteId { get; set; }
+            public string Description { get; set; }
+            public int? TransactionDetailId { get; set; }
+            public virtual TransactionDetail TransactionDetail { get; set; }
         }
     }
 }

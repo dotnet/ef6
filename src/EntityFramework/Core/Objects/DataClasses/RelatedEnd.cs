@@ -1337,10 +1337,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             // FK: update foreign key values on the dependent end.
             if (ObjectContext != null
-                &&
-                IsForeignKey
-                &&
-                !ObjectContext.ObjectStateManager.TransactionManager.IsGraphUpdate)
+                && IsForeignKey
+                && !ObjectContext.ObjectStateManager.TransactionManager.IsGraphUpdate)
             {
                 // Note that we use "forceForeignKeyChanges" below so that the FK properties will be set as modified
                 // even if they don't actually change.
@@ -1457,10 +1455,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     // If this Add is triggered by setting the principle end of an unchanged/modified dependent end, then the relationship should be Unchanged
                     if (!ObjectContext.ObjectStateManager.TransactionManager.IsLocalPublicAPI
-                        &&
-                        WrappedOwner.EntityKey != null
-                        &&
-                        !WrappedOwner.EntityKey.IsTemporary
+                        && WrappedOwner.EntityKey != null
+                        && !WrappedOwner.EntityKey.IsTemporary
                         && IsDependentEndOfReferentialConstraint(false))
                     {
                         addRelationshipAsUnchanged = true;
@@ -1570,8 +1566,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             AddEntityToObjectStateManager(wrappedEntity, doAttach);
             if (!relationshipAlreadyExists
-                &&
-                ObjectContext != null
+                && ObjectContext != null
                 && wrappedEntity.Context != null)
             {
                 if (!IsForeignKey)
@@ -2197,7 +2192,22 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         #endregion
 
-        internal abstract bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists);
+        // <returns> True if the verify succeeded, False if the Add should no-op </returns>
+        internal virtual bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
+        {
+            DebugCheck.NotNull(wrappedEntity);
+
+            if (relationshipAlreadyExists
+                && ContainsEntity(wrappedEntity))
+            {
+                return false;
+            }
+
+            VerifyType(wrappedEntity);
+
+            return true;
+        }
+
         internal abstract void VerifyType(IEntityWrapper wrappedEntity);
         internal abstract bool CanSetEntityType(IEntityWrapper wrappedEntity);
         internal abstract void Include(bool addRelationshipAsUnchanged, bool doAttach);
@@ -2305,10 +2315,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             EntityEntry entry;
 
             if (wrappedEntity.Context != null
-                &&
-                wrappedEntity.Context.ObjectStateManager.TransactionManager.IsAttachTracking
-                &&
-                wrappedEntity.Context.ObjectStateManager.TransactionManager.PromotedKeyEntries.TryGetValue(wrappedEntity.Entity, out entry))
+                && wrappedEntity.Context.ObjectStateManager.TransactionManager.IsAttachTracking
+                && wrappedEntity.Context.ObjectStateManager.TransactionManager.PromotedKeyEntries.TryGetValue(wrappedEntity.Entity, out entry))
             {
                 // This is executed only in the cleanup code from ObjectContext.AttachTo()
                 // If the entry was promoted in AttachTo(), it has to be degraded now instead of being deleted.

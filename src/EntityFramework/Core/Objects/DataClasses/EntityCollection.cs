@@ -569,22 +569,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        // <returns> True if the verify succeeded, False if the Add should no-op </returns>
-        internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
-        {
-            DebugCheck.NotNull(wrappedEntity);
-
-            if (!relationshipAlreadyExists
-                && ContainsEntity(wrappedEntity))
-            {
-                return false;
-            }
-
-            VerifyType(wrappedEntity);
-
-            return true;
-        }
-
         internal override bool CanSetEntityType(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -669,10 +653,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             DebugCheck.NotNull(wrappedEntity);
 
-            // Using operator 'as' instead of () allows calling ContainsEntity
-            // with entity of different type than TEntity.
-            var entity = wrappedEntity.Entity as TEntity;
-            return _wrappedRelatedEntities == null ? false : _wrappedRelatedEntities.ContainsKey(entity);
+            return _wrappedRelatedEntities != null && _wrappedRelatedEntities.ContainsKey((TEntity)wrappedEntity.Entity);
         }
 
         // -------------------

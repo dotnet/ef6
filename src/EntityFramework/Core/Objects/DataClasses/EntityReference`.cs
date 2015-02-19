@@ -595,22 +595,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _wrappedCachedValue = NullEntityWrapper.NullWrapper;
         }
 
-        // <returns> True if the verify succeeded, False if the Add should no-op </returns>
-        internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
-        {
-            DebugCheck.NotNull(wrappedEntity);
-
-            if (!relationshipAlreadyExists
-                && ContainsEntity(wrappedEntity))
-            {
-                return false;
-            }
-
-            VerifyType(wrappedEntity);
-
-            return true;
-        }
-
         internal override bool CanSetEntityType(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -778,9 +762,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
             DebugCheck.NotNull(wrappedEntity);
 
-            // Using operator 'as' instead of () allows calling ContainsEntity
-            // with entity of different type than TEntity.
-            return null != _wrappedCachedValue.Entity && _wrappedCachedValue.Entity == wrappedEntity.Entity;
+            return _wrappedCachedValue.Entity != null && _wrappedCachedValue.Entity == wrappedEntity.Entity;
         }
 
         // Identical code is in EntityCollection, but this can't be moved to the base class because it relies on the

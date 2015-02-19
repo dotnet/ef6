@@ -3318,7 +3318,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 try
                 {
-                    // Populate Transact-ionManager.DeletedRelationshipsByGraph and TransactionManager.AddedRelationshipsByGraph
+                    // Populate TransactionManager.DeletedRelationshipsByGraph and TransactionManager.AddedRelationshipsByGraph
                     DetectChangesInNavigationProperties(entries);
 
                     // Populate TransactionManager.ChangedForeignKeys
