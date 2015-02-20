@@ -209,6 +209,30 @@ namespace System.Data.Entity.Core.Common
             return (DbCommand)cloneablePrototype.Clone();
         }
 
+        /// <summary>
+        /// Clones the connection.
+        /// </summary>
+        /// <param name="connection">The original connection.</param>
+        /// <returns>Cloned connection</returns>
+        public virtual DbConnection CloneDbConnection(DbConnection connection)
+        {
+            return CloneDbConnection(connection, GetProviderFactory(connection));
+        }
+
+        /// <summary>
+        /// Clones the connection.
+        /// </summary>
+        /// <param name="connection">The original connection.</param>
+        /// <param name="factory">The factory to use.</param>
+        /// <returns>Cloned connection</returns>
+        public virtual DbConnection CloneDbConnection(DbConnection connection, DbProviderFactory factory)
+        {
+            DebugCheck.NotNull(connection);
+            DebugCheck.NotNull(factory);
+
+            return factory.CreateConnection();
+        }
+
         /// <summary>Returns provider manifest token given a connection.</summary>
         /// <returns>The provider manifest token.</returns>
         /// <param name="connection">Connection to provider.</param>

@@ -250,7 +250,7 @@ namespace System.Data.Entity.SqlServer
 
                 Assert.Equal(
                     SqlVersion.Sql10,
-                    SqlProviderServices.CreateDatabaseFromScript(null, mockConnection.Object, ""));
+                    SqlProviderServices.Instance.CreateDatabaseFromScript(null, mockConnection.Object, ""));
             }
         }
 

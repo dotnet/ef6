@@ -52,6 +52,7 @@ namespace System.Data.Entity.Migrations
         private readonly Lazy<ModificationCommandTreeGenerator> _modificationCommandTreeGenerator;
         private readonly DbContext _usersContext;
         private readonly Func<DbConnection, string, HistoryContext> _historyContextFactory;
+        private readonly DbConnection _connection;
 
         private readonly bool _calledByCreateDatabase;
         private readonly DatabaseExistenceState _existenceState;
@@ -143,9 +144,9 @@ namespace System.Data.Entity.Migrations
 
                 _currentModel = context.GetModel();
 
-                var connection = context.Database.Connection;
+                _connection = context.Database.Connection;
 
-                _providerFactory = DbProviderServices.GetProviderFactory(connection);
+                _providerFactory = DbProviderServices.GetProviderFactory(_connection);
 
                 _defaultSchema
                     = context.InternalContext.DefaultSchema
@@ -173,7 +174,7 @@ namespace System.Data.Entity.Migrations
                         : DbConfiguration
                             .DependencyResolver
                             .GetService<IManifestTokenResolver>()
-                            .ResolveManifestToken(connection);
+                            .ResolveManifestToken(_connection);
 
                 var modelBuilder
                     = context.InternalContext.CodeFirstModel.CachedModelBuilder;
@@ -193,8 +194,8 @@ namespace System.Data.Entity.Migrations
 
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
-                        DbInterception.Dispatch.Connection.GetDataSource(connection, interceptionContext),
-                        DbInterception.Dispatch.Connection.GetDatabase(connection, interceptionContext),
+                        DbInterception.Dispatch.Connection.GetDataSource(_connection, interceptionContext),
+                        DbInterception.Dispatch.Connection.GetDatabase(_connection, interceptionContext),
                         _usersContextInfo.ConnectionProviderName,
                         _usersContextInfo.ConnectionStringOrigin == DbConnectionStringOrigin.DbContextInfo
                             ? Strings.LoggingExplicit
@@ -1331,7 +1332,9 @@ namespace System.Data.Entity.Migrations
 
         private DbConnection CreateConnection()
         {
-            var connection = _providerFactory.CreateConnection();
+            var connection = _connection == null
+                ? _providerFactory.CreateConnection()
+                : DbProviderServices.GetProviderServices(_connection).CloneDbConnection(_connection, _providerFactory);
 
             var interceptionContext = new DbConnectionPropertyInterceptionContext<string>().WithValue(_usersContextInfo.ConnectionString);
             if (_usersContext != null)

@@ -46,8 +46,8 @@ namespace System.Data.Entity.Internal
             if (connection == null
                 || connection.State != ConnectionState.Open)
             {
-                connection =
-                    DbProviderServices.GetProviderFactory(objectContext.Connection.StoreConnection).CreateConnection();
+                connection = connection ?? objectContext.Connection.StoreConnection;
+                connection = DbProviderServices.GetProviderServices(connection).CloneDbConnection(connection);
                 DbInterception.Dispatch.Connection.SetConnectionString(
                     connection,
                     new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionString));

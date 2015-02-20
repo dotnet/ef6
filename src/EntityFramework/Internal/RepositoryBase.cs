@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
 
@@ -19,8 +20,7 @@ namespace System.Data.Entity.Internal
             DebugCheck.NotNull(providerFactory);
 
             var existingConnection = usersContext.Connection;
-            if (existingConnection != null
-                && existingConnection.State == ConnectionState.Open)
+            if (existingConnection != null)
             {
                 _existingConnection = existingConnection;
             }
@@ -31,12 +31,15 @@ namespace System.Data.Entity.Internal
 
         protected DbConnection CreateConnection()
         {
-            if (_existingConnection != null)
+            if (_existingConnection != null
+                && _existingConnection.State == ConnectionState.Open)
             {
                 return _existingConnection;
             }
 
-            var connection = _providerFactory.CreateConnection();
+            var connection = _existingConnection == null
+                ? _providerFactory.CreateConnection()
+                : DbProviderServices.GetProviderServices(_existingConnection).CloneDbConnection(_existingConnection, _providerFactory);
             DbInterception.Dispatch.Connection.SetConnectionString(connection,
                 new DbConnectionPropertyInterceptionContext<string>().WithValue(_connectionString));
 

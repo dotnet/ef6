@@ -13,6 +13,7 @@ namespace ProductivityApiUnitTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
@@ -33,6 +34,7 @@ namespace ProductivityApiUnitTests
     using Moq.Protected;
     using Xunit;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Security;
     using System.Threading;
 
     #region Context types for testing database name generation
@@ -486,6 +488,44 @@ namespace ProductivityApiUnitTests
                 new SqlConnectionStringBuilder(connectionString).Password,
                 new SqlConnectionStringBuilder(context.Database.Connection.ConnectionString).Password);
         }
+
+#if !NET40
+        [Fact]
+        public void Can_initialize_database_when_using_secure_connection_string_with_SqlCredential_and_eager_connection()
+        {
+            EnsureEfTestUserExists();
+
+            var connectionString = new SqlConnectionStringBuilder()
+            {
+                DataSource = @".\SQLEXPRESS",
+                InitialCatalog = DefaultDbName<PersistSecurityInfoContext>()
+            }.ConnectionString;
+
+            var password = new SecureString();
+            foreach (var c in "Password1".ToCharArray())
+            {
+                password.AppendChar(c);
+            }
+            password.MakeReadOnly();
+
+            var credential = new SqlCredential("EFTestUser", password);
+            var connection = new SqlConnection(connectionString, credential);
+
+            var context = new PersistSecurityInfoContext(connection, true);
+            try
+            {
+                context.Database.Delete();
+                context.Database.Initialize(force: true);
+                Assert.True(context.Database.CompatibleWithModel(true));
+            }
+            finally
+            {
+                Assert.True(connection.State == ConnectionState.Closed);
+                context.Database.Delete();
+                context.Dispose();
+            }
+        }
+#endif
 
         [Fact]
         public void Can_use_ddl_ops_when_using_secure_connection_string_with_sql_server_authentication_and_eager_context()

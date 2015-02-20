@@ -1121,7 +1121,7 @@ namespace System.Data.Entity.SqlServer
             return ExpandDataDirectory(attachDBFile);
         }
 
-        internal static SqlVersion CreateDatabaseFromScript(int? commandTimeout, DbConnection sqlConnection, string createDatabaseScript)
+        internal SqlVersion CreateDatabaseFromScript(int? commandTimeout, DbConnection sqlConnection, string createDatabaseScript)
         {
             SqlVersion sqlVersion = 0;
             UsingMasterConnection(
@@ -1251,7 +1251,7 @@ namespace System.Data.Entity.SqlServer
             return false;
         }
 
-        private static bool CheckDatabaseExists(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
+        private bool CheckDatabaseExists(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
             var databaseExists = false;
             UsingMasterConnection(
@@ -1342,7 +1342,7 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        private static void DropDatabase(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
+        private void DropDatabase(SqlConnection sqlConnection, int? commandTimeout, string databaseName)
         {
             // clear the connection pools in case someone's holding on to the database still
             SqlConnection.ClearAllPools();
@@ -1450,7 +1450,7 @@ namespace System.Data.Entity.SqlServer
                 });
         }
 
-        private static void UsingMasterConnection(DbConnection sqlConnection, Action<DbConnection> act)
+        private void UsingMasterConnection(DbConnection sqlConnection, Action<DbConnection> act)
         {
             var connectionBuilder = new SqlConnectionStringBuilder(
                 DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, new DbInterceptionContext()))
@@ -1461,7 +1461,7 @@ namespace System.Data.Entity.SqlServer
 
             try
             {
-                using (var masterConnection = GetProviderFactory(sqlConnection).CreateConnection())
+                using (var masterConnection = CloneDbConnection(sqlConnection))
                 {
                     DbInterception.Dispatch.Connection.SetConnectionString(masterConnection,
                         new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionBuilder.ConnectionString));
@@ -1478,6 +1478,26 @@ namespace System.Data.Entity.SqlServer
                 }
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Clones the connection.
+        /// </summary>
+        /// <param name="connection">The original connection.</param>
+        /// <param name="factory">The factory to use.</param>
+        /// <returns>Cloned connection</returns>
+        public override DbConnection CloneDbConnection(DbConnection connection, DbProviderFactory factory)
+        {
+            DebugCheck.NotNull(connection);
+            DebugCheck.NotNull(factory);
+
+            var clonableConnection = connection as ICloneable;
+            if (clonableConnection != null)
+            {
+                return (DbConnection)clonableConnection.Clone();
+            }
+
+            return base.CloneDbConnection(connection, factory);
         }
     }
 }
