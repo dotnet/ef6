@@ -199,7 +199,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _schema; }
             set
             {
-                DebugCheck.NotEmpty(value);
                 Util.ThrowIfReadOnly(this);
 
                 _schema = value;

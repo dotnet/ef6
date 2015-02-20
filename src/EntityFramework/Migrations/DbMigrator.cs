@@ -1191,7 +1191,7 @@ namespace System.Data.Entity.Migrations
             return new InterceptableDbCommand(command, interceptionContext);
         }
 
-        private static void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)
+        private void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)
         {
             DebugCheck.NotNull(operations);
             DebugCheck.NotNull(targetModel);
@@ -1239,7 +1239,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private static string GetStandardizedTableName(string tableName)
+        private string GetStandardizedTableName(string tableName)
         {
             DebugCheck.NotEmpty(tableName);
 
@@ -1250,7 +1250,7 @@ namespace System.Data.Entity.Migrations
                 return tableName;
             }
 
-            return new DatabaseName(tableName, EdmModelExtensions.DefaultSchema).ToString();
+            return new DatabaseName(tableName, _defaultSchema).ToString();
         }
 
         // <summary>

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Migrations.Design;
     using System.Linq;
     using Xunit;
 
@@ -123,6 +124,53 @@ namespace System.Data.Entity.Migrations
             Assert.True(
                 foreignKey.UniqueConstraint.KeyColumnUsages.Any(
                     kcu => kcu.Position == 2 && kcu.ColumnTableName == "MigrationsProducts" && kcu.ColumnName == "Sku"));
+        }
+
+        private class CustomSchemaContext : DbContext
+        {
+            private class Foo
+            {
+                public int Id { get; set; }
+            }
+
+            private class Bar
+            {
+                public int Id { get; set; }
+                public int FooId { get; set; }
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.HasDefaultSchema("");
+                modelBuilder.Entity<Foo>();
+                modelBuilder.Entity<Bar>();
+            }
+        }
+
+        private class AddFKCustomSchema : DbMigration
+        {
+            public override void Up()
+            {
+                AddForeignKey("Bars", new[] { "FooId" }, "Foos");
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_composite_foreign_key_constraint_when_principal_columns_not_specified_when_default_schema()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<CustomSchemaContext>();
+
+            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
+
+            migrator = CreateMigrator<CustomSchemaContext>(scaffoldedMigrations: generatedMigration);
+
+            migrator.Update();
+
+            migrator = CreateMigrator<CustomSchemaContext>(new AddFKCustomSchema());
+
+            migrator.Update();
         }
     }
 }

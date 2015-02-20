@@ -57,10 +57,8 @@ namespace System.Data.Entity.Utilities
 
         public DatabaseName(string name, string schema)
         {
-            DebugCheck.NotEmpty(name);
-
             _name = name;
-            _schema = schema;
+            _schema = !string.IsNullOrEmpty(schema) ? schema : null;
         }
 
         public string Name
