@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Resources;
@@ -40,10 +41,18 @@ namespace System.Data.Entity.Migrations
                             {
                                 facade.Update(targetMigration, force);
                             }
-                            catch (AutomaticMigrationsDisabledException ex)
+                            catch (ToolingException ex)
                             {
-                                facade.LogWarningDelegate(ex.Message);
-                                facade.LogWarningDelegate(Strings.AutomaticMigrationDisabledInfo);
+                                if (ex.InnerType
+                                    == typeof(AutomaticMigrationsDisabledException).FullName)
+                                {
+                                    facade.LogWarningDelegate(ex.Message);
+                                    facade.LogWarningDelegate(Strings.AutomaticMigrationDisabledInfo);
+                                }
+                                else
+                                {
+                                    throw;
+                                }
                             }
                         }
                     }

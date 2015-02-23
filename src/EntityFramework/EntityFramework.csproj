@@ -1479,6 +1479,7 @@
     <Compile Include="Migrations\Design\MigrationCodeGenerator.cs" />
     <Compile Include="Migrations\Design\MigrationScaffolder.cs" />
     <Compile Include="Migrations\Design\ScaffoldedMigration.cs" />
+    <Compile Include="Migrations\Design\ToolingException.cs" />
     <Compile Include="Migrations\Design\ToolingFacade.cs">
       <SubType>Code</SubType>
     </Compile>

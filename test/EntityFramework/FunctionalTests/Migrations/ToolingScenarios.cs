@@ -173,7 +173,7 @@ namespace System.Data.Entity.Migrations
                 dataDirectory: null,
                 connectionStringInfo: null))
             {
-                Assert.Throws<MigrationsException>(() => facade.GetContextType("MissingContext"));
+                Assert.Throws<ToolingException>(() => facade.GetContextType("MissingContext"));
             }
         }
 
@@ -327,7 +327,7 @@ namespace System.Data.Entity.Migrations
                 null,
                 null))
             {
-                Assert.Throws<MigrationsException>(() => facade.GetDatabaseMigrations())
+                Assert.Throws<ToolingException>(() => facade.GetDatabaseMigrations())
                       .ValidateMessage("ToolingFacade_AssemblyNotFound", unknownAssemblyName);
             }
         }
