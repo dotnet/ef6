@@ -37,11 +37,22 @@ namespace System.Data.Entity.Infrastructure
                 }
                 catch (EntityException)
                 {
-                    var sqlStatements = GenerateMigrationStatements(context);
-                    var migrator = new DbMigrator(context.InternalContext.MigrationsConfiguration, context, DatabaseExistenceState.Exists, calledByCreateDatabase: true);
-                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                    var currentInfo = DbContextInfo.CurrentInfo;
+                    DbContextInfo.CurrentInfo = null;
+                    try
                     {
-                        migrator.ExecuteStatements(sqlStatements, entityConnection.CurrentTransaction.StoreTransaction);
+                        var sqlStatements = GenerateMigrationStatements(context);
+                        var migrator = new DbMigrator(
+                            context.InternalContext.MigrationsConfiguration, context, DatabaseExistenceState.Exists,
+                            calledByCreateDatabase: true);
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                        {
+                            migrator.ExecuteStatements(sqlStatements, entityConnection.CurrentTransaction.StoreTransaction);
+                        }
+                    }
+                    finally
+                    {
+                        DbContextInfo.CurrentInfo = currentInfo;
                     }
                 }
             }

@@ -90,11 +90,21 @@ namespace System.Data.Entity.Infrastructure
 
         private void Initialize(DbConnection connection)
         {
-            TransactionContext = _transactionContextFactory(connection);
-            if (TransactionContext != null)
+            var currentInfo = DbContextInfo.CurrentInfo;
+            DbContextInfo.CurrentInfo = null;
+            try
             {
-                TransactionContext.Configuration.LazyLoadingEnabled = false;
-                TransactionContext.Configuration.AutoDetectChangesEnabled = false;
+                TransactionContext = _transactionContextFactory(connection);
+                if (TransactionContext != null)
+                {
+                    TransactionContext.Configuration.LazyLoadingEnabled = false;
+                    TransactionContext.Configuration.AutoDetectChangesEnabled = false;
+                    TransactionContext.Database.Initialize(force: false);
+                }
+            }
+            finally
+            {
+                DbContextInfo.CurrentInfo = currentInfo;
             }
         }
 

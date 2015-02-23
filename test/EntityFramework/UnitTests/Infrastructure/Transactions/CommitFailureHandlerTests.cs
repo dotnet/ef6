@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.TestDoubles;
     using System.Linq;
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 var context = MockHelper.CreateMockObjectContext<object>();
 
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(context);
 
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Infrastructure
                     Assert.Same(context.InterceptionContext.DbContexts.FirstOrDefault(), handler.DbContext);
                     Assert.Same(((EntityConnection)context.Connection).StoreConnection, handler.Connection);
                     Assert.Same(((EntityConnection)context.Connection).StoreConnection, handler.Connection);
-                    Assert.IsType<TransactionContext>(handler.TransactionContext);
+                    Assert.NotNull(handler.TransactionContext);
                 }
             }
 
@@ -41,14 +42,14 @@ namespace System.Data.Entity.Infrastructure
             {
                 var context = new DbContext("c");
 
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(context, context.Database.Connection);
 
                     Assert.Null(handler.ObjectContext);
                     Assert.Same(context, handler.DbContext);
                     Assert.Same(context.Database.Connection, handler.Connection);
-                    Assert.IsType<TransactionContext>(handler.TransactionContext);
+                    Assert.NotNull(handler.TransactionContext);
                 }
             }
 
@@ -74,7 +75,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 var context = MockHelper.CreateMockObjectContext<object>();
 
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(context);
 
@@ -173,7 +174,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Returns_false_with_DbContext_if_nothing_matches()
             {
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(new DbContext("c"), CreateMockConnection());
 
@@ -189,7 +190,7 @@ namespace System.Data.Entity.Infrastructure
             public void Returns_false_with_DbContext_if_different_context_same_connection()
             {
                 var connection = CreateMockConnection();
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(new DbContext("c"), connection);
 
@@ -205,7 +206,7 @@ namespace System.Data.Entity.Infrastructure
             public void Returns_true_with_DbContext_if_same_context()
             {
                 var context = new DbContext("c");
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(context, CreateMockConnection());
 
@@ -221,7 +222,7 @@ namespace System.Data.Entity.Infrastructure
             public void Returns_true_with_DbContext_if_no_context_same_connection()
             {
                 var connection = CreateMockConnection();
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(new DbContext("c"), connection);
 
@@ -235,7 +236,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Returns_false_with_ObjectContext_if_nothing_matches()
             {
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(MockHelper.CreateMockObjectContext<object>());
 
@@ -251,7 +252,7 @@ namespace System.Data.Entity.Infrastructure
             public void Returns_false_with_ObjectContext_if_different_context_same_connection()
             {
                 var context = MockHelper.CreateMockObjectContext<object>();
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(context);
 
@@ -267,7 +268,7 @@ namespace System.Data.Entity.Infrastructure
             public void Returns_true_with_ObjectContext_if_same_ObjectContext()
             {
                 var context = MockHelper.CreateMockObjectContext<object>();
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(context);
 
@@ -283,7 +284,7 @@ namespace System.Data.Entity.Infrastructure
             public void Returns_true_with_ObjectContext_if_no_context_same_connection()
             {
                 var context = MockHelper.CreateMockObjectContext<object>();
-                using (var handler = new CommitFailureHandler())
+                using (var handler = CreateCommitFailureHandlerMock().Object)
                 {
                     handler.Initialize(context);
 
@@ -397,7 +398,7 @@ namespace System.Data.Entity.Infrastructure
             public void BeganTransaction_does_not_fail_if_exception_thrown_such_that_there_is_no_transaction()
             {
                 var context = MockHelper.CreateMockObjectContext<object>();
-                var handler = new CommitFailureHandler();
+                var handler = CreateCommitFailureHandlerMock().Object;
                 handler.Initialize(context);
 
                 var interceptionContext = new BeginTransactionInterceptionContext().WithObjectContext(context);
@@ -424,6 +425,7 @@ namespace System.Data.Entity.Infrastructure
                     var transactionContextMock = new Mock<TransactionContext>(c) { CallBase = true };
                     var transactionRowSet = new InMemoryDbSet<TransactionRow>();
                     transactionContextMock.Setup(m => m.Transactions).Returns(transactionRowSet);
+                    transactionContextMock.Setup(m => m.InternalContext).Returns(Mock.Of<InternalContext>());
                     return transactionContextMock.Object;
                 };
             var handlerMock = new Mock<CommitFailureHandler>(transactionContextFactory) { CallBase = true };

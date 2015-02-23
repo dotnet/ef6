@@ -3,7 +3,9 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Annotations;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
@@ -35,6 +37,33 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1>(new AlterColumnWithDefault());
 
             migrator.Update();
+
+            var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
+            Assert.True(column.Default.Contains("'Bill'"));
+        }
+
+        [MigrationsTheory]
+        public void Can_change_column_to_have_default_value_with_transaction_handler()
+        {
+            ResetDatabase();
+            
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(c => new TransactionContext(c)), null, null));
+
+            try
+            {
+                var migrator = CreateMigrator<ShopContext_v1>();
+
+                migrator.Update();
+
+                migrator = CreateMigrator<ShopContext_v1>(new AlterColumnWithDefault());
+
+                migrator.Update();
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
 
             var column = Info.Columns.Single(c => c.TableName == "MigrationsCustomers" && c.Name == "Name");
             Assert.True(column.Default.Contains("'Bill'"));
