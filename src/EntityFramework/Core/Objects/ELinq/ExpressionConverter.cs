@@ -1175,7 +1175,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // Only primitive types, entity types, and simple row types (no IGrouping/EntityCollection) are
         // supported.
         // </summary>
-        private static void VerifyTypeSupportedForComparison(Type clrType, TypeUsage edmType, Stack<EdmMember> memberPath)
+        private static void VerifyTypeSupportedForComparison(Type clrType, TypeUsage edmType, Stack<EdmMember> memberPath, bool isNullComparison)
         {
             // NOTE: due to bug in null handling for complex types, complex types are currently not supported
             // for comparisons (see SQL BU 543956)
@@ -1186,6 +1186,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 case BuiltInTypeKind.EntityType:
                 case BuiltInTypeKind.RefType:
                     return;
+
                 case BuiltInTypeKind.RowType:
                     {
                         InitializerMetadata initializerMetadata;
@@ -1195,7 +1196,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             ||
                             initializerMetadata.Kind == InitializerMetadataKind.ProjectionNew)
                         {
-                            VerifyRowTypeSupportedForComparison(clrType, (RowType)edmType.EdmType, memberPath);
+                            if (!isNullComparison)
+                            {
+                                VerifyRowTypeSupportedForComparison(clrType, (RowType)edmType.EdmType, memberPath, isNullComparison);
+                            }
                             return;
                         }
                         break;
@@ -1203,6 +1207,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 default:
                     break;
             }
+
             if (null == memberPath)
             {
                 throw new NotSupportedException(Strings.ELinq_UnsupportedComparison(DescribeClrType(clrType)));
@@ -1220,7 +1225,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        private static void VerifyRowTypeSupportedForComparison(Type clrType, RowType rowType, Stack<EdmMember> memberPath)
+        private static void VerifyRowTypeSupportedForComparison(Type clrType, RowType rowType, Stack<EdmMember> memberPath, bool isNullComparison)
         {
             foreach (EdmMember member in rowType.Properties)
             {
@@ -1229,7 +1234,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     memberPath = new Stack<EdmMember>();
                 }
                 memberPath.Push(member);
-                VerifyTypeSupportedForComparison(clrType, member.TypeUsage, memberPath);
+                VerifyTypeSupportedForComparison(clrType, member.TypeUsage, memberPath, isNullComparison);
                 memberPath.Pop();
             }
         }
@@ -1270,7 +1275,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // </summary>
         private static DbExpression CreateIsNullExpression(DbExpression operand, Type operandClrType)
         {
-            VerifyTypeSupportedForComparison(operandClrType, operand.ResultType, null);
+            VerifyTypeSupportedForComparison(operandClrType, operand.ResultType, null, true);
             return operand.IsNull();
         }
 
@@ -1281,8 +1286,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private DbExpression CreateEqualsExpression(
             DbExpression left, DbExpression right, EqualsPattern pattern, Type leftClrType, Type rightClrType)
         {
-            VerifyTypeSupportedForComparison(leftClrType, left.ResultType, null);
-            VerifyTypeSupportedForComparison(rightClrType, right.ResultType, null);
+            VerifyTypeSupportedForComparison(leftClrType, left.ResultType, null, false);
+            VerifyTypeSupportedForComparison(rightClrType, right.ResultType, null, false);
 
             //For Ref Type comparison, check whether they refer to compatible Entity Types.
             var leftType = left.ResultType;
