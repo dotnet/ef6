@@ -17,7 +17,7 @@
   <?elseif $(var.VisualStudioVersion) = 14.0?>
     <?define ProductId = {6FDF32A2-AC01-477f-A9DF-738BC836EE53}?>
     <?define UpgradeCode = {BEBFDF8D-1831-4610-B0F4-9BA05E7C60DF}?>
-    <?define FullProductName = VS IDE Test Host for Visual Studio 14?>
+    <?define FullProductName = VS IDE Test Host for Visual Studio 2015?>
     <?define ProductDescription = Allows to run tests inside VS IDE?>
     <?define ProductVersion = $(var.WixVsIDETestHostAdapterProductVersion)?>
   <?endif?>
