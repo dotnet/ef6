@@ -9,7 +9,7 @@ Project global pre-settings.
   
   <PropertyGroup >
     <RuntimeVersionMajor>6</RuntimeVersionMajor>
-    <RuntimeVersionMinor>1</RuntimeVersionMinor>
+    <RuntimeVersionMinor>2</RuntimeVersionMinor>
     <RuntimeAssemblyVersionMinor>0</RuntimeAssemblyVersionMinor>
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '11.0'">11</ToolingVersionMajor>
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '12.0'">12</ToolingVersionMajor>
@@ -19,7 +19,7 @@ Project global pre-settings.
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '14.0'">0</ToolingVersionMinor>
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
-    <VersionReleasePrefix>4</VersionReleasePrefix>
+    <VersionReleasePrefix>0</VersionReleasePrefix>
     <VersionRelease>$(VersionReleasePrefix)-alpha1</VersionRelease>
     <VersionReleaseName>Alpha 1</VersionReleaseName>
   </PropertyGroup>
