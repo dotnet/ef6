@@ -2859,6 +2859,45 @@ namespace FunctionalTests
             Assert.Empty(databaseMapping.GetAssociationSetMappings());
         }
 
+        [Fact]
+        public void Can_hide_navigation_property_and_ignore_it_if_target_entity_is_not_mapped()
+        {
+            DbConfiguration.DependencyResolver.GetService<AttributeProvider>().ClearCache();
+
+            using (var staffConfiguration = new DynamicTypeDescriptionConfiguration<StaffAccount>())
+            {
+                staffConfiguration.SetPropertyAttributes(b => b.Domain, new NotMappedAttribute());
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<CustomStaffAccount>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Single().EntityTypeMappings.Count());
+                Assert.Empty(databaseMapping.GetAssociationSetMappings());
+            }
+
+            DbConfiguration.DependencyResolver.GetService<AttributeProvider>().ClearCache();
+        }
+
+        [Fact]
+        public void Can_hide_navigation_property_and_ignore_it_if_base_mapped_but_target_entity_is_not()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<StaffAccount>().Ignore(c => c.Domain);
+            modelBuilder.Entity<CustomStaffAccount>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Equal(3, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Single().EntityTypeMappings.Count());
+            Assert.Empty(databaseMapping.GetAssociationSetMappings());
+        }
+
         private DbContext CreateContext(DbModelBuilder modelBuilder)
         {
             return new DbContext("Bug2616Test", modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile());

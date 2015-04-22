@@ -281,11 +281,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     return true;
                 }
 
-                if (propertyInfo.DeclaringType == type)
-                {
-                    break;
-                }
-
                 type = type.BaseType;
             }
 
