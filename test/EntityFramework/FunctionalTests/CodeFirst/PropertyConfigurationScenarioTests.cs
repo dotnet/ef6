@@ -15,6 +15,64 @@ namespace System.Data.Entity.CodeFirst
 
     public class PropertyConfigurationScenarioTests : TestBase
     {
+        #region ConfigureKey
+
+        [Fact]
+        public void Configure_configure_key_on_property_index_named()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Customer>()
+                .ConfigureKey()
+                .HasName("PK_Foo_Bar");
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            {
+                var indexAttribute = ConfiguredPrimaryKeyIndexAttribute(model, "Customer");
+
+                indexAttribute.AssertConfiguration("PK_Foo_Bar", null, null, null);
+            }
+        }
+
+        [Fact]
+        public void Configure_configure_key_on_property_index_non_clustered()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Customer>()
+                .ConfigureKey()
+                .IsClustered(false);
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            {
+                var indexAttribute = ConfiguredPrimaryKeyIndexAttribute(model, "Customer");
+
+                indexAttribute.AssertConfiguration(null, null, null, false);
+            }
+        }
+
+        [Fact]
+        public void Configure_configure_key_on_property_index_clustered()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Customer>()
+                .ConfigureKey()
+                .IsClustered(true);
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            {
+                var indexAttribute = ConfiguredPrimaryKeyIndexAttribute(model, "Customer");
+
+                indexAttribute.AssertConfiguration(null, null, null, true);
+            }
+        }
+
+        #endregion
+
         #region HasKey
 
         #region Single Property
@@ -43,6 +101,7 @@ namespace System.Data.Entity.CodeFirst
 
             modelBuilder.Entity<Customer>()
                 .HasKey(e => e.CustomerID)
+                .ConfigureKey()
                 .HasName("PK_Foo_Bar");
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -61,6 +120,7 @@ namespace System.Data.Entity.CodeFirst
 
             modelBuilder.Entity<Customer>()
                 .HasKey(e => e.CustomerID)
+                .ConfigureKey()
                 .IsClustered(false);
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -79,6 +139,7 @@ namespace System.Data.Entity.CodeFirst
 
             modelBuilder.Entity<Customer>()
                 .HasKey(e => e.CustomerID)
+                .ConfigureKey()
                 .IsClustered(true);
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -118,6 +179,7 @@ namespace System.Data.Entity.CodeFirst
 
             modelBuilder.Entity<Customer>()
                 .HasKey(e => new { e.AccountNumber, e.CustomerID })
+                .ConfigureKey()
                 .HasName("PK_Foo_Bar");
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -137,6 +199,7 @@ namespace System.Data.Entity.CodeFirst
 
             modelBuilder.Entity<Customer>()
                 .HasKey(e => new { e.AccountNumber, e.CustomerID })
+                .ConfigureKey()
                 .IsClustered(false);
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -155,6 +218,7 @@ namespace System.Data.Entity.CodeFirst
 
             modelBuilder.Entity<Customer>()
                 .HasKey(e => new { e.AccountNumber, e.CustomerID })
+                .ConfigureKey()
                 .IsClustered(true);
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -509,9 +573,7 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => e.CustomerID);
-
-            modelBuilder.Entity<Customer>()
+                .HasKey(e => e.CustomerID)
                 .HasIndex(e => e.CustomerType);
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
@@ -560,6 +622,7 @@ namespace System.Data.Entity.CodeFirst
 
             modelBuilder.Entity<Customer>()
                 .HasKey(e => new { e.CustomerID, e.AccountNumber })
+                .ConfigureKey()
                 .IsClustered(false);
 
             modelBuilder.Entity<Customer>()

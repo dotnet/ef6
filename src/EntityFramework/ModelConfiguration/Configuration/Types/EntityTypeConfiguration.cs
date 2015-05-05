@@ -137,7 +137,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             get { return _keyProperties; }
         }
 
-        internal virtual Properties.Index.IndexConfiguration Key(IEnumerable<PropertyInfo> keyProperties)
+        internal virtual void Key(IEnumerable<PropertyInfo> keyProperties)
         {
             DebugCheck.NotNull(keyProperties);
 
@@ -147,10 +147,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             {
                 Key(property, OverridableConfigurationParts.None);
             }
-            
-            _keyConfiguration = new Properties.Index.IndexConfiguration();
-            
-            return _keyConfiguration;
+
+            if (_keyConfiguration == null)
+                _keyConfiguration = new Properties.Index.IndexConfiguration();
         }
 
         // <summary>
@@ -181,6 +180,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
                 Property(new PropertyPath(propertyInfo), overridableConfigurationParts);
             }
+        }
+
+        internal virtual Properties.Index.IndexConfiguration ConfigureKey()
+        {
+            if (_keyConfiguration == null)
+                _keyConfiguration = new Properties.Index.IndexConfiguration();
+
+            return _keyConfiguration;
         }
 
         internal IEnumerable<PropertyPath> PropertyIndexes
