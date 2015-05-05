@@ -62,15 +62,25 @@ namespace System.Data.Entity.ModelConfiguration
         /// </summary>
         /// <typeparam name="TKey"> The type of the key. </typeparam>
         /// <param name="keyExpression"> A lambda expression representing the property to be used as the primary key. C#: t => t.Id VB.Net: Function(t) t.Id If the primary key is made up of multiple properties then specify an anonymous type including the properties. C#: t => new { t.Id1, t.Id2 } VB.Net: Function(t) New With { t.Id1, t.Id2 } </param>
-        /// <returns> The PrimaryKeyIndexConfiguration instance so that the index can be further configured. </returns>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public PrimaryKeyIndexConfiguration HasKey<TKey>(Expression<Func<TEntityType, TKey>> keyExpression)
+        public EntityTypeConfiguration<TEntityType> HasKey<TKey>(Expression<Func<TEntityType, TKey>> keyExpression)
         {
             Check.NotNull(keyExpression, "keyExpression");
 
-            return new PrimaryKeyIndexConfiguration(
-                _entityTypeConfiguration.Key(keyExpression.GetSimplePropertyAccessList().Select(p => p.Single())));
+            _entityTypeConfiguration.Key(keyExpression.GetSimplePropertyAccessList().Select(p => p.Single()));
+
+            return this;
+        }
+
+        /// <summary>
+        /// Configures the primary key settings for this entity type.
+        /// </summary>
+        /// <returns> The PrimaryKeyIndexConfiguration instance so that the index can be further configured. </returns>
+        public PrimaryKeyIndexConfiguration ConfigureKey()
+        {
+            return new PrimaryKeyIndexConfiguration(_entityTypeConfiguration.ConfigureKey());
         }
 
         /// <summary>

@@ -2855,13 +2855,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<OrderLine>()
-                .ToTable("tbl_OrderLines")
                 .HasKey(
                     ol => new
                     {
                         ol.Id,
                         ol.OrderId
-                    });
+                    })
+                .ToTable("tbl_OrderLines");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 

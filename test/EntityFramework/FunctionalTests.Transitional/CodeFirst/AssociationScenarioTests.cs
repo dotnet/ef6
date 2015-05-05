@@ -878,9 +878,7 @@ namespace FunctionalTests
                                      {
                                          d.Fk1,
                                          d.Fk2
-                                     });
-
-            modelBuilder.Entity<DependentWeirdKeyOrder>()
+                                     })
                         .HasRequired(d => d.PrincipalNavigation)
                         .WithOptional();
 
@@ -890,9 +888,7 @@ namespace FunctionalTests
                                      {
                                          d.Fk1,
                                          d.Fk2
-                                     });
-
-            modelBuilder.Entity<DependentWeirdKeyOrder2>()
+                                     })
                         .HasRequired(d => d.PrincipalNavigation)
                         .WithOptional();
 
@@ -1362,20 +1358,13 @@ namespace FunctionalTests
                              {
                                  t.AnotherId1,
                                  t.AnotherId2
-                             });
-
-            modelBuilder
-                .Entity<ToOne>()
+                             })
                 .HasRequired(t => t.NavOne);
 
             modelBuilder
                 .Entity<One>()
-                .HasKey(o => o.AnId);
-
-            modelBuilder
-                .Entity<One>()
+                .HasKey(o => o.AnId)
                 .HasOptional(o => o.NavToOne);
-
             modelBuilder
                 .Entity<One>()
                 .Property(o => o.AnId)
@@ -1651,10 +1640,7 @@ namespace FunctionalTests
                              {
                                  t.AnotherId1,
                                  t.AnotherId2
-                             });
-
-            modelBuilder
-                .Entity<ToOne>()
+                             })
                 .HasRequired(t => t.NavOne);
 
             var databaseMapping = BuildMapping(modelBuilder);
@@ -1848,9 +1834,7 @@ namespace FunctionalTests
                     {
                         i.Id,
                         i.Name
-                    });
-
-            modelBuilder.Entity<Item>()
+                    })
                 .HasOptional(i => i.ParentItem)
                 .WithMany(i => i.ChildrenItems)
                 .Map(
@@ -2310,8 +2294,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>();
             modelBuilder.Entity<CustomerDiscount>()
-                        .HasKey(cd => cd.CustomerID);
-            modelBuilder.Entity<CustomerDiscount>()
+                        .HasKey(cd => cd.CustomerID)
                         .HasRequired(cd => cd.Customer);
 
             var databaseMapping = BuildMapping(modelBuilder);
@@ -2329,8 +2312,8 @@ namespace FunctionalTests
                         .WithRequired();
 
             modelBuilder.Entity<CustomerDiscount>()
-                        .Ignore(cd => cd.Customer)
-                        .HasKey(cd => cd.CustomerID);
+                        .HasKey(cd => cd.CustomerID)
+                        .Ignore(cd => cd.Customer);
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2550,8 +2533,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Customer>().HasKey(e => e.CustomerID);
             modelBuilder.Entity<CustomerDiscount>()
-                        .HasKey(e => e.CustomerID);
-            modelBuilder.Entity<CustomerDiscount>()
+                        .HasKey(e => e.CustomerID)
                         .HasRequired(cd => cd.Customer)
                         .WithRequiredPrincipal(c => c.CustomerDiscount)
                         .Map(m => m.ToTable("Customers"));
@@ -2569,6 +2551,7 @@ namespace FunctionalTests
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<SpecialOfferProduct>()
+                .HasKey(p => p.ProductID)
                 .Map(
                     m =>
                     {
@@ -2593,13 +2576,10 @@ namespace FunctionalTests
                                     p.SpecialOfferID
                                 });
                         m.ToTable("ProductTwo");
-                    })
-                .HasKey(p => p.ProductID);
+                    });
 
             modelBuilder.Entity<SpecialOffer>()
-                .HasKey(o => o.SpecialOfferID);
-
-            modelBuilder.Entity<SpecialOffer>()
+                .HasKey(o => o.SpecialOfferID)
                 .HasMany(o => o.SpecialOfferProducts)
                 .WithRequired(p => p.SpecialOffer)
                 .Map(
@@ -2665,8 +2645,7 @@ namespace FunctionalTests
                 .HasKey(p => p.ProductID);
 
             modelBuilder.Entity<SpecialOffer>()
-                .HasKey(o => o.SpecialOfferID);
-            modelBuilder.Entity<SpecialOffer>()
+                .HasKey(o => o.SpecialOfferID)
                 .HasMany(o => o.SpecialOfferProducts)
                 .WithRequired(p => p.SpecialOffer)
                 .Map(
@@ -2703,8 +2682,7 @@ namespace FunctionalTests
                         .HasKey(p => p.ProductID);
 
             modelBuilder.Entity<SpecialOffer>()
-                        .HasKey(o => o.SpecialOfferID);
-            modelBuilder.Entity<SpecialOffer>()
+                        .HasKey(o => o.SpecialOfferID)
                         .HasMany(o => o.SpecialOfferProducts)
                         .WithRequired(p => p.SpecialOffer)
                         .Map(mc => mc.MapKey("SpecialOfferID"));

@@ -620,10 +620,7 @@ namespace ProductivityApiTests
             {
                 modelBuilder
                     .Entity<CompositeBlog663>()
-                    .HasKey(e => new { e.Id1, e.Id2 });
-                
-                modelBuilder
-                    .Entity<CompositeBlog663>()
+                    .HasKey(e => new { e.Id1, e.Id2 })
                     .HasMany(e => e.Posts)
                     .WithOptional(e => e.Blog)
                     .HasForeignKey(e => new { e.BlogId1, e.BlogId2 });

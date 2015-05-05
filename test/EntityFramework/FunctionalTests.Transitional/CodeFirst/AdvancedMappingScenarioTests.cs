@@ -25,16 +25,14 @@ namespace FunctionalTests
                 {
                     modelBuilder.Entity<SomeUser>()
                         .ToTable("Users")
-                        .HasKey(u => new { u.Id1, u.Id2 });
-                    modelBuilder.Entity<SomeUser>()
+                        .HasKey(u => new { u.Id1, u.Id2 })
                         .HasMany(u => u.Roles)
                         .WithRequired()
                         .HasForeignKey(ur => new { ur.UserId1, ur.UserId2 });
 
                     modelBuilder.Entity<SomeRole>()
                         .ToTable("Roles")
-                        .HasKey(r => new { r.Id1, r.Id2 });
-                    modelBuilder.Entity<SomeRole>()
+                        .HasKey(r => new { r.Id1, r.Id2 })
                         .HasMany(r => r.Users)
                         .WithRequired()
                         .HasForeignKey(ur => new { ur.RoleId1, ur.RoleId2 });

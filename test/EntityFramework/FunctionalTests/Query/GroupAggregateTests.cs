@@ -1324,8 +1324,7 @@ FROM ( SELECT
 
                 protected override void OnModelCreating(DbModelBuilder modelBuilder)
                 {
-                    modelBuilder.Entity<Foo>().HasKey(e => e.S);
-                    modelBuilder.Entity<Foo>().HasOptional(e => e.Bar);
+                    modelBuilder.Entity<Foo>().HasKey(e => e.S).HasOptional(e => e.Bar);
                 }
             }
 
