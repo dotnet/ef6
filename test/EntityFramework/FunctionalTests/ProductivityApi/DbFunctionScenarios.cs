@@ -5,9 +5,11 @@ namespace FunctionalTests.ProductivityApi
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.TestHelpers;
     using System.Data.Entity.WrappingProvider;
     using System.Data.SqlClient;
@@ -1488,6 +1490,72 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         1, (decimal)GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
                             e => Math.Truncate(e.Decimal)).First(), 7);
+                }
+            }
+        }
+
+        public class Custom : FunctionalTestBase
+        {
+            [Fact]
+            public void CustomDbFunction_can_be_configured_in_CSpace()
+            {
+                using (var context = new CustomEntityFunctionContext())
+                {
+                    Assert.Equal(
+                        "Magic Unicorns Rocks",
+                        context.WithTypes
+                            .Where(t => t.String == "Magic Unicorns Rock")
+                            .Select(t => t.String.ConcatenateS())
+                            .First());
+
+                    Assert.Equal(
+                        "Magic Unicorns Rocks",
+                        GetObjectSet<EntityWithTypes>(context)
+                            .Where(t => t.String == "Magic Unicorns Rock")
+                            .Select(t => t.String.ConcatenateS())
+                            .First());
+                }
+            }
+
+            private class CustomEntityFunctionContext : EntityFunctionContext
+            {
+                static CustomEntityFunctionContext()
+                {
+                    Database.SetInitializer<CustomEntityFunctionContext>(new EntityFunctionInitializer());
+                }
+
+                protected override void OnModelCreating(DbModelBuilder modelBuilder)
+                {
+                    modelBuilder.Conventions.Add(new CustomConvention());                    
+                    
+                    base.OnModelCreating(modelBuilder);
+                }
+            }
+
+            private class CustomConvention
+                : IConceptualModelConvention<EdmModel>
+            {
+                public void Apply(EdmModel item, DbModel model)
+                {
+                    var functionPayload = new EdmFunctionPayload() {
+                        IsComposable = true,
+                        CommandText = "v + 's'",
+                        Parameters = new[] { 
+                            FunctionParameter.Create("v", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), ParameterMode.In)
+                        },
+
+                        ReturnParameters = new[] {
+                            FunctionParameter.Create("Result", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), ParameterMode.ReturnValue)
+                        }
+                    };
+
+                    item.AddItem(
+                        EdmFunction.Create(
+                            "ConcatenateS",
+                            "FunctionalTests.ProductivityApi",
+                            DataSpace.CSpace,
+                            functionPayload,
+                            null));
                 }
             }
         }
@@ -3176,6 +3244,15 @@ namespace FunctionalTests.ProductivityApi
             {
                 context.WithTypes.Add(entityWithType);
             }
+        }
+    }
+
+    static class CustomExtension
+    {
+        [DbFunction("FunctionalTests.ProductivityApi", "ConcatenateS")]
+        public static string ConcatenateS(this string baseString)
+        {
+            throw new NotImplementedException();
         }
     }
 }

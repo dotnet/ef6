@@ -235,6 +235,13 @@
         </xs:sequence>
         <xs:attribute name="Name" type="edm:TSimpleIdentifier" use="required" />
         <xs:attribute name="ReturnType" type="edm:TWrappedFunctionType" use="optional" />
+        <xs:attribute name="Aggregate" type="xs:boolean" use="optional" />
+        <xs:attribute name="BuiltIn" type="xs:boolean" use="optional" />
+        <xs:attribute name="StoreFunctionName" type="xs:string" use="optional" />
+        <xs:attribute name="NiladicFunction" type="xs:boolean" use="optional" />
+        <xs:attribute name="IsComposable" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="ParameterTypeSemantics" type="edm:TParameterTypeSemantics" use="optional" default="AllowImplicitConversion" />
+        <xs:attribute name="Schema" type="xs:string" use="optional" />
         <xs:attributeGroup ref="edm:TFacetAttributes" />
         <xs:anyAttribute namespace="##other" processContents="lax" />
     </xs:complexType>
@@ -580,6 +587,13 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="TParameterTypeSemantics">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ExactMatchOnly" />
+            <xs:enumeration value="AllowImplicitPromotion" />
+            <xs:enumeration value="AllowImplicitConversion" />
+        </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="TAction">
         <xs:restriction base="xs:token">
