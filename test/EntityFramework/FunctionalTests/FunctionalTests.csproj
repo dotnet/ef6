@@ -245,6 +245,7 @@
     <Compile Include="ProductivityApi\DbContextTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\DeadlockTests.cs" />
+    <Compile Include="ProductivityApi\DefaultDbModelStoreTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForSqlCe35.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
     <Compile Include="Query\Bug2612.cs" />

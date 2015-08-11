@@ -315,6 +315,8 @@
     <Compile Include="Infrastructure\Annotations\CompatibilityResultTests.cs" />
     <Compile Include="Infrastructure\Annotations\IndexAnnotationSerializerTests.cs" />
     <Compile Include="Infrastructure\Annotations\IndexAnnotationTests.cs" />
+    <Compile Include="Infrastructure\DbModelStoreTests.cs" />
+    <Compile Include="Infrastructure\DefaultDbModelStoreTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolverTests.cs" />
     <Compile Include="Infrastructure\Design\AppConfigReaderTests.cs" />
@@ -788,6 +790,7 @@
     <Compile Include="Validation\ValidationAttributeValidatorTests.cs" />
     <Compile Include="Validation\ValidationContextTests.cs" />
     <Compile Include="Validation\ValidationProviderTests.cs" />
+    <Compile Include="EdmxReaderTests.cs" />
     <Compile Include="WriteEdmxTests.cs" />
   </ItemGroup>
   <ItemGroup>

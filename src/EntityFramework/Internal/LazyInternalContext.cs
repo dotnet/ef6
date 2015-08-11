@@ -5,9 +5,14 @@ namespace System.Data.Entity.Internal
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Mapping;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -482,6 +487,22 @@ namespace System.Data.Entity.Internal
         // </summary>
         public static DbCompiledModel CreateModel(LazyInternalContext internalContext)
         {
+            var contextType = internalContext.Owner.GetType();
+
+            DbModelStore modelStore = null;
+            if (!(internalContext.Owner is HistoryContext))
+            {
+                modelStore = DbConfiguration.DependencyResolver.GetService<DbModelStore>();
+                if (modelStore != null)
+                {
+                    var compiledModel = modelStore.TryLoad(contextType);
+                    if (compiledModel != null)
+                    {
+                        return compiledModel;
+                    }
+                }
+            }
+
             var modelBuilder = internalContext.CreateModelBuilder();
 
             var model
@@ -490,6 +511,11 @@ namespace System.Data.Entity.Internal
                       : modelBuilder.Build(internalContext._modelProviderInfo);
 
             internalContext._modelBeingInitialized = model;
+
+            if (modelStore != null)
+            {
+                modelStore.Save(contextType, model);
+            }
 
             return model.Compile();
         }
