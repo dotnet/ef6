@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration;
     using System.IO;
     using System.Linq;
@@ -40,6 +41,27 @@ namespace ProductivityApiTests
         public void EDMX_can_be_written_after_context_is_initialized()
         {
             EDMX_can_be_written(initializeContext: true);
+        }
+
+        [Fact]
+        public void EDMX_can_be_read_from_DbModelStore_after_context_is_initialized()
+        {
+            var location = Path.GetTempPath();
+            try
+            {
+                var store = new DefaultDbModelStore(location);
+                var dependencyResolver = new SingletonDependencyResolver<DbModelStore>(store);
+                MutableResolver.AddResolver<DbModelStore>(dependencyResolver);
+                EDMX_can_be_written(initializeContext: true);
+            }
+            finally //clean up
+            {
+                MutableResolver.ClearResolvers();
+                if (File.Exists(location + typeof(SimpleModelContext).FullName + ".edmx"))
+                {
+                    File.Delete(location + typeof(SimpleModelContext).FullName + ".edmx");
+                }
+            }
         }
 
         private void EDMX_can_be_written(bool initializeContext)

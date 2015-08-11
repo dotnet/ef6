@@ -1036,6 +1036,40 @@ namespace System.Data.Entity
             }
         }
 
+        public class SetModelStore
+        {
+            [Fact]
+            public void Throws_if_given_a_null_modelstore()
+            {
+                Assert.Equal(
+                    "modelStore",
+                    Assert.Throws<ArgumentNullException>(
+                        () => new DbConfiguration().SetModelStore(null)).ParamName);
+            }
+
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+                var mockModelStore = new Mock<DbModelStore>();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetModelStore"),
+                    Assert.Throws<InvalidOperationException>(() => configuration.SetModelStore(mockModelStore.Object)).Message);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                var mockModelStore = new Mock<DbModelStore>();
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetModelStore(mockModelStore.Object);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(mockModelStore.Object));
+            }
+        }
+
         public class SetTableExistenceChecker
         {
             [Fact]

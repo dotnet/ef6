@@ -250,8 +250,11 @@
     <Compile Include="Infrastructure\Annotations\IndexAnnotation.cs" />
     <Compile Include="Infrastructure\Annotations\IndexAnnotationSerializer.cs" />
     <Compile Include="Infrastructure\Annotations\IndexAttributeExtensions.cs" />
+    <Compile Include="Infrastructure\DbModelStore.cs" />
+    <Compile Include="Infrastructure\DefaultDbModelStore.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolver.cs" />
+    <Compile Include="Infrastructure\EdmxReader.cs" />
     <Compile Include="Infrastructure\Design\AppConfigReader.cs" />
     <Compile Include="Infrastructure\Interception\DatabaseLogger.cs" />
     <Compile Include="Infrastructure\Interception\DbConfigurationDispatcher.cs" />
