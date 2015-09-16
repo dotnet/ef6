@@ -18,5 +18,10 @@
     <?define FullProductName = !(loc.FullProductName_Dev14)?>
     <?define ProductDescription = !(loc.ProductDescription_Dev14)?>
     <?define ProductVersion = $(var.AssemblyFileVersion)?>
+  <?elseif $(var.VisualStudioVersion) = 15.0?>
+    <?define UpgradeCode = {28672A77-D90A-4FCA-A00A-E181FA82AAB3}?>
+    <?define FullProductName = !(loc.FullProductName_Dev15)?>
+    <?define ProductDescription = !(loc.ProductDescription_Dev15)?>
+    <?define ProductVersion = $(var.AssemblyFileVersion)?>
   <?endif?>
 </Include>

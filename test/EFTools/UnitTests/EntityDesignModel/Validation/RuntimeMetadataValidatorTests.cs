@@ -602,7 +602,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     });
         }
 
-#if !VS14
+#if (VS11 || VS12)
         [Fact]
         public void IsOpenInEditorError_returns_false_for_recoverable_runtime_errors()
         {
@@ -637,7 +637,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     });
         }
 
-#if !VS14
+#if (VS11 || VS12)
         [Fact]
         public void IsOpenInEditorError_returns_false_for_SchemaValidationError_for_ModificationFunctionMapping()
         {

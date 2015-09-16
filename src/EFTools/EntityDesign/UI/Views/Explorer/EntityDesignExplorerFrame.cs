@@ -284,12 +284,13 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
 
         protected override ExplorerContent InitializeExplorerContent()
         {
-#if VS14
+#if VS15
+            var content = FileResourceManager.GetElement("Resources/ExplorerContent_15.0.xaml") as ExplorerContent;
+#elif VS14
             var content = FileResourceManager.GetElement("Resources/ExplorerContent_14.0.xaml") as ExplorerContent;
 #elif VS12
             var content = FileResourceManager.GetElement("Resources/ExplorerContent_12.0.xaml") as ExplorerContent;
 #else
-
             var content = FileResourceManager.GetElement("Resources/ExplorerContent_11.0.xaml") as ExplorerContent;
 #endif
 

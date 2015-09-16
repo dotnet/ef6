@@ -1,0 +1,46 @@
+﻿<vs:DialogWindow 
+        x:Class="Microsoft.Data.Entity.Design.UI.Views.Dialogs.RefactorRenameDialog"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+        xmlns:Design="clr-namespace:Microsoft.Data.Entity.Design"
+        mc:Ignorable="d" 
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResizeWithGrip"
+        FontFamily="{DynamicResource VsFont.EnvironmentFontFamily}"
+        FontSize="{DynamicResource VsFont.EnvironmentFontSize}"
+        BorderBrush="{DynamicResource VsBrush.ActiveBorder}" BorderThickness="0,0,1,0"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey }}"
+        d:DesignHeight="230"
+        d:DesignWidth="430"
+        HasHelpButton="False"
+        MinHeight="230"
+        MinWidth="430"
+        SizeToContent="WidthAndHeight"
+        Title="{x:Static Design:Resources.RefactorRenameDialog_Title}"
+        FocusManager.FocusedElement="{Binding ElementName=newNameTextBox}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="{x:Static Design:Resources.RefactorRenameDialog_NewNameLabel}" Height="25" HorizontalAlignment="Left" Margin="8,12,0,0"/>
+        <TextBox x:Name="newNameTextBox" Grid.Row="1" HorizontalAlignment="Stretch" Margin="12,0,12,2" TextChanged="OnNewNameTextBoxTextChanged"/>
+        <Label Grid.Row="2" Content="{x:Static Design:Resources.RefactorRenameDialog_LocationLabel}" Height="25" HorizontalAlignment="Left" Margin="8,2,0,0"/>
+        <TextBox x:Name="locationTextBox" Grid.Row="3" HorizontalAlignment="Stretch" Margin="12,0,12,12" IsEnabled="False"/>
+        <CheckBox x:Name="previewCheckBox" Grid.Row="4" Content="{x:Static Design:Resources.RefactorRenameDialog_PreviewReferenceChangesLabel}" HorizontalAlignment="Left" IsChecked="True" Margin="12,2,0,0"/>
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="okButton" Content="{x:Static Design:Resources.RefactorRenameDialog_OK}" Height="25" HorizontalAlignment="Left" Margin="12,12,0,12" VerticalAlignment="Bottom" MinWidth="75" Click="OnOkButtonClick" IsDefault="True"/>
+            <Button Content="{x:Static Design:Resources.RefactorRenameDialog_Cancel}" Height="25" HorizontalAlignment="Left" Margin="12,12,12,12" VerticalAlignment="Bottom" MinWidth="75" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</vs:DialogWindow>

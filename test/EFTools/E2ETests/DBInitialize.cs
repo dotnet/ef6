@@ -16,7 +16,7 @@ namespace EFDesigner.E2ETests
     {
         public MyConf()
         {
-#if VS14
+#if (VS14 || VS15)
             SetDefaultConnectionFactory(new LocalDbConnectionFactory("mssqllocaldb"));
 #else
             SetDefaultConnectionFactory(new LocalDbConnectionFactory("v11.0"));
