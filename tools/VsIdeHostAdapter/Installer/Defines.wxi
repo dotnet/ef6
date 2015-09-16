@@ -20,5 +20,11 @@
     <?define FullProductName = VS IDE Test Host for Visual Studio 2015?>
     <?define ProductDescription = Allows to run tests inside VS IDE?>
     <?define ProductVersion = $(var.WixVsIDETestHostAdapterProductVersion)?>
+  <?elseif $(var.VisualStudioVersion) = 15.0?>
+    <?define ProductId = {7E937BF4-8A36-4A19-889D-90C475D71CC6}?>
+    <?define UpgradeCode = {D0AEE2DB-379A-40FC-A710-C48727611A86}?>
+    <?define FullProductName = VS IDE Test Host for Visual Studio 15?>
+    <?define ProductDescription = Allows to run tests inside VS IDE?>
+    <?define ProductVersion = $(var.WixVsIDETestHostAdapterProductVersion)?>
   <?endif?>
 </Include>
