@@ -107,8 +107,8 @@
   <Target Name="ReplaceEFToolsStrings">
     <RegexReplaceInFile InputFileName="Resources\EFToolsStrings.wxl.tokenized"
                         OutputFileName="Resources\EFToolsStrings.wxl"
-                        Patterns="WIX_FULL_PRODUCT_NAME_DEV11;WIX_FULL_PRODUCT_NAME_DEV12;WIX_FULL_PRODUCT_NAME_DEV14;WIX_PRODUCT_DESCRIPTION_DEV11;WIX_PRODUCT_DESCRIPTION_DEV12;WIX_PRODUCT_DESCRIPTION_DEV14"
-                        Replacements="$(WixFullProductName_Dev11);$(WixFullProductName_Dev12);$(WixFullProductName_Dev14);$(WixProductDescription_Dev11);$(WixProductDescription_Dev12);$(WixProductDescription_Dev14)" />
+                        Patterns="WIX_FULL_PRODUCT_NAME_DEV11;WIX_FULL_PRODUCT_NAME_DEV12;WIX_FULL_PRODUCT_NAME_DEV14;WIX_FULL_PRODUCT_NAME_DEV15;WIX_PRODUCT_DESCRIPTION_DEV11;WIX_PRODUCT_DESCRIPTION_DEV12;WIX_PRODUCT_DESCRIPTION_DEV14;WIX_PRODUCT_DESCRIPTION_DEV15"
+                        Replacements="$(WixFullProductName_Dev11);$(WixFullProductName_Dev12);$(WixFullProductName_Dev14);$(WixFullProductName_Dev15);$(WixProductDescription_Dev11);$(WixProductDescription_Dev12);$(WixProductDescription_Dev14);$(WixProductDescription_Dev15)" />
   </Target>
   
   <!--
