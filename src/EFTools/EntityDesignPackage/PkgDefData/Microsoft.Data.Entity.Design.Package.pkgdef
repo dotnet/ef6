@@ -179,4 +179,4 @@
 "PublicKeyToken"="b77a5c561934e089"
 "Culture"="neutral"
 "Version"="5.0.0.0"
-"CodeBase"="$PackageFolder$\NuGet Packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll"
+"CodeBase"="$RootFolder$Common7\IDE\Extensions\Microsoft\Entity Framework Tools\NuGet Packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll"
