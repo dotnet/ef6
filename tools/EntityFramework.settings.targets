@@ -22,7 +22,7 @@ Project global pre-settings.
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
     <VersionReleasePrefix>3</VersionReleasePrefix>
-    <VersionRelease>$(VersionReleasePrefix)-tools-update-1</VersionRelease>
+    <VersionRelease>$(VersionReleasePrefix)</VersionRelease>
     <VersionReleaseName></VersionReleaseName>
   </PropertyGroup>
 
