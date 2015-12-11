@@ -67,7 +67,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         /// Gets or sets the string used to distinguish migrations belonging to this configuration
         /// from migrations belonging to other configurations using the same database.
-        /// This property enables migrations from multiple different models to be applied to applied to a single database.
+        /// This property enables migrations from multiple different models to be applied to a single database.
         /// </summary>
         public string ContextKey
         {
