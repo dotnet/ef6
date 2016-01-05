@@ -11,7 +11,7 @@
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>Microsoft.Data.Entity.Design</RootNamespace>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>$(ToolingDotNetFrameworkVersion)</TargetFrameworkVersion>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -100,6 +100,7 @@
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="EnvDte" />
     <Reference Include="EnvDte80" />
+    <Reference Condition="$(VisualStudioVersion)=='15.0'" Include="Microsoft.VisualStudio.Imaging" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />

@@ -11,7 +11,7 @@
     <RootNamespace>Microsoft.Data.Entity.Design.VersioningFacade</RootNamespace>
     <AssemblyName>Microsoft.Data.Entity.Design.VersioningFacade</AssemblyName>
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>$(ToolingDotNetFrameworkVersion)</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

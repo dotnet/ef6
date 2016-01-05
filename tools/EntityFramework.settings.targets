@@ -24,6 +24,8 @@ Project global pre-settings.
     <VersionReleasePrefix>0</VersionReleasePrefix>
     <VersionRelease>$(VersionReleasePrefix)-alpha1</VersionRelease>
     <VersionReleaseName>Alpha 1</VersionReleaseName>
+    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' == '15.0'">v4.5.1</ToolingDotNetFrameworkVersion>
+    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' != '15.0'">v4.5</ToolingDotNetFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>
