@@ -1434,6 +1434,12 @@ Public Class EdmMetadataLoader
     Private ReadOnly _host As IDynamicHost
     Private ReadOnly _errors As System.Collections.IList
 
+    Public Shared Sub ArgumentNotNull(Of T As Class)(arg As T, name As String)
+        If arg Is Nothing Then
+            Throw New ArgumentNullException(name)
+        End If
+    End Sub
+
     Public Sub New(host As IDynamicHost, errors As System.Collections.IList)
         ArgumentNotNull(host, "host")
         ArgumentNotNull(errors, "errors")
