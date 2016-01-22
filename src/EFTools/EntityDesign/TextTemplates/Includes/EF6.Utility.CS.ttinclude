@@ -1492,14 +1492,6 @@ public class EdmMetadataLoader
     private readonly IDynamicHost _host;
     private readonly System.Collections.IList _errors;
 
-    public static void ArgumentNotNull<T>(T arg, string name) where T : class
-    {
-        if (arg == null)
-        {
-            throw new ArgumentNullException(name);
-        }
-    }
-
     public EdmMetadataLoader(IDynamicHost host, System.Collections.IList errors)
     {
         ArgumentNotNull(host, "host");
