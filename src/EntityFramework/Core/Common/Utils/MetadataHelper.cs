@@ -454,7 +454,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         // <summary>
-        // Add and Edge a --> b
+        // Add an edge a --> b
         // Assumes edge does not exist
         // O(1)
         // </summary>
