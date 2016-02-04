@@ -508,7 +508,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        #region Transitive Edge generation
+        #region Transitive edge generation
 
         //
         // The goal of this module is to generate transitive join edges. 
