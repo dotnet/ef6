@@ -6,6 +6,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Globalization;
     using System.Linq;
@@ -19,6 +20,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     using Microsoft.VisualStudio.Shell.Interop;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal partial class ReferentialConstraintDialog : Form
     {
         private bool _needsValidation;
