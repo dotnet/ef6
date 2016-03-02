@@ -23,6 +23,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal partial class MappingDetailsWindowContainer : UserControl, ITreeGridDesignerToolWindowContainer
     {
         private readonly MappingDetailsWindow _toolWindow;

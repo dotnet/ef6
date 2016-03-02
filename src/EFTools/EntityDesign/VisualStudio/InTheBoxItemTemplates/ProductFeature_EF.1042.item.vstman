@@ -1,0 +1,656 @@
+﻿<VSTemplateManifest Version="1.0" Locale="1042" xmlns="http://schemas.microsoft.com/developer/vstemplatemanifest/2015">
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\CFCSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_CS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>CSharp</ProjectType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_CS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\CFCSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_CS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>CSharp</ProjectType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_CS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\CFCSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_CS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>CSharp</ProjectType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_CS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\DbCtxCSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>CSharp</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\DbCtxCSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>CSharp</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\DbCtxCSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>CSharp</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\DbCtxCSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>CSharp</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\DbCtxCSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>CSharp</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1042\DbCtxCSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>CSharp</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\CFVBEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_VB_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_VB_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\CFVBEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_VB_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_VB_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\CFVBEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_VB_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_VB_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\DbCtxVBEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\DbCtxVBEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\DbCtxVBEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\DbCtxVBEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\DbCtxVBEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1042\DbCtxVBEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\CFCSWSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_CS_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_CS_WS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\CFCSWSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_CS_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_CS_WS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\CFCSWSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_CS_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_CS_WS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\DbCtxCSWSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_WS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_ASPNET_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\DbCtxCSWSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_WS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_ASPNET_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\DbCtxCSWSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_WS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_ASPNET_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\DbCtxCSWSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_ASPNET_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\DbCtxCSWSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_ASPNET_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1042\DbCtxCSWSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_CS_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_ASPNET_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\CFVBWSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_VB_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_VB_WS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\CFVBWSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_VB_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_VB_WS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\CFVBWSEF6</RelativePathOnDisk>
+    <TemplateFileName>CodeFirst_VB_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>OneEF CodeFirst</Name>
+        <Description>OneEF CodeFirst.</Description>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon />
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.CodeFirst_VB_WS_V6.0</TemplateID>
+        <Hidden>true</Hidden>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\DbCtxVBWSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_WS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_ASPNET_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\DbCtxVBWSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_WS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_ASPNET_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\DbCtxVBWSEF5</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_WS_V5.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 5.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_ASPNET_V5.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\DbCtxVBWSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_ASPNET_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\DbCtxVBWSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_ASPNET_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1042\DbCtxVBWSEF6</RelativePathOnDisk>
+    <TemplateFileName>DbContext_VB_WS_V6.0.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name>EF 6.x DbContext 생성기</Name>
+        <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 6.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+        <DefaultName>Model.tt</DefaultName>
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon>__TemplateIcon.ico</Icon>
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.VB_ASPNET_V6.0</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+</VSTemplateManifest>

@@ -1048,6 +1048,7 @@
     <ItemGroup>
       <InTheBoxItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\DBContext\**\*.*" />
       <InTheBoxItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\CodeFirst\**\*.*" />
+      <InTheBoxItemTemplateFiles Include="VisualStudio\InTheBoxItemTemplates\*.vstman" />
     </ItemGroup>
     <MakeDir Directories="@(InTheBoxItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)')" />
     <RegexReplaceInFile Condition="'%(Extension)' == '.vstemplate'" InputFileName="%(InTheBoxItemTemplateFiles.Identity)" OutputFileName="@(InTheBoxItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" Patterns="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN;EFPACKAGEVERSION;EFDESIGNERVERSIONTOKEN" Replacements="EntityFrameworkVisualStudio$(VisualStudioVersion.Substring(0,2))Tools;$(EF6NuGetPackageVersion);$(AssemblyVersion)" />
