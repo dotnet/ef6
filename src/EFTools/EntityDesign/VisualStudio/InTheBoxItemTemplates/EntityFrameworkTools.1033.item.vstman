@@ -1,5 +1,81 @@
 ﻿<VSTemplateManifest Version="1.0" Locale="1033" xmlns="http://schemas.microsoft.com/developer/vstemplatemanifest/2015">
   <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>CSharp\Data\1033\EF_EDM</RelativePathOnDisk>
+    <TemplateFileName>ModelObjectItemCS.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="500" />
+        <DefaultName>Model</DefaultName>
+        <Description Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="501" />
+        <ProjectType>CSharp</ProjectType>
+        <Icon Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="502" />
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.VSTemplate.CS</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>VisualBasic\Data\1033\EF_EDM</RelativePathOnDisk>
+    <TemplateFileName>ModelObjectItemVB.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="500" />
+        <DefaultName>Model</DefaultName>
+        <Description Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="501" />
+        <ProjectType>VisualBasic</ProjectType>
+        <Icon Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="502" />
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+        <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.VSTemplate.VB</TemplateID>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\CSharp\1033\EF_EDM</RelativePathOnDisk>
+    <TemplateFileName>ModelObjectItemCS_ASPNET.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="500" />
+        <DefaultName>Model</DefaultName>
+        <Description Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="501" />
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>CSharp</ProjectSubType>
+        <Icon Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="502" />
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.VSTemplate.CS_ASPNET</TemplateID>
+        <AppendDefaultFileExtension>false</AppendDefaultFileExtension>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
+    <RelativePathOnDisk>Web\VisualBasic\1033\EF_EDM</RelativePathOnDisk>
+    <TemplateFileName>ModelObjectItemVB_ASPNET.vstemplate</TemplateFileName>
+    <VSTemplateHeader>
+      <TemplateData xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+        <Name Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="500" />
+        <DefaultName>Model</DefaultName>
+        <Description Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="501" />
+        <ProjectType>Web</ProjectType>
+        <ProjectSubType>VisualBasic</ProjectSubType>
+        <Icon Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="502" />
+        <ProvideDefaultName>true</ProvideDefaultName>
+        <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+        <SupportsCodeSeparation>false</SupportsCodeSeparation>
+        <SupportsMasterPage>false</SupportsMasterPage>
+        <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+        <TemplateID>Microsoft.Data.Entity.Design.VSTemplate.VB_ASPNET</TemplateID>
+        <AppendDefaultFileExtension>false</AppendDefaultFileExtension>
+      </TemplateData>
+    </VSTemplateHeader>
+  </VSTemplateContainer>
+  <VSTemplateContainer TemplateType="Item">
     <RelativePathOnDisk>CSharp\Data\1033\CFCSEF6</RelativePathOnDisk>
     <TemplateFileName>CodeFirst_CS_V6.0.vstemplate</TemplateFileName>
     <VSTemplateHeader>
