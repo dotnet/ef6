@@ -45,26 +45,6 @@
         <File CompanionFile="Microsoft.Data.Entity.Design.dll" Source="$(var.MsiRuntimeInputsNet45DllsDir)\EntityFramework.SqlServer.dll" >
           <netfx:NativeImage Id="ngen_IDE_EntityFramework_SqlServer" Platform="all" Priority="3" AppBaseDirectory="ide" />
         </File>
-        <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft">
-          <RegistryKey Key="VisualStudio\$(var.VisualStudioVersion)\TextTemplating\DirectiveProcessors\T4VSHost">
-            <RegistryValue Type="string"
-                           Name="Class"
-                           Value="Microsoft.Data.Entity.Design.VisualStudio.Directives.FallbackT4VSHostProcessor" />
-            <RegistryValue Type="string" Name="CodeBase" Value="[#Microsoft.Data.Entity.Design.dll]" />
-          </RegistryKey>
-          <RegistryKey Key="VWDExpress\$(var.VisualStudioVersion)\TextTemplating\DirectiveProcessors\T4VSHost">
-            <RegistryValue Type="string"
-                           Name="Class"
-                           Value="Microsoft.Data.Entity.Design.VisualStudio.Directives.FallbackT4VSHostProcessor" />
-            <RegistryValue Type="string" Name="CodeBase" Value="[#Microsoft.Data.Entity.Design.dll]" />
-          </RegistryKey>
-          <RegistryKey Key="WDExpress\$(var.VisualStudioVersion)\TextTemplating\DirectiveProcessors\T4VSHost">
-            <RegistryValue Type="string"
-                           Name="Class"
-                           Value="Microsoft.Data.Entity.Design.VisualStudio.Directives.FallbackT4VSHostProcessor" />
-            <RegistryValue Type="string" Name="CodeBase" Value="[#Microsoft.Data.Entity.Design.dll]" />
-          </RegistryKey>
-        </RegistryKey>
       </Component>
       <Component>
         <File Source="$(var.AssemblyPath45)\Microsoft.Data.Entity.Design.Model.dll"
