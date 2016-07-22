@@ -12,9 +12,9 @@
       <DirectoryRef Id="$(var.ItemTemplateRoot)">
         <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
           <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = true?>
-            <Component Id="$(var.ItemTemplateRoot)_ProductFeature_EF_$(var.ItemTemplateLCID)_item_vstman">
-              <File Id="File_$(var.ItemTemplateRoot)_ProductFeature_EF_$(var.ItemTemplateLCID)_item_vstman"
-                    Source="$(var.TargetDir)ItemTemplateFilesDir\ProductFeature_EF.$(var.ItemTemplateLCID).item.vstman" />
+            <Component Id="$(var.ItemTemplateRoot)_EntityFrameworkTools_$(var.ItemTemplateLCID)_item_vstman">
+              <File Id="File_$(var.ItemTemplateRoot)_EntityFrameworkTools_$(var.ItemTemplateLCID)_item_vstman"
+                    Source="$(var.TargetDir)ItemTemplateFilesDir\EntityFrameworkTools.$(var.ItemTemplateLCID).item.vstman" />
             </Component>
           <?endif?>
         <?endforeach?>
@@ -112,7 +112,7 @@
 
         <?foreach ItemTemplateLCID in $(var.ItemTemplateLCIDs)?>
           <?if $(var.ItemTemplateLCID) = 1033 or $(var.IncludeLocalizedArtifacts) = true?>
-            <ComponentRef Id="$(var.ItemTemplateRoot)_ProductFeature_EF_$(var.ItemTemplateLCID)_item_vstman" />
+            <ComponentRef Id="$(var.ItemTemplateRoot)_EntityFrameworkTools_$(var.ItemTemplateLCID)_item_vstman" />
           <?endif?>
         <?endforeach?>
 
