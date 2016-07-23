@@ -1018,6 +1018,10 @@
       <VBZip>$(TargetTemplateDir)\AdoNetEntityDataModelVB.zip</VBZip>
       <CSASPZip>$(TargetTemplateDir)\AdoNetEntityDataModelCSharp_ASPNET.zip</CSASPZip>
       <VBASPZip>$(TargetTemplateDir)\AdoNetEntityDataModelVB_ASPNET.zip</VBASPZip>
+      <CSDir>$(TargetItemTemplateFilesDir)\CSharp\Data\1033\EF_EDM</CSDir>
+      <VBDir>$(TargetItemTemplateFilesDir)\VisualBasic\Data\1033\EF_EDM</VBDir>
+      <CSASPDir>$(TargetItemTemplateFilesDir)\Web\CSharp\1033\EF_EDM</CSASPDir>
+      <VBASPDir>$(TargetItemTemplateFilesDir)\Web\VisualBasic\1033\EF_EDM</VBASPDir>
       <VersionedItemTemplateDir>VisualStudio\ItemTemplate\VersionedTemplates\</VersionedItemTemplateDir>
       <ItemTemplateDir>VisualStudio\ItemTemplate\</ItemTemplateDir>
     </PropertyGroup>
@@ -1064,5 +1068,20 @@
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemCS_ASPNET.vstemplate;@(CommonTemplateFile)" OutputFileName="$(CSASPZip)" OverwriteExistingFile="true" />
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemVB_ASPNET.vstemplate;@(CommonTemplateFile)" OutputFileName="$(VBASPZip)" OverwriteExistingFile="true" />
     <Copy SourceFiles="@(IntellisenseFiles)" DestinationFiles="@(IntellisenseFiles->'$(TargetIntellisenseDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <ItemGroup Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'">
+      <ADONETCS Include="$(VersionedItemTemplateDir)\ModelObjectItemCS.vstemplate;@(CommonTemplateFile)" />
+      <ADONETVB Include="$(VersionedItemTemplateDir)\ModelObjectItemVB.vstemplate;@(CommonTemplateFile)" />
+      <ADONETCS_ASPNET Include="$(VersionedItemTemplateDir)\ModelObjectItemCS_ASPNET.vstemplate;@(CommonTemplateFile)" />
+      <ADONETVB_ASPNET Include="$(VersionedItemTemplateDir)\ModelObjectItemVB_ASPNET.vstemplate;@(CommonTemplateFile)" />
+    </ItemGroup>
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
+          SourceFiles="@(ADONETCS)" DestinationFiles="@(ADONETCS->'$(TargetItemTemplateFilesDir)\$(CSDir)\%(Filename)%(Extension)')" />
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
+          SourceFiles="@(ADONETVB)" DestinationFiles="@(ADONETVB->'$(TargetItemTemplateFilesDir)\$(VBDir)\%(Filename)%(Extension)')" />
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
+          SourceFiles="@(ADONETCS_ASPNET)" DestinationFiles="@(ADONETCS_ASPNET->'$(TargetItemTemplateFilesDir)\$(CSASPDir)\%(Filename)%(Extension)')" />
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
+          SourceFiles="@(ADONETVB_ASPNET)" DestinationFiles="@(ADONETVB_ASPNET->'$(TargetItemTemplateFilesDir)\$(VBASPDir)\%(Filename)%(Extension)')" />
   </Target>
 </Project>
