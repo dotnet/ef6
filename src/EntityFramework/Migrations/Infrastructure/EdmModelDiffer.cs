@@ -330,16 +330,37 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private bool SourceAndTargetMatch(EntityType sourceEntityType, EntityTypeMapping sourceEntityTypeMapping, EntityType targetEntityType, EntityTypeMapping targetEntityTypeMapping)
         {
-            return (sourceEntityTypeMapping.EntityType != null
-                    && targetEntityTypeMapping.EntityType != null
-                    && sourceEntityType == sourceEntityTypeMapping.EntityType
+            if (sourceEntityTypeMapping.EntityType != null
+                && targetEntityTypeMapping.EntityType != null)
+            {
+                if (sourceEntityType == sourceEntityTypeMapping.EntityType
                     && targetEntityType == targetEntityTypeMapping.EntityType)
-                   || (sourceEntityTypeMapping.EntityType == null
-                       && targetEntityTypeMapping.EntityType == null
-                       && sourceEntityTypeMapping.IsOfTypes.Contains(sourceEntityType)
-                       && targetEntityTypeMapping.IsOfTypes.Contains(targetEntityType)
-                       && sourceEntityTypeMapping.IsOfTypes.Except(new[] { sourceEntityType }).Select(et => et.Name)
-                           .SequenceEqual(targetEntityTypeMapping.IsOfTypes.Except(new[] { targetEntityType }).Select(et => et.Name)));
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                var sourceTypes = sourceEntityTypeMapping.IsOfTypes;
+
+                if (sourceTypes.Contains(sourceEntityType))
+                {
+                    var targetTypes = targetEntityTypeMapping.IsOfTypes;
+
+                    if (targetTypes.Contains(targetEntityType))
+                    {
+                        var sourceTypeNames = sourceTypes.Except(new[] { sourceEntityType }).Select(et => et.Name);
+                        var targetTypeNames = targetTypes.Except(new[] { targetEntityType }).Select(et => et.Name);
+
+                        if (sourceTypeNames.SequenceEqual(targetTypeNames))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private bool MappingTypesAreIdentical(EntityTypeMapping sourceEntityTypeMapping, EntityTypeMapping targetEntityTypeMapping)
