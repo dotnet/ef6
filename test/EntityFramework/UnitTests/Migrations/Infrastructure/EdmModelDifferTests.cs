@@ -23,8 +23,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
     using Xunit;
     using Order = System.Data.Entity.Migrations.Order;
 
@@ -3653,77 +3651,33 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(0, operations.Count);
         }
-
-        public interface IPlatformEntity
-        {
-            long Id { get; set; }
-        }
-
+        
         [Table("PlatformUser")]
-        public class PlatformUser : IPlatformEntity
+        public class PlatformUser
         {
             public long Id { get; set; }
 
             public string UserName { get; set; }
         }
 
-        public class TypeGenerator
+        [Table("PlatformUserExtended")]
+        public class PlatformUserExtended : PlatformUser
         {
-            public byte[] Create()
-            {
-                var references = new List<MetadataReference>
-                {
-                    MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(PlatformUser).Assembly.Location),
-                    MetadataReference.CreateFromFile(typeof(TableAttribute).Assembly.Location),
-                };
-
-                var classDefinition = @"
-                    namespace System.Data.Entity.Migrations.Infrastructure
-                    {
-                        [System.ComponentModel.DataAnnotations.Schema.TableAttribute(""PlatformUserExtended"")]
-                        public class PlatformUserExtended : EdmModelDifferTests.PlatformUser
-                        {
-                            public string FirstName { get; set; }
-                        }
-                    }";
-                var compilation = CSharpCompilation.Create(
-                "Extended.Library",
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary),
-                syntaxTrees: new List<SyntaxTree> { SyntaxFactory.ParseSyntaxTree(classDefinition) },
-                references: references);
-
-                byte[] assembly;
-                using (var stream = new MemoryStream())
-                {
-                    var compileResult = compilation.Emit(stream);
-                    if (!compileResult.Success)
-                    {
-                        throw new Exception("Failed to compile extended entities extension.");
-                    }
-                    assembly = stream.GetBuffer();
-                }
-
-                return assembly;
-            }
+            public string FirstName { get; set; }
         }
 
         [MigrationsTheory]
         public void Extended_Table_Is_Added_And_Base_Table_Is_Left_Alone()
         {
             var modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<PlatformUser>().Map(configuration => { });
+            modelBuilder.Entity<PlatformUser>();
+            modelBuilder.Ignore<PlatformUserExtended>();
             var built1 = modelBuilder.Build(ProviderInfo);
             var model1 = built1.GetModel();
-
-            var typeGenerator = new TypeGenerator();
-            var assembly = typeGenerator.Create();
-            var loadedAssembly = Assembly.Load(assembly);
-            var extendedType = loadedAssembly.GetTypes().First();
-
+            
             modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<PlatformUser>();
-            modelBuilder.Entity(extendedType);
+            modelBuilder.Entity<PlatformUserExtended>();
             var built2 = modelBuilder.Build(ProviderInfo);
             var model2 = built2.GetModel();
 
