@@ -328,7 +328,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     / (entityType1.DeclaredMembers.Count + entityType2.DeclaredMembers.Count)) > 0.80;
         }
 
-        private bool SourceAndTargetMatch(EntityType sourceEntityType, EntityTypeMapping sourceEntityTypeMapping, EntityType targetEntityType, EntityTypeMapping targetEntityTypeMapping)
+        private static bool SourceAndTargetMatch(EntityType sourceEntityType, EntityTypeMapping sourceEntityTypeMapping, EntityType targetEntityType, EntityTypeMapping targetEntityTypeMapping)
         {
             if (sourceEntityTypeMapping.EntityType != null
                 && targetEntityTypeMapping.EntityType != null)
@@ -363,7 +363,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return false;
         }
 
-        private bool MappingTypesAreIdentical(EntityTypeMapping sourceEntityTypeMapping, EntityTypeMapping targetEntityTypeMapping)
+        private static bool MappingTypesAreIdentical(EntityTypeMapping sourceEntityTypeMapping, EntityTypeMapping targetEntityTypeMapping)
         {
             var canonicalSourceEntityMappingType = sourceEntityTypeMapping.EntityType ?? sourceEntityTypeMapping.IsOfTypes.First();
             var canonicalTargetEntityMappingType = targetEntityTypeMapping.EntityType ?? targetEntityTypeMapping.IsOfTypes.First();
