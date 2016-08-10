@@ -10,7 +10,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Linq;
     using System.Text;
 
-    internal class EntityStoreSchemaQueryGenerator
+    internal class EntityStoreSchemaQueryGenerato
     {
         private readonly string _baseQuery;
         private readonly string _orderByClause;
@@ -161,7 +161,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
                     AppendComparisonFragment(filterFragment, alias, propertyName, parameterName);
                     parameters.Add(
-                        new EntityParameter
+                        new EntityParamete
                         {
                             ParameterName = parameterName,
                             Value = value
