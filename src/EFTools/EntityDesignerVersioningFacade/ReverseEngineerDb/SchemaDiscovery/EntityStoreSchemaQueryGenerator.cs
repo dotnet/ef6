@@ -149,15 +149,24 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
             if (value != null)
             {
-                var parameterName = "p" + parameters.Count.ToString(CultureInfo.InvariantCulture);
+                var matchingParameter = parameters.GetParameterByValue(value);
 
-                AppendComparisonFragment(filterFragment, alias, propertyName, parameterName);
-                parameters.Add(
-                    new EntityParameter
+                if (matchingParameter != null)
+                {
+                    AppendComparisonFragment(filterFragment, alias, propertyName, matchingParameter.ParameterName);
+                }
+                else
+                {
+                    var parameterName = "p" + parameters.Count.ToString(CultureInfo.InvariantCulture);
+
+                    AppendComparisonFragment(filterFragment, alias, propertyName, parameterName);
+                    parameters.Add(
+                        new EntityParameter
                         {
                             ParameterName = parameterName,
                             Value = value
                         });
+                }
             }
 
             return filterFragment;

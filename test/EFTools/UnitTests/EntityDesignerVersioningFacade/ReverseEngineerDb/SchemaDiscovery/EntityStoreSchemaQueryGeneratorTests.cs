@@ -226,7 +226,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             var parameters = new EntityCommand().Parameters;
 
             Assert.Equal(
-                "((alias1.Name LIKE @p0))\r\nAND\r\n((alias2.Name LIKE @p1))",
+                "((alias1.Name LIKE @p0))\r\nAND\r\n((alias2.Name LIKE @p0))",
                 new EntityStoreSchemaQueryGenerator(
                     string.Empty,
                     string.Empty,
@@ -243,9 +243,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     new[] { "alias1", "alias2" })
                     .CreateWhereClause(parameters).ToString());
 
-            Assert.Equal(2, parameters.Count);
-            Assert.Equal("p0,p1", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.ParameterName)));
-            Assert.Equal("name,name", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.Value)));
+            Assert.Equal(1, parameters.Count);
+            Assert.Equal("p0", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.ParameterName)));
+            Assert.Equal("name", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.Value)));
         }
 
         [Fact]
@@ -282,7 +282,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             var parameters = new EntityCommand().Parameters;
 
             Assert.Equal(
-                "NOT ((alias1.Name LIKE @p0))\r\nAND\r\nNOT ((alias2.Name LIKE @p1))",
+                "NOT ((alias1.Name LIKE @p0))\r\nAND\r\nNOT ((alias2.Name LIKE @p0))",
                 new EntityStoreSchemaQueryGenerator(
                     string.Empty,
                     string.Empty,
@@ -299,9 +299,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     new[] { "alias1", "alias2" })
                     .CreateWhereClause(parameters).ToString());
 
-            Assert.Equal(2, parameters.Count);
-            Assert.Equal("p0,p1", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.ParameterName)));
-            Assert.Equal("name,name", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.Value)));
+            Assert.Equal(1, parameters.Count);
+            Assert.Equal("p0", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.ParameterName)));
+            Assert.Equal("name", string.Join(",", parameters.OfType<EntityParameter>().Select(p => p.Value)));
         }
 
         [Fact]
