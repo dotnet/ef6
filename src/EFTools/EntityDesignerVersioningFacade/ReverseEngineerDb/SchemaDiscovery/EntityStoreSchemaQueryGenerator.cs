@@ -10,7 +10,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Linq;
     using System.Text;
 
-    internal class EntityStoreSchemaQueryGenerato
+    internal class EntityStoreSchemaQueryGenerator
     {
         private readonly string _baseQuery;
         private readonly string _orderByClause;
