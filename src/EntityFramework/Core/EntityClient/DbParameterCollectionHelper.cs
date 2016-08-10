@@ -292,6 +292,50 @@ namespace System.Data.Entity.Core.EntityClient
             return -1;
         }
 
+        /// <inhertidoc />
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1604:ElementDocumentationMustHaveSummary")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1615:ElementReturnValueMustBeDocumented")]
+        [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
+        public DbParameter GetParameterByValue(string value)
+        {
+            var index = IndexOfParameterValue(InnerList, value);
+            if (index < 0)
+            {
+                return null;
+            }
+
+            return InnerList[index];
+        }
+
+        private static int IndexOfParameterValue(IEnumerable items, string parameterValue)
+        {
+            if (null != items)
+            {
+                var i = 0;
+
+                foreach (EntityParameter parameter in items)
+                {
+                    if (0 == EntityUtil.SrcCompare(parameterValue, parameter.ParameterStringValue))
+                    {
+                        return i;
+                    }
+                    ++i;
+                }
+                i = 0;
+
+                foreach (EntityParameter parameter in items)
+                {
+                    if (0 == EntityUtil.DstCompare(parameterValue, parameter.ParameterStringValue))
+                    {
+                        return i;
+                    }
+                    ++i;
+                }
+            }
+            return -1;
+        }
+
         /// <summary>
         /// Gets the location of the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> with the specified name.
         /// </summary>

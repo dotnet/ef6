@@ -28,6 +28,7 @@ namespace System.Data.Entity.Core.EntityClient
         private bool _isDirty;
 
         private object _value;
+        private string _parameterStringValue;
         private object _parent;
         private ParameterDirection _direction;
         private int? _size;
@@ -319,7 +320,17 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 _value = value;
+
+                _parameterStringValue = value.ToString() ?? null;
             }
+        }
+
+        // <summary>
+        // Gets the ToString() representation of the value of this parameter.
+        // </summary>
+        internal string ParameterStringValue
+        {
+            get { return _parameterStringValue; }
         }
 
         // <summary>
