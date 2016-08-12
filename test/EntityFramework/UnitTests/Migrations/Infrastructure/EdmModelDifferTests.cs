@@ -19,7 +19,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Xml.Linq;
     using Xunit;
     using Order = System.Data.Entity.Migrations.Order;
@@ -45,7 +47,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<ManyManySelfRef>();
 
             var model1 = modelBuilder.Build(ProviderInfo);
-            
+
             modelBuilder.Entity<ManyManySelfRef>().ToTable("Renamed");
 
             var model2 = modelBuilder.Build(ProviderInfo);
@@ -72,7 +74,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var tableRename = (RenameTableOperation)operations.Single();
@@ -99,7 +101,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations= new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+            var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.IsType<RenameTableOperation>(operations.Single());
         }
@@ -640,7 +642,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(3, operations.Count());
 
-            var tableRename 
+            var tableRename
                 = operations.OfType<RenameTableOperation>().Single();
 
             Assert.Equal("dbo.B1A1", tableRename.Name);
@@ -710,9 +712,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         #endregion
-        
+
         #region Table Moves
-        
+
         [MigrationsTheory]
         public void Can_detect_moved_tables()
         {
@@ -726,12 +728,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
 
-            var moveTableOperation 
+            var moveTableOperation
                 = operations.OfType<MoveTableOperation>().Single();
 
             Assert.Equal("dbo.MigrationsCustomers", moveTableOperation.Name);
@@ -751,7 +753,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var moveTableOperation
@@ -841,7 +843,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("foo.Join", moveTableOperation.Name);
             Assert.Equal("bar", moveTableOperation.NewSchema);
         }
-        
+
         #endregion
 
         #region Added Tables
@@ -923,14 +925,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer()
                     .Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(7, operations.Count());
             Assert.Equal(2, operations.OfType<AddForeignKeyOperation>().Count());
 
-            var ordersCreateTableOperation 
+            var ordersCreateTableOperation
                 = operations.OfType<CreateTableOperation>()
                     .Single(t => t.Name == "ordering.Orders");
 
@@ -1045,7 +1047,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var createTableOperation = operations.OfType<CreateTableOperation>().Single();
@@ -1069,7 +1071,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .HasTableAnnotation("AT1", "VT1")
                 .Property(e => e.OrderId)
                 .HasColumnAnnotation("AP1", "VP1");
-            
+
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
@@ -1077,7 +1079,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .HasTableAnnotation("AT1", "VT2")
                 .Property(e => e.OrderId)
                 .HasColumnAnnotation("AP1", "VP1");
-            
+
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
@@ -1447,7 +1449,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
@@ -1457,7 +1459,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("dbo.MigrationsCustomers", renameColumnOperation.Table);
             Assert.Equal("Name", renameColumnOperation.Name);
             Assert.Equal("col_Name", renameColumnOperation.NewName);
-            
+
             var alterColumnOperation = (AlterColumnOperation)operations.Last();
 
             Assert.Equal("dbo.MigrationsCustomers", alterColumnOperation.Table);
@@ -1528,7 +1530,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
@@ -1561,7 +1563,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
@@ -1601,7 +1603,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(3, operations.Count());
@@ -1637,7 +1639,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var renameColumnOperation = operations.OfType<RenameColumnOperation>().Single();
@@ -1665,7 +1667,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var renameColumnOperation = operations.OfType<RenameColumnOperation>().Single();
@@ -1703,7 +1705,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("Parent_Id", renameColumnOperation.Name);
             Assert.Equal("NewName", renameColumnOperation.NewName);
         }
-        
+
         [MigrationsTheory]
         public void Can_detect_discriminator_column_rename_when_ospace_type_renamed()
         {
@@ -1869,7 +1871,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<Renamed_ia_pk_v2.Dependent>();
-            
+
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations
@@ -1878,7 +1880,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal(8, operations.Count());
             Assert.Equal("Principal_Id", operations.OfType<DropForeignKeyOperation>().First().DependentColumns.Single());
         }
-        
+
         [MigrationsTheory]
         public void Should_introduce_temp_column_renames_when_transitive_dependencies()
         {
@@ -1962,7 +1964,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
@@ -2031,7 +2033,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
@@ -2058,7 +2060,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
@@ -2085,7 +2087,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
@@ -2103,7 +2105,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Property(e => e.OrderId)
                 .HasColumnAnnotation("A1", "V1")
                 .HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(new IndexAttribute("Bella")));
-            
+
             var model2 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
@@ -2143,7 +2145,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var addColumnOperation = (AddColumnOperation)operations.Single();
@@ -2166,7 +2168,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
@@ -2253,7 +2255,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
             Assert.Equal(2, operations.Count);
-            
+
             var dropColumnOperation = operations.OfType<DropColumnOperation>().Single();
 
             Assert.Equal("ordering.Orders", dropColumnOperation.Table);
@@ -2293,7 +2295,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             var alterColumnOperation = (AlterColumnOperation)operations.Single();
@@ -2472,7 +2474,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("dbo.MigrationsCustomers", dropIndexOperation.Table);
             Assert.Equal(new List<string> { "CustomerNumber" }, dropIndexOperation.Columns);
         }
-        
+
         [MigrationsTheory]
         public void Can_detect_changed_columns_when_renamed()
         {
@@ -2490,7 +2492,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
@@ -2521,7 +2523,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
@@ -2601,7 +2603,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model2.GetModel(), model1.GetModel());
 
             Assert.Equal(4, operations.Count());
@@ -2636,7 +2638,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("dbo.OrderLines", inverse.DependentTable);
             Assert.Equal("OrderId", inverse.DependentColumns.Single());
         }
-        
+
         [MigrationsTheory]
         public void Should_not_detect_duplicate_dropped_foreign_keys()
         {
@@ -2708,12 +2710,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(2, operations.Count());
             Assert.Equal(1, operations.OfType<DropForeignKeyOperation>().Count());
-            
+
             var addForeignKeyOperation = operations.OfType<AddForeignKeyOperation>().Single();
 
             Assert.Equal("ordering.Orders", addForeignKeyOperation.PrincipalTable);
@@ -2736,7 +2738,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
@@ -2766,7 +2768,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(3, operations.Count());
@@ -2798,7 +2800,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
@@ -2826,7 +2828,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
@@ -2865,7 +2867,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
@@ -3141,7 +3143,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
@@ -3344,7 +3346,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
@@ -3365,7 +3367,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
@@ -3386,7 +3388,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(new DbProviderInfo(DbProviders.SqlCe, "4"));
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count());
@@ -3416,7 +3418,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             public virtual Hat2 Hat { get; set; }
             public virtual Bracelet2 Bracelet { get; set; }
         }
-        
+
         public class Bracelet2
         {
             public int Id { get; set; }
@@ -3548,9 +3550,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder = new DbModelBuilder();
-            
+
             modelBuilder.Entity<Bug2433_v2.Foob>();
-            
+
             var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
@@ -3641,13 +3643,56 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<Nav_prop_rename_v2.Table>();
 
-           var model2 = modelBuilder.Build(ProviderInfo);
+            var model2 = modelBuilder.Build(ProviderInfo);
 
             var operations
                 = new EdmModelDiffer()
                     .Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(0, operations.Count);
+        }
+        
+        [Table("PlatformUser")]
+        public class PlatformUser
+        {
+            public long Id { get; set; }
+
+            public string UserName { get; set; }
+        }
+
+        [Table("PlatformUserExtended")]
+        public class PlatformUserExtended : PlatformUser
+        {
+            public string FirstName { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Extended_Table_Is_Added_And_Base_Table_Is_Left_Alone()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<PlatformUser>();
+            modelBuilder.Ignore<PlatformUserExtended>();
+            var built1 = modelBuilder.Build(ProviderInfo);
+            var model1 = built1.GetModel();
+            
+            modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<PlatformUser>();
+            modelBuilder.Entity<PlatformUserExtended>();
+            var built2 = modelBuilder.Build(ProviderInfo);
+            var model2 = built2.GetModel();
+
+            var operations = new EdmModelDiffer().Diff(model1, model2);
+
+            Assert.Equal(3, operations.Count);
+            var createTableOperation = (CreateTableOperation)operations.First(o => o is CreateTableOperation);
+            Assert.Equal("dbo.PlatformUserExtended", createTableOperation.Name);
+            var createIndexOperation = (CreateIndexOperation)operations.First(o => o is CreateIndexOperation);
+            Assert.Equal("IX_Id", createIndexOperation.Name);
+            Assert.Equal("dbo.PlatformUserExtended", createIndexOperation.Table);
+            var addForeignKeyOperation = (AddForeignKeyOperation)operations.First(o => o is AddForeignKeyOperation);
+            Assert.Equal("FK_dbo.PlatformUserExtended_dbo.PlatformUser_Id", addForeignKeyOperation.Name);
+            Assert.Equal("dbo.PlatformUserExtended", addForeignKeyOperation.DependentTable);
+            Assert.Equal("dbo.PlatformUser", addForeignKeyOperation.PrincipalTable);
         }
 
         #endregion

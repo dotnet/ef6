@@ -84,7 +84,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 {
                     EdmItemCollection = storageMappingItemCollection.EdmItemCollection,
                     StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
-                    StoreEntityContainer 
+                    StoreEntityContainer
                         = storageMappingItemCollection.StoreItemCollection.GetItems<EntityContainer>().Single(),
                     EntityContainerMapping
                         = storageMappingItemCollection.GetItems<EntityContainerMapping>().Single(),
@@ -109,11 +109,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 };
 
             return Diff(
-                source, 
-                target, 
-                modificationCommandTreeGenerator, 
-                migrationSqlGenerator, 
-                sourceModelVersion, 
+                source,
+                target,
+                modificationCommandTreeGenerator,
+                migrationSqlGenerator,
+                sourceModelVersion,
                 targetModelVersion);
         }
 
@@ -328,6 +328,48 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     / (entityType1.DeclaredMembers.Count + entityType2.DeclaredMembers.Count)) > 0.80;
         }
 
+        private static bool SourceAndTargetMatch(EntityType sourceEntityType, EntityTypeMapping sourceEntityTypeMapping, EntityType targetEntityType, EntityTypeMapping targetEntityTypeMapping)
+        {
+            if (sourceEntityTypeMapping.EntityType != null
+                && targetEntityTypeMapping.EntityType != null)
+            {
+                if (sourceEntityType == sourceEntityTypeMapping.EntityType
+                    && targetEntityType == targetEntityTypeMapping.EntityType)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                var sourceTypes = sourceEntityTypeMapping.IsOfTypes;
+
+                if (sourceTypes.Contains(sourceEntityType))
+                {
+                    var targetTypes = targetEntityTypeMapping.IsOfTypes;
+
+                    if (targetTypes.Contains(targetEntityType))
+                    {
+                        var sourceTypeNames = sourceTypes.Except(new[] { sourceEntityType }).Select(et => et.Name);
+                        var targetTypeNames = targetTypes.Except(new[] { targetEntityType }).Select(et => et.Name);
+
+                        if (sourceTypeNames.SequenceEqual(targetTypeNames))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool MappingTypesAreIdentical(EntityTypeMapping sourceEntityTypeMapping, EntityTypeMapping targetEntityTypeMapping)
+        {
+            var canonicalSourceEntityMappingType = sourceEntityTypeMapping.EntityType ?? sourceEntityTypeMapping.IsOfTypes.First();
+            var canonicalTargetEntityMappingType = targetEntityTypeMapping.EntityType ?? targetEntityTypeMapping.IsOfTypes.First();
+            return canonicalSourceEntityMappingType.FullName == canonicalTargetEntityMappingType.FullName;
+        }
+
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<Tuple<MappingFragment, MappingFragment>> FindMappingFragmentPairs(
             ICollection<Tuple<EntityType, EntityType>> entityTypePairs)
@@ -337,36 +379,42 @@ namespace System.Data.Entity.Migrations.Infrastructure
             // Zip the two models together. Our goal here is to match mapping fragments across
             // the source and target input models.
 
-            var targetEntityTypeMappings 
+            var targetEntityTypeMappings
                 = _target.EntityContainerMapping.EntitySetMappings
                     .SelectMany(esm => esm.EntityTypeMappings)
                     .ToList();
 
-            foreach (var etm1
-                in _source.EntityContainerMapping.EntitySetMappings.SelectMany(esm => esm.EntityTypeMappings))
+            var sourceEntityTypeMappings = _source.EntityContainerMapping.EntitySetMappings.SelectMany(esm => esm.EntityTypeMappings);
+
+            var matchedTargets = new List<EntityTypeMapping>();
+
+            foreach (var etm1 in sourceEntityTypeMappings)
             {
                 foreach (var etm2 in targetEntityTypeMappings)
                 {
-                    if (entityTypePairs
-                        .Any(
-                            t => (etm1.EntityType != null
-                                  && etm2.EntityType != null
-                                  && t.Item1 == etm1.EntityType
-                                  && t.Item2 == etm2.EntityType)
-                                 || (etm1.EntityType == null
-                                     && etm2.EntityType == null
-                                     && etm1.IsOfTypes.Contains(t.Item1)
-                                     && etm2.IsOfTypes.Contains(t.Item2)
-                                     && etm1.IsOfTypes.Except(new[] { t.Item1 }).Select(et => et.Name)
-                                         .SequenceEqual(etm2.IsOfTypes.Except(new[] { t.Item2 }).Select(et => et.Name)))))
+                    if (matchedTargets.Contains(etm2))
                     {
-                        foreach (var t in etm1.MappingFragments.Zip(etm2.MappingFragments, Tuple.Create))
-                        {
-                            yield return t;
-                        }
-
-                        break;
+                        continue;
                     }
+
+                    var sourceAndTargetMatch = entityTypePairs.Any(t => SourceAndTargetMatch(t.Item1, etm1, t.Item2, etm2));
+                    if (!sourceAndTargetMatch)
+                    {
+                        sourceAndTargetMatch = MappingTypesAreIdentical(etm1, etm2);
+                    }
+
+                    if (!sourceAndTargetMatch)
+                    {
+                        continue;
+                    }
+
+                    matchedTargets.Add(etm2);
+                    foreach (var t in etm1.MappingFragments.Zip(etm2.MappingFragments, Tuple.Create))
+                    {
+                        yield return t;
+                    }
+
+                    break;
                 }
             }
         }
@@ -1190,7 +1238,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var parameter1 = parameterBinding1.Parameter;
             var parameter2 = parameterBinding2.Parameter;
-            
+
             if (!parameter1.Name.EqualsOrdinal(parameter2.Name))
             {
                 return false;
@@ -1213,7 +1261,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 return false;
             }
-            
+
             if (_source.ProviderInfo.Equals(_target.ProviderInfo))
             {
                 return parameter1.TypeName.EqualsIgnoreCase(parameter2.TypeName)
@@ -1499,7 +1547,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<MigrationOperation> FindAlteredPrimaryKeys(
             ICollection<Tuple<EntitySet, EntitySet>> tablePairs,
-            ICollection<RenameColumnOperation> renamedColumns, 
+            ICollection<RenameColumnOperation> renamedColumns,
             ICollection<AlterColumnOperation> alteredColumns)
         {
             DebugCheck.NotNull(tablePairs);
@@ -1666,18 +1714,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             return dropForeignKeyOperation;
         }
-        
+
         private static void BuildForeignKeyOperation(
-            ReferentialConstraint referentialConstraint, 
-            ForeignKeyOperation foreignKeyOperation, 
+            ReferentialConstraint referentialConstraint,
+            ForeignKeyOperation foreignKeyOperation,
             ModelMetadata modelMetadata)
         {
             DebugCheck.NotNull(referentialConstraint);
             DebugCheck.NotNull(foreignKeyOperation);
             DebugCheck.NotNull(modelMetadata);
 
-            foreignKeyOperation.PrincipalTable 
-                = GetSchemaQualifiedName( 
+            foreignKeyOperation.PrincipalTable
+                = GetSchemaQualifiedName(
                     modelMetadata.StoreEntityContainer.EntitySets
                     .Single(es => es.ElementType == referentialConstraint.PrincipalEnd.GetEntityType()));
 
@@ -1860,7 +1908,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private static bool IndexesEqual(
             ConsolidatedIndex consolidatedIndex1,
-            ConsolidatedIndex consolidatedIndex2, 
+            ConsolidatedIndex consolidatedIndex2,
             ICollection<RenameColumnOperation> renamedColumns)
         {
             DebugCheck.NotNull(consolidatedIndex1);
@@ -1977,7 +2025,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var targetAnnotations = BuildAnnotationPairs(
                 GetAnnotations(sourceProperty), GetAnnotations(targetProperty));
-            
+
             var sourceAnnotations = targetAnnotations
                 .ToDictionary(a => a.Key, a => new AnnotationValues(a.Value.NewValue, a.Value.OldValue));
 
