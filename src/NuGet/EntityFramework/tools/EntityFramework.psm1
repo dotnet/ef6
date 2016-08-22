@@ -446,6 +446,7 @@ function Add-Migration
         [switch] $IgnoreChanges,
 		[string] $AppDomainBaseDirectory)
 
+    Hint-Downgrade $MyInvocation.MyCommand
     $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
 
     try
@@ -582,6 +583,7 @@ function Update-Database
         [string] $ConnectionProviderName,
 		[string] $AppDomainBaseDirectory)
 
+    Hint-Downgrade $MyInvocation.MyCommand
     $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
 
     try
@@ -1016,6 +1018,12 @@ function Check-Project($project)
     }
 
 	return $project.CodeModel
+}
+
+function Hint-Downgrade ($name) {
+    if (Get-Module | Where { $_.Name -eq 'EntityFrameworkCore' }) {
+        Write-Warning "Both Entity Framework 6.x and Entity Framework Core commands are installed. The Entity Framework 6 version is executing. You can fully qualify the command to select which one to execute, 'EntityFramework\$name' for EF6.x and 'EntityFrameworkCore\$name' for EF Core."
+    }
 }
 
 Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory', 'Initialize-EFConfiguration') -Variable InitialDatabase
