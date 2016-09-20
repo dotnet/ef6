@@ -133,7 +133,7 @@ namespace System.Data.Entity.Migrations
                     = identifyingProperties.Select(
                         pi => Expression.Equal(
                             Expression.Property(parameter, pi.Single()),
-                            Expression.Constant(pi.Last().GetValue(entity, null))))
+                            Expression.Constant(pi.Last().GetValue(entity, null), pi.Last().PropertyType)))
                                            .Aggregate<BinaryExpression, Expression>(
                                                null,
                                                (current, predicate)

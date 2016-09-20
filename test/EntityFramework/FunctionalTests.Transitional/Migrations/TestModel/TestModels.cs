@@ -33,6 +33,8 @@ namespace System.Data.Entity.Migrations
 
         [MaxLength(1024)]
         public byte[] Photo { get; set; }
+
+        public int? Narf { get; set; }
     }
 
     public class SpecialCustomer : MigrationsCustomer
