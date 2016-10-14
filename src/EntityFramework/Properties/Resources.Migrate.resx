@@ -226,4 +226,10 @@
   <data name="MissingCommandLineParameter" xml:space="preserve">
     <value>Missing required parameter {0} "{1}" in command line "{2}"</value>
   </data>
+  <data name="ScriptFileDescription" xml:space="preserve">
+    <value>Specifies the output file where to write the SQL script being generated. Specifying this option will not apply changes to the database.</value>
+  </data>
+  <data name="SourceMigrationDescription" xml:space="preserve">
+    <value>Specifies the name of a particular migration to update the database from. If omitted, the current model will be used.</value>
+  </data>
 </root>

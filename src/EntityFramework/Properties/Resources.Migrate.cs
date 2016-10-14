@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Migrations.Console.Resources
 {
     using System.CodeDom.Compiler;
-    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Resources;
+    using System.Reflection;
     using System.Threading;
 
     // <summary>
@@ -293,6 +293,22 @@ namespace System.Data.Entity.Migrations.Console.Resources
         {
             return EntityRes.GetString(EntityRes.MissingCommandLineParameter, p0, p1, p2);
         }
+
+        // <summary>
+        // A string like "Specifies the output file where to write the SQL script being generated. Specifying this option will not apply changes to the database."
+        // </summary>
+        internal static string ScriptFileDescription
+        {
+            get { return EntityRes.GetString(EntityRes.ScriptFileDescription); }
+        }
+
+        // <summary>
+        // A string like "Specifies the name of a particular migration to update the database from. If omitted, the current model will be used."
+        // </summary>
+        internal static string SourceMigrationDescription
+        {
+            get { return EntityRes.GetString(EntityRes.SourceMigrationDescription); }
+        }
     }
 
     // <summary>
@@ -401,6 +417,8 @@ namespace System.Data.Entity.Migrations.Console.Resources
         internal const string InvalidCommandLineArgument = "InvalidCommandLineArgument";
         internal const string InvalidCommandLineCommand = "InvalidCommandLineCommand";
         internal const string MissingCommandLineParameter = "MissingCommandLineParameter";
+        internal const string ScriptFileDescription = "ScriptFileDescription";
+        internal const string SourceMigrationDescription = "SourceMigrationDescription";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
@@ -408,7 +426,12 @@ namespace System.Data.Entity.Migrations.Console.Resources
         private EntityRes()
         {
             resources = new ResourceManager(
-                "System.Data.Entity.Properties.Resources.Migrate", typeof(System.Data.Entity.DbContext).Assembly);
+                "System.Data.Entity.Properties.Resources.Migrate",
+#if NET40
+                typeof(System.Data.Entity.DbContext).Assembly);
+#else
+                typeof(System.Data.Entity.DbContext).GetTypeInfo().Assembly);
+#endif
         }
 
         private static EntityRes GetLoader()

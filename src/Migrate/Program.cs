@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations.Console
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
+    using System.Text;
     using CmdLine;
     using Console = System.Console;
 
@@ -77,8 +78,22 @@ namespace System.Data.Entity.Migrations.Console
         {
             using (var facade = CreateFacade())
             {
-                facade.Update(_arguments.TargetMigration, _arguments.Force);
+                if (!String.IsNullOrEmpty(_arguments.ScriptFile)) 
+                {
+                    ScriptUpdate(facade, _arguments);
+                } 
+                else 
+                {
+                    facade.Update(_arguments.TargetMigration, _arguments.Force);
+                }
             }
+        }
+
+        private static void ScriptUpdate(ToolingFacade facade, Arguments arguments)
+        {
+            string scriptContents = facade.ScriptUpdate(arguments.SourceMigration, arguments.TargetMigration, arguments.Force);
+
+            File.WriteAllText(arguments.ScriptFile, scriptContents, Encoding.UTF8);
         }
 
         private static Assembly ResolveAssembly(object sender, ResolveEventArgs args)
