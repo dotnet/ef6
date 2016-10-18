@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void TryProcessCandidate(
-            KeyValuePair<Node, Node> candidate,
+            KeyValuePair<Node, List<Node>> candidate,
             GroupAggregateVarInfo groupAggregateVarInfo)
         {
             IList<Node> functionAncestors;
@@ -100,17 +100,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Remap the template from referencing the groupAggregate var to reference the input to
             // the group by into
             //
-            var argumentNode = OpCopier.Copy(m_command, candidate.Value);
             var dictionary = new Dictionary<Var, Var>(1);
             dictionary.Add(groupAggregateVarInfo.GroupAggregateVar, inputVar);
             var remapper = new VarRemapper(m_command, dictionary);
-            remapper.RemapSubtree(argumentNode);
 
-            var newFunctionDefiningNode = m_command.CreateNode(
-                m_command.CreateAggregateOp(functionOp.Function, false),
-                argumentNode);
+			var argNodes = new List<Node>(candidate.Value.Count);
 
-            Var newFunctionVar;
+			foreach (var argumentNode in candidate.Value) {
+				var argumentNodeCopy = OpCopier.Copy(m_command, argumentNode);
+				remapper.RemapSubtree(argumentNodeCopy);
+
+				argNodes.Add(argumentNodeCopy);
+			}
+
+			var newFunctionDefiningNode = m_command.CreateNode(
+				m_command.CreateAggregateOp(functionOp.Function, false),
+				argNodes);
+
+			Var newFunctionVar;
             var varDefNode = m_command.CreateVarDefNode(newFunctionDefiningNode, out newFunctionVar);
 
             // Add the new aggregate to the list of aggregates

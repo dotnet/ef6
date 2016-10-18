@@ -149,27 +149,42 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(FunctionOp op, Node n)
         {
-            VisitDefault(n);
-            if (!PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
-            {
-                return;
-            }
-            PlanCompiler.Assert(n.Children.Count == 1, "Aggregate Function must have one argument");
+			VisitDefault(n);
+			if (!PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
+			{
+				return;
+			}
+			GroupAggregateVarInfo referencedGroupAggregateVarInfo;
+			GroupAggregateVarInfo referencedGroupAggregateVarInfoTracker = null;
 
-            var argumentNode = n.Child0;
+			Node templateNode;
+			bool isUnnested;
 
-            GroupAggregateVarInfo referencedGroupAggregateVarInfo;
-            Node templateNode;
-            bool isUnnested;
-            if (GroupAggregateVarComputationTranslator.TryTranslateOverGroupAggregateVar(
-                n.Child0, false, _command, _groupAggregateVarInfoManager, out referencedGroupAggregateVarInfo, out templateNode,
-                out isUnnested)
-                &&
-                (isUnnested || AggregatePushdownUtil.IsVarRefOverGivenVar(templateNode, referencedGroupAggregateVarInfo.GroupAggregateVar)))
-            {
-                referencedGroupAggregateVarInfo.CandidateAggregateNodes.Add(new KeyValuePair<Node, Node>(n, templateNode));
-            }
-        }
+			var list = new List<Node>();
+
+			foreach (var argument in n.Children)
+			{
+				if (GroupAggregateVarComputationTranslator.TryTranslateOverGroupAggregateVar(
+					argument, false, _command, _groupAggregateVarInfoManager, out referencedGroupAggregateVarInfo, out templateNode,
+					out isUnnested)
+					&&
+					(isUnnested || AggregatePushdownUtil.IsVarRefOverGivenVar(templateNode, referencedGroupAggregateVarInfo.GroupAggregateVar)))
+				{
+
+					referencedGroupAggregateVarInfoTracker = referencedGroupAggregateVarInfo;
+					list.Add(templateNode);
+				}
+				else
+				{
+					list.Add(argument);
+				}
+			}
+
+			if (referencedGroupAggregateVarInfoTracker != null)
+			{
+				referencedGroupAggregateVarInfoTracker.CandidateAggregateNodes.Add(new KeyValuePair<Node, List<Node>>(n, list));
+			}
+		}
 
         #endregion
 

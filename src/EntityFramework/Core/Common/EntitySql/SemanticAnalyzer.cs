@@ -1372,10 +1372,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     "argument types resolved for the collection aggregate calls must match");
             }
 
-            //
-            // Aggregate functions can have only one argument and of collection edmType
-            //
-            Debug.Assert((1 == functionType.Parameters.Count), "(1 == functionType.Parameters.Count)");
             // we only support monadic aggregate functions
             Debug.Assert(
                 TypeSemantics.IsCollectionType(functionType.Parameters[0].TypeUsage), "functionType.Parameters[0].Type is CollectionType");
@@ -1393,11 +1389,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (methodExpr.DistinctKind
                 == DistinctKind.Distinct)
             {
-                functionAggregate = functionType.AggregateDistinct(args[0]);
+                functionAggregate = functionType.AggregateDistinct(args);
             }
             else
             {
-                functionAggregate = functionType.Aggregate(args[0]);
+                functionAggregate = functionType.Aggregate(args);
             }
 
             //

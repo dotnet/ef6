@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Private Fields
 
         private readonly Node _definingGroupByNode;
-        private HashSet<KeyValuePair<Node, Node>> _candidateAggregateNodes;
+        private HashSet<KeyValuePair<Node, List<Node>>> _candidateAggregateNodes;
         private readonly Var _groupAggregateVar;
 
         #endregion
@@ -43,13 +43,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // A valid candidate has an argument that does not have any external references
         // except for the group aggregate corresponding to the DefiningGroupNode.
         // </summary>
-        internal HashSet<KeyValuePair<Node, Node>> CandidateAggregateNodes
+        internal HashSet<KeyValuePair<Node, List<Node>>> CandidateAggregateNodes
         {
             get
             {
                 if (_candidateAggregateNodes == null)
                 {
-                    _candidateAggregateNodes = new HashSet<KeyValuePair<Node, Node>>();
+                    _candidateAggregateNodes = new HashSet<KeyValuePair<Node, List<Node>>>();
                 }
                 return _candidateAggregateNodes;
             }
