@@ -184,19 +184,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 var newFunction = VisitFunction(aggregate.Function);
                 var newArguments = VisitExpressionList(aggregate.Arguments);
 
-                Debug.Assert(newArguments.Count == 1, "Function aggregate had more than one argument?");
-
                 if (!ReferenceEquals(aggregate.Function, newFunction)
                     ||
                     !ReferenceEquals(aggregate.Arguments, newArguments))
                 {
                     if (aggregate.Distinct)
                     {
-                        result = CqtBuilder.AggregateDistinct(newFunction, newArguments[0]);
+                        result = CqtBuilder.AggregateDistinct(newFunction, newArguments);
                     }
                     else
                     {
-                        result = CqtBuilder.Aggregate(newFunction, newArguments[0]);
+                        result = CqtBuilder.Aggregate(newFunction, newArguments);
                     }
                 }
             }

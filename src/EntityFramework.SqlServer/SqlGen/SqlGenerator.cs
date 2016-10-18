@@ -1532,46 +1532,52 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 foreach (var aggregate in e.Aggregates)
                 {
-                    var member = members.Current;
-                    var alias = QuoteIdentifier(member.Name);
+					var member = members.Current;
+					var alias = QuoteIdentifier(member.Name);
 
-                    Debug.Assert(aggregate.Arguments.Count == 1);
-                    var translatedAggregateArgument = aggregate.Arguments[0].Accept(this);
+					var finalArgs = new List<object>();
 
-                    object aggregateArgument;
+					foreach (var argument in aggregate.Arguments)
+					{
+						var translatedAggregateArgument = argument.Accept(this);
 
-                    if (needsInnerQuery)
-                    {
-                        //In this case the argument to the aggratete is reference to the one projected out by the
-                        // inner query
-                        var wrappingAggregateArgument = new SqlBuilder();
-                        wrappingAggregateArgument.Append(fromSymbol);
-                        wrappingAggregateArgument.Append(".");
-                        wrappingAggregateArgument.Append(alias);
-                        aggregateArgument = wrappingAggregateArgument;
+						object aggregateArgument;
 
-                        innerQuery.Select.Append(separator);
-                        innerQuery.Select.AppendLine();
-                        innerQuery.Select.Append(translatedAggregateArgument);
-                        innerQuery.Select.Append(" AS ");
-                        innerQuery.Select.Append(alias);
-                    }
-                    else
-                    {
-                        aggregateArgument = translatedAggregateArgument;
-                    }
+						if (needsInnerQuery)
+						{
+							//In this case the argument to the aggratete is reference to the one projected out by the
+							// inner query
+							var wrappingAggregateArgument = new SqlBuilder();
+							wrappingAggregateArgument.Append(fromSymbol);
+							wrappingAggregateArgument.Append(".");
+							wrappingAggregateArgument.Append(alias);
+							aggregateArgument = wrappingAggregateArgument;
 
-                    ISqlFragment aggregateResult = VisitAggregate(aggregate, aggregateArgument);
+							innerQuery.Select.Append(separator);
+							innerQuery.Select.AppendLine();
+							innerQuery.Select.Append(translatedAggregateArgument);
+							innerQuery.Select.Append(" AS ");
+							innerQuery.Select.Append(alias);
+						}
+						else
+						{
+							aggregateArgument = translatedAggregateArgument;
+						}
 
-                    result.Select.Append(separator);
-                    result.Select.AppendLine();
-                    result.Select.Append(aggregateResult);
-                    result.Select.Append(" AS ");
-                    result.Select.Append(alias);
+						finalArgs.Add(aggregateArgument);
+					}
 
-                    separator = ", ";
-                    members.MoveNext();
-                }
+					ISqlFragment aggregateResult = VisitAggregate(aggregate, finalArgs);
+
+					result.Select.Append(separator);
+					result.Select.AppendLine();
+					result.Select.Append(aggregateResult);
+					result.Select.Append(" AS ");
+					result.Select.Append(alias);
+
+					separator = ", ";
+					members.MoveNext();
+				}
             }
 
             symbolTable.ExitScope();
@@ -2756,8 +2762,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // Aggregates are not visited by the normal visitor walk.
         // </summary>
         // <param name="aggregate"> The aggregate go be translated </param>
-        // <param name="aggregateArgument"> The translated aggregate argument </param>
-        private static SqlBuilder VisitAggregate(DbAggregate aggregate, object aggregateArgument)
+        // <param name="aggregateArguments"> The translated aggregate arguments </param>
+        private static SqlBuilder VisitAggregate(DbAggregate aggregate, IList<object> aggregateArguments)
         {
             var aggregateResult = new SqlBuilder();
             var functionAggregate = aggregate as DbFunctionAggregate;
@@ -2788,9 +2794,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 aggregateResult.Append("DISTINCT ");
             }
 
-            aggregateResult.Append(aggregateArgument);
+			string separator = String.Empty;
+			foreach (var arg in aggregateArguments)
+			{
+				aggregateResult.Append(separator);
+				aggregateResult.Append(arg);
+				separator = ", ";
+			}
 
-            aggregateResult.Append(")");
+			aggregateResult.Append(")");
             return aggregateResult;
         }
 
