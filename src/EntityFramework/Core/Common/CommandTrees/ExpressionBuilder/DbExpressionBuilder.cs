@@ -208,15 +208,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="argument">The argument over which the aggregate function should be calculated.</param>
         /// <exception cref="T:System.ArgumentNullException">function or argument null.</exception>
         /// <exception cref="T:System.ArgumentException">function is not an aggregate function or has more than one argument, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
-        public static DbFunctionAggregate Aggregate(this EdmFunction function, IList<DbExpression> arguments)
+        public static DbFunctionAggregate Aggregate(this EdmFunction function, IEnumerable<DbExpression> arguments)
         {
             Check.NotNull(function, "function");
-			if (arguments.Count == 0)
-			{
-				throw new ArgumentNullException("arguments");
-			}
+            if (arguments?.Any() == false)
+            {
+                throw new ArgumentNullException("arguments");
+            }
 
-			return CreateFunctionAggregate(function, arguments, false);
+            return CreateFunctionAggregate(function, arguments, false);
         }
 
         /// <summary>
@@ -227,17 +227,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="argument">The arguments over which the aggregate function should be calculated.</param>
         /// <exception cref="T:System.ArgumentNullException">function or argument is null.</exception>
         /// <exception cref="T:System.ArgumentException">function is not an aggregate function, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
-        public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, IList<DbExpression> arguments)
+        public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, IEnumerable<DbExpression> arguments)
         {
             Check.NotNull(function, "function");
-            if (arguments.Count == 0) {
-				throw new ArgumentNullException("arguments");
-			}
+            if (arguments?.Any() == false)
+            {
+                throw new ArgumentNullException("arguments");
+            }
 
             return CreateFunctionAggregate(function, arguments, true);
         }
 
-        private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, IList<DbExpression> arguments, bool isDistinct)
+        private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, IEnumerable<DbExpression> arguments, bool isDistinct)
         {
             var funcArgs = ArgumentValidation.ValidateFunctionAggregate(function, arguments);
             var resultType = function.ReturnParameter.TypeUsage;

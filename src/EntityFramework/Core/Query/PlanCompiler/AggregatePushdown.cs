@@ -104,20 +104,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             dictionary.Add(groupAggregateVarInfo.GroupAggregateVar, inputVar);
             var remapper = new VarRemapper(m_command, dictionary);
 
-			var argNodes = new List<Node>(candidate.Value.Count);
+            var argNodes = new List<Node>(candidate.Value.Count);
 
-			foreach (var argumentNode in candidate.Value) {
-				var argumentNodeCopy = OpCopier.Copy(m_command, argumentNode);
-				remapper.RemapSubtree(argumentNodeCopy);
+            foreach (var argumentNode in candidate.Value)
+            {
+                var argumentNodeCopy = OpCopier.Copy(m_command, argumentNode);
+                remapper.RemapSubtree(argumentNodeCopy);
 
-				argNodes.Add(argumentNodeCopy);
-			}
+                argNodes.Add(argumentNodeCopy);
+            }
 
-			var newFunctionDefiningNode = m_command.CreateNode(
-				m_command.CreateAggregateOp(functionOp.Function, false),
-				argNodes);
+            var newFunctionDefiningNode = m_command.CreateNode(
+                m_command.CreateAggregateOp(functionOp.Function, false),
+                argNodes);
 
-			Var newFunctionVar;
+            Var newFunctionVar;
             var varDefNode = m_command.CreateVarDefNode(newFunctionDefiningNode, out newFunctionVar);
 
             // Add the new aggregate to the list of aggregates
