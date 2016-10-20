@@ -1517,52 +1517,52 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 foreach (var aggregate in e.Aggregates)
                 {
-					var member = members.Current;
-					var alias = QuoteIdentifier(member.Name);
+                    var member = members.Current;
+                    var alias = QuoteIdentifier(member.Name);
 
-					var finalArgs = new List<object>();
+                    var finalArgs = new List<object>();
 
-					foreach (var argument in aggregate.Arguments)
-					{
-						var translatedAggregateArgument = argument.Accept(this);
+                    foreach (var argument in aggregate.Arguments)
+                    {
+                        var translatedAggregateArgument = argument.Accept(this);
 
-						object aggregateArgument;
+                        object aggregateArgument;
 
-						if (needsInnerQuery)
-						{
-							//In this case the argument to the aggratete is reference to the one projected out by the
-							// inner query
-							var wrappingAggregateArgument = new SqlBuilder();
-							wrappingAggregateArgument.Append(fromSymbol);
-							wrappingAggregateArgument.Append(".");
-							wrappingAggregateArgument.Append(alias);
-							aggregateArgument = wrappingAggregateArgument;
+                        if (needsInnerQuery)
+                        {
+                            //In this case the argument to the aggratete is reference to the one projected out by the
+                            // inner query
+                            var wrappingAggregateArgument = new SqlBuilder();
+                            wrappingAggregateArgument.Append(fromSymbol);
+                            wrappingAggregateArgument.Append(".");
+                            wrappingAggregateArgument.Append(alias);
+                            aggregateArgument = wrappingAggregateArgument;
 
-							innerQuery.Select.Append(separator);
-							innerQuery.Select.AppendLine();
-							innerQuery.Select.Append(translatedAggregateArgument);
-							innerQuery.Select.Append(" AS ");
-							innerQuery.Select.Append(alias);
-						}
-						else
-						{
-							aggregateArgument = translatedAggregateArgument;
-						}
+                            innerQuery.Select.Append(separator);
+                            innerQuery.Select.AppendLine();
+                            innerQuery.Select.Append(translatedAggregateArgument);
+                            innerQuery.Select.Append(" AS ");
+                            innerQuery.Select.Append(alias);
+                        }
+                        else
+                        {
+                            aggregateArgument = translatedAggregateArgument;
+                        }
 
-						finalArgs.Add(aggregateArgument);
-					}
+                        finalArgs.Add(aggregateArgument);
+                    }
 
-					ISqlFragment aggregateResult = VisitAggregate(aggregate, finalArgs);
+                    ISqlFragment aggregateResult = VisitAggregate(aggregate, finalArgs);
 
-					result.Select.Append(separator);
-					result.Select.AppendLine();
-					result.Select.Append(aggregateResult);
-					result.Select.Append(" AS ");
-					result.Select.Append(alias);
+                    result.Select.Append(separator);
+                    result.Select.AppendLine();
+                    result.Select.Append(aggregateResult);
+                    result.Select.Append(" AS ");
+                    result.Select.Append(alias);
 
-					separator = ", ";
-					members.MoveNext();
-				}
+                    separator = ", ";
+                    members.MoveNext();
+                }
             }
 
             symbolTable.ExitScope();
@@ -2770,15 +2770,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 aggregateResult.Append("DISTINCT ");
             }
 
-			string separator = String.Empty;
-			foreach (var arg in aggregateArguments)
-			{
-				aggregateResult.Append(separator);
-				aggregateResult.Append(arg);
-				separator = ", ";
-			}
+            string separator = String.Empty;
+            foreach (var arg in aggregateArguments)
+            {
+                aggregateResult.Append(separator);
+                aggregateResult.Append(arg);
+                separator = ", ";
+            }
 
-			aggregateResult.Append(")");
+            aggregateResult.Append(")");
             return aggregateResult;
         }
 

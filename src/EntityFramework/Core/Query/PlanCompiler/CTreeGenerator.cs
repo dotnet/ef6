@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using Linq;
     using SortKey = System.Data.Entity.Core.Query.InternalTrees.SortKey;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -1886,24 +1887,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             PlanCompiler.Assert(aggRootNode.Op is VarDefListOp, "Invalid Aggregates VarDefListOp Node encountered in GroupByOp");
             foreach (var aggVarDefNode in aggRootNode.Children)
             {
-				var aggVarDef = aggVarDefNode.Op as VarDefOp;
+                var aggVarDef = aggVarDefNode.Op as VarDefOp;
                 PlanCompiler.Assert(aggVarDef != null, "Non-VarDefOp Node encountered as child of Aggregates VarDefListOp Node");
 
                 var aggVar = aggVarDef.Var;
-				PlanCompiler.Assert(aggVar is ComputedVar, "Non-ComputedVar encountered in Aggregate VarDefOp");
+                PlanCompiler.Assert(aggVar is ComputedVar, "Non-ComputedVar encountered in Aggregate VarDefOp");
 
                 var aggOpNode = aggVarDefNode.Child0;
+                var args = aggOpNode.Children.Select(argumentNode => VisitNode(argumentNode));
 
-				// Loop through arguments
-				var args = new List<DbExpression>();
-
-				foreach (var argumentNode in aggOpNode.Children) {
-					var aggDef = VisitNode(argumentNode);
-					args.Add(aggDef);
-				}
-
-				var funcAggOp = aggOpNode.Op as AggregateOp;
-				PlanCompiler.Assert(funcAggOp != null, "Non-Aggregate Node encountered as child of Aggregate VarDefOp Node");
+                var funcAggOp = aggOpNode.Op as AggregateOp;
+                PlanCompiler.Assert(funcAggOp != null, "Non-Aggregate Node encountered as child of Aggregate VarDefOp Node");
                 DbFunctionAggregate newFuncAgg;
                 if (funcAggOp.IsDistinctAggregate)
                 {

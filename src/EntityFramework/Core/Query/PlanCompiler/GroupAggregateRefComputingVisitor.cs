@@ -149,42 +149,42 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(FunctionOp op, Node n)
         {
-			VisitDefault(n);
-			if (!PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
-			{
-				return;
-			}
-			GroupAggregateVarInfo referencedGroupAggregateVarInfo;
-			GroupAggregateVarInfo referencedGroupAggregateVarInfoTracker = null;
+            VisitDefault(n);
+            if (!PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
+            {
+                return;
+            }
+            GroupAggregateVarInfo referencedGroupAggregateVarInfo;
+            GroupAggregateVarInfo referencedGroupAggregateVarInfoTracker = null;
 
-			Node templateNode;
-			bool isUnnested;
+            Node templateNode;
+            bool isUnnested;
 
-			var list = new List<Node>();
+            var list = new List<Node>();
 
-			foreach (var argument in n.Children)
-			{
-				if (GroupAggregateVarComputationTranslator.TryTranslateOverGroupAggregateVar(
-					argument, false, _command, _groupAggregateVarInfoManager, out referencedGroupAggregateVarInfo, out templateNode,
-					out isUnnested)
-					&&
-					(isUnnested || AggregatePushdownUtil.IsVarRefOverGivenVar(templateNode, referencedGroupAggregateVarInfo.GroupAggregateVar)))
-				{
+            foreach (var argument in n.Children)
+            {
+                if (GroupAggregateVarComputationTranslator.TryTranslateOverGroupAggregateVar(
+                    argument, false, _command, _groupAggregateVarInfoManager, out referencedGroupAggregateVarInfo, out templateNode,
+                    out isUnnested)
+                    &&
+                    (isUnnested || AggregatePushdownUtil.IsVarRefOverGivenVar(templateNode, referencedGroupAggregateVarInfo.GroupAggregateVar)))
+                {
 
-					referencedGroupAggregateVarInfoTracker = referencedGroupAggregateVarInfo;
-					list.Add(templateNode);
-				}
-				else
-				{
-					list.Add(argument);
-				}
-			}
+                    referencedGroupAggregateVarInfoTracker = referencedGroupAggregateVarInfo;
+                    list.Add(templateNode);
+                }
+                else
+                {
+                    list.Add(argument);
+                }
+            }
 
-			if (referencedGroupAggregateVarInfoTracker != null)
-			{
-				referencedGroupAggregateVarInfoTracker.CandidateAggregateNodes.Add(new KeyValuePair<Node, List<Node>>(n, list));
-			}
-		}
+            if (referencedGroupAggregateVarInfoTracker != null)
+            {
+                referencedGroupAggregateVarInfoTracker.CandidateAggregateNodes.Add(new KeyValuePair<Node, List<Node>>(n, list));
+            }
+        }
 
         #endregion
 
