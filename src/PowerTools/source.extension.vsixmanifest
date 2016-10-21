@@ -32,8 +32,8 @@ When right-clicking on a file containing a derived DbContext class, the followin
         <Edition>Pro</Edition>
       </VisualStudio>
       <VisualStudio Version="14.0">
-35	    <Edition>Pro</Edition>
-36	  </VisualStudio>
+        <Edition>Pro</Edition>
+      </VisualStudio>
     </SupportedProducts>
     <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
   </Identifier>
