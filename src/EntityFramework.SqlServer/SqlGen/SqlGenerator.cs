@@ -1537,27 +1537,30 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                     var finalArgs = new List<object>();
 
-                    foreach (var argument in aggregate.Arguments)
+                    for (var childIndex = 0; childIndex < aggregate.Arguments.Count; childIndex++)
                     {
+                        var argument = aggregate.Arguments[childIndex];
                         var translatedAggregateArgument = argument.Accept(this);
 
                         object aggregateArgument;
 
                         if (needsInnerQuery)
                         {
+                            var argAlias = QuoteIdentifier(member.Name + "_" + childIndex);
+
                             //In this case the argument to the aggratete is reference to the one projected out by the
                             // inner query
                             var wrappingAggregateArgument = new SqlBuilder();
                             wrappingAggregateArgument.Append(fromSymbol);
                             wrappingAggregateArgument.Append(".");
-                            wrappingAggregateArgument.Append(alias);
+                            wrappingAggregateArgument.Append(argAlias);
                             aggregateArgument = wrappingAggregateArgument;
 
                             innerQuery.Select.Append(separator);
                             innerQuery.Select.AppendLine();
                             innerQuery.Select.Append(translatedAggregateArgument);
                             innerQuery.Select.Append(" AS ");
-                            innerQuery.Select.Append(alias);
+                            innerQuery.Select.Append(argAlias);
                         }
                         else
                         {
