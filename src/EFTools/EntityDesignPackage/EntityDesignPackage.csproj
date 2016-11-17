@@ -265,6 +265,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\VSSDK\Microsoft.VsSDK.targets" />
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">
+    <VsctCommandsFile>Commands_preVS15.vsct</VsctCommandsFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'">
+    <VsctCommandsFile>Commands_VS15.vsct</VsctCommandsFile>
+  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <Copy SourceFiles="$(VsctCommandsFile)" DestinationFiles="Commands.vsct" OverwriteReadOnlyFiles="true" />
+  </Target>
   <Target Name="AfterBuild">
     <MakeDir Directories="$(OutputPath)PkgDefData" />
     <RegexReplaceInFile InputFileName="PkgDefData\Microsoft.Data.Entity.Design.Package.pkgdef" OutputFileName="$(OutputPath)PkgDefData\Microsoft.Data.Entity.Design.Package.pkgdef" Patterns="EFDESIGNERVERSIONTOKEN" Replacements="$(AssemblyVersion)" />
