@@ -34,7 +34,7 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
 #if (VS11 || VS12 || VS14)
     [VSShell.ProvideAutoLoadAttribute("93694fa0-0397-11d1-9f4e-00a0c911004f")] // VSConstants.UICONTEXT_SolutionHasMultipleProjects
     [VSShell.ProvideAutoLoadAttribute("adfc4e66-0397-11d1-9f4e-00a0c911004f")] // VSConstants.UICONTEXT_SolutionHasSingleProject
-#elif
+#else
     // Perf optimization for VS15 onwards - only load this package if an .edmx file
     // is the current selection in the active hierarchy (instead of at solution load)
     [VSShell.ProvideAutoLoadAttribute(UICONTEXT_AddNewEntityDataModel)]
