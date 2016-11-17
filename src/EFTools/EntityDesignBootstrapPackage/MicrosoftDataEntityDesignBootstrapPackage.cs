@@ -37,8 +37,8 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
 #else
     // Perf optimization for VS15 onwards - only load this package if an .edmx file
     // is the current selection in the active hierarchy (instead of at solution load)
-    [VSShell.ProvideAutoLoadAttribute(UICONTEXT_AddNewEntityDataModel)]
-    [VSShell.ProvideUIContextRule(UICONTEXT_AddNewEntityDataModel,
+    [VSShell.ProvideAutoLoadAttribute(Constants.UICONTEXT_AddNewEntityDataModel)]
+    [VSShell.ProvideUIContextRule(Constants.UICONTEXT_AddNewEntityDataModel,
         name: "Auto load Entity Data Model Package",
         expression: "DotEdmx",
         termNames: new[] { "DotEdmx" },
