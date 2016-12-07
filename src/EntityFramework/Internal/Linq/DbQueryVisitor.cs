@@ -121,7 +121,7 @@ namespace System.Data.Entity.Internal.Linq
             }
 
             //Retrieve the context value from the encapsulated scope
-            object value = GetExpressionValue(expression);
+            var value = GetExpressionValue(expression);
             if (value != null)
             {
                 return GetContextFromMember(member, value);
@@ -141,20 +141,20 @@ namespace System.Data.Entity.Internal.Linq
         private static object GetExpressionValue(Expression expression)
         {
             //If the given expression is a constant, we just return its value
-            ConstantExpression constantExpression = expression as ConstantExpression;
+            var constantExpression = expression as ConstantExpression;
             if (constantExpression != null)
             {
                 return constantExpression.Value;
             }
 
             //If the given expression is a member access on an inner expression, we recursively retrieve the value of the inner expression, and get the member value from it.
-            MemberExpression memberExpression = expression as MemberExpression;
+            var memberExpression = expression as MemberExpression;
             if (memberExpression != null)
             {
                 var asField = memberExpression.Member as FieldInfo;
                 if (asField != null)
                 {
-                    object innerValue = GetExpressionValue(memberExpression.Expression);
+                    var innerValue = GetExpressionValue(memberExpression.Expression);
 
                     if (innerValue != null)
                     {
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Internal.Linq
                 var asProperty = memberExpression.Member as PropertyInfo;
                 if (asProperty != null)
                 {
-                    object innerValue = GetExpressionValue(memberExpression.Expression);
+                    var innerValue = GetExpressionValue(memberExpression.Expression);
 
                     if (innerValue != null)
                     {
