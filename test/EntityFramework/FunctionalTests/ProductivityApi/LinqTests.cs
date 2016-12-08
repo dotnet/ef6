@@ -16,6 +16,7 @@ namespace ProductivityApiTests
     using SimpleModel;
     using Xunit;
     using Xunit.Sdk;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Functional tests for LINQ to Entities using DbQuery.
@@ -12394,6 +12395,37 @@ namespace ProductivityApiTests
                 Assert.True(results.All(r => r.c != null && r.p1 != null && r.p2 != null && r.p3 > 0));
             }
         }
+
+
+        [Fact] // Github 20
+        public void Context_gets_properly_retrieved_from_expression_in_VS2015()
+        {
+            var task = Context_gets_properly_retrieved_from_expression_in_VS2015_task();
+            task.Wait();
+
+            Assert.Equal(16, task.Result.Count);
+        }
+
+        private async Task<List<Category>> Context_gets_properly_retrieved_from_expression_in_VS2015_task()
+        {
+            var queryOption = SampleEnumGitHub20.Value1;
+            using (var context = new SimpleModelContext())
+            {
+                int[] ids = { 1, 2, 3, 4 };
+
+                return await (from product in context.Set<Product>()
+                              where ids.Contains(product.Id)
+                                 && queryOption == SampleEnumGitHub20.Value1
+                              from category in context.Set<Category>()
+                              select category).ToListAsync();
+            }
+        }
+
+        public enum SampleEnumGitHub20
+        {
+            Value1,
+            Value2,
+        };
 
         #endregion
 
