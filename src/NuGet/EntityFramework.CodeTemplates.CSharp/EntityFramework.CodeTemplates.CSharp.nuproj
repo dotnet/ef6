@@ -12,7 +12,7 @@
   <Target Name="CopyTemplates">
     <PropertyGroup>
       <TemplateSourceFolder>..\..\EFTools\EntityDesign\CodeGeneration\Generators\GeneratedCode\</TemplateSourceFolder>
-      <TemplateTargetFolder>$(IntermediateOutputPath)Content\CodeTemplates\EFModelFromDatabase\</TemplateTargetFolder>
+      <TemplateTargetFolder>$(IntermediateOutputPath)Content\net40\CodeTemplates\EFModelFromDatabase\</TemplateTargetFolder>
     </PropertyGroup>
     <MakeDir Directories="$(TemplateTargetFolder)" />
     <Copy

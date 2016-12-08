@@ -16,7 +16,7 @@
     <language>en-US</language>
   </metadata>
   <files>
-    <file src="Content\CodeTemplates\EFModelFromDatabase\Context.cs.t4" target="Content\CodeTemplates\EFModelFromDatabase" />
-    <file src="Content\CodeTemplates\EFModelFromDatabase\EntityType.cs.t4" target="Content\CodeTemplates\EFModelFromDatabase" />
+    <file src="Content\net40\CodeTemplates\EFModelFromDatabase\Context.cs.t4" target="Content\net40\CodeTemplates\EFModelFromDatabase" />
+    <file src="Content\net40\CodeTemplates\EFModelFromDatabase\EntityType.cs.t4" target="Content\net40\CodeTemplates\EFModelFromDatabase" />
   </files>
 </package>
