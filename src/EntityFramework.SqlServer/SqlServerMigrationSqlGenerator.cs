@@ -770,11 +770,7 @@ namespace System.Data.Entity.SqlServer
 
             using (var writer = Writer())
             {
-                if ((column.DefaultValue != null)
-                    || !string.IsNullOrWhiteSpace(column.DefaultValueSql))
-                {
-                    DropDefaultConstraint(alterColumnOperation.Table, column.Name, writer);
-                }
+                DropDefaultConstraint(alterColumnOperation.Table, column.Name, writer);
 
                 writer.Write("ALTER TABLE ");
                 writer.Write(Name(alterColumnOperation.Table));
