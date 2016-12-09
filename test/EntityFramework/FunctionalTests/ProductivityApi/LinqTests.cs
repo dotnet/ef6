@@ -12396,6 +12396,7 @@ namespace ProductivityApiTests
             }
         }
 
+        #if !NET40
 
         [Fact] // Github 20
         public void Context_gets_properly_retrieved_from_expression_in_VS2015()
@@ -12426,6 +12427,8 @@ namespace ProductivityApiTests
             Value1,
             Value2,
         };
+
+        #endif
 
         #endregion
 
