@@ -120,11 +120,12 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(newExpression);
             DebugCheck.NotNull(propertyPaths);
 
-            return !newExpression.Members
-                                 .Where(
-                                     (t, i) =>
-                                     !string.Equals(t.Name, propertyPaths.ElementAt(i).Last().Name, StringComparison.Ordinal))
-                                 .Any();
+            return newExpression.Members == null
+                   || !newExpression.Members
+                       .Where(
+                           (t, i) =>
+                               !string.Equals(t.Name, propertyPaths.ElementAt(i).Last().Name, StringComparison.Ordinal))
+                       .Any();
         }
 
         private static PropertyPath MatchSimplePropertyAccess(
