@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-  <Identifier Id="2b119c79-9836-46e2-b5ed-eb766cebbf7c">
-    <Name>Entity Framework Power Tools Beta 4</Name>
-    <Author>Microsoft</Author>
-    <Version>0.9.0.0</Version>
+<PackageManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="2b119c79-9836-46e2-b5ed-eb766cebbf7c"
+              Publisher="Microsoft"
+              Version="0.9.0.0"
+              Language="en-US" />
+    <DisplayName>Entity Framework Power Tools Beta 4</DisplayName>
     <Description xml:space="preserve">Preview of useful design-time features for DbContext.
 
 When right-clicking on a C# project, the following context menu function is supported:
@@ -14,35 +16,20 @@ When right-clicking on a file containing a derived DbContext class, the followin
 1) View Entity Data Model XML - Displays the EDMX XML representing the underlying Code First model.
 2) View Entity Data Model DDL SQL - Displays the DDL SQL corresponding to the SSDL in the underlying EDM Model.
 3) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.</Description>
-    <Locale>1033</Locale>
-    <MoreInfoUrl>http://go.microsoft.com/fwlink/?LinkId=327691</MoreInfoUrl>
+    <MoreInfo>http://go.microsoft.com/fwlink/?LinkId=327691</MoreInfo>
     <License>License.rtf</License>
     <GettingStartedGuide>http://go.microsoft.com/fwlink/?LinkId=327692</GettingStartedGuide>
     <Icon>db.png</Icon>
     <PreviewImage>menu.png</PreviewImage>
-    <InstalledByMsi>false</InstalledByMsi>
-    <SupportedProducts>
-      <VisualStudio Version="10.0">
-        <Edition>Pro</Edition>
-      </VisualStudio>
-      <VisualStudio Version="11.0">
-        <Edition>Pro</Edition>
-      </VisualStudio>
-      <VisualStudio Version="12.0">
-        <Edition>Pro</Edition>
-      </VisualStudio>
-      <VisualStudio Version="14.0">
-        <Edition>Pro</Edition>
-      </VisualStudio>
-    </SupportedProducts>
-    <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
-  </Identifier>
-  <References>
-    <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
-      <Name>Visual Studio MPF</Name>
-    </Reference>
-  </References>
-  <Content>
-    <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
-  </Content>
-</Vsix>
+  </Metadata>
+  <Installation InstalledByMsi="false">
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0, )" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="11.0" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>
