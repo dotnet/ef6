@@ -518,9 +518,10 @@ namespace Microsoft.DbContextPackage
 
             AppDomain.CurrentDomain.SetData(
                 "DataDirectory",
-                project.IsWebProject()
-                    ? Path.Combine(project.GetProjectDir(), "App_Data")
-                    : project.GetTargetDir());
+                Path.GetFullPath(
+                    project.IsWebProject()
+                        ? Path.Combine(project.GetProjectDir(), "App_Data")
+                        : project.GetTargetDir()));
         }
 
         private static IEnumerable<CodeElement> FindClassesInCodeModel(CodeElements codeElements)
