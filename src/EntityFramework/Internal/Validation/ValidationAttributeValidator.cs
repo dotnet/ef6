@@ -60,7 +60,6 @@ namespace System.Data.Entity.Internal.Validation
                 return Enumerable.Empty<DbValidationError>();
             }
 
-
             var validationContext = entityValidationContext.ExternalValidationContext;
 
             validationContext.SetDisplayName(property, _displayAttribute);
@@ -88,7 +87,6 @@ namespace System.Data.Entity.Internal.Validation
                        : Enumerable.Empty<DbValidationError>();
         }
 
-
         // <summary>
         // Determines if the attribute should be enforced given the context of the validation request.
         // </summary>
@@ -98,7 +96,7 @@ namespace System.Data.Entity.Internal.Validation
         protected virtual bool AttributeApplicable(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {
-            // Do not apply RequiredAttrbiute to existing entities when the property is 
+            // Do not apply RequiredAttrbiute to existing entities when the property is
             // a navigation property and it has not been loaded.
             var internalNavigationProperty = property as InternalNavigationEntry;
 
