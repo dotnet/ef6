@@ -4096,10 +4096,24 @@ namespace System.Data.Entity.Core.Objects
 
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
-                    () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
+                    () => ExecuteStoreCommandInternal(commandText, parameters),
                     executionStrategy,
                     startLocalTransaction: transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                     releaseConnectionOnSuccess: true));
+        }
+
+        private int ExecuteStoreCommandInternal(string commandText, object[] parameters)
+        {
+            var command = CreateStoreCommand(commandText, parameters);
+            try
+            {
+                return command.ExecuteNonQuery();
+            }
+            finally
+            {
+                command.Parameters.Clear();
+                command.Dispose();
+            }
         }
 
 #if !NET40
@@ -4237,7 +4251,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 return await executionStrategy.ExecuteAsync(
                     () => ExecuteInTransactionAsync(
-                        () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
+                        () => ExecuteStoreCommandInternalAsync(commandText, cancellationToken, parameters),
                         executionStrategy,
                         /*startLocalTransaction:*/ transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                         /*releaseConnectionOnSuccess:*/ true, cancellationToken),
@@ -4246,6 +4260,20 @@ namespace System.Data.Entity.Core.Objects
             finally
             {
                 AsyncMonitor.Exit();
+            }
+        }
+
+        private async Task<int> ExecuteStoreCommandInternalAsync(string commandText, CancellationToken cancellationToken, object[] parameters)
+        {
+            var command = CreateStoreCommand(commandText, parameters);
+            try
+            {
+                return await command.ExecuteNonQueryAsync(cancellationToken).WithCurrentCulture();
+            }
+            finally
+            {
+                command.Parameters.Clear();
+                command.Dispose();
             }
         }
 
@@ -4793,6 +4821,10 @@ namespace System.Data.Entity.Core.Objects
 
                 if (command != null)
                 {
+                    // We need to clear the parameters
+                    // from the command in case we need to retry it
+                    // to avoid getting the Sql parameter is contained in a collection error
+                    command.Parameters.Clear();
                     command.Dispose();
                 }
 
