@@ -55,6 +55,12 @@ namespace System.Data.Entity.Internal.Validation
         {
             DebugCheck.NotNull(entityValidationContext);
 
+            if (!AttributeApplicable(entityValidationContext, property))
+            {
+                return Enumerable.Empty<DbValidationError>();
+            }
+
+
             var validationContext = entityValidationContext.ExternalValidationContext;
 
             validationContext.SetDisplayName(property, _displayAttribute);
@@ -80,6 +86,31 @@ namespace System.Data.Entity.Internal.Validation
             return validationResult != ValidationResult.Success
                        ? DbHelpers.SplitValidationResults(validationContext.MemberName, new[] { validationResult })
                        : Enumerable.Empty<DbValidationError>();
+        }
+
+
+        // <summary>
+        // Determines if the attribute should be enforced given the context of the validation request.
+        // </summary>
+        // <param name="entityValidationContext"> Validation context. Never null. </param>
+        // <param name="property"> Property to validate. Null for entity validation. Not null for property validation. </param>
+        // <returns> True if the attribute should be enforced; otherwise false. </returns>
+        protected virtual bool AttributeApplicable(
+            EntityValidationContext entityValidationContext, InternalMemberEntry property)
+        {
+            // Do not apply RequiredAttrbiute to existing entities when the property is 
+            // a navigation property and it has not been loaded.
+            var internalNavigationProperty = property as InternalNavigationEntry;
+
+            if (_validationAttribute is RequiredAttribute &&
+                property != null && property.InternalEntityEntry != null &&
+                property.InternalEntityEntry.State != EntityState.Added && property.InternalEntityEntry.State != EntityState.Detached &&
+                internalNavigationProperty != null && !internalNavigationProperty.IsLoaded)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

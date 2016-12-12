@@ -1094,6 +1094,26 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         }
 
         [Fact]
+        public void DbPropertyEntry_GetValidationErrors_does_not_return_errors_for_non_loaded_non_added_navigation_properties()
+        {
+            var entity = new EntityWithReferenceNavigationProperty
+            {
+                ID = 1,
+                Name = "Test"
+            };
+
+            foreach (var useGenericDbReferenceEntry in new[] { false, true })
+            {
+                var errors = Invoke_DbReferenceEntry_GetValidationErrors(
+                    entity, e => e.RelatedEntity,
+                    useGenericDbReferenceEntry, 
+                    EntityState.Modified);
+                Assert.NotNull(errors);
+                Assert.Equal(0, errors.Count());
+            }
+        }
+
+        [Fact]
         public void DbPropertyEntry_GetValidationErrors_does_not_drill_into_navigation_properties()
         {
             var entity = new EntityWithReferenceNavigationProperty
@@ -1455,13 +1475,8 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                             var errors = context.ValidateEntity(context.Entry(entity)).ValidationErrors;
 
                             Assert.NotNull(errors);
-                            Assert.Equal(1, errors.Count());
-                            var validationError = errors.Single();
-                            Assert.Equal("RelatedEntity", validationError.PropertyName);
-                            Assert.Equal(
-                                string.Format(RequiredAttribute_ValidationError, "RelatedEntity"),
-                                validationError.ErrorMessage);
-
+                            Assert.Equal(0, errors.Count());
+                            
                             if (lazyLoadingEnabled)
                             {
                                 Assert.NotNull(entity.RelatedEntity);
@@ -2010,13 +2025,19 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         }
 
         public static ICollection<DbValidationError> Invoke_DbReferenceEntry_GetValidationErrors<TEntity, TProperty>(
-            TEntity entity, Expression<Func<TEntity, TProperty>> property, bool asGeneric)
+            TEntity entity, Expression<Func<TEntity, TProperty>> property, bool asGeneric, EntityState? entityState = null)
             where TEntity : class, new()
             where TProperty : class
         {
             using (var ctx = new SelfPopulatingContext(new object[] { entity }))
             {
-                var referenceEntry = ctx.Entry(entity).Reference(property);
+                var entityEntry = ctx.Entry(entity);
+                var referenceEntry = entityEntry.Reference(property);
+
+                if (entityState.HasValue)
+                {
+                    entityEntry.State = entityState.Value;
+                }
 
                 return asGeneric
                            ? referenceEntry.GetValidationErrors()
