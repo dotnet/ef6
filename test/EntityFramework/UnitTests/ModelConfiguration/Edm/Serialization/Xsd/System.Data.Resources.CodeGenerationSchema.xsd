@@ -7,6 +7,7 @@
     <xs:attribute name="GetterAccess" type="TAccess" />
     <xs:attribute name="TypeAccess" type="TPublicOrInternalAccess" />
     <xs:attribute name="MethodAccess" type="TAccess" />
+    <xs:attribute name="ExternalTypeName" type="xs:string" />
 
     <xs:simpleType name="TAccess">
         <xs:restriction base="xs:string">
