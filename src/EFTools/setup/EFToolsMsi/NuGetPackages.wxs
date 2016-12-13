@@ -13,12 +13,23 @@
         <?endif?>
         <Directory Id="EntityFramework_$(var.packageVersionId)" Name="EntityFramework.$(var.PackageVersion)">
           <Directory Id="content_$(var.packageVersionId)" Name="Content">
-            <Component Id="App.config.transform_$(var.packageVersionId)">
-              <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\App.config.transform"/>
-            </Component>
-            <Component Id="Web.config.transform_$(var.packageVersionId)">
-              <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\Web.config.transform"/>
-            </Component>
+            <?if $(var.PackageVersion) = $(var.EF6NuGetPackageVersion)?>
+              <Directory Id="content_net40_$(var.packageVersionId)" Name="net40">
+                <Component Id="App.config.transform_$(var.packageVersionId)">
+                  <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\net40\App.config.transform"/>
+                </Component>
+                <Component Id="Web.config.transform_$(var.packageVersionId)">
+                  <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\net40\Web.config.transform"/>
+                </Component>
+              </Directory>
+            <?else?>
+                <Component Id="App.config.transform_$(var.packageVersionId)">
+                  <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\App.config.transform"/>
+                </Component>
+                <Component Id="Web.config.transform_$(var.packageVersionId)">
+                  <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\Web.config.transform"/>
+                </Component>
+            <?endif?>
           </Directory>
           <Directory Id="tools_$(var.packageVersionId)" Name="tools">
             <Component Id="about_EntityFramework.help.txt_$(var.packageVersionId)">
@@ -108,7 +119,7 @@
           <?else?>
             <?define packageVersionId = $(var.PackageVersion)?>
           <?endif?>
-      
+
           <?foreach NuGetLang in $(var.NuGetLangs)?>
             <!-- WIX Ids cannot have hyphens, so we need to handle zh langs differently -->
             <?if $(var.NuGetLang) = zh-Hans?>
