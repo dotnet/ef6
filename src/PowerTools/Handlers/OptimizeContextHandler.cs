@@ -111,11 +111,21 @@ namespace Microsoft.DbContextPackage.Handlers
                     var ef6Assembly = typeResolutionService.GetAssembly(
                         new AssemblyName { Name = ef6Reference.Name, Version = new Version(ef6Reference.Version) });
 
-                    string containerName;
-                    var mappingCollection = edmxUtility.GetMappingCollectionEF6(ef6Assembly, out containerName);
-                    var contextTypeName = selectedItem.ProjectItem.GetDefaultNamespace() + "." + containerName;
+                    if (ef6Assembly != null)
+                    {
+                        string containerName;
+                        var mappingCollection = edmxUtility.GetMappingCollectionEF6(ef6Assembly, out containerName);
+                        var contextTypeName = selectedItem.ProjectItem.GetDefaultNamespace() + "." + containerName;
 
-                    OptimizeContextEF6(languageOption, baseFileName, mappingCollection, selectedItem, contextTypeName);
+                        OptimizeContextEF6(languageOption, baseFileName, mappingCollection, selectedItem, contextTypeName);
+                    }
+                    else
+                    {
+                        var mappingCollection = edmxUtility.GetMappingCollection();
+
+                        OptimizeContextEF5(languageOption, baseFileName, mappingCollection, selectedItem);
+                    }
+
                 }
             }
             catch (Exception ex)
