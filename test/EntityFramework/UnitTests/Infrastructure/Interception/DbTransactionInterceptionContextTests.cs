@@ -7,6 +7,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
+    using Xunit.Extensions;
 
     public class DbTransactionInterceptionContextTests : TestBase
     {
@@ -20,8 +21,10 @@ namespace System.Data.Entity.Infrastructure.Interception
                     Assert.Throws<ArgumentNullException>(() => new DbTransactionInterceptionContext<int>(null)).ParamName);
             }
 
-            [Fact]
-            public void Initially_has_no_state()
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void Initially_has_no_state(bool useObsoleteState)
             {
                 var interceptionContext = new DbTransactionInterceptionContext<int>();
 
@@ -34,11 +37,23 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Equal(0, interceptionContext.OriginalResult);
                 Assert.Equal(0, interceptionContext.Result);
                 Assert.Equal((TaskStatus)0, interceptionContext.TaskStatus);
-                Assert.Null(interceptionContext.UserState);
+                if (useObsoleteState)
+                {
+#pragma warning disable 618
+                    Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+                }
+                else
+                {
+                    Assert.Null(interceptionContext.FindUserState("A"));
+                    Assert.Null(interceptionContext.FindUserState("B"));
+                }
             }
 
-            [Fact]
-            public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state()
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state(bool useObsoleteState)
             {
                 var objectContext = new ObjectContext();
                 var dbContext = DbContextMockHelper.CreateDbContext(objectContext);
@@ -46,7 +61,17 @@ namespace System.Data.Entity.Infrastructure.Interception
                 var interceptionContext = new DbTransactionInterceptionContext<int>();
                 interceptionContext.Exception = new Exception("Cheez Whiz");
                 interceptionContext.Result = 23;
-                interceptionContext.UserState = "Norwegian Jarlsberg";
+                if (useObsoleteState)
+                {
+#pragma warning disable 618
+                    interceptionContext.UserState = "Cheddar";
+#pragma warning restore 618
+                }
+                else
+                {
+                    interceptionContext.SetUserState("A", "AState");
+                    interceptionContext.SetUserState("B", "BState");
+                }
 
                 interceptionContext = interceptionContext
                     .WithDbContext(dbContext)
@@ -62,7 +87,17 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Null(interceptionContext.Exception);
                 Assert.Null(interceptionContext.OriginalException);
                 Assert.False(interceptionContext.IsExecutionSuppressed);
-                Assert.Null(interceptionContext.UserState);
+                if (useObsoleteState)
+                {
+#pragma warning disable 618
+                    Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+                }
+                else
+                {
+                    Assert.Null(interceptionContext.FindUserState("A"));
+                    Assert.Null(interceptionContext.FindUserState("B"));
+                }
             }
 
             [Fact]
@@ -89,8 +124,10 @@ namespace System.Data.Entity.Infrastructure.Interception
                     Assert.Throws<ArgumentNullException>(() => new DbTransactionInterceptionContext(null)).ParamName);
             }
 
-            [Fact]
-            public void Initially_has_no_state()
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void Initially_has_no_state(bool useObsoleteState)
             {
                 var interceptionContext = new DbTransactionInterceptionContext();
 
@@ -102,11 +139,23 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Empty(interceptionContext.ObjectContexts);
                 Assert.Null(interceptionContext.OriginalException);
                 Assert.Equal((TaskStatus)0, interceptionContext.TaskStatus);
-                Assert.Null(interceptionContext.UserState);
+                if (useObsoleteState)
+                {
+#pragma warning disable 618
+                    Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+                }
+                else
+                {
+                    Assert.Null(interceptionContext.FindUserState("A"));
+                    Assert.Null(interceptionContext.FindUserState("B"));
+                }
             }
 
-            [Fact]
-            public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state()
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state(bool useObsoleteState)
             {
                 var objectContext = new ObjectContext();
                 var dbContext = DbContextMockHelper.CreateDbContext(objectContext);
@@ -116,7 +165,17 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 var mutableData = ((IDbMutableInterceptionContext)interceptionContext).MutableData;
                 mutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
-                mutableData.UserState = "Caerphilly";
+                if (useObsoleteState)
+                {
+#pragma warning disable 618
+                    interceptionContext.UserState = "Cheddar";
+#pragma warning restore 618
+                }
+                else
+                {
+                    interceptionContext.SetUserState("A", "AState");
+                    interceptionContext.SetUserState("B", "BState");
+                }
 
                 interceptionContext = interceptionContext
                     .WithDbContext(dbContext)
@@ -132,7 +191,17 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Null(interceptionContext.Exception);
                 Assert.Null(interceptionContext.OriginalException);
                 Assert.False(interceptionContext.IsExecutionSuppressed);
-                Assert.Null(interceptionContext.UserState);
+                if (useObsoleteState)
+                {
+#pragma warning disable 618
+                    Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+                }
+                else
+                {
+                    Assert.Null(interceptionContext.FindUserState("A"));
+                    Assert.Null(interceptionContext.FindUserState("B"));
+                }
             }
 
             [Fact]

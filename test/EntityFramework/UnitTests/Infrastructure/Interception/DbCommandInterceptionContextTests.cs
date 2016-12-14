@@ -8,6 +8,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
+    using Xunit.Extensions;
 
     public class DbCommandInterceptionContextTests : TestBase
     {
@@ -77,8 +78,10 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.False(interceptionContext.IsExecutionSuppressed);
         }
 
-        [Fact]
-        public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state(bool useObsoleteState)
         {
             var objectContext = new ObjectContext();
             var dbContext = DbContextMockHelper.CreateDbContext(objectContext);
@@ -88,7 +91,18 @@ namespace System.Data.Entity.Infrastructure.Interception
             var mutableData = ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData;
             mutableData.SetExecuted("Wensleydale");
             mutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
-            mutableData.UserState = new object();
+
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                mutableData.UserState = new object();
+#pragma warning restore 618
+            }
+            else
+            {
+                mutableData.SetUserState("A", "AState");
+                mutableData.SetUserState("B", "BState");
+            }
 
             interceptionContext = interceptionContext
                 .WithDbContext(dbContext)
@@ -105,7 +119,19 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.Null(interceptionContext.UserState);
+
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Null(interceptionContext.FindUserState("A"));
+                Assert.Null(interceptionContext.FindUserState("B"));
+            }
+
             Assert.False(interceptionContext.IsExecutionSuppressed);
         }
 
@@ -117,8 +143,10 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Assert.Throws<ArgumentNullException>(() => new DbCommandInterceptionContext<int>(null)).ParamName);
         }
 
-        [Fact]
-        public void Result_can_be_mutated()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Result_can_be_mutated(bool useObsoleteState)
         {
             var interceptionContext = new DbCommandInterceptionContext<string>();
 
@@ -126,7 +154,17 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.Null(interceptionContext.UserState);
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Null(interceptionContext.FindUserState("A"));
+                Assert.Null(interceptionContext.FindUserState("B"));
+            }
             Assert.False(interceptionContext.IsExecutionSuppressed);
 
             ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData.SetExecuted("Wensleydale");
@@ -135,20 +173,72 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.Null(interceptionContext.UserState);
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Null(interceptionContext.FindUserState("A"));
+                Assert.Null(interceptionContext.FindUserState("B"));
+            }
             Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Result = "Double Gloucester";
-            interceptionContext.UserState = "Cheddar";
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                interceptionContext.UserState = "Cheddar";
+#pragma warning restore 618
+            }
+            else
+            {
+                interceptionContext.SetUserState("A", "AState");
+                interceptionContext.SetUserState("B", "BState");
+            }
             Assert.Equal("Double Gloucester", interceptionContext.Result);
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
-            Assert.Equal("Cheddar", interceptionContext.UserState);
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Equal("Cheddar", interceptionContext.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Equal("AState", interceptionContext.FindUserState("A"));
+                Assert.Equal("BState", interceptionContext.FindUserState("B"));
+                Assert.Null(interceptionContext.FindUserState("C"));
+            }
+            Assert.False(interceptionContext.IsExecutionSuppressed);
             Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Result = null;
-            interceptionContext.UserState = null;
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                interceptionContext.UserState = null;
+#pragma warning restore 618
+            }
+            else
+            {
+                interceptionContext.SetUserState("A", null);
+                interceptionContext.SetUserState("B", null);
+            }
             Assert.Null(interceptionContext.Result);
-            Assert.Null(interceptionContext.UserState);
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Null(interceptionContext.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Null(interceptionContext.FindUserState("A"));
+                Assert.Null(interceptionContext.FindUserState("B"));
+            }
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
             Assert.False(interceptionContext.IsExecutionSuppressed);
         }

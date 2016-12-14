@@ -102,10 +102,35 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <summary>
         /// Gets or sets a value containing arbitrary user-specified state information associated with the operation.
         /// </summary>
+        [Obsolete("Not safe when multiple interceptors are in use. Use SetUserState and FindUserState instead.")]
         public object UserState
         {
             get { return _mutableData.UserState; }
             set { _mutableData.UserState = value; }
+        }
+
+        /// <summary>
+        /// Gets a value containing arbitrary user-specified state information associated with the operation.
+        /// </summary>
+        /// <param name="key">A key used to identify the user state.</param>
+        /// <returns>The user state set, or null if none was found for the given key.</returns>
+        public object FindUserState(string key)
+        {
+            Check.NotNull(key, "key");
+
+            return _mutableData.FindUserState(key);
+        }
+
+        /// <summary>
+        /// Sets a value containing arbitrary user-specified state information associated with the operation.
+        /// </summary>
+        /// <param name="key">A key used to identify the user state.</param>
+        /// <param name="value">The state to set.</param>
+        public void SetUserState(string key, object value)
+        {
+            Check.NotNull(key, "key");
+
+            _mutableData.SetUserState(key, value);
         }
 
         /// <summary>
