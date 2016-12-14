@@ -7,6 +7,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Remoting.Messaging;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -29,6 +30,8 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly int _maxRetryCount;
         private readonly TimeSpan _maxDelay;
+
+        private const string ContextName = "ExecutionStrategySuspended";
 
         // <summary>
         // The default number of retry attempts, must be nonnegative.
@@ -91,7 +94,17 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         public bool RetriesOnFailure
         {
-            get { return true; }
+            get { return !Suspended; }
+        }
+
+        /// <summary>
+        ///     Indicates whether the strategy is suspended. The strategy is typically suspending while executing to avoid
+        ///     recursive execution from nested operations.
+        /// </summary>
+        protected static bool Suspended
+        {
+            get { return (bool?)CallContext.LogicalGetData(ContextName) ?? false; }
+            set { CallContext.LogicalSetData(ContextName, value); }
         }
 
         /// <summary>
@@ -127,7 +140,15 @@ namespace System.Data.Entity.Infrastructure
         public TResult Execute<TResult>(Func<TResult> operation)
         {
             Check.NotNull(operation, "operation");
-            EnsurePreexecutionState();
+
+            if (RetriesOnFailure)
+            {
+                EnsurePreexecutionState();
+            }
+            else
+            {
+                return operation();
+            }
 
             while (true)
             {
@@ -135,6 +156,7 @@ namespace System.Data.Entity.Infrastructure
 
                 try
                 {
+                    Suspended = true;
                     return operation();
                 }
                 catch (Exception ex)
@@ -149,6 +171,10 @@ namespace System.Data.Entity.Infrastructure
                     {
                         throw new RetryLimitExceededException(Strings.ExecutionStrategy_RetryLimitExceeded(_maxRetryCount, GetType().Name), ex);
                     }
+                }
+                finally
+                {
+                    Suspended = false;
                 }
 
                 if (delay < TimeSpan.Zero)
@@ -182,7 +208,10 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(operation, "operation");
 
-            EnsurePreexecutionState();
+            if (RetriesOnFailure)
+            {
+                EnsurePreexecutionState();
+            }
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -220,7 +249,10 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(operation, "operation");
 
-            EnsurePreexecutionState();
+            if (RetriesOnFailure)
+            {
+                EnsurePreexecutionState();
+            }
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -231,12 +263,18 @@ namespace System.Data.Entity.Infrastructure
         private async Task<TResult> ProtectedExecuteAsync<TResult>(
             Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
+            if (!RetriesOnFailure)
+            {
+                return await operation().WithCurrentCulture();
+            }
+
             while (true)
             {
                 TimeSpan? delay;
 
                 try
                 {
+                    Suspended = true;
                     return await operation().WithCurrentCulture();
                 }
                 catch (Exception ex)
@@ -251,6 +289,10 @@ namespace System.Data.Entity.Infrastructure
                     {
                         throw new RetryLimitExceededException(Strings.ExecutionStrategy_RetryLimitExceeded(_maxRetryCount, GetType().Name), ex);
                     }
+                }
+                finally
+                {
+                    Suspended = false;
                 }
 
                 if (delay < TimeSpan.Zero)

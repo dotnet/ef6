@@ -414,6 +414,55 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.Equal(3, executionCount);
             }
+
+            [Fact]
+            public void Execute_nested_retries_until_limit_is_reached()
+            {
+                var executionCount = 0;
+
+                var executionStrategyMock =
+                    new Mock<DbExecutionStrategy>
+                    {
+                        CallBase = true
+                    };
+
+                executionStrategyMock.Setup(m => m.GetNextDelay(It.IsAny<Exception>())).Returns<Exception>(
+                    e => executionCount < 3 ? (TimeSpan?)TimeSpan.FromTicks(0) : null);
+                executionStrategyMock.Protected().Setup<bool>("ShouldRetryOn", ItExpr.IsAny<Exception>()).Returns<Exception>(
+                    e => e is ExternalException);
+
+
+                var executionStrategyMock2 =
+                    new Mock<DbExecutionStrategy>
+                    {
+                        CallBase = true
+                    };
+
+                executionStrategyMock2.Setup(m => m.GetNextDelay(It.IsAny<Exception>())).Returns<Exception>(
+                    e => executionCount < 3 ? (TimeSpan?)TimeSpan.FromTicks(0) : null);
+                executionStrategyMock2.Protected().Setup<bool>("ShouldRetryOn", ItExpr.IsAny<Exception>()).Returns<Exception>(
+                    e => e is ExternalException);
+
+                Assert.IsType<ExternalException>(
+                    Assert.Throws<RetryLimitExceededException>(
+                        () => executionStrategyMock.Object.Execute(
+                            () => executionStrategyMock2.Object.Execute(
+                                () =>
+                                {
+                                    if (executionCount++ < 3)
+                                    {
+                                        throw new ExternalException();
+                                    }
+                                    else
+                                    {
+                                        Assert.True(false);
+                                        return 0;
+                                    }
+                                }))
+                        ).InnerException);
+
+                Assert.Equal(3, executionCount);
+            }
         }
 
 #if !NET40
@@ -749,6 +798,56 @@ namespace System.Data.Entity.Infrastructure
                                                                           return Task.FromResult(0);
                                                                       }
                                                                   }).Wait())).InnerException);
+
+                Assert.Equal(3, executionCount);
+            }
+
+            [Fact]
+            public void ExecuteAsync_nested_retries_until_limit_is_reached()
+            {
+                var executionCount = 0;
+
+                var executionStrategyMock =
+                    new Mock<DbExecutionStrategy>
+                    {
+                        CallBase = true
+                    };
+
+                executionStrategyMock.Setup(m => m.GetNextDelay(It.IsAny<Exception>())).Returns<Exception>(
+                    e => executionCount < 3 ? (TimeSpan?)TimeSpan.FromTicks(0) : null);
+                executionStrategyMock.Protected().Setup<bool>("ShouldRetryOn", ItExpr.IsAny<Exception>()).Returns<Exception>(
+                    e => e is ExternalException);
+
+
+                var executionStrategyMock2 =
+                    new Mock<DbExecutionStrategy>
+                    {
+                        CallBase = true
+                    };
+
+                executionStrategyMock2.Setup(m => m.GetNextDelay(It.IsAny<Exception>())).Returns<Exception>(
+                    e => executionCount < 3 ? (TimeSpan?)TimeSpan.FromTicks(0) : null);
+                executionStrategyMock2.Protected().Setup<bool>("ShouldRetryOn", ItExpr.IsAny<Exception>()).Returns<Exception>(
+                    e => e is ExternalException);
+
+                Assert.IsType<ExternalException>(
+                    Assert.Throws<RetryLimitExceededException>(
+                        () => ExceptionHelpers.UnwrapAggregateExceptions(
+                            () => executionStrategyMock.Object.ExecuteAsync(
+                                () => executionStrategyMock2.Object.ExecuteAsync(
+                                   async () =>
+                                    {
+                                        if (executionCount++ < 3)
+                                        {
+                                            await Task.Delay(1);
+                                            throw new ExternalException();
+                                        }
+                                        else
+                                        {
+                                            Assert.True(false);
+                                        }
+                                    }, CancellationToken.None)
+                                , CancellationToken.None).Wait())).InnerException);
 
                 Assert.Equal(3, executionCount);
             }
