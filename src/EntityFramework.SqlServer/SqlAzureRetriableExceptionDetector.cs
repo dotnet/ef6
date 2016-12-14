@@ -3,12 +3,14 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.SqlClient;
+    using System.Diagnostics.CodeAnalysis;
 
     // <summary>
     // Detects the exceptions caused by SQL Azure transient failures.
     // </summary>
     internal static class SqlAzureRetriableExceptionDetector
     {
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public static bool ShouldRetryOn(Exception ex)
         {
             var sqlException = ex as SqlException;
