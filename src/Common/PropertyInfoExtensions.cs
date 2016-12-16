@@ -126,6 +126,7 @@ namespace System.Data.Entity.Utilities
                              .GetInstanceProperties()
                              .SingleOrDefault(
                                  p => p.Name == propertyInfo.Name
+                                      && p.DeclaringType == propertyInfo.DeclaringType
                                       && !p.GetIndexParameters().Any()
                                       && p.PropertyType == propertyInfo.PropertyType);
         }

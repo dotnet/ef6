@@ -2192,6 +2192,40 @@ namespace FunctionalTests
         }
     }
 
+    public class IssueG84 : TestBase
+    {
+        [Fact]
+        public void Entity_type_can_have_hidden_properties_from_generic_base()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Market>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<Market>().HasColumns("Id");
+        }
+
+        public abstract class ContentEntityBase<T>
+        {
+            protected abstract T SomeField { get; }
+        }
+
+        public abstract class Company : ContentEntityBase<int>
+        {
+            public int Id { get; set; }
+            protected override int SomeField
+            {
+                get { return 1; }
+            }
+        }
+
+        public class Market : Company
+        {
+        }
+    }
 
     public class Issue1776 : TestBase
     {
