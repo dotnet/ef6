@@ -2,17 +2,21 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="2b119c79-9836-46e2-b5ed-eb766cebbf7c" Version="0.9.1.0" Language="en-US" Publisher="Microsoft" />
-    <DisplayName>Entity Framework Power Tools Beta 5</DisplayName>
-    <Description xml:space="preserve">Preview of useful design-time features for DbContext.
+    <DisplayName>Entity Framework 6 Power Tools Beta 6</DisplayName>
+    <Description xml:space="preserve">Preview of useful design-time DbContext features, added to the Visual Studio Solution Explorer context menu.
 
-When right-clicking on a C# project, the following context menu function is supported:
-1) Reverse Engineer Code First - Generates POCO classes, derived DbContext and Code First mapping for an existing database. 
+When right-clicking on a C# project, the following context menu functions are supported:
+1) Reverse Engineer Code First - Generates POCO classes, derived DbContext and Code First mapping for an existing database.
+2) Customize Reverse Engineer Templates - Adds the default reverse engineer T4 templates to your project for editing.
 
 When right-clicking on a file containing a derived DbContext class, the following context menu functions are supported:
+1) View Entity Data Model (Read-only) - Displays a read-only view of the Code First model in the Entity Model Designer.
+2) View Entity Data Model XML - Displays the EDMX XML representing the underlying Code First model.
+3) View Entity Data Model DDL SQL - Displays the DDL SQL corresponding to the SSDL in the underlying EDM Model.
+4) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.
 
-1) View Entity Data Model XML - Displays the EDMX XML representing the underlying Code First model.
-2) View Entity Data Model DDL SQL - Displays the DDL SQL corresponding to the SSDL in the underlying EDM Model.
-3) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.</Description>
+When right-clicking on an Entity Data Model (*.edmx) file, the following context menu function is supported:
+1) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.</Description>
     <MoreInfo>http://go.microsoft.com/fwlink/?LinkId=327691</MoreInfo>
     <License>License.rtf</License>
     <GettingStartedGuide>http://go.microsoft.com/fwlink/?LinkId=327692</GettingStartedGuide>
