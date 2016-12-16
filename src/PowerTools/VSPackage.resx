@@ -118,16 +118,23 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="110" xml:space="preserve">
-    <value>Entity Framework Power Tools</value>
+    <value>Entity Framework 6 Power Tools</value>
   </data>
   <data name="112" xml:space="preserve">
-    <value>Adds useful design-time DbContext features to the Visual Studio Solution Explorer context menu. 
+    <value>Preview of useful design-time DbContext features, added to the Visual Studio Solution Explorer context menu.
+
+When right-clicking on a C# project, the following context menu functions are supported:
+1) Reverse Engineer Code First - Generates POCO classes, derived DbContext and Code First mapping for an existing database.
+2) Customize Reverse Engineer Templates - Adds the default reverse engineer T4 templates to your project for editing.
 
 When right-clicking on a file containing a derived DbContext class, the following context menu functions are supported:
-
-1) View Entity Data Model - Displays the underlying Code First model in the Entity Framework designer.
+1) View Entity Data Model (Read-only) - Displays a read-only view of the Code First model in the Entity Model Designer.
 2) View Entity Data Model XML - Displays the EDMX XML representing the underlying Code First model.
-3) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.</value>
+3) View Entity Data Model DDL SQL - Displays the DDL SQL corresponding to the SSDL in the underlying EDM Model.
+4) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.
+
+When right-clicking on an Entity Data Model (*.edmx) file, the following context menu function is supported:
+Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
