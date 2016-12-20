@@ -196,14 +196,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         throw new NotSupportedException(
                             Strings.Materializer_RecyclingEntity(
                                 TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), typeof(TEntity).FullName,
-                                existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
+                                existingEntry.WrappedEntity.IdentityType.FullName));
                     }
 
                     if (EntityState.Added
                         == existingEntry.State)
                     {
                         throw new InvalidOperationException(
-                            Strings.Materializer_AddedEntityAlreadyExists(existingEntry.EntityKey.ConcatKeyValue()));
+                            Strings.Materializer_AddedEntityAlreadyExists(typeof(TEntity).FullName));
                     }
                     result = existingEntry.WrappedEntity;
                 }
@@ -797,13 +797,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 throw new NotSupportedException(
                     Strings.Materializer_RecyclingEntity(
                         TypeHelpers.GetFullName(key.EntityContainerName, key.EntitySetName), clrType.FullName,
-                        existingEntry.WrappedEntity.IdentityType.FullName, key.ConcatKeyValue()));
+                        existingEntry.WrappedEntity.IdentityType.FullName));
             }
 
             if (EntityState.Added
                 == existingEntry.State)
             {
-                throw new InvalidOperationException(Strings.Materializer_AddedEntityAlreadyExists(existingEntry.EntityKey.ConcatKeyValue()));
+                throw new InvalidOperationException(Strings.Materializer_AddedEntityAlreadyExists(clrType.FullName));
             }
 
             if (MergeOption.AppendOnly != MergeOption)

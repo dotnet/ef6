@@ -2603,7 +2603,7 @@ namespace System.Data.Entity.Core.Objects
                         else
                         {
                             builder.Append(prefix).Append(Environment.NewLine);
-                            builder.Append('\'').Append(item.Key.ConcatKeyValue()).Append('\'');
+                            builder.Append('\'').Append(item.Value.WrappedEntity.IdentityType.FullName).Append('\'');
                             prefix = ",";
                         }
                     }
@@ -2751,7 +2751,7 @@ namespace System.Data.Entity.Core.Objects
                         else
                         {
                             builder.Append(prefix).Append(Environment.NewLine);
-                            builder.Append('\'').Append(item.Key.ConcatKeyValue()).Append('\'');
+                            builder.Append('\'').Append(item.Value.WrappedEntity.IdentityType.FullName).Append('\'');
                             prefix = ",";
                         }
                     }

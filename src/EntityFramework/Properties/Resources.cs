@@ -1623,7 +1623,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Key usage is not valid. The {0} class  cannot define keys because one of its base classes ('{1}') defines keys."
+        // A string like "Key usage is not valid. The {0} class cannot define keys because one of its base classes ('{1}') defines keys."
         // </summary>
         internal static string EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(object p0, object p1)
         {
@@ -7127,15 +7127,15 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "All objects in the EntitySet '{0}' must have unique primary keys. However, an instance of type '{1}' and an instance of type '{2}' both have the same primary key value, '{3}'. "
+        // A string like "All objects in the EntitySet '{0}' must have unique primary keys. However, an instance of type '{1}' and an instance of type '{2}' both have the same primary key value. "
         // </summary>
-        internal static string Materializer_RecyclingEntity(object p0, object p1, object p2, object p3)
+        internal static string Materializer_RecyclingEntity(object p0, object p1, object p2)
         {
-            return EntityRes.GetString(EntityRes.Materializer_RecyclingEntity, p0, p1, p2, p3);
+            return EntityRes.GetString(EntityRes.Materializer_RecyclingEntity, p0, p1, p2);
         }
 
         // <summary>
-        // A string like "An object with a key value '{0}' already exists in an added state. An object in this state cannot be merged."
+        // A string like "An object of type '{0}' with the same key already exists in an added state. An object in this state cannot be merged."
         // </summary>
         internal static string Materializer_AddedEntityAlreadyExists(object p0)
         {
@@ -14031,7 +14031,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "EscapeLikeArgument is not supported by the provider."
+        // A string like "Escaping within like expressions is not supported by the provider."
         // </summary>
         internal static string ProviderDoesNotSupportEscapingLikeArgument
         {

@@ -858,7 +858,7 @@
     <value>The property '{0}' in EntityType '{1}' is not valid. All properties that are part of the EntityKey must be of PrimitiveType.</value>
   </data>
   <data name="EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass" xml:space="preserve">
-    <value>Key usage is not valid. The {0} class  cannot define keys because one of its base classes ('{1}') defines keys.</value>
+    <value>Key usage is not valid. The {0} class cannot define keys because one of its base classes ('{1}') defines keys.</value>
   </data>
   <data name="EdmModel_Validator_Semantic_KeyMissingOnEntityType" xml:space="preserve">
     <value>EntityType '{0}' has no key defined. Define the key for this EntityType.</value>
@@ -2943,10 +2943,10 @@
     <value>The cast to value type '{0}' failed because the materialized value is null. Either the result type's generic parameter or the query must use a nullable type.</value>
   </data>
   <data name="Materializer_RecyclingEntity" xml:space="preserve">
-    <value>All objects in the EntitySet '{0}' must have unique primary keys. However, an instance of type '{1}' and an instance of type '{2}' both have the same primary key value, '{3}'. </value>
+    <value>All objects in the EntitySet '{0}' must have unique primary keys. However, an instance of type '{1}' and an instance of type '{2}' both have the same primary key value. </value>
   </data>
   <data name="Materializer_AddedEntityAlreadyExists" xml:space="preserve">
-    <value>An object with a key value '{0}' already exists in an added state. An object in this state cannot be merged.</value>
+    <value>An object of type '{0}' with the same key already exists in an added state. An object in this state cannot be merged.</value>
   </data>
   <data name="Materializer_CannotReEnumerateQueryResults" xml:space="preserve">
     <value>The result of a query cannot be enumerated more than once.</value>
