@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CompiledQueryModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="CompiledQueryModelStoreContainer">
+    <EntitySet Name="CompiledQueryBlog" EntityType="CompiledQueryModel.Store.CompiledQueryBlog" store:Type="Tables" Schema="dbo" />
+  </EntityContainer>
+  <EntityType Name="CompiledQueryBlog">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="100" />  
+  </EntityType>
+</Schema>

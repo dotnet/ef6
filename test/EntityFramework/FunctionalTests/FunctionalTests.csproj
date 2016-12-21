@@ -132,6 +132,9 @@
     <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.csdl" />
     <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.msl" />
     <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.ssdl" />
+    <EmbeddedResource Include="Query\CompiledQuery\CompiledQueryModel.csdl" />
+    <EmbeddedResource Include="Query\CompiledQuery\CompiledQueryModel.msl" />
+    <EmbeddedResource Include="Query\CompiledQuery\CompiledQueryModel.ssdl" />
     <None Include="TestModels\TemplateModels\CsAdvancedPatterns\CsAdvancedPatterns.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>CsAdvancedPatterns.Context.cs</LastGenOutput>
@@ -251,6 +254,7 @@
     <Compile Include="Query\Bug2612.cs" />
     <Compile Include="Query\Bug952621.cs" />
     <Compile Include="Query\ComparisonTestst.cs" />
+    <Compile Include="Query\CompiledQuery\CompiledQueryTests.cs" />
     <Compile Include="Query\ConditionalTranslatorTests.cs" />
     <Compile Include="Query\FilterOpRulesTests.cs" />
     <Compile Include="Query\LinqToEntities\ConvertEliminationTests.cs" />
