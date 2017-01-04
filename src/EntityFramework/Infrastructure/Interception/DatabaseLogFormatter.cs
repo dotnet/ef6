@@ -125,13 +125,13 @@ namespace System.Data.Entity.Infrastructure.Interception
                 return _stopwatch;
             }
 
-            var stopwatch = (Stopwatch)((IDbMutableInterceptionContext)interceptionContext).MutableData
-                .FindUserState(StopwatchStateKey);
+            var mutableContext = (IDbMutableInterceptionContext)interceptionContext;
+            var stopwatch = (Stopwatch)mutableContext.MutableData.FindUserState(StopwatchStateKey);
 
             if (stopwatch == null)
             {
                 stopwatch = new Stopwatch();
-                ((IDbMutableInterceptionContext)interceptionContext).MutableData.SetUserState(StopwatchStateKey, stopwatch);
+                mutableContext.MutableData.SetUserState(StopwatchStateKey, stopwatch);
             }
 
             return stopwatch;
