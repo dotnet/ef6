@@ -106,6 +106,7 @@ Project global pre-settings.
     <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterMicrosoftCommonTargets>
     <CustomAfterNuGetProjTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterNuGetProjTargets>
     <CustomAfterWixTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterWixTargets>
+    <CustomAfterSwixTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterSwixTargets>
   </PropertyGroup>
 
   <PropertyGroup>
