@@ -7,13 +7,13 @@
 // of the SSDL. This T-SQL is compatible with SQL 2012, 2008, 2005, CE, and Azure databases.
 //---------------------------------------------------------------------
 // Note: We will resolve all paths in assembly directives at runtime, taking 
-// macros and environment variables into account (e.g. $(ProjectDir), %VERSIONED_VSCOMNTOOLS_ENV_VAR% etc.)
+// macros and environment variables into account (e.g. $(ProjectDir), VERSIONED_VSCOMNTOOLS_ENV_VAR etc.)
 #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
-<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\EntityFramework.dll"#>
-<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\EntityFramework.SqlServer.dll" #>
-<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\EntityFramework.SqlServerCompact.dll" #>
+<#@ assembly name="VERSIONED_VSCOMNTOOLS_ENV_VAR..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
+<#@ assembly name="VERSIONED_VSCOMNTOOLS_ENV_VAR..\IDE\EntityFramework.dll"#>
+<#@ assembly name="VERSIONED_VSCOMNTOOLS_ENV_VAR..\IDE\EntityFramework.SqlServer.dll" #>
+<#@ assembly name="VERSIONED_VSCOMNTOOLS_ENV_VAR..\IDE\EntityFramework.SqlServerCompact.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>

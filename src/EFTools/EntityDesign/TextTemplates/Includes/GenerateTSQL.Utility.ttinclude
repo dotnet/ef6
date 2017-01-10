@@ -2,10 +2,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
 // NOTE: This include template also requires an assembly
-// reference to %VERSIONED_VSCOMNTOOLS_ENV_VAR%\Microsoft.Data.Entity.Design.DatabaseGeneration.dll
+// reference to %VSnnnCOMNTOOLS% or $(DevEnvDir)\Microsoft.Data.Entity.Design.DatabaseGeneration.dll
 // and a namespace reference to Microsoft.Data.Entity.Design.DatabaseGeneration 
 // in the parent template. Commented-out examples are provided below (replace '!' with '#'):
 // <!@ assembly name="%VS110COMNTOOLS%..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll" !>
+// <!@ import namespace="Microsoft.Data.Entity.Design.DatabaseGeneration" !>
+// or
+// <!@ assembly name="$(DevEnvDir)Microsoft.Data.Entity.Design.DatabaseGeneration.dll" !>
 // <!@ import namespace="Microsoft.Data.Entity.Design.DatabaseGeneration" !>
 // ++++++++++++++++++++++++++++++++++++++++++++++++++
 #>

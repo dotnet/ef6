@@ -18,6 +18,7 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
     internal static class Constants
     {
         public const string MicrosoftDataEntityDesignBootstrapPackageId = "7A4E8D96-5D5B-4415-9FAB-D6DCC56F47FB";
+        public const string UICONTEXT_AddNewEntityDataModel = "E000C7E5-DBA5-4682-ABE0-7F6CE57B236D"; // see EntityDesignPackage\Commands_VS15.vsct
     }
 
     //
@@ -30,8 +31,23 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
     [VSShell.PackageRegistrationAttribute(RegisterUsing = VSShell.RegistrationMethod.Assembly, UseManagedResourcesOnly = true)]
     [ComVisible(true)]
     [Guid(Constants.MicrosoftDataEntityDesignBootstrapPackageId)]
+#if (VS11 || VS12 || VS14)
     [VSShell.ProvideAutoLoadAttribute("93694fa0-0397-11d1-9f4e-00a0c911004f")] // VSConstants.UICONTEXT_SolutionHasMultipleProjects
     [VSShell.ProvideAutoLoadAttribute("adfc4e66-0397-11d1-9f4e-00a0c911004f")] // VSConstants.UICONTEXT_SolutionHasSingleProject
+#else
+    // Perf optimization for VS15 onwards - only load this package if an .edmx file
+    // is the current selection in the active hierarchy (instead of at solution load)
+    [VSShell.ProvideAutoLoadAttribute(Constants.UICONTEXT_AddNewEntityDataModel)]
+    // VSShell.ProvideUIContextRule will cause a CS3016 warning. It should not because the class is internal
+    // but due to DevDiv bug 94391 it does anyway. Work around this by ignoring that warning.
+#pragma warning disable 3016
+    [VSShell.ProvideUIContextRule(Constants.UICONTEXT_AddNewEntityDataModel,
+        name: "Auto load Entity Data Model Package",
+        expression: "DotEdmx",
+        termNames: new[] { "DotEdmx" },
+        termValues: new[] { "HierSingleSelectionName:.edmx$" })]
+#pragma warning restore 3016
+#endif
     [SuppressMessage("Microsoft.Performance", "CA1812: AvoidUninstantiatedInternalClasses")]
     internal sealed class BootstrapPackage : VSShell.Package, IVsSolutionEvents
     {

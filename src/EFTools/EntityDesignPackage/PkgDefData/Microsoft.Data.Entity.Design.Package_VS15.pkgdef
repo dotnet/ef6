@@ -1,0 +1,187 @@
+// Register Data Entity Design Package as a DSL package 
+[$RootKey$\DslTools\Packages\{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}]
+@="Microsoft.Data.Entity.Design.Package.MicrosoftDataEntityDesignPackage"
+
+// Register the editor for edmx files
+[$RootKey$\Editors\{c99aea30-8e36-4515-b76f-496f5a48a6aa}]
+@="MicrosoftDataEntityDesignEditorFactory"
+"DisplayName"="#103"
+"EditorTrustLevel"=dword:00000001
+"Package"="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}"
+"CommonPhysicalViewAttributes"=dword:00000002
+
+[$RootKey$\Editors\{c99aea30-8e36-4515-b76f-496f5a48a6aa}\Extensions]
+"edmx"=dword:0000003d
+
+// Register a logical view for the editor (used by multiple diagram feature)
+[$RootKey$\Editors\{c99aea30-8e36-4515-b76f-496f5a48a6aa}\LogicalViews]
+"{ab6778a7-2644-4467-bd57-154f50f3dae5}"=""
+
+// VSPackage Registration   
+[$RootKey$\Packages\{8889E051-B7F9-4781-BB33-2A36A9BDB3A5}]
+@="Microsoft.Data.Entity.Design.Package.MicrosoftDataEntityDesignPackage"
+"Assembly"="Microsoft.Data.Entity.Design.Package, version=EFDESIGNERVERSIONTOKEN, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Class"="Microsoft.Data.Entity.Design.Package.MicrosoftDataEntityDesignPackage"
+"CodeBase"="$RootFolder$Common7\IDE\Microsoft.Data.Entity.Design.Package.dll"
+"InprocServer32"="%SystemRoot%\\system32\\mscoree.dll"
+
+// Register Toolbox Items 
+[$RootKey$\Packages\{8889E051-B7F9-4781-BB33-2A36A9BDB3A5}\Toolbox]
+"Default Items"=dword:00000001
+
+[$RootKey$\Packages\{8889E051-B7F9-4781-BB33-2A36A9BDB3A5}\Toolbox\DefaultContent]
+
+[$RootKey$\Packages\{8889E051-B7F9-4781-BB33-2A36A9BDB3A5}\Toolbox\DefaultContent\DE3C632C3FEAC5C355DA182A9B9F875]
+@="@Entity FrameworkToolboxTab;Microsoft.Data.Entity.Design.EntityDesigner.dll"
+"UniqueID"="Microsoft.Data.Entity.Design.Package.Entity FrameworkToolboxTab"
+
+[$RootKey$\Packages\{8889E051-B7F9-4781-BB33-2A36A9BDB3A5}\Toolbox\DefaultContent\DE3C632C3FEAC5C355DA182A9B9F875\BEC239151C59BC3DB41C03C3169DA1]
+@="@AssociationToolToolboxItem;Microsoft.Data.Entity.Design.EntityDesigner.dll"
+"BitmapResourceID"="@AssociationToolToolboxBitmap;Microsoft.Data.Entity.Design.EntityDesigner.dll"
+"Formats"="CF_TOOLBOXITEMCONTAINER,CF_TOOLBOXITEMCONTAINER_HASH,CF_TOOLBOXITEMCONTAINER_CONTENTS"
+"HelpKeyword"=""
+"TransparentColor"=dword:00ff00ff
+"UniqueID"="Microsoft.Data.Entity.Design.Package.AssociationToolToolboxItem"
+
+[$RootKey$\Packages\{8889E051-B7F9-4781-BB33-2A36A9BDB3A5}\Toolbox\DefaultContent\DE3C632C3FEAC5C355DA182A9B9F875\D6F894FAEE744F1C45D37A95ED62FB8]
+@="@InheritanceToolToolboxItem;Microsoft.Data.Entity.Design.EntityDesigner.dll"
+"BitmapResourceID"="@InheritanceToolToolboxBitmap;Microsoft.Data.Entity.Design.EntityDesigner.dll"
+"Formats"="CF_TOOLBOXITEMCONTAINER,CF_TOOLBOXITEMCONTAINER_HASH,CF_TOOLBOXITEMCONTAINER_CONTENTS"
+"HelpKeyword"=""
+"TransparentColor"=dword:00ff00ff
+"UniqueID"="Microsoft.Data.Entity.Design.Package.InheritanceToolToolboxItem"
+
+[$RootKey$\Packages\{8889E051-B7F9-4781-BB33-2A36A9BDB3A5}\Toolbox\DefaultContent\DE3C632C3FEAC5C355DA182A9B9F875\DC8AD58BD9D7759EA45FCEB1587784D]
+@="@EntityToolToolboxItem;Microsoft.Data.Entity.Design.EntityDesigner.dll"
+"BitmapResourceID"="@EntityToolToolboxBitmap;Microsoft.Data.Entity.Design.EntityDesigner.dll"
+"Formats"="CF_TOOLBOXITEMCONTAINER,CF_TOOLBOXITEMCONTAINER_HASH,CF_TOOLBOXITEMCONTAINER_CONTENTS"
+"HelpKeyword"=""
+"TransparentColor"=dword:00ff00ff
+"UniqueID"="Microsoft.Data.Entity.Design.Package.EntityToolToolboxItem"
+
+// Register the Tool Window for our EDM Explorer 
+[$RootKey$\ToolWindows\{a34b1c5d-6d37-4a0c-a8b0-99f8e8158b48}]
+@="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}"
+"Name"="Microsoft.Data.Entity.Design.VisualStudio.Package.ExplorerWindow"
+"Orientation"="Right"
+"Style"="Tabbed"
+"Window"="{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+
+[$RootKey$\ToolWindows\{a34b1c5d-6d37-4a0c-a8b0-99f8e8158b48}\Visibility]
+"{c99aea30-8e36-4515-b76f-496f5a48a6aa}"=dword:00000000
+
+// Register the Tool Window for our Mapping Details 
+[$RootKey$\ToolWindows\{cdbdee54-b399-484b-b763-db2c3393d646}]
+@="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}"
+"Name"="Microsoft.Data.Entity.Design.UI.Views.MappingDetails.MappingDetailsWindow"
+"Orientation"="Left"
+"Style"="Tabbed"
+"Window"="{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+
+[$RootKey$\ToolWindows\{cdbdee54-b399-484b-b763-db2c3393d646}\Visibility]
+"{c99aea30-8e36-4515-b76f-496f5a48a6aa}"=dword:00000000
+
+// Single File Generator Registration 
+[$RootKey$\CLSID\{A58BFFCF-B9BD-4904-9248-0936C15D178A}]
+@="Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator"
+"Assembly"="Microsoft.Data.Entity.Design, version=EFDESIGNERVERSIONTOKEN, Culture=Neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Class"="Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator"
+"InprocServer32"="%SystemRoot%\\system32\\mscoree.dll"
+"ThreadingModel"="Both"
+
+// Register Entity Designer menu resource 
+[$RootKey$\Menus]
+"{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}"=", EntityDesigner.ctmenu, 1"
+
+// Generic Code-Generator registration 
+[$RootKey$\Generators\{164B10B9-B200-11D0-8C61-00A0C91E29D5}\EntityModelCodeGenerator]
+@="Microsoft VB Code Generator for ADO.NET vNext Entity Model"
+"CLSID"="{A58BFFCF-B9BD-4904-9248-0936C15D178A}"
+"GeneratesDesignTimeSource"=dword:00000001
+
+[$RootKey$\Generators\{FAE04EC1-301F-11D3-BF4B-00C04F79EFBC}\EntityModelCodeGenerator]
+@="Microsoft C# Code Generator for ADO.NET vNext Entity Model"
+"CLSID"="{A58BFFCF-B9BD-4904-9248-0936C15D178A}"
+"GeneratesDesignTimeSource"=dword:00000001
+
+[$RootKey$\Generators\{39C9C826-8EF8-4079-8C95-428F5B1C323F}\EntityModelCodeGenerator]
+@="Microsoft Code Generator for ADO.NET vNext Entity Model"
+"CLSID"="{A58BFFCF-B9BD-4904-9248-0936C15D178A}"
+"GeneratesDesignTimeSource"=dword:00000001
+
+// VB and C Sharp ASP.NET Template Filter (so the menu item only shows up in and under the App_Code folder)
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\AddNewItemFilters\App_Browsers]
+"ModelObjectItemCS_ASPNET.vstemplate"=dword:00000000
+"ModelObjectItemVB_ASPNET.vstemplate"=dword:00000000
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\AddNewItemFilters\App_Data]
+"ModelObjectItemCS_ASPNET.vstemplate"=dword:00000000
+"ModelObjectItemVB_ASPNET.vstemplate"=dword:00000000
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\AddNewItemFilters\App_GlobalResources]
+"ModelObjectItemCS_ASPNET.vstemplate"=dword:00000000
+"ModelObjectItemVB_ASPNET.vstemplate"=dword:00000000
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\AddNewItemFilters\App_LocalResources]
+"ModelObjectItemCS_ASPNET.vstemplate"=dword:00000000
+"ModelObjectItemVB_ASPNET.vstemplate"=dword:00000000
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\AddNewItemFilters\App_Themes]
+"ModelObjectItemCS_ASPNET.vstemplate"=dword:00000000
+"ModelObjectItemVB_ASPNET.vstemplate"=dword:00000000
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\AddNewItemWizardInfo\ModelObjectItemCS_ASPNET.vstemplate]
+"Extension"=".edmx"
+"ItemName"="ADO.NET Entity Data Model"
+"PrimaryFolder"="App_Code"
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\AddNewItemWizardInfo\ModelObjectItemVB_ASPNET.vstemplate]
+"Extension"=".edmx"
+"ItemName"="ADO.NET Entity Data Model"
+"PrimaryFolder"="App_Code"
+
+// Register CustomTool for the WebSite Project
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\FileExtensions\.edmx]
+"CustomTool"="EntityModelCodeGenerator"
+"EditorFactoryNotify"="{c99aea30-8e36-4515-b76f-496f5a48a6aa}"
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\FileExtensions\.edmx\CustomToolSetting]
+"EntityModelCodeGenerator"="App_Code"
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\RelatedFiles\.edmx]
+"RelationType"=dword:00000002
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\RelatedFiles\.edmx\.diagram]
+
+[$RootKey$\Projects\{F184B08F-C81C-45f6-A57F-5ABD9991F28F}\FileExtensions\.edmx]
+"EditorFactoryNotify"="{c99aea30-8e36-4515-b76f-496f5a48a6aa}"
+
+// Register a .diagram file as the child of an .edmx file 
+[$RootKey$\Projects\{F184B08F-C81C-45f6-A57F-5ABD9991F28F}\RelatedFiles\.edmx]
+".diagram"=dword:00000002
+
+[$RootKey$\Projects\{FAE04EC0-301F-11d3-BF4B-00C04F79EFBC}\FileExtensions\.edmx]
+"EditorFactoryNotify"="{c99aea30-8e36-4515-b76f-496f5a48a6aa}"
+
+// Register a .diagram file as the child of an .edmx file 
+[$RootKey$\Projects\{FAE04EC0-301F-11d3-BF4B-00C04F79EFBC}\RelatedFiles\.edmx]
+".diagram"=dword:00000002
+
+// Register the Include path for T4 Templates 
+[$RootKey$\TextTemplating\IncludeFolders\.tt]
+"Include67826F5E-E1F5-4618-B91C-957E4A34F0D9"="$RootFolder$Common7\IDE\Extensions\Microsoft\Entity Framework Tools\Templates\Includes\"
+
+// Register the FallbackT4VSHostProcessor for T4 Templates 
+[$RootKey$\TextTemplating\DirectiveProcessors\T4VSHost]
+"Class"="Microsoft.Data.Entity.Design.VisualStudio.Directives.FallbackT4VSHostProcessor"
+"CodeBase"="$RootFolder$Common7\IDE\Microsoft.Data.Entity.Design.dll"
+
+// Enables the EntityDataSource connection wizard to work against Entity Framework 5 by registering a dependency
+// assembly codebase in the registry to hint Visual Studio (or its express flavors) as to where to go look for
+// the Entity Framework assembly when version 5 is required.
+[$RootKey$\RuntimeConfiguration\dependentAssembly\codeBase\{29A768DC-8850-4C53-BC56-32D9E7925E00}]
+"Name"="EntityFramework"
+"PublicKeyToken"="b77a5c561934e089"
+"Culture"="neutral"
+"Version"="5.0.0.0"
+"CodeBase"="$RootFolder$Common7\IDE\Extensions\Microsoft\Entity Framework Tools\Runtimes\5.0.0\EntityFramework.dll"
