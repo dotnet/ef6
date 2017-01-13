@@ -257,6 +257,48 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
+        public void AddOrUpdate_should_be_able_to_add_new_data_by_nullable_identifier()
+        {
+            ResetDatabase();
+
+            CreateMigrator<ShopContext_v1>().Update();
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                context.Customers.AddOrUpdate
+                    (
+                        c => new
+                        {
+                            c.FullName,
+                            c.Narf
+                        },
+                        new MigrationsCustomer
+                        {
+                            FullName = "Andrew Peters",
+                            CustomerNumber = 123
+                        },
+                        new MigrationsCustomer
+                        {
+                            FullName = "Brice Lambson",
+                            CustomerNumber = 456
+                        },
+                        new MigrationsCustomer
+                        {
+                            FullName = "Rowan Miller",
+                            CustomerNumber = 789
+                        }
+                    );
+
+                context.SaveChanges();
+            }
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                Assert.Equal(3, context.Customers.Count());
+            }
+        }
+
+        [MigrationsTheory]
         public void AddOrUpdate_should_be_able_to_update_existing_data_by_custom_identifier()
         {
             ResetDatabase();
@@ -317,6 +359,70 @@ namespace System.Data.Entity.Migrations
                     123,
                     context.Customers
                         .Single(c => c.FullName == "Andrew Peters" && c.Name == "Andrew2").CustomerNumber);
+            }
+        }
+
+        [MigrationsTheory]
+        public void AddOrUpdate_should_be_able_to_update_existing_data_by_nullable_identifier()
+        {
+            ResetDatabase();
+
+            CreateMigrator<ShopContext_v1>().Update();
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                context.Customers.AddOrUpdate
+                    (
+                        new MigrationsCustomer
+                        {
+                            FullName = "Andrew Peters",
+                            Narf = 1,
+                            CustomerNumber = 123
+                        },
+                        new MigrationsCustomer
+                        {
+                            FullName = "Andrew Peters",
+                            Narf = 2,
+                            CustomerNumber = 123
+                        }
+                    );
+
+                context.SaveChanges();
+            }
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                Assert.Equal(2, context.Customers.Count());
+
+                context.Customers.AddOrUpdate
+                    (
+                        c => new
+                        {
+                            c.FullName,
+                            c.Narf
+                        },
+                        new MigrationsCustomer
+                        {
+                            FullName = "Andrew Peters",
+                            Narf = 1,
+                            CustomerNumber = 456
+                        }
+                    );
+
+                context.SaveChanges();
+            }
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                Assert.Equal(2, context.Customers.Count());
+                Assert.Equal(
+                    456L,
+                    context.Customers
+                        .Single(c => c.FullName == "Andrew Peters" && c.Narf == 1).CustomerNumber);
+                Assert.Equal(
+                    123,
+                    context.Customers
+                        .Single(c => c.FullName == "Andrew Peters" && c.Narf == 2).CustomerNumber);
             }
         }
     }
