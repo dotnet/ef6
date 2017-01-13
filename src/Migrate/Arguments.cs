@@ -42,6 +42,16 @@ namespace System.Data.Entity.Migrations.Console
         public string WorkingDirectory { get; set; }
 
         [CommandLineParameter(
+            Command = "scriptFile",
+            DescriptionResourceId = EntityRes.ScriptFileDescription)]
+        public string ScriptFile { get; set; }
+
+        [CommandLineParameter(
+            Command = "sourceMigration",
+            DescriptionResourceId = EntityRes.SourceMigrationDescription)]
+        public string SourceMigration { get; set; }
+
+        [CommandLineParameter(
             Command = "startUpConfigurationFile",
             DescriptionResourceId = EntityRes.ConfigurationFileDescription)]
         public string ConfigurationFile { get; set; }
