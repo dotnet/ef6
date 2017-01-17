@@ -40,6 +40,7 @@ namespace System.Data.Entity.Migrations.History
         private readonly int _contextKeyMaxLength;
         private readonly int _migrationIdMaxLength;
         private readonly DatabaseExistenceState _initialExistence;
+        private readonly Func<Exception, bool> _permissionDeniedDetector;
         private readonly DbTransaction _existingTransaction;
 
         private string _currentSchema;
@@ -55,13 +56,15 @@ namespace System.Data.Entity.Migrations.History
             Func<DbConnection, string, HistoryContext> historyContextFactory,
             IEnumerable<string> schemas = null,
             DbContext contextForInterception = null,
-            DatabaseExistenceState initialExistence = DatabaseExistenceState.Unknown)
+            DatabaseExistenceState initialExistence = DatabaseExistenceState.Unknown,
+            Func<Exception, bool> permissionDeniedDetector = null)
             : base(usersContext, connectionString, providerFactory)
         {
             DebugCheck.NotEmpty(contextKey);
             DebugCheck.NotNull(historyContextFactory);
 
             _initialExistence = initialExistence;
+            _permissionDeniedDetector = permissionDeniedDetector;
             _commandTimeout = commandTimeout;
             _existingTransaction = usersContext.TryGetCurrentStoreTransaction();
 
@@ -505,8 +508,13 @@ namespace System.Data.Entity.Migrations.History
                                 }
                             }
                         }
-                        catch (EntityException)
+                        catch (EntityException entityException)
                         {
+                            if (_permissionDeniedDetector?.Invoke(entityException.InnerException) == true)
+                            {
+                                throw;
+                            }
+
                             _contextKeyColumnExists = false;
                         }
 
@@ -521,8 +529,13 @@ namespace System.Data.Entity.Migrations.History
                                     context.History.Count();
                                 }
                             }
-                            catch (EntityException)
+                            catch (EntityException entityException)
                             {
+                                if (_permissionDeniedDetector?.Invoke(entityException.InnerException) == true)
+                                {
+                                    throw;
+                                }
+
                                 _currentSchema = null;
                             }
                         }

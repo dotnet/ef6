@@ -223,6 +223,7 @@
     <Compile Include="Migrations\AlterTableAnnotationsScenarios.cs" />
     <Compile Include="Migrations\BasicMigrationScenarios.cs" />
     <Compile Include="Migrations\CustomHistoryScenarios.cs" />
+    <Compile Include="Migrations\DbPermissionsScenarios.cs" />
     <Compile Include="Migrations\LoggingScenarios.cs" />
     <Compile Include="Migrations\CreateStoredProcedureScenarios.cs" />
     <Compile Include="Migrations\ModificationFunctionsScenarios.cs" />

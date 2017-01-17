@@ -45,6 +45,15 @@ namespace System.Data.Entity.SqlServer
         private int _variableCounter;
 
         /// <summary>
+        /// Determines if a provider specific exception corresponds to a database-level permission denied error.
+        /// </summary>
+        /// <param name="exception">The database exception.</param>
+        public override bool IsPermissionDeniedError(Exception exception)
+        {
+            return (exception as SqlException)?.Number == 229;
+        }
+
+        /// <summary>
         /// Converts a set of migration operations into Microsoft SQL Server specific SQL.
         /// </summary>
         /// <param name="migrationOperations"> The operations to be converted. </param>
