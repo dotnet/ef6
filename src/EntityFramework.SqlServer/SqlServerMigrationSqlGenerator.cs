@@ -48,6 +48,7 @@ namespace System.Data.Entity.SqlServer
         /// Determines if a provider specific exception corresponds to a database-level permission denied error.
         /// </summary>
         /// <param name="exception">The database exception.</param>
+        /// <returns> true if the supplied exception corresponds to a database-level permission denied error; otherwise false. </returns>
         public override bool IsPermissionDeniedError(Exception exception)
         {
             var sqlException = exception as SqlException;

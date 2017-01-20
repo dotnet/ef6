@@ -52,6 +52,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// Determines if a provider specific exception corresponds to a database-level permission denied error.
         /// </summary>
         /// <param name="exception">The database exception.</param>
+        /// <returns> true if the supplied exception corresponds to a database-level permission denied error; otherwise false. </returns>
         public virtual bool IsPermissionDeniedError(Exception exception)
         {
             return false; // Default is unknown
