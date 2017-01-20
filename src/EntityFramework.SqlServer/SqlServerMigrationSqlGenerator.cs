@@ -50,7 +50,9 @@ namespace System.Data.Entity.SqlServer
         /// <param name="exception">The database exception.</param>
         public override bool IsPermissionDeniedError(Exception exception)
         {
-            return (exception as SqlException)?.Number == 229;
+            var sqlException = exception as SqlException;
+
+            return sqlException != null && sqlException.Number == 229;
         }
 
         /// <summary>

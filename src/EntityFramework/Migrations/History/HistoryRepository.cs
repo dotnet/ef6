@@ -510,7 +510,8 @@ namespace System.Data.Entity.Migrations.History
                         }
                         catch (EntityException entityException)
                         {
-                            if (_permissionDeniedDetector?.Invoke(entityException.InnerException) == true)
+                            if (_permissionDeniedDetector != null 
+                                && _permissionDeniedDetector(entityException.InnerException))
                             {
                                 throw;
                             }
@@ -531,7 +532,8 @@ namespace System.Data.Entity.Migrations.History
                             }
                             catch (EntityException entityException)
                             {
-                                if (_permissionDeniedDetector?.Invoke(entityException.InnerException) == true)
+                                if (_permissionDeniedDetector != null 
+                                    && _permissionDeniedDetector(entityException.InnerException))
                                 {
                                     throw;
                                 }
