@@ -15661,6 +15661,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+<<<<<<< HEAD
         // InvalidOperationException with message like "The store type '{0}' could not be found in the {1} provider manifest"
         // </summary>
         internal static Exception StoreTypeNotFound(object p0, object p1)
@@ -15684,6 +15685,8 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+=======
+>>>>>>> Remove use of GUIDs to identify composite indexes in favor of naming ahead of time.
         // The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         // </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
@@ -17467,10 +17470,13 @@ namespace System.Data.Entity.Resources
         internal const string UnableToLoadEmbeddedResource = "UnableToLoadEmbeddedResource";
         internal const string CannotSetBaseTypeCyclicInheritance = "CannotSetBaseTypeCyclicInheritance";
         internal const string CannotDefineKeysOnBothBaseAndDerivedTypes = "CannotDefineKeysOnBothBaseAndDerivedTypes";
+<<<<<<< HEAD
         internal const string StoreTypeNotFound = "StoreTypeNotFound";
         internal const string ProviderDoesNotSupportEscapingLikeArgument = "ProviderDoesNotSupportEscapingLikeArgument";
         internal const string IndexPropertyNotFound = "IndexPropertyNotFound";
         internal const string ConflictingIndexAttributeMatches = "ConflictingIndexAttributeMatches";
+=======
+>>>>>>> Remove use of GUIDs to identify composite indexes in favor of naming ahead of time.
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

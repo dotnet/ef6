@@ -8,7 +8,6 @@ namespace System.Data.Entity.Infrastructure.Annotations
 
     internal static class IndexAttributeExtensions
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static CompatibilityResult IsCompatibleWith(this IndexAttribute me, IndexAttribute other, bool ignoreOrder = false)
         {
             DebugCheck.NotNull(me);
@@ -21,18 +20,11 @@ namespace System.Data.Entity.Infrastructure.Annotations
 
             string errorMessage = null;
 
-            if ((me.Name == null || me.Name == other.Name) && me.Identity != other.Identity)
+            if (me.Name != other.Name)
             {
-                errorMessage = errorMessage == null ? "" : errorMessage + (Environment.NewLine + "\t");
-                errorMessage = Strings.ConflictingIndexAttributeProperty("Identity", me.Identity, other.Identity);
-            }
-
-            if ((!me.Identity.HasValue || me.Identity == other.Identity) && me.Name != other.Name)
-            {
-                errorMessage = errorMessage == null ? "" : errorMessage + (Environment.NewLine + "\t");
                 errorMessage = Strings.ConflictingIndexAttributeProperty("Name", me.Name, other.Name);
             }
-            
+
             if (!ignoreOrder
                 && me.Order != -1
                 && other.Order != -1
@@ -78,26 +70,10 @@ namespace System.Data.Entity.Infrastructure.Annotations
                     Strings.ConflictingIndexAttribute(me.Name, Environment.NewLine + "\t" + isCompatible.ErrorMessage));
             }
 
-            var merged = new IndexAttribute();
+            var merged = me.Name != null
+                ? new IndexAttribute(me.Name)
+                : other.Name != null ? new IndexAttribute(other.Name) : new IndexAttribute();
 
-            if (me.Identity.HasValue)
-            {
-                merged.Identity = me.Identity;
-            }
-            else if (other.Identity.HasValue)
-            {
-                merged.Identity = other.Identity;
-            }
-
-            if (me.Name != null)
-            {
-                merged.Name = me.Name;
-            }
-            else if (other.Name != null)
-            {
-                merged.Name = other.Name;
-            }
-            
             if (!ignoreOrder)
             {
                 if (me.Order != -1)
