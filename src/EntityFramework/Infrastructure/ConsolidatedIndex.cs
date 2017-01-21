@@ -51,18 +51,7 @@ namespace System.Data.Entity.Infrastructure
                     .OfType<IndexAnnotation>()
                     .SelectMany(a => a.Indexes))
                 {
-                    
-                    var consolidatedCandidates = allIndexes.Where(
-                        i => (index.Identity != null && i.Index.Identity == index.Identity) 
-                            || (index.Name != null && i.Index.Name == index.Name));
-
-                    if (consolidatedCandidates.Count() > 1)
-                    {
-                        throw Error.ConflictingIndexAttributeMatches(index.Identity, index.Name);
-                    }
-
-                    var consolidated = consolidatedCandidates.SingleOrDefault();
-                    
+                    var consolidated = index.Name == null ? null : allIndexes.FirstOrDefault(i => i.Index.Name == index.Name);
                     if (consolidated == null)
                     {
                         allIndexes.Add(new ConsolidatedIndex(tableName, column.Item1, index));
@@ -97,7 +86,7 @@ namespace System.Data.Entity.Infrastructure
             DebugCheck.NotEmpty(columnName);
             DebugCheck.NotNull(index);
 
-            Debug.Assert(_index.Identity == index.Identity || _index.Name == index.Name);
+            Debug.Assert(_index.Name == index.Name);
 
             if (_columns.ContainsKey(index.Order))
             {
@@ -120,7 +109,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var columnNames = Columns.ToArray();
             Debug.Assert(columnNames.Length > 0);
-            Debug.Assert(_index.Identity != null || _index.Name != null || columnNames.Length == 1);
+            Debug.Assert(_index.Name != null || columnNames.Length == 1);
 
             var operation = new CreateIndexOperation
             {

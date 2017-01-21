@@ -23,8 +23,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Index
         private bool? _isClustered;
         private string _name;
 
-        private readonly Guid _indexIdentity = Guid.NewGuid();
-        
         public IndexConfiguration()
         {
 
@@ -95,7 +93,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Index
             DebugCheck.NotNull(edmProperty);
 
             edmProperty.AddAnnotation(XmlConstants.IndexAnnotationWithPrefix,
-                new IndexAnnotation(new IndexAttribute(_indexIdentity, _name, indexOrder, _isClustered, _isUnique)));
+                new IndexAnnotation(new IndexAttribute(_name, indexOrder, _isClustered, _isUnique)));
         }
 
         internal void Configure(EntityType entityType)

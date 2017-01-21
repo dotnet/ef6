@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure.Annotations
     public class IndexAnnotationSerializer : IMetadataAnnotationSerializer
     {
         internal const string FormatExample
-            = "{ Identity: 382c74c3-721d-4f34-80e5-57657b6cbc27, Name: MyIndex, Order: 7, IsClustered: True, IsUnique: False } { } { Name: MyOtherIndex }";
+            = "{ Name: MyIndex, Order: 7, IsClustered: True, IsUnique: False } { } { Name: MyOtherIndex }";
 
         private static readonly Regex _indexesSplitter
             = new Regex(@"(?<!\\)}\s*{", RegexOptions.Compiled);
@@ -69,21 +69,8 @@ namespace System.Data.Entity.Infrastructure.Annotations
 
             var builder = new StringBuilder("{ ");
 
-            if (indexAttribute.Identity.HasValue)
-            {
-                builder
-                .Append("Identity: ")
-                .Append(
-                    indexAttribute.Identity.Value);
-            }
-            
             if (!string.IsNullOrWhiteSpace(indexAttribute.Name))
             {
-                if (builder.Length > 2)
-                {
-                    builder.Append(", ");
-                }
-
                 builder
                     .Append("Name: ")
                     .Append(
@@ -170,18 +157,7 @@ namespace System.Data.Entity.Infrastructure.Annotations
                 {
                     foreach (var indexPart in _indexPartsSplitter.Split(indexString).Select(s => s.Trim()))
                     {
-                        if (indexPart.StartsWith("Identity: ", StringComparison.Ordinal))
-                        {
-                            Guid indexIdentity;
-
-                            if (!Guid.TryParse(indexPart.Substring(10).Trim(), out indexIdentity))
-                            {
-                                throw BuildFormatException(value);
-                            }
-
-                            indexAttribute.Identity = indexIdentity;
-                        } 
-                        else if (indexPart.StartsWith("Name:", StringComparison.Ordinal))
+                        if (indexPart.StartsWith("Name:", StringComparison.Ordinal))
                         {
                             var indexName = indexPart.Substring(5).Trim();
 

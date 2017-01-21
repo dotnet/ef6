@@ -387,14 +387,14 @@ namespace System.Data.Entity.CodeFirst
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerID");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, null, null);
+                indexAttributes.Single().AssertConfiguration("IX_CustomerID_AccountNumber", null, null, null);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "AccountNumber");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, null, null);
+                indexAttributes.Single().AssertConfiguration("IX_CustomerID_AccountNumber", null, null, null);
             }
         }
 
@@ -438,21 +438,21 @@ namespace System.Data.Entity.CodeFirst
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerID");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, 1, null, null);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID_CustomerType", 1, null, null);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "AccountNumber");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, 0, null, null);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID_CustomerType", 0, null, null);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerType");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, 2, null, null);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID_CustomerType", 2, null, null);
             }
         }
 
@@ -472,14 +472,14 @@ namespace System.Data.Entity.CodeFirst
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerID");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, false, null);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, false, null);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "AccountNumber");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, false, null);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, false, null);
             }
         }
 
@@ -498,14 +498,14 @@ namespace System.Data.Entity.CodeFirst
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerID");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, true, null);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, true, null);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "AccountNumber");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, true, null);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, true, null);
             }
         }
 
@@ -524,14 +524,14 @@ namespace System.Data.Entity.CodeFirst
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerID");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, null, false);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, null, false);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "AccountNumber");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, null, false);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, null, false);
             }
         }
 
@@ -550,14 +550,14 @@ namespace System.Data.Entity.CodeFirst
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerID");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, null, true);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, null, true);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "AccountNumber");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, null, null, true);
+                indexAttributes.Single().AssertConfiguration("IX_AccountNumber_CustomerID", null, null, true);
             }
         }
 
@@ -642,14 +642,14 @@ namespace System.Data.Entity.CodeFirst
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerType");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, 0, true, true);
+                indexAttributes.Single().AssertConfiguration("IX_CustomerType_rowguid", 0, true, true);
             }
 
             {
                 var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "rowguid");
                 Assert.Single(indexAttributes);
 
-                indexAttributes.Single().AssertConfiguration(null, 1, true, true);
+                indexAttributes.Single().AssertConfiguration("IX_CustomerType_rowguid", 1, true, true);
             }
         }
 

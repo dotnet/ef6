@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
+    using Migrations.Model;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
@@ -554,21 +555,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             foreach (var indexConfiguration in _indexConfigurations)
             {
-                int sortOrder = 0;
-
-                foreach (var indexConfigurationProperty in indexConfiguration.Key)
+                foreach (var entityTypeMapping in entityTypeMappings)
                 {
-                    var conceptualProperty = entityType.GetDeclaredPrimitiveProperty(indexConfigurationProperty);
-                    var propertyMappings = entityTypeMappings.Select(etm => etm.GetPropertyMapping(conceptualProperty));
-                    
-                    propertyMappings.Each(pm => 
+                    var propertyMappings = indexConfiguration.Key
+                        .ToDictionary(
+                            icp => icp,
+                            icp => entityTypeMapping.GetPropertyMapping(
+                                entityType.GetDeclaredPrimitiveProperty(icp)));
+
+                    if (indexConfiguration.Key.Count > 1 && string.IsNullOrEmpty(indexConfiguration.Value.Name))
+                    {
+                        indexConfiguration.Value.Name = IndexOperation.BuildDefaultName(
+                            indexConfiguration.Key.Select(icp => propertyMappings[icp].ColumnProperty.Name));
+                    }
+
+                    int sortOrder = 0;
+
+                    foreach (var indexConfigurationProperty in indexConfiguration.Key)
+                    {
+                        var propertyMapping = propertyMappings[indexConfigurationProperty];
+                        
                         indexConfiguration.Value.Configure(
-                            pm.ColumnProperty, 
+                            propertyMapping.ColumnProperty, 
                             (indexConfiguration.Key.Count != 1 ?
                                 sortOrder :
-                                -1)));
+                                -1));
 
-                    ++sortOrder;
+                        ++sortOrder;
+                    }
                 }
             }
         }

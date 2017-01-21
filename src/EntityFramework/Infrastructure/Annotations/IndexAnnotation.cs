@@ -75,17 +75,7 @@ namespace System.Data.Entity.Infrastructure.Annotations
                     throw new ArgumentNullException("indexAttribute");
                 }
 
-                var matches = existingIndexes.Where(
-                    i => ((index.Identity.HasValue && i.Identity == index.Identity) || i.Name == index.Name)
-                        && !(i.Identity != index.Identity && i.Name == null && index.Name == null));
-
-                if (matches.Count() > 1)
-                {
-                    throw Error.ConflictingIndexAttributeMatches(index.Identity, index.Name);
-                }
-
-                var existingIndex = matches.SingleOrDefault();
-
+                var existingIndex = existingIndexes.SingleOrDefault(i => i.Name == index.Name);
                 if (existingIndex == null)
                 {
                     existingIndexes.Add(index);
@@ -147,17 +137,7 @@ namespace System.Data.Entity.Infrastructure.Annotations
 
             foreach (var newIndex in otherAnnotation._indexes)
             {
-                var matches = _indexes.Where(
-                    i => ((newIndex.Identity != null && i.Identity == newIndex.Identity) || i.Name == newIndex.Name)
-                        && !(i.Identity != newIndex.Identity && i.Name == null && newIndex.Name == null));
-
-                if (matches.Count() > 1)
-                {
-                    throw Error.ConflictingIndexAttributeMatches(newIndex.Identity, newIndex.Name);
-                }
-
-                var existing = matches.SingleOrDefault();
-
+                var existing = _indexes.SingleOrDefault(i => i.Name == newIndex.Name);
                 if (existing != null)
                 {
                     var isCompatible = existing.IsCompatibleWith(newIndex);
