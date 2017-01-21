@@ -13,15 +13,11 @@ namespace System.Data.Entity
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Xml;
     using Xunit;
 
     public static class DbDatabaseMappingExtensions
     {
-        private static readonly Regex _guidRegex = new Regex(
-            @"([0-9A-F]{8}-?[0-9A-F]{4}-?[0-9A-F]{4}-?[0-9A-F]{4}-?[0-9A-F]{12})", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
         internal static void ShellEdmx(this DbDatabaseMapping databaseMapping, string fileName = "Dump.edmx")
         {
             new EdmxSerializer().Serialize(
@@ -53,28 +49,7 @@ namespace System.Data.Entity
                               {
                                   Indent = true
                               }));
-            return NormalizeGuids(edmx.ToString());
-        }
-
-        internal static string NormalizeGuids(string value)
-        {
-            var guidDictionary = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
-
-            return _guidRegex.Replace(
-                value, 
-                (match) =>
-                {
-                    var matchString = match.Groups[1].Value;
-
-                    if (!guidDictionary.ContainsKey(matchString))
-                    {
-                        guidDictionary.Add(
-                            matchString, 
-                            new Guid(0, 0, 0, BitConverter.GetBytes(guidDictionary.LongCount())));
-                    }
-
-                    return guidDictionary[matchString].ToString();
-                });
+            return edmx.ToString();
         }
 
         internal static void AssertValid(this DbDatabaseMapping databaseMapping)
