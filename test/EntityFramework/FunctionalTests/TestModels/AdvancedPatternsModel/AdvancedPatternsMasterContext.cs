@@ -45,8 +45,7 @@ namespace AdvancedPatternsModel
                          });
             builder.Ignore<UnMappedOffice>();
             builder.Entity<BuildingDetail>()
-                .HasKey(d => d.BuildingId);
-            builder.Entity<BuildingDetail>()
+                .HasKey(d => d.BuildingId)
                 .HasRequired(d => d.Building).WithOptional();
 
             builder.Entity<Building>().Ignore(b => b.NotInModel);

@@ -2613,8 +2613,7 @@ namespace FunctionalTests
                 .HasKey(p => p.ProductID);
 
             modelBuilder.Entity<SpecialOffer>()
-                .HasKey(o => o.SpecialOfferID);
-            modelBuilder.Entity<SpecialOffer>()
+                .HasKey(o => o.SpecialOfferID)
                 .HasMany(o => o.SpecialOfferProducts)
                 .WithRequired(p => p.SpecialOffer)
                 .Map(

@@ -74,9 +74,7 @@ namespace FunctionalTests
                 .Column("WithMultiple")
                 .HasAnnotation(
                     "Index",
-                    new IndexAnnotation(new[] { 
-                        new IndexAttribute("I1"), new IndexAttribute("I2") 
-                    }),
+                    new IndexAnnotation(new[] { new IndexAttribute("I1"), new IndexAttribute("I2") }),
                     new IndexAnnotationEqualityComparer());
         }
 
@@ -152,7 +150,7 @@ namespace FunctionalTests
             
             [Index]
             public string SimpleProp { get; set; }
-            
+
             [Index("I1")]
             [Index("I2")]
             public string WithMultiple { get; set; }
