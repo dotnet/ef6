@@ -253,9 +253,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private readonly Dictionary<string, bool> _candidateParametersToForceNonUnicode = new Dictionary<string, bool>();
         // <summary>
         // Maintain the list of (string) DbParameterReferenceExpressions that should be compensated, viz.
-        // forced to generate maxLenght within the parameter. 
+        // forced to generate maxLength within the parameter. 
         // </summary>
-        private readonly Dictionary<string, int?> _parametersWithMaxLenght = new Dictionary<string, int?>();
+        private readonly Dictionary<string, int?> _parametersWithMaxLength = new Dictionary<string, int?>();
 
         // <summary>
         // Set and reset in DbComparisonExpression and DbLikeExpression visit methods. Maintains
@@ -271,7 +271,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private const byte DefaultDecimalPrecision = 18;
         private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-        private int? _maxLenght;
+        private int? _maxLength;
 
         private List<string> _targets;
 
@@ -363,18 +363,62 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // <returns> The string representing the SQL to be executed. </returns>
         internal static string GenerateSql(
             DbCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters, out CommandType commandType,
-            out HashSet<string> paramsToForceNonUnicode)
+            out HashSet<string> paramsToForceNonUnicode, out Dictionary<string, int?> parametersWithMaxLength)
         {
             commandType = CommandType.Text;
             parameters = null;
             paramsToForceNonUnicode = null;
+            parametersWithMaxLength = null;
 
             var sqlGenerator = new SqlGenerator(sqlVersion);
 
             switch (tree.CommandTreeKind)
             {
                 case DbCommandTreeKind.Query:
-                    return sqlGenerator.GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode);
+                    return sqlGenerator.GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode, out parametersWithMaxLength);
+
+                case DbCommandTreeKind.Insert:
+                    return DmlSqlGenerator.GenerateInsertSql((DbInsertCommandTree)tree, sqlGenerator, out parameters);
+
+                case DbCommandTreeKind.Delete:
+                    return DmlSqlGenerator.GenerateDeleteSql((DbDeleteCommandTree)tree, sqlGenerator, out parameters);
+
+                case DbCommandTreeKind.Update:
+                    return DmlSqlGenerator.GenerateUpdateSql((DbUpdateCommandTree)tree, sqlGenerator, out parameters);
+
+                case DbCommandTreeKind.Function:
+                    return GenerateFunctionSql((DbFunctionCommandTree)tree, out commandType);
+
+                default:
+                    //We have covered all command tree kinds
+                    Debug.Assert(false, "Unknown command tree kind");
+                    return null;
+            }
+        }
+
+        // <summary>
+        // General purpose static function that can be called from System.Data assembly
+        // </summary>
+        // <param name="tree"> command tree </param>
+        // <param name="sqlVersion"> Server version </param>
+        // <param name="parameters"> Parameters to add to the command tree corresponding to constants in the command tree. Used only in ModificationCommandTrees. </param>
+        // <param name="commandType"> CommandType for generated command. </param>
+        // <returns> The string representing the SQL to be executed. </returns>
+        internal static string GenerateSql(
+            DbCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters, out CommandType commandType,
+            out HashSet<string> paramsToForceNonUnicode)
+        {
+            commandType = CommandType.Text;
+            parameters = null;
+            paramsToForceNonUnicode = null;
+            Dictionary<string, int?> parametersWithMaxLength = null;
+
+            var sqlGenerator = new SqlGenerator(sqlVersion);
+
+            switch (tree.CommandTreeKind)
+            {
+                case DbCommandTreeKind.Query:
+                    return sqlGenerator.GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode, out parametersWithMaxLength);
 
                 case DbCommandTreeKind.Insert:
                     return DmlSqlGenerator.GenerateInsertSql((DbInsertCommandTree)tree, sqlGenerator, out parameters);
@@ -434,6 +478,24 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 commandType = CommandType.Text;
                 return function.CommandTextAttribute;
             }
+        }
+
+        // <summary>
+        // Translate a command tree to a SQL string.
+        // The input tree could be translated to either a SQL SELECT statement
+        // or a SELECT expression.  This choice is made based on the return type
+        // of the expression
+        // CollectionType => select statement
+        // non collection type => select expression
+        // </summary>
+        // <returns> The string representing the SQL to be executed. </returns>
+        internal string GenerateSql(DbQueryCommandTree tree, out HashSet<string> paramsToForceNonUnicode, out Dictionary<string, int?> parametersWithMaxLength)
+        {
+            paramsToForceNonUnicode = null;
+            parametersWithMaxLength = null;
+            var returnSql = GenerateSql(tree, out paramsToForceNonUnicode);
+            parametersWithMaxLength = _parametersWithMaxLength;
+            return returnSql;
         }
 
         // <summary>
@@ -505,7 +567,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             Debug.Assert(isParentAJoinStack.Count == 0);
 
             paramsToForceNonUnicode =
-                new HashSet<string>(_candidateParametersToForceNonUnicode.Where(p => p.Value).Select(q => q.Key).ToList());
+                new HashSet<string>(_candidateParametersToForceNonUnicode.Where(p => p.Value).Select(q => q.Key).ToList());            
 
             var builder = new StringBuilder(1024);
             using (var writer = new SqlWriter(builder))
@@ -699,7 +761,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 // Check if the Comparison expression is a candidate for compensation in order to optimize store performance.
                 _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
-                _maxLenght = CheckIfHasMaxLenghtDefined(e);
+                _maxLength = CheckIfHasMaxLengthDefined(e);
             }
 
             switch (e.ExpressionKind)
@@ -729,9 +791,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     throw new InvalidOperationException(String.Empty);
             }
 
-            // Reset the force non-unicode and maxLenght, global state variable if it was set by CheckIfForceNonUnicodeRequired().
+            // Reset the force non-unicode and maxLength, global state variable if it was set by CheckIfForceNonUnicodeRequired().
             _forceNonUnicode = false;
-            _maxLenght = null;
+            _maxLength = null;
 
             return result;
         }
@@ -756,14 +818,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // for compensation. If yes, sets global state variable - _forceNonUnicode.
         // </summary>
         // <param name="e"> DBComparisonExpression or DbLikeExpression </param>
-        private int CheckIfHasMaxLenghtDefined(DbExpression e)
+        private int CheckIfHasMaxLengthDefined(DbExpression e)
         {
-            if (_maxLenght != null)
+            if (_maxLength != null)
             {
                 Debug.Assert(false);
                 throw new NotSupportedException();
             }
-            return MatchPatternForMaxLenght(e);
+            return MatchPatternForMaxLength(e);
         }
 
         // <summary>
@@ -858,22 +920,22 @@ namespace System.Data.Entity.SqlServer.SqlGen
                    !isUnicode;
         }
 
-        #region maxlenght
-        private int MatchPatternForMaxLenght(DbExpression e)
+        #region maxlength
+        private int MatchPatternForMaxLength(DbExpression e)
         {
-            int maxLenght = 0;
+            int maxLength = 0;
             switch (e.ExpressionKind)
             {
                 case DbExpressionKind.Like:
                     var likeExpr = (DbLikeExpression)e;
-                    if (MatchSourcePatternForMaxLenght(likeExpr.Argument, out maxLenght))
-                        return maxLenght;
+                    if (MatchSourcePatternForMaxLength(likeExpr.Argument, out maxLength))
+                        return maxLength;
                     break;
 
                 case DbExpressionKind.In:
                     var inExpr = (DbInExpression)e;
-                    if (MatchSourcePatternForMaxLenght(inExpr.Item, out maxLenght))
-                        return maxLenght;
+                    if (MatchSourcePatternForMaxLength(inExpr.Item, out maxLength))
+                        return maxLength;
                     break;
                 default:
                     // DBExpressionKind is any of (Equals, LessThan, LessThanOrEquals, GreaterThan, GreaterThanOrEquals, NotEquals)
@@ -881,24 +943,24 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     var left = compareExpr.Left;
                     var right = compareExpr.Right;
 
-                    if (MatchSourcePatternForMaxLenght(left, out maxLenght))
-                        return maxLenght;
-                    if (MatchSourcePatternForMaxLenght(right, out maxLenght))
-                        return maxLenght;
+                    if (MatchSourcePatternForMaxLength(left, out maxLength))
+                        return maxLength;
+                    if (MatchSourcePatternForMaxLength(right, out maxLength))
+                        return maxLength;
                     break;
             }
-            return maxLenght;
+            return maxLength;
         }
 
         // <summary>
-        // Determines if the expression represents a string with max lenght definition
+        // Determines if the expression represents a string with max length definition
         // </summary>
-        private static bool MatchSourcePatternForMaxLenght(DbExpression argument, out int maxLenght)
+        private static bool MatchSourcePatternForMaxLength(DbExpression argument, out int maxLength)
         {
-            maxLenght = 0;
+            maxLength = 0;
             if (argument.ExpressionKind == DbExpressionKind.Property)
             {
-                return argument.ResultType.TryGetMaxLength(out maxLenght);
+                return argument.ResultType.TryGetMaxLength(out maxLength);
             }
             return false;
         }
@@ -1752,7 +1814,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             // Check if the LIKE expression is a candidate for compensation in order to optimize store performance.
             _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
-            _maxLenght = CheckIfHasMaxLenghtDefined(e);
+            _maxLength = CheckIfHasMaxLengthDefined(e);
 
             var result = new SqlBuilder();
             result.Append(e.Argument.Accept(this));
@@ -1768,9 +1830,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 result.Append(e.Escape.Accept(this));
             }
 
-            // Reset the force non-unicode and maxLenght, global state variable if it was set by CheckIfForceNonUnicodeRequired().
+            // Reset the force non-unicode and maxLength, global state variable if it was set by CheckIfForceNonUnicodeRequired().
             _forceNonUnicode = false;
-            _maxLenght = null;
+            _maxLength = null;
 
             return result;
         }
@@ -1886,13 +1948,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     if (comparisonExpression.Left.ResultType.IsPrimitiveType(PrimitiveTypeKind.String))
                     {
                         _forceNonUnicode = CheckIfForceNonUnicodeRequired(comparisonExpression);
-                        _maxLenght = CheckIfHasMaxLenghtDefined(e);
+                        _maxLength = CheckIfHasMaxLengthDefined(e);
                     }
 
                     var binaryResult = VisitComparisonExpression(" <> ", comparisonExpression.Left, comparisonExpression.Right);
                     
                     _forceNonUnicode = forceNonUnicodeLocal; // Reset flag
-                    _maxLenght = null;
+                    _maxLength = null;
                     return binaryResult;
                 }
             }
@@ -1998,7 +2060,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 // Check if the expression is a candidate for compensation in order to optimize store performance.
                 _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
-                _maxLenght = CheckIfHasMaxLenghtDefined(e);
+                _maxLength = CheckIfHasMaxLengthDefined(e);
             }
 
             result.Append(e.Item.Accept(this));
@@ -2022,7 +2084,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             result.Append(")");
 
             _forceNonUnicode = false;
-            _maxLenght = null;
+            _maxLength = null;
 
             return result;
         }
@@ -2354,9 +2416,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
             }
 
-            if (_maxLenght != null)
+            if (_maxLength != null)
             {
-                _parametersWithMaxLenght[e.ParameterName] = _maxLenght.Value;
+                _parametersWithMaxLength[e.ParameterName] = _maxLength.Value;
             }
 
             var result = new SqlBuilder();

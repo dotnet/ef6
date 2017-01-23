@@ -242,8 +242,9 @@ namespace System.Data.Entity.SqlServer
             List<SqlParameter> parameters;
             CommandType commandType;
             HashSet<string> paramsToForceNonUnicode;
+            Dictionary<string, int?> parametersWithMaxLength = null;
             command.CommandText = SqlGenerator.GenerateSql(
-                commandTree, sqlVersion, out parameters, out commandType, out paramsToForceNonUnicode);
+                commandTree, sqlVersion, out parameters, out commandType, out paramsToForceNonUnicode, out parametersWithMaxLength);
             command.CommandType = commandType;
 
             // Get the function (if any) implemented by the command tree since this influences our interpretation of parameters
@@ -276,6 +277,13 @@ namespace System.Data.Entity.SqlServer
                                         && paramsToForceNonUnicode.Contains(queryParameter.Key)
                                             ? queryParameter.Value.ForceNonUnicode()
                                             : queryParameter.Value;
+                    //this was made to respect the mapped value for maxLength
+                    if (parametersWithMaxLength != null)
+                    {
+                        int? length = null;
+                        parametersWithMaxLength.TryGetValue(queryParameter.Key, out length);
+                        parameterType = length == null ? parameterType : parameterType.ForceMaxLengh(parametersWithMaxLength[queryParameter.Key].Value);
+                    }
 
                     const bool preventTruncation = false;
                     parameter = CreateSqlParameter(
