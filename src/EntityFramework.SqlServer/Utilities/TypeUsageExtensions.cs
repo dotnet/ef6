@@ -227,5 +227,18 @@ namespace System.Data.Entity.SqlServer.Utilities
                          .Union(
                              nonUnicodeString.Facets.Where(f => f.Name == DbProviderManifest.UnicodeFacetName)));
         }
+        internal static TypeUsage ForceMaxLengh(this TypeUsage typeUsage, int value)
+        {
+            var maxlenght = TypeUsage.CreateStringTypeUsage(
+                (PrimitiveType)typeUsage.EdmType, isUnicode: false, isFixedLength: true, maxLength: value);
+
+            // Copy all existing facets except replace the maxleght facet
+            return TypeUsage.Create(
+                typeUsage.EdmType,
+                typeUsage.Facets
+                         .Where(f => f.Name != DbProviderManifest.MaxLengthFacetName)
+                         .Union(
+                             maxlenght.Facets.Where(f => f.Name == DbProviderManifest.MaxLengthFacetName)));
+        }
     }
 }
