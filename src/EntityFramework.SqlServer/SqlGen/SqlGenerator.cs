@@ -251,6 +251,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // String constants are also compensated and the decision is local, unlike parameters.
         // </summary>
         private readonly Dictionary<string, bool> _candidateParametersToForceNonUnicode = new Dictionary<string, bool>();
+        // <summary>
+        // Maintain the list of (string) DbParameterReferenceExpressions that should be compensated, viz.
+        // forced to generate maxLenght within the parameter. 
+        // </summary>
+        private readonly Dictionary<string, int?> _parametersWithMaxLenght = new Dictionary<string, int?>();
 
         // <summary>
         // Set and reset in DbComparisonExpression and DbLikeExpression visit methods. Maintains
@@ -265,6 +270,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private const byte DefaultDecimalPrecision = 18;
         private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+        private int? _maxLenght;
 
         private List<string> _targets;
 
@@ -692,6 +699,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 // Check if the Comparison expression is a candidate for compensation in order to optimize store performance.
                 _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
+                _maxLenght = CheckIfHasMaxLenghtDefined(e);
             }
 
             switch (e.ExpressionKind)
@@ -721,8 +729,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     throw new InvalidOperationException(String.Empty);
             }
 
-            // Reset the force non-unicode, global state variable if it was set by CheckIfForceNonUnicodeRequired().
+            // Reset the force non-unicode and maxLenght, global state variable if it was set by CheckIfForceNonUnicodeRequired().
             _forceNonUnicode = false;
+            _maxLenght = null;
 
             return result;
         }
@@ -740,6 +749,21 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 throw new NotSupportedException();
             }
             return MatchPatternForForcingNonUnicode(e);
+        }
+
+        // <summary>
+        // Checks if the arguments of the input Comparison or Like expression are candidates
+        // for compensation. If yes, sets global state variable - _forceNonUnicode.
+        // </summary>
+        // <param name="e"> DBComparisonExpression or DbLikeExpression </param>
+        private int CheckIfHasMaxLenghtDefined(DbExpression e)
+        {
+            if (_maxLenght != null)
+            {
+                Debug.Assert(false);
+                throw new NotSupportedException();
+            }
+            return MatchPatternForMaxLenght(e);
         }
 
         // <summary>
@@ -833,6 +857,52 @@ namespace System.Data.Entity.SqlServer.SqlGen
                    argument.ResultType.TryGetIsUnicode(out isUnicode) &&
                    !isUnicode;
         }
+
+        #region maxlenght
+        private int MatchPatternForMaxLenght(DbExpression e)
+        {
+            int maxLenght = 0;
+            switch (e.ExpressionKind)
+            {
+                case DbExpressionKind.Like:
+                    var likeExpr = (DbLikeExpression)e;
+                    if (MatchSourcePatternForMaxLenght(likeExpr.Argument, out maxLenght))
+                        return maxLenght;
+                    break;
+
+                case DbExpressionKind.In:
+                    var inExpr = (DbInExpression)e;
+                    if (MatchSourcePatternForMaxLenght(inExpr.Item, out maxLenght))
+                        return maxLenght;
+                    break;
+                default:
+                    // DBExpressionKind is any of (Equals, LessThan, LessThanOrEquals, GreaterThan, GreaterThanOrEquals, NotEquals)
+                    var compareExpr = (DbComparisonExpression)e;
+                    var left = compareExpr.Left;
+                    var right = compareExpr.Right;
+
+                    if (MatchSourcePatternForMaxLenght(left, out maxLenght))
+                        return maxLenght;
+                    if (MatchSourcePatternForMaxLenght(right, out maxLenght))
+                        return maxLenght;
+                    break;
+            }
+            return maxLenght;
+        }
+
+        // <summary>
+        // Determines if the expression represents a string with max lenght definition
+        // </summary>
+        private static bool MatchSourcePatternForMaxLenght(DbExpression argument, out int maxLenght)
+        {
+            maxLenght = 0;
+            if (argument.ExpressionKind == DbExpressionKind.Property)
+            {
+                return argument.ResultType.TryGetMaxLength(out maxLenght);
+            }
+            return false;
+        }
+        #endregion
 
         // <summary>
         // Determines if the expression represents a string constant or parameter with the facet, unicode=null.
@@ -1682,6 +1752,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             // Check if the LIKE expression is a candidate for compensation in order to optimize store performance.
             _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
+            _maxLenght = CheckIfHasMaxLenghtDefined(e);
 
             var result = new SqlBuilder();
             result.Append(e.Argument.Accept(this));
@@ -1697,8 +1768,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 result.Append(e.Escape.Accept(this));
             }
 
-            // Reset the force non-unicode, global state variable if it was set by CheckIfForceNonUnicodeRequired().
+            // Reset the force non-unicode and maxLenght, global state variable if it was set by CheckIfForceNonUnicodeRequired().
             _forceNonUnicode = false;
+            _maxLenght = null;
 
             return result;
         }
@@ -1814,11 +1886,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     if (comparisonExpression.Left.ResultType.IsPrimitiveType(PrimitiveTypeKind.String))
                     {
                         _forceNonUnicode = CheckIfForceNonUnicodeRequired(comparisonExpression);
+                        _maxLenght = CheckIfHasMaxLenghtDefined(e);
                     }
 
                     var binaryResult = VisitComparisonExpression(" <> ", comparisonExpression.Left, comparisonExpression.Right);
                     
                     _forceNonUnicode = forceNonUnicodeLocal; // Reset flag
+                    _maxLenght = null;
                     return binaryResult;
                 }
             }
@@ -1924,6 +1998,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 // Check if the expression is a candidate for compensation in order to optimize store performance.
                 _forceNonUnicode = CheckIfForceNonUnicodeRequired(e);
+                _maxLenght = CheckIfHasMaxLenghtDefined(e);
             }
 
             result.Append(e.Item.Accept(this));
@@ -1947,6 +2022,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             result.Append(")");
 
             _forceNonUnicode = false;
+            _maxLenght = null;
 
             return result;
         }
@@ -2276,6 +2352,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     //This parameter matches our criteria for forcing to non-unicode. So add to dictionary
                     _candidateParametersToForceNonUnicode[e.ParameterName] = true;
                 }
+            }
+
+            if (_maxLenght != null)
+            {
+                _parametersWithMaxLenght[e.ParameterName] = _maxLenght.Value;
             }
 
             var result = new SqlBuilder();
