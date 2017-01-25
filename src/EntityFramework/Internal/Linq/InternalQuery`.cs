@@ -169,7 +169,7 @@ namespace System.Data.Entity.Internal.Linq
         // to ToTraceString on ObjectQuery.
         // </summary>
         // <returns> The query string. </returns>
-        public override string ToString()
+        public string ToTraceString()
         {
             Debug.Assert(_objectQuery != null, "InternalQuery should have been initialized.");
 

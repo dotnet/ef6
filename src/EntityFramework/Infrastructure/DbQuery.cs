@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure
     using System.ComponentModel;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Resources;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
@@ -15,6 +16,7 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
+    [DebuggerDisplay(@"{DebuggerDisplay()}")]
     public abstract class DbQuery : IOrderedQueryable, IListSource, IInternalQueryAdapter
 #if !NET40
 , IDbAsyncEnumerable
@@ -217,7 +219,18 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The query string. </returns>
         public override string ToString()
         {
-            return InternalQuery == null ? base.ToString() : InternalQuery.ToString();
+            return InternalQuery == null ? base.ToString() : InternalQuery.ToTraceString();
+        }
+
+        private string DebuggerDisplay()
+        {
+            return base.ToString();
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private string Sql
+        {
+            get { return ToString(); }
         }
 
         #endregion

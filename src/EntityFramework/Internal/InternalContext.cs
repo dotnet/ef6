@@ -502,6 +502,9 @@ namespace System.Data.Entity.Internal
         // </summary>
         public void Initialize()
         {
+            // Causes the debugger to stop automatic evaluation on this expensive code path.
+            Debugger.NotifyOfCrossThreadDependency();
+
             InitializeContext();
             InitializeDatabase();
         }
