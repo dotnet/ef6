@@ -2416,7 +2416,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
             }
 
-            if (_maxLength != null || _maxLength != 0)
+            if (_maxLength != null && _maxLength != 0)
             {
                 _parametersWithMaxLength[e.ParameterName] = _maxLength.Value;
             }
