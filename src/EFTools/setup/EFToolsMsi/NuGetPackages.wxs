@@ -167,6 +167,13 @@
       <?endif IncludeLocalizedArtifacts?>
     </DirectoryRef>
 
+    <!-- Install the net45 EF5 dll in its own directory for reference by the Microsoft.Data.Entity.Design.Package pkgdef -->
+    <DirectoryRef Id="eft_runtimes_500_dir">
+      <Component Id="entityframework5dll">
+        <File Id="entityframework5dll" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.EF5NuGetPackageVersion)\lib\net45\EntityFramework.dll"/>
+      </Component>
+    </DirectoryRef>
+
     <ComponentGroup Directory="eft_nuget_pkg_dir" Id="NuGetPackageComponents">
       <Component>
         <RegistryValue Key="Software\NuGet\Repository" Name="EntityFrameworkVisualStudio$(var.MajorVisualStudioVersion)Tools" Root="HKLM" Type="string" Value="[DSTDIR]Common7\IDE\Extensions\Microsoft\Entity Framework Tools\NuGet Packages"/>
@@ -199,6 +206,7 @@
           <ComponentRef Id="EntityFramework.PS3.psd1_$(var.packageVersionId)"/>
           <ComponentRef Id="Redirect.config_$(var.packageVersionId)"/>
           <ComponentRef Id="Redirect.VS11.config_$(var.packageVersionId)"/>
+          <ComponentRef Id="entityframework5dll"/>
         <?else?>
           <ComponentRef Id="EntityFramework.SqlServerProvider.dll_$(var.packageVersionId)" />
           <ComponentRef Id="EntityFramework.SqlServerProvider.xml_$(var.packageVersionId)" />

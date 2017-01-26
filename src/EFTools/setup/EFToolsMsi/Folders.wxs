@@ -37,6 +37,9 @@
               <Directory Id="eft_templates_include" Name="Includes" />
             </Directory>
             <Directory Id="eft_nuget_pkg_dir" Name="NuGet Packages" />
+            <Directory Id="eft_runtimes_dir" Name="Runtimes" >
+              <Directory Id="eft_runtimes_500_dir" Name="5.0.0" />
+            </Directory>
           </Directory>
         </Directory>
       </Directory>
