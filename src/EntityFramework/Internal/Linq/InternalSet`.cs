@@ -682,6 +682,18 @@ namespace System.Data.Entity.Internal.Linq
 
             return base.ToString();
         }
+        
+        // <summary>
+        // Returns a <see cref="System.String" /> representation of the underlying query, equivalent
+        // to ToTraceString on ObjectQuery.
+        // </summary>
+        // <returns> The query string. </returns>
+        public override string ToTraceString()
+        {
+            Initialize();
+
+            return base.ToTraceString();
+        }
 
         #endregion
 
