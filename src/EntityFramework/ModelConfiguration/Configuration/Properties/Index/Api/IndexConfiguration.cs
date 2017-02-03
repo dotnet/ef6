@@ -7,11 +7,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// <summary>
     /// Configures an index.
     /// </summary>
-    public class IndexConfiguration : IndexConfigurationBase<IndexConfiguration>
+    public class IndexConfiguration
     {
+        private readonly Properties.Index.IndexConfiguration _configuration;
+
         internal IndexConfiguration(Properties.Index.IndexConfiguration configuration)
-            : base(configuration)
         {
+            DebugCheck.NotNull(configuration);
+
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -30,7 +34,40 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same IndexConfiguration instance so that multiple calls can be chained. </returns>
         public IndexConfiguration IsUnique(bool unique)
         {
-            Configuration.IsUnique = unique;
+            _configuration.IsUnique = unique;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Configures the index to be clustered.
+        /// </summary>
+        /// <returns> The same IndexConfigurationBase instance so that multiple calls can be chained. </returns>
+        public IndexConfiguration IsClustered()
+        {
+            return IsClustered(true);
+        }
+
+        /// <summary>
+        /// Configures whether or not the index will be clustered.
+        /// </summary>
+        /// <param name="clustered"> Value indicating if the index should be clustered or not. </param>
+        /// <returns> The same IndexConfigurationBase instance so that multiple calls can be chained. </returns>
+        public IndexConfiguration IsClustered(bool clustered)
+        {
+            _configuration.IsClustered = clustered;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Configures the index to have a specific name.
+        /// </summary>
+        /// <param name="name"> Value indicating what the index name should be.</param>
+        /// <returns> The same IndexConfigurationBase instance so that multiple calls can be chained. </returns>
+        public IndexConfiguration HasName(string name)
+        {
+            _configuration.Name = name;
 
             return this;
         }

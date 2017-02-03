@@ -27,7 +27,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var location = "zz:\\filelocation";
             var modelStore = new DefaultDbModelStore(location);
-            Assert.Equal(location, modelStore.Location);
+            Assert.Equal(location, modelStore.Directory);
         }
     }
 }

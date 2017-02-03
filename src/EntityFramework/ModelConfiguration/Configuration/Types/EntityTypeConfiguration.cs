@@ -186,7 +186,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         internal virtual Properties.Index.IndexConfiguration ConfigureKey()
         {
             if (_keyConfiguration == null)
+            {
                 _keyConfiguration = new Properties.Index.IndexConfiguration();
+            }
 
             return _keyConfiguration;
         }

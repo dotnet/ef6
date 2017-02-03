@@ -14,25 +14,25 @@ namespace System.Data.Entity.Infrastructure
     {
         private const string FileExtension = ".edmx";
 
-        private readonly string _location;
+        private readonly string _directory;
 
         /// <summary>
         /// Initializes a new DefaultDbModelStore instance.
         /// </summary>
-        /// <param name="location">The parent directory for the .edmx files.</param>
-        public DefaultDbModelStore(string location)
+        /// <param name="directory">The parent directory for the .edmx files.</param>
+        public DefaultDbModelStore(string directory)
         {
-            Check.NotEmpty(location, "location");
+            Check.NotEmpty(directory, "directory");
 
-            _location = location;
+            _directory = directory;
         }
 
         /// <summary>
         /// Gets the location of the .edmx files.
         /// </summary>
-        public string Location
+        public string Directory
         {
-            get { return _location; }
+            get { return _directory; }
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var fileName = contextType.FullName + FileExtension;
 
-            return Path.Combine(_location, fileName);
+            return Path.Combine(_directory, fileName);
         }
 
         /// <summary>

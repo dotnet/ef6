@@ -75,12 +75,26 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         /// <summary>
-        /// Configures the primary key settings for this entity type.
+        /// Configures the primary key property(s) for this entity type.
         /// </summary>
-        /// <returns> The PrimaryKeyIndexConfiguration instance so that the index can be further configured. </returns>
-        public PrimaryKeyIndexConfiguration ConfigureKey()
+        /// <typeparam name="TKey"> The type of the key. </typeparam>
+        /// <param name="keyExpression"> A lambda expression representing the property to be used as the primary key. C#: t => t.Id VB.Net: Function(t) t.Id If the primary key is made up of multiple properties then specify an anonymous type including the properties. C#: t => new { t.Id1, t.Id2 } VB.Net: Function(t) New With { t.Id1, t.Id2 } </param>
+        /// <param name="buildAction"> A builder to configure the key. </param>       
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public EntityTypeConfiguration<TEntityType> HasKey<TKey>(
+            Expression<Func<TEntityType, TKey>> keyExpression,
+            Action<PrimaryKeyIndexConfiguration> buildAction)
         {
-            return new PrimaryKeyIndexConfiguration(_entityTypeConfiguration.ConfigureKey());
+            Check.NotNull(keyExpression, "keyExpression");
+            Check.NotNull(buildAction, "buildAction");
+
+            _entityTypeConfiguration.Key(keyExpression.GetSimplePropertyAccessList().Select(p => p.Single()));
+
+            buildAction(new PrimaryKeyIndexConfiguration(_entityTypeConfiguration.ConfigureKey()));
+
+            return this;
         }
 
         /// <summary>

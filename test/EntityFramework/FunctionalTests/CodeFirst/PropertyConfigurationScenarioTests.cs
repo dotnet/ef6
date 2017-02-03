@@ -23,8 +23,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .ConfigureKey()
-                .HasName("PK_Foo_Bar");
+                .HasKey(
+                    e => e.CustomerID,
+                    b => b.HasName("PK_Foo_Bar"));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -41,8 +42,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .ConfigureKey()
-                .IsClustered(false);
+                .HasKey(
+                    e => e.CustomerID,
+                    b => b.IsClustered(false));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -59,8 +61,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .ConfigureKey()
-                .IsClustered(true);
+                .HasKey(
+                    e => e.CustomerID,
+                    b => b.IsClustered(true));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -100,9 +103,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => e.CustomerID)
-                .ConfigureKey()
-                .HasName("PK_Foo_Bar");
+                .HasKey(
+                    e => e.CustomerID,
+                    b => b.HasName("PK_Foo_Bar"));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -119,9 +122,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => e.CustomerID)
-                .ConfigureKey()
-                .IsClustered(false);
+                .HasKey(
+                    e => e.CustomerID,
+                    b => b.IsClustered(false));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -138,9 +141,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => e.CustomerID)
-                .ConfigureKey()
-                .IsClustered(true);
+                .HasKey(
+                    e => e.CustomerID,
+                    b => b.IsClustered(true));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -178,9 +181,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => new { e.AccountNumber, e.CustomerID })
-                .ConfigureKey()
-                .HasName("PK_Foo_Bar");
+                .HasKey(
+                    e => new { e.AccountNumber, e.CustomerID },
+                    b => b.HasName("PK_Foo_Bar"));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -190,7 +193,6 @@ namespace System.Data.Entity.CodeFirst
                 indexAttribute.AssertConfiguration("PK_Foo_Bar", null, null, null);
             }
         }
-        
 
         [Fact]
         public void Configure_has_key_on_multiple_properties_index_non_clustered()
@@ -198,9 +200,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => new { e.AccountNumber, e.CustomerID })
-                .ConfigureKey()
-                .IsClustered(false);
+                .HasKey(
+                    e => new { e.AccountNumber, e.CustomerID },
+                    b => b.IsClustered(false));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -217,9 +219,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => new { e.AccountNumber, e.CustomerID })
-                .ConfigureKey()
-                .IsClustered(true);
+                .HasKey(
+                    e => new { e.AccountNumber, e.CustomerID },
+                    b => b.IsClustered(true));
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
@@ -621,9 +623,9 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new AdventureWorksModelBuilder();
 
             modelBuilder.Entity<Customer>()
-                .HasKey(e => new { e.CustomerID, e.AccountNumber })
-                .ConfigureKey()
-                .IsClustered(false);
+                .HasKey(
+                    e => new { e.CustomerID, e.AccountNumber },
+                    b => b.IsClustered(false));
 
             modelBuilder.Entity<Customer>()
                 .HasIndex(e => new { e.CustomerType, e.rowguid })
@@ -634,7 +636,7 @@ namespace System.Data.Entity.CodeFirst
 
             {
                 var indexAttribute = ConfiguredPrimaryKeyIndexAttribute(model, "Customer");
-                
+
                 indexAttribute.AssertConfiguration(null, null, null, false);
             }
 
