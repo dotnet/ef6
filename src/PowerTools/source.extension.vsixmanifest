@@ -6,17 +6,17 @@
     <Description xml:space="preserve">Preview of useful design-time DbContext features, added to the Visual Studio Solution Explorer context menu.
 
 When right-clicking on a C# project, the following context menu functions are supported:
-1) Reverse Engineer Code First - Generates POCO classes, derived DbContext and Code First mapping for an existing database.
-2) Customize Reverse Engineer Templates - Adds the default reverse engineer T4 templates to your project for editing.
+1) Reverse Engineer Code First
+2) Customize Reverse Engineer Templates
 
 When right-clicking on a file containing a derived DbContext class, the following context menu functions are supported:
-1) View Entity Data Model (Read-only) - Displays a read-only view of the Code First model in the Entity Model Designer.
-2) View Entity Data Model XML - Displays the EDMX XML representing the underlying Code First model.
-3) View Entity Data Model DDL SQL - Displays the DDL SQL corresponding to the SSDL in the underlying EDM Model.
-4) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.
+1) View Entity Data Model (Read-only)
+2) View Entity Data Model XML
+3) View Entity Data Model DDL SQL
+4) Generate Views
 
 When right-clicking on an Entity Data Model (*.edmx) file, the following context menu function is supported:
-1) Generate Views - Generates pre-compiled views used by the EF runtime to improve start-up performance. Adds the generated views file to the containing project.</Description>
+1) Generate Views</Description>
     <MoreInfo>http://go.microsoft.com/fwlink/?LinkId=327691</MoreInfo>
     <License>License.rtf</License>
     <GettingStartedGuide>http://go.microsoft.com/fwlink/?LinkId=327692</GettingStartedGuide>
