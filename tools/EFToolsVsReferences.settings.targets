@@ -12,4 +12,7 @@
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.14.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0" />
   </ItemGroup>
+  <ItemGroup Condition="$(VisualStudioVersion)=='15.0'">
+    <Reference Include="Microsoft.VisualStudio.Shell.Framework" />
+  </ItemGroup>
 </Project>

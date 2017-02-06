@@ -24,8 +24,8 @@ Project global pre-settings.
     <VersionReleasePrefix>0</VersionReleasePrefix>
     <VersionRelease>$(VersionReleasePrefix)-beta1</VersionRelease>
     <VersionReleaseName>Beta 1</VersionReleaseName>
-    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' == '15.0'">v4.5.1</ToolingDotNetFrameworkVersion>
-    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' != '15.0'">v4.5</ToolingDotNetFrameworkVersion>
+    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">v4.5</ToolingDotNetFrameworkVersion>
+    <ToolingDotNetFrameworkVersion Condition="'$(ToolingDotNetFrameworkVersion)' == ''">v4.6</ToolingDotNetFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>
