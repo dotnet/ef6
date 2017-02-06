@@ -270,4 +270,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", 
         Target = "System.Data.Entity.Utilities")]
 [assembly: SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member", Target = "System.Data.Entity.Core.Objects.ELinq.ExpressionConverter+StringTranslatorUtil.#ConvertToString(System.Data.Entity.Core.Objects.ELinq.ExpressionConverter,System.Linq.Expressions.Expression)")]
+[assembly: SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "System.Data.Entity.Core.Objects.ELinq.ExpressionConverter+MemberAccessTranslator.#TranslateNavigationProperty(System.Data.Entity.Core.Objects.ELinq.ExpressionConverter,System.Reflection.MemberInfo,System.Data.Entity.Core.Common.CommandTrees.DbExpression,System.Data.Entity.Core.Metadata.Edm.NavigationProperty)")]
 

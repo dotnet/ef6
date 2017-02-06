@@ -26,6 +26,7 @@ namespace System.Data.Entity.Core.Mapping
         //Condition property mappings for this complex type
 
 #if DEBUG
+        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private readonly bool m_isPartial; //Whether the property mapping representation is 
 #endif
 
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Core.Mapping
         // Construct a new Complex Property mapping object
         // </summary>
         // <param name="isPartial"> Whether the property mapping representation is totally represented in this table mapping fragment or not. </param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPartial")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPartial", Justification = "Only used in debug mode.")]
         internal ComplexTypeMapping(bool isPartial)
         {
 #if DEBUG

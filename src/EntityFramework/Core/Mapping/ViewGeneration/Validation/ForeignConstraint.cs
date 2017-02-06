@@ -178,7 +178,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             //First check if the FK is covered by Foreign Key Association
             //If we find this, we don't need to check for independent associations. If user maps the Fk to both FK and independent associations,
             //the regular round tripping validation will catch the error.
-            if (CheckIfConstraintMappedToForeignKeyAssociation(childRewriter, parentRewriter, cells))
+            if (CheckIfConstraintMappedToForeignKeyAssociation(childRewriter, cells))
             {
                 return;
             }
@@ -225,8 +225,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             if (false == cImpliesP)
             {
                 // Foreign key constraint not being ensured in C-space
-                var childExtents = LeftCellWrapper.GetExtentListAsUserString(cNode.GetLeaves());
-                var parentExtents = LeftCellWrapper.GetExtentListAsUserString(pNode.GetLeaves());
                 var message = Strings.ViewGen_Foreign_Key_Not_Guaranteed_InCSpace(
                     ToUserString());
                 // Add all wrappers into allWrappers
@@ -297,7 +295,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 {
                     // At this point, we know cell corresponds to an association set
                     var assocSet = (AssociationSet)cell.CQuery.Extent;
-                    var parentSet = MetadataHelper.GetEntitySetAtEnd(assocSet, parentEnd);
                     foundCell = CheckConstraintWhenOnlyParentMapped(assocSet, parentEnd, childRewriter, parentRewriter);
                     if (foundCell)
                     {
@@ -335,11 +332,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         }
 
         private bool CheckIfConstraintMappedToForeignKeyAssociation(
-            QueryRewriter childRewriter, QueryRewriter parentRewriter,
-            Set<Cell> cells)
+            QueryRewriter childRewriter, Set<Cell> cells)
         {
             var childContext = childRewriter.ViewgenContext;
-            var parentContext = parentRewriter.ViewgenContext;
 
             //First collect the sets of properties that the principal and dependant ends of this FK
             //are mapped to in the Edm side.

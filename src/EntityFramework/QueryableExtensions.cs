@@ -7687,6 +7687,7 @@ namespace System.Data.Entity
             return GetMethod(methodName, getParameterTypes, 1);
         }
 
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object,System.Object)", Justification = "Only used in debug mode.")]
         private static MethodInfo GetMethod(string methodName, Delegate getParameterTypesDelegate, int genericArgumentsCount)
         {
             var candidates = typeof(Queryable).GetDeclaredMethods(methodName);

@@ -89,6 +89,7 @@ namespace System.Data.Entity.Internal
         // <typeparam name="TRelatedEntity"> The type of the related entity. </typeparam>
         // <param name="entityReference"> The entity reference. </param>
         // <param name="value"> The value. </param>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private static void SetValueOnEntityReference<TRelatedEntity>(IRelatedEnd entityReference, object value)
             where TRelatedEntity : class
         {

@@ -19,6 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return typeof(TItem); }
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal override void Evaluate(EdmModelValidationContext context, MetadataItem item)
         {
             Debug.Assert(item is TItem);

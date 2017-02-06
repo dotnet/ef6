@@ -1317,6 +1317,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static bool TryConvertAsFunctionAggregate(
             MethodExpr methodExpr,
             MetadataFunctionGroup metadataFunctionGroup,
@@ -3967,7 +3968,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (null != queryExpr.HavingClause
                 && queryExpr.HavingClause.HasMethodCall)
             {
-                var converted = ConvertValueExpression(queryExpr.HavingClause.HavingPredicate, sr);
+                // LAJ LAJ - needed for side-effects?
+                ConvertValueExpression(queryExpr.HavingClause.HavingPredicate, sr);
             }
 
             //
@@ -4044,7 +4046,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                     sr.CurrentScopeRegion.WasResolutionCorrelated = false;
 
-                    var converted = ConvertValueExpression(orderItem.OrderExpr, sr);
+                    // LAJ LAJ - needed for side-effects?
+                    ConvertValueExpression(orderItem.OrderExpr, sr);
 
                     //
                     // Ensure key expression is correlated.
@@ -4806,6 +4809,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return astExprConverters;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static Dictionary<BuiltInKind, BuiltInExprConverter> CreateBuiltInExprConverter()

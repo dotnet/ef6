@@ -356,7 +356,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             input = input.Trim();
-            var output = Dump.ToXml(n);
+            Dump.ToXml(n);
 #endif
             //DEBUG
         }

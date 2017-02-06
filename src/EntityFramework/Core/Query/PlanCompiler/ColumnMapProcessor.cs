@@ -313,7 +313,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             //
             foreach (var property in relProperties)
             {
-                var propertyColumnMap = CreateColumnMap(property.ToEnd.TypeUsage, property.ToString());
+                CreateColumnMap(property.ToEnd.TypeUsage, property.ToString());
             }
 
             //
@@ -361,19 +361,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Get the type discriminant column first
             var typeIdColumnMap = CreateTypeIdColumnMap(rootTypeInfo.TypeIdProperty);
 
-            // Prepare a place for the constructors to put the columns on the base
-            // type, as they identify them.
-            TypedColumnMap rootTypeColumnMap = null;
-
             // process complex/entity types appropriately
             // use the same name for the column 
             if (md.TypeSemantics.IsComplexType(typeInfo.Type))
             {
-                rootTypeColumnMap = CreateComplexTypeColumnMap(rootTypeInfo, name, null, discriminatorMap, allMaps);
+                CreateComplexTypeColumnMap(rootTypeInfo, name, null, discriminatorMap, allMaps);
             }
             else
             {
-                rootTypeColumnMap = CreateEntityColumnMap(rootTypeInfo, name, null, discriminatorMap, allMaps, true);
+                CreateEntityColumnMap(rootTypeInfo, name, null, discriminatorMap, allMaps, true);
             }
 
             // Naturally, nothing is simple; we need to walk the rootTypeColumnMap hierarchy

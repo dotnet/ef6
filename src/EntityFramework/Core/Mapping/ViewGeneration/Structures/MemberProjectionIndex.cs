@@ -171,6 +171,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // </summary>
         // <param name="member"> corresponds to a value of an Entity or Complex or Association type </param>
         // <param name="needKeysOnly"> indicates whether we need to only collect members that are keys </param>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private static void GatherPartialSignature(
             MemberProjectionIndex index, EdmItemCollection edmItemCollection, MemberPath member, bool needKeysOnly)
         {

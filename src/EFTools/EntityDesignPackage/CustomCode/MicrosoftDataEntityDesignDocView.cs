@@ -298,7 +298,7 @@ namespace Microsoft.Data.Entity.Design.Package
                 {
                     Frame.SetProperty(
                         (int)__VSFPROPID.VSFPROPID_EditorCaption,
-                        String.Format(CultureInfo.CurrentUICulture, Resources.EditorCaptionFormat, entityDesignerDiagram.Title));
+                        String.Format(CultureInfo.CurrentCulture, Resources.EditorCaptionFormat, entityDesignerDiagram.Title));
                 }
             }
         }

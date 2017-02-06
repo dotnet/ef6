@@ -51,6 +51,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _configuration = new ConventionTypeConfiguration(type, modelConfiguration);
         }
 
+        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object,System.Object)", Justification = "Only used in debug mode.")]
         [Conditional("DEBUG")]
         private static void VerifyType(Type type)
         {

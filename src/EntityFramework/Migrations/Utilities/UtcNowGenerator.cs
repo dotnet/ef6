@@ -27,6 +27,7 @@ namespace System.Data.Entity.Migrations.Utilities
         // this method is called in rapid succession while testing or otherwise calling the DbMigrator APIs
         // there may be occasional sleeping.
         // </remarks>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.DateTime.ToString(System.String)", Justification = "It only objects to the statement in Debug.Assert() which is only for debug mode.")]
         public static DateTime UtcNow()
         {
             var now = DateTime.UtcNow;
