@@ -1219,6 +1219,7 @@ namespace System.Data.Entity.Core
         // based on whether the key is a singleton, composite, or temporary.
         // </summary>
         // <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only used in debug mode.")]
         [Conditional("DEBUG")]
         private void AssertCorrectState(EntitySetBase entitySet, bool isTemporary)
         {

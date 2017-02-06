@@ -77,6 +77,7 @@ namespace System.Data.Entity.Core.Common
         /// <param name="edmType">
         /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> for which the facet descriptions are to be retrieved.
         /// </param>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only casts twice in debug mode.")]
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)
         {
             Debug.Assert(edmType is PrimitiveType, "DbXmlEnabledProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");

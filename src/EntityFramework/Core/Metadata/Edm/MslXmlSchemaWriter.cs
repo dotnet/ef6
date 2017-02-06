@@ -268,6 +268,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 functionImportMapping.FunctionImport.Name);
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private void WriteFunctionImportResultMappingElement(FunctionImportResultMapping resultMapping)
         {
             DebugCheck.NotNull(resultMapping);
@@ -345,6 +346,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }            
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private void WriteFunctionImportConditionElement(FunctionImportEntityTypeMappingCondition condition)
         {
             DebugCheck.NotNull(condition);

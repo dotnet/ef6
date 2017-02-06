@@ -50,6 +50,7 @@ namespace System.Data.Entity.Core.Mapping
         // w.r.t. Derived1 "IsTypeOf(Derived1)" takes precedence over "IsTypeOf(Base)" when you ask for the rename of Derived1
         // </summary>
         // <param name="lineInfo"> Empty for default rename mapping. </param>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only used in debug mode.")]
         internal string GetRename(EdmType type, out IXmlLineInfo lineInfo)
         {
             DebugCheck.NotNull(type);

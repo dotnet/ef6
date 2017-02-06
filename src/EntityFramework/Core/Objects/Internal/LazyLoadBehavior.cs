@@ -129,6 +129,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // </param>
         // <param name="wrapperObject"> Entity wrapper object used to retrieve RelationshipManager for the proxied entity. </param>
         // <returns> True if the value instance was mutated and can be returned False if the class should refetch the value because the instance has changed </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private static bool LoadProperty<TItem>(
             TItem propertyValue, string relationshipName, string targetRoleName, bool mustBeNull, object wrapperObject) where TItem : class
         {

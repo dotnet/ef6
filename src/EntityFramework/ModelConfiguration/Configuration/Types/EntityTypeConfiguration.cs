@@ -541,6 +541,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private void ConfigureIndexes(DbDatabaseMapping mapping, EntityType entityType)
         {
             DebugCheck.NotNull(mapping);

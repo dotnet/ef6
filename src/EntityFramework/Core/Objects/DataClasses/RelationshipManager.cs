@@ -1338,6 +1338,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Traverse the relationships and find all the dependent ends that contain FKs, then attempt
         // to null all of those FKs.
         // </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal void NullAllFKsInDependentsForWhichThisIsThePrincipal()
         {
             if (_relationships != null)

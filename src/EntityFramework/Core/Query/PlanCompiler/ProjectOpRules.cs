@@ -36,10 +36,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private static bool ProcessProjectOverProject(RuleProcessingContext context, Node projectNode, out Node newNode)
         {
             newNode = projectNode;
-            var projectOp = (ProjectOp)projectNode.Op;
             var varDefListNode = projectNode.Child1;
             var subProjectNode = projectNode.Child0;
-            var subProjectOp = (ProjectOp)subProjectNode.Op;
             var trc = (TransformationRulesContext)context;
 
             // If any of the defining expressions is not a scalar op tree, then simply

@@ -629,8 +629,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
         private bool IsDisjoint(CellTreeNode n1, CellTreeNode n2)
         {
-            var isQueryView = (m_viewgenContext.ViewTarget == ViewTarget.QueryView);
-
             var isDisjointLeft = LeftQP.IsDisjointFrom(n1.LeftFragmentQuery, n2.LeftFragmentQuery);
 
             if (isDisjointLeft && m_viewgenContext.ViewTarget == ViewTarget.QueryView)

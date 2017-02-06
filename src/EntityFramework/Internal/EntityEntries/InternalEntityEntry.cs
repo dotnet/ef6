@@ -598,6 +598,7 @@ namespace System.Data.Entity.Internal
         // Gets the related end for the navigation property with the given name.
         // </summary>
         // <param name="navigationProperty"> The navigation property. </param>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         public virtual IRelatedEnd GetRelatedEnd(string navigationProperty)
         {
             EdmMember member;

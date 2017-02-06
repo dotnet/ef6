@@ -276,6 +276,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Single Table Predicates
 
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "vec", Justification = "Simplest way of initializing an out parameter.")]
         private void GetSingleTablePredicates(
             List<VarVec> tableDefinitions,
             out List<Predicate> singleTablePredicates, out Predicate otherPredicates)

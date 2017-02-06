@@ -386,14 +386,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // Note: We are losing the original cell number information here and the line number information
             // But we will not raise any
 
-            // We do not create CellExpressions with LOJ, FOJ - canBooleansOverlap is true for validation
-            var inputOpType = opType;
-            if (opType == CellTreeOpType.FOJ
-                || opType == CellTreeOpType.LOJ)
-            {
-                inputOpType = CellTreeOpType.IJ;
-            }
-
             var wrapper = new LeftCellWrapper(
                 m_viewgenContext.ViewTarget, temp.Attributes,
                 temp.LeftFragmentQuery,

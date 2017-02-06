@@ -33,8 +33,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 else if (!(type is ScalarType)
                          && typeUsageBuilder.HasUserDefinedFacets)
                 {
-                    Debug.Assert(!(type is SchemaEnumType), "Note that enums should have already been handled.");
-
                     // Non-scalar type should not have Facets. 
                     element.AddError(
                         ErrorCode.FacetOnNonScalarType, EdmSchemaErrorSeverity.Error, Strings.FacetsOnNonScalarType(type.FQName));

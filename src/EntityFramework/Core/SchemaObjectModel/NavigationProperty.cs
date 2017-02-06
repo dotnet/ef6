@@ -155,8 +155,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         Name,
                         _fromEnd.Type.FQName, _fromEnd.Name, _relationship.FQName, ParentElement.FQName));
             }
-
-            StructuredType type = _toEnd.Type;
         }
 
         #region Private Methods

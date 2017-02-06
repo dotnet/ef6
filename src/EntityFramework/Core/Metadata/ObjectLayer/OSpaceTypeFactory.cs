@@ -32,6 +32,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public abstract void AddToTypesInAssembly(EdmType type);
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         public virtual EdmType TryCreateType(Type type, EdmType cspaceType)
         {
             DebugCheck.NotNull(type);

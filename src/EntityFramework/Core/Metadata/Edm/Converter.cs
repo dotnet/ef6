@@ -703,12 +703,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             foreach (var end in relationshipSet.Ends)
             {
-                //-- need the EntityType for the end
-                var endEntityType = (EntityType)LoadSchemaElement(
-                    end.EntitySet.EntityType,
-                    providerManifest,
-                    convertedItemCache,
-                    newGlobalItems);
                 //-- need to get the end member
                 var endMember = (AssociationEndMember)associationType.Members[end.Name];
                 //-- create the end
@@ -1011,7 +1005,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Debug.Assert(
                         functionImportEntityContainer != null,
                         "functionImportEntityContainer must be specified during function import conversion");
-                    var entityContainer = functionImportEntityContainer;
                     entitySets = somFunctionImport.ReturnTypeList
                                                   .Select(
                                                       returnType => null != returnType.EntitySet

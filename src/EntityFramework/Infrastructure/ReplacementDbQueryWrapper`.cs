@@ -31,6 +31,7 @@ namespace System.Data.Entity.Infrastructure
         // </summary>
         // <param name="query"> The query, which must be a generic object of the expected type. </param>
         // <returns> A new instance. </returns>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal static ReplacementDbQueryWrapper<TElement> Create(ObjectQuery query)
         {
             Debug.Assert(query is ObjectQuery<TElement>);

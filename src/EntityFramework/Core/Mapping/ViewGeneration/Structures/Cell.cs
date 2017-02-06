@@ -157,6 +157,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return m_viewCellRelation;
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private void GenerateCellRelations(int cellNumber)
         {
             // Generate the view cell relation

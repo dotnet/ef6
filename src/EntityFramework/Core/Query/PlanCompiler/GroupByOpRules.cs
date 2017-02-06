@@ -455,9 +455,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var nodeInfo = command.GetExtendedNodeInfo(n.Child0);
             var newOp = command.CreateProjectOp(op.Keys);
 
-            var varDefListOp = command.CreateVarDefListOp();
-            var varDefListNode = command.CreateNode(varDefListOp);
-
             newNode = command.CreateNode(newOp, n.Child0, n.Child1);
 
             //If we know the keys of the input and the list of keys includes them all, 

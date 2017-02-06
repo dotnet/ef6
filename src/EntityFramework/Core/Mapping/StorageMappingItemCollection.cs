@@ -829,6 +829,7 @@ namespace System.Data.Entity.Core.Mapping
         //     name="interestingMembersKind" />
         // ).
         // </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only casts twice in debug mode.")]
         private ReadOnlyCollection<EdmMember> FindInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, InterestingMembersKind interestingMembersKind)
         {

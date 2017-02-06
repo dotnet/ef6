@@ -251,6 +251,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="providerCommands"> list of provider commands </param>
         // <param name="resultColumnMap"> column map for the result </param>
         // <param name="entitySets"> the entity sets exposed in this query </param>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
         private void Compile(
             out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount,
             out Set<md.EntitySet> entitySets)

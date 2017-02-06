@@ -2165,6 +2165,7 @@ namespace System.Data.Entity.Core.Objects
         // they will ultimately be brought into the context as Added objects, at which point we would
         // have skipped them anyway because the are not Unchanged or Modified.
         // </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal void FixupFKValuesFromNonAddedReferences()
         {
             Debug.Assert(EntitySet is EntitySet, "Expect entity entries to have true entity sets.");

@@ -526,6 +526,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // an obejct becayse IEntityWrapper is an internal type and is therefore not accessable to
         // the proxy type.  Once we're in the framework it is cast back to an IEntityWrapper.
         // </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private static void ResetFKSetterFlag(object wrappedEntityAsObject)
         {
             Debug.Assert(

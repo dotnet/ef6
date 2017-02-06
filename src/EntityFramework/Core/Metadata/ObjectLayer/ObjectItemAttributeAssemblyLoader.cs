@@ -99,8 +99,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // we need to take special care of them
             if (clrType.IsGenericType())
             {
-                var genericType = clrType.GetGenericTypeDefinition();
-
                 // Try to resolve the element type into a type object
                 EdmType elementType;
                 if (!TryGetLoadedType(clrType.GetGenericArguments()[0], out elementType))
@@ -272,6 +270,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Load metadata of the given type - when you call this method, you should check and make sure that the type has
         // edm attribute. If it doesn't,we won't load the type and it will be returned as null
         // </summary>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private void LoadType(Type clrType)
         {
             Debug.Assert(clrType.Assembly() == SourceAssembly, "Why are we loading a type that is not in our assembly?");
