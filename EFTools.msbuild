@@ -12,6 +12,7 @@
         <SkipEnvSetup></SkipEnvSetup>
         <LogsDir>$(SolutionDir)logs\</LogsDir>
         <SkipStrongNamesXml>tools\EFToolsSkipStrongNames.xml</SkipStrongNamesXml>
+        <AllowsAddIns Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">True</AllowsAddIns>
     </PropertyGroup>
 
     <ItemGroup>
@@ -56,7 +57,8 @@
     <Target Name="Clean">
         <MSBuild Targets="Clean"
                  Projects="@(Projects)" />
-        <MSBuild Targets="Clean"
+        <MSBuild Condition="'AllowsAddIns' == 'True'"
+                 Targets="Clean"
                  Projects="@(TestHostProjects)" />
         <MSBuild Targets="Clean"
                  Projects="$(SolutionDir)\src\EFTools\Setup\GenerateMsiInputs\GenerateMsiInputs.msbuild" />
@@ -90,7 +92,12 @@
     </Target>
 
     <Target Name="BuildTestHost">
-        <MSBuild Targets="Build"
+        <Message Condition="'AllowsAddIns' != 'True'"
+                 Text="Visual Studio $(VisualStudioVersion) does not allow add-ins. Skipping building test host."
+                 Importance="High" />
+
+        <MSBuild Condition="'AllowsAddIns' == 'True'"
+                 Targets="Build"
                  Projects="@(TestHostProjects)"
                  Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
@@ -123,7 +130,12 @@
             <TestHostQuery>$([MSBuild]::GetRegistryValueFromView('$(TestHostPath)', 'DisplayName', null, RegistryView.Registry64, RegistryView.Registry32))</TestHostQuery>
             <TestHostInstalled>$(TestHostQuery.StartsWith('VS IDE Test Host for Visual Studio'))</TestHostInstalled>
         </PropertyGroup>
-        <Exec Condition="'$(TestHostInstalled)'!='True'"
+
+        <Message Condition="'AllowsAddIns' != 'True'"
+                 Text="Visual Studio $(VisualStudioVersion) does not allow add-ins. Skipping installing test host."
+                 Importance="High" />
+
+        <Exec Condition="'AllowsAddIns' == 'True' AND '$(TestHostInstalled)' != 'True'"
               Command='msiexec /qb /i $(OutputPath)VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log' />
     </Target>
 
@@ -133,7 +145,13 @@
             <TestHostUnistallGuid Condition=" '$(VisualStudioVersion)' == '12.0' ">{D39AE4C3-21C4-40DE-9F35-53A83803F8DB}</TestHostUnistallGuid>
             <TestHostUnistallGuid Condition=" '$(TestHostUnistallGuid)' == '' ">{6FDF32A2-AC01-477f-A9DF-738BC836EE53}</TestHostUnistallGuid>
         </PropertyGroup>
-        <Exec Command='msiexec /qb /x $(TestHostUnistallGuid) /L*v $(LogsDir)VsIdeTestHost.msi.uninstall.log' />
+
+        <Message Condition="'AllowsAddIns' != 'True'"
+                 Text="Visual Studio $(VisualStudioVersion) does not allow add-ins. Skipping uninstalling test host."
+                 Importance="High" />
+
+        <Exec Condition="'AllowsAddIns' == 'True'"
+              Command='msiexec /qb /x $(TestHostUnistallGuid) /L*v $(LogsDir)VsIdeTestHost.msi.uninstall.log' />
     </Target>
 
     <Target Name="Install" DependsOnTargets="Rebuild">
