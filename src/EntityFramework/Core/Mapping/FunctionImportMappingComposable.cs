@@ -541,10 +541,8 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only casts twice in debug mode.")]
         private static DbExpression GeneratePropertyMappingView(PropertyMapping mapping, DbExpression row)
         {
-            Debug.Assert(mapping is ScalarPropertyMapping, "Complex property mapping is not supported in function imports.");
             var scalarPropertyMapping = (ScalarPropertyMapping)mapping;
             return GenerateScalarPropertyMappingView(scalarPropertyMapping.Property, scalarPropertyMapping.Column, row);
         }

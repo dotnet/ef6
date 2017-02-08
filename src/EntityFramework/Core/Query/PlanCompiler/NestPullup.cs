@@ -726,6 +726,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // and the input is also a nestOp.  we handle this by first processing Case1,
         // then processing Case2.
         // </remarks>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
         public override Node Visit(ProjectOp op, Node n)
         {
@@ -768,7 +769,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             var size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            Dump.ToXml(newNode);
+            var output = Dump.ToXml(newNode);
 #endif
             //DEBUG
             return newNode;
@@ -811,6 +812,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // not referred to by the top level-NestOp, we can safely remove it from
         // the merged NestOp we produce.
         // </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Vars")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "collectionVar")]
@@ -895,7 +897,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             var size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            Dump.ToXml(newNode);
+            var output = Dump.ToXml(newNode);
 #endif
             //DEBUG
             return newNode;
@@ -907,6 +909,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Remove CollectOps from projection, constructing a NestOp
         // over the ProjectOp.
         // </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1113,7 +1116,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             var size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            Dump.ToXml(nestNode);
+            var output = Dump.ToXml(nestNode);
 #endif
             //DEBUG
             return nestNode;
@@ -1248,6 +1251,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // (9) Set ProjectOp's input to NestOp's input
         // (10) Set NestOp's input to ProjectOp.
         // </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "vars", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1433,7 +1437,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Command.RecomputeNodeInfo(nestNode);
 #if DEBUG
             var size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            Dump.ToXml(nestNode);
+            var output = Dump.ToXml(nestNode);
 #endif
             //DEBUG
             return nestNode;
@@ -1633,6 +1637,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // all Vars from the UnnestOp; and has no local definitions. This allows us to
         // restrict the Var->Var replacement to just ProjectOp.
         // </remarks>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDef")]
@@ -1713,7 +1718,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             var size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            Dump.ToXml(newNode);
+            var output = Dump.ToXml(newNode);
 #endif
             //DEBUG
             return newNode;
@@ -1815,6 +1820,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // (2) Convert SingleStreamNestOp(...) => SortOp(...)
         // (3) Fixup the column maps.
         // </remarks>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "physicalProject")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1880,7 +1886,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             var size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            Dump.ToXml(n);
+            var output = Dump.ToXml(n);
 #endif
             //DEBUG
 
@@ -1996,8 +2002,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Y1...Yn     are the columns from the second nested collection
         // nY1...nYn   are null values for all columns from the second nested collection
         // </remarks>
-        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "output", Justification = "Only used in debug mode.")]
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "size", Justification = "Only used in debug mode.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private Node ConvertToSingleStreamNest(
             Node nestNode, Dictionary<Var, ColumnMap> varRefReplacementMap, VarList flattenedOutputVarList,
             out SimpleColumnMap[] parentKeyColumnMaps)
@@ -2221,7 +2228,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
             var size = input.Length; // GC.KeepAlive makes FxCop Grumpy.
-            Dump.ToXml(newNestNode);
+            var output = Dump.ToXml(newNestNode);
 #endif
             //DEBUG
 

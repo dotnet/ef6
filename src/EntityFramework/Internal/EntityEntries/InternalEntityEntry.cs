@@ -598,13 +598,11 @@ namespace System.Data.Entity.Internal
         // Gets the related end for the navigation property with the given name.
         // </summary>
         // <param name="navigationProperty"> The navigation property. </param>
-        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         public virtual IRelatedEnd GetRelatedEnd(string navigationProperty)
         {
             EdmMember member;
             EdmEntityType.Members.TryGetValue(navigationProperty, false, out member);
 
-            Debug.Assert(member is NavigationProperty, "Property should have already been validated as a nav property.");
             var asNavProperty = (NavigationProperty)member;
 
             var relationshipManager = _internalContext.ObjectContext.ObjectStateManager.GetRelationshipManager(Entity);

@@ -328,7 +328,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 			
 			return this.LoadModel(serializationResult, store.DefaultPartition, fileName, schemaResolver, validationController, serializerLocator);
 		}
-		
+	
 		/// <summary>
 		/// Loads a EntityDesignerViewModel instance.
 		/// </summary>

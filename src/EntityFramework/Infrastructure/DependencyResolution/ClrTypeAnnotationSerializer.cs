@@ -9,12 +9,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
     internal class ClrTypeAnnotationSerializer : IMetadataAnnotationSerializer
     {
-        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         public string Serialize(string name, object value)
         {
             DebugCheck.NotEmpty(name);
             DebugCheck.NotNull(value);
-            Debug.Assert(value is Type);
 
             return ((Type)value).AssemblyQualifiedName;
         }

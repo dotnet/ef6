@@ -3968,7 +3968,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
             if (null != queryExpr.HavingClause
                 && queryExpr.HavingClause.HasMethodCall)
             {
-                // LAJ LAJ - needed for side-effects?
                 ConvertValueExpression(queryExpr.HavingClause.HavingPredicate, sr);
             }
 
@@ -4046,7 +4045,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
                     sr.CurrentScopeRegion.WasResolutionCorrelated = false;
 
-                    // LAJ LAJ - needed for side-effects?
                     ConvertValueExpression(orderItem.OrderExpr, sr);
 
                     //
