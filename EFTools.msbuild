@@ -12,7 +12,7 @@
         <SkipEnvSetup></SkipEnvSetup>
         <LogsDir>$(SolutionDir)logs\</LogsDir>
         <SkipStrongNamesXml>tools\EFToolsSkipStrongNames.xml</SkipStrongNamesXml>
-        <AllowsAddIns Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">True</AllowsAddIns>
+        <IsDev15OrLower Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">True</IsDev15OrLower>
     </PropertyGroup>
 
     <ItemGroup>
@@ -57,12 +57,13 @@
     <Target Name="Clean">
         <MSBuild Targets="Clean"
                  Projects="@(Projects)" />
-        <MSBuild Condition="'AllowsAddIns' == 'True'"
+        <MSBuild Condition="'IsDev15OrLower' == 'True'"
                  Targets="Clean"
                  Projects="@(TestHostProjects)" />
         <MSBuild Targets="Clean"
                  Projects="$(SolutionDir)\src\EFTools\Setup\GenerateMsiInputs\GenerateMsiInputs.msbuild" />
-        <MSBuild Targets="Clean"
+        <MSBuild Condition="'IsDev15OrLower' == 'True'"
+                 Targets="Clean"
                  Projects="$(SolutionDir)\src\EFTools\Setup\EFToolsMsi\EFToolsMsi.wixproj" />
     </Target>
 
@@ -92,25 +93,35 @@
     </Target>
 
     <Target Name="BuildTestHost">
-        <Message Condition="'AllowsAddIns' != 'True'"
+        <Message Condition="'IsDev15OrLower' != 'True'"
                  Text="Visual Studio $(VisualStudioVersion) does not allow add-ins. Skipping building test host."
                  Importance="High" />
 
-        <MSBuild Condition="'AllowsAddIns' == 'True'"
+        <MSBuild Condition="'IsDev15OrLower' == 'True'"
                  Targets="Build"
                  Projects="@(TestHostProjects)"
                  Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
 
     <Target Name="GenerateInstallerInputs" DependsOnTargets="BuildFrameworkPackages">
-        <MSBuild Targets="GenerateMsiInputs"
+        <Message Condition="'IsDev15OrLower' != 'True'"
+                 Text="Visual Studio $(VisualStudioVersion) does not use MSI installer. Skipping generating MSI installer inputs."
+                 Importance="High" />
+
+        <MSBuild Condition="'IsDev15OrLower' == 'True'"
+             Targets="GenerateMsiInputs"
              Projects="$(SolutionDir)src\EFTools\setup\GenerateMsiInputs\GenerateMsiInputs.msbuild"
              BuildInParallel="false"
              Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
 
     <Target Name="BuildInstaller" DependsOnTargets="GenerateInstallerInputs">
-        <MSBuild Targets="$(BuildTargets)"
+        <Message Condition="'IsDev15OrLower' != 'True'"
+                 Text="Visual Studio $(VisualStudioVersion) does not use MSI installer. Skipping building the MSI installer."
+                 Importance="High" />
+
+        <MSBuild Condition="'IsDev15OrLower' == 'True'"
+             Targets="$(BuildTargets)"
              Projects="$(SolutionDir)src\EFTools\setup\EFToolsMsi\EFToolsMsi.wixproj"
              BuildInParallel="false"
              Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
@@ -131,11 +142,11 @@
             <TestHostInstalled>$(TestHostQuery.StartsWith('VS IDE Test Host for Visual Studio'))</TestHostInstalled>
         </PropertyGroup>
 
-        <Message Condition="'AllowsAddIns' != 'True'"
+        <Message Condition="'IsDev15OrLower' != 'True'"
                  Text="Visual Studio $(VisualStudioVersion) does not allow add-ins. Skipping installing test host."
                  Importance="High" />
 
-        <Exec Condition="'AllowsAddIns' == 'True' AND '$(TestHostInstalled)' != 'True'"
+        <Exec Condition="'IsDev15OrLower' == 'True' AND '$(TestHostInstalled)' != 'True'"
               Command='msiexec /qb /i $(OutputPath)VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log' />
     </Target>
 
@@ -146,16 +157,21 @@
             <TestHostUnistallGuid Condition=" '$(TestHostUnistallGuid)' == '' ">{6FDF32A2-AC01-477f-A9DF-738BC836EE53}</TestHostUnistallGuid>
         </PropertyGroup>
 
-        <Message Condition="'AllowsAddIns' != 'True'"
+        <Message Condition="'IsDev15OrLower' != 'True'"
                  Text="Visual Studio $(VisualStudioVersion) does not allow add-ins. Skipping uninstalling test host."
                  Importance="High" />
 
-        <Exec Condition="'AllowsAddIns' == 'True'"
+        <Exec Condition="'IsDev15OrLower' == 'True'"
               Command='msiexec /qb /x $(TestHostUnistallGuid) /L*v $(LogsDir)VsIdeTestHost.msi.uninstall.log' />
     </Target>
 
     <Target Name="Install" DependsOnTargets="Rebuild">
-        <Exec Command='msiexec /qb /i $(OutputPath)en\EFTools.msi SKIPENVIRONMENTSETUP="$(SkipEnvSetup)" /L*v $(LogsDir)EFTools.msi.log' />
+        <Message Condition="'IsDev15OrLower' != 'True'"
+                 Text="Visual Studio $(VisualStudioVersion) does not use MSI installer. Skipping installing the MSI."
+                 Importance="High" />
+
+        <Exec Condition="'IsDev15OrLower' == 'True'"
+              Command='msiexec /qb /i $(OutputPath)en\EFTools.msi SKIPENVIRONMENTSETUP="$(SkipEnvSetup)" /L*v $(LogsDir)EFTools.msi.log' />
 
     <!-- This is included here so that we have the correct .PDBs for the last EFTools _installed_ (not just built) -->
       <ItemGroup>
