@@ -10,7 +10,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void Constructor_location_cannot_be_null()
         {
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("location"),
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("directory"),
                 Assert.Throws<ArgumentException>(() => new DefaultDbModelStore(null)).Message);
         }
 
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Infrastructure
         public void Constructor_location_cannot_be_empty()
         {
             
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("location"),
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("directory"),
                 Assert.Throws<ArgumentException>(() => new DefaultDbModelStore(string.Empty)).Message);
         }
 
