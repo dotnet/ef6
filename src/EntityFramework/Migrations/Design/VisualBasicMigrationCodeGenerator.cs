@@ -1577,7 +1577,14 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns> The quoted identifier. </returns>
         protected virtual string Quote(string identifier)
         {
-            return "\"" + identifier + "\"";
+            using (var writer = new StringWriter())
+            {
+                using (var provider = CodeDom.Compiler.CodeDomProvider.CreateProvider("VisualBasic"))
+                {
+                    provider.GenerateCodeFromExpression(new CodeDom.CodePrimitiveExpression(identifier), writer, null);
+                    return writer.ToString();
+                }
+            }
         }
     }
 }
