@@ -2165,10 +2165,8 @@ namespace System.Data.Entity.Core.Objects
         // they will ultimately be brought into the context as Added objects, at which point we would
         // have skipped them anyway because the are not Unchanged or Modified.
         // </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal void FixupFKValuesFromNonAddedReferences()
         {
-            Debug.Assert(EntitySet is EntitySet, "Expect entity entries to have true entity sets.");
             if (!((EntitySet)EntitySet).HasForeignKeyRelationships)
             {
                 return;
@@ -2192,9 +2190,6 @@ namespace System.Data.Entity.Core.Objects
                         if (_cache.TryGetObjectStateEntry(principal, out principalEntry)
                             && (principalEntry.State == EntityState.Modified || principalEntry.State == EntityState.Unchanged))
                         {
-                            Debug.Assert(
-                                principalEntry is EntityEntry,
-                                "Existing entry for an entity must be an EntityEntry, not a RelationshipEntry");
                             reference.UpdateForeignKeyValues(
                                 WrappedEntity, ((EntityEntry)principalEntry).WrappedEntity, changedFKs, forceChange: false);
                         }

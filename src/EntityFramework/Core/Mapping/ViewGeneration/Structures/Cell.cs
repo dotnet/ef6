@@ -157,7 +157,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return m_viewCellRelation;
         }
 
-        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         private void GenerateCellRelations(int cellNumber)
         {
             // Generate the view cell relation
@@ -172,10 +171,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 var sSlot = SQuery.ProjectedSlotAt(i);
                 Debug.Assert(cSlot != null, "Has cell query been normalized?");
                 Debug.Assert(sSlot != null, "Has cell query been normalized?");
-
-                // These slots better be MemberProjectedSlots. We do not have constants etc at this point.
-                Debug.Assert(cSlot is MemberProjectedSlot, "cSlot is expected to be MemberProjectedSlot");
-                Debug.Assert(sSlot is MemberProjectedSlot, "sSlot is expected to be MemberProjectedSlot");
 
                 var cJoinSlot = (MemberProjectedSlot)cSlot;
                 var sJoinSlot = (MemberProjectedSlot)sSlot;

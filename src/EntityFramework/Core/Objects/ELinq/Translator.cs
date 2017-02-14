@@ -419,7 +419,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 if (BuiltInTypeKind.CollectionType
                     == propertyExpression.ResultType.EdmType.BuiltInTypeKind)
                 {
-                    Debug.Assert(clrMember is PropertyInfo, "Navigation property was not a property; should not be allowed by metadata.");
                     var propertyType = ((PropertyInfo)clrMember).PropertyType;
                     if (propertyType.IsGenericType()
                         && propertyType.GetGenericTypeDefinition() == typeof(EntityCollection<>))

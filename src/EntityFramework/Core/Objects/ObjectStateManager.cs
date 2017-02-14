@@ -776,7 +776,6 @@ namespace System.Data.Entity.Core.Objects
         // <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
         // <param name="relationshipAlreadyExists"> Whether or not the relationship entry already exists in the cache for these entities </param>
         // <param name="inKeyEntryPromotion"> Whether this method is used in key entry promotion </param>
-        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal static void AddEntityToCollectionOrReference(
             MergeOption mergeOption,
             IEntityWrapper wrappedSource,
@@ -794,8 +793,6 @@ namespace System.Data.Entity.Core.Objects
             if (targetMember.RelationshipMultiplicity
                 != RelationshipMultiplicity.Many)
             {
-                Debug.Assert(
-                    relatedEnd is EntityReference, "If end is not Many multiplicity, then the RelatedEnd should be an EntityReference.");
                 var relatedReference = (EntityReference)relatedEnd;
 
                 switch (mergeOption)

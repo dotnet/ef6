@@ -48,12 +48,9 @@ namespace System.Data.Entity.Internal.Validation
         // <returns>
         // Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null.
         // </returns>
-        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         public override IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {
-            Debug.Assert(property is InternalPropertyEntry);
-
             var validationErrors = new List<DbValidationError>();
             validationErrors.AddRange(base.Validate(entityValidationContext, property));
 
