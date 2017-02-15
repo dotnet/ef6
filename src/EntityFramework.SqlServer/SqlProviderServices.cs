@@ -100,8 +100,8 @@ namespace System.Data.Entity.SqlServer
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
         private static bool _truncateDecimalsToScale = true;
-
         private static bool _useScopeIdentity = true;
+        private static bool _useRowNumberOrderingInOffsetQueries = true;
 
         /// <summary>
         /// The Singleton instance of the SqlProviderServices type.
@@ -144,6 +144,25 @@ namespace System.Data.Entity.SqlServer
         {
             get { return _useScopeIdentity; }
             set { _useScopeIdentity = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the ROW_NUMBER() function is used in sort expression 
+        /// passed to the ORDER BY clause when OFFSET is present in query. The default value of <c>true</c> 
+        /// is recommended to obtain query results that are stable for paging operations. The value of 
+        /// <c>false</c> can be used for compatibility with previous versions of EF and will cause the sort 
+        /// expression to be passed unmodified to the ORDER BY clause, which can lead to unstable results 
+        /// if the ordering is ambiguous. 
+        /// </summary>
+        /// <remarks>
+        /// This flag only applies to SQL Server 2012 or later. This flag does not affect queries that have 
+        /// already been translated to SQL and cached, therefore applications that need to set the value to 
+        /// <c>false</c> for compatibility should do so before executing any queries.
+        /// </remarks>
+        public static bool UseRowNumberOrderingInOffsetQueries
+        {
+            get { return _useRowNumberOrderingInOffsetQueries; }
+            set { _useRowNumberOrderingInOffsetQueries = value; }
         }
 
         /// <summary>
