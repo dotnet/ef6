@@ -543,7 +543,7 @@ function Add-Migration
 	
 .EXAMPLE
 	Update-Database -Script
-	# Generate a script to update the database from it's current state  to the latest migration
+	# Generate a script to update the database from its current state to the latest migration
 	
 .EXAMPLE
 	Update-Database -Script -SourceMigration Second -TargetMigration First
