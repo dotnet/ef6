@@ -2075,7 +2075,7 @@ namespace System.Data.Entity
     [Extent1].[Id] AS [Id], 
     [Extent1].[Name] AS [Name]
     FROM [dbo].[Entities] AS [Extent1]
-    ORDER BY [Extent1].[Name] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[Name] ASC)
     OFFSET @p__linq__0 ROWS ";
                 }
                 else

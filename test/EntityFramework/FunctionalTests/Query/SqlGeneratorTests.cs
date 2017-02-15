@@ -340,7 +340,7 @@ order by o.Id desc skip @pInt16 LIMIT 5";
 @"SELECT 
     [Extent1].[Id] AS [Id]
     FROM [dbo].[ArubaOwners] AS [Extent1]
-    ORDER BY [Extent1].[Id] DESC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] DESC)
     OFFSET @pInt16 ROWS FETCH NEXT 5 ROWS ONLY ";
                 }
                 else
@@ -913,7 +913,7 @@ ORDER BY i SKIP 2 LIMIT 4";
     [Extent1].[Address] AS [Address]
     FROM [dbo].[ArubaConfigs] AS [Extent1]
     WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
-    ORDER BY [Extent1].[Id] DESC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] DESC)
     OFFSET 3 ROWS FETCH NEXT 2 ROWS ONLY ";
 
                 Skip_limit_group_by_expectedSql =
@@ -928,7 +928,7 @@ ORDER BY i SKIP 2 LIMIT 4";
             FROM [dbo].[ArubaOwners] AS [Extent1]
         )  AS [Distinct1]
     )  AS [Project2]
-    ORDER BY [Project2].[FirstName] DESC
+    ORDER BY row_number() OVER (ORDER BY [Project2].[FirstName] DESC)
     OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY ";
 
                 Skip_no_limit_with_inheritance_expectedSql =
@@ -937,7 +937,7 @@ ORDER BY i SKIP 2 LIMIT 4";
     [Extent1].[Address] AS [Address]
     FROM [dbo].[ArubaConfigs] AS [Extent1]
     WHERE [Extent1].[Discriminator] = N'ArubaMachineConfig'
-    ORDER BY [Extent1].[Id] DESC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] DESC)
     OFFSET 1 ROWS ";
 
                 Skip_limit_distinct_expectedSql =
@@ -949,7 +949,7 @@ ORDER BY i SKIP 2 LIMIT 4";
         1 AS [C1]
         FROM [dbo].[ArubaOwners] AS [Extent1]
     )  AS [Distinct1]
-    ORDER BY [Distinct1].[FirstName] ASC
+    ORDER BY row_number() OVER (ORDER BY [Distinct1].[FirstName] ASC)
     OFFSET 1 ROWS FETCH NEXT 1 ROWS ONLY ";
 
                 Multiple_sort_keys_expectedSql =
@@ -958,7 +958,7 @@ ORDER BY i SKIP 2 LIMIT 4";
     [Extent1].[FirstName] AS [FirstName], 
     [Extent1].[LastName] AS [LastName]
     FROM [dbo].[ArubaOwners] AS [Extent1]
-    ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC)
     OFFSET 3 ROWS FETCH NEXT 4 ROWS ONLY ";
 
                 Nested_skip_limits_in_select_expectedSql =
@@ -969,13 +969,13 @@ ORDER BY i SKIP 2 LIMIT 4";
     FROM   (SELECT [Extent1].[Id] AS [Id]
         FROM [dbo].[ArubaOwners] AS [Extent1]
         WHERE [Extent1].[Id] > 3
-        ORDER BY [Extent1].[Id] ASC
+        ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] ASC)
         OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY  ) AS [Limit1]
     LEFT OUTER JOIN  (SELECT 
         [Extent2].[Id] AS [Id], 
         1 AS [C1]
         FROM [dbo].[ArubaOwners] AS [Extent2]
-        ORDER BY [Extent2].[Id] ASC
+        ORDER BY row_number() OVER (ORDER BY [Extent2].[Id] ASC)
         OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY  ) AS [Project1] ON 1 = 1
     ORDER BY [Limit1].[Id] ASC, [Project1].[C1] ASC";
 
@@ -984,10 +984,10 @@ ORDER BY i SKIP 2 LIMIT 4";
     [Limit1].[Id] AS [Id]
     FROM ( SELECT [Extent1].[Id] AS [Id]
         FROM [dbo].[ArubaOwners] AS [Extent1]
-        ORDER BY [Extent1].[Id] DESC
+        ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] DESC)
         OFFSET 2 ROWS FETCH NEXT 5 ROWS ONLY 
     )  AS [Limit1]
-    ORDER BY [Limit1].[Id] ASC
+    ORDER BY row_number() OVER (ORDER BY [Limit1].[Id] ASC)
     OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY ";
 
                 Intersect_with_split_limit_expectedSql =
@@ -1003,7 +1003,7 @@ ORDER BY i SKIP 2 LIMIT 4";
             1 AS [C1]
             FROM [dbo].[ArubaOwners] AS [Extent1]
         )  AS [Project1]
-        ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC
+        ORDER BY row_number() OVER (ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC)
         OFFSET 3 ROWS FETCH NEXT 7 ROWS ONLY 
     INTERSECT
         SELECT 
@@ -1015,7 +1015,7 @@ ORDER BY i SKIP 2 LIMIT 4";
             1 AS [C1]
             FROM [dbo].[ArubaOwners] AS [Extent2]
         )  AS [Project3]
-        ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC
+        ORDER BY row_number() OVER (ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC)
         OFFSET 4 ROWS FETCH NEXT 6 ROWS ONLY ) AS [Intersect1]";
 
                 Nested_projections_list_expectedSql =
@@ -1029,7 +1029,7 @@ ORDER BY i SKIP 2 LIMIT 4";
         CASE WHEN ([Limit2].[Id] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]
         FROM   (SELECT [Extent1].[Id] AS [Id]
             FROM [dbo].[ArubaOwners] AS [Extent1]
-            ORDER BY [Extent1].[Id] ASC
+            ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] ASC)
             OFFSET 5 ROWS FETCH NEXT 2 ROWS ONLY  ) AS [Limit1]
         OUTER APPLY  (SELECT TOP (2) [Project1].[Id] AS [Id]
             FROM ( SELECT 
@@ -1049,7 +1049,7 @@ ORDER BY i SKIP 2 LIMIT 4";
         FROM ( SELECT 
             [Extent1].[Id] AS [Id]
             FROM [dbo].[ArubaOwners] AS [Extent1]
-            ORDER BY [Extent1].[Id] ASC
+            ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] ASC)
             OFFSET 3 ROWS FETCH NEXT 2 ROWS ONLY 
         )  AS [element] ) AS [Element1] ON 1 = 1";
 
@@ -1063,21 +1063,21 @@ ORDER BY i SKIP 2 LIMIT 4";
         1 AS [C2]
         FROM [dbo].[ArubaOwners] AS [Extent1]
     )  AS [Project1]
-    ORDER BY [Project1].[C1] ASC
+    ORDER BY row_number() OVER (ORDER BY [Project1].[C1] ASC)
     OFFSET 4 ROWS FETCH NEXT 3 ROWS ONLY ";
 
                 Skip_with_no_limit_and_multiset_expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id]
     FROM [dbo].[ArubaOwners] AS [Extent1]
-    ORDER BY [Extent1].[Id] DESC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] DESC)
     OFFSET 2 ROWS ";
 
                 Edge_case_column_name_expectedSql =
 @"SELECT 
     [Extent1].[Id] AS [Id]
     FROM [dbo].[ArubaOwners] AS [Extent1]
-    ORDER BY [Extent1].[Id] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[Id] ASC)
     OFFSET 2 ROWS FETCH NEXT 3 ROWS ONLY ";
 
                 Skip_limit_over_skip_limit_intersect_expectedSql =
@@ -1095,7 +1095,7 @@ ORDER BY i SKIP 2 LIMIT 4";
             1 AS [C1]
             FROM [dbo].[ArubaOwners] AS [Extent1]
         )  AS [Project1]
-        ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC
+        ORDER BY row_number() OVER (ORDER BY [Project1].[Id] DESC, [Project1].[Alias] DESC)
         OFFSET 3 ROWS FETCH NEXT 4 ROWS ONLY 
     INTERSECT
         SELECT 
@@ -1108,9 +1108,9 @@ ORDER BY i SKIP 2 LIMIT 4";
             1 AS [C1]
             FROM [dbo].[ArubaOwners] AS [Extent2]
         )  AS [Project3]
-        ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC
+        ORDER BY row_number() OVER (ORDER BY [Project3].[Id] ASC, [Project3].[Alias] ASC)
         OFFSET 5 ROWS FETCH NEXT 2 ROWS ONLY ) AS [Intersect1]
-    ORDER BY [Intersect1].[Id] ASC
+    ORDER BY row_number() OVER (ORDER BY [Intersect1].[Id] ASC)
     OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY ";
 
                 Skip_limit_with_duplicates_expectedSql =
@@ -1135,7 +1135,7 @@ ORDER BY i SKIP 2 LIMIT 4";
         SELECT 
         2 AS [C1]
         FROM  ( SELECT 1 AS X ) AS [SingleRowTable5]) AS [UnionAll4]
-    ORDER BY [UnionAll4].[C1] ASC
+    ORDER BY row_number() OVER (ORDER BY [UnionAll4].[C1] ASC)
     OFFSET 2 ROWS FETCH NEXT 4 ROWS ONLY ";
 
                 Skip_limit_with_nulls_expectedSql =
@@ -1157,7 +1157,7 @@ ORDER BY i SKIP 2 LIMIT 4";
             2 AS [C1]
             FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]
     )  AS [Project4]
-    ORDER BY [Project4].[C1] ASC
+    ORDER BY row_number() OVER (ORDER BY [Project4].[C1] ASC)
     OFFSET 2 ROWS FETCH NEXT 4 ROWS ONLY ";
             }
 
