@@ -1592,7 +1592,7 @@ namespace PlanCompilerTests
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
     WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[LastName] ASC)
     OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
 
             Limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql =
@@ -1608,7 +1608,7 @@ namespace PlanCompilerTests
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
     WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[LastName] ASC)
     OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
 
             Limit_SimpleModel_OrderBy_Skip_Single_expectedSql =
@@ -1624,7 +1624,7 @@ namespace PlanCompilerTests
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
     WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[LastName] ASC)
     OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
 
             Limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql =
@@ -1640,7 +1640,7 @@ namespace PlanCompilerTests
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
     WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[LastName] ASC)
     OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
 
             Limit_SimpleModel_OrderBy_Skip_Take_expectedSql =
@@ -1656,7 +1656,7 @@ namespace PlanCompilerTests
     FROM  [dbo].[ArubaOwners] AS [Extent1]
     LEFT OUTER JOIN [dbo].[ArubaRuns] AS [Extent2] ON [Extent1].[Id] = [Extent2].[Id]
     WHERE N'Diego' = [Extent1].[FirstName]
-    ORDER BY [Extent1].[LastName] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[LastName] ASC)
     OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
 
             Limit_ComplexModel_OrderBy_Skip_First_expectedSql =
@@ -1692,7 +1692,7 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
-    ORDER BY [Project1].[Address_ZipCode] ASC
+    ORDER BY row_number() OVER (ORDER BY [Project1].[Address_ZipCode] ASC)
     OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
 
             Limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql =
@@ -1728,7 +1728,7 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
-    ORDER BY [Project1].[Address_ZipCode] ASC
+    ORDER BY row_number() OVER (ORDER BY [Project1].[Address_ZipCode] ASC)
     OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
 
             Limit_ComplexModel_OrderBy_Skip_Single_expectedSql =
@@ -1764,7 +1764,7 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
-    ORDER BY [Project1].[Address_ZipCode] ASC
+    ORDER BY row_number() OVER (ORDER BY [Project1].[Address_ZipCode] ASC)
     OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
 
             Limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql =
@@ -1800,7 +1800,7 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
-    ORDER BY [Project1].[Address_ZipCode] ASC
+    ORDER BY row_number() OVER (ORDER BY [Project1].[Address_ZipCode] ASC)
     OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY ";
 
             Limit_ComplexModel_OrderBy_Skip_Take_expectedSql =
@@ -1836,7 +1836,7 @@ namespace PlanCompilerTests
         LEFT OUTER JOIN [dbo].[MailRooms] AS [Extent2] ON [Extent1].[PrincipalMailRoomId] = [Extent2].[id]
         WHERE N'Building One' = [Extent1].[Name]
     )  AS [Project1]
-    ORDER BY [Project1].[Address_ZipCode] ASC
+    ORDER BY row_number() OVER (ORDER BY [Project1].[Address_ZipCode] ASC)
     OFFSET 2 ROWS FETCH NEXT 1 ROWS ONLY ";
         }
 
