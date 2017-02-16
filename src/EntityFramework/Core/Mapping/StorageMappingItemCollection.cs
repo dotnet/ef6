@@ -848,8 +848,6 @@ namespace System.Data.Entity.Core.Mapping
                 }
                 else
                 {
-                    Debug.Assert(storageTypeMapping is EntityTypeMapping, "EntityTypeMapping expected.");
-
                     FindInterestingEntityMappingMembers(
                         (EntityTypeMapping)storageTypeMapping, interestingMembersKind, interestingMembers);
                 }

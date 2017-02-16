@@ -51,6 +51,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // effects: Creates a map with all the condition member constants
         // from extentCells. viewtarget determines whether the view is an
         // update or query view
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal MemberDomainMap(
             ViewTarget viewTarget, bool isValidationEnabled, IEnumerable<Cell> extentCells, EdmItemCollection edmItemCollection,
             ConfigViewGenerator config, Dictionary<EntityType, Set<EntityType>> inheritanceGraph)

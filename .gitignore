@@ -22,6 +22,7 @@ EntityFramework.SqlServerCompact.xml
 [Ss]tyle[Cc]op.*
 *.csproj.DotSettings
 /src/EFTools/EntityDesign/VisualStudio/ItemTemplate/VersionedTemplates/
+/src/EFTools/EntityDesignPackage/Commands.vsct
 /src/EFTools/setup/EFToolsMsi/Resources/EFToolsStrings.wxl
 Index.dat
 Storage.dat

@@ -793,8 +793,6 @@ namespace System.Data.Entity.Core.Objects
             if (targetMember.RelationshipMultiplicity
                 != RelationshipMultiplicity.Many)
             {
-                Debug.Assert(
-                    relatedEnd is EntityReference, "If end is not Many multiplicity, then the RelatedEnd should be an EntityReference.");
                 var relatedReference = (EntityReference)relatedEnd;
 
                 switch (mergeOption)

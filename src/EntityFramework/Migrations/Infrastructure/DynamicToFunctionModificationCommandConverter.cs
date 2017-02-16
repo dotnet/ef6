@@ -264,6 +264,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return base.Visit(expression);
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public override DbExpression Visit(DbNewInstanceExpression expression)
         {
             DebugCheck.NotNull(expression);

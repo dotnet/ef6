@@ -1396,6 +1396,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // Determines whether a type test expression can be rewritten. Returns true of the
         // argument type is guaranteed to implement "testType" (if the argument is non-null).
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "subType")]
         private bool CanRewriteTypeTest(EdmType testType, EdmType argumentType)
         {
             // The rewrite only proceeds if the types are the same. If they are not,

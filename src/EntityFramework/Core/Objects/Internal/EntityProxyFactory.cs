@@ -528,8 +528,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         // </summary>
         private static void ResetFKSetterFlag(object wrappedEntityAsObject)
         {
-            Debug.Assert(
-                wrappedEntityAsObject == null || wrappedEntityAsObject is IEntityWrapper, "wrappedEntityAsObject must be an IEntityWrapper");
             var wrappedEntity = (IEntityWrapper)wrappedEntityAsObject; // We want an exception if the cast fails.
             if (wrappedEntity != null
                 && wrappedEntity.Context != null)

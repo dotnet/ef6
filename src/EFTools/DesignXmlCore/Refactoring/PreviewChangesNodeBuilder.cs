@@ -49,6 +49,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         protected static List<PreviewChangesNode> CreatePreviewNodesForVsLang(
             IList<FileChange> fileChanges, bool placeNodesUnderSingleRoot = false)
         {
