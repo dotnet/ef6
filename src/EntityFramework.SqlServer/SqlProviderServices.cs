@@ -126,6 +126,7 @@ namespace System.Data.Entity.SqlServer
         /// behavior of <see cref="SqlParameter" /> and allowing SQL Server to round values if necessary. 
         /// The default value is <c>true</c> to prevent breaking existing applications that depend on this 
         /// behavior. 
+        /// </summary>
         public static bool TruncateDecimalsToScale
         {
             get { return _truncateDecimalsToScale; }
