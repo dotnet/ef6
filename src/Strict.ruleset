@@ -5,5 +5,9 @@
     <Rule Id="CA1062" Action="None" />
     <Rule Id="CA2243" Action="None" />
     <Rule Id="CA1809" Action="None" />
+    <Rule Id="CA1506" Action="None" />
+    <Rule Id="CA1020" Action="None" />
+    <Rule Id="CA2210" Action="None" />
+    <Rule Id="CA1305" Action="None" />
   </Rules>
 </RuleSet>
