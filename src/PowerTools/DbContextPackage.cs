@@ -24,7 +24,7 @@ namespace Microsoft.DbContextPackage
     using ConfigurationManager = System.Configuration.ConfigurationManager;
 
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "0.9.1", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "0.9.2", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidDbContextPackagePkgString)]
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
