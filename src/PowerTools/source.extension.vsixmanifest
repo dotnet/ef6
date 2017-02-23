@@ -2,7 +2,7 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="2b119c79-9836-46e2-b5ed-eb766cebbf7c" Version="0.9.1.0" Language="en-US" Publisher="Microsoft" />
-    <DisplayName>Entity Framework 6 Power Tools Beta 6</DisplayName>
+    <DisplayName>Entity Framework 6 Power Tools Beta 5</DisplayName>
     <Description xml:space="preserve">Preview of useful design-time DbContext features, added to the Visual Studio Solution Explorer context menu.
 
 When right-clicking on a C# project, the following context menu functions are supported:
