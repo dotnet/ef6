@@ -22,15 +22,15 @@ Project global pre-settings.
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
     <VersionReleasePrefix>0</VersionReleasePrefix>
-    <VersionRelease>$(VersionReleasePrefix)-beta1</VersionRelease>
-    <VersionReleaseName>Beta 1</VersionReleaseName>
+    <VersionRelease>$(VersionReleasePrefix)-beta2</VersionRelease>
+    <VersionReleaseName>Beta 2</VersionReleaseName>
     <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">v4.5</ToolingDotNetFrameworkVersion>
     <ToolingDotNetFrameworkVersion Condition="'$(ToolingDotNetFrameworkVersion)' == ''">v4.6</ToolingDotNetFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">320540</ProjectUrlFwLinkID>
-    <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">320539</LicenseUrlFwLinkID>
+    <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">389132</ProjectUrlFwLinkID>
+    <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">389134</LicenseUrlFwLinkID>
     <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
   </PropertyGroup>
 
