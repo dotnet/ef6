@@ -5,10 +5,6 @@
     <DisplayName>Entity Framework 6 Power Tools Beta 5</DisplayName>
     <Description xml:space="preserve">Preview of useful design-time DbContext features, added to the Visual Studio Solution Explorer context menu.
 
-When right-clicking on a C# project, the following context menu functions are supported:
-1) Reverse Engineer Code First
-2) Customize Reverse Engineer Templates
-
 When right-clicking on a file containing a derived DbContext class, the following context menu functions are supported:
 1) View Entity Data Model (Read-only)
 2) View Entity Data Model XML
