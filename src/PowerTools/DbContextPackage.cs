@@ -30,9 +30,7 @@ namespace Microsoft.DbContextPackage
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
     public sealed class DbContextPackage : Package
     {
-        private readonly AddCustomTemplatesHandler _addCustomTemplatesHandler;
         private readonly OptimizeContextHandler _optimizeContextHandler;
-        private readonly ReverseEngineerCodeFirstHandler _reverseEngineerCodeFirstHandler;
         private readonly ViewContextHandler _viewContextHandler;
         private readonly ViewDdlHandler _viewDdlHandler;
 
@@ -40,9 +38,7 @@ namespace Microsoft.DbContextPackage
 
         public DbContextPackage()
         {
-            _addCustomTemplatesHandler = new AddCustomTemplatesHandler(this);
             _optimizeContextHandler = new OptimizeContextHandler(this);
-            _reverseEngineerCodeFirstHandler = new ReverseEngineerCodeFirstHandler(this);
             _viewContextHandler = new ViewContextHandler(this);
             _viewDdlHandler = new ViewDdlHandler(this);
         }
@@ -87,42 +83,7 @@ namespace Microsoft.DbContextPackage
                 var menuItem4 = new OleMenuCommand(OnItemContextMenuInvokeHandler, null, OnItemMenuBeforeQueryStatus, menuCommandID4);
 
                 oleMenuCommandService.AddCommand(menuItem4);
-
-                var menuCommandID5 = new CommandID(GuidList.guidDbContextPackageCmdSet, (int)PkgCmdIDList.cmdidReverseEngineerCodeFirst);
-                var menuItem5 = new OleMenuCommand(OnProjectContextMenuInvokeHandler, null, OnProjectMenuBeforeQueryStatus, menuCommandID5);
-
-                oleMenuCommandService.AddCommand(menuItem5);
-
-                var menuCommandID6 = new CommandID(GuidList.guidDbContextPackageCmdSet, (int)PkgCmdIDList.cmdidCustomizeReverseEngineerTemplates);
-                var menuItem6 = new OleMenuCommand(OnProjectContextMenuInvokeHandler, null, OnProjectMenuBeforeQueryStatus, menuCommandID6);
-
-                oleMenuCommandService.AddCommand(menuItem6);
             }
-        }
-
-        private void OnProjectMenuBeforeQueryStatus(object sender, EventArgs e)
-        {
-            var menuCommand = sender as MenuCommand;
-
-            if (menuCommand == null)
-            {
-                return;
-            }
-
-            if (_dte2.SelectedItems.Count != 1)
-            {
-                return;
-            }
-
-            var project = _dte2.SelectedItems.Item(1).Project;
-
-            if (project == null)
-            {
-                return;
-            }
-
-            menuCommand.Visible =
-                project.Kind == "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"; // csproj
         }
 
         private void OnItemMenuBeforeQueryStatus(object sender, EventArgs e)
@@ -177,30 +138,6 @@ namespace Microsoft.DbContextPackage
             }
 
             return (string)extension.Value;
-        }
-
-        private void OnProjectContextMenuInvokeHandler(object sender, EventArgs e)
-        {
-            var menuCommand = sender as MenuCommand;
-            if (menuCommand == null || _dte2.SelectedItems.Count != 1)
-            {
-                return;
-            }
-
-            var project = _dte2.SelectedItems.Item(1).Project;
-            if (project == null)
-            {
-                return;
-            }
-
-            if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidReverseEngineerCodeFirst)
-            {
-                _reverseEngineerCodeFirstHandler.ReverseEngineerCodeFirst(project);
-            }
-            else if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidCustomizeReverseEngineerTemplates)
-            {
-                _addCustomTemplatesHandler.AddCustomTemplates(project);
-            }
         }
 
         private void OnItemContextMenuInvokeHandler(object sender, EventArgs e)
@@ -285,7 +222,6 @@ namespace Microsoft.DbContextPackage
             DebugCheck.NotNull(exception);
 
             var edmSchemaErrorException = exception as EdmSchemaErrorException;
-            var compilerErrorException = exception as CompilerErrorException;
 
             _dte2.StatusBar.Text = statusMessage;
 
@@ -298,15 +234,6 @@ namespace Microsoft.DbContextPackage
                 buildOutputWindow.OutputString(edmSchemaErrorException.Message + Environment.NewLine);
 
                 foreach (var error in edmSchemaErrorException.Errors)
-                {
-                    buildOutputWindow.OutputString(error + Environment.NewLine);
-                }
-            }
-            else if (compilerErrorException != null)
-            {
-                buildOutputWindow.OutputString(compilerErrorException.Message + Environment.NewLine);
-
-                foreach (var error in compilerErrorException.Errors)
                 {
                     buildOutputWindow.OutputString(error + Environment.NewLine);
                 }

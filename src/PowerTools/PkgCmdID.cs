@@ -7,7 +7,5 @@ namespace Microsoft.DbContextPackage
         public const uint cmdidViewEntityDataModelXml = 0x200;
         public const uint cmdidPrecompileEntityDataModelViews = 0x300;
         public const uint cmdidViewEntityModelDdl = 0x400;
-        public const uint cmdidReverseEngineerCodeFirst = 0x001;
-        public const uint cmdidCustomizeReverseEngineerTemplates = 0x005;
     }
 }
