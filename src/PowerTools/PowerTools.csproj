@@ -98,8 +98,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\CompilerErrorCollectionExtensions.cs" />
-    <Compile Include="Extensions\CompilerErrorException.cs" />
     <Compile Include="Extensions\EdmSchemaErrorException.cs" />
     <Compile Include="Extensions\IComponentModelExtensions.cs" />
     <Compile Include="Extensions\IEnumerableOfEdmSchemaErrorExtensions.cs" />
@@ -109,9 +107,7 @@
     <Compile Include="Extensions\SourceControlExtenstions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\XContainerExtensions.cs" />
-    <Compile Include="Handlers\AddCustomTemplatesHandler.cs" />
     <Compile Include="Handlers\OptimizeContextHandler.cs" />
-    <Compile Include="Handlers\ReverseEngineerCodeFirstHandler.cs" />
     <Compile Include="Handlers\ViewContextHandler.cs" />
     <Compile Include="Handlers\ViewDdlHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -129,11 +125,8 @@
     </Compile>
     <Compile Include="Utilities\DebugCheck.cs" />
     <Compile Include="Utilities\EdmxUtility.cs" />
-    <Compile Include="Utilities\EfTextTemplateHost.cs" />
     <Compile Include="Utilities\FileExtensions.cs" />
     <Compile Include="Utilities\IViewGenerator.cs" />
-    <Compile Include="Utilities\TemplateProcessor.cs" />
-    <Compile Include="Utilities\Templates.cs" />
     <Compile Include="DbContextPackage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Guids.cs" />
@@ -161,12 +154,8 @@
     <Resource Include="Resources\2.png" />
     <Resource Include="Resources\3.png" />
     <Resource Include="Resources\4.png" />
-    <Resource Include="Resources\5.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CodeTemplates\ReverseEngineerCodeFirst\Context.tt" />
-    <EmbeddedResource Include="CodeTemplates\ReverseEngineerCodeFirst\Entity.tt" />
-    <EmbeddedResource Include="CodeTemplates\ReverseEngineerCodeFirst\Mapping.tt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
