@@ -4,8 +4,8 @@ namespace System.Data.Entity.Resources
 {
     using System.CodeDom.Compiler;
     using System.Globalization;
-    using System.Resources;
     using System.Reflection;
+    using System.Resources;
     using System.Threading;
 
     // <summary>
@@ -260,6 +260,14 @@ namespace System.Data.Entity.Resources
         internal static string MigrationsNamespaceNotUnderRootNamespace(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.MigrationsNamespaceNotUnderRootNamespace, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Unable to call public, instance method AddOrUpdate on derived IDbSet<T> type '{0}'. Method not found."
+        // </summary>
+        internal static string UnableToDispatchRemoveIfExist(object p0)
+        {
+            return EntityRes.GetString(EntityRes.UnableToDispatchRemoveIfExist, p0);
         }
 
         // <summary>
@@ -14181,6 +14189,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // InvalidOperationException with message like "Unable to call public, instance method RemoveIfExist on derived IDbSet<T> type '{0}'. Method not found."
+        // </summary>
+        internal static Exception UnableToDispatchRemoveIfExist(object p0)
+        {
+            return new InvalidOperationException(Strings.UnableToDispatchRemoveIfExist(p0));
+        }
+
+        // <summary>
         // InvalidOperationException with message like "Unable to call public, instance method AddOrUpdate on derived IDbSet<T> type '{0}'. Method not found."
         // </summary>
         internal static Exception UnableToDispatchAddOrUpdate(object p0)
@@ -15747,6 +15763,7 @@ namespace System.Data.Entity.Resources
         internal const string AssemblyMigrator_NoConfiguration = "AssemblyMigrator_NoConfiguration";
         internal const string AssemblyMigrator_MultipleConfigurations = "AssemblyMigrator_MultipleConfigurations";
         internal const string MigrationsNamespaceNotUnderRootNamespace = "MigrationsNamespaceNotUnderRootNamespace";
+        internal const string UnableToDispatchRemoveIfExist = "UnableToDispatchRemoveIfExist";
         internal const string UnableToDispatchAddOrUpdate = "UnableToDispatchAddOrUpdate";
         internal const string NoSqlGeneratorForProvider = "NoSqlGeneratorForProvider";
         internal const string ToolingFacade_AssemblyNotFound = "ToolingFacade_AssemblyNotFound";

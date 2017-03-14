@@ -136,6 +136,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
             base.SeedDatabase();
         }
 
+        internal override void SeedDatabase(IEnumerable<string> migrationsApllied)
+        {
+            _logger.Info(Strings.LoggingSeedingDatabase);
+
+            base.SeedDatabase(migrationsApllied);
+        }
+
         internal override void UpgradeHistory(IEnumerable<MigrationOperation> upgradeOperations)
         {
             _logger.Info(Strings.UpgradingHistoryTable);

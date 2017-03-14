@@ -146,6 +146,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
             _this.SeedDatabase();
         }
 
+        internal virtual void SeedDatabase(IEnumerable<string> migrationsApplied)
+        {
+            _this.SeedDatabase(migrationsApplied);
+        }
+
         internal virtual void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
         {
             DebugCheck.NotNull(migrationStatements);
