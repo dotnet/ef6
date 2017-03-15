@@ -267,7 +267,6 @@ namespace System.Data.Entity.Migrations
             DebugCheck.NotNull(identifyingProperties);
             DebugCheck.NotNull(entities);
 
-            var keyProperties = GetKeyProperties(typeof(TEntity), internalSet);
             var parameter = Expression.Parameter(typeof(TEntity));
 
             foreach (var entity in entities)
@@ -289,12 +288,7 @@ namespace System.Data.Entity.Migrations
 
                 if (existing != null)
                 {
-                    foreach (var keyProperty in keyProperties)
-                    {
-                        keyProperty.Single().GetPropertyInfoForSet().SetValue(entity, keyProperty.Single().GetValue(existing, null), null);
-                    }
-
-                    internalSet.Remove(entity);
+                    internalSet.Remove(internalSet.InternalContext.Owner.Entry(existing).Entity);
                 }
             }
         }
