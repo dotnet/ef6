@@ -263,7 +263,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Unable to call public, instance method AddOrUpdate on derived IDbSet<T> type '{0}'. Method not found."
+        // A string like "Unable to call public, instance method RemoveIfExist on derived IDbSet<T> type '{0}'. Method not found."
         // </summary>
         internal static string UnableToDispatchRemoveIfExist(object p0)
         {
