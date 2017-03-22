@@ -1577,7 +1577,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns> The quoted identifier. </returns>
         protected virtual string Quote(string identifier)
         {
-            return "\"" + identifier + "\"";
+            return "\"" + identifier.Replace("\"", "\"\"") + "\"";
         }
     }
 }
