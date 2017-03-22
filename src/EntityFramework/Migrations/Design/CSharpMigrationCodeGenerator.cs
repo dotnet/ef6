@@ -131,7 +131,7 @@ namespace System.Data.Entity.Migrations.Design
                     if (hasUnsupportedOperations)
                     {
                         writer.Write("throw new NotSupportedException(");
-                        writer.Write(Generate(Strings.ScaffoldSprocInDownNotSupported));
+                        writer.Write(Quote(Strings.ScaffoldSprocInDownNotSupported));
                         writer.WriteLine(");");
                     }
 
@@ -533,12 +533,10 @@ namespace System.Data.Entity.Migrations.Design
                     = writer.NewLine
                       + writer.CurrentIndentation() + "  ";
 
-                writer.Write("@");
                 writer.WriteLine(
-                    Generate(
-                        procedureOperation
-                            .BodySql
-                            .Replace(Environment.NewLine, indentString)));
+                    VerbatimQuote(procedureOperation.BodySql)
+                        .Replace(Environment.NewLine, indentString));
+
                 writer.Indent--;
             }
             else
@@ -1537,6 +1535,16 @@ namespace System.Data.Entity.Migrations.Design
         protected virtual string Quote(string identifier)
         {
             return "\"" + identifier.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+        }
+
+        /// <summary>
+        /// Quotes text using appropriate escaping to allow it to be stored in a verbatim string.
+        /// </summary>
+        /// <param name="text"> The text to be quoted. </param>
+        /// <returns> The quoted identifier. </returns>
+        protected virtual string VerbatimQuote(string text)
+        {
+            return "@\"" + text.Replace("\"", "\"\"") + "\"";
         }
     }
 }
