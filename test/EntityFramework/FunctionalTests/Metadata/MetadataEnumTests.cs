@@ -66,7 +66,7 @@ namespace System.Data.Entity.Metadata
         {
             var edmItemCollection = new EdmItemCollection(new[] { XmlReader.Create(new StringReader(enumCsdl)) });
             var enumType = edmItemCollection.GetItems<EnumType>().Single();
-            
+
             var schemaSource = enumType.MetadataProperties["SchemaSource"];
             Assert.Equal(PropertyKind.System, schemaSource.PropertyKind);
         }
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Metadata
             Assert.Equal("Documentation - summary", enumType.Documentation.Summary);
             Assert.Equal("Documentation - long description", enumType.Documentation.LongDescription);
         }
-        
+
         [Fact]
         public void Documenation_is_populated_correctly_for_members_of_enum_type()
         {
@@ -138,7 +138,7 @@ namespace System.Data.Entity.Metadata
             Assert.Equal("Edm.Int32", enumType.MetadataProperties.Where(p => p.Name == "UnderlyingType").Single().Value.ToString());
 
             var membersProperty = ((IEnumerable<EnumMember>)enumType.MetadataProperties.Where(p => p.Name == "Members").Single().Value).ToList();
-            
+
             Assert.Equal(3, membersProperty.Count());
             Assert.Equal("Yellow", membersProperty[0].Name);
             Assert.Equal(1, membersProperty[0].Value);
@@ -389,8 +389,8 @@ namespace System.Data.Entity.Metadata
             });
         }
 
-        private static string[,] invalidEnumPropertyFacets = 
-        { 
+        private static string[,] invalidEnumPropertyFacets =
+        {
             { "Collation", "Int32" },
             { "FixedLength", "false" },
             { "MaxLength", "30" },
@@ -401,7 +401,7 @@ namespace System.Data.Entity.Metadata
 
         private static void RunInvalidEnumTypeFacetTests(Action<XDocument, string, string> updateCsdl)
         {
-            for (int i = 0; i < invalidEnumPropertyFacets.Length >> 1; i++)
+            for (int i = 0; i < (invalidEnumPropertyFacets.Length >> 1); i++)
             {
                 var enumCSDL = XDocument.Parse(enumCsdl);
                 updateCsdl(enumCSDL, invalidEnumPropertyFacets[i, 0], invalidEnumPropertyFacets[i, 1]);
@@ -430,7 +430,7 @@ namespace System.Data.Entity.Metadata
             funcImportInvalidEnumParamFacets[7, 0] = "DefaultValue";
             funcImportInvalidEnumParamFacets[7, 1] = "34";
 
-            for (int i = 0; i < funcImportInvalidEnumParamFacets.Length >> 1; i++)
+            for (int i = 0; i < (funcImportInvalidEnumParamFacets.Length >> 1); i++)
             {
                 var enumCSDL = XDocument.Parse(enumCsdl);
                 enumCSDL.Root
@@ -472,7 +472,7 @@ namespace System.Data.Entity.Metadata
         [Fact]
         public void Collection_of_enum_values_can_be_specified_as_FunctionImport_ReturnType()
         {
-            var functionImportDefinitions = new XElement[] { 
+            var functionImportDefinitions = new XElement[] {
                 XElement.Parse(@"<FunctionImport Name=""TestFunc"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" ReturnType=""Collection(EnumTestModel.Color)"" />"),
                 XElement.Parse(
                     @"<FunctionImport Name=""TestFunc"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">
@@ -901,8 +901,8 @@ namespace System.Data.Entity.Metadata
         }
 
         private static void RunOverflowTestsForCalculatedValues(
-            string underlyingTypeName, 
-            long lastSpecifiedValue, 
+            string underlyingTypeName,
+            long lastSpecifiedValue,
             IEnumerable<KeyValuePair<string, object[]>> expectedExceptions)
         {
             var document = XDocument.Parse(enumCsdl);
@@ -953,8 +953,8 @@ namespace System.Data.Entity.Metadata
         {
             CsdlSchemaSet = new XmlSchemaSet();
 
-            foreach (var schemaName in new string[] { 
-                    "System.Data.Resources.CSDLSchema_3.xsd",  
+            foreach (var schemaName in new string[] {
+                    "System.Data.Resources.CSDLSchema_3.xsd",
                     "System.Data.Resources.CodeGenerationSchema.xsd",
                     "System.Data.Resources.AnnotationSchema.xsd"})
             {
