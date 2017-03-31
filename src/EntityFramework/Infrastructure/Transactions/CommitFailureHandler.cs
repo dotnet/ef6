@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure.Interception;
@@ -14,11 +15,11 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
 
-    //TODO: cref seems to have an error in vNext that it will not resolve a reference to a protected method
-    //      restore to <see cref="DbContext.OnModelCreating(DbModelBuilder)"/> below when working.
     /// <summary>
     /// A transaction handler that allows to gracefully recover from connection failures
     /// during transaction commit by storing transaction tracing information in the database.
@@ -27,13 +28,10 @@ namespace System.Data.Entity.Infrastructure
     /// <remarks>
     /// This transaction handler uses <see cref="TransactionContext"/> to store the transaction information
     /// the schema used can be configured by creating a class derived from <see cref="TransactionContext"/>
-    /// that overrides DbContext.OnModelCreating(DbModelBuilder) and passing it to the constructor of this class.
+    /// that overrides <see cref="DbContext.OnModelCreating(DbModelBuilder)"/> and passing it to the constructor of this class.
     /// </remarks>
     public class CommitFailureHandler : TransactionHandler
     {
-        // Doesn't need to be thread-safe since transactions can't run concurrently on the same connection
-        private readonly Dictionary<DbTransaction, TransactionRow> _transactions = new Dictionary<DbTransaction, TransactionRow>();
-
         private readonly HashSet<TransactionRow> _rowsToDelete = new HashSet<TransactionRow>();
 
         private readonly Func<DbConnection, TransactionContext> _transactionContextFactory;
@@ -61,6 +59,7 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(transactionContextFactory, "transactionContextFactory");
 
             _transactionContextFactory = transactionContextFactory;
+            Transactions = new Dictionary<DbTransaction, TransactionRow>();
         }
 
         /// <summary>
@@ -70,6 +69,22 @@ namespace System.Data.Entity.Infrastructure
         /// The transaction context.
         /// </value>
         protected internal TransactionContext TransactionContext { get; private set; }
+
+        /// <summary>
+        /// The map between the store transactions and the transaction tracking objects
+        /// </summary>
+        // Doesn't need to be thread-safe since transactions can't run concurrently on the same connection
+        protected Dictionary<DbTransaction, TransactionRow> Transactions { get; private set; }
+
+        /// <summary>
+        /// Creates a new instance of an <see cref="IDbExecutionStrategy"/> to use for quering the transaction log.
+        /// If null the default will be used.
+        /// </summary>
+        /// <returns> An <see cref="IDbExecutionStrategy"/> instance or null. </returns>
+        protected virtual IDbExecutionStrategy GetExecutionStrategy()
+        {
+            return null;
+        }
 
         /// <inheritdoc/>
         public override void Initialize(ObjectContext context)
@@ -179,9 +194,9 @@ namespace System.Data.Entity.Infrastructure
             ((EntityConnection)objectContext.Connection).UseStoreTransaction(interceptionContext.Result);
             while (!savedSuccesfully)
             {
-                Debug.Assert(!_transactions.ContainsKey(interceptionContext.Result), "The transaction has already been registered");
+                Debug.Assert(!Transactions.ContainsKey(interceptionContext.Result), "The transaction has already been registered");
                 var transactionRow = new TransactionRow { Id = transactionId, CreationTime = DateTime.Now };
-                _transactions.Add(interceptionContext.Result, transactionRow);
+                Transactions.Add(interceptionContext.Result, transactionRow);
 
                 TransactionContext.Transactions.Add(transactionRow);
                 try
@@ -191,7 +206,7 @@ namespace System.Data.Entity.Infrastructure
                 }
                 catch (UpdateException)
                 {
-                    _transactions.Remove(interceptionContext.Result);
+                    Transactions.Remove(interceptionContext.Result);
                     TransactionContext.Entry(transactionRow).State = EntityState.Detached;
 
                     if (reinitializedDatabase)
@@ -242,25 +257,33 @@ namespace System.Data.Entity.Infrastructure
             TransactionRow transactionRow;
             if (TransactionContext == null
                 || (interceptionContext.Connection != null && !MatchesParentContext(interceptionContext.Connection, interceptionContext))
-                || !_transactions.TryGetValue(transaction, out transactionRow))
+                || !Transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;
             }
 
-            _transactions.Remove(transaction);
+            Transactions.Remove(transaction);
             if (interceptionContext.Exception != null)
             {
                 TransactionRow existingTransactionRow = null;
+                var suspendedState = DbExecutionStrategy.Suspended;
                 try
                 {
+                    DbExecutionStrategy.Suspended = false;
+                    var executionStrategy = GetExecutionStrategy()
+                                            ?? DbProviderServices.GetExecutionStrategy(interceptionContext.Connection);
                     existingTransactionRow = TransactionContext.Transactions
                         .AsNoTracking()
-                        .WithExecutionStrategy(new DefaultExecutionStrategy())
+                        .WithExecutionStrategy(executionStrategy)
                         .SingleOrDefault(t => t.Id == transactionRow.Id);
                 }
                 catch (EntityCommandExecutionException)
                 {
-                    // Transaction table doesn't exist
+                    // Error during verification, assume commit failed
+                }
+                finally
+                {
+                    DbExecutionStrategy.Suspended = suspendedState;
                 }
 
                 if (existingTransactionRow != null)
@@ -292,12 +315,12 @@ namespace System.Data.Entity.Infrastructure
             TransactionRow transactionRow;
             if (TransactionContext == null
                 || (interceptionContext.Connection != null && !MatchesParentContext(interceptionContext.Connection, interceptionContext))
-                || !_transactions.TryGetValue(transaction, out transactionRow))
+                || !Transactions.TryGetValue(transaction, out transactionRow))
             {
                 return;
             }
 
-            _transactions.Remove(transaction);
+            Transactions.Remove(transaction);
             TransactionContext.Entry(transactionRow).State = EntityState.Detached;
         }
 
