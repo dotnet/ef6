@@ -14,8 +14,10 @@ namespace System.Data.Entity.Interception
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
     using Moq;
     using Xunit;
 
@@ -249,6 +251,16 @@ namespace System.Data.Entity.Interception
 #endif
 
         [Fact]
+        public void TransactionHandler_and_ExecutionStrategy_retries_on_commit_verification_fail()
+        {
+            MutableResolver.AddResolver<Func<TransactionHandler>>(
+                new TransactionHandlerResolver(() => new CommitFailureHandler(), null, null));
+
+            TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_implementation(
+                context => context.SaveChanges(), queryFailures: 2);
+        }
+
+        [Fact]
         public void TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_with_custom_TransactionContext()
         {
             MutableResolver.AddResolver<Func<TransactionHandler>>(
@@ -285,11 +297,14 @@ namespace System.Data.Entity.Interception
         }
 
         private void TransactionHandler_and_ExecutionStrategy_does_not_retry_on_false_commit_fail_implementation(
-            Action<BlogContextCommit> runAndVerify)
+            Action<BlogContextCommit> runAndVerify, int queryFailures = 0)
         {
             var failingTransactionInterceptorMock = new Mock<FailingTransactionInterceptor> { CallBase = true };
             var failingTransactionInterceptor = failingTransactionInterceptorMock.Object;
             DbInterception.Add(failingTransactionInterceptor);
+
+            var failingCommandInterceptor = new FailingCommandInterceptor();
+            DbInterception.Add(failingCommandInterceptor);
 
             var isSqlAzure = DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString);
             MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
@@ -309,6 +324,9 @@ namespace System.Data.Entity.Interception
 
                     failingTransactionInterceptor.ShouldFailTimes = 2;
                     failingTransactionInterceptor.ShouldRollBack = false;
+
+                    failingCommandInterceptor.FailAfter = 1;
+                    failingCommandInterceptor.ShouldFailTimes = queryFailures;
 
                     context.Blogs.Add(new BlogContext.Blog());
 
@@ -339,6 +357,7 @@ namespace System.Data.Entity.Interception
             finally
             {
                 DbInterception.Remove(failingTransactionInterceptorMock.Object);
+                DbInterception.Remove(failingCommandInterceptor);
                 MutableResolver.ClearResolvers();
             }
 
@@ -941,6 +960,28 @@ namespace System.Data.Entity.Interception
             {
                 modelBuilder.Entity<TransactionRow>()
                     .ToTable("TransactionContextNoInit");
+            }
+        }
+
+        public class FailingCommandInterceptor : DbCommandInterceptor
+        {
+            public int FailAfter { get; set; }
+            public int ShouldFailTimes { get; set; }
+
+            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+            {
+                if (FailAfter > 0)
+                {
+                    FailAfter--;
+                }
+                else
+                {
+                    if (ShouldFailTimes > 0)
+                    {
+                        ShouldFailTimes--;
+                        interceptionContext.Exception = new TimeoutException();
+                    }
+                }
             }
         }
 
