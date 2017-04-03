@@ -81,6 +81,7 @@ namespace System.Data.Entity.Infrastructure
         /// If null the default will be used.
         /// </summary>
         /// <returns> An <see cref="IDbExecutionStrategy"/> instance or null. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         protected virtual IDbExecutionStrategy GetExecutionStrategy()
         {
             return null;
