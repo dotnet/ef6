@@ -59,7 +59,7 @@ Imports System.Data.Entity.Infrastructure.MappingViews
             #line hidden
             this.Write("))>\r\n\r\nNamespace Edm_EntityMappingGeneratedViews\r\n\r\n    \'\'\' <summary>\r\n    \'\'\' Im" +
                     "plements a mapping view cache.\r\n    \'\'\' </summary>\r\n    <GeneratedCode(\"Entity F" +
-                    "ramework Power Tools\", \"0.9.2.0\")>\r\n    Friend NotInheritable Class ViewsForBase" +
+                    "ramework Power Tools\", \"0.9.1.0\")>\r\n    Friend NotInheritable Class ViewsForBase" +
                     "EntitySets");
             
             #line 28 "C:\Projects\entityframework\src\PowerTools\Utilities\VBViewGenerator.tt"
