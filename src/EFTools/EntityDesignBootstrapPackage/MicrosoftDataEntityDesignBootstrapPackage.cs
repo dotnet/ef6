@@ -22,10 +22,13 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
     }
 
     //
-    // Auto load this VS package when the solution has at least one loaded project.
-    // This package will then check the solution for any contained EDMX files and keep
+    // Prior to Dev15 we auto load this VS package when the solution has at least one loaded
+    // project. This package will then check the solution for any contained EDMX files and keep
     // monitoring projects/solutions for any EDMX files. If there is any, this package
     // will load the EDM package.
+    // From Dev15 onwards auto load when a .edmx file is selected and not at solution load.
+    // Note: the pkgdef files in PkgDefData _must_ be kept in sync with the
+    // ProvideAutoLoad and ProvideUIContextRule attributes.
     //
     [VSShell.DefaultRegistryRootAttribute("Software\\Microsoft\\VisualStudio\\11.0")]
     [VSShell.PackageRegistrationAttribute(RegisterUsing = VSShell.RegistrationMethod.Assembly, UseManagedResourcesOnly = true)]
