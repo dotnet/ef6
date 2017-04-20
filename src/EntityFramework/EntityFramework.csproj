@@ -348,6 +348,7 @@
     <Compile Include="Internal\QueryCacheConfig.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Migrations\Infrastructure\VersionedModel.cs" />
+    <Compile Include="Migrations\Model\AddOrUpdateOperation.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />
     <Compile Include="Migrations\Model\AlterTableOperation.cs" />
     <Compile Include="Migrations\Model\IAnnotationTarget.cs" />

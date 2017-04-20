@@ -22,7 +22,6 @@ namespace System.Data.Entity.SqlServer
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Text.RegularExpressions;
 
     /// <summary>
@@ -816,6 +815,69 @@ namespace System.Data.Entity.SqlServer
                     writer.Write(" FOR ");
                     writer.Write(Quote(column.Name));
                 }
+
+                Statement(writer);
+            }
+        }
+
+        /// <summary>
+        /// Generates SQL for a <see cref="AddOrUpdateOperation" />.
+        /// Generated SQL should be added using the Statement method.
+        /// </summary>
+        /// <param name="addOrUpdateRowOperation">The operation to produce SQL for.</param>
+        protected virtual void Generate(AddOrUpdateOperation addOrUpdateRowOperation)
+        {
+            Check.NotNull(addOrUpdateRowOperation, "addOrUpdateRowOperation");
+
+            using (var writer = Writer())
+            {
+                var identifiers = addOrUpdateRowOperation.Columns.Intersect(addOrUpdateRowOperation.Identifiers).ToList();
+
+                if (identifiers.Any())
+                {
+                    writer.Write("IF EXISTS (SELECT 1 FROM ");
+                    writer.Write(Name(addOrUpdateRowOperation.Table));
+                    writer.Write(" WHERE ");
+
+                    writer.Write(
+                        identifiers.Join(
+                            identifier =>
+                                string.Join(
+                                    " = ", Quote(identifier),
+                                    Generate((dynamic)addOrUpdateRowOperation.Values[addOrUpdateRowOperation.Columns.IndexOf(identifier)])),
+                            " AND "));
+
+                    writer.Write(") UPDATE ");
+                    writer.Write(Name(addOrUpdateRowOperation.Table));
+                    writer.Write(" SET ");
+
+                    writer.Write(
+                        addOrUpdateRowOperation.Columns.Join(
+                            column =>
+                                string.Join(
+                                    " = ", Quote(column),
+                                    Generate((dynamic)addOrUpdateRowOperation.Values[addOrUpdateRowOperation.Columns.IndexOf(column)]))));
+
+                    writer.Write(" WHERE ");
+
+                    writer.Write(
+                        identifiers.Join(
+                            identifier =>
+                                string.Join(
+                                    " = ", Quote(identifier),
+                                    Generate((dynamic)addOrUpdateRowOperation.Values[addOrUpdateRowOperation.Columns.IndexOf(identifier)])),
+                            " AND "));
+                    
+                    writer.Write(" ELSE ");
+                }
+
+                writer.Write("INSERT INTO ");
+                writer.Write(Name(addOrUpdateRowOperation.Table));
+                writer.Write("(");
+                writer.Write(addOrUpdateRowOperation.Columns.Join(Quote));
+                writer.Write(") VALUES (");
+                writer.Write(addOrUpdateRowOperation.Values.Join(value => Generate((dynamic)value)));
+                writer.Write(")");
 
                 Statement(writer);
             }

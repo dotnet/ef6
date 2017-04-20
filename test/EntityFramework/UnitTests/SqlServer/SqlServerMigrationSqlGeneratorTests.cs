@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using Moq;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -12,18 +13,128 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
-    using Moq;
     using Xunit;
 
     public class SqlServerMigrationSqlGeneratorTests
     {
+
+        [Fact]
+        public void Generate_add_or_update_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo";
+            var identifiers = new [] { "cA" } ;
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new object[] { "vA", "vB", 1 };
+
+            var addOrUpdateOperation = new AddOrUpdateOperation(tableName, identifiers, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF EXISTS (SELECT 1 FROM [foo] WHERE [cA] = 'vA') UPDATE [foo] SET [cA] = 'vA', [cB] = 'vB', [cC] = 1 WHERE [cA] = 'vA' ELSE INSERT INTO [foo]([cA], [cB], [cC]) VALUES ('vA', 'vB', 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_add_or_update_more_than_one_identifier_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo";
+            var identifiers = new[] { "cA", "cC" };
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new object[] { "vA", "vB", 1 };
+
+            var addOrUpdateOperation = new AddOrUpdateOperation(tableName, identifiers, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF EXISTS (SELECT 1 FROM [foo] WHERE [cA] = 'vA' AND [cC] = 1) UPDATE [foo] SET [cA] = 'vA', [cB] = 'vB', [cC] = 1 WHERE [cA] = 'vA' AND [cC] = 1 ELSE INSERT INTO [foo]([cA], [cB], [cC]) VALUES ('vA', 'vB', 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_add_or_update_all_columns_as_identifiers_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo";
+            var identifiers = new[] { "cA", "cB", "cC" };
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new object[] { "vA", "vB", 1 };
+
+            var addOrUpdateOperation = new AddOrUpdateOperation(tableName, identifiers, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF EXISTS (SELECT 1 FROM [foo] WHERE [cA] = 'vA' AND [cB] = 'vB' AND [cC] = 1) UPDATE [foo] SET [cA] = 'vA', [cB] = 'vB', [cC] = 1 WHERE [cA] = 'vA' AND [cB] = 'vB' AND [cC] = 1 ELSE INSERT INTO [foo]([cA], [cB], [cC]) VALUES ('vA', 'vB', 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_add_or_update_diferent_order_in_identifiers_columns_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo";
+            var identifiers = new[] { "cA", "cC", "cB" };
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new object[] { "vA", "vB", 1 };
+
+            var addOrUpdateOperation = new AddOrUpdateOperation(tableName, identifiers, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF EXISTS (SELECT 1 FROM [foo] WHERE [cA] = 'vA' AND [cB] = 'vB' AND [cC] = 1) UPDATE [foo] SET [cA] = 'vA', [cB] = 'vB', [cC] = 1 WHERE [cA] = 'vA' AND [cB] = 'vB' AND [cC] = 1 ELSE INSERT INTO [foo]([cA], [cB], [cC]) VALUES ('vA', 'vB', 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_add_or_update_all_types_of_objects_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo";
+            var identifiers = new[] { "cString"};
+            var columns = new[] { "cString", "cBoolean", "cInt", "cLong", "cDate", "cGuid" };
+            var values = new object[] { "vString", true, 1, 2147483648, DateTime.Parse("2017-04-20T16:55:50.483+02:00"), Guid.Parse("17786656-5cc1-42a0-9a53-e6a8a2427d8b") };
+
+            var addOrUpdateOperation = new AddOrUpdateOperation(tableName, identifiers, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF EXISTS (SELECT 1 FROM [foo] WHERE [cString] = 'vString') UPDATE [foo] SET [cString] = 'vString', [cBoolean] = 1, [cInt] = 1, [cLong] = 2147483648, [cDate] = '2017-04-20T16:55:50.483+02:00', [cGuid] = '17786656-5cc1-42a0-9a53-e6a8a2427d8b' WHERE [cString] = 'vString' ELSE INSERT INTO [foo]([cString], [cBoolean], [cInt], [cLong], [cDate], [cGuid]) VALUES ('vString', 1, 1, 2147483648, '2017-04-20T16:55:50.483+02:00', '17786656-5cc1-42a0-9a53-e6a8a2427d8b')";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
         [Fact]
         public void Generate_can_handle_update_database_operations()
         {

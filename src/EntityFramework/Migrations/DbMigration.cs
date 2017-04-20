@@ -917,6 +917,23 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="identifier"></param>
+        /// <param name="columns"></param>
+        /// <param name="values"></param>
+        protected internal void AddOrUpdate(string table, string[] identifier, string[] columns, object[] values)
+        {
+            Check.NotEmpty(table, "table");
+            Check.NotNull(columns, "columns");
+            Check.NotNull(values, "values");
+            Check.NotNull(identifier, "identifier");
+
+            AddOperation(new AddOrUpdateOperation(table, identifier, columns, values));
+        }
+
+        /// <summary>
         /// Adds an operation to drop an existing column.
         ///
         /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
