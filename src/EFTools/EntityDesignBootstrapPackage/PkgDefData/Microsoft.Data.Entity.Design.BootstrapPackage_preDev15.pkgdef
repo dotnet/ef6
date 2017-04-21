@@ -1,0 +1,13 @@
+// Entity Designer Bootstrap package registration
+[$RootKey$\Packages\{7A4E8D96-5D5B-4415-9FAB-D6DCC56F47FB}]
+@="Microsoft.Data.Entity.Design.BootstrapPackage.BootstrapPackage, Microsoft.Data.Entity.Design.BootstrapPackage, version=EFDESIGNERVERSIONTOKEN, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Assembly"="Microsoft.Data.Entity.Design.BootstrapPackage, version=EFDESIGNERVERSIONTOKEN, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+"Class"="Microsoft.Data.Entity.Design.BootstrapPackage.BootstrapPackage"
+"InprocServer32"="%SystemRoot%\\system32\\mscoree.dll"
+
+// Auto load the bootstrap package on solution load
+[$RootKey$\AutoLoadPackages\{93694fa0-0397-11d1-9f4e-00a0c911004f}]
+"{7A4E8D96-5D5B-4415-9FAB-D6DCC56F47FB}"=dword:00000000
+
+[$RootKey$\AutoLoadPackages\{adfc4e66-0397-11d1-9f4e-00a0c911004f}]
+"{7A4E8D96-5D5B-4415-9FAB-D6DCC56F47FB}"=dword:00000000
