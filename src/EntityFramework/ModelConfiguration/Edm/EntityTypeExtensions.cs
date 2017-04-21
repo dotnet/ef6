@@ -163,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return false;
         }
 
-        public static IEnumerable<EdmProperty> KeyProperties(this EntityType entityType)
+        public static IReadOnlyCollection<EdmProperty> KeyProperties(this EntityType entityType)
         {
             DebugCheck.NotNull(entityType);
 

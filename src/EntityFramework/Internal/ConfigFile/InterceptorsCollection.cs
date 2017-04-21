@@ -40,7 +40,7 @@ namespace System.Data.Entity.Internal.ConfigFile
 
         public virtual IEnumerable<IDbInterceptor> Interceptors
         {
-            get { return this.OfType<InterceptorElement>().Select(e => e.CreateInterceptor()).ToList(); }
+            get { return this.OfType<InterceptorElement>().Select(e => e.CreateInterceptor()); }
         }
     }
 }

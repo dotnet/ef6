@@ -2037,7 +2037,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var resultBinding = input.Bind();
             var predicates = new List<DbExpression>(
                 typeFilter.ToEnumerable().Select(
-                    tf => tf.Value ? resultBinding.Variable.IsOfOnly(tf.Key) : resultBinding.Variable.IsOf(tf.Key)).ToList()
+                    tf => tf.Value ? resultBinding.Variable.IsOfOnly(tf.Key) : resultBinding.Variable.IsOf(tf.Key))
                 );
             var predicate = Helpers.BuildBalancedTreeInPlace(predicates, (left, right) => left.And(right));
             var result = resultBinding.Filter(predicate);

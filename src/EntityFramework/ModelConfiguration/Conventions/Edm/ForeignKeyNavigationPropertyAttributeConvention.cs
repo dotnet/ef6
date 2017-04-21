@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     = new ReferentialConstraint(
                         principalEnd,
                         dependentEnd,
-                        principalEnd.GetEntityType().KeyProperties().ToList(),
+                        principalEnd.GetEntityType().KeyProperties(),
                         dependentProperties);
 
                 var dependentKeyProperties = dependentEnd.GetEntityType().KeyProperties();

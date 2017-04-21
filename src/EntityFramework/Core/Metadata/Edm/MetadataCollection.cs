@@ -261,7 +261,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <exception cref="System.ArgumentException">An item to add is null.</exception>
         // <exception cref="System.ArgumentException">An item with the same identity already exists.</exception>
         // <returns>A boolean that indicates whether the operation was successful.</returns>
-        internal void AddRange(List<T> items)
+        internal void AddRange(IEnumerable<T> items)
         {
             Check.NotNull(items, "items");
 

@@ -532,7 +532,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                function.AddMetadataProperties(metadataProperties.ToList());
+                function.AddMetadataProperties(metadataProperties);
             }
 
             function.SetReadOnly();

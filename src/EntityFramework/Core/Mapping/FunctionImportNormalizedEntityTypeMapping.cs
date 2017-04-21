@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping
                 impliedEntityTypes.Length == parent.MappedEntityTypes.Count,
                 "implied entity types must be ordinally aligned with mapped entity types");
 
-            ColumnConditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(columnConditions.ToList());
+            ColumnConditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(columnConditions);
             ImpliedEntityTypes = impliedEntityTypes;
             ComplementImpliedEntityTypes = (new BitArray(ImpliedEntityTypes)).Not();
         }

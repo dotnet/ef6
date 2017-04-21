@@ -498,7 +498,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             Debug.Assert(isParentAJoinStack.Count == 0);
 
             paramsToForceNonUnicode =
-                new HashSet<string>(_candidateParametersToForceNonUnicode.Where(p => p.Value).Select(q => q.Key).ToList());
+                new HashSet<string>(_candidateParametersToForceNonUnicode.Where(p => p.Value).Select(q => q.Key));
 
             var builder = new StringBuilder(1024);
             using (var writer = new SqlWriter(builder))

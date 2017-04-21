@@ -63,17 +63,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal virtual IEnumerable<Type> Entities
         {
-            get { return _entityConfigurations.Keys.Except(_ignoredTypes).ToList(); }
+            get { return _entityConfigurations.Keys.Except(_ignoredTypes); }
         }
 
         internal virtual IEnumerable<Type> ComplexTypes
         {
-            get { return _complexTypeConfigurations.Keys.Except(_ignoredTypes).ToList(); }
+            get { return _complexTypeConfigurations.Keys.Except(_ignoredTypes); }
         }
 
         internal virtual IEnumerable<Type> StructuralTypes
         {
-            get { return _entityConfigurations.Keys.Union(_complexTypeConfigurations.Keys).Except(_ignoredTypes).ToList(); }
+            get { return _entityConfigurations.Keys.Union(_complexTypeConfigurations.Keys).Except(_ignoredTypes); }
         }
 
         // <summary>
@@ -574,7 +574,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private static void ConfigureTables(EdmModel database)
         {
-            foreach (var table in database.EntityTypes.ToList())
+            foreach (var table in database.EntityTypes)
             {
                 ConfigureTable(database, table);
             }
