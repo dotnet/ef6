@@ -460,7 +460,7 @@ namespace System.Data.Entity
                                         DbConfiguration.DependencyResolver.GetService<AttributeProvider>()));
 
 
-            var entityTypes = _modelConfiguration.Entities;
+            var entityTypes = _modelConfiguration.Entities.ToList(); // prevent InvalidOperationException: Collection was modified
             foreach (var type in entityTypes)
             {
                 if (typeMapper.MapEntityType(type) == null)
@@ -469,7 +469,7 @@ namespace System.Data.Entity
                 }
             }
 
-            var complexTypes = _modelConfiguration.ComplexTypes;
+            var complexTypes = _modelConfiguration.ComplexTypes.ToList(); // prevent InvalidOperationException: Collection was modified
             foreach (var type in complexTypes)
             {
                 if (typeMapper.MapComplexType(type) == null)
