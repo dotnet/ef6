@@ -313,7 +313,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                entity.AddMetadataProperties(metadataProperties.ToList());
+                entity.AddMetadataProperties(metadataProperties);
             }
 
             entity.SetReadOnly();
@@ -350,7 +350,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                entity.AddMetadataProperties(metadataProperties.ToList());
+                entity.AddMetadataProperties(metadataProperties);
             }
 
             entity.SetReadOnly();

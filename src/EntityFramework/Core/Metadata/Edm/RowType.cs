@@ -263,7 +263,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                rowType.AddMetadataProperties(metadataProperties.ToList());
+                rowType.AddMetadataProperties(metadataProperties);
             }
 
             rowType.SetReadOnly();

@@ -390,7 +390,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                entityContainer.AddMetadataProperties(metadataProperties.ToList());
+                entityContainer.AddMetadataProperties(metadataProperties);
             }
 
             entityContainer.SetReadOnly();

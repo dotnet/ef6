@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                entitySet.AddMetadataProperties(metadataProperties.ToList());
+                entitySet.AddMetadataProperties(metadataProperties);
             }
 
             entitySet.SetReadOnly();
