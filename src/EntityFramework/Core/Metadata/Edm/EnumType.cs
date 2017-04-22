@@ -227,7 +227,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                instance.AddMetadataProperties(metadataProperties.ToList());
+                instance.AddMetadataProperties(metadataProperties);
             }
 
             instance.SetReadOnly();

@@ -658,7 +658,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotNull(metadataProperties, "metadataProperties");
 
             Util.ThrowIfReadOnly(this);
-            AddMetadataProperties(metadataProperties.ToList());
+            AddMetadataProperties(metadataProperties);
         }
     }
 }

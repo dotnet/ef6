@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Adds the given metadata property to the metadata property collection
         // </summary>
-        internal void AddMetadataProperties(List<MetadataProperty> metadataProperties)
+        internal void AddMetadataProperties(IEnumerable<MetadataProperty> metadataProperties)
         {
             GetMetadataProperties().AddRange(metadataProperties);
         }
