@@ -917,12 +917,39 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
+        /// Adds an operation to upsert an row in an existing table
         /// 
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table"></param>
-        /// <param name="identifier"></param>
-        /// <param name="columns"></param>
-        /// <param name="values"></param>
+        ///  The name of the table the row should be added or updated to. Schema name is optional, if no schema is specified
+        /// then dbo is assumed.
+        /// <param name="columns"> The name/s of the column/s that going to have data added or updated. </param>
+        /// <param name="values"> The value/s that going to be or updated. </param>
+        protected internal void AddOrUpdate(string table, string[] columns, object[] values)
+        {
+            Check.NotEmpty(table, "table");
+            Check.NotNull(columns, "columns");
+            Check.NotNull(values, "values");
+
+            AddOperation(new AddOrUpdateOperation(table, columns, values));
+        }
+
+        /// <summary>
+        /// Adds an operation to upsert an row in an existing table
+        /// 
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="table"></param>
+        ///  The name of the table the row should be added or updated to. Schema name is optional, if no schema is specified
+        /// then dbo is assumed.
+        /// <param name="identifier"> The name/s of the column/s that going to identiy if the column/s with the respective value exists. </param>
+        /// <param name="columns"> The name/s of the column/s that going to have data added or updated. </param>
+        /// <param name="values"> The value/s that going to be or updated. </param>
         protected internal void AddOrUpdate(string table, string[] identifier, string[] columns, object[] values)
         {
             Check.NotEmpty(table, "table");

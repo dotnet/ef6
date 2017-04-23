@@ -1675,5 +1675,49 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
             Assert.Equal(sqlExpected, sqlResult);
 
         }
+
+        [Fact]
+        public void Generate_add_or_update_with_no_identifiers_given_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo.boo";
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new object[] { "vA", "vB", 1 };
+
+            var addOrUpdateOperation = new AddOrUpdateOperation(tableName, new []{""}, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF object_id('[foo].[boo]') IS NOT NULL
+ INSERT INTO [foo].[boo]([cA], [cB], [cC]) VALUES ('vA', 'vB', 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_add_or_update_with_no_identifiers_constructor_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo.boo";
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new object[] { "vA", "vB", 1 };
+
+            var addOrUpdateOperation = new AddOrUpdateOperation(tableName, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF object_id('[foo].[boo]') IS NOT NULL
+ INSERT INTO [foo].[boo]([cA], [cB], [cC]) VALUES ('vA', 'vB', 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
     }
 }
