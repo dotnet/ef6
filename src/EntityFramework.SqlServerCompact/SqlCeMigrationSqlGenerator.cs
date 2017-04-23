@@ -425,19 +425,23 @@ namespace System.Data.Entity.SqlServerCompact
         /// Generates SQL for a <see cref="AddOrUpdateOperation" />.
         /// Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name="addOrUpdateRowOperation">The operation to produce SQL for.</param>
-        protected virtual void Generate(AddOrUpdateOperation addOrUpdateRowOperation)
+        /// <param name="addOrUpdateOperation">The operation to produce SQL for.</param>
+        protected virtual void Generate(AddOrUpdateOperation addOrUpdateOperation)
         {
-            Check.NotNull(addOrUpdateRowOperation, "addOrUpdateRowOperation");
+            Check.NotNull(addOrUpdateOperation, "addOrUpdateOperation");
 
             using (var writer = Writer())
             {
-                var identifiers = addOrUpdateRowOperation.Columns.Intersect(addOrUpdateRowOperation.Identifiers).ToList();
+                writer.Write("IF object_id('");
+                writer.Write(Name(addOrUpdateOperation.Table));
+                writer.WriteLine("') IS NOT NULL");
+
+                var identifiers = addOrUpdateOperation.Columns.Intersect(addOrUpdateOperation.Identifiers).ToList();
 
                 if (identifiers.Any())
                 {
-                    writer.Write("IF EXISTS (SELECT 1 FROM ");
-                    writer.Write(Name(addOrUpdateRowOperation.Table));
+                    writer.Write(" IF EXISTS (SELECT 1 FROM ");
+                    writer.Write(Name(addOrUpdateOperation.Table));
                     writer.Write(" WHERE ");
 
                     writer.Write(
@@ -445,19 +449,19 @@ namespace System.Data.Entity.SqlServerCompact
                             identifier =>
                                 string.Join(
                                     " = ", Quote(identifier),
-                                    Generate((dynamic)addOrUpdateRowOperation.Values[addOrUpdateRowOperation.Columns.IndexOf(identifier)])),
+                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(identifier)])),
                             " AND "));
 
                     writer.Write(") UPDATE ");
-                    writer.Write(Name(addOrUpdateRowOperation.Table));
+                    writer.Write(Name(addOrUpdateOperation.Table));
                     writer.Write(" SET ");
 
                     writer.Write(
-                        addOrUpdateRowOperation.Columns.Join(
+                        addOrUpdateOperation.Columns.Join(
                             column =>
                                 string.Join(
                                     " = ", Quote(column),
-                                    Generate((dynamic)addOrUpdateRowOperation.Values[addOrUpdateRowOperation.Columns.IndexOf(column)]))));
+                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(column)]))));
 
                     writer.Write(" WHERE ");
 
@@ -466,18 +470,18 @@ namespace System.Data.Entity.SqlServerCompact
                             identifier =>
                                 string.Join(
                                     " = ", Quote(identifier),
-                                    Generate((dynamic)addOrUpdateRowOperation.Values[addOrUpdateRowOperation.Columns.IndexOf(identifier)])),
+                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(identifier)])),
                             " AND "));
 
-                    writer.Write(" ELSE ");
+                    writer.WriteLine(" ELSE");
                 }
 
-                writer.Write("INSERT INTO ");
-                writer.Write(Name(addOrUpdateRowOperation.Table));
+                writer.Write(" INSERT INTO ");
+                writer.Write(Name(addOrUpdateOperation.Table));
                 writer.Write("(");
-                writer.Write(addOrUpdateRowOperation.Columns.Join(Quote));
+                writer.Write(addOrUpdateOperation.Columns.Join(Quote));
                 writer.Write(") VALUES (");
-                writer.Write(addOrUpdateRowOperation.Values.Join(value => Generate((dynamic)value)));
+                writer.Write(addOrUpdateOperation.Values.Join(value => Generate((dynamic)value)));
                 writer.Write(")");
 
                 Statement(writer);
