@@ -829,9 +829,9 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotNull(addOrUpdateOperation, "addOrUpdateOperation");
 
-            var columns = addOrUpdateOperation.Columns.ToList();
+            var columns = addOrUpdateOperation.Columns;
             var identifiers = columns.Intersect(addOrUpdateOperation.Identifiers).ToList();
-            var values = addOrUpdateOperation.Values.ToList();
+            var values = addOrUpdateOperation.Values;
 
             using (var writer = Writer())
             {

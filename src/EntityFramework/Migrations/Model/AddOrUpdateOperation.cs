@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations.Model
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -12,9 +13,9 @@
     public class AddOrUpdateOperation : MigrationOperation
     {
         private readonly string _table;
-        private readonly string[] _identifiers;
-        private readonly string[] _columns;
-        private readonly object[] _values;
+        private readonly List<string> _identifiers;
+        private readonly List<string> _columns;
+        private readonly List<object> _values;
 
         /// <summary>
         /// Initializes a new instance of the AddorUpdateOperation class.
@@ -49,9 +50,9 @@
             Check.NotNull(identifiers, "identifiers");
 
             _table = table;
-            _columns = columns;
-            _values = values;
-            _identifiers = identifiers;
+            _columns = new List<string>(columns);
+            _values = new List<object>(values);
+            _identifiers = new List<string>(identifiers);
         }
         /// <summary>
         /// Gets the name of the table the row should be added or updated to.
@@ -64,7 +65,7 @@
         /// <summary>
         /// Gets the name/s of the column/s that going to have data added or updated. 
         /// </summary>
-        public string[] Columns
+        public IList<string> Columns
         {
             get { return _columns; }
         }
@@ -72,7 +73,7 @@
         /// <summary>
         /// Gets the value/s that going to be or updated.
         /// </summary>
-        public object[] Values
+        public IList<object> Values
         {
             get { return _values; }
         }
@@ -80,7 +81,7 @@
         /// <summary>
         /// Gets the name/s of the column/s that going to identiy if the column/s with the respective value exists.
         /// </summary>
-        public string[] Identifiers
+        public IList<string> Identifiers
         {
             get { return _identifiers; }
         }

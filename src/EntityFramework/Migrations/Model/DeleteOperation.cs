@@ -1,5 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations.Model
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -12,7 +13,7 @@
     public class DeleteOperation : MigrationOperation
     {
         private readonly string _table;
-        private readonly string[] _columns;
+        private readonly List<string> _columns;
         private readonly object[][] _values;
 
         /// <summary>
@@ -33,7 +34,7 @@
             Check.NotNull(values, "values");
 
             _table = table;
-            _columns = columns;
+            _columns = new List<string>(columns);
             _values = values;
         }
 
@@ -48,7 +49,7 @@
         /// <summary>
         /// Gets the name/s of the column/s that are going to identify the row be deleted. 
         /// </summary>
-        public string[] Columns
+        public IList<string> Columns
         {
             get { return _columns; }
         }
