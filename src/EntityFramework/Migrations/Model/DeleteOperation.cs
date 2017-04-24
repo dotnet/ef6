@@ -14,7 +14,7 @@
     {
         private readonly string _table;
         private readonly List<string> _columns;
-        private readonly object[][] _values;
+        private readonly List<object[]> _values;
 
         /// <summary>
         /// Initializes a new instance of the DeleteOperation class.
@@ -35,7 +35,7 @@
 
             _table = table;
             _columns = new List<string>(columns);
-            _values = values;
+            _values = new List<object[]>(values);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@
         /// <summary>
         /// Gets the value/s that going to identify the row be deleted.
         /// </summary>
-        public object[][] Values
+        public IList<object[]> Values
         {
             get { return _values; }
         }
