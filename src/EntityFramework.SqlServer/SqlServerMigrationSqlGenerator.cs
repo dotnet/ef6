@@ -829,26 +829,28 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotNull(addOrUpdateOperation, "addOrUpdateOperation");
 
+            var columns = addOrUpdateOperation.Columns.ToList();
+            var identifiers = columns.Intersect(addOrUpdateOperation.Identifiers).ToList();
+            var values = addOrUpdateOperation.Values.ToList();
+
             using (var writer = Writer())
             {
                 writer.Write("IF object_id('");
                 writer.Write(Name(addOrUpdateOperation.Table));
                 writer.WriteLine("') IS NOT NULL");
 
-                var identifiers = addOrUpdateOperation.Columns.Intersect(addOrUpdateOperation.Identifiers).ToList();
-
                 if (identifiers.Any())
                 {
                     writer.Write(" IF EXISTS (SELECT 1 FROM ");
                     writer.Write(Name(addOrUpdateOperation.Table));
                     writer.Write(" WHERE ");
-
+                    
                     writer.Write(
                         identifiers.Join(
                             identifier =>
                                 string.Join(
                                     " = ", Quote(identifier),
-                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(identifier)])),
+                                    Generate((dynamic)values[columns.IndexOf(identifier)])),
                             " AND "));
 
                     writer.Write(") UPDATE ");
@@ -860,7 +862,7 @@ namespace System.Data.Entity.SqlServer
                             column =>
                                 string.Join(
                                     " = ", Quote(column),
-                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(column)]))));
+                                    Generate((dynamic)values[columns.IndexOf(column)]))));
 
                     writer.Write(" WHERE ");
 
@@ -869,7 +871,7 @@ namespace System.Data.Entity.SqlServer
                             identifier =>
                                 string.Join(
                                     " = ", Quote(identifier),
-                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(identifier)])),
+                                    Generate((dynamic)values[columns.IndexOf(identifier)])),
                             " AND "));
                     
                     writer.WriteLine(" ELSE");
@@ -878,9 +880,9 @@ namespace System.Data.Entity.SqlServer
                 writer.Write(" INSERT INTO ");
                 writer.Write(Name(addOrUpdateOperation.Table));
                 writer.Write("(");
-                writer.Write(addOrUpdateOperation.Columns.Join(Quote));
+                writer.Write(columns.Join(Quote));
                 writer.Write(") VALUES (");
-                writer.Write(addOrUpdateOperation.Values.Join(value => Generate((dynamic)value)));
+                writer.Write(values.Join(value => Generate((dynamic)value)));
                 writer.Write(")");
 
                 Statement(writer);
@@ -895,7 +897,7 @@ namespace System.Data.Entity.SqlServer
         protected virtual void Generate(DeleteOperation deleteOperation)
         {
             Check.NotNull(deleteOperation, "deleteOperation");
-
+            
             using (var writer = Writer())
             {
                 writer.Write("IF object_id('");
@@ -906,7 +908,7 @@ namespace System.Data.Entity.SqlServer
                 writer.Write(Name(deleteOperation.Table));
                 writer.Write(" WHERE ");
 
-                for (var i = 0 ; i < deleteOperation.Columns.Count ; i++)
+                for (var i = 0 ; i < deleteOperation.Columns.Count() ; i++)
                 {
                     var column = deleteOperation.Columns[i];
                     var values = deleteOperation.Values[i];

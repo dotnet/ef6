@@ -430,13 +430,15 @@ namespace System.Data.Entity.SqlServerCompact
         {
             Check.NotNull(addOrUpdateOperation, "addOrUpdateOperation");
 
+            var columns = addOrUpdateOperation.Columns.ToList();
+            var identifiers = columns.Intersect(addOrUpdateOperation.Identifiers).ToList();
+            var values = addOrUpdateOperation.Values.ToList();
+
             using (var writer = Writer())
             {
                 writer.Write("IF object_id('");
                 writer.Write(Name(addOrUpdateOperation.Table));
                 writer.WriteLine("') IS NOT NULL");
-
-                var identifiers = addOrUpdateOperation.Columns.Intersect(addOrUpdateOperation.Identifiers).ToList();
 
                 if (identifiers.Any())
                 {
@@ -449,7 +451,7 @@ namespace System.Data.Entity.SqlServerCompact
                             identifier =>
                                 string.Join(
                                     " = ", Quote(identifier),
-                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(identifier)])),
+                                    Generate((dynamic)values[columns.IndexOf(identifier)])),
                             " AND "));
 
                     writer.Write(") UPDATE ");
@@ -461,7 +463,7 @@ namespace System.Data.Entity.SqlServerCompact
                             column =>
                                 string.Join(
                                     " = ", Quote(column),
-                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(column)]))));
+                                    Generate((dynamic)values[columns.IndexOf(column)]))));
 
                     writer.Write(" WHERE ");
 
@@ -470,7 +472,7 @@ namespace System.Data.Entity.SqlServerCompact
                             identifier =>
                                 string.Join(
                                     " = ", Quote(identifier),
-                                    Generate((dynamic)addOrUpdateOperation.Values[addOrUpdateOperation.Columns.IndexOf(identifier)])),
+                                    Generate((dynamic)values[columns.IndexOf(identifier)])),
                             " AND "));
 
                     writer.WriteLine(" ELSE");
@@ -479,9 +481,9 @@ namespace System.Data.Entity.SqlServerCompact
                 writer.Write(" INSERT INTO ");
                 writer.Write(Name(addOrUpdateOperation.Table));
                 writer.Write("(");
-                writer.Write(addOrUpdateOperation.Columns.Join(Quote));
+                writer.Write(columns.Join(Quote));
                 writer.Write(") VALUES (");
-                writer.Write(addOrUpdateOperation.Values.Join(value => Generate((dynamic)value)));
+                writer.Write(values.Join(value => Generate((dynamic)value)));
                 writer.Write(")");
 
                 Statement(writer);
@@ -507,7 +509,7 @@ namespace System.Data.Entity.SqlServerCompact
                 writer.Write(Name(deleteOperation.Table));
                 writer.Write(" WHERE ");
 
-                for (var i = 0; i < deleteOperation.Columns.Count; i++)
+                for (var i = 0; i < deleteOperation.Columns.Count(); i++)
                 {
                     var column = deleteOperation.Columns[i];
                     var values = deleteOperation.Values[i];

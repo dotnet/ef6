@@ -1,8 +1,6 @@
 ﻿namespace System.Data.Entity.Migrations.Model
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
-    using System.Linq;
 
     /// <summary>
     /// Represents a row being deleted from a table.
@@ -14,8 +12,8 @@
     public class DeleteOperation : MigrationOperation
     {
         private readonly string _table;
-        private readonly List<string> _columns;
-        private readonly List<IList<object>> _values;
+        private readonly string[] _columns;
+        private readonly object[][] _values;
 
         /// <summary>
         /// Initializes a new instance of the DeleteOperation class.
@@ -35,8 +33,8 @@
             Check.NotNull(values, "values");
 
             _table = table;
-            _columns = columns.ToList();
-            _values = values.Cast<IList<object>>().ToList();
+            _columns = columns;
+            _values = values;
         }
 
         /// <summary>
@@ -50,7 +48,7 @@
         /// <summary>
         /// Gets the name/s of the column/s that are going to identify the row be deleted. 
         /// </summary>
-        public IList<string> Columns
+        public string[] Columns
         {
             get { return _columns; }
         }
@@ -58,7 +56,7 @@
         /// <summary>
         /// Gets the value/s that going to identify the row be deleted.
         /// </summary>
-        public IList<IList<object>> Values
+        public object[][] Values
         {
             get { return _values; }
         }
