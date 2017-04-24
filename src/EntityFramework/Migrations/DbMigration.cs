@@ -923,7 +923,7 @@ namespace System.Data.Entity.Migrations
         /// (such as the end user of an application). If input is accepted from such sources it should be validated 
         /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
-        /// <param name="table"></param>
+        /// <param name="table"> The name of the table the row should be added or updated to. </param>
         ///  The name of the table the row should be added or updated to. Schema name is optional, if no schema is specified
         /// then dbo is assumed.
         /// <param name="columns"> The name/s of the column/s that going to have data added or updated. </param>
@@ -944,7 +944,7 @@ namespace System.Data.Entity.Migrations
         /// (such as the end user of an application). If input is accepted from such sources it should be validated 
         /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
-        /// <param name="table"></param>
+        /// <param name="table"> The name of the table the row should be added or updated to. </param>
         ///  The name of the table the row should be added or updated to. Schema name is optional, if no schema is specified
         /// then dbo is assumed.
         /// <param name="identifier"> The name/s of the column/s that going to identiy if the column/s with the respective value exists. </param>
@@ -967,7 +967,7 @@ namespace System.Data.Entity.Migrations
         /// (such as the end user of an application). If input is accepted from such sources it should be validated 
         /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
-        /// <param name="table"></param>
+        /// <param name="table"> The name of the table the row should be deleteded from. </param>
         ///  The name of the table the row should be deleteded from. Schema name is optional, if no schema is specified
         /// then dbo is assumed.
         /// <param name="columns"> The name/s of the column/s that are going to identify the row be deleted. </param>
