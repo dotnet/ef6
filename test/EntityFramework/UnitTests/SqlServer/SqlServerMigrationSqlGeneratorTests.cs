@@ -1719,5 +1719,109 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
             Assert.Equal(sqlExpected, sqlResult);
 
         }
+
+        [Fact]
+        public void Generate_delete_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo.boo";
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new [] {
+                    new object[] { "vA1" , "vA2"},
+                    new object[] { Guid.Parse("A093B257-2EA8-4216-B623-8A11DC199981")},
+                    new object[] { }
+                };
+
+            var addOrUpdateOperation = new DeleteOperation(tableName, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF object_id('[foo].[boo]') IS NOT NULL
+ DELETE FROM [foo].[boo] WHERE ([cA] = 'vA1' OR [cA] = 'vA2') AND ([cB] = 'a093b257-2ea8-4216-b623-8a11dc199981')";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_delete_is_null_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo.boo";
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new[] {
+                    new object[] { "vA1" , "vA2"},
+                    new object[] { Guid.Parse("A093B257-2EA8-4216-B623-8A11DC199981")},
+                    new object[] { null }
+                };
+
+            var addOrUpdateOperation = new DeleteOperation(tableName, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF object_id('[foo].[boo]') IS NOT NULL
+ DELETE FROM [foo].[boo] WHERE ([cA] = 'vA1' OR [cA] = 'vA2') AND ([cB] = 'a093b257-2ea8-4216-b623-8a11dc199981') AND ([cC] IS NULL)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_delete_is_null_and_with_values_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo.boo";
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new[] {
+                    new object[] { "vA1" , "vA2"},
+                    new object[] { Guid.Parse("A093B257-2EA8-4216-B623-8A11DC199981")},
+                    new object[] { null , 1}
+                };
+
+            var addOrUpdateOperation = new DeleteOperation(tableName, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF object_id('[foo].[boo]') IS NOT NULL
+ DELETE FROM [foo].[boo] WHERE ([cA] = 'vA1' OR [cA] = 'vA2') AND ([cB] = 'a093b257-2ea8-4216-b623-8a11dc199981') AND ([cC] IS NULL OR [cC] = 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
+
+        [Fact]
+        public void Generate_delete_with_empty_values_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var tableName = "foo.boo";
+            var columns = new[] { "cA", "cB", "cC" };
+            var values = new[] {
+                    new object[] { "vA1" , "vA2"},
+                    new object[] { },
+                    new object[] { null , 1}
+                };
+
+            var addOrUpdateOperation = new DeleteOperation(tableName, columns, values);
+
+            var sqlResult = migrationSqlGenerator.Generate(new[] { addOrUpdateOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+
+            var sqlExpected =
+                @"IF object_id('[foo].[boo]') IS NOT NULL
+ DELETE FROM [foo].[boo] WHERE ([cA] = 'vA1' OR [cA] = 'vA2') AND ([cC] IS NULL OR [cC] = 1)";
+
+            Assert.Equal(sqlExpected, sqlResult);
+
+        }
     }
 }

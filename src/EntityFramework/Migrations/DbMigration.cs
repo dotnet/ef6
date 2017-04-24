@@ -961,6 +961,27 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
+        /// Adds an operation to delete an row in an existing table
+        /// 
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="table"></param>
+        ///  The name of the table the row should be deleteded from. Schema name is optional, if no schema is specified
+        /// then dbo is assumed.
+        /// <param name="columns"> The name/s of the column/s that are going to identify the row be deleted. </param>
+        /// <param name="values"> The value/s that going to identify the row be deleted. </param>
+        protected internal void Delete(string table, string[] columns, object[][] values)
+        {
+            Check.NotEmpty(table, "table");
+            Check.NotNull(columns, "columns");
+            Check.NotNull(values, "values");
+
+            AddOperation(new DeleteOperation(table, columns, values));
+        }
+
+        /// <summary>
         /// Adds an operation to drop an existing column.
         ///
         /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 

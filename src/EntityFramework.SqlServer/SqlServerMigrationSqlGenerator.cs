@@ -888,6 +888,49 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
+        /// Generates SQL for a <see cref="DeleteOperation" />.
+        /// Generated SQL should be added using the Statement method.
+        /// </summary>
+        /// <param name="deleteOperation">The operation to produce SQL for.</param>
+        protected virtual void Generate(DeleteOperation deleteOperation)
+        {
+            Check.NotNull(deleteOperation, "deleteOperation");
+
+            using (var writer = Writer())
+            {
+                writer.Write("IF object_id('");
+                writer.Write(Name(deleteOperation.Table));
+                writer.WriteLine("') IS NOT NULL");
+
+                writer.Write(" DELETE FROM ");
+                writer.Write(Name(deleteOperation.Table));
+                writer.Write(" WHERE ");
+
+                for (var i = 0 ; i < deleteOperation.Columns.Count ; i++)
+                {
+                    var column = deleteOperation.Columns[i];
+                    var values = deleteOperation.Values[i];
+
+                    
+                    var joinedValues = values.Any() ? 
+                        string.Join(" OR ", values.Select(value => string.Concat(Quote(column), value != null ? string.Concat(" = ", Generate((dynamic)value)) : " IS NULL")))
+                        : string.Empty;
+
+                    if (!string.IsNullOrEmpty(joinedValues))
+                    {
+                        if (i > 0) writer.Write(" AND ");
+
+                        writer.Write("(");
+                        writer.Write(joinedValues);
+                        writer.Write(")");
+                    }
+                }
+
+                Statement(writer);
+            }
+        }
+
+        /// <summary>
         /// Call this method to generate SQL that will attempt to drop the default constraint created
         /// when a column is created. This method is usually called by code that overrides the creation or
         /// altering of columns.

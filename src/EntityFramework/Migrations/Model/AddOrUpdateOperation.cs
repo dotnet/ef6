@@ -86,9 +86,8 @@
         {
             get { return _identifiers; }
         }
-        /// <summary>
-        /// 
-        /// </summary>
+
+        /// <inheritdoc />
         public override bool IsDestructiveChange
         {
             get { return false; }

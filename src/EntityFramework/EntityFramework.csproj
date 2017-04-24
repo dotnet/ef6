@@ -351,6 +351,7 @@
     <Compile Include="Migrations\Model\AddOrUpdateOperation.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />
     <Compile Include="Migrations\Model\AlterTableOperation.cs" />
+    <Compile Include="Migrations\Model\DeleteOperation.cs" />
     <Compile Include="Migrations\Model\IAnnotationTarget.cs" />
     <Compile Include="Migrations\Model\RenameIndexOperation.cs" />
     <Compile Include="Migrations\Model\UpdateDatabaseOperation.cs" />
