@@ -63,7 +63,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             AddRule(EdmModelSemanticValidationRules.EdmAssociationSet_DuplicateEndName);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_EntityKeyMustBeScalar);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_DuplicatePropertyNameSpecifiedInEntityKey);
-            AddRule(EdmModelSemanticValidationRules.EdmEntityType_InvalidKeyNullablePart);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_InvalidKeyKeyDefinedInBaseClass);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_KeyMissingOnEntityType);
             AddRule(EdmModelSemanticValidationRules.EdmEntityType_InvalidMemberNameMatchesTypeName);
