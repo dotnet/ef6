@@ -131,5 +131,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         MissingTvfReturnTable = BaseValue + 44,
         UnableToGenerateFunctionImportParameterName = BaseValue + 45,
         UnableToGenerateFunctionImportReturnType = BaseValue + 46,
+
+        /// <summary>
+        ///     Coercing nullable primary key column to non-nullable primary key property
+        /// </summary>
+        CoercingNullablePrimaryKeyPropertyToNonNullable = BaseValue + 47,
     }
 }
