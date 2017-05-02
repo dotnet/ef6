@@ -732,9 +732,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             var rows =
                 new List<TableDetailsRow>
                     {
-                        CreateRow(columnName: "IntColumn", dataType: "int", isPrimaryKey: true),
-                        CreateRow(columnName: "GeographyKey", dataType: "geography", isPrimaryKey: true),
-                        CreateRow(columnName: "DecimalColumn", dataType: "decimal", isPrimaryKey: false),
+                        CreateRow(table: "TestTable", columnName: "IntColumn", dataType: "int", isPrimaryKey: true),
+                        CreateRow(table: "TestTable", columnName: "GeographyKey", dataType: "geography", isPrimaryKey: true),
+                        CreateRow(table: "TestTable", columnName: "DecimalColumn", dataType: "decimal", isPrimaryKey: false),
                         CreateRow(table: "TestTable", columnName: "InvalidColumn", isPrimaryKey: false)
                     };
 
@@ -750,7 +750,33 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             Assert.Equal("IntColumn", properties[0].Name);
             Assert.Equal("GeographyKey", properties[1].Name);
             Assert.Equal("DecimalColumn", properties[2].Name);
-            Assert.Equal(1, errors.Count);
+
+            Assert.Equal(3, errors.Count);
+            Assert.Equal(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources_VersioningFacade.CoercingNullablePrimaryKeyPropertyToNonNullable,
+                    "IntColumn",
+                    "TestTable"),
+                errors[0].Message);
+            Assert.Equal(EdmSchemaErrorSeverity.Warning, errors[0].Severity);
+            Assert.Equal(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources_VersioningFacade.CoercingNullablePrimaryKeyPropertyToNonNullable,
+                    "GeographyKey",
+                    "TestTable"),
+                errors[1].Message);
+            Assert.Equal(EdmSchemaErrorSeverity.Warning, errors[1].Severity);
+            Assert.Equal(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    Resources_VersioningFacade.UnsupportedDataTypeUnknownType,
+                    "InvalidColumn",
+                    "TestTable"),
+                errors[2].Message);
+            Assert.Equal(EdmSchemaErrorSeverity.Warning, errors[2].Severity);
+
             Assert.Equal("InvalidColumn", excludedColumns.Single());
             Assert.Equal(2, keyColumns.Count);
             Assert.Equal("IntColumn", keyColumns[0]);
@@ -940,8 +966,29 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 Assert.True(new[] { "Id", "Name" }.SequenceEqual(entity.KeyMembers.Select(k => k.Name)));
                 Assert.True(new[] { "Id", "Name" }.SequenceEqual(entity.Members.Select(m => m.Name)));
                 Assert.False(needsDefiningQuery);
-                Assert.False(entity.MetadataProperties.Any(p => p.Name == "EdmSchemaErrors"));
                 Assert.False(MetadataItemHelper.IsInvalid(entity));
+
+                var edmSchemaErrors =
+                    (IList<EdmSchemaError>)entity.MetadataProperties.Single(p => p.Name == "EdmSchemaErrors").Value;
+                Assert.Equal(2, edmSchemaErrors.Count());
+
+                Assert.Equal(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources_VersioningFacade.CoercingNullablePrimaryKeyPropertyToNonNullable,
+                        "Id",
+                        "table"),
+                    edmSchemaErrors[0].Message);
+                Assert.Equal(EdmSchemaErrorSeverity.Warning, edmSchemaErrors[0].Severity);
+
+                Assert.Equal(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources_VersioningFacade.CoercingNullablePrimaryKeyPropertyToNonNullable,
+                        "Name",
+                        "table"),
+                    edmSchemaErrors[1].Message);
+                Assert.Equal(EdmSchemaErrorSeverity.Warning, edmSchemaErrors[1].Severity);
             }
 
             [Fact]
@@ -1060,10 +1107,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                                 isPrimaryKey: true),
                             CreateRow(
                                 schema: "dbo", table: "table", columnName: "Id2", dataType: "geography",
-                                isPrimaryKey: true),
+                                isPrimaryKey: true, isNullable: false),
                             CreateRow(
                                 schema: "dbo", table: "table", columnName: "Id3", dataType: "int",
-                                isPrimaryKey: true),
+                                isPrimaryKey: true, isNullable: false),
                             CreateRow(
                                 schema: "dbo", table: "table", columnName: "Name", dataType: "nvarchar(max)",
                                 isPrimaryKey: false)
@@ -1092,6 +1139,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         "Id1",
                         "dbo.table"),
                     edmSchemaErrors[0].Message);
+                Assert.Equal(EdmSchemaErrorSeverity.Warning, edmSchemaErrors[0].Severity);
 
                 Assert.Equal(
                     string.Format(
@@ -1101,6 +1149,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         "Id2",
                         "geography"),
                     edmSchemaErrors[1].Message);
+                Assert.Equal(EdmSchemaErrorSeverity.Warning, edmSchemaErrors[1].Severity);
             }
 
             [Fact]
@@ -1135,7 +1184,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                     ((IList<EdmSchemaError>)(entity.MetadataProperties.Single(p => p.Name == "EdmSchemaErrors").Value))
                         .Skip(1).ToArray();
 
-                Assert.Equal(2, edmSchemaErrors.Length);
+                Assert.Equal(3, edmSchemaErrors.Length);
+
+                Assert.Equal(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources_VersioningFacade.CoercingNullablePrimaryKeyPropertyToNonNullable,
+                        "Id2",
+                        "table"),
+                    edmSchemaErrors[0].Message);
+                Assert.Equal(EdmSchemaErrorSeverity.Warning, edmSchemaErrors[0].Severity);
 
                 Assert.Equal(
                     string.Format(
@@ -1143,7 +1201,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         Resources_VersioningFacade.ExcludedColumnWasAKeyColumnEntityIsInvalid,
                         "Id1",
                         "dbo.table"),
-                    edmSchemaErrors[0].Message);
+                    edmSchemaErrors[1].Message);
+                Assert.Equal(EdmSchemaErrorSeverity.Warning, edmSchemaErrors[1].Severity);
 
                 Assert.Equal(
                     string.Format(
@@ -1152,7 +1211,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         "dbo.table",
                         "Id2",
                         "geography"),
-                    edmSchemaErrors[1].Message);
+                    edmSchemaErrors[2].Message);
+                Assert.Equal(EdmSchemaErrorSeverity.Warning, edmSchemaErrors[2].Severity);
             }
 
             [Fact]
@@ -1537,7 +1597,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var inputTableDetailsRows =
                     new[]
                         {
-                            CreateRow("catalog", null, "Customer", "Id", 0, /*isNullable*/ true, "int", isPrimaryKey: true),
+                            CreateRow("catalog", null, "Customer", "Id", 0, /*isNullable*/ true, "geography", isPrimaryKey: true),
                             CreateRow("catalog", null, "Customer", "location", 0, false, "geometry", isPrimaryKey: true)
                         };
 
@@ -2715,38 +2775,99 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             }
 
             [Fact]
-            public static void TryCreateAssociationSet_expected_association_end_multiplicity()
+            public static void TryCreateAssociationSet_expected_association_end_multiplicity_pk_to_pk()
             {
-                Check_two_column_relationship_expected_association_end_multiplicity(
+                Check_two_column_relationship_expected_association_end_multiplicity_pk_to_pk(
+                    EntityFrameworkVersion.Version1);
+
+                Check_two_column_relationship_expected_association_end_multiplicity_pk_to_pk(
+                    EntityFrameworkVersion.Version3);
+            }
+
+            private static void Check_two_column_relationship_expected_association_end_multiplicity_pk_to_pk(
+                Version targetEntityFrameworkVersion)
+            {
+                var tableDetails = new[]
+                    {
+                        CreateRow(
+                            "catalog", "schema", "source", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true,
+                            isPrimaryKey: true),
+                        CreateRow(
+                            "catalog", "schema", "source", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false,
+                            isPrimaryKey: true),
+                        CreateRow(
+                            "catalog", "schema", "target", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true,
+                            isPrimaryKey: true),
+                        CreateRow(
+                            "catalog", "schema", "target", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false,
+                            isPrimaryKey: true)
+                    };
+
+                var relationshipDetails = new List<RelationshipDetailsRow>
+                    {
+                        CreateRelationshipDetailsRow(
+                            "RelationshipId", "name", 0, false, "catalog", "schema", "source", "Id", "catalog", "schema", "target", "Id"),
+                        CreateRelationshipDetailsRow(
+                            "RelationshipId", "name", 1, false, "catalog", "schema", "source", "Other", "catalog", "schema", "target",
+                            "Other")
+                    };
+
+                var storeModelBuilder = CreateStoreModelBuilder("System.Data.SqlClient", "2008", targetEntityFrameworkVersion);
+
+                var entityRegister = new StoreModelBuilder.EntityRegister();
+                storeModelBuilder.CreateEntitySets(tableDetails, new TableDetailsRow[0], entityRegister);
+
+                var associationTypes = new List<AssociationType>();
+                var associationSet = storeModelBuilder.TryCreateAssociationSet(relationshipDetails, entityRegister, associationTypes);
+
+                Assert.Equal(1, associationTypes.Count);
+                Assert.NotNull(associationSet);
+
+                var associationType = associationTypes[0];
+
+                Assert.False(MetadataItemHelper.IsInvalid(associationType));
+                Assert.Null(associationType.MetadataProperties.SingleOrDefault(p => p.Name == "EdmSchemaErrors"));
+
+                var sourceEnd = associationType.AssociationEndMembers.FirstOrDefault();
+                var targetEnd = associationType.AssociationEndMembers.ElementAtOrDefault(1);
+
+                Assert.Equal(RelationshipMultiplicity.One, sourceEnd.RelationshipMultiplicity);
+                Assert.Equal(RelationshipMultiplicity.ZeroOrOne, targetEnd.RelationshipMultiplicity);
+            }
+
+            [Fact]
+            public static void TryCreateAssociationSet_expected_association_end_multiplicity_pk_to_fk()
+            {
+                Check_two_column_relationship_expected_association_end_multiplicity_pk_to_fk(
                     EntityFrameworkVersion.Version1,
                     column1Nullable: true,
                     column2Nullable: true,
                     expectedSourceEndMultiplicity: RelationshipMultiplicity.ZeroOrOne,
                     expectedTargetEndMultiplicity: RelationshipMultiplicity.Many);
 
-                Check_two_column_relationship_expected_association_end_multiplicity(
+                Check_two_column_relationship_expected_association_end_multiplicity_pk_to_fk(
                     EntityFrameworkVersion.Version1,
                     column1Nullable: false,
                     column2Nullable: true,
                     expectedSourceEndMultiplicity: RelationshipMultiplicity.One,
-                    expectedTargetEndMultiplicity: RelationshipMultiplicity.ZeroOrOne);
+                    expectedTargetEndMultiplicity: RelationshipMultiplicity.Many);
 
-                Check_two_column_relationship_expected_association_end_multiplicity(
+                Check_two_column_relationship_expected_association_end_multiplicity_pk_to_fk(
                     EntityFrameworkVersion.Version3,
                     column1Nullable: false,
                     column2Nullable: true,
                     expectedSourceEndMultiplicity: RelationshipMultiplicity.ZeroOrOne,
                     expectedTargetEndMultiplicity: RelationshipMultiplicity.Many);
 
-                Check_two_column_relationship_expected_association_end_multiplicity(
+                Check_two_column_relationship_expected_association_end_multiplicity_pk_to_fk(
                     EntityFrameworkVersion.Version3,
                     column1Nullable: false,
                     column2Nullable: false,
                     expectedSourceEndMultiplicity: RelationshipMultiplicity.One,
-                    expectedTargetEndMultiplicity: RelationshipMultiplicity.ZeroOrOne);
+                    expectedTargetEndMultiplicity: RelationshipMultiplicity.Many);
             }
 
-            private static void Check_two_column_relationship_expected_association_end_multiplicity(
+            private static void Check_two_column_relationship_expected_association_end_multiplicity_pk_to_fk(
                 Version targetEntityFrameworkVersion,
                 bool column1Nullable,
                 bool column2Nullable,
@@ -2756,17 +2877,20 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         CreateRow(
-                            "catalog", "schema", "source", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true, isPrimaryKey: true)
-                        ,
+                            "catalog", "schema", "source", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true,
+                            isPrimaryKey: true),
                         CreateRow(
                             "catalog", "schema", "source", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false,
                             isPrimaryKey: true),
                         CreateRow(
-                            "catalog", "schema", "target", "Id", 0, isNullable: column1Nullable, dataType: "int", isIdentiy: true,
+                            "catalog", "schema", "target", "TargetId", 0, isNullable: false, dataType: "int", isIdentiy: true,
                             isPrimaryKey: true),
                         CreateRow(
+                            "catalog", "schema", "target", "Id", 0, isNullable: column1Nullable, dataType: "int", isIdentiy: true,
+                            isPrimaryKey: false),
+                        CreateRow(
                             "catalog", "schema", "target", "Other", 1, isNullable: column2Nullable, dataType: "int", isIdentiy: false,
-                            isPrimaryKey: true)
+                            isPrimaryKey: false)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2774,7 +2898,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         CreateRelationshipDetailsRow(
                             "RelationshipId", "name", 0, false, "catalog", "schema", "source", "Id", "catalog", "schema", "target", "Id"),
                         CreateRelationshipDetailsRow(
-                            "RelationshipId", "name", 0, false, "catalog", "schema", "source", "Other", "catalog", "schema", "target",
+                            "RelationshipId", "name", 1, false, "catalog", "schema", "source", "Other", "catalog", "schema", "target",
                             "Other")
                     };
 
