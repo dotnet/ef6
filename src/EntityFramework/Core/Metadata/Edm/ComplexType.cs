@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (metadataProperties != null)
             {
-                complexType.AddMetadataProperties(metadataProperties.ToList());
+                complexType.AddMetadataProperties(metadataProperties);
             }
 
             complexType.SetReadOnly();
