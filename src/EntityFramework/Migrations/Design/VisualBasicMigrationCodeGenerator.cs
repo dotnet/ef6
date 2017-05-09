@@ -128,7 +128,7 @@ namespace System.Data.Entity.Migrations.Design
                     if (hasUnsupportedOperations)
                     {
                         writer.Write("Throw New NotSupportedException(");
-                        writer.Write(Generate(Strings.ScaffoldSprocInDownNotSupported));
+                        writer.Write(Quote(Strings.ScaffoldSprocInDownNotSupported));
                         writer.WriteLine(")");
                     }
 
@@ -553,10 +553,8 @@ namespace System.Data.Entity.Migrations.Design
                       + "\"";
 
                 writer.WriteLine(
-                    Generate(
-                        procedureOperation
-                            .BodySql
-                            .Replace(Environment.NewLine, indentString)));
+                    Quote(procedureOperation.BodySql)
+                        .Replace(Environment.NewLine, indentString));
 
                 writer.Indent--;
             }
@@ -777,7 +775,7 @@ namespace System.Data.Entity.Migrations.Design
             writer.Indent--;
             writer.WriteLine();
         }
-        
+
         /// <summary>
         /// Generates code to perform an <see cref="AddPrimaryKeyOperation" /> as part of a <see cref="CreateTableOperation" />.
         /// </summary>
@@ -1088,7 +1086,7 @@ namespace System.Data.Entity.Migrations.Design
                 writer.Write(Quote(createIndexOperation.Name));
             }
         }
-        
+
         /// <summary>
         /// Generates code to perform a <see cref="DropIndexOperation" />.
         /// </summary>
@@ -1208,7 +1206,7 @@ namespace System.Data.Entity.Migrations.Design
 
                 writer.Indent--;
             }
-            
+
             writer.Write(")");
         }
 
@@ -1482,7 +1480,7 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write(Quote(renameColumnOperation.NewName));
             writer.WriteLine(")");
         }
-        
+
         /// <summary>
         /// Generates code to perform a <see cref="RenameIndexOperation" />.
         /// </summary>
@@ -1577,7 +1575,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <returns> The quoted identifier. </returns>
         protected virtual string Quote(string identifier)
         {
-            return "\"" + identifier + "\"";
+            return "\"" + identifier.Replace("\"", "\"\"") + "\"";
         }
     }
 }
