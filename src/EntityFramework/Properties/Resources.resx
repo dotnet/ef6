@@ -851,9 +851,6 @@
   <data name="EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic" xml:space="preserve">
     <value>ComplexType '{0}' has a BaseType specified. ComplexType inheritance is only supported in version 1.1 EDM models.</value>
   </data>
-  <data name="EdmModel_Validator_Semantic_InvalidKeyNullablePart" xml:space="preserve">
-    <value>Key part '{0}' for type '{1}' is not valid. All parts of the key must be non-nullable.</value>
-  </data>
   <data name="EdmModel_Validator_Semantic_EntityKeyMustBeScalar" xml:space="preserve">
     <value>The property '{0}' in EntityType '{1}' is not valid. All properties that are part of the EntityKey must be of PrimitiveType.</value>
   </data>

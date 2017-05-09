@@ -1607,14 +1607,6 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Key part '{0}' for type '{1}' is not valid. All parts of the key must be non-nullable."
-        // </summary>
-        internal static string EdmModel_Validator_Semantic_InvalidKeyNullablePart(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.EdmModel_Validator_Semantic_InvalidKeyNullablePart, p0, p1);
-        }
-
-        // <summary>
         // A string like "The property '{0}' in EntityType '{1}' is not valid. All properties that are part of the EntityKey must be of PrimitiveType."
         // </summary>
         internal static string EdmModel_Validator_Semantic_EntityKeyMustBeScalar(object p0, object p1)
@@ -14038,6 +14030,7 @@ namespace System.Data.Entity.Resources
             get { return EntityRes.GetString(EntityRes.ProviderDoesNotSupportEscapingLikeArgument); }
         }
 
+        // <summary>
         // A string like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
         // </summary>
         internal static string IndexPropertyNotFound(object p0, object p1)
@@ -15668,6 +15661,7 @@ namespace System.Data.Entity.Resources
             return new InvalidOperationException(Strings.StoreTypeNotFound(p0, p1));
         }
 
+        // <summary>
         // InvalidOperationException with message like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
         // </summary>
         internal static Exception IndexPropertyNotFound(object p0, object p1)
@@ -15915,7 +15909,6 @@ namespace System.Data.Entity.Resources
         internal const string EdmModel_Validator_Semantic_InvalidCollectionKindNotV1_1 = "EdmModel_Validator_Semantic_InvalidCollectionKindNotV1_1";
         internal const string EdmModel_Validator_Semantic_InvalidComplexTypeAbstract = "EdmModel_Validator_Semantic_InvalidComplexTypeAbstract";
         internal const string EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic = "EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic";
-        internal const string EdmModel_Validator_Semantic_InvalidKeyNullablePart = "EdmModel_Validator_Semantic_InvalidKeyNullablePart";
         internal const string EdmModel_Validator_Semantic_EntityKeyMustBeScalar = "EdmModel_Validator_Semantic_EntityKeyMustBeScalar";
         internal const string EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass = "EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass";
         internal const string EdmModel_Validator_Semantic_KeyMissingOnEntityType = "EdmModel_Validator_Semantic_KeyMissingOnEntityType";

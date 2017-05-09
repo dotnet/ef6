@@ -1216,6 +1216,36 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             }
 
             [Fact]
+            public void CreateEntityType_creates_valid_entity_if_nullable_primary_key_defined()
+            {
+                var columns =
+                    new List<TableDetailsRow>
+                        {
+                            CreateRow(
+                                schema: "dbo", table: "table", columnName: "Id", dataType: "int",
+                                isNullable: true, isPrimaryKey: true),
+                            CreateRow(
+                                schema: "dbo", table: "table", columnName: "Name", dataType: "nvarchar(max)",
+                                isNullable: false)
+                        };
+
+                bool needsDefiningQuery;
+                var entity = CreateStoreModelBuilder()
+                    .CreateEntityType(columns, out needsDefiningQuery);
+
+                Assert.Equal("myModel.table", entity.FullName);
+                Assert.True(new[] { "Id" }.SequenceEqual(entity.KeyMembers.Select(m => m.Name)));
+                Assert.True(new[] { "Id", "Name" }.SequenceEqual(entity.Members.Select(m => m.Name)));
+                Assert.False(needsDefiningQuery);
+                Assert.False(MetadataItemHelper.IsInvalid(entity));
+
+                var edmSchemaErrors =
+                    (IList<EdmSchemaError>)entity.MetadataProperties.FirstOrDefault(p => p.Name == "EdmSchemaErrors");
+
+                Assert.Null(edmSchemaErrors);
+            }
+
+            [Fact]
             public void CreateEntityType_creates_readonly_entity_if_no_keys_defined_but_keys_can_be_infered()
             {
                 var columns =

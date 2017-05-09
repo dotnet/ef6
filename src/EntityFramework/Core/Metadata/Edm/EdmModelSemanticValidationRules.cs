@@ -310,26 +310,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         }
                     });
 
-        internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_InvalidKeyNullablePart =
-            new EdmModelValidationRule<EntityType>(
-                (context, edmEntityType) =>
-                    {
-                        foreach (var key in edmEntityType.GetValidKey())
-                        {
-                            if (key.IsPrimitiveType)
-                            {
-                                if (key.Nullable)
-                                {
-                                    context.AddError(
-                                        key,
-                                        EdmConstants.Nullable,
-                                        Strings.EdmModel_Validator_Semantic_InvalidKeyNullablePart(
-                                            key.Name, edmEntityType.Name));
-                                }
-                            }
-                        }
-                    });
-
         internal static readonly EdmModelValidationRule<EntityType> EdmEntityType_EntityKeyMustBeScalar =
             new EdmModelValidationRule<EntityType>(
                 (context, edmEntityType) =>
