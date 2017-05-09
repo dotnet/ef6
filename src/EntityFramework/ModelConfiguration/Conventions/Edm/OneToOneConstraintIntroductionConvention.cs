@@ -43,8 +43,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             = new ReferentialConstraint(
                                 principalEnd,
                                 dependentEnd,
-                                principalEnd.GetEntityType().KeyProperties().ToList(),
-                                dependentEnd.GetEntityType().KeyProperties().ToList());
+                                principalEnd.GetEntityType().KeyProperties(),
+                                dependentEnd.GetEntityType().KeyProperties());
 
                         item.Constraint = constraint;
                     }

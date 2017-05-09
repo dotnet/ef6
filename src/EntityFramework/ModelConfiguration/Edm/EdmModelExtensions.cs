@@ -76,13 +76,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(tableName);
 
-            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
-            var entityTypesList = database.EntityTypes as IList<EntityType> ?? database.EntityTypes.ToList();
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            // ReSharper disable once ForCanBeConvertedToForeach
-            for (var entityTypesIterator = 0; entityTypesIterator < entityTypesList.Count; ++entityTypesIterator)
+            var entityTypesList = database.EntityTypes;
+            foreach (var t in entityTypesList)
             {
-                var t = entityTypesList[entityTypesIterator];
                 var databaseName = t.GetTableName();
                 if (databaseName != null ? databaseName.Equals(tableName)
                     : string.Equals(t.Name, tableName.Name, StringComparison.Ordinal) && tableName.Schema == null)
@@ -125,15 +121,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(model);
             DebugCheck.NotNull(propertyInfo);
 
-            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
-            var entityTypesList = model.EntityTypes as IList<EntityType> ?? model.EntityTypes.ToList();
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            // ReSharper disable once ForCanBeConvertedToForeach
-            for (var entityTypesListIterator = 0;
-                entityTypesListIterator < entityTypesList.Count;
-                ++entityTypesListIterator)
+            var entityTypesList = model.EntityTypes;
+            foreach (var entityType in entityTypesList)
             {
-                var np = entityTypesList[entityTypesListIterator].GetNavigationProperty(propertyInfo);
+                var np = entityType.GetNavigationProperty(propertyInfo);
                 if (np != null)
                 {
                     return np;
@@ -207,13 +198,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(model);
             DebugCheck.NotNull(clrType);
 
-            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
-            var entityTypes = model.EntityTypes as IList<EntityType> ?? model.EntityTypes.ToList();
-            // ReSharper disable once ForCanBeConvertedToForeach
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            for (var entityTypesIterator = 0; entityTypesIterator < entityTypes.Count; ++entityTypesIterator)
+            var entityTypes = model.EntityTypes;
+            foreach (var entityType in entityTypes)
             {
-                var entityType = entityTypes[entityTypesIterator];
                 if (entityType.GetClrType() == clrType)
                 {
                     return entityType;

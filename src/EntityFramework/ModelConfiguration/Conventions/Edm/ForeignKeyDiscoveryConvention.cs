@@ -81,11 +81,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             var foreignKeyProperties
-                = from p in principalKeyProperties
+                = (from p in principalKeyProperties
                   from d in dependentEnd.GetEntityType().DeclaredProperties
                   where MatchDependentKeyProperty(item, dependentEnd, d, principalEnd.GetEntityType(), p)
                         && (p.UnderlyingPrimitiveType == d.UnderlyingPrimitiveType)
-                  select d;
+                  select d).ToList();
 
             if (!foreignKeyProperties.Any()
                 || (foreignKeyProperties.Count() != principalKeyProperties.Count()))
@@ -114,8 +114,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 = new ReferentialConstraint(
                     principalEnd,
                     dependentEnd,
-                    principalKeyProperties.ToList(),
-                    foreignKeyProperties.ToList());
+                    principalKeyProperties,
+                    foreignKeyProperties);
 
             item.Constraint = constraint;
 

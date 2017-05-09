@@ -697,7 +697,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             if (entityTypeMapping != null)
             {
                 VerifyAllCSpacePropertiesAreMapped(
-                    databaseMapping.GetEntityTypeMappings(entityType).ToList(),
+                    databaseMapping.GetEntityTypeMappings(entityType),
                     entityTypeMapping.EntityType.DeclaredProperties,
                     new List<EdmProperty>());
             }
@@ -839,21 +839,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(providerManifest);
 
-            // PERF: this code written this way since it's part of a hotpath, consider its performance when refactoring. See codeplex #2298.
-            var entityTypesList = databaseMapping.Database.EntityTypes as IList<EntityType> ?? databaseMapping.Database.EntityTypes.ToList();
-            // ReSharper disable ForCanBeConvertedToForeach
-            for (var entityTypesListIterator = 0;
-                entityTypesListIterator < entityTypesList.Count;
-                ++entityTypesListIterator)
+            var entityTypesList = databaseMapping.Database.EntityTypes;
+            foreach (var entityType in entityTypesList)
             {
-                var entityType = entityTypesList[entityTypesListIterator];
-                var foreignKeyBuilders = entityType.ForeignKeyBuilders as IList<ForeignKeyBuilder> ?? entityType.ForeignKeyBuilders.ToList();
-                for (var foreignKeyBuildersIterator = 0;
-                    foreignKeyBuildersIterator < foreignKeyBuilders.Count;
-                    ++foreignKeyBuildersIterator)
+                var foreignKeyBuilders = entityType.ForeignKeyBuilders;
+                foreach (var foreignKeyConstraint in foreignKeyBuilders)
                 {
-                    var foreignKeyConstraint = foreignKeyBuilders[foreignKeyBuildersIterator];
-
                     var dependentColumns = foreignKeyConstraint.DependentColumns;
                     var dependentColumnsList = dependentColumns as IList<EdmProperty> ?? dependentColumns.ToList();
 
@@ -877,7 +868,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     }
                 }
             }
-            // ReSharper restore ForCanBeConvertedToForeach
         }
 
         private static void VerifyAllCSpacePropertiesAreMapped(

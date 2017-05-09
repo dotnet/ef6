@@ -678,7 +678,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             // Resolve all the property in the dependent end attribute. Also checks whether this is nullable or not and 
                             // whether the properties are the keys for the type in the dependent end
                             IsKeyProperty(
-                                constraint.ToProperties.ToList(),
+                                constraint.ToProperties,
                                 dependentRoleEnd,
                                 out isPrincipalRoleKeyProperty,
                                 out areAllDependentRolePropertiesNullable,
@@ -796,7 +796,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                         dependentRoleEnd.Name, edmAssociationType.Name));
                             }
                             var keyProperties_PrincipalRoleEnd = principalRoleEnd.GetEntityType().GetValidKey().ToList();
-                            var dependentProperties = constraint.ToProperties.ToList();
+                            var dependentProperties = constraint.ToProperties;
 
                             if (dependentProperties.Count
                                 != keyProperties_PrincipalRoleEnd.Count)
@@ -808,7 +808,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             }
                             else
                             {
-                                var principalProperties = constraint.FromProperties.ToList();
+                                var principalProperties = constraint.FromProperties;
 
                                 var count = dependentProperties.Count;
                                 for (var i = 0; i < count; i++)
@@ -834,7 +834,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                 constraint,
                                                 null,
                                                 Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(
-                                                    constraint.ToProperties.ToList()[i].Name,
+                                                    constraint.ToProperties[i].Name,
                                                     dependentRoleEnd.GetEntityType().Name,
                                                     principalProperty.Name,
                                                     principalRoleEnd.GetEntityType().Name,
@@ -857,7 +857,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             edmAssociationType.Constraint.ToRole.GetEntityType() != null)
                         {
                             var dependentEndProperties =
-                                edmAssociationType.Constraint.ToRole.GetEntityType().Properties.ToList();
+                                edmAssociationType.Constraint.ToRole.GetEntityType().Properties;
                             foreach (var property in edmAssociationType.Constraint.ToProperties)
                             {
                                 if (property != null)
@@ -1190,7 +1190,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private static void IsKeyProperty(
-            List<EdmProperty> roleProperties,
+            IReadOnlyList<EdmProperty> roleProperties,
             RelationshipEndMember roleElement,
             out bool isKeyProperty,
             out bool areAllPropertiesNullable,

@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                    ? GetMappingsForEntitySetAndType(mappingCollection, container, entitySet, entityTypeBase)
                                    : GetIsTypeOfMappingsForEntitySetAndType(
                                        mappingCollection, container, entitySet, entityTypeBase, childEntityType);
-                    }).ToList();
+                    });
         }
 
         // <summary>

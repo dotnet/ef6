@@ -537,7 +537,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 // these entries will be updated by the code consuming them, so 
                 // create a stable container to iterate over.
-                return foundEntries.Select(e => e.Item2).ToList();
+                return foundEntries.Select(e => e.Item2);
             }
             return Enumerable.Empty<EntityEntry>();
         }
