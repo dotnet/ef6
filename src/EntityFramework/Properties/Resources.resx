@@ -5585,4 +5585,8 @@
     <value>IndexAttributes with identity '{0}' and name '{1}' cannot be merged because they ambiguously match multiple, conflicting IndexAttributes.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="UnableToDispatchRemoveIfExist" xml:space="preserve">
+    <value>Unable to call public, instance method RemoveIfExist on derived IDbSet&lt;T&gt; type '{0}'. Method not found.</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>

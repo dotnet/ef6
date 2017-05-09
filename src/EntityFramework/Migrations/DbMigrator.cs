@@ -558,6 +558,8 @@ namespace System.Data.Entity.Migrations
         {
             DbMigration lastMigration = null;
 
+            var migrationsApplied = new List<string>();
+
             if (lastMigrationId != null)
             {
                 lastMigration = _migrationAssembly.GetMigration(lastMigrationId);
@@ -572,6 +574,8 @@ namespace System.Data.Entity.Migrations
                 lastMigration = migration;
 
                 _emptyMigrationNeeded = false;
+
+                migrationsApplied.Add(pendingMigration);
 
                 if (pendingMigration.EqualsIgnoreCase(targetMigrationId))
                 {
@@ -605,11 +609,11 @@ namespace System.Data.Entity.Migrations
             if (!_calledByCreateDatabase
                 && !IsModelOutOfDate(_currentModel, lastMigration))
             {
-                base.SeedDatabase();
+                base.SeedDatabase(migrationsApplied);
             }
         }
 
-        internal override void SeedDatabase()
+        internal override void SeedDatabase(IEnumerable<string> migrationsApplied)
         {
             Debug.Assert(!_calledByCreateDatabase);
 
@@ -622,7 +626,7 @@ namespace System.Data.Entity.Migrations
 
             try
             {
-                _configuration.OnSeed(context);
+                _configuration.OnSeed(context, migrationsApplied);
 
                 context.SaveChanges();
             }

@@ -271,10 +271,11 @@ namespace System.Data.Entity.Migrations
                 _commandTimeout = value;
             }
         }
-
-        internal virtual void OnSeed(DbContext context)
+        
+        internal virtual void OnSeed(DbContext context, IEnumerable<string> migrationsApplied)
         {
             DebugCheck.NotNull(context);
+            DebugCheck.NotNull(migrationsApplied);
         }
 
         internal EdmModelDiffer ModelDiffer

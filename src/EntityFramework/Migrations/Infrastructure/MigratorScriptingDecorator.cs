@@ -143,6 +143,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
         }
 
+        internal override void SeedDatabase(IEnumerable<string> migrationsApplied)
+        {
+        }
+
         internal override bool HistoryExists()
         {
             return false;
