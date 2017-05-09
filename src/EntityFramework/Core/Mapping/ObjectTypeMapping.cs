@@ -96,9 +96,13 @@ namespace System.Data.Entity.Core.Mapping
         {
             var memberMapping = GetMemberMap(propertyName, false /*ignoreCase*/);
 
-            if (memberMapping?.MemberMappingKind == MemberMappingKind.ScalarPropertyMapping
-                ||
-                memberMapping?.MemberMappingKind == MemberMappingKind.ComplexPropertyMapping)
+            if (memberMapping != null &&
+                (
+                    memberMapping.MemberMappingKind == MemberMappingKind.ScalarPropertyMapping
+                    ||
+                    memberMapping.MemberMappingKind == MemberMappingKind.ComplexPropertyMapping
+                )
+            )
             {
                 return (ObjectPropertyMapping)memberMapping;
             }
