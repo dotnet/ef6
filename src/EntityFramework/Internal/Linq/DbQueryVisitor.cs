@@ -43,22 +43,27 @@ namespace System.Data.Entity.Internal.Linq
             if (typeof(DbContext).IsAssignableFrom(node.Method.DeclaringType))
             {
                 var memberExpression = node.Object as MemberExpression;
+                DbContext context = null;
                 if (memberExpression != null)
                 {
-                    // Only try to invoke the method if it is on the context, is not parameterless, and is not attributed
-                    // as a function.
-                    var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
-                    if (context != null
+                    context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
+                }
+                else if (node.Object is ConstantExpression constantExpression)
+                {
+                    context = constantExpression.Value as DbContext;
+                }
+                // Only try to invoke the method if it is on the context, is not parameterless, and is not attributed
+                // as a function.
+                if (context != null
                         && !node.Method.GetCustomAttributes<DbFunctionAttribute>(inherit: false).Any()
                         && node.Method.GetParameters().Length == 0)
+                {
+                    var expression =
+                        CreateObjectQueryConstant(
+                            node.Method.Invoke(context, SetAccessBindingFlags, null, null, null));
+                    if (expression != null)
                     {
-                        var expression =
-                            CreateObjectQueryConstant(
-                                node.Method.Invoke(context, SetAccessBindingFlags, null, null, null));
-                        if (expression != null)
-                        {
-                            return expression;
-                        }
+                        return expression;
                     }
                 }
             }

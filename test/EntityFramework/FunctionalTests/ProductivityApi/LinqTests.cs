@@ -12422,6 +12422,33 @@ namespace ProductivityApiTests
             }
         }
 
+        [Fact]
+        public void Context_gets_properly_retrieved_from_expression_WhenUsingDerivedDbContext()
+        {
+            using (var context = new DerivedDbContextUsage())
+            {
+                var result = context.ExecuteProductsQuery().Result;
+                Assert.Equal(16, result.Count);
+            }
+        }
+
+        private class DerivedDbContextUsage : SimpleModelContext
+        {
+            public DerivedDbContextUsage() : base("EntityConnectionForSimpleModel")
+            {}
+
+            public async Task<List<Category>> ExecuteProductsQuery()
+            {
+                var queryOption = SampleEnumGitHub20.Value1;
+                int[] ids = { 1, 2, 3, 4 };
+                return await (from product in Set<Product>()
+                              where ids.Contains(product.Id)
+                                 && queryOption == SampleEnumGitHub20.Value1
+                              from category in Set<Category>()
+                              select category).ToListAsync();
+            }
+        }
+
         public enum SampleEnumGitHub20
         {
             Value1,
