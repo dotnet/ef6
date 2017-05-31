@@ -223,7 +223,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "The migrations configuration type '{0}' was not be found in the assembly '{1}'."
+        // A string like "The migrations configuration type '{0}' was not found in the assembly '{1}'."
         // </summary>
         internal static string AssemblyMigrator_NoConfigurationWithName(object p0, object p1)
         {
@@ -14150,7 +14150,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // Migrations.Infrastructure.MigrationsException with message like "The migrations configuration type '{0}' was not be found in the assembly '{1}'."
+        // Migrations.Infrastructure.MigrationsException with message like "The migrations configuration type '{0}' was not found in the assembly '{1}'."
         // </summary>
         internal static Exception AssemblyMigrator_NoConfigurationWithName(object p0, object p1)
         {
