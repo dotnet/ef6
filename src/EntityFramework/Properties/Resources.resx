@@ -206,7 +206,7 @@
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
   <data name="AssemblyMigrator_NoConfigurationWithName" xml:space="preserve">
-    <value>The migrations configuration type '{0}' was not be found in the assembly '{1}'.</value>
+    <value>The migrations configuration type '{0}' was not found in the assembly '{1}'.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
   <data name="AssemblyMigrator_MultipleConfigurationsWithName" xml:space="preserve">
