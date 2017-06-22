@@ -74,10 +74,10 @@ Project global post-settings and targets.
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
-    <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2012 DO NOT USE</WixFullProductName_Dev11>
-    <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2013 DO NOT USE</WixFullProductName_Dev12>
-    <WixFullProductName_Dev14>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 2015 Update 1 DO NOT USE</WixFullProductName_Dev14>
-    <WixFullProductName_Dev15>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) for Visual Studio 15</WixFullProductName_Dev15>
+    <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) Update 2 for Visual Studio 2012 DO NOT USE</WixFullProductName_Dev11>
+    <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) Update 2 for Visual Studio 2013 DO NOT USE</WixFullProductName_Dev12>
+    <WixFullProductName_Dev14>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) Update 2 for Visual Studio 2015 Update 1 DO NOT USE</WixFullProductName_Dev14>
+    <WixFullProductName_Dev15>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionReleasePrefix) Tools $(VersionReleaseName) Update 2 for Visual Studio 2017</WixFullProductName_Dev15>
     <WixProductDescription_Dev11>$(WixFullProductName_Dev11)</WixProductDescription_Dev11>
     <WixProductDescription_Dev12>$(WixFullProductName_Dev12)</WixProductDescription_Dev12>
     <WixProductDescription_Dev14>$(WixFullProductName_Dev14)</WixProductDescription_Dev14>
