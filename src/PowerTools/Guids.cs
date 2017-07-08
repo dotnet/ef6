@@ -5,7 +5,7 @@ namespace Microsoft.DbContextPackage
 
     internal static class GuidList
     {
-        public const string guidDbContextPackagePkgString = "2b119c79-9836-46e2-b5ed-eb766cebbf7c";
+        public const string guidDbContextPackagePkgString = "F0A7D01D-4834-44C3-99B2-5907A0701906";
         public const string guidDbContextPackageCmdSetString = "c769a05d-8d51-4919-bfe6-5f35a0eaf27e";
 
         public static readonly Guid guidDbContextPackageCmdSet = new Guid(guidDbContextPackageCmdSetString);
