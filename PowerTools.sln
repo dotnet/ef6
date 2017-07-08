@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.0
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2AE1B177-580C-44F1-9514-B3F23F4B1433}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerTools", "src\PowerTools\PowerTools.csproj", "{16CAD3A8-FCE0-4BC1-901A-16957CF24BD6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerTools.Test", "test\PowerTools.Test\PowerTools.Test.csproj", "{ADCD3A3D-2564-48F3-81A9-B0B532675808}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,15 +17,8 @@ Global
 		{16CAD3A8-FCE0-4BC1-901A-16957CF24BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16CAD3A8-FCE0-4BC1-901A-16957CF24BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16CAD3A8-FCE0-4BC1-901A-16957CF24BD6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADCD3A3D-2564-48F3-81A9-B0B532675808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADCD3A3D-2564-48F3-81A9-B0B532675808}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADCD3A3D-2564-48F3-81A9-B0B532675808}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADCD3A3D-2564-48F3-81A9-B0B532675808}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{ADCD3A3D-2564-48F3-81A9-B0B532675808} = {2AE1B177-580C-44F1-9514-B3F23F4B1433}
 	EndGlobalSection
 EndGlobal
