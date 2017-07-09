@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="$edmxversion$" xmlns:edmx="$edmxnamespacename$">
- <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <edmx:Designer xmlns="$edmxnamespacename$">
-    <!-- Diagram content (shape and connector positions) -->
-    <edmx:Diagrams>
-    </edmx:Diagrams>
-  </edmx:Designer>
-</edmx:Edmx>

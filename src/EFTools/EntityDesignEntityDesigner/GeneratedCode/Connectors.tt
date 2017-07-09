@@ -1,2 +1,0 @@
-<#@ Dsl processor="DslDirectiveProcessor" requires="fileName='..\DslDefinition.dsl'" #>
-<#@ include file="%DslTemplatesSrc%\Dsl\Connectors.tt" #>
