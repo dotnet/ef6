@@ -15,7 +15,7 @@ When right-clicking on a file containing a derived DbContext class, the followin
 When right-clicking on an Entity Data Model .edmx  file, the following context menu function is available: 
 1) Generate Views.
 
-If you are looking for Reverse Engineeering tools, I recommned using the [EF Reverse POCO Generator Template](https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator). You can also use the less advanced ["Code First from Database" feature](http://www.entityframeworktutorial.net/code-first/code-first-from-existing-database.aspx) that is included with the Visual Studio tooling.
+If you are looking for Reverse Engineeering tools, I recommend using the [EF Reverse POCO Generator Template](https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator). You can also use the less advanced ["Code First from Database" feature](http://www.entityframeworktutorial.net/code-first/code-first-from-existing-database.aspx) that is included with the Visual Studio tooling.
 
 # Downloads/builds
 
