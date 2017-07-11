@@ -147,7 +147,7 @@
 
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidDbContextPackagePkg" value="{2b119c79-9836-46e2-b5ed-eb766cebbf7c}" />
+    <GuidSymbol name="guidDbContextPackagePkg" value="{F0A7D01D-4834-44C3-99B2-5907A0701906}" />
 
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidDbContextPackageCmdSet" value="{c769a05d-8d51-4919-bfe6-5f35a0eaf27e}">

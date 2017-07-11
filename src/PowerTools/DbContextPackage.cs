@@ -444,7 +444,6 @@ namespace Microsoft.DbContextPackage
 
             var document = XDocument.Load(userConfigFilename);
             FixUpConfig(document, assemblyFullName, userConfigDirectory, tempConfigDirectory);
-
             var tempFile
                 = Path.Combine(tempConfigDirectory,
                                "temp.config");
@@ -556,7 +555,6 @@ namespace Microsoft.DbContextPackage
                 var configSource = configSection.Attribute("configSource");
                 CopyRelatedConfigFile(userConfigDirectory, tempConfigDirectory, configSource);
             }
-
         }
 
         private static void CopyRelatedConfigFile(string userConfigDirectory, string tempConfigDirectory, XAttribute attr)

@@ -1,21 +1,42 @@
-# Entity Framework 6.x
+# Entity Framework 6 Power Tools Community Edition
 
-Entity Framework (EF) is an object-relational mapper that enables .NET developers to work with relational data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
+This is a fork of the "official" [EF 6 repository](https://github.com/aspnet/entityFramework6/), which hosts the Visual Studio 2015 and 2017 version of EF Power Tools. 
 
-Entity Framework is actively developed by the Entity Framework team in collaboration with a community of open source developers. Together we are dedicated to creating the best possible data access experience for .NET developers.
+# What are the Power Tools?
 
-## EF6.x here, EF Core elsewhere
+Useful design-time utilities for EF 6, accessible through the Visual Studio Solution Explorer context menu. 
 
-This project is for Entity Framework 6.x. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFramework.
+When right-clicking on a file containing a derived DbContext class, the following context menu functions are available: 
+1. View Entity Data Model (Read-only)
+2. View Entity Data Model XML 
+3. View Entity Data Model DDL SQL 
+4. Generate Views 
 
-## How do I use EF
+When right-clicking on an Entity Data Model .edmx  file, the following context menu function is available: 
+1. Generate Views.
 
-If you want to use an officially supported Entity Framework release to develop your applications then head to https://msdn.com/data/ef where you can find installation information, documentation, tutorials, samples, and videos.
+If you are looking for Reverse Engineeering tools, I recommend using the [EF Reverse POCO Generator Template](https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator). You can also use the less advanced ["Code First from Database" feature](http://www.entityframeworktutorial.net/code-first/code-first-from-existing-database.aspx) that is included with the standard Visual Studio tooling for EF 6.
 
-If you want to try out the latest changes that have not been officially released yet, [signed nightly builds](https://github.com/aspnet/EntityFramework6/wiki/Nightly-Builds) of the Entity Framework code base are made available
+A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-us/data/jj593170)
+
+# Downloads/builds
+
+**Release**
+
+The Power Tools will remain in "beta" status.
+
+Download the latest released version from [Visual Studio MarketPlace](https://marketplace.visualstudio.com/items?itemName=ErikEJ.EntityFramework6PowerToolsCommunityEdition)
+
+Or just install from Tools, Extensions and Updates in Visual Studio! ![](https://github.com/ErikEJ/SqlCeToolbox/blob/master/img/ext.png)
+
+**Daily build**
+
+You can download the daily build from [VSIX Gallery](http://vsixgallery.com/extensions/F0A7D01D-4834-44C3-99B2-5907A0701906/extension.vsix). 
+
+Install the [VSIX Gallery Nightly builds extension](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.VSIXGallery-nightlybuilds) to get the latest daily build automatically.
 
 ## How do I contribute
 
-There are lots of ways to [contribute to the Entity Framework project](https://github.com/aspnet/EntityFramework6/wiki/Contributing) including testing out nighty builds, reporting bugs, and contributing code.
+There are lots of ways to contribute, including testing out nighty builds, reporting bugs, and contributing code.
 
-All code submissions will be rigorously reviewed and tested by the Entity Framework team, and only those that meet an extremely high bar for both quality and design/roadmap appropriateness will be merged into the source.
+If you encounter a bug or have a feature request, please use the [Issue Tracker](https://github.com/ErikEJ/EntityFramework6PowerTools/issues/new).

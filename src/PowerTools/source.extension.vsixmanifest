@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="2b119c79-9836-46e2-b5ed-eb766cebbf7c" Version="0.9.2.0" Language="en-US" Publisher="Microsoft" />
-    <DisplayName>Entity Framework 6 Power Tools Beta 6</DisplayName>
-    <Description xml:space="preserve">Preview of useful design-time DbContext features, added to the Visual Studio Solution Explorer context menu.
+    <Identity Id="F0A7D01D-4834-44C3-99B2-5907A0701906" Version="0.9.3.0" Language="en-US" Publisher="ErikEJ" />
+    <DisplayName>Entity Framework 6 Power Tools Community Edition</DisplayName>
+    <Description xml:space="preserve">Useful design-time utilities for EF 6, accessible through the Visual Studio Solution Explorer context menu.
 
 When right-clicking on a file containing a derived DbContext class, the following context menu functions are supported:
 1) View Entity Data Model (Read-only)
@@ -18,13 +18,14 @@ When right-clicking on an Entity Data Model (*.edmx) file, the following context
     <GettingStartedGuide>http://go.microsoft.com/fwlink/?LinkId=327692</GettingStartedGuide>
     <Icon>db.png</Icon>
     <PreviewImage>menu.png</PreviewImage>
+  <Tags>Entity Framework,DbContext,Power Tools,edmx</Tags>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,16.0)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[14.0,16.0)" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-    <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="[11.0]" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0]" />
   </Dependencies>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
