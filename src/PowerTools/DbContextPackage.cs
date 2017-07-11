@@ -421,7 +421,8 @@ namespace Microsoft.DbContextPackage
         {
             DebugCheck.NotNull(project);
 
-            var userConfigDirectory = (string)project.Properties.Item("FullPath").Value;
+            var userConfigDirectory
+                = (string)project.Properties.Item("FullPath").Value;
 
             var userConfigFilename
                 = Path.Combine(
@@ -430,10 +431,24 @@ namespace Microsoft.DbContextPackage
                         ? "Web.config"
                         : "App.config");
 
-            var document = XDocument.Load(userConfigFilename);
-            FixUpConfig(document, assemblyFullName, userConfigDirectory);
+            string tempConfigDirectory;
+            do
+            {
+                tempConfigDirectory
+                    = Path.Combine(
+                        Path.GetTempPath(),
+                        Path.GetRandomFileName());
+            } while (Directory.Exists(tempConfigDirectory) || File.Exists(tempConfigDirectory));
 
-            var tempFile = Path.GetTempFileName();
+            Directory.CreateDirectory(tempConfigDirectory);
+
+            var document = XDocument.Load(userConfigFilename);
+            FixUpConfig(document, assemblyFullName, userConfigDirectory, tempConfigDirectory);
+
+            var tempFile
+                = Path.Combine(tempConfigDirectory,
+                               "temp.config");
+
             document.Save(tempFile);
 
             return ConfigurationManager.OpenMappedExeConfiguration(
@@ -511,7 +526,7 @@ namespace Microsoft.DbContextPackage
             }
         }
 
-        private static void FixUpConfig(XDocument document, string assemblyFullName, string userConfigDirectory)
+        private static void FixUpConfig(XDocument document, string assemblyFullName, string userConfigDirectory, string tempConfigDirectory)
         {
             var entityFramework = document.Descendants("entityFramework").FirstOrDefault();
             if (entityFramework == null)
@@ -533,21 +548,35 @@ namespace Microsoft.DbContextPackage
             if (appSettings != null)
             {
                 var file = appSettings.Attribute("file");
-                if (file != null)
-                {
-                    file.SetValue(System.IO.Path.Combine(userConfigDirectory, file.Value));
-                }
+                CopyRelatedConfigFile(userConfigDirectory, tempConfigDirectory, file);
             }
 
             foreach (var configSection in document.Descendants().Where((section)=>section.Attribute("configSource") != null))
             {
                 var configSource = configSection.Attribute("configSource");
-                if (configSource != null)
-                {
-                    configSource.SetValue(System.IO.Path.Combine(userConfigDirectory, configSource.Value));
-                }
+                CopyRelatedConfigFile(userConfigDirectory, tempConfigDirectory, configSource);
             }
 
+        }
+
+        private static void CopyRelatedConfigFile(string userConfigDirectory, string tempConfigDirectory, XAttribute attr)
+        {
+            if (attr != null)
+            {
+                string tempFileName = null;
+                string tempQualifiedFileName = null;
+                do
+                {
+                    tempFileName = Path.GetRandomFileName();
+                    tempQualifiedFileName = Path.Combine(tempConfigDirectory, tempFileName);
+                } while (File.Exists(tempQualifiedFileName));
+
+                File.Copy(
+                    Path.Combine(userConfigDirectory, attr.Value),
+                    tempQualifiedFileName);
+
+                attr.SetValue(tempFileName);
+            }
         }
 
         private static string QualifyAssembly(string typeName, string assemblyFullName)
