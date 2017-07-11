@@ -421,15 +421,17 @@ namespace Microsoft.DbContextPackage
         {
             DebugCheck.NotNull(project);
 
+            var userConfigDirectory = (string)project.Properties.Item("FullPath").Value;
+
             var userConfigFilename
                 = Path.Combine(
-                    (string)project.Properties.Item("FullPath").Value,
+                    userConfigDirectory,
                     project.IsWebProject()
                         ? "Web.config"
                         : "App.config");
 
             var document = XDocument.Load(userConfigFilename);
-            FixUpConfig(document, assemblyFullName);
+            FixUpConfig(document, assemblyFullName, userConfigDirectory);
 
             var tempFile = Path.GetTempFileName();
             document.Save(tempFile);
@@ -509,7 +511,7 @@ namespace Microsoft.DbContextPackage
             }
         }
 
-        private static void FixUpConfig(XDocument document, string assemblyFullName)
+        private static void FixUpConfig(XDocument document, string assemblyFullName, string userConfigDirectory)
         {
             var entityFramework = document.Descendants("entityFramework").FirstOrDefault();
             if (entityFramework == null)
@@ -526,6 +528,26 @@ namespace Microsoft.DbContextPackage
                     type.SetValue(QualifyAssembly(type.Value, assemblyFullName));
                 }
             }
+
+            var appSettings = document.Descendants("appSettings").FirstOrDefault();
+            if (appSettings != null)
+            {
+                var file = appSettings.Attribute("file");
+                if (file != null)
+                {
+                    file.SetValue(System.IO.Path.Combine(userConfigDirectory, file.Value));
+                }
+            }
+
+            foreach (var configSection in document.Descendants().Where((section)=>section.Attribute("configSource") != null))
+            {
+                var configSource = configSection.Attribute("configSource");
+                if (configSource != null)
+                {
+                    configSource.SetValue(System.IO.Path.Combine(userConfigDirectory, configSource.Value));
+                }
+            }
+
         }
 
         private static string QualifyAssembly(string typeName, string assemblyFullName)
