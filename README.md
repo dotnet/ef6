@@ -23,7 +23,11 @@ A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-
 
 **Release**
 
-The Power Tools will remain in "beta" status, but I hope to be able to publish a build to the Visual Studio MarketPlace, so it will be easily available via Tools - Extensions and Updates in Visual Studio.
+The Power Tools will remain in "beta" status.
+
+Download the latest released version from [Visual Studio MarketPlace](https://marketplace.visualstudio.com/items?itemName=ErikEJ.EntityFramework6PowerToolsCommunityEdition)
+
+Or just install from Tools, Extensions and Updates in Visual Studio! ![](https://github.com/ErikEJ/SqlCeToolbox/blob/master/img/ext.png)
 
 **Daily build**
 
