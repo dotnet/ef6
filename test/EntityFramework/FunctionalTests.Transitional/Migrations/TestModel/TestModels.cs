@@ -657,4 +657,23 @@ namespace System.Data.Entity.Migrations
             public string Id { get; set; }
         }
     }
+
+    namespace Issue316
+    {
+        public class Order
+        {
+            public Guid OrderId { get; set; }
+            public string SomeProperty { get; set; }
+
+            public OrderOptions Options { get; set; }
+        }
+
+        public class OrderOptions
+        {
+            public Guid OrderId { get; set; }
+            public bool SomeOption { get; set; }
+
+            public Order Order { get; set; }
+        }
+    }
 }
