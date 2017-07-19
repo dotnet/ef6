@@ -1,4 +1,4 @@
-
+ -
 # Entity Framework 6 Power Tools Community Edition
 
 This is a fork of the "official" [EF 6 repository](https://github.com/aspnet/entityFramework6/), which hosts the Visual Studio 2015 and 2017 version of EF Power Tools. 
@@ -50,7 +50,7 @@ If you encounter a bug or have a feature request, please use the [Issue Tracker]
 
 ## Release 0.9.35 (July 19, 2017)
 
-* Fix error: "Unable to open configSource" with linked config files
+* Fix error: "Unable to open configSource" with linked config files - thanks to [CZEMacLeod](https://github.com/CZEMacLeod) 
 * Clean temp files
 
 ## Release 0.9.20 (July 11, 2017)
