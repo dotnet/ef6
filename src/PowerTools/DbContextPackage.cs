@@ -33,6 +33,7 @@ namespace Microsoft.DbContextPackage
         private readonly OptimizeContextHandler _optimizeContextHandler;
         private readonly ViewContextHandler _viewContextHandler;
         private readonly ViewDdlHandler _viewDdlHandler;
+        private HashSet<string> _tempFileNames;
 
         private DTE2 _dte2;
 
@@ -41,6 +42,7 @@ namespace Microsoft.DbContextPackage
             _optimizeContextHandler = new OptimizeContextHandler(this);
             _viewContextHandler = new ViewContextHandler(this);
             _viewDdlHandler = new ViewDdlHandler(this);
+            _tempFileNames = new HashSet<string>();
         }
 
         internal DTE2 DTE2
@@ -185,6 +187,24 @@ namespace Microsoft.DbContextPackage
                 remoteStackTraceString.SetValue(innerException, innerException.StackTrace + "$$RethrowMarker$$");
 
                 throw innerException;
+            }
+            finally
+            {
+                foreach (var file in _tempFileNames)
+                {
+                    try
+                    {
+                        if (File.Exists(file))
+                        {
+                            File.Delete(file);
+                        }
+                    }
+                    catch
+                    {
+                        //Ignored
+                    }
+                }
+                _tempFileNames.Clear();
             }
         }
 
@@ -417,7 +437,7 @@ namespace Microsoft.DbContextPackage
             }
         }
 
-        private static Configuration GetUserConfig(Project project, string assemblyFullName)
+        private Configuration GetUserConfig(Project project, string assemblyFullName)
         {
             DebugCheck.NotNull(project);
 
@@ -449,6 +469,7 @@ namespace Microsoft.DbContextPackage
                                "temp.config");
 
             document.Save(tempFile);
+            _tempFileNames.Add(tempFile);
 
             return ConfigurationManager.OpenMappedExeConfiguration(
                 new ExeConfigurationFileMap { ExeConfigFilename = tempFile },
@@ -525,7 +546,7 @@ namespace Microsoft.DbContextPackage
             }
         }
 
-        private static void FixUpConfig(XDocument document, string assemblyFullName, string userConfigDirectory, string tempConfigDirectory)
+        private void FixUpConfig(XDocument document, string assemblyFullName, string userConfigDirectory, string tempConfigDirectory)
         {
             var entityFramework = document.Descendants("entityFramework").FirstOrDefault();
             if (entityFramework == null)
@@ -557,7 +578,7 @@ namespace Microsoft.DbContextPackage
             }
         }
 
-        private static void CopyRelatedConfigFile(string userConfigDirectory, string tempConfigDirectory, XAttribute attr)
+        private void CopyRelatedConfigFile(string userConfigDirectory, string tempConfigDirectory, XAttribute attr)
         {
             if (attr != null)
             {
@@ -572,6 +593,7 @@ namespace Microsoft.DbContextPackage
                 File.Copy(
                     Path.Combine(userConfigDirectory, attr.Value),
                     tempQualifiedFileName);
+                _tempFileNames.Add(tempQualifiedFileName);
 
                 attr.SetValue(tempFileName);
             }
