@@ -17,7 +17,7 @@ When right-clicking on an Entity Data Model .edmx  file, the following context m
 
 If you are looking for Reverse Engineeering tools, I recommend using the [EF Reverse POCO Generator Template](https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator). You can also use the less advanced ["Code First from Database" feature](http://www.entityframeworktutorial.net/code-first/code-first-from-existing-database.aspx) that is included with the standard Visual Studio tooling for EF 6.
 
-A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-us/data/jj593170)
+A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-us/data/jj593170
 
 # Downloads/builds
 
@@ -35,8 +35,20 @@ You can download the daily build from [VSIX Gallery](http://vsixgallery.com/exte
 
 Install the [VSIX Gallery Nightly builds extension](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.VSIXGallery-nightlybuilds) to get the latest daily build automatically.
 
-## How do I contribute
+# How do I contribute
 
 There are lots of ways to contribute, including testing out nighty builds, reporting bugs, and contributing code.
 
 If you encounter a bug or have a feature request, please use the [Issue Tracker](https://github.com/ErikEJ/EntityFramework6PowerTools/issues/new).
+
+# Release Notes
+
+## Daily build
+
+**Bug fixes**
+
+* Fix error: "Unable to open configSource" with linked config files
+
+## Release 0.9.20 (July 11, 2017)
+
+Initial release based on the current EF codebase
