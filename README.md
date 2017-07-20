@@ -24,6 +24,7 @@ A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-
 
 **Release**
 
+
 The Power Tools will remain in "beta" status.
 
 Download the latest released version from [Visual Studio MarketPlace](https://marketplace.visualstudio.com/items?itemName=ErikEJ.EntityFramework6PowerToolsCommunityEdition)
@@ -56,3 +57,25 @@ If you encounter a bug or have a feature request, please use the [Issue Tracker]
 ## Release 0.9.20 (July 11, 2017)
 
 Initial release based on the current EF codebase
+
+# Feature details
+
+## View Entity Data Model (Read-only)
+
+Even when developing with code first, you might want to graphically view your model. This View Entity Data Model option displays a read-only view of the Code First model in the EF Designer. Even though the designer will let you modify the model, you would not be able to save your changes.
+
+## View Entity Data Model XML
+
+This option allows you to view the EDMX XML representing the underlying Code First model. You probably will not be using this option on too many occasions. One case where you may need to use it is when debugging some Code First issues.
+
+## View Entity Data Model DDL SQL
+
+This option allows you to view the DDL SQL script that corresponds to the SSDL in the underlying EDM Model. You may want to use this option when you want to review the tables and columns that will get produced by your model.
+
+## Generating Pre-compiled Views 
+
+You can use Generate Views option to generate pre-compiled views that are used by the Entity Framework runtime to improve start-up performance. The generated views file is added to the project. You can read more about view compilation in the following article: Performance Considerations.
+The Generate Views option is available when working with Code First and also when working with the EF Designer.
+When working with Code First, Generate Views option is available when right-clicking on a file that contains a derived DbContext class.
+When working with the EF Designer, Generate Views option is available when right-clicking on the EDMX file.
+Note that, every time you change your model you need to re-generate the pre-compiled views by running the GenerateViews command again.
