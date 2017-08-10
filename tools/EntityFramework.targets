@@ -19,6 +19,9 @@ Project global post-settings and targets.
      Condition="'$(VisualStudioVersion)' == '12.0'
              OR '$(VisualStudioVersion)' == '14.0'
              OR '$(VisualStudioVersion)' == '15.0'">$(DefineConstants);VS12ORNEWER</DefineConstants>
+    <DefineConstants
+     Condition="'$(VisualStudioVersion)' == '14.0'
+             OR '$(VisualStudioVersion)' == '15.0'">$(DefineConstants);VS14ORNEWER</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'" >
@@ -34,6 +37,13 @@ Project global post-settings and targets.
       $(DevEnvDir)ReferenceAssemblies\v2.0\;
       $(DevEnvDir)PublicAssemblies\;
       $(DevEnvDir);
+      $(AssemblySearchPaths)
+    </AssemblySearchPaths>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '14.0'" >
+    <AssemblySearchPaths>
+      $(VS140COMNTOOLS)\..\..\Common7\IDE\PrivateAssemblies;
       $(AssemblySearchPaths)
     </AssemblySearchPaths>
   </PropertyGroup>
