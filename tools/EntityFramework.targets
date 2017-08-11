@@ -41,13 +41,6 @@ Project global post-settings and targets.
     </AssemblySearchPaths>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(VisualStudioVersion)' == '14.0'" >
-    <AssemblySearchPaths>
-      $(VS140COMNTOOLS)\..\..\Common7\IDE\PrivateAssemblies;
-      $(AssemblySearchPaths)
-    </AssemblySearchPaths>
-  </PropertyGroup>
-
   <!-- For VisualStudioVersion 15.0 the VS installation no longer adds the VS dirs to the
        assembly search paths via the GAC so need to add the following search paths to support
        references to Microsoft.VSDesigner, Microsoft.VisualStudio.XmlEditor and

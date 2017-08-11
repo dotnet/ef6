@@ -56,6 +56,9 @@
   </PropertyGroup>
   <Import Project="$(RepositoryRoot)tools\EFToolsVsReferences.settings.targets" />
   <ItemGroup>
+    <Reference Condition="'$(VisualStudioVersion)' >= '14.0'" Include="Microsoft.VisualStudio.Telemetry">
+      <HintPath>..\..\..\packages\Microsoft.VisualStudio.Telemetry.14.1.680-update09A45013\lib\net45\Microsoft.VisualStudio.Telemetry.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TextTemplating.$(VisualStudioVersion)" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.11.0" />
@@ -366,6 +369,7 @@
       <LastGenOutput>DefaultVBEntityTypeGenerator.cs</LastGenOutput>
       <CustomToolNamespace>Microsoft.Data.Entity.Design.CodeGeneration</CustomToolNamespace>
     </None>
+    <None Include="packages.config" />
     <None Include="VisualStudio\InTheBoxItemTemplates\DbContext.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>DbContext.txt</LastGenOutput>

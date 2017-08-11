@@ -11,10 +11,8 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.14.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0" />
-    <Reference Include="Microsoft.VisualStudio.Telemetry" />
   </ItemGroup>
   <ItemGroup Condition="$(VisualStudioVersion)=='15.0'">
     <Reference Include="Microsoft.VisualStudio.Shell.Framework" />
-    <Reference Include="Microsoft.VisualStudio.Telemetry" />
   </ItemGroup>
 </Project>
