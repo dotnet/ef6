@@ -1,4 +1,4 @@
-# Entity Framework 6.x
+Core# Entity Framework 6.x
 
 Entity Framework (EF) is an object-relational mapper that enables .NET developers to work with relational data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
 
@@ -6,7 +6,7 @@ Entity Framework is actively developed by the Entity Framework team in collabora
 
 ## EF6.x here, EF Core elsewhere
 
-This project is for Entity Framework 6.x. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFramework.
+This project is for Entity Framework 6.x. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFrameworkCore.
 
 ## How do I use EF
 
