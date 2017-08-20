@@ -171,7 +171,7 @@ namespace System.Data.Entity.Migrations.Utilities
                 return _tabString;
             }
 
-            // Since _indentLevel is known > 2, we can safely subtract two to index the list
+            // Since _indentLevel is known >= 2, we can safely subtract two to index the list
             var cacheIndex = _indentLevel - 2;
             var cached = cacheIndex < _cachedIndents.Count ? _cachedIndents[cacheIndex] : null;
 
