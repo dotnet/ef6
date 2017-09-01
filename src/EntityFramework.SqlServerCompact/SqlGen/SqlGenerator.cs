@@ -1312,7 +1312,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
                     var finalArgs = new List<object>();
 
-                    for (var childIndex = 0; childIndex < aggregate.Arguments.Count; childIndex++) {
+                    for (var childIndex = 0; childIndex < aggregate.Arguments.Count; childIndex++)
+                    {
                         var argument = aggregate.Arguments[childIndex];
                         var translatedAggregateArgument = argument.Accept(this);
 
