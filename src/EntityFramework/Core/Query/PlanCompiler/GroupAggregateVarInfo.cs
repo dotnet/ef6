@@ -39,8 +39,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Each key value pair represents a candidate aggregate.
         // The key is the function aggregate subtree and the value is a 'template' of translation of the
-        // function aggregate's argument over the var representing the group aggregate.
-        // A valid candidate has an argument that does not have any external references
+        // function aggregate's arguments over the var representing the group aggregate.
+        // A valid candidate has arguments that do not have any external references
         // except for the group aggregate corresponding to the DefiningGroupNode.
         // </summary>
         internal HashSet<KeyValuePair<Node, List<Node>>> CandidateAggregateNodes

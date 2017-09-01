@@ -1894,7 +1894,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 PlanCompiler.Assert(aggVar is ComputedVar, "Non-ComputedVar encountered in Aggregate VarDefOp");
 
                 var aggOpNode = aggVarDefNode.Child0;
-                var args = aggOpNode.Children.Select(argumentNode => VisitNode(argumentNode));
+                var args = aggOpNode.Children.Select(VisitNode);
 
                 var funcAggOp = aggOpNode.Op as AggregateOp;
                 PlanCompiler.Assert(funcAggOp != null, "Non-Aggregate Node encountered as child of Aggregate VarDefOp Node");
