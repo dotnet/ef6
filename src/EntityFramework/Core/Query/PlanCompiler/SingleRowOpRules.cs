@@ -25,6 +25,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="singleRowNode"> Current subtree </param>
         // <param name="newNode"> transformed subtree </param>
         // <returns> Transformation status </returns>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "trc", Justification = "Ensures will throw exception if context is of wrong type.")]
         private static bool ProcessSingleRowOpOverAnything(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;

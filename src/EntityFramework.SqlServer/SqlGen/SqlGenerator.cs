@@ -2561,7 +2561,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 input.Select.Skip = new SkipClause(HandleCountExpression(e.Count));
 
                 // Add the ORDER BY part.
-                AddSortKeys(input.OrderBy, e.SortOrder);
+                if (SqlProviderServices.UseRowNumberOrderingInOffsetQueries)
+                {
+                    input.OrderBy.Append("row_number() OVER (ORDER BY ");
+                    AddSortKeys(input.OrderBy, e.SortOrder);
+                    input.OrderBy.Append(")");
+                }
+                else
+                {
+                    AddSortKeys(input.OrderBy, e.SortOrder);
+                }
 
                 symbolTable.ExitScope();
                 selectStatementStack.Pop();

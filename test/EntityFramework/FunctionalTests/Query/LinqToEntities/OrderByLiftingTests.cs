@@ -131,7 +131,7 @@ namespace System.Data.Entity.Query.LinqToEntities
     [Skip1].[Alias] AS [Alias]
     FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias]
     FROM [dbo].[ArubaOwners] AS [Extent1]
-    ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC)
     OFFSET 5 ROWS 
     )  AS [Skip1]
     WHERE 0 = ([Skip1].[Id] % 2)
@@ -145,7 +145,7 @@ namespace System.Data.Entity.Query.LinqToEntities
     [Skip1].[Alias] AS [Alias]
     FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[FirstName] AS [FirstName], [Extent1].[LastName] AS [LastName], [Extent1].[Alias] AS [Alias]
     FROM [dbo].[ArubaOwners] AS [Extent1]
-    ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC
+    ORDER BY row_number() OVER (ORDER BY [Extent1].[FirstName] DESC, [Extent1].[Id] ASC)
     OFFSET 5 ROWS 
     )  AS [Skip1]
     WHERE 0 = ([Skip1].[Id] % 2)
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Query.LinqToEntities
 	    FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[OS] AS [OS], [Extent1].[Lang] AS [Lang], [Extent1].[Arch] AS [Arch], [Extent1].[Host] AS [Host], [Extent1].[Address] AS [Address], [Extent1].[Location] AS [Location], [Extent1].[Discriminator] AS [Discriminator]
 	        FROM [dbo].[ArubaConfigs] AS [Extent1]
 	        WHERE [Extent1].[Discriminator] IN (N'ArubaMachineConfig',N'ArubaConfig')
-            ORDER BY [Extent1].[Arch] DESC, [Extent1].[Id] ASC
+            ORDER BY row_number() OVER (ORDER BY [Extent1].[Arch] DESC, [Extent1].[Id] ASC)
             OFFSET 5 ROWS 
 	    )  AS [Skip1]
 	    WHERE [Skip1].[Discriminator] = N'ArubaMachineConfig'
@@ -206,7 +206,7 @@ namespace System.Data.Entity.Query.LinqToEntities
         FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[OS] AS [OS], [Extent1].[Lang] AS [Lang], [Extent1].[Arch] AS [Arch], [Extent1].[Host] AS [Host], [Extent1].[Address] AS [Address], [Extent1].[Location] AS [Location], [Extent1].[Discriminator] AS [Discriminator]
             FROM [dbo].[ArubaConfigs] AS [Extent1]
             WHERE [Extent1].[Discriminator] IN (N'ArubaMachineConfig',N'ArubaConfig')
-            ORDER BY [Extent1].[Arch] DESC, [Extent1].[Id] ASC
+            ORDER BY row_number() OVER (ORDER BY [Extent1].[Arch] DESC, [Extent1].[Id] ASC)
             OFFSET 5 ROWS FETCH NEXT 10 ROWS ONLY 
         )  AS [Limit1]
         WHERE [Limit1].[Discriminator] = N'ArubaMachineConfig'

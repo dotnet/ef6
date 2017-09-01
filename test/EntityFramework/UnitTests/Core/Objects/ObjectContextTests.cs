@@ -561,6 +561,9 @@ namespace System.Data.Entity.Core.Objects
             public void Command_is_executed_with_correct_CommandText()
             {
                 var dbCommandMock = new Mock<DbCommand>();
+
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection")
+                    .Returns(() => new EntityParameterCollection());
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
                 dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
@@ -581,6 +584,8 @@ namespace System.Data.Entity.Core.Objects
             public void CommandTimeout_is_set_on_created_DbCommand_if_it_was_set_on_ObjectContext()
             {
                 var dbCommandMock = new Mock<DbCommand>();
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection")
+                    .Returns(() => new EntityParameterCollection());
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
                 dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
@@ -601,6 +606,8 @@ namespace System.Data.Entity.Core.Objects
             public void Transaction_set_on_created_DbCommand_if_it_was_set_on_EntityConnection()
             {
                 var dbCommandMock = new Mock<DbCommand>();
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection")
+                    .Returns(() => new EntityParameterCollection());
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
                 dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
@@ -632,24 +639,24 @@ namespace System.Data.Entity.Core.Objects
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                                        Callback(
-                                            (Array p) =>
-                                                {
-                                                    var list = p.ToList<DbParameter>();
-                                                    if (list.Count == 3
-                                                        && list[0] == parameter1
-                                                        && list[1] == parameter2
-                                                        && list[2] == parameter3)
-                                                    {
-                                                        correctParameters = true;
-                                                    }
-                                                });
+                    Callback(
+                        (Array p) =>
+                        {
+                            var list = p.ToList<DbParameter>();
+                            if (list.Count == 3
+                                && list[0] == parameter1
+                                && list[1] == parameter2
+                                && list[2] == parameter3)
+                            {
+                                correctParameters = true;
+                            }
+                        });
 
                 var dbCommandMock = new Mock<DbCommand>();
-                
+
                 parameterCollectionMock
-                   .Setup(m => m.GetEnumerator())
-                   .Returns(new List<DbParameter>().GetEnumerator());
+                    .Setup(m => m.GetEnumerator())
+                    .Returns(new List<DbParameter>().GetEnumerator());
 
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
@@ -679,42 +686,42 @@ namespace System.Data.Entity.Core.Objects
                 var parameterMock4 = new Mock<DbParameter>();
 
                 var parameterMockList = new List<Mock<DbParameter>>
-                    {
-                        parameterMock1,
-                        parameterMock2,
-                        parameterMock3,
-                        parameterMock4,
-                    };
+                {
+                    parameterMock1,
+                    parameterMock2,
+                    parameterMock3,
+                    parameterMock4,
+                };
 
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                                        Callback(
-                                            (Array p) =>
-                                                {
-                                                    var list = p.ToList<DbParameter>();
-                                                    if (list.Count == 4
-                                                        && list[0] == parameterMockList[0].Object
-                                                        && list[1] == parameterMockList[1].Object
-                                                        &&
-                                                        list[2] == parameterMockList[2].Object
-                                                        && list[3] == parameterMockList[3].Object)
-                                                    {
-                                                        correctParameters = true;
-                                                    }
-                                                });
+                    Callback(
+                        (Array p) =>
+                        {
+                            var list = p.ToList<DbParameter>();
+                            if (list.Count == 4
+                                && list[0] == parameterMockList[0].Object
+                                && list[1] == parameterMockList[1].Object
+                                &&
+                                list[2] == parameterMockList[2].Object
+                                && list[3] == parameterMockList[3].Object)
+                            {
+                                correctParameters = true;
+                            }
+                        });
 
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.SetupGet(m => m.CommandText).Returns("{0} Foo {1} Bar {2} Baz {3}");
                 parameterCollectionMock
-                   .Setup(m => m.GetEnumerator())
-                   .Returns(new List<DbParameter>().GetEnumerator());
+                    .Setup(m => m.GetEnumerator())
+                    .Returns(new List<DbParameter>().GetEnumerator());
 
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
                 dbCommandMock.Protected().Setup<DbParameter>("CreateDbParameter").
-                              Returns(() => parameterMockList[createdParameterCount].Object).
-                              Callback(() => createdParameterCount++);
+                    Returns(() => parameterMockList[createdParameterCount].Object).
+                    Callback(() => createdParameterCount++);
 
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
@@ -770,31 +777,38 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true, useDefaultTransactionalBehavior: false);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(
+                    startTransaction: true, useDefaultTransactionalBehavior: false);
             }
 
             [Fact]
             public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false, useDefaultTransactionalBehavior: false);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(
+                    startTransaction: false, useDefaultTransactionalBehavior: false);
             }
 
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_true()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true, useDefaultTransactionalBehavior: true);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(
+                    startTransaction: true, useDefaultTransactionalBehavior: true);
             }
 
             [Fact]
             public void Executes_without_a_transaction_using_ExecutionStrategy_when_EnsureTransactionsForFunctionsAndCommands_is_false()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false, useDefaultTransactionalBehavior: true);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(
+                    startTransaction: false, useDefaultTransactionalBehavior: true);
             }
 
-            private void Executes_in_a_transaction_using_ExecutionStrategy_implementation(bool startTransaction, bool useDefaultTransactionalBehavior)
+            private void Executes_in_a_transaction_using_ExecutionStrategy_implementation(
+                bool startTransaction, bool useDefaultTransactionalBehavior)
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQuery()).Returns(1);
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection")
+                    .Returns(() => new EntityParameterCollection());
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
 
@@ -803,36 +817,37 @@ namespace System.Data.Entity.Core.Objects
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteNonQuery
                 objectContextMock.Setup(
                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<int>, IDbExecutionStrategy, bool, bool>(
-                                     (f, t, s, r) =>
-                                         {
-                                             dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Never());
-                                             var result = f();
-                                             dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Once());
-                                             return result;
-                                         });
+                    .Returns<Func<int>, IDbExecutionStrategy, bool, bool>(
+                        (f, t, s, r) =>
+                        {
+                            dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Never());
+                            var result = f();
+                            dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Once());
+                            return result;
+                        });
 
                 objectContextMock.Object.ContextOptions.EnsureTransactionsForFunctionsAndCommands = startTransaction;
 
                 // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>()))
-                                     .Returns<Func<int>>(
-                                         f =>
-                                             {
-                                                 objectContextMock.Verify(
-                                                     m =>
-                                                     m.ExecuteInTransaction(
-                                                         It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()),
-                                                     Times.Never());
-                                                 var result = f();
-                                                 objectContextMock.Verify(
-                                                     m =>
-                                                     m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), startTransaction, true),
-                                                     Times.Once());
-                                                 return result;
-                                             });
+                    .Returns<Func<int>>(
+                        f =>
+                        {
+                            objectContextMock.Verify(
+                                m =>
+                                    m.ExecuteInTransaction(
+                                        It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                Times.Never());
+                            var result = f();
+                            objectContextMock.Verify(
+                                m =>
+                                    m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), startTransaction, true),
+                                Times.Once());
+                            return result;
+                        });
 
-                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                    key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     if (useDefaultTransactionalBehavior)
@@ -854,6 +869,59 @@ namespace System.Data.Entity.Core.Objects
 
                 // Finally verify that ExecutionStrategy.Execute was called
                 executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<int>>()), Times.Once());
+            }
+
+            [Fact]
+            public void Executes_in_a_transaction_using_ExecutionStrategy_clears_parameters_for_retry()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+                dbCommandMock.Setup(m => m.ExecuteNonQuery()).Throws(new InvalidOperationException("Foo"));
+
+                var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
+
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+
+                var parameter = new EntityParameter();
+                var entityParameterCollection = new EntityParameterCollection();
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(() => entityParameterCollection);
+                objectContextMock.Setup(
+                    m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                    .Returns<Func<int>, IDbExecutionStrategy, bool, bool>(
+                        (f, t, s, r) =>
+                        {
+                            var result = f();
+                            return result;
+                        });
+
+                executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>()))
+                    .Returns<Func<int>>(
+                        f =>
+                        {
+                            var result = f();
+                            return result;
+                        });
+
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                    key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+                try
+                {
+                    // To simulate the retry, we will execute the query twice.
+                    // and we validate that in both ocassions the same exception is received
+                    // if parameter were not cleared, the second call would fail with the
+                    // sql paramters contained in an another sql collection error.
+                    Assert.Equal(
+                        "Foo",
+                        Assert.Throws<InvalidOperationException>(
+                            () => objectContextMock.Object.ExecuteStoreCommand("foo", parameter)).Message);
+                    Assert.Equal(
+                        "Foo",
+                        Assert.Throws<InvalidOperationException>(
+                            () => objectContextMock.Object.ExecuteStoreCommand("foo", parameter)).Message);
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
             }
         }
 
@@ -1204,11 +1272,10 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
-            public void Executes_in_a_transaction_using_ExecutionStrategy_throws_clears_parameters_for_retry()
+            public void Executes_in_a_transaction_using_ExecutionStrategy_clears_parameters_for_retry()
             {
                 var dbCommandMock = new Mock<DbCommand>();
 
-                // we set up teh command to trhow an exception.
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                              .Throws(new InvalidOperationException("Foo"));
                 var parameter = new EntityParameter();
@@ -1226,10 +1293,10 @@ namespace System.Data.Entity.Core.Objects
                 MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
-                    // To simulate the retry, we will execute the query twice. 
+                    // To simulate the retry, we will execute the query twice.
                     // and we validate that in both ocassions the same exception is received
-                    // if parameter were not cleared, the second call would fail with the 
-                    // sql paramters contained in an another sql collection error. 
+                    // if parameter were not cleared, the second call would fail with the
+                    // sql paramters contained in an another sql collection error.
                     Assert.Equal(
                         "Foo",
                         Assert.Throws<InvalidOperationException>(
@@ -2441,6 +2508,8 @@ namespace System.Data.Entity.Core.Objects
             public void CommandTimeout_is_set_on_created_DbCommand_if_it_was_set_on_ObjectContext()
             {
                 var dbCommandMock = new Mock<DbCommand>();
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection")
+                    .Returns(() => new EntityParameterCollection());
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
@@ -2463,6 +2532,8 @@ namespace System.Data.Entity.Core.Objects
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection")
+                    .Returns(() => new EntityParameterCollection());
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
                 dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
@@ -2660,6 +2731,8 @@ namespace System.Data.Entity.Core.Objects
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection")
+                    .Returns(() => new EntityParameterCollection());
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
 
@@ -2728,6 +2801,65 @@ namespace System.Data.Entity.Core.Objects
                 // Finally verify that ExecutionStrategy.ExecuteAsync was called
                 executionStrategyMock.Verify(
                     m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()), Times.Once());
+            }
+
+            [Fact]
+            public static void Executes_in_a_transaction_using_ExecutionStrategy_clears_parameters_for_retry()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+                dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Throws(new InvalidOperationException("Foo"));
+
+                var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
+
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+
+                var parameter = new EntityParameter();
+                var entityParameterCollection = new EntityParameterCollection();
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(() => entityParameterCollection);
+                objectContextMock.Setup(
+                    m => m.ExecuteInTransactionAsync(
+                        It.IsAny<Func<Task<int>>>(),
+                        It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                                 .Returns<Func<Task<int>>, IDbExecutionStrategy, bool, bool, CancellationToken>(
+                                     (f, t, s, r, c) =>
+                                     {
+                                         var result = f();
+                                         return result;
+                                     });
+
+                executionStrategyMock.Setup(
+                    m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()))
+                                     .Returns<Func<Task<int>>, CancellationToken>(
+                                         (f, c) =>
+                                         {
+                                             var result = f().Result;
+                                             return Task.FromResult(result);
+                                         });
+
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+                try
+                {
+                    // To simulate the retry, we will execute the query twice.
+                    // and we validate that in both ocassions the same exception is received
+                    // if parameter were not cleared, the second call would fail with the
+                    // sql paramters contained in an another sql collection error.
+                    Assert.Equal(
+                        "Foo",
+                        Assert.Throws<InvalidOperationException>(
+                            () => ExceptionHelpers.UnwrapAggregateExceptions(
+                                () => objectContextMock.Object.ExecuteStoreCommandAsync("foo", parameter).GetAwaiter().GetResult()))
+                            .Message);
+                    Assert.Equal(
+                        "Foo",
+                        Assert.Throws<InvalidOperationException>(
+                            () => ExceptionHelpers.UnwrapAggregateExceptions(
+                                () => objectContextMock.Object.ExecuteStoreCommandAsync("foo", parameter).GetAwaiter().GetResult()))
+                            .Message);
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
             }
 
             [Fact]
@@ -2800,7 +2932,7 @@ namespace System.Data.Entity.Core.Objects
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
             }
-            
+
             [Fact]
             public void Command_is_executed_with_correct_CommandText_and_parameters_with_streaming()
             {
@@ -2886,7 +3018,7 @@ namespace System.Data.Entity.Core.Objects
                 var storeDataReaderMock = new Mock<DbDataReader>();
                 storeDataReaderMock.Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
                 storeDataReaderMock.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
-                
+
                 dbCommandMock.Protected()
                              .Setup<Task<DbDataReader>>(
                              "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
@@ -3037,7 +3169,7 @@ namespace System.Data.Entity.Core.Objects
                 parameterCollectionMock
                    .Setup(m => m.GetEnumerator())
                    .Returns(new List<DbParameter>().GetEnumerator());
-                
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
@@ -3126,6 +3258,56 @@ namespace System.Data.Entity.Core.Objects
                 executionStrategyMock.Verify(
                     m => m.ExecuteAsync(It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<CancellationToken>()), Times.Once());
             }
+
+            [Fact]
+            public void Executes_in_a_transaction_using_ExecutionStrategy_clears_parameters_for_retry()
+            {
+                var dbCommandMock = new Mock<DbCommand>();
+
+                dbCommandMock.Protected().Setup<Task<DbDataReader>>(
+                    "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
+                             .Throws(new InvalidOperationException("Foo"));
+
+                var parameter = new EntityParameter();
+                var entityParameterCollection = new EntityParameterCollection();
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(() => entityParameterCollection);
+                var objectContext = Mock.Get(CreateObjectContext(dbCommandMock.Object));
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+                executionStrategyMock.Setup(
+                    m => m.ExecuteAsync(It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<CancellationToken>()))
+                    .Returns<Func<Task<ObjectResult<object>>>, CancellationToken>(
+                        (f, c) =>
+                        {
+                            var result = f().Result;
+                            return Task.FromResult(result);
+                        });
+
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+                try
+                {
+                    // To simulate the retry, we will execute the query twice.
+                    // and we validate that in both ocassions the same exception is received
+                    // if parameter were not cleared, the second call would fail with the
+                    // sql paramters contained in an another sql collection error.
+                    Assert.Equal(
+                        "Foo",
+                        Assert.Throws<InvalidOperationException>(
+                            () => ExceptionHelpers.UnwrapAggregateExceptions(
+                                () => objectContext.Object.ExecuteStoreQueryAsync<object>("Bar", parameter).GetAwaiter().GetResult()))
+                            .Message);
+                    Assert.Equal(
+                        "Foo",
+                        Assert.Throws<InvalidOperationException>(
+                            () => ExceptionHelpers.UnwrapAggregateExceptions(
+                                () => objectContext.Object.ExecuteStoreQueryAsync<object>("Bar", parameter).GetAwaiter().GetResult()))
+                            .Message);
+                }
+                finally
+                {
+                    MutableResolver.ClearResolvers();
+                }
+            }
         }
 
         public class ExecuteInTransactionAsync : TestBase
@@ -3170,7 +3352,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.EnlistedInUserTransaction).Returns(true);
-                
+
                 var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
@@ -3230,7 +3412,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
-                
+
                 var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
 

@@ -1623,7 +1623,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Key usage is not valid. The {0} class  cannot define keys because one of its base classes ('{1}') defines keys."
+        // A string like "Key usage is not valid. The {0} class cannot define keys because one of its base classes ('{1}') defines keys."
         // </summary>
         internal static string EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(object p0, object p1)
         {
@@ -7127,15 +7127,15 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "All objects in the EntitySet '{0}' must have unique primary keys. However, an instance of type '{1}' and an instance of type '{2}' both have the same primary key value, '{3}'. "
+        // A string like "All objects in the EntitySet '{0}' must have unique primary keys. However, an instance of type '{1}' and an instance of type '{2}' both have the same primary key value. "
         // </summary>
-        internal static string Materializer_RecyclingEntity(object p0, object p1, object p2, object p3)
+        internal static string Materializer_RecyclingEntity(object p0, object p1, object p2)
         {
-            return EntityRes.GetString(EntityRes.Materializer_RecyclingEntity, p0, p1, p2, p3);
+            return EntityRes.GetString(EntityRes.Materializer_RecyclingEntity, p0, p1, p2);
         }
 
         // <summary>
-        // A string like "An object with a key value '{0}' already exists in an added state. An object in this state cannot be merged."
+        // A string like "An object of type '{0}' with the same key already exists in an added state. An object in this state cannot be merged."
         // </summary>
         internal static string Materializer_AddedEntityAlreadyExists(object p0)
         {
@@ -14029,6 +14029,29 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.StoreTypeNotFound, p0, p1);
         }
+
+        // <summary>
+        // A string like "Escaping within like expressions is not supported by the provider."
+        // </summary>
+        internal static string ProviderDoesNotSupportEscapingLikeArgument
+        {
+            get { return EntityRes.GetString(EntityRes.ProviderDoesNotSupportEscapingLikeArgument); }
+        }
+
+        // A string like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
+        // </summary>
+        internal static string IndexPropertyNotFound(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.IndexPropertyNotFound, p0, p1);
+        }
+
+        // <summary>
+        // A string like "IndexAttributes with identity '{0}' and name '{1}' cannot be merged because they ambiguously match multiple, conflicting IndexAttributes."
+        // </summary>
+        internal static string ConflictingIndexAttributeMatches(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConflictingIndexAttributeMatches, p0, p1);
+        }
     }
 
     // <summary>
@@ -15643,6 +15666,21 @@ namespace System.Data.Entity.Resources
         internal static Exception StoreTypeNotFound(object p0, object p1)
         {
             return new InvalidOperationException(Strings.StoreTypeNotFound(p0, p1));
+        }
+
+        // InvalidOperationException with message like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
+        // </summary>
+        internal static Exception IndexPropertyNotFound(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.IndexPropertyNotFound(p0, p1));
+        }
+
+        // <summary>
+        // InvalidOperationException with message like "IndexAttributes with identity '{0}' and name '{1}' cannot be merged because they ambiguously match multiple, conflicting IndexAttributes."
+        // </summary>
+        internal static Exception ConflictingIndexAttributeMatches(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.ConflictingIndexAttributeMatches(p0, p1));
         }
 
         // <summary>
@@ -17430,6 +17468,9 @@ namespace System.Data.Entity.Resources
         internal const string CannotSetBaseTypeCyclicInheritance = "CannotSetBaseTypeCyclicInheritance";
         internal const string CannotDefineKeysOnBothBaseAndDerivedTypes = "CannotDefineKeysOnBothBaseAndDerivedTypes";
         internal const string StoreTypeNotFound = "StoreTypeNotFound";
+        internal const string ProviderDoesNotSupportEscapingLikeArgument = "ProviderDoesNotSupportEscapingLikeArgument";
+        internal const string IndexPropertyNotFound = "IndexPropertyNotFound";
+        internal const string ConflictingIndexAttributeMatches = "ConflictingIndexAttributeMatches";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

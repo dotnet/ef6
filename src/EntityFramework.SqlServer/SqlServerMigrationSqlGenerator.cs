@@ -45,6 +45,18 @@ namespace System.Data.Entity.SqlServer
         private int _variableCounter;
 
         /// <summary>
+        /// Determines if a provider specific exception corresponds to a database-level permission denied error.
+        /// </summary>
+        /// <param name="exception">The database exception.</param>
+        /// <returns> true if the supplied exception corresponds to a database-level permission denied error; otherwise false. </returns>
+        public override bool IsPermissionDeniedError(Exception exception)
+        {
+            var sqlException = exception as SqlException;
+
+            return sqlException != null && sqlException.Number == 229;
+        }
+
+        /// <summary>
         /// Converts a set of migration operations into Microsoft SQL Server specific SQL.
         /// </summary>
         /// <param name="migrationOperations"> The operations to be converted. </param>
@@ -770,11 +782,7 @@ namespace System.Data.Entity.SqlServer
 
             using (var writer = Writer())
             {
-                if ((column.DefaultValue != null)
-                    || !string.IsNullOrWhiteSpace(column.DefaultValueSql))
-                {
-                    DropDefaultConstraint(alterColumnOperation.Table, column.Name, writer);
-                }
+                DropDefaultConstraint(alterColumnOperation.Table, column.Name, writer);
 
                 writer.Write("ALTER TABLE ");
                 writer.Write(Name(alterColumnOperation.Table));
@@ -1613,7 +1621,10 @@ namespace System.Data.Entity.SqlServer
 
             var target = new CreateTableOperation(source.Name + suffix)
                              {
-                                 PrimaryKey = new AddPrimaryKeyOperation()
+                                 PrimaryKey = new AddPrimaryKeyOperation() 
+                                 {
+                                     IsClustered = source.PrimaryKey.IsClustered
+                                 }
                              };
 
             Debug.Assert(target.PrimaryKey.Name == source.PrimaryKey.Name + suffix);

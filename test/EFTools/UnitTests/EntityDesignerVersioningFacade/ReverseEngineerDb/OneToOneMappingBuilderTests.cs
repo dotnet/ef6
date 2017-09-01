@@ -1276,9 +1276,11 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         StoreModelBuilderTests.CreateRow(
                             "catalog", "schema", "B", "Col1", 0, false, "int", isIdentiy: false, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
+                            "catalog", "schema", "C", "CId", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
                         StoreModelBuilderTests.CreateRow(
-                            "catalog", "schema", "C", "Col1", 1, true, "int", isIdentiy: false, isPrimaryKey: true)
+                            "catalog", "schema", "C", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: false),
+                        StoreModelBuilderTests.CreateRow(
+                            "catalog", "schema", "C", "Col1", 1, true, "int", isIdentiy: false, isPrimaryKey: false)
                     };
 
                 var relationshipDetails = new[]

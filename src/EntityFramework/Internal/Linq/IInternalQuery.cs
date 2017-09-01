@@ -21,6 +21,8 @@ namespace System.Data.Entity.Internal.Linq
         Type ElementType { get; }
         Expression Expression { get; }
         ObjectQueryProvider ObjectQueryProvider { get; }
+
+        string ToTraceString();
  
 #if !NET40
 

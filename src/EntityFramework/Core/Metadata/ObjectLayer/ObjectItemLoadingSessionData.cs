@@ -157,6 +157,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal ObjectItemLoadingSessionData(
             KnownAssembliesSet knownAssemblies, LockedAssemblyCache lockedAssemblyCache, EdmItemCollection edmItemCollection,
             Action<String> logLoadMessage, object loaderCookie)

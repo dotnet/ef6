@@ -34,8 +34,8 @@
       <Source>$(NuGetScriptsPath)</Source>
       <Destination>tools</Destination>
     </NuGetContent>
-    <NuGetContent Include="Content\*">
-      <Destination>content</Destination>
+    <NuGetContent Include="Content\**\*">
+      <Destination>content\%(RecursiveDir)</Destination>
     </NuGetContent>
   </ItemGroup>
   <Import Project="$(RepositoryRoot)Tools\NuGetProj.targets"/>

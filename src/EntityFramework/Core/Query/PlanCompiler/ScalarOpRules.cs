@@ -400,9 +400,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var patternOp = (InternalConstantOp)n.Child1.Op;
             var strOp = (InternalConstantOp)n.Child0.Op;
 
-            var str = (string)strOp.Value;
-            var pattern = (string)patternOp.Value;
-
             var match = MatchesPattern((string)strOp.Value, (string)patternOp.Value);
             if (match == null)
             {

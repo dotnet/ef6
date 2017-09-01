@@ -339,8 +339,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             var result = new List<DbModificationClause>(setClauses.Count);
             foreach (var setClause in setClauses)
             {
-                var property = setClause.Key;
-
                 result.Add(
                     new DbSetClause(
                         GeneratePropertyExpression(target, setClause.Key),

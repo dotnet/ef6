@@ -695,6 +695,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     functionMapping.Function, resultType, functionParams);
 
                 commandDefinition = _providerServices.CreateCommandDefinition(tree, _interceptionContext);
+                _modificationFunctionCommandDefinitions.Add(functionMapping, commandDefinition);
             }
             return commandDefinition;
         }

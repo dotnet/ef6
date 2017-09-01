@@ -207,4 +207,7 @@
   <data name="EF6Providers_NotDbProviderServices" xml:space="preserve">
     <value>The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider.</value>
   </data>
+  <data name="CoercingNullablePrimaryKeyPropertyToNonNullable" xml:space="preserve">
+    <value>The Entity Framework provider in use reported the primary key column {0} on table {1} to be nullable. Entity Framework does not allow nullable primary keys, therefore it will assume the column is not nullable and any null values stored in this column may cause errors at runtime.</value>
+  </data>
 </root>

@@ -428,9 +428,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var refElementType = refType.ElementType;
                 // Go through all the members of elementType and get the key properties
 
-                var entitySet = MetadataHelper.GetEntitySetAtEnd(
-                    (AssociationSet)caseMemberPath.Extent,
-                    (AssociationEndMember)caseMemberPath.LeafEdmMember);
                 foreach (var entityMember in refElementType.KeyMembers)
                 {
                     var slotNum = GetSlotIndex(caseMemberPath, entityMember);

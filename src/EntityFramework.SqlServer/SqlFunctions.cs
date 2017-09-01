@@ -68,83 +68,83 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>Returns the starting position of one expression found within another expression.</summary>
-        /// <returns>The starting position of  target  if it is found in  toSearch .</returns>
+        /// <returns>The starting position of  toFind  if it is found in  toSearch .</returns>
+        /// <param name="toFind">The string expression to be found.</param>
         /// <param name="toSearch">The string expression to be searched.</param>
-        /// <param name="target">The string expression to be found.</param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toFind")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [DbFunction("SqlServer", "CHARINDEX")]
-        public static Int32? CharIndex(String toSearch, String target)
+        public static Int32? CharIndex(String toFind, String toSearch)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>Returns the starting position of one expression found within another expression.</summary>
-        /// <returns>The starting position of  target  if it is found in  toSearch .</returns>
+        /// <returns>The starting position of  toFind  if it is found in  toSearch .</returns>
+        /// <param name="toFind">The string expression to be found.</param>
         /// <param name="toSearch">The string expression to be searched.</param>
-        /// <param name="target">The string expression to be found.</param>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toFind")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [DbFunction("SqlServer", "CHARINDEX")]
-        public static Int32? CharIndex(Byte[] toSearch, Byte[] target)
+        public static Int32? CharIndex(Byte[] toFind, Byte[] toSearch)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>Returns the starting position of one expression found within another expression.</summary>
-        /// <returns>The starting position of  target  if it is found in  toSearch .</returns>
+        /// <returns>The starting position of  toFind  if it is found in  toSearch .</returns>
+        /// <param name="toFind">The string expression to be found.</param>
         /// <param name="toSearch">The string expression to be searched.</param>
-        /// <param name="target">The string expression to be found.</param>
         /// <param name="startLocation">The character position in  toSearch  where searching begins.</param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toFind")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
         [DbFunction("SqlServer", "CHARINDEX")]
-        public static Int32? CharIndex(String toSearch, String target, Int32? startLocation)
+        public static Int32? CharIndex(String toFind, String toSearch, Int32? startLocation)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>Returns the starting position of one expression found within another expression.</summary>
-        /// <returns>The starting position of  target  if it is found in  toSearch .</returns>
+        /// <returns>The starting position of  toFind  if it is found in  toSearch .</returns>
+        /// <param name="toFind">The string expression to be found.</param>
         /// <param name="toSearch">The string expression to be searched.</param>
-        /// <param name="target">The string expression to be found.</param>
         /// <param name="startLocation">The character position in  toSearch  where searching begins.</param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toFind")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
         [DbFunction("SqlServer", "CHARINDEX")]
-        public static Int32? CharIndex(Byte[] toSearch, Byte[] target, Int32? startLocation)
+        public static Int32? CharIndex(Byte[] toFind, Byte[] toSearch, Int32? startLocation)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>Returns the starting position of one expression found within another expression.</summary>
         /// <returns>
-        /// A <see cref="T:System.Nullable`1" /> of <see cref="T:System.Int64" /> value that is the starting position of  target  if it is found in  toSearch .
+        /// A <see cref="T:System.Nullable`1" /> of <see cref="T:System.Int64" /> value that is the starting position of  toFind  if it is found in  toSearch .
         /// </returns>
+        /// <param name="toFind">The string expression to be found.</param>
         /// <param name="toSearch">The string expression to be searched.</param>
-        /// <param name="target">The string expression to be found.</param>
         /// <param name="startLocation">The character position in  toSearch  where searching begins.</param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toFind")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
         [DbFunction("SqlServer", "CHARINDEX")]
-        public static Int64? CharIndex(String toSearch, String target, Int64? startLocation)
+        public static Int64? CharIndex(String toFind, String toSearch, Int64? startLocation)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 
         /// <summary>Returns the starting position of one expression found within another expression.</summary>
-        /// <returns>The starting position of  target  if it is found in  toSearch .</returns>
+        /// <returns>The starting position of  toFind  if it is found in  toSearch .</returns>
+        /// <param name="toFind">The string expression to be found.</param>
         /// <param name="toSearch">The string expression to be searched.</param>
-        /// <param name="target">The string expression to be found.</param>
-        /// <param name="startLocation">The character position in  toSearch  at which searching begins.</param>
+        /// <param name="startLocation">The character position in  toSearch  where searching begins.</param>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toFind")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
         [DbFunction("SqlServer", "CHARINDEX")]
-        public static Int64? CharIndex(Byte[] toSearch, Byte[] target, Int64? startLocation)
+        public static Int64? CharIndex(Byte[] toFind, Byte[] toSearch, Int64? startLocation)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }

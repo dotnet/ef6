@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Data.Entity.Resources;
     using System.Threading.Tasks;
     using Xunit;
+    using Xunit.Extensions;
 
     public class InterceptionContextMutableDataTests : TestBase
     {
@@ -160,24 +161,74 @@ namespace System.Data.Entity.Infrastructure.Interception
             Assert.False(data.IsExecutionSuppressed);
         }
 
-        [Fact]
-        public void UserState_can_be_changed()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void UserState_can_be_changed(bool useObsoleteState)
         {
             var data = new InterceptionContextMutableData();
 
-            Assert.Null(data.UserState);
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Null(data.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Null(data.FindUserState("A"));
+                Assert.Null(data.FindUserState("B"));
+            }
 
-            var firstUserState = new object();
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                data.UserState = "Cheddar";
+#pragma warning restore 618
+            }
+            else
+            {
+                data.SetUserState("A", "AState");
+                data.SetUserState("B", "BState");
+            }
 
-            data.UserState = firstUserState;
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Equal("Cheddar", data.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Equal("AState", data.FindUserState("A"));
+                Assert.Equal("BState", data.FindUserState("B"));
+                Assert.Null(data.FindUserState("C"));
+            }
 
-            Assert.Same(firstUserState, data.UserState);
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                data.UserState = "Cheddar2";
+#pragma warning restore 618
+            }
+            else
+            {
+                data.SetUserState("A", "AState2");
+                data.SetUserState("B", "BState2");
+            }
 
-            var secondUserState = new object();
-
-            data.UserState = secondUserState;
-
-            Assert.Same(secondUserState, data.UserState);
+            if (useObsoleteState)
+            {
+#pragma warning disable 618
+                Assert.Equal("Cheddar2", data.UserState);
+#pragma warning restore 618
+            }
+            else
+            {
+                Assert.Equal("AState2", data.FindUserState("A"));
+                Assert.Equal("BState2", data.FindUserState("B"));
+                Assert.Null(data.FindUserState("C"));
+            }
         }
     }
 }

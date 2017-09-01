@@ -15,7 +15,9 @@
     <summary>Allows SQL Server Compact 3.5 to be used with Entity Framework.</summary>
     <language>en-US</language>
     <dependencies>
-      <dependency id="EntityFramework" version="$EF6NuGetPackageVersion$" />
+      <group targetFramework="net40">
+        <dependency id="EntityFramework" version="$EF6NuGetPackageVersion$" />
+      </group>
     </dependencies>
   </metadata>
 </package>

@@ -109,6 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return new ObjectItemNoOpAssemblyLoader(assembly, sessionData);
         }
 
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         internal static bool IsAttributeLoader(object loaderCookie)
         {
             Debug.Assert(

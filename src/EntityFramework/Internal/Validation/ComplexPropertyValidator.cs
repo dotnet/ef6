@@ -51,8 +51,6 @@ namespace System.Data.Entity.Internal.Validation
         public override IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {
-            Debug.Assert(property is InternalPropertyEntry);
-
             var validationErrors = new List<DbValidationError>();
             validationErrors.AddRange(base.Validate(entityValidationContext, property));
 

@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             PlanCompiler.Assert(md.TypeSemantics.IsRowType(collType.TypeUsage), "command rowtype is not a record");
 
             // Build up a mapping from Vars to the corresponding output property/column
-            var outputVarMap = BuildOutputVarMap(projectOp, collType.TypeUsage);
+            BuildOutputVarMap(projectOp, collType.TypeUsage);
 
             return new ProviderCommandInfo(ctree);
         }

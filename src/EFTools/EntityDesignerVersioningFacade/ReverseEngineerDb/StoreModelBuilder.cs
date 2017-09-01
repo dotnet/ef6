@@ -235,7 +235,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             if (!keyColumnNames.Any())
             {
                 return
-                    CreateEntityTypeWtihoutDefinedKeys(
+                    CreateEntityTypeWithoutDefinedKeys(
                         entityTypeName, properties, tableName, errors, out needsDefiningQuery);
             }
 
@@ -256,7 +256,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                         EdmSchemaErrorSeverity.Warning));
 
                 return
-                    CreateEntityTypeWtihoutDefinedKeys(
+                    CreateEntityTypeWithoutDefinedKeys(
                         entityTypeName, properties, tableName, errors, out needsDefiningQuery);
             }
 
@@ -334,7 +334,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             return CreateEntityType(name, validKeyColumnNames, properties, metadataProperties);
         }
 
-        private EntityType CreateEntityTypeWtihoutDefinedKeys(
+        private EntityType CreateEntityTypeWithoutDefinedKeys(
             string name,
             IList<EdmProperty> properties,
             string tableName,
@@ -348,7 +348,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
             var inferedKeyProperties = InferKeyProperties(properties);
 
-            // the entity type is read only if we could infere at least one valid key property and therefore will need the defining query
+            // the entity type is read only if we could infer at least one valid key property and therefore will need the defining query
             // otherwise the entity is invalid and will not need a defining query since there will be no corresponding entity
             // set for this entity type and the type itself will be commented out in the SSDL
             needsDefiningQuery = inferedKeyProperties.Any();
@@ -477,7 +477,20 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
             if (property != null)
             {
-                property.Nullable = row.IsNullable;
+                if (row.IsPrimaryKey && row.IsNullable)
+                {
+                    errors.Add(
+                        new EdmSchemaError(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources_VersioningFacade.CoercingNullablePrimaryKeyPropertyToNonNullable,
+                                row.ColumnName,
+                                row.TableName),
+                            (int)ModelBuilderErrorCode.CoercingNullablePrimaryKeyPropertyToNonNullable,
+                            EdmSchemaErrorSeverity.Warning));
+                }
+
+                property.Nullable = row.IsPrimaryKey ? false : row.IsNullable;
 
                 if (!row.IsIsIdentityNull()
                     && row.IsIdentity)
@@ -1065,7 +1078,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 fkEnd = AssociationEndMember.Create(
                     usedEndNames.AdjustIdentifier(fkEntityType.Name),
                     fkEntityType.GetReferenceType(),
-                    !someFKColumnsAreNullable && AreRelationshipColumnsTheFullKey(relationshipDetailsRows, fkEntityType, r => r.FKColumn)
+                    !someFKColumnsAreNullable && AreRelationshipColumnsTheFullPrimaryKey(relationshipDetailsRows, fkEntityType, r => r.FKColumn)
                         ? RelationshipMultiplicity.ZeroOrOne
                         : RelationshipMultiplicity.Many,
                     OperationAction.None,
@@ -1146,7 +1159,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 return false;
             }
 
-            if (!AreRelationshipColumnsTheFullKey(relationshipDetailsRows, pkEntityType, r => r.PKColumn))
+            if (!AreRelationshipColumnsTheFullPrimaryKey(relationshipDetailsRows, pkEntityType, r => r.PKColumn))
             {
                 errors.Add(
                     new EdmSchemaError(
@@ -1209,7 +1222,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             return false;
         }
 
-        private static bool AreRelationshipColumnsTheFullKey(
+        private static bool AreRelationshipColumnsTheFullPrimaryKey(
             IList<RelationshipDetailsRow> relationshipDetailsRows,
             EntityType entityType,
             Func<RelationshipDetailsRow, string> getColumnName)

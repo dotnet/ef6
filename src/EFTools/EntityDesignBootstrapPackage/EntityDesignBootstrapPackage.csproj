@@ -95,7 +95,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage.pkgdef" />
+    <None Include="PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage_preDev15.pkgdef" />
+    <None Include="PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage_Dev15.pkgdef" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -105,8 +106,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PkgDefFile Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">Microsoft.Data.Entity.Design.BootstrapPackage_preDev15.pkgdef</PkgDefFile>
+    <PkgDefFile Condition="'$(PkgDefFile)' == ''">Microsoft.Data.Entity.Design.BootstrapPackage_Dev15.pkgdef</PkgDefFile>
+  </PropertyGroup>
   <Target Name="AfterBuild">
     <MakeDir Directories="$(OutputPath)PkgDefData" />
-    <RegexReplaceInFile InputFileName="PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage.pkgdef" OutputFileName="$(OutputPath)PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage.pkgdef" Patterns="EFDESIGNERVERSIONTOKEN" Replacements="$(AssemblyVersion)" />
+    <RegexReplaceInFile InputFileName="PkgDefData\$(PkgDefFile)" OutputFileName="$(OutputPath)PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage.pkgdef" Patterns="EFDESIGNERVERSIONTOKEN" Replacements="$(AssemblyVersion)" />
   </Target>
 </Project>

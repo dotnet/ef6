@@ -3,12 +3,14 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.SqlClient;
+    using System.Diagnostics.CodeAnalysis;
 
     // <summary>
     // Detects the exceptions caused by SQL Azure transient failures.
     // </summary>
     internal static class SqlAzureRetriableExceptionDetector
     {
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public static bool ShouldRetryOn(Exception ex)
         {
             var sqlException = ex as SqlException;
@@ -19,6 +21,26 @@ namespace System.Data.Entity.SqlServer
                 {
                     switch (err.Number)
                     {
+                            // SQL Error Code: 49920
+                            // Cannot process request. Too many operations in progress for subscription "%ld".
+                            // The service is busy processing multiple requests for this subscription.
+                            // Requests are currently blocked for resource optimization. Query sys.dm_operation_status for operation status.
+                            // Wait until pending requests are complete or delete one of your pending requests and retry your request later.
+                        case 49920:
+                            // SQL Error Code: 49919
+                            // Cannot process create or update request. Too many create or update operations in progress for subscription "%ld".
+                            // The service is busy processing multiple create or update requests for your subscription or server.
+                            // Requests are currently blocked for resource optimization. Query sys.dm_operation_status for pending operations.
+                            // Wait till pending create or update requests are complete or delete one of your pending requests and
+                            // retry your request later.
+                        case 49919:
+                            // SQL Error Code: 49918
+                            // Cannot process request. Not enough resources to process request.
+                            // The service is currently busy.Please retry the request later.
+                        case 49918:
+                            // SQL Error Code: 41839
+                            // Transaction exceeded the maximum number of commit dependencies.
+                        case 41839:
                             // SQL Error Code: 41325
                             // The current transaction failed to commit due to a serializable validation failure.
                         case 41325:
@@ -52,30 +74,36 @@ namespace System.Data.Entity.SqlServer
                             // see http://go.microsoft.com/fwlink/?LinkId=267637.
                         case 10928:
                             // SQL Error Code: 10060
-                            // A network-related or instance-specific error occurred while establishing a connection to SQL Server. 
-                            // The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server 
-                            // is configured to allow remote connections. (provider: TCP Provider, error: 0 - A connection attempt failed 
-                            // because the connected party did not properly respond after a period of time, or established connection failed 
+                            // A network-related or instance-specific error occurred while establishing a connection to SQL Server.
+                            // The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server
+                            // is configured to allow remote connections. (provider: TCP Provider, error: 0 - A connection attempt failed
+                            // because the connected party did not properly respond after a period of time, or established connection failed
                             // because connected host has failed to respond.)"}
                         case 10060:
                             // SQL Error Code: 10054
-                            // A transport-level error has occurred when sending the request to the server. 
+                            // A transport-level error has occurred when sending the request to the server.
                             // (provider: TCP Provider, error: 0 - An existing connection was forcibly closed by the remote host.)
                         case 10054:
                             // SQL Error Code: 10053
                             // A transport-level error has occurred when receiving results from the server.
                             // An established connection was aborted by the software in your host machine.
                         case 10053:
+                            // SQL Error Code: 1205
+                            // Deadlock
+                        case 1205:
                             // SQL Error Code: 233
-                            // The client was unable to establish a connection because of an error during connection initialization process before login. 
+                            // The client was unable to establish a connection because of an error during connection initialization process before login.
                             // Possible causes include the following: the client tried to connect to an unsupported version of SQL Server;
                             // the server was too busy to accept new connections; or there was a resource limitation (insufficient memory or maximum
                             // allowed connections) on the server. (provider: TCP Provider, error: 0 - An existing connection was forcibly closed by
                             // the remote host.)
                         case 233:
+                            // SQL Error Code: 121
+                            // The semaphore timeout period has expired
+                        case 121:
                             // SQL Error Code: 64
-                            // A connection was successfully established with the server, but then an error occurred during the login process. 
-                            // (provider: TCP Provider, error: 0 - The specified network name is no longer available.) 
+                            // A connection was successfully established with the server, but then an error occurred during the login process.
+                            // (provider: TCP Provider, error: 0 - The specified network name is no longer available.)
                         case 64:
                             // DBNETLIB Error Code: 20
                             // The instance of SQL Server you attempted to connect to does not support encryption.
@@ -83,7 +111,7 @@ namespace System.Data.Entity.SqlServer
                             return true;
                             // This exception can be thrown even if the operation completed succesfully, so it's safer to let the application fail.
                             // DBNETLIB Error Code: -2
-                            // Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding. The statement has been terminated. 
+                            // Timeout expired. The timeout period elapsed prior to completion of the operation or the server is not responding. The statement has been terminated.
                             //case -2:
                     }
                 }

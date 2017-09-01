@@ -206,14 +206,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             EntityContainerMapping containerMapping)
         {
             var mappedExtents = new Set<EntitySetBase>();
-            string mslFileLocation = null;
             EntityContainer container = null;
             // Determine the container and name of the file while determining
             // the set of mapped extents in the cells
             foreach (var cell in cells)
             {
                 mappedExtents.Add(cell.CQuery.Extent);
-                mslFileLocation = cell.CellLabel.SourceLocation;
                 // All cells are from the same container
                 container = cell.CQuery.Extent.EntityContainer;
             }

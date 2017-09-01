@@ -490,6 +490,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         private static bool IsValidScopeIdentityColumnType(TypeUsage typeUsage)
         {
+            if (!SqlProviderServices.UseScopeIdentity) 
+            {
+                return false;
+            }
+
             // SQL Server supports the following types for identity columns:
             // tinyint, smallint, int, bigint, decimal(p,0), or numeric(p,0)
 

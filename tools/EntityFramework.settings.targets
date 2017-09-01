@@ -22,10 +22,10 @@ Project global pre-settings.
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
     <VersionReleasePrefix>0</VersionReleasePrefix>
-    <VersionRelease>$(VersionReleasePrefix)-alpha1</VersionRelease>
-    <VersionReleaseName>Alpha 1</VersionReleaseName>
-    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' == '15.0'">v4.5.1</ToolingDotNetFrameworkVersion>
-    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' != '15.0'">v4.5</ToolingDotNetFrameworkVersion>
+    <VersionRelease>$(VersionReleasePrefix)-beta2</VersionRelease>
+    <VersionReleaseName>Beta 2</VersionReleaseName>
+    <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">v4.5</ToolingDotNetFrameworkVersion>
+    <ToolingDotNetFrameworkVersion Condition="'$(ToolingDotNetFrameworkVersion)' == ''">v4.6</ToolingDotNetFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -106,6 +106,7 @@ Project global pre-settings.
     <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterMicrosoftCommonTargets>
     <CustomAfterNuGetProjTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterNuGetProjTargets>
     <CustomAfterWixTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterWixTargets>
+    <CustomAfterSwixTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterSwixTargets>
   </PropertyGroup>
 
   <PropertyGroup>

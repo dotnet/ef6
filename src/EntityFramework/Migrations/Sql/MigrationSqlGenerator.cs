@@ -49,6 +49,16 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <summary>
+        /// Determines if a provider specific exception corresponds to a database-level permission denied error.
+        /// </summary>
+        /// <param name="exception">The database exception.</param>
+        /// <returns> true if the supplied exception corresponds to a database-level permission denied error; otherwise false. </returns>
+        public virtual bool IsPermissionDeniedError(Exception exception)
+        {
+            return false; // Default is unknown
+        }
+
+        /// <summary>
         /// Builds the store type usage for the specified <paramref name="storeTypeName"/> using the facets from the specified <paramref name="propertyModel"/>.
         /// </summary>
         /// <param name="storeTypeName">Name of the store type.</param>

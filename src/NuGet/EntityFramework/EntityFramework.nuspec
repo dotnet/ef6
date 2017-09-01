@@ -15,7 +15,7 @@
     <summary>Entity Framework is Microsoft's recommended data access technology for new applications.</summary>
     <language>en-US</language>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="" />
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="net40" />
     </frameworkAssemblies>
   </metadata>
 </package>

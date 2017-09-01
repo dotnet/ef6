@@ -453,10 +453,17 @@ namespace System.Data.Entity.Migrations
                     var cancellingLogger = new CommandTreeCancellingLogger(historyContext);
                     DbInterception.Add(cancellingLogger);
 
-                    historyContext.SaveChanges();
+                    try
+                    {
+                        historyContext.SaveChanges();
 
-                    return new HistoryOperation(
-                        cancellingLogger.Log.OfType<DbModificationCommandTree>().ToList());
+                        return new HistoryOperation(
+                            cancellingLogger.Log.OfType<DbModificationCommandTree>().ToList());
+                    }
+                    finally
+                    {
+                        DbInterception.Remove(cancellingLogger);
+                    }
                 }
             }
         }

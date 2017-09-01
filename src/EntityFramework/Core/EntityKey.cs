@@ -1220,24 +1220,25 @@ namespace System.Data.Entity.Core
         // </summary>
         // <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
         [Conditional("DEBUG")]
-        private void AssertCorrectState(EntitySetBase entitySet, bool isTemporary)
+        private void AssertCorrectState(EntitySetBase entitySetBase, bool isTemporary)
         {
+            var entitySet = (EntitySet)entitySetBase;
             if (_singletonKeyValue != null)
             {
                 Debug.Assert(!isTemporary);
                 Debug.Assert(_compositeKeyValues == null);
-                if (entitySet != null)
+                if (entitySetBase != null)
                 {
-                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == 1);
+                    Debug.Assert(entitySet.ElementType.KeyMembers.Count == 1);
                 }
             }
             else if (_compositeKeyValues != null)
             {
                 Debug.Assert(!isTemporary);
-                if (entitySet != null)
+                if (entitySetBase != null)
                 {
-                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count > 1);
-                    Debug.Assert(((EntitySet)entitySet).ElementType.KeyMembers.Count == _compositeKeyValues.Length);
+                    Debug.Assert(entitySet.ElementType.KeyMembers.Count > 1);
+                    Debug.Assert(entitySet.ElementType.KeyMembers.Count == _compositeKeyValues.Length);
                 }
                 for (var i = 0; i < _compositeKeyValues.Length; ++i)
                 {

@@ -30,6 +30,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// </remarks>
     public class DatabaseLogFormatter : IDbCommandInterceptor, IDbConnectionInterceptor, IDbTransactionInterceptor
     {
+        private const string StopwatchStateKey = "__LoggingStopwatch__";
         private readonly WeakReference _context;
         private readonly Action<string> _writeAction;
         private readonly Stopwatch _stopwatch = new Stopwatch();
@@ -99,21 +100,72 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        /// The stop watch used to time executions. This stop watch is started at the end of
-        /// <see cref="NonQueryExecuting" />, <see cref="ScalarExecuting" />, and <see cref="ReaderExecuting" />
-        /// methods and is stopped at the beginning of the <see cref="NonQueryExecuted" />, <see cref="ScalarExecuted" />,
-        /// and <see cref="ReaderExecuted" /> methods. If these methods are overridden and the stop watch is being used
-        /// then the overrides should either call the base method or start/stop the watch themselves.
+        /// This property is obsolete. Using it can result in logging incorrect execution times. Call
+        /// <see cref="GetStopwatch"/> instead.
         /// </summary>
+        [Obsolete("This stopwatch can give incorrect times. Use 'GetStopwatch' instead.")]
         protected internal Stopwatch Stopwatch
         {
             get { return _stopwatch; }
         }
 
         /// <summary>
+        /// The stopwatch used to time executions. This stopwatch is started at the end of
+        /// <see cref="NonQueryExecuting" />, <see cref="ScalarExecuting" />, and <see cref="ReaderExecuting" />
+        /// methods and is stopped at the beginning of the <see cref="NonQueryExecuted" />, <see cref="ScalarExecuted" />,
+        /// and <see cref="ReaderExecuted" /> methods. If these methods are overridden and the stopwatch is being used
+        /// then the overrides should either call the base method or start/stop the stopwatch themselves.
+        /// </summary>
+        /// <param name="interceptionContext">The interception context for which the stopwatch will be obtained.</param>
+        /// <returns>The stopwatch.</returns>
+        protected internal Stopwatch GetStopwatch(DbCommandInterceptionContext interceptionContext)
+        {
+            if (_context != null)
+            {
+                return _stopwatch;
+            }
+
+            var mutableContext = (IDbMutableInterceptionContext)interceptionContext;
+            var stopwatch = (Stopwatch)mutableContext.MutableData.FindUserState(StopwatchStateKey);
+
+            if (stopwatch == null)
+            {
+                stopwatch = new Stopwatch();
+                mutableContext.MutableData.SetUserState(StopwatchStateKey, stopwatch);
+            }
+
+            return stopwatch;
+        }
+
+        private void RestartStopwatch(DbCommandInterceptionContext interceptionContext)
+        {
+            var stopwatch = GetStopwatch(interceptionContext);
+            stopwatch.Restart();
+
+            // Preseve behavior for any code still using the obsolete Stopwatch property in method overrides.
+            if (!ReferenceEquals(stopwatch, _stopwatch))
+            {
+                _stopwatch.Restart();
+            }
+        }
+
+        private void StopStopwatch(DbCommandInterceptionContext interceptionContext)
+        {
+            var stopwatch = GetStopwatch(interceptionContext);
+            stopwatch.Stop();
+
+            // Preseve behavior for any code still using the obsolete Stopwatch property in method overrides.
+            if (!ReferenceEquals(stopwatch, _stopwatch))
+            {
+                _stopwatch.Stop();
+            }
+        }
+
+        /// <summary>
         /// This method is called before a call to <see cref="DbCommand.ExecuteNonQuery" /> or
         /// one of its async counterparts is made.
-        /// The default implementation calls <see cref="Executing" /> and starts <see cref="Stopwatch"/>.
+        /// The default implementation calls <see cref="Executing" /> and starts the stopwatch returned from
+        /// <see cref="GetStopwatch"/>.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -123,13 +175,14 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Executing(command, interceptionContext);
-            Stopwatch.Restart();
+            RestartStopwatch(interceptionContext);
         }
 
         /// <summary>
         /// This method is called after a call to <see cref="DbCommand.ExecuteNonQuery" /> or
         /// one of its async counterparts is made.
-        /// The default implementation stops <see cref="Stopwatch"/> and calls <see cref="Executed" />.
+        /// The default implementation stopsthe stopwatch returned from <see cref="GetStopwatch"/> and calls
+        /// <see cref="Executed" />.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -138,14 +191,15 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Stopwatch.Stop();
+            StopStopwatch(interceptionContext);
             Executed(command, interceptionContext);
         }
 
         /// <summary>
         /// This method is called before a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" /> or
         /// one of its async counterparts is made.
-        /// The default implementation calls <see cref="Executing" /> and starts <see cref="Stopwatch"/>.
+        /// The default implementation calls <see cref="Executing" /> and starts the stopwatch returned from
+        /// <see cref="GetStopwatch"/>.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -155,13 +209,14 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Executing(command, interceptionContext);
-            Stopwatch.Restart();
+            RestartStopwatch(interceptionContext);
         }
 
         /// <summary>
         /// This method is called after a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" /> or
         /// one of its async counterparts is made.
-        /// The default implementation stops <see cref="Stopwatch"/> and calls <see cref="Executed" />.
+        /// The default implementation stopsthe stopwatch returned from <see cref="GetStopwatch"/> and calls
+        /// <see cref="Executed" />.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -170,14 +225,15 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Stopwatch.Stop();
+            StopStopwatch(interceptionContext);
             Executed(command, interceptionContext);
         }
 
         /// <summary>
         /// This method is called before a call to <see cref="DbCommand.ExecuteScalar" />  or
         /// one of its async counterparts is made.
-        /// The default implementation calls <see cref="Executing" /> and starts <see cref="Stopwatch"/>.
+        /// The default implementation calls <see cref="Executing" /> and starts the stopwatch returned from
+        /// <see cref="GetStopwatch"/>.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -187,13 +243,14 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Executing(command, interceptionContext);
-            Stopwatch.Restart();
+            RestartStopwatch(interceptionContext);
         }
 
         /// <summary>
         /// This method is called after a call to <see cref="DbCommand.ExecuteScalar" />  or
         /// one of its async counterparts is made.
-        /// The default implementation stops <see cref="Stopwatch"/> and calls <see cref="Executed" />.
+        /// The default implementation stopsthe stopwatch returned from <see cref="GetStopwatch"/> and calls
+        /// <see cref="Executed" />.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -202,7 +259,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Stopwatch.Stop();
+            StopStopwatch(interceptionContext);
             Executed(command, interceptionContext);
         }
 
@@ -230,7 +287,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <summary>
         /// Called whenever a command has completed executing. The default implementation of this method
         /// filters by <see cref="DbContext" /> set into <see cref="Context" />, if any, and then calls
-        /// <see cref="LogResult" />. This method would typically only be overridden to change the context
+        /// <see cref="LogResult" />.  This method would typically only be overridden to change the context
         /// filtering behavior.
         /// </summary>
         /// <typeparam name="TResult">The type of the operation's results.</typeparam>
@@ -352,15 +409,29 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
+            var stopwatch = _stopwatch;
+            if (_context == null)
+            {
+                var safeStopwatch = (Stopwatch)((IDbMutableInterceptionContext)interceptionContext).MutableData
+                     .FindUserState(StopwatchStateKey);
+
+                // If overriding methods still use obsolete Stopwatch, then preserve this behavior to avoid
+                // breaking change.
+                if (safeStopwatch != null)
+                {
+                    stopwatch = safeStopwatch;
+                }
+            }
+
             if (interceptionContext.Exception != null)
             {
                 Write(
                     Strings.CommandLogFailed(
-                        Stopwatch.ElapsedMilliseconds, interceptionContext.Exception.Message, Environment.NewLine));
+                        stopwatch.ElapsedMilliseconds, interceptionContext.Exception.Message, Environment.NewLine));
             }
             else if (interceptionContext.TaskStatus.HasFlag(TaskStatus.Canceled))
             {
-                Write(Strings.CommandLogCanceled(Stopwatch.ElapsedMilliseconds, Environment.NewLine));
+                Write(Strings.CommandLogCanceled(stopwatch.ElapsedMilliseconds, Environment.NewLine));
             }
             else
             {
@@ -370,8 +441,9 @@ namespace System.Data.Entity.Infrastructure.Interception
                     : (result is DbDataReader)
                         ? result.GetType().Name
                         : result.ToString();
-                Write(Strings.CommandLogComplete(Stopwatch.ElapsedMilliseconds, resultString, Environment.NewLine));
+                Write(Strings.CommandLogComplete(stopwatch.ElapsedMilliseconds, resultString, Environment.NewLine));
             }
+
             Write(Environment.NewLine);
         }
 

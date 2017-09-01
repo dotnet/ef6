@@ -603,7 +603,6 @@ namespace System.Data.Entity.Internal
             EdmMember member;
             EdmEntityType.Members.TryGetValue(navigationProperty, false, out member);
 
-            Debug.Assert(member is NavigationProperty, "Property should have already been validated as a nav property.");
             var asNavProperty = (NavigationProperty)member;
 
             var relationshipManager = _internalContext.ObjectContext.ObjectStateManager.GetRelationshipManager(Entity);

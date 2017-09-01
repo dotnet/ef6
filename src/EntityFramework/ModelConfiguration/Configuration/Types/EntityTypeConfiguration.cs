@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
+    using Migrations.Model;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
@@ -27,6 +28,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     {
         private readonly List<PropertyInfo> _keyProperties = new List<PropertyInfo>();
 
+        private Properties.Index.IndexConfiguration _keyConfiguration;
+
+        private readonly Dictionary<PropertyPath, Properties.Index.IndexConfiguration> _indexConfigurations
+            = new Dictionary<PropertyPath, Properties.Index.IndexConfiguration>();
+
         private readonly Dictionary<PropertyInfo, NavigationPropertyConfiguration> _navigationPropertyConfigurations
             = new Dictionary<PropertyInfo, NavigationPropertyConfiguration>(
                 new DynamicEqualityComparer<PropertyInfo>((p1, p2) => p1.IsSameAs(p2)));
@@ -41,7 +47,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         private readonly IDictionary<string, object> _annotations = new Dictionary<string, object>();
 
-        private bool _isKeyConfigured;
         private string _entitySetName;
 
         private ModificationStoredProceduresConfiguration _modificationStoredProceduresConfiguration;
@@ -58,6 +63,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(source);
 
             _keyProperties.AddRange(source._keyProperties);
+            _keyConfiguration = source._keyConfiguration;
+
+            source._indexConfigurations.Each(
+                c => _indexConfigurations.Add(c.Key, c.Value.Clone()));
             source._navigationPropertyConfigurations.Each(
                 c => _navigationPropertyConfigurations.Add(c.Key, c.Value.Clone()));
             source._entitySubTypesMappingConfigurations.Each(
@@ -66,7 +75,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _entityMappingConfigurations.AddRange(
                 source._entityMappingConfigurations.Except(source._nonCloneableMappings).Select(e => e.Clone()));
 
-            _isKeyConfigured = source._isKeyConfigured;
             _entitySetName = source._entitySetName;
 
             if (source._modificationStoredProceduresConfiguration != null)
@@ -122,7 +130,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         internal bool IsKeyConfigured
         {
-            get { return _isKeyConfigured; }
+            get { return _keyConfiguration != null; }
         }
 
         internal IEnumerable<PropertyInfo> KeyProperties
@@ -141,7 +149,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 Key(property, OverridableConfigurationParts.None);
             }
 
-            _isKeyConfigured = true;
+            if (_keyConfiguration == null)
+                _keyConfiguration = new Properties.Index.IndexConfiguration();
         }
 
         // <summary>
@@ -165,7 +174,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 throw Error.ModelBuilder_KeyPropertiesMustBePrimitive(propertyInfo.Name, ClrType);
             }
 
-            if (!_isKeyConfigured
+            if (_keyConfiguration == null
                 && !_keyProperties.ContainsSame(propertyInfo))
             {
                 _keyProperties.Add(propertyInfo);
@@ -174,10 +183,38 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
+        internal virtual Properties.Index.IndexConfiguration ConfigureKey()
+        {
+            if (_keyConfiguration == null)
+            {
+                _keyConfiguration = new Properties.Index.IndexConfiguration();
+            }
+
+            return _keyConfiguration;
+        }
+
+        internal IEnumerable<PropertyPath> PropertyIndexes
+        { 
+            get { return _indexConfigurations.Keys; } 
+        }
+
+        internal virtual Properties.Index.IndexConfiguration Index(PropertyPath indexProperties)
+        {
+            Properties.Index.IndexConfiguration indexConfiguration;
+            if (!_indexConfigurations.TryGetValue(indexProperties, out indexConfiguration))
+            {
+                _indexConfigurations.Add(
+                    indexProperties,
+                    indexConfiguration = new Properties.Index.IndexConfiguration());
+            }
+
+            return indexConfiguration;
+        }
+
         internal void ClearKey()
         {
             _keyProperties.Clear();
-            _isKeyConfigured = false;
+            _keyConfiguration = null;
         }
 
         // <summary>
@@ -471,7 +508,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             var keyProperties = _keyProperties.AsEnumerable();
 
-            if (!_isKeyConfigured)
+            if (_keyConfiguration == null)
             {
                 var primaryKeys
                     = from p in _keyProperties
@@ -501,6 +538,55 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
                 property.Nullable = false;
                 entityType.AddKeyMember(property);
+            }
+        }
+
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        private void ConfigureIndexes(DbDatabaseMapping mapping, EntityType entityType)
+        {
+            DebugCheck.NotNull(mapping);
+            DebugCheck.NotNull(entityType);
+
+            var entityTypeMappings = mapping.GetEntityTypeMappings(entityType);
+
+            if (_keyConfiguration != null)
+            {
+                entityTypeMappings
+                    .SelectMany(etm => etm.Fragments)
+                    .Each(f => _keyConfiguration.Configure(f.Table));
+            }
+
+            foreach (var indexConfiguration in _indexConfigurations)
+            {
+                foreach (var entityTypeMapping in entityTypeMappings)
+                {
+                    var propertyMappings = indexConfiguration.Key
+                        .ToDictionary(
+                            icp => icp,
+                            icp => entityTypeMapping.GetPropertyMapping(
+                                entityType.GetDeclaredPrimitiveProperty(icp)));
+
+                    if (indexConfiguration.Key.Count > 1 && string.IsNullOrEmpty(indexConfiguration.Value.Name))
+                    {
+                        indexConfiguration.Value.Name = IndexOperation.BuildDefaultName(
+                            indexConfiguration.Key.Select(icp => propertyMappings[icp].ColumnProperty.Name));
+                    }
+
+                    int sortOrder = 0;
+
+                    foreach (var indexConfigurationProperty in indexConfiguration.Key)
+                    {
+                        var propertyMapping = propertyMappings[indexConfigurationProperty];
+                        
+                        indexConfiguration.Value.Configure(
+                            propertyMapping.ColumnProperty, 
+                            (indexConfiguration.Key.Count != 1 ?
+                                sortOrder :
+                                -1));
+
+                        ++sortOrder;
+                    }
+                }
             }
         }
 
@@ -617,6 +703,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
 
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
+            ConfigureIndexes(databaseMapping, entityType);
             ConfigureAssociationMappings(databaseMapping, entityType, providerManifest);
             ConfigureDependentKeys(databaseMapping, providerManifest);
             ConfigureModificationStoredProcedures(databaseMapping, entityType, providerManifest);

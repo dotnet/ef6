@@ -821,7 +821,7 @@ namespace System.Data.Entity.Core.Mapping
             var objectComplexType = (ComplexType)containingClrMember.TypeUsage.EdmType;
 
             // Get the type mapping for the complex type
-            var complexTypeMapping = LoadTypeMapping(edmComplexType, objectComplexType, ocItemCollection, typeMappings);
+            LoadTypeMapping(edmComplexType, objectComplexType, ocItemCollection, typeMappings);
 
             //Go through the CDMMembers and find the corresponding member in Object space
             //and create a member map.

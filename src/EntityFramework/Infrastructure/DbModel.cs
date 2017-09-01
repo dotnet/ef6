@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -112,7 +113,9 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The compiled model. </returns>
         public DbCompiledModel Compile()
         {
-            return new DbCompiledModel(this);
+            return new DbCompiledModel(
+                CodeFirstCachedMetadataWorkspace.Create(DatabaseMapping), 
+                CachedModelBuilder);
         }
     }
 }

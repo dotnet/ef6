@@ -158,8 +158,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return;
             }
 
-            var argumentNode = n.Child0;
-
             GroupAggregateVarInfo referencedGroupAggregateVarInfo;
             Node templateNode;
             bool isUnnested;

@@ -13,6 +13,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using Moq;
     using Moq.Protected;
     using Xunit;
+    using Xunit.Extensions;
 
     public class DatabaseLogFormatterTests : TestBase
     {
@@ -330,8 +331,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 var lines = GetLines(writer);
                 Assert.Equal(Strings.CommandLogComplete(0, "Would you like them", ""), lines[0]);
-                Assert.Equal(Strings.CommandLogComplete(0, "Here or there?", ""), lines[2]);
-                Assert.Equal(Strings.CommandLogComplete(0, "I would not like them", ""), lines[4]);
+                Assert.Equal(Strings.CommandLogComplete(0, "Here or there?", ""), lines[1]);
+                Assert.Equal(Strings.CommandLogComplete(0, "I would not like them", ""), lines[2]);
             }
         }
 
@@ -448,7 +449,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 Assert.Equal(
                     "-- Param1: '2013' (Type = Decimal, Direction = InputOutput, IsNullable = false, Size = 4, Precision = 18, Scale = 2)",
-                    GetLines(writer)[1]);
+                    GetLines(writer)[0]);
             }
 
             [Fact]
@@ -462,8 +463,8 @@ namespace System.Data.Entity.Infrastructure.Interception
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
-                Assert.Equal("-- Param1: 'value' (Type = String, Size = 4000)", lines[1]);
-                Assert.Equal("-- Param2: 'value' (Type = String, IsNullable = false, Size = 4000)", lines[2]);
+                Assert.Equal("-- Param1: 'value' (Type = String, Size = 4000)", lines[0]);
+                Assert.Equal("-- Param2: 'value' (Type = String, IsNullable = false, Size = 4000)", lines[1]);
             }
 
             [Fact]
@@ -478,9 +479,9 @@ namespace System.Data.Entity.Infrastructure.Interception
                     CreateCommand("", parameter1, parameter2, parameter3), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
-                Assert.Equal("-- Param1: 'null' (Type = String, Size = 4000)", lines[1]);
-                Assert.Equal("-- Param2: 'null' (Type = String, IsNullable = false, Size = 4000)", lines[2]);
-                Assert.Equal("-- Param3: 'Not Null' (Type = String, IsNullable = false, Size = 4000)", lines[3]);
+                Assert.Equal("-- Param1: 'null' (Type = String, Size = 4000)", lines[0]);
+                Assert.Equal("-- Param2: 'null' (Type = String, IsNullable = false, Size = 4000)", lines[1]);
+                Assert.Equal("-- Param3: 'Not Null' (Type = String, IsNullable = false, Size = 4000)", lines[2]);
             }
 
             [Fact]
@@ -494,8 +495,8 @@ namespace System.Data.Entity.Infrastructure.Interception
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
-                Assert.Equal("-- Param1: 'value' (Type = String, Scale = 2)", lines[1]);
-                Assert.Equal("-- Param2: 'value' (Type = String)", lines[2]);
+                Assert.Equal("-- Param1: 'value' (Type = String, Scale = 2)", lines[0]);
+                Assert.Equal("-- Param2: 'value' (Type = String)", lines[1]);
             }
 
             [Fact]
@@ -509,8 +510,8 @@ namespace System.Data.Entity.Infrastructure.Interception
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
-                Assert.Equal("-- Param1: 'value' (Type = String, Precision = 18)", lines[1]);
-                Assert.Equal("-- Param2: 'value' (Type = String)", lines[2]);
+                Assert.Equal("-- Param1: 'value' (Type = String, Precision = 18)", lines[0]);
+                Assert.Equal("-- Param2: 'value' (Type = String)", lines[1]);
             }
 
             [Fact]
@@ -524,8 +525,8 @@ namespace System.Data.Entity.Infrastructure.Interception
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
-                Assert.Equal("-- Param1: 'value' (Type = String, Size = -1)", lines[1]);
-                Assert.Equal("-- Param2: 'value' (Type = String)", lines[2]);
+                Assert.Equal("-- Param1: 'value' (Type = String, Size = -1)", lines[0]);
+                Assert.Equal("-- Param2: 'value' (Type = String)", lines[1]);
             }
 
             [Fact]
@@ -628,52 +629,98 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
 
             [Fact]
-            public void LogResult_logs_elapsed_time_for_completed_commands()
+            public void LogResult_uses_different_timers_per_interception_context()
             {
                 var writer = new StringWriter();
                 var formatter = new DatabaseLogFormatter(writer.Write);
-                var elapsed = GetElapsed(formatter);
 
-                formatter.LogResult(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int> { Result = 77 });
+                var interceptionContexts = new DbCommandInterceptionContext<int>[10];
+                var elapsedTimes = new long[10];
+
+                for (var i = 0; i < 10; i++)
+                {
+                    interceptionContexts[i] = new DbCommandInterceptionContext<int> { Result = 77 };
+                }
+
+                for (var i = 0; i < 10; i++)
+                {
+                    elapsedTimes[i] = GetElapsed(formatter, interceptionContexts[i], false, i * 5);
+                }
+
+                for (var i = 0; i < 10; i++)
+                {
+                    formatter.LogResult(new Mock<DbCommand>().Object, interceptionContexts[i]);
+
+                    Assert.Equal(Strings.CommandLogComplete(elapsedTimes[i], "77", ""), GetLines(writer).Skip(i).First());
+                }
+            }
+
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void LogResult_logs_elapsed_time_for_completed_commands(bool useObsoleteTimer)
+            {
+                var writer = new StringWriter();
+                var formatter = new DatabaseLogFormatter(writer.Write);
+                var interceptionContext = new DbCommandInterceptionContext<int> { Result = 77 };
+
+                var elapsed = GetElapsed(formatter, interceptionContext, useObsoleteTimer);
+
+                formatter.LogResult(new Mock<DbCommand>().Object, interceptionContext);
 
                 Assert.Equal(Strings.CommandLogComplete(elapsed, "77", ""), GetSingleLine(writer));
             }
 
-            [Fact]
-            public void LogResult_logs_elapsed_time_for_failed_commands()
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void LogResult_logs_elapsed_time_for_failed_commands(bool useObsoleteTimer)
             {
                 var writer = new StringWriter();
                 var formatter = new DatabaseLogFormatter(writer.Write);
-                var elapsed = GetElapsed(formatter);
+                var interceptionContext = new DbCommandInterceptionContext<int> { Exception = new Exception("I do not like them!") };
 
-                formatter.LogResult(
-                    new Mock<DbCommand>().Object,
-                    new DbCommandInterceptionContext<int> { Exception = new Exception("I do not like them!") });
+                var elapsed = GetElapsed(formatter, interceptionContext, useObsoleteTimer);
+
+                formatter.LogResult(new Mock<DbCommand>().Object, interceptionContext);
 
                 Assert.Equal(Strings.CommandLogFailed(elapsed, "I do not like them!", ""), GetSingleLine(writer));
             }
 
-            [Fact]
-            public void LogResult_logs_elapsed_time_for_canceled_commands()
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void LogResult_logs_elapsed_time_for_canceled_commands(bool useObsoleteTimer)
             {
                 var writer = new StringWriter();
                 var formatter = new DatabaseLogFormatter(writer.Write);
-                var elapsed = GetElapsed(formatter);
 
                 var interceptionContext = new DbCommandInterceptionContext<int>();
                 interceptionContext.MutableData.TaskStatus = TaskStatus.Canceled;
+
+                var elapsed = GetElapsed(formatter, interceptionContext, useObsoleteTimer);
 
                 formatter.LogResult(new Mock<DbCommand>().Object, interceptionContext);
 
                 Assert.Equal(Strings.CommandLogCanceled(elapsed, ""), GetSingleLine(writer));
             }
 
-            private static long GetElapsed(DatabaseLogFormatter formatter)
+            private static long GetElapsed(
+                DatabaseLogFormatter formatter, 
+                DbCommandInterceptionContext interceptionContext, 
+                bool useObsoleteTimer,
+                int time = 10)
             {
-                formatter.Stopwatch.Restart();
-                Thread.Sleep(10);
-                formatter.Stopwatch.Stop();
-                return formatter.Stopwatch.ElapsedMilliseconds;
+                var stopwatch = useObsoleteTimer 
+#pragma warning disable 618
+                    ? formatter.Stopwatch
+#pragma warning restore 618
+                    : formatter.GetStopwatch(interceptionContext);
+
+                stopwatch.Restart();
+                Thread.Sleep(time);
+                stopwatch.Stop();
+                return stopwatch.ElapsedMilliseconds;
             }
         }
 
@@ -783,7 +830,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             {
                 var writer = new StringWriter();
                 new DatabaseLogFormatter(writer.Write).Disposing(new Mock<DbTransaction>().Object, new DbTransactionInterceptionContext());
-                Assert.Empty(GetSingleLine(writer));
+                Assert.Null(GetSingleLine(writer));
             }
         }
 
@@ -893,7 +940,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             {
                 var writer = new StringWriter();
                 new DatabaseLogFormatter(writer.Write).Disposing(new Mock<DbConnection>().Object, new DbConnectionInterceptionContext());
-                Assert.Empty(GetSingleLine(writer));
+                Assert.Null(GetSingleLine(writer));
             }
         }
 
@@ -1000,12 +1047,12 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         private static string GetSingleLine(TextWriter writer)
         {
-            return GetLines(writer).First();
+            return GetLines(writer).FirstOrDefault();
         }
 
         private static string[] GetLines(TextWriter writer)
         {
-            return writer.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            return writer.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

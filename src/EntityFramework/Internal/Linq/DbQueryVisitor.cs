@@ -120,15 +120,60 @@ namespace System.Data.Entity.Internal.Linq
                 return GetContextFromMember(member, null);
             }
 
-            var constant = expression as ConstantExpression;
-            if (constant != null)
+            //Retrieve the context value from the encapsulated scope
+            var value = GetExpressionValue(expression);
+            if (value != null)
             {
-                var value = constant.Value;
-                if (value != null)
+                return GetContextFromMember(member, value);
+            }
+
+            return null;
+        }
+
+        // <summary>
+        // Tries to retrieve the value of an expression
+        // If the expression is a constant, it returns the constant value.
+        // If the expression is a field or property access on an expression, it returns the value of it recursively.
+        // Otherwise it returns null
+        // </summary>
+        // <param name="expression">The expression</param>
+        // <returns> The expression value. </returns>
+        private static object GetExpressionValue(Expression expression)
+        {
+            //If the given expression is a constant, we just return its value
+            var constantExpression = expression as ConstantExpression;
+            if (constantExpression != null)
+            {
+                return constantExpression.Value;
+            }
+
+            //If the given expression is a member access on an inner expression, we recursively retrieve the value of the inner expression, and get the member value from it.
+            var memberExpression = expression as MemberExpression;
+            if (memberExpression != null)
+            {
+                var asField = memberExpression.Member as FieldInfo;
+                if (asField != null)
                 {
-                    return GetContextFromMember(member, value);
+                    var innerValue = GetExpressionValue(memberExpression.Expression);
+
+                    if (innerValue != null)
+                    {
+                        return asField.GetValue(innerValue);
+                    }
+                }
+
+                var asProperty = memberExpression.Member as PropertyInfo;
+                if (asProperty != null)
+                {
+                    var innerValue = GetExpressionValue(memberExpression.Expression);
+
+                    if (innerValue != null)
+                    {
+                        return asProperty.GetValue(innerValue, null);
+                    }
                 }
             }
+
             return null;
         }
 

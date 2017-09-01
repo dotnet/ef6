@@ -226,6 +226,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // <summary>
         // Number of vars in this set
         // </summary>
+        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "v", Justification = "Allows count of objects from within this object.")]
         internal int Count
         {
             get

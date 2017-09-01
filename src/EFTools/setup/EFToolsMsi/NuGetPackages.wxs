@@ -13,12 +13,23 @@
         <?endif?>
         <Directory Id="EntityFramework_$(var.packageVersionId)" Name="EntityFramework.$(var.PackageVersion)">
           <Directory Id="content_$(var.packageVersionId)" Name="Content">
-            <Component Id="App.config.transform_$(var.packageVersionId)">
-              <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\App.config.transform"/>
-            </Component>
-            <Component Id="Web.config.transform_$(var.packageVersionId)">
-              <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\Web.config.transform"/>
-            </Component>
+            <?if $(var.PackageVersion) = $(var.EF6NuGetPackageVersion)?>
+              <Directory Id="content_net40_$(var.packageVersionId)" Name="net40">
+                <Component Id="App.config.transform_$(var.packageVersionId)">
+                  <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\net40\App.config.transform"/>
+                </Component>
+                <Component Id="Web.config.transform_$(var.packageVersionId)">
+                  <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\net40\Web.config.transform"/>
+                </Component>
+              </Directory>
+            <?else?>
+                <Component Id="App.config.transform_$(var.packageVersionId)">
+                  <File Id="app.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\App.config.transform"/>
+                </Component>
+                <Component Id="Web.config.transform_$(var.packageVersionId)">
+                  <File Id="web.config.transform_$(var.packageVersionId)" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\Content\Web.config.transform"/>
+                </Component>
+            <?endif?>
           </Directory>
           <Directory Id="tools_$(var.packageVersionId)" Name="tools">
             <Component Id="about_EntityFramework.help.txt_$(var.packageVersionId)">
@@ -108,7 +119,7 @@
           <?else?>
             <?define packageVersionId = $(var.PackageVersion)?>
           <?endif?>
-      
+
           <?foreach NuGetLang in $(var.NuGetLangs)?>
             <!-- WIX Ids cannot have hyphens, so we need to handle zh langs differently -->
             <?if $(var.NuGetLang) = zh-Hans?>
@@ -156,6 +167,13 @@
       <?endif IncludeLocalizedArtifacts?>
     </DirectoryRef>
 
+    <!-- Install the net45 EF5 dll in its own directory for reference by the Microsoft.Data.Entity.Design.Package pkgdef -->
+    <DirectoryRef Id="eft_runtimes_500_dir">
+      <Component Id="entityframework5dll">
+        <File Id="entityframework5dll" Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.EF5NuGetPackageVersion)\lib\net45\EntityFramework.dll"/>
+      </Component>
+    </DirectoryRef>
+
     <ComponentGroup Directory="eft_nuget_pkg_dir" Id="NuGetPackageComponents">
       <Component>
         <RegistryValue Key="Software\NuGet\Repository" Name="EntityFrameworkVisualStudio$(var.MajorVisualStudioVersion)Tools" Root="HKLM" Type="string" Value="[DSTDIR]Common7\IDE\Extensions\Microsoft\Entity Framework Tools\NuGet Packages"/>
@@ -188,6 +206,7 @@
           <ComponentRef Id="EntityFramework.PS3.psd1_$(var.packageVersionId)"/>
           <ComponentRef Id="Redirect.config_$(var.packageVersionId)"/>
           <ComponentRef Id="Redirect.VS11.config_$(var.packageVersionId)"/>
+          <ComponentRef Id="entityframework5dll"/>
         <?else?>
           <ComponentRef Id="EntityFramework.SqlServerProvider.dll_$(var.packageVersionId)" />
           <ComponentRef Id="EntityFramework.SqlServerProvider.xml_$(var.packageVersionId)" />

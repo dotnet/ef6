@@ -344,6 +344,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner
 		/// is passed, load-time validation will not be performed.
 		/// </param>
 		/// <returns>The loaded EntityDesignerViewModel instance.</returns>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
 		internal virtual global::Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel LoadModel(DslModeling::SerializationResult serializationResult, DslModeling::Partition partition, string fileName, DslModeling::ISchemaResolver schemaResolver, DslValidation::ValidationController validationController, DslModeling::ISerializerLocator serializerLocator)
 		{
 			#region Check Parameters

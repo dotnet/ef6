@@ -572,10 +572,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // <param name="reader"> An XmlReader positioned at the Type attribute. </param>
         private void HandleDbSchemaAttribute(XmlReader reader)
         {
-            Debug.Assert(
-                Schema.DataModel == SchemaDataModelOption.ProviderDataModel, "We shouldn't see this attribute unless we are parsing ssdl");
-            DebugCheck.NotNull(reader);
-
             _schema = reader.Value;
         }
 

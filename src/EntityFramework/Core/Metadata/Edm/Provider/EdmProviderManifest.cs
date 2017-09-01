@@ -80,6 +80,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         // </summary>
         // <param name="type"> the type to return FacetDescriptions for. </param>
         // <returns> The FacetDescriptions for the type given. </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Only cast twice in debug mode.")]
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
         {
             Debug.Assert(type is PrimitiveType, "EdmProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");

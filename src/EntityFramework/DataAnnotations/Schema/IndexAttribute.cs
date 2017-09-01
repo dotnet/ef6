@@ -71,7 +71,14 @@ namespace System.ComponentModel.DataAnnotations.Schema
             _order = order;
         }
 
-        private IndexAttribute(string name, int order, bool? isClustered, bool? isUnique)
+        internal IndexAttribute(string name, bool? isClustered, bool? isUnique)
+        {
+            _name = name;
+            _isClustered = isClustered;
+            _isUnique = isUnique;
+        }
+
+        internal IndexAttribute(string name, int order, bool? isClustered, bool? isUnique)
         {
             _name = name;
             _order = order;

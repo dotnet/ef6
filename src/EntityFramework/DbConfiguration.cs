@@ -770,6 +770,18 @@ namespace System.Data.Entity
         }
 
         /// <summary>
+        /// Sets a singleton model store implementation (persisted model cache).
+        /// </summary>
+        /// <param name="modelStore">The model store implementation.</param>
+        protected internal void SetModelStore(DbModelStore modelStore)
+        {
+            Check.NotNull(modelStore, "modelStore");
+
+            _internalConfiguration.CheckNotLocked("SetModelStore");
+            _internalConfiguration.RegisterSingleton(modelStore);
+        }
+
+        /// <summary>
         /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register
         /// a database table existence checker for a given provider.
         /// </summary>

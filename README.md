@@ -6,7 +6,7 @@ Entity Framework is actively developed by the Entity Framework team in collabora
 
 ## EF6.x here, EF Core elsewhere
 
-This project is for Entity Framework 6.x. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFramework.
+This project is for Entity Framework 6.x. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFrameworkCore.
 
 ## How do I use EF
 

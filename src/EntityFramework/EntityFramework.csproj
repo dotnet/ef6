@@ -250,8 +250,11 @@
     <Compile Include="Infrastructure\Annotations\IndexAnnotation.cs" />
     <Compile Include="Infrastructure\Annotations\IndexAnnotationSerializer.cs" />
     <Compile Include="Infrastructure\Annotations\IndexAttributeExtensions.cs" />
+    <Compile Include="Infrastructure\DbModelStore.cs" />
+    <Compile Include="Infrastructure\DefaultDbModelStore.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolver.cs" />
+    <Compile Include="Infrastructure\EdmxReader.cs" />
     <Compile Include="Infrastructure\Design\AppConfigReader.cs" />
     <Compile Include="Infrastructure\Interception\DatabaseLogger.cs" />
     <Compile Include="Infrastructure\Interception\DbConfigurationDispatcher.cs" />
@@ -360,6 +363,9 @@
     <Compile Include="ModelConfiguration\Configuration\ConventionsTypeActivator.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsTypeFilter.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConventionsTypeFinder.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Index\Api\IndexConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Index\Api\PrimaryKeyIndexConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Index\IndexConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\ConventionNavigationPropertyConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfiguration`.cs" />

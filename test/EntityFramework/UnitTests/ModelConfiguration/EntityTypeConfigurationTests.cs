@@ -8,6 +8,7 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.Utilities;
     using Moq;
     using Xunit;
+    using System.Data.Entity.ModelConfiguration.Utilities;
 
     public sealed class EntityTypeConfigurationTests
     {
@@ -42,9 +43,31 @@ namespace System.Data.Entity.ModelConfiguration
             var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(Fixture));
             var entityConfiguration = new EntityTypeConfiguration<Fixture>(mockEntityTypeConfiguration.Object);
 
-            entityConfiguration.HasKey(f => f.Id);
+            mockEntityTypeConfiguration.Setup(e => e.Key(new[] { typeof(Fixture).GetDeclaredProperty("Id") }))
+                .Throws(new Exception("Bang!"));
 
-            mockEntityTypeConfiguration.Verify(e => e.Key(new[] { typeof(Fixture).GetDeclaredProperty("Id") }));
+
+            var thrownException = Assert.Throws<Exception>(
+                () => entityConfiguration.HasKey(f => f.Id));
+
+            Assert.Equal("Bang!", thrownException.Message);
+        }
+
+        [Fact]
+        public void HasIndex_should_add_index_properties()
+        {
+            var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(Fixture));
+            var entityConfiguration = new EntityTypeConfiguration<Fixture>(mockEntityTypeConfiguration.Object);
+
+            mockEntityTypeConfiguration.Setup(e => e.Index(new PropertyPath(new[] { typeof(Fixture).GetDeclaredProperty("Id") })))
+                .Throws(new Exception("Bang!"));
+
+
+            var thrownException = Assert.Throws<Exception>(
+                () => entityConfiguration.HasIndex(f => f.Id));
+
+            Assert.Equal("Bang!", thrownException.Message);
+
         }
 
         [Fact]

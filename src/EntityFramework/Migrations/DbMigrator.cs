@@ -166,7 +166,8 @@ namespace System.Data.Entity.Migrations
                         _historyContextFactory,
                         schemas: new[] { _defaultSchema }.Concat(GetHistorySchemas()),
                         contextForInterception: _usersContext,
-                        initialExistence: _existenceState);
+                        initialExistence: _existenceState,
+                        permissionDeniedDetector: e => SqlGenerator.IsPermissionDeniedError(e));
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null

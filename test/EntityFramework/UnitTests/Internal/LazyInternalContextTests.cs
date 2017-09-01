@@ -10,11 +10,127 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Migrations.History;
+    using System.IO;
     using Xunit;
     using System.Threading;
 
-    public class LazyInternalContextTests
+    public class LazyInternalContextTests : TestBase
     {
+        [Fact]
+        public void CreateModel_uses_DbCompiledModel_from_ModelStore_when_available()
+        {
+            var store = new Mock<DbModelStore>();
+
+            var dbCompiledModelInStore = new DbCompiledModel();
+            store.Setup(c => c.TryLoad(It.IsAny<Type>())).Returns(dbCompiledModelInStore);
+            store.Setup(c => c.Save(It.IsAny<Type>(), It.IsAny<DbModel>()));
+
+            try
+            {
+                var dependencyResolver = new SingletonDependencyResolver<DbModelStore>(store.Object);
+                MutableResolver.AddResolver<DbModelStore>(dependencyResolver);
+
+                var mockContext = new Mock<LazyInternalContext>(
+                    new Mock<DbContext>().Object, new Mock<IInternalConnection>().Object, null, null, null, null, null)
+                {
+                    CallBase = true
+                };
+
+                var model = LazyInternalContext.CreateModel(mockContext.Object);
+             
+                Assert.Same(dbCompiledModelInStore, model);
+
+                store.Verify(c => c.TryLoad(It.IsAny<Type>()), Times.Once(),
+                    "should load existing model");
+
+                store.Verify(c => c.Save(It.IsAny<Type>(), It.IsAny<DbModel>()), Times.Never(),
+                    "should not call Save when loading model from store");
+            }
+            finally //clean up
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+        [Fact]
+        public void CreateModel_does_not_use_ModelStore_for_HistoryContext()
+        {
+            var store = new Mock<DbModelStore>();
+
+            var dbCompiledModelInStore = new DbCompiledModel();
+            store.Setup(c => c.TryLoad(It.IsAny<Type>())).Returns(dbCompiledModelInStore);
+            store.Setup(c => c.Save(It.IsAny<Type>(), It.IsAny<DbModel>()));
+
+            try
+            {
+                var dependencyResolver = new SingletonDependencyResolver<DbModelStore>(store.Object);
+                MutableResolver.AddResolver<DbModelStore>(dependencyResolver);
+
+                var mockContext = new Mock<LazyInternalContext>(
+                    new MockHistoryContext(), new Mock<IInternalConnection>().Object, null, null, null, null, null)
+                {
+                    CallBase = true
+                };
+                mockContext.Object.ModelProviderInfo = ProviderRegistry.Sql2008_ProviderInfo;
+
+                var model = LazyInternalContext.CreateModel(mockContext.Object);
+
+                Assert.NotSame(dbCompiledModelInStore, model);
+
+                store.Verify(c => c.TryLoad(It.IsAny<Type>()), Times.Never(),
+                    "should not call store for HistoryContext");
+
+                store.Verify(c => c.Save(It.IsAny<Type>(), It.IsAny<DbModel>()), Times.Never(),
+                    "should not call store for HistoryContext");
+            }
+            finally //clean up
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+        public class MockHistoryContext : HistoryContext
+        {
+        }
+
+        [Fact]
+        public void CreateModel_saves_DbCompiledModel_into_ModelStore_when_not_yet_stored()
+        {
+            var store = new Mock<DbModelStore>();
+
+            store.Setup(c => c.TryLoad(It.IsAny<Type>())).Returns((DbCompiledModel)null); //no file exists yet
+            store.Setup(c => c.Save(It.IsAny<Type>(), It.IsAny<DbModel>()));
+
+            try
+            {
+                var dependencyResolver = new SingletonDependencyResolver<DbModelStore>(store.Object);
+                MutableResolver.AddResolver<DbModelStore>(dependencyResolver);
+
+                var mockContext = new Mock<LazyInternalContext>(
+                    new Mock<DbContext>().Object, new Mock<IInternalConnection>().Object, null, null, null, null, null)
+                {
+                    CallBase = true
+                };
+                mockContext.Object.ModelProviderInfo = ProviderRegistry.Sql2008_ProviderInfo;
+
+                var model = LazyInternalContext.CreateModel(mockContext.Object);
+                
+                Assert.NotNull(model);
+
+                store.Verify(c => c.TryLoad(It.IsAny<Type>()), Times.Once(),
+                    "should try to load existing model");
+
+                store.Verify(c => c.Save(It.IsAny<Type>(), It.IsAny<DbModel>()), Times.Once(),
+                    "should Save after creating model when store did not contain exist yet");
+            }
+            finally //clean up
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
         [Fact]
         public void CommandTimeout_is_obtained_from_and_set_in_ObjectContext_if_ObjectContext_exists()
         {

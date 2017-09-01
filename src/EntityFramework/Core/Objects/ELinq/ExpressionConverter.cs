@@ -109,6 +109,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #region Additional Entity function names
 
+        private const string Like = "Like";
         private const string AsUnicode = "AsUnicode";
         private const string AsNonUnicode = "AsNonUnicode";
 
@@ -1458,6 +1459,35 @@ namespace System.Data.Entity.Core.Objects.ELinq
         #region Helper Methods Shared by Translators
 
         // <summary>
+        // Helper method for String.Like
+        // object.Like(likeExpression[, escapeCharacter]) is translated to:
+        // object like likeExpression [escape escapeCharacter]
+        // </summary>
+        // <returns> The translation </returns>
+        private DbExpression TranslateLike(MethodCallExpression call)
+        {
+            char dummyEscapeChar;
+            var providerSupportsEscapingLikeArgument = ProviderManifest.SupportsEscapingLikeArgument(out dummyEscapeChar);
+
+            var inputExpression = call.Arguments[0];
+            var patternExpression = call.Arguments[1];
+            var escapeExpression = (call.Arguments.Count > 2 ? call.Arguments[2] : null);
+            
+            if (!providerSupportsEscapingLikeArgument && (escapeExpression != null))
+            {
+                throw new ProviderIncompatibleException(Strings.ProviderDoesNotSupportEscapingLikeArgument);
+            }
+
+            var translatedPatternExpression = TranslateExpression(patternExpression);
+            var translatedEscapeExpression = (escapeExpression != null ? TranslateExpression(escapeExpression) : null);
+            var translatedInputExpression = TranslateExpression(inputExpression);
+
+            return escapeExpression != null ?
+                translatedInputExpression.Like(translatedPatternExpression, translatedEscapeExpression) :
+                translatedInputExpression.Like(translatedPatternExpression);
+        }
+
+        // <summary>
         // Helper method for String.StartsWith, String.EndsWith and String.Contains
         // object.Method(argument), where Method is one of String.StartsWith, String.EndsWith or
         // String.Contains is translated into:
@@ -1488,10 +1518,19 @@ namespace System.Data.Entity.Core.Objects.ELinq
             if (providerSupportsEscapingLikeArgument && (queryParameterExpression != null))
             {
                 useLikeTranslation = true;
-                bool specifyEscapeDummy;
-                patternExpression =
-                    queryParameterExpression.EscapeParameterForLike(
-                        input => PreparePattern(input, insertPercentAtStart, insertPercentAtEnd, out specifyEscapeDummy));
+
+                var methodInfo = typeof(ExpressionConverter).GetMethod("PreparePattern", BindingFlags.Static | BindingFlags.NonPublic);
+                var inputPrm = Expression.Parameter(typeof(string), "input");
+                var preparePatternFunc = Expression.Lambda<Func<string, Tuple<string, bool>>>(
+                    Expression.Call(
+                        methodInfo, 
+                        inputPrm, 
+                        Expression.Constant(insertPercentAtStart), 
+                        Expression.Constant(insertPercentAtEnd), 
+                        Expression.Constant(ProviderManifest)),
+                    inputPrm);
+
+                patternExpression = queryParameterExpression.EscapeParameterForLike(preparePatternFunc);
             }
 
             var translatedPatternExpression = TranslateExpression(patternExpression);
@@ -1502,9 +1541,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 useLikeTranslation = true;
                 var constantExpression = (DbConstantExpression)translatedPatternExpression;
 
-                var preparedValue = PreparePattern(
-                    (string)constantExpression.Value, insertPercentAtStart, insertPercentAtEnd, out specifyEscape);
-                Debug.Assert(preparedValue != null, "The prepared value should not be null when the input is non-null");
+                var preparedPattern = PreparePattern(
+                    (string)constantExpression.Value, insertPercentAtStart, insertPercentAtEnd, ProviderManifest);
+
+                Debug.Assert(preparedPattern.Item1 != null, "The prepared value should not be null when the input is non-null");
+
+                var preparedValue = preparedPattern.Item1;
+                specifyEscape = preparedPattern.Item2;
 
                 //Note: the result type needs to be taken from the original expression, as the user may have specified Unicode/Non-Unicode
                 translatedPatternExpression = constantExpression.ResultType.Constant(preparedValue);
@@ -1539,23 +1582,22 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // first escaping it by the provider and then appending "%" and the beginging/end depending
         // on whether insertPercentAtStart/insertPercentAtEnd is specified.
         // </summary>
-        private string PreparePattern(string patternValue, bool insertPercentAtStart, bool insertPercentAtEnd, out bool specifyEscape)
+        private static Tuple<string, bool> PreparePattern(string patternValue, bool insertPercentAtStart, bool insertPercentAtEnd, DbProviderManifest providerManifest)
         {
             // Dev10 #800466: The pattern value if originating from a parameter value could be null
             if (patternValue == null)
             {
-                specifyEscape = false;
-                return null;
+                return new Tuple<string, bool>(null, false);
             }
 
-            var escapedPatternValue = ProviderManifest.EscapeLikeArgument(patternValue);
+            var escapedPatternValue = providerManifest.EscapeLikeArgument(patternValue);
 
             if (escapedPatternValue == null)
             {
                 throw new ProviderIncompatibleException(Strings.ProviderEscapeLikeArgumentReturnedNull);
             }
 
-            specifyEscape = patternValue != escapedPatternValue;
+            var specifyEscape = patternValue != escapedPatternValue;
 
             var patternBuilder = new StringBuilder();
             if (insertPercentAtStart)
@@ -1568,7 +1610,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 patternBuilder.Append("%");
             }
 
-            return patternBuilder.ToString();
+            return new Tuple<string, bool>(patternBuilder.ToString(), specifyEscape);
         }
 
         // <summary>
