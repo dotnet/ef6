@@ -117,6 +117,45 @@ namespace ProductivityApiTests
         #endregion
 
         [Fact]
+        public void Migrations_or_Edmx_writing_throws_when_model_is_not_cached()
+        {
+            try
+            {
+                var fileName = _location + typeof(NonCachedContext).FullName + ".edmx";
+
+                using (var context = new NonCachedContext())
+                {
+                    using (var writer = XmlWriter.Create(fileName))
+                    {
+                        EdmxWriter.WriteEdmx(context, writer);
+                    }
+                }
+
+                using (var reader = XmlReader.Create(fileName))
+                {
+                    var compiledModel = EdmxReader.Read(reader, "default");
+
+                    using (var context = new NonCachedContext(compiledModel))
+                    {
+                        using (var xmlWriter = XmlWriter.Create(new MemoryStream()))
+                        {
+                            Assert.Throws<NotSupportedException>(
+                                () => EdmxWriter.WriteEdmx(context, xmlWriter));
+                        }
+                    }
+                }
+            }
+            finally //clean up
+            {
+                MutableResolver.ClearResolvers();
+                if (File.Exists(_location + typeof(NonCachedContext).FullName + ".edmx"))
+                {
+                    File.Delete(_location + typeof(NonCachedContext).FullName + ".edmx");
+                }
+            }
+        }
+
+        [Fact]
         public void DefaultDbModelStore_saves_and_loads_DbContext_with_DropCreateAlwaysInitializer()
         {
             try
@@ -217,6 +256,7 @@ namespace ProductivityApiTests
                         RETURN @inValue;
                     END";
         }
+
         public class ScalarFunctionDbContext : DbContext
         {
             public ScalarFunctionDbContext()
@@ -305,6 +345,21 @@ namespace ProductivityApiTests
         #endregion
 
         #region ModelContext
+
+        public class NonCachedContext : ModelContext
+        {
+            public NonCachedContext()
+            {
+                Database.SetInitializer<NonCachedContext>(null);
+            }
+
+            public NonCachedContext(DbCompiledModel model)
+                : base(model)
+            {
+                Database.SetInitializer<NonCachedContext>(null);
+            }
+        }
+
         public class Model
         {
             public int Id { get; set; }
@@ -325,6 +380,7 @@ namespace ProductivityApiTests
 
             public DbSet<Model> Models { get; set; }
         }
+
         #endregion
     }
 }

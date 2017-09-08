@@ -807,6 +807,10 @@
     <value>Creating a DbModelBuilder or writing the EDMX from a DbContext created using Database First or Model First is not supported. EDMX can only be obtained from a Code First DbContext created without using an existing DbCompiledModel.</value>
     <comment>## ExceptionType=NotSupportedException</comment>
   </data>
+  <data name="EdmxWriter_EdmxFromRawCompiledModelNotSupported" xml:space="preserve">
+    <value>Writing the EDMX file or using Migrations from a DbContext created using a DbCompiledModel that is not in the DbModelStore cache is not supported. Ensure that the DbCompiledModel is stored in the DbModelStore cache.</value>
+    <comment>## ExceptionType=NotSupportedException</comment>
+  </data>
   <data name="UnintentionalCodeFirstException_Message" xml:space="preserve">
     <value>The context is being used in Code First mode with code that was generated from an EDMX file for either Database First or Model First development.  This will not work correctly. To fix this problem do not remove the line of code that throws this exception. If you wish to use Database First or Model First, then make sure that the Entity Framework connection string is included in the app.config or web.config of the start-up project. If you are creating your own DbConnection, then make sure that it is an EntityConnection and not some other type of DbConnection, and that you pass it to one of the base DbContext constructors that take a DbConnection. To learn more about Code First, Database First, and Model First see the Entity Framework documentation here: http://go.microsoft.com/fwlink/?LinkId=394715</value>
   </data>

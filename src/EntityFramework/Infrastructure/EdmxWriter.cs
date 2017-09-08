@@ -63,8 +63,14 @@ namespace System.Data.Entity.Infrastructure
                     return;
                 }
             }
+
+            var cachedModelBuilder = compiledModel.CachedModelBuilder;
+            if (cachedModelBuilder == null)
+            {
+                throw Error.EdmxWriter_EdmxFromRawCompiledModelNotSupported();
+            }
             
-            var builder = compiledModel.CachedModelBuilder.Clone();
+            var builder = cachedModelBuilder.Clone();
 
             WriteEdmx(
                 internalContext.ModelProviderInfo == null
