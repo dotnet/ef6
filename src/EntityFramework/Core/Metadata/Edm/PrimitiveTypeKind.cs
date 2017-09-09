@@ -174,6 +174,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         GeographyCollection = 30,
 
+        /// <summary>
+        /// HierarchyId type kind
+        /// </summary>
+        HierarchyId = 31,
+
         //
         //If you add anything below this, make sure you update the variable NumPrimitiveTypes in EdmConstants
         //

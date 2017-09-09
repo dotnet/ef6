@@ -190,6 +190,13 @@ namespace System.Data.Entity.SqlServer.Utilities
             return ((PrimitiveType)type.EdmType).FacetDescriptions.Single(f => f.FacetName == facetName).IsConstant;
         }
 
+        internal static bool IsHierarchyIdType(this TypeUsage type)
+        {
+            DebugCheck.NotNull(type);
+
+            return (type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType && ((PrimitiveType)type.EdmType).IsHierarchyIdType());
+        }
+
         internal static bool IsSpatialType(this TypeUsage type)
         {
             DebugCheck.NotNull(type);

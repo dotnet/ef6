@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
@@ -29,11 +30,16 @@ namespace System.Data.Entity.SqlServer
         public SqlTypesAssembly(Assembly sqlSpatialAssembly)
         {
             // Retrieve SQL Server spatial types and static constructor methods
+            var sqlHier = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlHierarchyId", throwOnError: true);
             var sqlGeog = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlGeography", throwOnError: true);
             var sqlGeom = sqlSpatialAssembly.GetType("Microsoft.SqlServer.Types.SqlGeometry", throwOnError: true);
 
+            Debug.Assert(sqlHier != null, "SqlHierarchyId type was not properly retrieved?");
             Debug.Assert(sqlGeog != null, "SqlGeography type was not properly retrieved?");
             Debug.Assert(sqlGeom != null, "SqlGeometry type was not properly retrieved?");
+
+            SqlHierarchyIdType = sqlHier;
+            sqlHierarchyIdParse = CreateStaticConstructorDelegateHierarchyId<string>(sqlHier, "Parse");
 
             SqlGeographyType = sqlGeog;
             sqlGeographyFromWKTString = CreateStaticConstructorDelegate<string>(sqlGeog, "STGeomFromText");
@@ -1110,8 +1116,15 @@ namespace System.Data.Entity.SqlServer
             return SqlCharsToString(chars);
         }
 
+        internal Type SqlHierarchyIdType { get; private set; }
         internal Type SqlGeographyType { get; private set; }
         internal Type SqlGeometryType { get; private set; }
+
+        internal object ConvertToSqlTypesHierarchyId(HierarchyId hierarchyIdValue)
+        {
+            DebugCheck.NotNull(hierarchyIdValue);
+            return GetSqlTypesHierarchyIdValue(hierarchyIdValue.ToString());
+        }
 
         internal object ConvertToSqlTypesGeography(DbGeography geographyValue)
         {
@@ -1147,6 +1160,13 @@ namespace System.Data.Entity.SqlServer
         {
             DebugCheck.NotNull(wellKnownText);
             return sqlGeometryFromWKTString(wellKnownText, srid);
+        }
+
+        private object GetSqlTypesHierarchyIdValue(string hierarchyIdValue)
+        {
+            DebugCheck.NotNull(hierarchyIdValue);
+
+            return sqlHierarchyIdParse(hierarchyIdValue);
         }
 
         private object GetSqlTypesSpatialValue(IDbSpatialValue spatialValue, Type requiredProviderValueType)
@@ -1204,6 +1224,8 @@ namespace System.Data.Entity.SqlServer
             return XmlReader.Create(new StringReader(stringValue));
         }
 
+        private readonly Func<string, object> sqlHierarchyIdParse;
+
         private readonly Func<string, int, object> sqlGeographyFromWKTString;
         private readonly Func<byte[], int, object> sqlGeographyFromWKBByteArray;
         private readonly Func<XmlReader, int, object> sqlGeographyFromGMLReader;
@@ -1211,6 +1233,24 @@ namespace System.Data.Entity.SqlServer
         private readonly Func<string, int, object> sqlGeometryFromWKTString;
         private readonly Func<byte[], int, object> sqlGeometryFromWKBByteArray;
         private readonly Func<XmlReader, int, object> sqlGeometryFromGMLReader;
+
+        private static Func<TArg, object> CreateStaticConstructorDelegateHierarchyId<TArg>(Type hierarchyIdType, string methodName)
+        {
+            DebugCheck.NotNull(hierarchyIdType);
+            var dataParam = Expression.Parameter(typeof(TArg));
+            var staticCtorMethod = hierarchyIdType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
+            Debug.Assert(staticCtorMethod != null, "Could not find method '" + methodName + "' on type '" + hierarchyIdType.FullName + "'");
+            Debug.Assert(
+                staticCtorMethod.GetParameters().Length == 1,
+                "Static constructor method on '" + hierarchyIdType.FullName + "' does not match static constructor pattern?");
+
+            var sqlData = BuildSqlString(dataParam, staticCtorMethod.GetParameters()[0].ParameterType);
+
+            var ex = Expression.Lambda<Func<TArg, object>>(
+                Expression.Convert(Expression.Call(null, staticCtorMethod, sqlData), typeof(object)), dataParam);
+            var result = ex.Compile();
+            return result;
+        }
 
         private static Func<TArg, int, object> CreateStaticConstructorDelegate<TArg>(Type spatialType, string methodName)
         {
@@ -1283,6 +1323,17 @@ namespace System.Data.Entity.SqlServer
             Debug.Assert(sqlCharsFromSqlStringCtor != null, "SqlXml(System.IO.Stream) constructor not found?");
             var sqlStringFromStringCtor = sqlString.GetDeclaredConstructor(typeof(string));
             Expression result = Expression.New(sqlCharsFromSqlStringCtor, Expression.New(sqlStringFromStringCtor, toConvert));
+            return result;
+        }
+
+        private static Expression BuildSqlString(Expression toConvert, Type sqlStringType)
+        {
+            // dataParam:String => new SqlString(dataParam)   
+            Debug.Assert(sqlStringType.Name == "SqlString", "String argument used with non-SqlString static constructor method?");
+            var sqlStringFromStringCtor = sqlStringType.GetConstructor(
+                BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null);
+            Debug.Assert(sqlStringFromStringCtor != null);
+            Expression result = Expression.New(sqlStringFromStringCtor, toConvert);
             return result;
         }
 

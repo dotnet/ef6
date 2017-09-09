@@ -81,7 +81,7 @@ namespace Microsoft.Data.Entity.Design.Model
                 var expectedTypes =
                     PrimitiveType
                         .GetEdmPrimitiveTypes()
-                        .Where(t => schemaVersion == EntityFrameworkVersion.Version3 || !IsGeoSpatialType(t))
+                        .Where(t => schemaVersion == EntityFrameworkVersion.Version3 || (!IsGeoSpatialType(t) && !IsHierardchyIdType(t)))
                         .Select(t => t.Name);
 
                 Assert.Equal(expectedTypes, ModelHelper.AllPrimitiveTypes(schemaVersion));
@@ -207,6 +207,11 @@ namespace Microsoft.Data.Entity.Design.Model
         {
             return type.PrimitiveTypeKind >= PrimitiveTypeKind.Geometry &&
                    type.PrimitiveTypeKind <= PrimitiveTypeKind.GeographyCollection;
+        }
+
+        private static bool IsHierardchyIdType(PrimitiveType type)
+        {
+            return type.PrimitiveTypeKind == PrimitiveTypeKind.HierarchyId;
         }
     }
 }

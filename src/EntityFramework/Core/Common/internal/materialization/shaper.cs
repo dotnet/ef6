@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -576,6 +577,17 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             var result = new ColumnErrorHandlingValueReader<TColumn>().GetValue(Reader, ordinal);
             return result;
+        }
+
+        /// <summary>
+        ///     Get the hierarchyid value of a column with the given ordinal
+        /// </summary>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The hierarchyid value </returns>
+        public HierarchyId GetHierarchyIdColumnValue(int ordinal)
+        {
+            var hierarchyId = Reader.GetValue(ordinal);
+            return new HierarchyId(hierarchyId.ToString());
         }
 
         protected virtual DbSpatialDataReader CreateSpatialDataReader()

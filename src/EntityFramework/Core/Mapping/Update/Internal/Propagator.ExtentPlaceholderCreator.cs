@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -50,6 +51,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 typeDefaultMap[PrimitiveTypeKind.Single] = default(Single);
                 typeDefaultMap[PrimitiveTypeKind.SByte] = default(SByte);
                 typeDefaultMap[PrimitiveTypeKind.String] = String.Empty;
+                typeDefaultMap[PrimitiveTypeKind.HierarchyId] = HierarchyId.GetRoot();
 
 #if DEBUG
                 foreach (var o in typeDefaultMap.Values)

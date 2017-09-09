@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
@@ -963,6 +964,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         WrapWithCastIfNeeded(true, EscapeSingleQuote(e.Value.ToString(), false /* IsUnicode */), "uniqueidentifier", result);
                         break;
 
+                    case PrimitiveTypeKind.HierarchyId:
+                        AppendHierarchyConstant(result, (HierarchyId)e.Value);
+                        break;
+
                     case PrimitiveTypeKind.Int16:
                         WrapWithCastIfNeeded(!isCastOptional, e.Value.ToString(), "smallint", result);
                         break;
@@ -1004,6 +1009,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             return result;
+        }
+
+        private static void AppendHierarchyConstant(SqlBuilder result, HierarchyId hierarchyId)
+        {
+            DebugCheck.NotNull(result);
+            DebugCheck.NotNull(hierarchyId);
+
+            result.Append("cast(");
+            result.Append(EscapeSingleQuote(hierarchyId.ToString(), false /* IsUnicode */));
+            result.Append(" as hierarchyid)");
         }
 
         private void AppendSpatialConstant(SqlBuilder result, IDbSpatialValue spatialValue)

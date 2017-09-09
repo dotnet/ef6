@@ -25,7 +25,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
                 var typeMap = storageModel.StoreTypeNameToStoreTypeMap;
 
                 Assert.Equal(
-                    SqlProviderServices.Instance.GetProviderManifest("2008").GetStoreTypes().Select(t => t.Name),
+                    SqlProviderServices.Instance.GetProviderManifest("2008").GetStoreTypes().Where(t => t.Name != "hierarchyid").Select(t => t.Name),
                     typeMap.Keys);
 
                 Assert.False(typeMap.Any(t => t.Key != t.Value.Name));

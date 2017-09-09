@@ -221,6 +221,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         new TrimStartTranslator(),
                         new TrimEndTranslator(),
                         new SpatialMethodCallTranslator(),
+                        new HierarchyIdMethodCallTranslator(),
                         new HasFlagTranslator(),
                         new ToStringTranslator(),
                     };

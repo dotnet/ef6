@@ -4,14 +4,17 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
 {
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
+    using System.Linq;
     using System.Threading;
     using System.Xml;
 
     internal class ClrProviderManifest : DbProviderManifest
     {
-        private const int s_PrimitiveTypeCount = 17;
+        private const int s_PrimitiveTypeCount = EdmConstants.NumPrimitiveTypes;
+        private ReadOnlyCollection<PrimitiveType> _primitiveTypesArray;
         private ReadOnlyCollection<PrimitiveType> _primitiveTypes;
         private static readonly ClrProviderManifest _instance = new ClrProviderManifest();
 
@@ -51,7 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             if (TryGetPrimitiveTypeKind(clrType, out resolvedTypeKind))
             {
                 InitializePrimitiveTypes();
-                primitiveType = _primitiveTypes[(int)resolvedTypeKind];
+                primitiveType = _primitiveTypesArray[(int)resolvedTypeKind];
                 return true;
             }
 
@@ -134,6 +137,10 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
                             {
                                 primitiveTypeKind = PrimitiveTypeKind.Guid;
                             }
+                            else if (typeof(HierarchyId) == clrType)
+                            {
+                                primitiveTypeKind = PrimitiveTypeKind.HierarchyId;
+                            }
                             else if (typeof(TimeSpan) == clrType)
                             {
                                 primitiveTypeKind = PrimitiveTypeKind.Time;
@@ -205,6 +212,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             primitiveTypes[(int)PrimitiveTypeKind.Geography] = CreatePrimitiveType(typeof(DbGeography), PrimitiveTypeKind.Geography);
             primitiveTypes[(int)PrimitiveTypeKind.Geometry] = CreatePrimitiveType(typeof(DbGeometry), PrimitiveTypeKind.Geometry);
             primitiveTypes[(int)PrimitiveTypeKind.Guid] = CreatePrimitiveType(typeof(Guid), PrimitiveTypeKind.Guid);
+            primitiveTypes[(int)PrimitiveTypeKind.HierarchyId] = CreatePrimitiveType(typeof(HierarchyId), PrimitiveTypeKind.HierarchyId);
             primitiveTypes[(int)PrimitiveTypeKind.Int16] = CreatePrimitiveType(typeof(Int16), PrimitiveTypeKind.Int16);
             primitiveTypes[(int)PrimitiveTypeKind.Int32] = CreatePrimitiveType(typeof(Int32), PrimitiveTypeKind.Int32);
             primitiveTypes[(int)PrimitiveTypeKind.Int64] = CreatePrimitiveType(typeof(Int64), PrimitiveTypeKind.Int64);
@@ -212,9 +220,11 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             primitiveTypes[(int)PrimitiveTypeKind.Single] = CreatePrimitiveType(typeof(Single), PrimitiveTypeKind.Single);
             primitiveTypes[(int)PrimitiveTypeKind.String] = CreatePrimitiveType(typeof(String), PrimitiveTypeKind.String);
 
-            var readOnlyTypes = new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
+            var readOnlyTypesArray = new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
+            var readOnlyTypes = new ReadOnlyCollection<PrimitiveType>(primitiveTypes.Where(t => t != null).ToList());
 
             // Set the result to _primitiveTypes at the end
+            Interlocked.CompareExchange(ref _primitiveTypesArray, readOnlyTypesArray, null);
             Interlocked.CompareExchange(ref _primitiveTypes, readOnlyTypes, null);
         }
 

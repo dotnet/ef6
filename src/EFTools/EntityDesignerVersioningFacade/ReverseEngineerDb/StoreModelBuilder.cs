@@ -932,7 +932,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 && _nameToEdmType.TryGetValue(typeName, out storeType))
             {
                 if ((storeType.PrimitiveTypeKind == PrimitiveTypeKind.Geography ||
-                     storeType.PrimitiveTypeKind == PrimitiveTypeKind.Geometry)
+                     storeType.PrimitiveTypeKind == PrimitiveTypeKind.Geometry ||
+                     storeType.PrimitiveTypeKind == PrimitiveTypeKind.HierarchyId)
                     && _targetEntityFrameworkVersion < EntityFrameworkVersion.Version3)
                 {
                     excludedForVersion = true;

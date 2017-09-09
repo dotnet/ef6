@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CodeFirstDatabaseSchema" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="SupplierWithHierarchyId">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Path" Type="hierarchyid" Nullable="true" />
+  </EntityType>
+  <EntityType Name="WidgetWithHierarchyId">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="SomeHierarchyId" Type="hierarchyid" Nullable="true" />
+    <Property Name="NotHierarchyId" Type="nvarchar" Nullable="false" MaxLength="16" />
+    <Property Name="SomeMoreHierarchyId" Type="hierarchyid" Nullable="true" />
+  </EntityType>
+  <EntityContainer Name="CodeFirstDatabase">
+    <EntitySet Name="SupplierWithHierarchyId" EntityType="Self.SupplierWithHierarchyId" Schema="dbo" Table="SupplierWithHierarchyIds" />
+    <EntitySet Name="WidgetWithHierarchyId" EntityType="Self.WidgetWithHierarchyId" Schema="dbo" Table="WidgetWithHierarchyIds" />
+  </EntityContainer>
+  <Function Name="fx_SuppliersWithinRange" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="path1" Type="hierarchyid" Mode="In" />
+    <Parameter Name="path2" Type="hierarchyid" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="Path" Type="hierarchyid" Nullable="true" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="fx_SupplierHierarchyIdsWithinRange" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="path1" Type="hierarchyid" Mode="In" />
+    <Parameter Name="path2" Type="hierarchyid" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="Path" Type="hierarchyid" Nullable="true" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+</Schema>

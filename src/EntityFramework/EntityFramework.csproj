@@ -218,6 +218,7 @@
     <Compile Include="Core\Common\CommandTrees\DbGroupExpressionBinding.cs" />
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\DbExpressionBuilder.cs" />
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\EdmFunctions.cs" />
+    <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\Hierarchy\HierarchyIdEdmFunctions.cs" />
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\Internal\ArgumentValidation.cs" />
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\Internal\EnumerableValidator.cs" />
     <Compile Include="Core\Common\CommandTrees\ExpressionBuilder\Row.cs" />
@@ -407,10 +408,12 @@
     <Compile Include="Core\Metadata\Edm\DbDatabaseMapping.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\INamedDataModelItem.cs" />
+    <Compile Include="Core\Metadata\Edm\Provider\EdmProviderManifestHierarchyIdFunctions.cs" />
     <Compile Include="Core\Metadata\Edm\ExpensiveOSpaceLoader.cs" />
     <Compile Include="Core\Metadata\ObjectLayer\CodeFirstOSpaceLoader.cs" />
     <Compile Include="Core\Metadata\ObjectLayer\CodeFirstOSpaceTypeFactory.cs" />
     <Compile Include="Core\Metadata\ObjectLayer\OSpaceTypeFactory.cs" />
+    <Compile Include="Core\Objects\ELinq\HierarchyIdMethodCallTranslator.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmFunctionAttribute.cs" />
     <Compile Include="Core\Objects\EntityFunctions.cs" />
     <Compile Include="Core\Objects\ExecutionOptions.cs" />
@@ -529,6 +532,8 @@
     <Compile Include="DataAnnotations\Schema\NotMappedAttribute.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttribute.cs" />
     <Compile Include="DbContextTransaction.cs" />
+    <Compile Include="Hierarchy\DbHierarchyServices.cs" />
+    <Compile Include="Hierarchy\HierarchyId.cs" />
     <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryResolver.cs" />
     <Compile Include="Migrations\Infrastructure\DynamicToFunctionModificationCommandConverter.cs" />
     <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGenerator.cs" />

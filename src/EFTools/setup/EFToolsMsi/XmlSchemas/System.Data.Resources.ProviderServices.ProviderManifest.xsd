@@ -118,6 +118,7 @@
       <xs:enumeration value="Time"/>
       <xs:enumeration value="DateTimeOffset"/>        
       <xs:enumeration value="Double"/>
+      <xs:enumeration value="HierarchyId"/>
       <!--- TODO: Spatial: only support the union types here for now.   Once we deeply understand the full heirarchy, we'll have to beef this up. -->
       <xs:enumeration value="Geography"/>
       <xs:enumeration value="Geometry"/>

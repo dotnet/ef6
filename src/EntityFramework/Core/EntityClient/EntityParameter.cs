@@ -612,12 +612,12 @@ namespace System.Data.Entity.Core.EntityClient
             }
             else if (!DbTypeMap.TryGetModelTypeUsage(DbType, out typeUsage))
             {
-                // Spatial types have only DbType 'Object', and cannot be represented in the static type map.
+                // Spatial and HierarchyId types have only DbType 'Object', and cannot be represented in the static type map. 
                 PrimitiveType primitiveParameterType;
                 if (DbType == DbType.Object
                     && Value != null
                     && ClrProviderManifest.Instance.TryGetPrimitiveType(Value.GetType(), out primitiveParameterType)
-                    && Helper.IsSpatialType(primitiveParameterType))
+                    && (Helper.IsSpatialType(primitiveParameterType) || Helper.IsHierarchyIdType(primitiveParameterType))) 
                 {
                     typeUsage = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveParameterType.PrimitiveTypeKind);
                 }

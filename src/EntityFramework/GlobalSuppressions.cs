@@ -27,6 +27,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
         Target = "System.Data.Entity.ModelConfiguration.Edm")]
+[assembly:
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.Data.Entity.Hierarchy")]
 
 [assembly: SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly")]
 [assembly:
@@ -177,6 +180,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
         Target = "System.Data.Entity.Core.Common.EntitySql")]
+[assembly:
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Hierarchy")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
         Target = "System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial")]

@@ -34,7 +34,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper.Le
                 Assert.Equal(storeItemCollection.StoreSchemaVersion, legacyStoreItemCollection.StoreSchemaVersion);
 
                 Assert.Equal(
-                    storeItemCollection.GetItems<GlobalItem>().Count,
+                    storeItemCollection.GetItems<GlobalItem>().Count - 8, // 8 hierarchyid releated items
                     legacyStoreItemCollection.GetItems<LegacyMetadata.GlobalItem>().Count);
             }
         }
@@ -87,8 +87,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper.Le
             var sourceGlobalItems = storeItemCollection.GetItems<EdmType>();
             var legacyGlobalItems = legacyStoreItemCollection.GetItems<LegacyMetadata.EdmType>();
 
-            Assert.Equal(sourceGlobalItems.Count, legacyGlobalItems.Count);
-            Assert.True(sourceGlobalItems.All(i => legacyGlobalItems.Any(j => j.FullName == i.FullName)));
+            Assert.Equal(sourceGlobalItems.Count - 8, legacyGlobalItems.Count); // 8 hierarchyid releated items
+            Assert.True(legacyGlobalItems.All(i => sourceGlobalItems.Any(j => j.FullName == i.FullName)));
         }
     }
 }

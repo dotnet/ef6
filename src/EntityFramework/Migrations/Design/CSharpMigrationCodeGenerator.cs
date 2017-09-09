@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Utilities;
@@ -1266,6 +1267,16 @@ namespace System.Data.Entity.Migrations.Design
         protected virtual string Generate(TimeSpan defaultValue)
         {
             return "new TimeSpan(" + defaultValue.Ticks + ")";
+        }
+
+        /// <summary>
+        /// Generates code to specify the default value for a <see cref="HierarchyId" /> column.
+        /// </summary>
+        /// <param name="defaultValue"> The value to be used as the default. </param>
+        /// <returns> Code representing the default value. </returns>
+        protected virtual string Generate(HierarchyId defaultValue)
+        {
+            return "new HierarchyId(\"" + defaultValue + "\")";
         }
 
         /// <summary>
