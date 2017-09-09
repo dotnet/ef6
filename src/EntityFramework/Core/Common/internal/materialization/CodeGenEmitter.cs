@@ -84,6 +84,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal static readonly MethodInfo Shaper_GetColumnValueWithErrorHandling =
             typeof(Shaper).GetOnlyDeclaredMethod("GetColumnValueWithErrorHandling");
 
+        internal static readonly MethodInfo Shaper_GetHierarchyIdColumnValue = typeof(Shaper).GetOnlyDeclaredMethod("GetHierarchyIdColumnValue");
+        
         internal static readonly MethodInfo Shaper_GetGeographyColumnValue = typeof(Shaper).GetOnlyDeclaredMethod("GetGeographyColumnValue");
         internal static readonly MethodInfo Shaper_GetGeometryColumnValue = typeof(Shaper).GetOnlyDeclaredMethod("GetGeometryColumnValue");
 
@@ -620,6 +622,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 result = Expression.Call(
                     Shaper_Parameter, Shaper_GetColumnValueWithErrorHandling.MakeGenericMethod(resultType), Expression.Constant(ordinal));
             }
+            return result;
+        }
+
+        // <summary>
+        // Create expression to read a column value of type System.Data.Entity.Hierarchy.HierarchyId by delegating to the DbSpatialServices implementation of the underlying provider
+        // </summary>
+        internal static Expression Emit_Shaper_GetHierarchyIdColumnValue(int ordinal)
+        {
+            // shaper.GetHierarchyIdColumnValue(ordinal)   
+            Expression result = Expression.Call(Shaper_Parameter, Shaper_GetHierarchyIdColumnValue, Expression.Constant(ordinal));
             return result;
         }
 

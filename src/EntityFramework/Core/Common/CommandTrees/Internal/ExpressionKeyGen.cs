@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -244,6 +245,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 case PrimitiveTypeKind.Int64:
                 case PrimitiveTypeKind.Time:
                     _key.AppendFormat(CultureInfo.InvariantCulture, "{0}", e.Value);
+                    break;
+
+                case PrimitiveTypeKind.HierarchyId:
+                    var hierarchyId = e.Value as HierarchyId;
+                    if (hierarchyId != null)
+                    {
+                        _key.Append(hierarchyId);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
                     break;
 
                 case PrimitiveTypeKind.DateTime:

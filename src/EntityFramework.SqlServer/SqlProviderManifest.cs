@@ -84,6 +84,7 @@ namespace System.Data.Entity.SqlServer
                                          primitiveType.Name.Equals("date", StringComparison.OrdinalIgnoreCase) ||
                                          primitiveType.Name.Equals("datetime2", StringComparison.OrdinalIgnoreCase) ||
                                          primitiveType.Name.Equals("datetimeoffset", StringComparison.OrdinalIgnoreCase) ||
+                                         primitiveType.Name.Equals("hierarchyid", StringComparison.OrdinalIgnoreCase) ||
                                          primitiveType.Name.Equals("geography", StringComparison.OrdinalIgnoreCase) ||
                                          primitiveType.Name.Equals("geometry", StringComparison.OrdinalIgnoreCase)
                         );
@@ -364,6 +365,7 @@ namespace System.Data.Entity.SqlServer
                 case "bigint":
                 case "bit":
                 case "uniqueidentifier":
+                case "hierarchyid":
                 case "int":
                 case "geography":
                 case "geometry":
@@ -566,6 +568,9 @@ namespace System.Data.Entity.SqlServer
 
                 case PrimitiveTypeKind.Guid:
                     return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["uniqueidentifier"]);
+
+                case PrimitiveTypeKind.HierarchyId:
+                    return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["hierarchyid"]);
 
                 case PrimitiveTypeKind.Double:
                     return TypeUsage.CreateDefaultTypeUsage(StoreTypeNameToStorePrimitiveType["float"]);

@@ -9,6 +9,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
@@ -677,6 +678,14 @@ namespace System.Data.Entity.SqlServer
                     {
                         value = SqlTypesAssemblyLoader.DefaultInstance.GetSqlTypesAssembly().ConvertToSqlTypesGeometry(geometryValue);
                     }
+                    else
+                    {
+                        var hierarchyIdValue = value as HierarchyId;
+                        if (hierarchyIdValue != null)
+                        {
+                            value = SqlTypesAssemblyLoader.DefaultInstance.GetSqlTypesAssembly().ConvertToSqlTypesHierarchyId(hierarchyIdValue);
+                        }
+                    }
                 }
             }
 
@@ -760,6 +769,12 @@ namespace System.Data.Entity.SqlServer
 
                 case PrimitiveTypeKind.Guid:
                     return SqlDbType.UniqueIdentifier;
+
+                case PrimitiveTypeKind.HierarchyId:
+                    {
+                        udtName = "hierarchyid";
+                        return SqlDbType.Udt;
+                    }
 
                 case PrimitiveTypeKind.Int16:
                     return SqlDbType.SmallInt;

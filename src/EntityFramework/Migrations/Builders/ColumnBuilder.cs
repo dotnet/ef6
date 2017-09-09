@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations.Builders
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Spatial;
@@ -541,6 +542,40 @@ namespace System.Data.Entity.Migrations.Builders
                 defaultValue,
                 defaultValueSql,
                 precision: precision,
+                name: name,
+                storeType: storeType,
+                annotations: annotations);
+        }
+
+        /// <summary>
+        /// Creates a new column definition to store hierarchyid data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
+        /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
+        /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
+        /// <param name="defaultValueSql"> SQL expression used as the default value for this column. </param>
+        /// <param name="name"> The name of the column. </param>
+        /// <param name="storeType"> Provider specific data type to use for this column. </param>
+        /// <param name="annotations"> Custom annotations usually from the Code First model. </param>
+        /// <returns> The newly constructed column definition. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+        public ColumnModel HierarchyId(
+            bool? nullable = null,
+            HierarchyId defaultValue = null,
+            string defaultValueSql = null,
+            string name = null,
+            string storeType = null,
+            IDictionary<string, AnnotationValues> annotations = null)
+        {
+            return BuildColumn(
+                PrimitiveTypeKind.HierarchyId,
+                nullable,
+                defaultValue,
+                defaultValueSql,
                 name: name,
                 storeType: storeType,
                 annotations: annotations);

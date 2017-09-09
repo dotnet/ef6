@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Spatial;
     using Xunit;
 
@@ -28,6 +29,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Check_result_for_basic_type(PrimitiveTypeKind.Single, default(Single));
                 Check_result_for_basic_type(PrimitiveTypeKind.SByte, default(SByte));
                 Check_result_for_basic_type(PrimitiveTypeKind.String, string.Empty);
+                Check_result_for_basic_type(PrimitiveTypeKind.HierarchyId, HierarchyId.GetRoot());
             }
 
             private static void Check_result_for_basic_type(PrimitiveTypeKind primitiveTypeKind, object defaultValue)

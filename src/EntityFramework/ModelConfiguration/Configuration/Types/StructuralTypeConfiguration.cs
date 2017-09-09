@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -50,6 +51,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
 
             return (propertyType.IsValueType()
+                    || propertyType == typeof(HierarchyId) 
                     || propertyType == typeof(DbGeography)
                     || propertyType == typeof(DbGeometry)
                    )

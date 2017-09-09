@@ -240,6 +240,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                     case PrimitiveTypeKind.SByte:
                     case PrimitiveTypeKind.Double:
                     case PrimitiveTypeKind.Guid:
+                    case PrimitiveTypeKind.HierarchyId:
                     case PrimitiveTypeKind.Single:
                         break;
                     case PrimitiveTypeKind.Geography:

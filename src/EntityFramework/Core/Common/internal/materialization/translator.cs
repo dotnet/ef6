@@ -1223,6 +1223,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         NullableColumns.Add(ordinal);
                     }
                 }
+                else if (Helper.IsHierarchyIdType(columnType))
+                {
+                    result =
+                        CodeGenEmitter.Emit_Conditional_NotDBNull(
+                            CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetHierarchyIdColumnValue(ordinal), type), ordinal,
+                            type);
+                }
                 else
                 {
                     bool needsNullableCheck;

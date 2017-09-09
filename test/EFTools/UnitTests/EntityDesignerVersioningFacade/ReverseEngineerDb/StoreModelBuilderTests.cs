@@ -228,7 +228,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var schemaGenerator = CreateStoreModelBuilder(targetEntityFrameworkVersion: EntityFrameworkVersion.Version2);
 
-                foreach (var unsupportedTypeName in new[] { "geography", "geometry" })
+                foreach (var unsupportedTypeName in new[] { "geography", "geometry", "hierarchyid" })
                 {
                     var errors = new List<EdmSchemaError>();
                     var property =

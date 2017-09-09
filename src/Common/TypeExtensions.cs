@@ -12,6 +12,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Diagnostics;
@@ -181,7 +182,8 @@ namespace System.Data.Entity.Utilities
                      || type.IsArray
                      || type == typeof(string)
                      || type == typeof(DbGeography)
-                     || type == typeof(DbGeometry))
+                     || type == typeof(DbGeometry)
+                     || type == typeof(HierarchyId))
                    && type.IsValidStructuralPropertyType();
         }
 

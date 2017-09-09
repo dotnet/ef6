@@ -149,6 +149,7 @@ namespace System.Data.Entity.Migrations.Model
                       { PrimitiveTypeKind.Single, 4 },
                       { PrimitiveTypeKind.String, int.MaxValue },
                       { PrimitiveTypeKind.Time, 5 },
+                      { PrimitiveTypeKind.HierarchyId, int.MaxValue },
                       { PrimitiveTypeKind.Geometry, int.MaxValue },
                       { PrimitiveTypeKind.Geography, int.MaxValue },
                       { PrimitiveTypeKind.GeometryPoint, int.MaxValue },

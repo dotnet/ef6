@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProductivityApiTests" Alias="Self"
+     xmlns="http://schemas.microsoft.com/ado/2009/11/edm" 
+     xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+  <EntityType Name="SupplierWithHierarchyId">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p6:StoreGeneratedPattern="Identity" xmlns:p6="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+    <Property Name="Name" Type="String" FixedLength="false" MaxLength="Max" Unicode="true" Nullable="true" />
+    <Property Name="Path" Type="HierarchyId" Nullable="true" />
+  </EntityType>
+  <EntityType Name="WidgetWithHierarchyId">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p6:StoreGeneratedPattern="Identity" xmlns:p6="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+    <Property Name="Name" Type="String" FixedLength="false" MaxLength="Max" Unicode="true" Nullable="true" />
+    <Property Name="SomeHierarchyId" Type="HierarchyId" Nullable="true" />
+    <Property Name="Complex" Type="ProductivityApiTests.ComplexWithHierarchyId" Nullable="false" />
+  </EntityType>
+  <ComplexType Name="ComplexWithHierarchyId">
+    <Property Name="NotHierarchyId" Type="String" Nullable="false" MaxLength="16" />
+    <Property Name="SomeMoreHierarchyId" Type="HierarchyId" Nullable="true" />
+  </ComplexType>
+  <EntityContainer Name="HierarchyIdNorthwindContext">
+    <EntitySet Name="Suppliers" EntityType="Self.SupplierWithHierarchyId" />
+    <EntitySet Name="Widgets" EntityType="Self.WidgetWithHierarchyId" />
+    <FunctionImport Name="SuppliersWithinRange" ReturnType="Collection(ProductivityApiTests.SupplierWithHierarchyId)" IsComposable="true"
+    	EntitySet="Suppliers">
+      <Parameter Name="path1" Type="HierarchyId" />
+      <Parameter Name="path2" Type="HierarchyId" />
+    </FunctionImport>
+    <FunctionImport Name="SupplierHierarchyIdsWithinRange" ReturnType="Collection(HierarchyId)" IsComposable="true">
+      <Parameter Name="path1" Type="HierarchyId" />
+      <Parameter Name="path2" Type="HierarchyId" />
+    </FunctionImport>
+  </EntityContainer>
+</Schema>

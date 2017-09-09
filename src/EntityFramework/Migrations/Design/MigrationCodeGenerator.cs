@@ -65,6 +65,11 @@ namespace System.Data.Entity.Migrations.Design
                 namespaces = namespaces.Concat(new[] { "System.Data.Entity.Spatial" });
             }
 
+            if (operationsArray.OfType<AddColumnOperation>().Any(o => o.Column.Type == PrimitiveTypeKind.HierarchyId))
+            {
+                namespaces = namespaces.Concat(new[] { "System.Data.Entity.Hierarchy" });
+            }
+
             if (AnnotationsExist(operationsArray))
             {
                 namespaces = namespaces.Concat(new[] { "System.Collections.Generic", "System.Data.Entity.Infrastructure.Annotations" });

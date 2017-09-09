@@ -358,6 +358,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return IsEnumType(edmType) || IsPrimitiveType(edmType);
         }
 
+        internal static bool IsHierarchyIdType(PrimitiveType type)
+        {
+            return type.PrimitiveTypeKind == PrimitiveTypeKind.HierarchyId;
+        }
+
         internal static bool IsSpatialType(PrimitiveType type)
         {
             return IsGeographicType(type) || IsGeometricType(type);
@@ -430,6 +435,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static bool IsStrongGeographicTypeKind(PrimitiveTypeKind kind)
         {
             return kind >= PrimitiveTypeKind.GeographyPoint && kind <= PrimitiveTypeKind.GeographyCollection;
+        }
+
+        internal static bool IsHierarchyIdType(TypeUsage type)
+        {
+            return (type.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType
+                    && ((PrimitiveType)type.EdmType).PrimitiveTypeKind == PrimitiveTypeKind.HierarchyId);
         }
 
         internal static bool IsSpatialType(TypeUsage type)

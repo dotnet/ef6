@@ -213,6 +213,7 @@ namespace System.Data.Entity.Migrations.Builders
             VerifyAnnotations(builder.DateTimeOffset(annotations: annotations));
             VerifyAnnotations(builder.Decimal(annotations: annotations));
             VerifyAnnotations(builder.Double(annotations: annotations));
+            VerifyAnnotations(builder.HierarchyId(annotations: annotations));
             VerifyAnnotations(builder.Geography(annotations: annotations));
             VerifyAnnotations(builder.Geometry(annotations: annotations));
             VerifyAnnotations(builder.Guid(annotations: annotations));
