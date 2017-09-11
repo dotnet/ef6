@@ -1698,7 +1698,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "searchString")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "likeExpression")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        public static bool Like(this string searchString, string likeExpression)
+        public static bool Like(string searchString, string likeExpression)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
@@ -1718,7 +1718,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "likeExpression")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "escapeCharacter")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
-        public static bool Like(this string searchString, string likeExpression, string escapeCharacter)
+        public static bool Like(string searchString, string likeExpression, string escapeCharacter)
         {
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }

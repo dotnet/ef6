@@ -519,14 +519,6 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         "Magic Unicorns Roll",
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => DbFunctions.Like(e.String, "Magic%Roll%")).Select(e => e.String).First());
-
-                    Assert.Equal(
-                        "Magic Unicorns Roll",
-                        context.WithTypes.OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll")).Select(e => e.String).First());
-
-                    Assert.Equal(
-                        "Magic Unicorns Roll",
-                        GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll%")).Select(e => e.String).First());
                 }
             }
             
@@ -542,14 +534,6 @@ namespace FunctionalTests.ProductivityApi
                     Assert.Equal(
                         "Magic Unicorns Roll",
                         GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => DbFunctions.Like(e.String, "Magic%Roll", "~")).Select(e => e.String).First());
-
-                    Assert.Equal(
-                        "Magic Unicorns Roll",
-                        context.WithTypes.OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll", "~")).Select(e => e.String).First());
-
-                    Assert.Equal(
-                        "Magic Unicorns Roll",
-                        GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Where(e => e.String.Like("Magic%Roll", "~")).Select(e => e.String).First());
                 }
             }
 
