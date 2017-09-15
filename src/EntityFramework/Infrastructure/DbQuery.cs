@@ -227,8 +227,7 @@ namespace System.Data.Entity.Infrastructure
             return base.ToString();
         }
 
-        // ReSharper disable once UnusedMember.Local
-        private string Sql
+        public string Sql
         {
             get { return ToString(); }
         }
