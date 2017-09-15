@@ -178,6 +178,14 @@ namespace System.Data.Entity.Core.Common
             return false;
         }
 
+        /// <summary>
+        /// Indicates if the provider supports the parameter optimization described in EntityFramework6 GitHub issue #195.
+        /// The default is <c>false</c>. Providers should change this to true only after testing that schema queries (as
+        /// used in the Database First flow) work correctly with this flag.
+        /// </summary>
+        /// <returns><c>True</c> only if the provider supports the parameter optimization.</returns>
+        public virtual bool SupportsParameterOptimizationInSchemaQueries() => false;
+
         /// <summary>Provider writers should override this method to return the argument with the wildcards and the escape character escaped. This method is only used if SupportsEscapingLikeArgument returns true.</summary>
         /// <returns>The argument with the wildcards and the escape character escaped.</returns>
         /// <param name="argument">The argument to be escaped.</param>

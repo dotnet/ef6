@@ -758,6 +758,12 @@ namespace System.Data.Entity.SqlServer
             return EscapeLikeText(argument, true, out usedEscapeCharacter);
         }
 
+        /// <summary>
+        /// Indicates if the provider supports the parameter optimization described in EntityFramework6 GitHub issue #195.
+        /// </summary>
+        /// <returns><c>True</c> since this provider supports the parameter optimization.</returns>
+        public override bool SupportsParameterOptimizationInSchemaQueries() => true;
+
         // <summary>
         // Returns a boolean that specifies whether the corresponding provider can handle expression trees 
         // containing instances of DbInExpression.
