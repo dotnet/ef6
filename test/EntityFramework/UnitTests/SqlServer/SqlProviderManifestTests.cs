@@ -32,7 +32,10 @@ namespace System.Data.Entity.SqlServer
 
         private class FakeProviderManifest : DbProviderManifest
         {
-            public override string NamespaceName => null;
+            public override string NamespaceName
+            {
+                get { return null; }
+            }
 
             public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
             {

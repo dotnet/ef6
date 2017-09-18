@@ -493,7 +493,10 @@ namespace System.Data.Entity.SqlServerCompact
         /// Indicates if the provider supports the parameter optimization described in EntityFramework6 GitHub issue #195.
         /// </summary>
         /// <returns><c>True</c> since this provider supports the parameter optimization.</returns>
-        public override bool SupportsParameterOptimizationInSchemaQueries() => true;
+        public override bool SupportsParameterOptimizationInSchemaQueries()
+        {
+            return true;
+        }
 
         // <summary>
         // Escapes the wildcard characters and the escape character in the given argument.

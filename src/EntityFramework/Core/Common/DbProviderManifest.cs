@@ -184,7 +184,10 @@ namespace System.Data.Entity.Core.Common
         /// used in the Database First flow) work correctly with this flag.
         /// </summary>
         /// <returns><c>True</c> only if the provider supports the parameter optimization.</returns>
-        public virtual bool SupportsParameterOptimizationInSchemaQueries() => false;
+        public virtual bool SupportsParameterOptimizationInSchemaQueries()
+        {
+            return false;
+        }
 
         /// <summary>Provider writers should override this method to return the argument with the wildcards and the escape character escaped. This method is only used if SupportsEscapingLikeArgument returns true.</summary>
         /// <returns>The argument with the wildcards and the escape character escaped.</returns>
