@@ -37,6 +37,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     parameterCollectionBuilder).ToString());
 
             Assert.Equal(1, parameterCollectionBuilder.ParameterCollection.Count);
+            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
             Assert.Equal("Value", parameterCollectionBuilder.ParameterCollection["p0"].Value);
         }
 
@@ -65,6 +66,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                 filterBuilder.ToString());
 
             Assert.Equal(2, parameterCollectionBuilder.ParameterCollection.Count);
+            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
             Assert.Equal("Value1", parameterCollectionBuilder.ParameterCollection["p0"].Value);
             Assert.Equal("Value2", parameterCollectionBuilder.ParameterCollection["p1"].Value);
         }
@@ -83,6 +85,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     parameterCollectionBuilder).ToString());
 
             Assert.Equal(3, parameterMap.Count);
+            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
             Assert.Equal("catalog", parameterCollectionBuilder.ParameterCollection["p0"].Value);
             Assert.Equal("schema", parameterCollectionBuilder.ParameterCollection["p1"].Value);
             Assert.Equal("name", parameterCollectionBuilder.ParameterCollection["p2"].Value);
@@ -130,6 +133,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     parameterCollectionBuilder).ToString());
 
             Assert.Equal(1, parameterCollectionBuilder.ParameterCollection.Count);
+            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
             Assert.Equal("%", parameterCollectionBuilder.ParameterCollection["p0"].Value);
         }
 
@@ -156,6 +160,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                 filterBuilder.ToString());
 
             Assert.Equal(3, parameterCollectionBuilder.ParameterCollection.Count);
+            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
+            Assert.Equal("p1", parameterCollectionBuilder.ParameterCollection[1].ParameterName);
             Assert.Equal("%", parameterCollectionBuilder.ParameterCollection["p0"].Value);
             Assert.Equal("catalog", parameterCollectionBuilder.ParameterCollection["p1"].Value);
             Assert.Equal("schema", parameterCollectionBuilder.ParameterCollection["p2"].Value);
@@ -219,6 +225,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     .CreateWhereClause(parameters).ToString());
 
             Assert.Equal(3, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("p1", parameters[1].ParameterName);
             Assert.Equal(parameters["p0"].Value, "catalog");
             Assert.Equal(parameters["p1"].Value, "schema");
             Assert.Equal(parameters["p2"].Value, "name");
@@ -226,6 +234,36 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         [Fact]
         public void Where_clause_uses_AND_to_connect_multiple_aliases_and_Allow_filter()
+        {
+            var parameters = new EntityCommand().Parameters;
+
+            Assert.Equal(
+                "((alias1.Name LIKE @p0))\r\nAND\r\n((alias2.Name LIKE @p1))",
+                new EntityStoreSchemaQueryGenerator(
+                    string.Empty,
+                    string.Empty,
+                    EntityStoreSchemaFilterObjectTypes.Table,
+                    new[]
+                        {
+                            new EntityStoreSchemaFilterEntry(
+                                null,
+                                null,
+                                "name",
+                                EntityStoreSchemaFilterObjectTypes.Table,
+                                EntityStoreSchemaFilterEffect.Allow),
+                        },
+                    new[] { "alias1", "alias2" })
+                    .CreateWhereClause(parameters, optimizeParameters: false).ToString());
+
+            Assert.Equal(2, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("p1", parameters[1].ParameterName);
+            Assert.Equal(parameters["p0"].Value, "name");
+            Assert.Equal(parameters["p1"].Value, "name");
+        }
+
+        [Fact]
+        public void Where_clause_uses_AND_to_connect_multiple_aliases_and_Allow_filter_and_optimizes_parameters()
         {
             var parameters = new EntityCommand().Parameters;
 
@@ -245,9 +283,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                                 EntityStoreSchemaFilterEffect.Allow),
                         },
                     new[] { "alias1", "alias2" })
-                    .CreateWhereClause(parameters).ToString());
+                    .CreateWhereClause(parameters, optimizeParameters: true).ToString());
 
             Assert.Equal(1, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
             Assert.Equal(parameters["p0"].Value, "name");
         }
 
@@ -275,6 +314,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     .CreateWhereClause(parameters).ToString());
 
             Assert.Equal(3, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("p1", parameters[1].ParameterName);
             Assert.Equal(parameters["p0"].Value, "catalog");
             Assert.Equal(parameters["p1"].Value, "schema");
             Assert.Equal(parameters["p2"].Value, "name");
@@ -282,6 +323,35 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         [Fact]
         public void Where_clause_uses_AND_to_connect_multiple_aliases_and_Exclude_filter()
+        {
+            var parameters = new EntityCommand().Parameters;
+
+            Assert.Equal(
+                "NOT ((alias1.Name LIKE @p0))\r\nAND\r\nNOT ((alias2.Name LIKE @p1))",
+                new EntityStoreSchemaQueryGenerator(
+                    string.Empty,
+                    string.Empty,
+                    EntityStoreSchemaFilterObjectTypes.Table,
+                    new[]
+                        {
+                            new EntityStoreSchemaFilterEntry(
+                                null,
+                                null,
+                                "name",
+                                EntityStoreSchemaFilterObjectTypes.Table,
+                                EntityStoreSchemaFilterEffect.Exclude),
+                        },
+                    new[] { "alias1", "alias2" })
+                    .CreateWhereClause(parameters, optimizeParameters: false).ToString());
+
+            Assert.Equal(2, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal(parameters["p0"].Value, "name");
+        }
+
+        [Fact]
+        public void Where_clause_uses_AND_to_connect_multiple_aliases_and_Exclude_filter_and_optimizes_parameters()
         {
             var parameters = new EntityCommand().Parameters;
 
@@ -301,9 +371,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                                 EntityStoreSchemaFilterEffect.Exclude),
                         },
                     new[] { "alias1", "alias2" })
-                    .CreateWhereClause(parameters).ToString());
+                    .CreateWhereClause(parameters, optimizeParameters: true).ToString());
 
             Assert.Equal(1, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
             Assert.Equal(parameters["p0"].Value, "name");
         }
 
@@ -337,6 +408,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     .CreateWhereClause(parameters).ToString());
 
             Assert.Equal(2, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("p1", parameters[1].ParameterName);
             Assert.Equal(parameters["p0"].Value, "nameAllowed");
             Assert.Equal(parameters["p1"].Value, "nameExcluded");
         }
@@ -354,7 +427,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     EntityStoreSchemaFilterObjectTypes.Table,
                     new EntityStoreSchemaFilterEntry[0],
                     new string[0])
-                    .GenerateQuery(parameters), false);
+                    .GenerateQuery(parameters));
 
             Assert.Equal(0, parameters.Count);
         }
@@ -409,7 +482,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     .GenerateQuery(parameters));
 
             Assert.Equal(1, parameters.Count);
-            Assert.Equal(parameters["p0"].Value, "name");
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("name", parameters["p0"].Value);
         }
 
         [Fact]
@@ -454,7 +528,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     .GenerateQuery(parameters));
 
             Assert.Equal(1, parameters.Count);
-            Assert.Equal(parameters["p0"].Value, "name");
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("name", parameters["p0"].Value);
         }
     }
 }
