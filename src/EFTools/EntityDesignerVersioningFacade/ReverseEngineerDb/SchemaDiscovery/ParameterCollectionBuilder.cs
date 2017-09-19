@@ -51,7 +51,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             string parameterName = null;
             if (!IsOptimized || IsOptimized && !_parameterMap.TryGetValue(parameterValue, out parameterName))
             {
-                parameterName = GetParameterName();
+                parameterName = GetNextParameterName();
                 _parameterCollection.AddWithValue(parameterName, parameterValue);
                 if (IsOptimized)
                 {
@@ -61,7 +61,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             return parameterName;
         }
 
-        private string GetParameterName()
+        private string GetNextParameterName()
         {
             return "p" + _parameterCollection.Count.ToString(CultureInfo.InvariantCulture);
         }
