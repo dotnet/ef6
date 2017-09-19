@@ -93,6 +93,7 @@
     <Compile Include="ReverseEngineerDb\EntityStoreSchemaFilterEffect.cs" />
     <Compile Include="ReverseEngineerDb\EntityStoreSchemaFilterEntry.cs" />
     <Compile Include="ReverseEngineerDb\EntityStoreSchemaFilterObjectTypes.cs" />
+    <Compile Include="ReverseEngineerDb\SchemaDiscovery\ParameterCollectionBuilder.cs" />
     <Compile Include="ReverseEngineerDb\StoreSchemaConnectionFactory.cs" />
     <Compile Include="ReverseEngineerDb\ModelBuilderErrorCode.cs" />
     <Compile Include="ReverseEngineerDb\DbDatabaseMappingBuilder.cs" />
