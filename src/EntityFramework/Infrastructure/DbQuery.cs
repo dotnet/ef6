@@ -227,6 +227,9 @@ namespace System.Data.Entity.Infrastructure
             return base.ToString();
         }
 
+        /// <summary>
+        /// Gets a <see cref="System.String" /> representation of the underlying query.
+        /// </summary>
         public string Sql
         {
             get { return ToString(); }
