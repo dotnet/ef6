@@ -26,6 +26,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         public void AppendComparison_creates_comparison_fragment_and_corresponding_parameter_for_non_null_value()
         {
             var parameterCollectionBuilder = new ParameterCollectionBuilder();
+            var parameters = parameterCollectionBuilder.ParameterCollection;
 
             Assert.Equal(
                 "alias.propertyName LIKE @p0",
@@ -36,15 +37,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     "Value",
                     parameterCollectionBuilder).ToString());
 
-            Assert.Equal(1, parameterCollectionBuilder.ParameterCollection.Count);
-            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
-            Assert.Equal("Value", parameterCollectionBuilder.ParameterCollection["p0"].Value);
+            Assert.Equal(1, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("Value", parameters["p0"].Value);
         }
 
         [Fact]
         public void AppendComparison_creates_parameters_and_adds_AND_for_multiple_comparisons()
         {
             var parameterCollectionBuilder = new ParameterCollectionBuilder();
+            var parameters = parameterCollectionBuilder.ParameterCollection;
 
             var filterBuilder =
                 EntityStoreSchemaQueryGenerator.AppendComparison(
@@ -65,16 +67,17 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                 "alias1.propertyName1 LIKE @p0 AND alias2.propertyName2 LIKE @p1",
                 filterBuilder.ToString());
 
-            Assert.Equal(2, parameterCollectionBuilder.ParameterCollection.Count);
-            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
-            Assert.Equal("Value1", parameterCollectionBuilder.ParameterCollection["p0"].Value);
-            Assert.Equal("Value2", parameterCollectionBuilder.ParameterCollection["p1"].Value);
+            Assert.Equal(2, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("Value1", parameters["p0"].Value);
+            Assert.Equal("Value2", parameters["p1"].Value);
         }
 
         [Fact]
         public void AppendFilterEntry_creates_filter_for_catalog_schema_and_name_if_all_specified()
         {
             var parameterCollectionBuilder = new ParameterCollectionBuilder();
+            var parameters = parameterCollectionBuilder.ParameterCollection;
 
             Assert.Equal(
                 "(alias.CatalogName LIKE @p0 AND alias.SchemaName LIKE @p1 AND alias.Name LIKE @p2)",
@@ -84,11 +87,11 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     new EntityStoreSchemaFilterEntry("catalog", "schema", "name"),
                     parameterCollectionBuilder).ToString());
 
-            Assert.Equal(3, parameterMap.Count);
-            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
-            Assert.Equal("catalog", parameterCollectionBuilder.ParameterCollection["p0"].Value);
-            Assert.Equal("schema", parameterCollectionBuilder.ParameterCollection["p1"].Value);
-            Assert.Equal("name", parameterCollectionBuilder.ParameterCollection["p2"].Value);
+            Assert.Equal(3, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("catalog", parameters["p0"].Value);
+            Assert.Equal("schema", parameters["p1"].Value);
+            Assert.Equal("name", parameters["p2"].Value);
         }
 
         [Fact]
@@ -123,6 +126,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         public void AppendFilterEntry_uses_wildcard_parameter_value_if_schema_catalog_and_name_are_null()
         {
             var parameterCollectionBuilder = new ParameterCollectionBuilder();
+            var parameters = parameterCollectionBuilder.ParameterCollection;
 
             Assert.Equal(
                 "(alias.Name LIKE @p0)",
@@ -132,15 +136,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     new EntityStoreSchemaFilterEntry(null, null, null),
                     parameterCollectionBuilder).ToString());
 
-            Assert.Equal(1, parameterCollectionBuilder.ParameterCollection.Count);
-            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
-            Assert.Equal("%", parameterCollectionBuilder.ParameterCollection["p0"].Value);
+            Assert.Equal(1, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("%", parameters["p0"].Value);
         }
 
         [Fact]
         public void AppendFilterEntry_uses_OR_to_connect_multiple_filters()
         {
             var parameterCollectionBuilder = new ParameterCollectionBuilder();
+            var parameters = parameterCollectionBuilder.ParameterCollection;
             var filterBuilder = new StringBuilder();
 
             EntityStoreSchemaQueryGenerator.AppendFilterEntry(
@@ -159,12 +164,12 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                 "(alias.Name LIKE @p0) OR (alias.CatalogName LIKE @p1 AND alias.SchemaName LIKE @p2)",
                 filterBuilder.ToString());
 
-            Assert.Equal(3, parameterCollectionBuilder.ParameterCollection.Count);
-            Assert.Equal("p0", parameterCollectionBuilder.ParameterCollection[0].ParameterName);
-            Assert.Equal("p1", parameterCollectionBuilder.ParameterCollection[1].ParameterName);
-            Assert.Equal("%", parameterCollectionBuilder.ParameterCollection["p0"].Value);
-            Assert.Equal("catalog", parameterCollectionBuilder.ParameterCollection["p1"].Value);
-            Assert.Equal("schema", parameterCollectionBuilder.ParameterCollection["p2"].Value);
+            Assert.Equal(3, parameters.Count);
+            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("p1", parameters[1].ParameterName);
+            Assert.Equal("%", parameters["p0"].Value);
+            Assert.Equal("catalog", parameters["p1"].Value);
+            Assert.Equal("schema", parameters["p2"].Value);
         }
 
         [Fact]
