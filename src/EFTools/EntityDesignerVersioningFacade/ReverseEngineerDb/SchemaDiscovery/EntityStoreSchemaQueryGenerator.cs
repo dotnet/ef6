@@ -27,7 +27,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _filterAliases = filterAliases;
         }
 
-        public string GenerateQuery(EntityParameterCollection parameters, bool optimizeParameters)
+        public string GenerateQuery(EntityParameterCollection parameters, bool optimizeParameters = false)
         {
             Debug.Assert(parameters != null, "parameters != null");
 
@@ -38,8 +38,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             }
 
             var sqlStatement = new StringBuilder(_baseQuery);
-            var parameterCollectionBuilder = new ParameterCollectionBuilder(parameters, optimizeParameters);
-            var whereClause = CreateWhereClause(parameterCollectionBuilder);
+            var whereClause = CreateWhereClause(parameters, optimizeParameters);
 
             if (whereClause.Length != 0)
             {
@@ -60,11 +59,13 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         }
 
         // internal to allow unit testing
-        internal StringBuilder CreateWhereClause(ParameterCollectionBuilder parameters)
+        internal StringBuilder CreateWhereClause(EntityParameterCollection parameters, bool optimizeParameters = false)
         {
             Debug.Assert(parameters != null, "parameters != null");
 
             var whereClause = new StringBuilder();
+            var parameterCollectionBuilder = new ParameterCollectionBuilder(parameters, optimizeParameters);
+
 
             foreach (var alias in _filterAliases)
             {
@@ -74,12 +75,12 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                 {
                     if (entry.Effect == EntityStoreSchemaFilterEffect.Allow)
                     {
-                        AppendFilterEntry(allows, alias, entry, parameters);
+                        AppendFilterEntry(allows, alias, entry, parameterCollectionBuilder);
                     }
                     else
                     {
                         Debug.Assert(entry.Effect == EntityStoreSchemaFilterEffect.Exclude, "did you add new value?");
-                        AppendFilterEntry(excludes, alias, entry, parameters);
+                        AppendFilterEntry(excludes, alias, entry, parameterCollectionBuilder);
                     }
                 }
 
@@ -116,20 +117,20 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         // internal to allow unit testing
         internal static StringBuilder AppendFilterEntry(
-            StringBuilder segment, string alias, EntityStoreSchemaFilterEntry entry, ParameterCollectionBuilder parameters)
+            StringBuilder segment, string alias, EntityStoreSchemaFilterEntry entry, ParameterCollectionBuilder parameterCollectionBuilder)
         {
             Debug.Assert(segment != null, "segment != null");
             Debug.Assert(alias != null, "alias != null");
             Debug.Assert(entry != null, "entry != null");
-            Debug.Assert(parameters != null, "parameters != null");
+            Debug.Assert(parameterCollectionBuilder != null, "parameters != null");
 
             var filterText = new StringBuilder();
-            AppendComparison(filterText, alias, "CatalogName", entry.Catalog, parameters);
-            AppendComparison(filterText, alias, "SchemaName", entry.Schema, parameters);
+            AppendComparison(filterText, alias, "CatalogName", entry.Catalog, parameterCollectionBuilder);
+            AppendComparison(filterText, alias, "SchemaName", entry.Schema, parameterCollectionBuilder);
             AppendComparison(
                 filterText, alias, "Name",
                 entry.Catalog == null && entry.Schema == null && entry.Name == null ? "%" : entry.Name,
-                parameters);
+                parameterCollectionBuilder);
             segment
                 .AppendIfNotEmpty(" OR ")
                 .Append("(")
@@ -141,16 +142,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         // internal to allow unit testing
         internal static StringBuilder AppendComparison(
-            StringBuilder filterFragment, string alias, string propertyName, string value, ParameterCollectionBuilder parameters)
+            StringBuilder filterFragment, string alias, string propertyName, string value, ParameterCollectionBuilder parameterCollectionBuilder)
         {
             Debug.Assert(filterFragment != null, "filterFragment != null");
             Debug.Assert(alias != null, "alias != null");
             Debug.Assert(propertyName != null, "propertyName != null");
-            Debug.Assert(parameters != null, "parameters != null");
+            Debug.Assert(parameterCollectionBuilder != null, "parameters != null");
 
             if (value != null)
             {
-                var parameterName = parameters.GetOrAdd(value);
+                var parameterName = parameterCollectionBuilder.GetOrAdd(value);
                 AppendComparisonFragment(filterFragment, alias, propertyName, parameterName);
             }
 
