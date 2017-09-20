@@ -6,56 +6,57 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityClient;
     using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
-    // Abstracts building collections of parameters with or without duplicate parameter value de-duplication
+    // Abstracts building collections of parameters for schema queries 
+    // with or without parameter value de-duplication
     internal class ParameterCollectionBuilder
     {
-        private EntityParameterCollection _parameterCollection;
-        private Dictionary<string, string> _parameterMap = null;
+        private EntityParameterCollection _collection;
+        private Dictionary<string, string> _map = null;
 
-        public ParameterCollectionBuilder(EntityParameterCollection parameterCollection, bool optimizeParameters)
+        public ParameterCollectionBuilder(EntityParameterCollection collection, bool optimized)
         {
-            _parameterCollection = parameterCollection;
-            if (optimizeParameters)
+            _collection = collection;
+            if (optimized)
             {
-                _parameterMap = new Dictionary<string, string>(StringComparer.Ordinal);
+                _map = new Dictionary<string, string>(StringComparer.Ordinal);
             }
         }
 
-        // used for testing
-        public ParameterCollectionBuilder() : this(new EntityCommand().Parameters, true)
-        {
-        }
-
-        private bool IsOptimized
+        public int Count
         {
             get
             {
-                return _parameterMap != null;
+                return _collection.Count;
             }
         }
 
-        public EntityParameterCollection ParameterCollection
+        public EntityParameter this[int index]
         {
             get
             {
-                return _parameterCollection;
+                return _collection[index];
+            }
+        }
+
+        public EntityParameter this[string parameterName]
+        {
+            get
+            {
+                return _collection[parameterName];
             }
         }
 
         public string GetOrAdd(string parameterValue)
         {
             string parameterName = null;
-            if (!IsOptimized || IsOptimized && !_parameterMap.TryGetValue(parameterValue, out parameterName))
+            if (_map == null || !_map.TryGetValue(parameterValue, out parameterName))
             {
                 parameterName = GetNextParameterName();
-                _parameterCollection.AddWithValue(parameterName, parameterValue);
-                if (IsOptimized)
+                _collection.AddWithValue(parameterName, parameterValue);
+                if (_map != null)
                 {
-                    _parameterMap.Add(parameterValue, parameterName);
+                    _map.Add(parameterValue, parameterName);
                 }
             }
             return parameterName;
@@ -63,7 +64,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         private string GetNextParameterName()
         {
-            return "p" + _parameterCollection.Count.ToString(CultureInfo.InvariantCulture);
+            return "p" + _collection.Count.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

@@ -250,7 +250,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
             command.CommandText =
                 new EntityStoreSchemaQueryGenerator(sql, orderByClause, queryTypes, filters, filterAliases)
-                    .GenerateQuery(command.Parameters, optimizeParameters);
+                    .GenerateQuery(new ParameterCollectionBuilder(command.Parameters, optimizeParameters));
 
             return command;
         }
