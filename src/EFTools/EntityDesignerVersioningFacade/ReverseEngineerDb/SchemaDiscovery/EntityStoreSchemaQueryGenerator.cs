@@ -37,6 +37,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             }
 
             var sqlStatement = new StringBuilder(_baseQuery);
+
             var whereClause = CreateWhereClause(parameters);
 
             if (whereClause.Length != 0)
