@@ -1,4 +1,3 @@
- -
 # Entity Framework 6 Power Tools Community Edition
 
 This is a fork of the "official" [EF 6 repository](https://github.com/aspnet/entityFramework6/), which hosts the Visual Studio 2015 and 2017 version of EF Power Tools. 
