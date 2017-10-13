@@ -8,9 +8,9 @@ Entity Framework 6 is developed by the Entity Framework team in collaboration wi
 
 This repository is for the Entity Framework 6 runtime and Visual Studio tools. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFrameworkCore.
 
-## EF6 PowerTools develoment has moved
+## EF6 PowerTools development has moved
 
-The codebase for PowerTools was originally being developed as in this repository, but further development is happening in a community-driven project, the [EF6 PowerTools Community Edition](https://github.com/ErikEJ/EntityFramework6PowerTools).
+Further development of the EF6 PowerTools is happening in a community-driven project, the [EF6 PowerTools Community Edition](https://github.com/ErikEJ/EntityFramework6PowerTools).
 
 ## How do I use EF
 
