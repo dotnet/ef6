@@ -1,18 +1,22 @@
-# Entity Framework 6.x
+# Entity Framework 6
 
-Entity Framework (EF) is an object-relational mapper that enables .NET developers to work with relational data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
+Entity Framework 6 (EF6) is an object-relational mapper that enables .NET developers to work with relational data using domain-specific objects. It eliminates the need for most of the data-access code that developers usually need to write.
 
-Entity Framework is actively developed by the Entity Framework team in collaboration with a community of open source developers. Together we are dedicated to creating the best possible data access experience for .NET developers.
+Entity Framework 6 is developed by the Entity Framework team in collaboration with a community of open source developers.
 
-## EF6.x here, EF Core elsewhere
+## EF6 here, EF Core elsewhere
 
-This project is for Entity Framework 6.x. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFrameworkCore.
+This repository is for the Entity Framework 6 runtime and Visual Studio tools. Entity Framework Core is a lightweight and extensible version of Entity Framework and is maintained at https://github.com/aspnet/EntityFrameworkCore.
+
+## EF6 PowerTools development has moved
+
+Further development of the EF6 PowerTools is happening in a community-driven project, the [EF6 PowerTools Community Edition](https://github.com/ErikEJ/EntityFramework6PowerTools).
 
 ## How do I use EF
 
-If you want to use an officially supported Entity Framework release to develop your applications then head to https://msdn.com/data/ef where you can find installation information, documentation, tutorials, samples, and videos.
+If you want to use an officially supported Entity Framework release to develop your applications then head to https://docs.microsoft.com/ef/ef6/ where you can find installation information, documentation, tutorials, samples, and videos.
 
-If you want to try out the latest changes that have not been officially released yet, [signed nightly builds](https://github.com/aspnet/EntityFramework6/wiki/Nightly-Builds) of the Entity Framework code base are made available
+If you want to try out the latest changes that have not been officially released yet, you can choose to [build the code](https://github.com/aspnet/EntityFramework6/wiki/Building-the-Runtime). We regularily also make [nightly builds](https://github.com/aspnet/EntityFramework6/wiki/Nightly-Builds) of the Entity Framework codebase available.
 
 ## How do I contribute
 
