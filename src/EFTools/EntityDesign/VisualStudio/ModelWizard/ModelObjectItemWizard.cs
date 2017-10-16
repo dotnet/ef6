@@ -36,6 +36,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
+#if VS14ORNEWER
+    using Microsoft.VisualStudio.Telemetry;
+#endif
+
     /// <summary>
     ///     Visual Studio invokes this wizard when a new item of type "ADO.NET Entity Data Model" is added
     ///     to an existing project.  This wizard is registered in the .vstemplate file item template.
@@ -298,6 +302,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public void RunFinished()
         {
+#if VS14ORNEWER
+            TelemetryService.DefaultSession.PostEvent(
+                new TelemetryEvent("vs/entityframework/entitydatamodelwizard")
+                {
+                    Properties =
+                    {
+                        {
+                            "VS.EntityFramework.EntityDataModelWizard.GenerationOption",
+                            _modelBuilderSettings.GenerationOption
+                        }
+                    }
+                });
+#endif
+
             if (_edmxItem == null)
             {
                 if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModelCodeFirst

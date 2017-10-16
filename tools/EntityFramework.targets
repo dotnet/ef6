@@ -19,6 +19,9 @@ Project global post-settings and targets.
      Condition="'$(VisualStudioVersion)' == '12.0'
              OR '$(VisualStudioVersion)' == '14.0'
              OR '$(VisualStudioVersion)' == '15.0'">$(DefineConstants);VS12ORNEWER</DefineConstants>
+    <DefineConstants
+     Condition="'$(VisualStudioVersion)' == '14.0'
+             OR '$(VisualStudioVersion)' == '15.0'">$(DefineConstants);VS14ORNEWER</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'" >
