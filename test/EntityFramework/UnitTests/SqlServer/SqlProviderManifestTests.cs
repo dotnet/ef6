@@ -2,13 +2,72 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Collections.ObjectModel;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.SqlServerCompact;
     using System.Linq;
     using System.Xml;
     using Xunit;
 
     public class SqlProviderManifestTests
     {
+        [Fact]
+        public void SqlServer_provider_manifest_supports_parameter_optimization()
+        {
+            Assert.True(new SqlProviderManifest(SqlProviderManifest.TokenSql11).SupportsParameterOptimizationInSchemaQueries());
+        }
+
+        [Fact]
+        public void SqlCe_provider_manifest_supports_parameter_optimization()
+        {
+            Assert.True(new SqlCeProviderManifest(false).SupportsParameterOptimizationInSchemaQueries());
+        }
+
+        [Fact]
+        public void Default_for_provider_manifest_is_to_not_support_parameter_optimization()
+        {
+            Assert.False(new FakeProviderManifest().SupportsParameterOptimizationInSchemaQueries());
+        }
+
+        private class FakeProviderManifest : DbProviderManifest
+        {
+            public override string NamespaceName
+            {
+                get { return null; }
+            }
+
+            public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override TypeUsage GetEdmType(TypeUsage storeType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override TypeUsage GetStoreType(TypeUsage edmType)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override XmlReader GetDbInformation(string informationType)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         [Fact]
         public void GetProviderManifest_loads_ProviderManifest_xml()
         {

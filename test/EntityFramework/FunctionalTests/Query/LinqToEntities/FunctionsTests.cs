@@ -31,7 +31,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 using (var context = new ArubaContext())
                 {
-                    var query = context.Owners.Select(o => o.LastName.Like("%LAST_%NAME[0-1]%"));
+                    var query = context.Owners.Select(o => DbFunctions.Like(o.LastName, "%LAST_%NAME[0-1]%"));
                     Assert.Contains("LIKE N'%LAST_%NAME[0-1]%'", query.ToString().ToUpperInvariant());
                 }
             }
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 using (var context = new ArubaContext())
                 {
-                    var query = context.Owners.Select(o => o.LastName.Like(@"%\%LAST_\_%NAME\[[0-1]%", "\\"));
+                    var query = context.Owners.Select(o => DbFunctions.Like(o.LastName, @"%\%LAST_\_%NAME\[[0-1]%", "\\"));
                     Assert.Contains(@"LIKE N'%\%LAST_\_%NAME\[[0-1]%' ESCAPE N'\'", query.ToString().ToUpperInvariant());
                 }
             }

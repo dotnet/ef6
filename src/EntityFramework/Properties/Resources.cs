@@ -1495,6 +1495,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "Writing the EDMX file or using Migrations from a DbContext created using a DbCompiledModel that is not in the DbModelStore cache is not supported. Ensure that the DbCompiledModel is stored in the DbModelStore cache."
+        // </summary>
+        internal static string EdmxWriter_EdmxFromRawCompiledModelNotSupported
+        {
+            get { return EntityRes.GetString(EntityRes.EdmxWriter_EdmxFromRawCompiledModelNotSupported); }
+        }
+
+        // <summary>
         // A string like "The context is being used in Code First mode with code that was generated from an EDMX file for either Database First or Model First development.  This will not work correctly. To fix this problem do not remove the line of code that throws this exception. If you wish to use Database First or Model First, then make sure that the Entity Framework connection string is included in the app.config or web.config of the start-up project. If you are creating your own DbConnection, then make sure that it is an EntityConnection and not some other type of DbConnection, and that you pass it to one of the base DbContext constructors that take a DbConnection. To learn more about Code First, Database First, and Model First see the Entity Framework documentation here: http://go.microsoft.com/fwlink/?LinkId=394715"
         // </summary>
         internal static string UnintentionalCodeFirstException_Message
@@ -14038,6 +14046,7 @@ namespace System.Data.Entity.Resources
             get { return EntityRes.GetString(EntityRes.ProviderDoesNotSupportEscapingLikeArgument); }
         }
 
+        // <summary>
         // A string like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
         // </summary>
         internal static string IndexPropertyNotFound(object p0, object p1)
@@ -15141,6 +15150,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // NotSupportedException with message like "Writing the EDMX file or using Migrations from a DbContext created using a DbCompiledModel that is not in the DbModelStore cache is not supported. Ensure that the DbCompiledModel is stored in the DbModelStore cache."
+        // </summary>
+        internal static Exception EdmxWriter_EdmxFromRawCompiledModelNotSupported()
+        {
+            return new NotSupportedException(Strings.EdmxWriter_EdmxFromRawCompiledModelNotSupported);
+        }
+
+        // <summary>
         // InvalidOperationException with message like "The context factory type '{0}' does not have a public parameterless constructor. Either add a public parameterless constructor, create an IDbContextFactory implementation in the context assembly, or register a context factory using DbConfiguration."
         // </summary>
         internal static Exception DbContextServices_MissingDefaultCtor(object p0)
@@ -15668,6 +15685,7 @@ namespace System.Data.Entity.Resources
             return new InvalidOperationException(Strings.StoreTypeNotFound(p0, p1));
         }
 
+        // <summary>
         // InvalidOperationException with message like "The index component '{0}' is not a declared property on type '{1}'. Verify that it has not been explicitly excluded from the model and that it is a valid primitive property."
         // </summary>
         internal static Exception IndexPropertyNotFound(object p0, object p1)
@@ -15901,6 +15919,7 @@ namespace System.Data.Entity.Resources
         internal const string Database_InitializationException = "Database_InitializationException";
         internal const string EdmxWriter_EdmxFromObjectContextNotSupported = "EdmxWriter_EdmxFromObjectContextNotSupported";
         internal const string EdmxWriter_EdmxFromModelFirstNotSupported = "EdmxWriter_EdmxFromModelFirstNotSupported";
+        internal const string EdmxWriter_EdmxFromRawCompiledModelNotSupported = "EdmxWriter_EdmxFromRawCompiledModelNotSupported";
         internal const string UnintentionalCodeFirstException_Message = "UnintentionalCodeFirstException_Message";
         internal const string DbContextServices_MissingDefaultCtor = "DbContextServices_MissingDefaultCtor";
         internal const string CannotCallGenericSetWithProxyType = "CannotCallGenericSetWithProxyType";
