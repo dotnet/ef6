@@ -753,6 +753,7 @@
       <Border x:Name="comboPanel">
         <Grid>
           <xdb:SearchComboBox x:Name="searchBox"
+                    AutomationProperties.Name="{x:Static Design:Resources.ExplorerContent_PromptSearch}"
                     BorderThickness="0.0"
                     Background="{DynamicResource VsBrush.ComboBoxBackground}"
                     Foreground="{DynamicResource VsBrush.ComboBoxGlyph}"
@@ -770,6 +771,7 @@
                     StaysOpenOnEdit=    "True" />
           <!-- Note: searchPrompt will only be visible if searchBox.IsHitTestVisible is set to false -->
           <TextBlock x:Name="searchPrompt" x:Uid="searchPrompt" Padding="5,5,20,0" IsHitTestVisible="False"
+                     AutomationProperties.Name="{x:Static Design:Resources.ExplorerContent_PromptSearch}"
                      MaxWidth="{Binding ElementName=comboPanel, Path=ActualWidth}"
                      TextTrimming="CharacterEllipsis"
                      Background="{DynamicResource VsBrush.ComboBoxBackground}"

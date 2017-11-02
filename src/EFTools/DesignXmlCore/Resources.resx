@@ -152,6 +152,9 @@ Caught exception of type {2} with message {3} and stack trace {4}</value>
   <data name="VanillaProvider_DtdNodesReadOnly" xml:space="preserve">
     <value>DTD nodes cannot be edited.</value>
   </data>
+  <data name="MappingDetails_Up_And_Down" xml:space="preserve">
+    <value>Use "Up" and "Down" arrows to access the list items.</value>
+  </data>
   <data name="VanillaProvider_TxAlreadyCompleted" xml:space="preserve">
     <value>Transaction already completed.</value>
   </data>

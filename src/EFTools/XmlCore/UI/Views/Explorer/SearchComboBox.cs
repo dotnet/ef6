@@ -3,6 +3,7 @@
 namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
 {
     using System.Windows;
+    using System.Windows.Automation;
     using System.Windows.Automation.Peers;
     using System.Windows.Controls;
 
@@ -40,6 +41,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
                     if (textBox != null)
                     {
                         textBox.CaretBrush = textBox.Foreground;
+                        textBox.SetValue(
+                            AutomationProperties.NameProperty,
+                            this.GetValue(AutomationProperties.NameProperty));
                     }
                 }
             }

@@ -588,12 +588,13 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             get
             {
-                if (ModelElement == null)
-                {
-                    return base.AccessibleName;
-                }
-
-                return TypedModelElement.Name;
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.AccDesc_EntityType,
+                    TypedModelElement != null
+                    && !string.IsNullOrWhiteSpace(TypedModelElement.Name)
+                        ? TypedModelElement.Name
+                        : Resources.Acc_Unnamed);
             }
         }
 

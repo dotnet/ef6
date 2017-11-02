@@ -8,6 +8,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
     using System.Diagnostics.CodeAnalysis;
     using System.Windows.Forms;
     using Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid;
+    using Microsoft.VisualStudio.Data.Tools.Design.XmlCore;
 
     /// <summary>
     ///     Summary description for TreeGridDesignerBranch.
@@ -377,7 +378,9 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
             if (_columns[column].ColumnIsCheckBox)
             {
                 // check box - {column header} {state image text}
-                return new VirtualTreeAccessibilityData("{0} {5}", _descriptionAccessibilityReplacementFields);
+                return new VirtualTreeAccessibilityData(
+                    "{0} {5}", _descriptionAccessibilityReplacementFields,
+                    Resources.MappingDetails_Up_And_Down, new AccessibilityReplacementField[0]);
             }
 
             var eltCount = ElementCount;
@@ -395,18 +398,24 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
                 if (column == 0)
                 {
                     // standard outline item - {display text} {row} {column header}
-                    return new VirtualTreeAccessibilityData("{1}, {3} {0}", _descriptionAccessibilityReplacementFields);
+                    return new VirtualTreeAccessibilityData(
+                        "{1}, {3} {0}", _descriptionAccessibilityReplacementFields,
+                        Resources.MappingDetails_Up_And_Down, new AccessibilityReplacementField[0]);
                 }
                 else
                 {
                     // standard cell - {row} {column header}.  Note that text in the cell is already reported in the value field of the accessible object.
-                    return new VirtualTreeAccessibilityData("{3} {0}", _descriptionAccessibilityReplacementFields);
+                    return new VirtualTreeAccessibilityData(
+                        "{3} {0}", _descriptionAccessibilityReplacementFields,
+                        Resources.MappingDetails_Up_And_Down, new AccessibilityReplacementField[0]);
                 }
             }
             else
             {
                 // creator row - {display text} {row}
-                return new VirtualTreeAccessibilityData("{1}, {3}", _descriptionAccessibilityReplacementFields);
+                return new VirtualTreeAccessibilityData(
+                    "{1}, {3}", _descriptionAccessibilityReplacementFields,
+                    Resources.MappingDetails_Up_And_Down, new AccessibilityReplacementField[0]);
             }
         }
 
