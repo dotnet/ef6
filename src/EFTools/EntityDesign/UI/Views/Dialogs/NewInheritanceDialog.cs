@@ -5,6 +5,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
     using Microsoft.Data.Entity.Design.Model;
@@ -63,6 +64,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
                 baseEntityComboBox.SelectedItem = baseType;
             }
             CheckOkButtonEnabled();
+
+            cancelButton.BackColor = SystemColors.Control;
+            cancelButton.ForeColor = SystemColors.ControlText;
+            okButton.BackColor = SystemColors.Control;
+            okButton.ForeColor = SystemColors.ControlText;
         }
 
         protected override void OnHelpRequested(HelpEventArgs hevent)

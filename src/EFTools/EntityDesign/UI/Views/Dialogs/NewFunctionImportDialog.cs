@@ -185,6 +185,17 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             // Since Visual Studio has already defined Dispose method in the generated file(designer.cs),
             // we instantiates Diposer class that calls our custom dispose method when Form is disposed.
             components.Add(new Disposer(OnDispose));
+
+            cancelButton.BackColor = SystemColors.Control;
+            cancelButton.ForeColor = SystemColors.ControlText;
+            okButton.BackColor = SystemColors.Control;
+            okButton.ForeColor = SystemColors.ControlText;
+            getColumnInformationButton.BackColor = SystemColors.Control;
+            getColumnInformationButton.ForeColor = SystemColors.ControlText;
+            createNewComplexTypeButton.BackColor = SystemColors.Control;
+            createNewComplexTypeButton.ForeColor = SystemColors.ControlText;
+            updateComplexTypeButton.BackColor = SystemColors.Control;
+            updateComplexTypeButton.ForeColor = SystemColors.ControlText;
         }
 
         private void OnDispose(bool disposing)
