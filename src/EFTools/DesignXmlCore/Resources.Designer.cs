@@ -235,6 +235,24 @@ namespace Microsoft.VisualStudio.Data.Tools.Design.XmlCore {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This refactoring has no changes to preview..
+        /// </summary>
+        internal static string RefactoringOperation_NoChangesToPreview {
+            get {
+                return ResourceManager.GetString("RefactoringOperation_NoChangesToPreview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No changes to preview..
+        /// </summary>
+        internal static string RefactoringOperation_NoChangesToPreviewTitle {
+            get {
+                return ResourceManager.GetString("RefactoringOperation_NoChangesToPreviewTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service instances must inherit from or implement {0}..
         /// </summary>
         internal static string ServiceProvider_InvalidServiceInstance {

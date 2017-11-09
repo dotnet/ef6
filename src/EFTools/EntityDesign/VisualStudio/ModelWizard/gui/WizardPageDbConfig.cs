@@ -20,6 +20,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Data.Common;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
     using System.Globalization;
     using System.IO;
     using System.Runtime.InteropServices;
@@ -86,6 +87,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
 
             newDBConnectionButton.Text = Resources.NewDatabaseConnectionBtn;
+            newDBConnectionButton.BackColor = SystemColors.Control;
+            newDBConnectionButton.ForeColor = SystemColors.ControlText;
             lblEntityConnectionString.Text = Resources.ConnectionStringLabel;
             lblPagePrompt.Text = Resources.WhichDataConnectionLabel;
             lblPagePrompt.Font = LabelFont;

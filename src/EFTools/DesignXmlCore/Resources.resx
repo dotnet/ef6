@@ -194,6 +194,12 @@ Caught exception of type {2} with message {3} and stack trace {4}</value>
   <data name="RefactoringOperation_NoChanges" xml:space="preserve">
     <value>No changes are required</value>
   </data>
+  <data name="RefactoringOperation_NoChangesToPreview" xml:space="preserve">
+    <value>This refactoring has no changes to preview.</value>
+  </data>
+  <data name="RefactoringOperation_NoChangesToPreviewTitle" xml:space="preserve">
+    <value>No changes to preview.</value>
+  </data>
   <data name="ServiceProvider_InvalidServiceInstance" xml:space="preserve">
     <value>Service instances must inherit from or implement {0}.</value>
   </data>
