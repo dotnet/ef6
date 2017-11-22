@@ -984,6 +984,8 @@ namespace System.Data.Entity.Core.Objects
                         }
                     }
 
+                    var sourceKeyRelationshipsLazy = new Lazy<ILookup<EntityKey, RelationshipEntry>>(() => GetRelationshipLookup(context.ObjectStateManager, associationSet, sourceMember, sourceKey));
+
                     foreach (var someTarget in targets)
                     {
                         var wrappedTarget = someTarget as IEntityWrapper;
@@ -1013,9 +1015,11 @@ namespace System.Data.Entity.Core.Objects
                         {
                             var manager = context.ObjectStateManager;
                             var targetKey = wrappedTarget.EntityKey;
+                            
+
                             if (
                                 !TryUpdateExistingRelationships(
-                                    context, mergeOption, associationSet, sourceMember, sourceKey, wrappedSource, targetMember, targetKey,
+                                    context, mergeOption, associationSet, sourceMember, sourceKey, sourceKeyRelationshipsLazy.Value, wrappedSource, targetMember, targetKey,
                                     setIsLoaded, out newEntryState))
                             {
                                 var needNewRelationship = true;
@@ -1029,10 +1033,12 @@ namespace System.Data.Entity.Core.Objects
                                         //           entities, but unless I add a flag or something to indicate when I have to do it and when I don't, this is necessary.
                                         // devnote2: The target and source arguments are intentionally reversed in the following call, because we already know there isn't a relationship
                                         //           between the two entities we are current processing, but we want to see if there is one between the target and another source
+                                        var targetKeyRelationships = GetRelationshipLookup(context.ObjectStateManager, associationSet, targetMember, targetKey);
+
                                         needNewRelationship =
                                             !TryUpdateExistingRelationships(
                                                 context, mergeOption, associationSet, targetMember,
-                                                targetKey, wrappedTarget, sourceMember, sourceKey, setIsLoaded, out newEntryState);
+                                                targetKey, targetKeyRelationships, wrappedTarget, sourceMember, sourceKey, setIsLoaded, out newEntryState);
                                         break;
                                     case RelationshipMultiplicity.Many:
                                         // we always need a new relationship with Many-To-Many, if there was no exact match between these two entities, so do nothing                                
@@ -1083,6 +1089,19 @@ namespace System.Data.Entity.Core.Objects
             }
             return count;
             // devnote: Don't set IsLoaded on the target related end here -- the caller can do this more efficiently than we can here in some cases.
+        }
+
+        internal static ILookup<EntityKey, RelationshipEntry> GetRelationshipLookup(ObjectStateManager manager, AssociationSet associationSet, AssociationEndMember sourceMember, EntityKey sourceKey)
+        {
+            var relationshipEntries = new List<RelationshipEntry>();
+
+            foreach (var relationshipEntry in manager.FindRelationshipsByKey(sourceKey))
+            {
+                if (relationshipEntry.IsSameAssociationSetAndRole(associationSet, sourceMember, sourceKey))
+                    relationshipEntries.Add(relationshipEntry);
+            }
+
+            return relationshipEntries.ToLookup(r => r.RelationshipWrapper.GetOtherEntityKey(sourceKey));
         }
 
         // Checks if the target end is a collection and, if so, ensures that it is not
@@ -1170,7 +1189,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static bool TryUpdateExistingRelationships(
             ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember,
-            EntityKey sourceKey, IEntityWrapper wrappedSource, AssociationEndMember targetMember, EntityKey targetKey, bool setIsLoaded,
+            EntityKey sourceKey, ILookup<EntityKey, RelationshipEntry> relationshipLookup, IEntityWrapper wrappedSource, AssociationEndMember targetMember, EntityKey targetKey, bool setIsLoaded,
             out EntityState newEntryState)
         {
             Debug.Assert(mergeOption != MergeOption.NoTracking, "Existing relationships should not be updated with NoTracking");
@@ -1192,48 +1211,61 @@ namespace System.Data.Entity.Core.Objects
             var manager = context.ObjectStateManager;
             List<RelationshipEntry> entriesToDetach = null;
             List<RelationshipEntry> entriesToUpdate = null;
-            foreach (var relationshipEntry in manager.FindRelationshipsByKey(sourceKey))
+
+            foreach (var relationshipEntry in relationshipLookup[targetKey])
             {
                 // We only care about relationships for the same AssociationSet and where the source entity is in the same role as it is in the incoming relationship.
-                if (relationshipEntry.IsSameAssociationSetAndRole(associationSet, sourceMember, sourceKey))
+                // If the other end of this relationship matches our current target entity, this relationship entry matches the server
+                if (entriesToUpdate == null)
                 {
-                    // If the other end of this relationship matches our current target entity, this relationship entry matches the server
-                    if (targetKey == relationshipEntry.RelationshipWrapper.GetOtherEntityKey(sourceKey))
-                    {
-                        if (entriesToUpdate == null)
-                        {
-                            // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-                            entriesToUpdate = new List<RelationshipEntry>(InitialListSize);
-                        }
-                        entriesToUpdate.Add(relationshipEntry);
-                    }
-                    else
-                    {
-                        // We found an existing relationship where the reference side is different on the server than what the client has.
+                    // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
+                    entriesToUpdate = new List<RelationshipEntry>(InitialListSize);
+                }
+                entriesToUpdate.Add(relationshipEntry);
+            }
 
-                        // This relationship is between the same source entity and a different target, so we may need to take steps to fix up the 
-                        // relationship to ensure that the client state is correct based on the requested MergeOption. 
-                        // The only scenario we care about here is one where the target member has zero or one multiplicity (0..1 or 1..1), because those
-                        // are the only cases where it is meaningful to say that the relationship is different on the server and the client. In scenarios
-                        // where the target member has a many (*) multiplicity, it is possible to have multiple relationships between the source key
-                        // and other entities, and we don't want to touch those here.
-                        switch (targetMember.RelationshipMultiplicity)
+
+            // We found an existing relationship where the reference side is different on the server than what the client has.
+
+            // This relationship is between the same source entity and a different target, so we may need to take steps to fix up the 
+            // relationship to ensure that the client state is correct based on the requested MergeOption. 
+            // The only scenario we care about here is one where the target member has zero or one multiplicity (0..1 or 1..1), because those
+            // are the only cases where it is meaningful to say that the relationship is different on the server and the client. In scenarios
+            // where the target member has a many (*) multiplicity, it is possible to have multiple relationships between the source key
+            // and other entities, and we don't want to touch those here.
+            switch (targetMember.RelationshipMultiplicity)
+            {
+                case RelationshipMultiplicity.One:
+                case RelationshipMultiplicity.ZeroOrOne:
+                    foreach (var relationshipEntry in relationshipLookup.Where(g => g.Key != targetKey).SelectMany(re => re))
+                    {
+                        switch (mergeOption)
                         {
-                            case RelationshipMultiplicity.One:
-                            case RelationshipMultiplicity.ZeroOrOne:
-                                switch (mergeOption)
+                            case MergeOption.AppendOnly:
+                                if (relationshipEntry.State
+                                    != EntityState.Deleted)
                                 {
-                                    case MergeOption.AppendOnly:
-                                        if (relationshipEntry.State
-                                            != EntityState.Deleted)
-                                        {
-                                            Debug.Assert(
-                                                relationshipEntry.State == EntityState.Added
-                                                || relationshipEntry.State == EntityState.Unchanged, "Unexpected relationshipEntry state");
-                                            needNewRelationship = false; // adding a new relationship would conflict with the existing one
-                                        }
+                                    Debug.Assert(
+                                        relationshipEntry.State == EntityState.Added
+                                        || relationshipEntry.State == EntityState.Unchanged, "Unexpected relationshipEntry state");
+                                    needNewRelationship = false; // adding a new relationship would conflict with the existing one
+                                }
+                                break;
+                            case MergeOption.OverwriteChanges:
+                                if (entriesToDetach == null)
+                                {
+                                    // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
+                                    entriesToDetach = new List<RelationshipEntry>(InitialListSize);
+                                }
+                                entriesToDetach.Add(relationshipEntry);
+                                break;
+                            case MergeOption.PreserveChanges:
+                                switch (relationshipEntry.State)
+                                {
+                                    case EntityState.Added:
+                                        newEntryState = EntityState.Deleted;
                                         break;
-                                    case MergeOption.OverwriteChanges:
+                                    case EntityState.Unchanged:
                                         if (entriesToDetach == null)
                                         {
                                             // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
@@ -1241,48 +1273,32 @@ namespace System.Data.Entity.Core.Objects
                                         }
                                         entriesToDetach.Add(relationshipEntry);
                                         break;
-                                    case MergeOption.PreserveChanges:
-                                        switch (relationshipEntry.State)
+                                    case EntityState.Deleted:
+                                        newEntryState = EntityState.Deleted;
+                                        if (entriesToDetach == null)
                                         {
-                                            case EntityState.Added:
-                                                newEntryState = EntityState.Deleted;
-                                                break;
-                                            case EntityState.Unchanged:
-                                                if (entriesToDetach == null)
-                                                {
-                                                    // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-                                                    entriesToDetach = new List<RelationshipEntry>(InitialListSize);
-                                                }
-                                                entriesToDetach.Add(relationshipEntry);
-                                                break;
-                                            case EntityState.Deleted:
-                                                newEntryState = EntityState.Deleted;
-                                                if (entriesToDetach == null)
-                                                {
-                                                    // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
-                                                    entriesToDetach = new List<RelationshipEntry>(InitialListSize);
-                                                }
-                                                entriesToDetach.Add(relationshipEntry);
-                                                break;
-                                            default:
-                                                Debug.Assert(false, "Unexpected relationship entry state");
-                                                break;
+                                            // Initial capacity is set to avoid an almost immediate resizing, which was causing a perf hit.
+                                            entriesToDetach = new List<RelationshipEntry>(InitialListSize);
                                         }
+                                        entriesToDetach.Add(relationshipEntry);
                                         break;
                                     default:
-                                        Debug.Assert(false, "Unexpected MergeOption");
+                                        Debug.Assert(false, "Unexpected relationship entry state");
                                         break;
                                 }
                                 break;
-                            case RelationshipMultiplicity.Many:
-                                // do nothing because its okay for this source entity to have multiple different targets, so there is nothing for us to fixup
-                                break;
                             default:
-                                Debug.Assert(false, "Unexpected targetMember.RelationshipMultiplicity");
+                                Debug.Assert(false, "Unexpected MergeOption");
                                 break;
                         }
                     }
-                }
+                    break;
+                case RelationshipMultiplicity.Many:
+                    // do nothing because its okay for this source entity to have multiple different targets, so there is nothing for us to fixup
+                    break;
+                default:
+                    Debug.Assert(false, "Unexpected targetMember.RelationshipMultiplicity");
+                    break;
             }
 
             // Detach all of the entries that we have collected above
@@ -1366,6 +1382,7 @@ namespace System.Data.Entity.Core.Objects
                     }
                 }
             }
+
             return !needNewRelationship;
         }
 
