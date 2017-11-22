@@ -303,10 +303,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 var manager = Context.ObjectStateManager;
                 EntityState newEntryState;
-                // If there is an existing relationship entry, update it based on its current state and the MergeOption, otherwise add a new one            
+                // If there is an existing relationship entry, update it based on its current state and the MergeOption, otherwise add a new one        
+
+                var sourceRelationships = ObjectStateManager.GetRelationshipLookup(Context.ObjectStateManager, associationSet, sourceMember, sourceKey);
+
                 if (
                     !ObjectStateManager.TryUpdateExistingRelationships(
-                        Context, MergeOption, associationSet, sourceMember, sourceKey, wrappedEntity, targetMember, targetKey,
+                        Context, MergeOption, associationSet, sourceMember, sourceKey, sourceRelationships, wrappedEntity, targetMember, targetKey,
                          /*setIsLoaded*/ true, out newEntryState))
                 {
                     // Try to find a state entry for the target key
@@ -318,6 +321,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     {
                         case RelationshipMultiplicity.ZeroOrOne:
                         case RelationshipMultiplicity.One:
+
+                            var targetRelationships = ObjectStateManager.GetRelationshipLookup(Context.ObjectStateManager, associationSet, targetMember, targetKey);
+
                             // devnote: targetEntry can be a key entry (targetEntry.Entity == null), 
                             // but it that case this parameter won't be used in TryUpdateExistingRelationships
                             needNewRelationship = !ObjectStateManager.TryUpdateExistingRelationships(
@@ -326,6 +332,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                 associationSet,
                                 targetMember,
                                 targetKey,
+                                targetRelationships,
                                 targetEntry.WrappedEntity,
                                 sourceMember,
                                 sourceKey,
