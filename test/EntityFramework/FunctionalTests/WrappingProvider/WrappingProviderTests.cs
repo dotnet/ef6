@@ -9,12 +9,14 @@ namespace System.Data.Entity.WrappingProvider
     using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
+    using FunctionalTests.SimpleMigrationsModel;
     using Xunit;
 
     public class WrappingProviderTests : FunctionalTestBase, IDisposable
@@ -200,6 +202,38 @@ namespace System.Data.Entity.WrappingProvider
             Assert.Contains("Generate", methods);
         }
 
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Migrations_work_with_wrapping_provider_setup_by_replacing_ADO_NET_provider()
+        {
+            RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
+            MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+            MutableResolver.AddResolver<Func<MigrationSqlGenerator>>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+
+            var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
+            log.Clear();
+
+            using (var context = new MigrationsBlogContext())
+            {
+                context.Database.Delete();
+            }
+
+            using (var context = new MigrationsBlogContext())
+            {
+                Assert.False(context.Database.Exists());
+            }
+
+            var migrator = new DbMigrator(new MigrateInitializerConfiguration());
+            var appliedMigrations = migrator.GetDatabaseMigrations();
+            Assert.Equal(2, appliedMigrations.Count());
+
+            // Sanity check that the wrapping provider really did get used
+            var methods = log.Select(i => i.Method).ToList();
+            Assert.Contains("ExecuteReader", methods);
+            Assert.Contains("Open", methods);
+            Assert.Contains("Close", methods);
+        }
+
         [Fact] // CodePlex 2320
         public void Model_is_available_in_DatabaseExists()
         {
@@ -251,6 +285,22 @@ namespace System.Data.Entity.WrappingProvider
             static EfLevelBlogContext()
             {
                 Database.SetInitializer<EfLevelBlogContext>(new BlogInitializer());
+            }
+        }
+
+        public class MigrationsBlogContext : BlogContext
+        {
+            static MigrationsBlogContext()
+            {
+                Database.SetInitializer(new MigrateDatabaseToLatestVersion<MigrationsBlogContext, MigrationsBlogConfiguration>());
+            }
+        }
+
+        public class MigrationsBlogConfiguration : DbMigrationsConfiguration<MigrationsBlogContext>
+        {
+            public MigrationsBlogConfiguration()
+            {
+                MigrationsNamespace = "FunctionalTests.MigrationsBlogContext";
             }
         }
 

@@ -210,6 +210,7 @@ namespace System.Data.Entity.Migrations
                 if (usersContext == null)
                 {
                     _usersContext = null;
+                    _connection = null;
                     context.Dispose();
                 }
             }

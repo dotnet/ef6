@@ -6,7 +6,7 @@ namespace System.Data.Entity.WrappingProvider
 
     public class WrappingConnection<TBase> : DbConnection, IDisposable where TBase : DbProviderFactory
     {
-        private readonly DbConnection _baseConnection;
+        private DbConnection _baseConnection;
 
         public WrappingConnection(DbConnection baseConnection)
         {
@@ -89,6 +89,7 @@ namespace System.Data.Entity.WrappingProvider
         public new void Dispose()
         {
             _baseConnection.Dispose();
+            _baseConnection = null;
         }
     }
 }
