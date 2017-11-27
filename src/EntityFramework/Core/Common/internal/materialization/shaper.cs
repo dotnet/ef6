@@ -310,7 +310,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 if (
                     !ObjectStateManager.TryUpdateExistingRelationships(
-                        Context, MergeOption, associationSet, sourceMember, sourceKey, sourceRelationships, wrappedEntity, targetMember, targetKey,
+                        Context, MergeOption, associationSet, sourceMember, sourceRelationships, wrappedEntity, targetMember, targetKey,
                          /*setIsLoaded*/ true, out newEntryState))
                 {
                     // Try to find a state entry for the target key
@@ -332,7 +332,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                 MergeOption,
                                 associationSet,
                                 targetMember,
-                                targetKey,
                                 targetRelationships,
                                 targetEntry.WrappedEntity,
                                 sourceMember,
