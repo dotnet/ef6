@@ -1019,7 +1019,7 @@ namespace System.Data.Entity.Core.Objects
 
                             if (
                                 !TryUpdateExistingRelationships(
-                                    context, mergeOption, associationSet, sourceMember, sourceKey, sourceKeyRelationshipsLazy.Value, wrappedSource, targetMember, targetKey,
+                                    context, mergeOption, associationSet, sourceMember, sourceKeyRelationshipsLazy.Value, wrappedSource, targetMember, targetKey,
                                     setIsLoaded, out newEntryState))
                             {
                                 var needNewRelationship = true;
@@ -1038,7 +1038,7 @@ namespace System.Data.Entity.Core.Objects
                                         needNewRelationship =
                                             !TryUpdateExistingRelationships(
                                                 context, mergeOption, associationSet, targetMember,
-                                                targetKey, targetKeyRelationships, wrappedTarget, sourceMember, sourceKey, setIsLoaded, out newEntryState);
+                                                targetKeyRelationships, wrappedTarget, sourceMember, sourceKey, setIsLoaded, out newEntryState);
                                         break;
                                     case RelationshipMultiplicity.Many:
                                         // we always need a new relationship with Many-To-Many, if there was no exact match between these two entities, so do nothing                                
@@ -1179,7 +1179,7 @@ namespace System.Data.Entity.Core.Objects
         // <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
         // <param name="associationSet"> AssociationSet for the relationship we are looking for </param>
         // <param name="sourceMember"> AssociationEndMember for the source role of the relationship </param>
-        // <param name="sourceKey"> EntityKey for the source entity in the relationship (passed here so we don't have to look it up again) </param>
+        // <param name="relationshipLookup"> Lookup for the source entity's relationships to find matching relationship entries by target key (passed here for performance reasons) </param>
         // <param name="wrappedSource"> Source entity in the relationship </param>
         // <param name="targetMember"> AssociationEndMember for the target role of the relationship </param>
         // <param name="targetKey"> EntityKey for the target entity in the relationship </param>
@@ -1189,7 +1189,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static bool TryUpdateExistingRelationships(
             ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember,
-            EntityKey sourceKey, ILookup<EntityKey, RelationshipEntry> relationshipLookup, IEntityWrapper wrappedSource, AssociationEndMember targetMember, EntityKey targetKey, bool setIsLoaded,
+            ILookup<EntityKey, RelationshipEntry> relationshipLookup, IEntityWrapper wrappedSource, AssociationEndMember targetMember, EntityKey targetKey, bool setIsLoaded,
             out EntityState newEntryState)
         {
             Debug.Assert(mergeOption != MergeOption.NoTracking, "Existing relationships should not be updated with NoTracking");
@@ -1225,7 +1225,6 @@ namespace System.Data.Entity.Core.Objects
             }
 
 
-            // We found an existing relationship where the reference side is different on the server than what the client has.
 
             // This relationship is between the same source entity and a different target, so we may need to take steps to fix up the 
             // relationship to ensure that the client state is correct based on the requested MergeOption. 
@@ -1239,6 +1238,7 @@ namespace System.Data.Entity.Core.Objects
                 case RelationshipMultiplicity.ZeroOrOne:
                     foreach (var relationshipEntry in relationshipLookup.Where(g => g.Key != targetKey).SelectMany(re => re))
                     {
+                        // We found an existing relationship where the reference side is different on the server than what the client has.
                         switch (mergeOption)
                         {
                             case MergeOption.AppendOnly:
