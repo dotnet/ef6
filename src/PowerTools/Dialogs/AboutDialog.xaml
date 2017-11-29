@@ -17,7 +17,7 @@
                 <Run Text="https://github.com/ErikEJ/EntityFramework6PowerTools"/></Hyperlink></Bold>
             <LineBreak/>
             <LineBreak/>
-            <Run Text="This add-in is FREE, but I would be grateful for a review: "/><Bold>
+            <Run Text="I would be grateful for a review: "/><Bold>
                 <LineBreak/>
                 <Hyperlink TextDecorations="" Click="GalleryLink_Click" x:Name="GalleryLink">
             <Run Text="Visual Studio Marketplace"/></Hyperlink></Bold>
