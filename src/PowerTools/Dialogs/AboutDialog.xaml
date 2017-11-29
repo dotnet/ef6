@@ -1,0 +1,35 @@
+﻿<dw:DialogWindow x:Class="Microsoft.DbContextPackage.AboutDialog"
+             xmlns:dw="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+       Title="About" 
+        WindowStartupLocation="CenterOwner"
+        x:Name="aboutDialog"
+        Loaded="Window_Loaded" SizeToContent="WidthAndHeight" ResizeMode="NoResize" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" d:DesignWidth="350" Height="250.118">
+    <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+        <TextBlock Margin="8,20,5,0" TextWrapping="Wrap" Height="34">                
+            <Bold>EF 6 Power Tools Community Edition</Bold> for Visual Studio</TextBlock>
+        <TextBlock Name="Version" Margin="10,1,10,10" Height="16">Version:</TextBlock>
+        <TextBlock VerticalAlignment="Top" Margin="10,0,5,0" Height="86" >
+            <Run Text="For support, feedback and full source code, go to:"/><LineBreak/>
+            <Bold><Hyperlink TextDecorations="" Click="CodeplexLink_Click" x:Name="CodeplexLink">
+                <Run Text="https://github.com/ErikEJ/EntityFramework6PowerTools"/></Hyperlink></Bold>
+            <LineBreak/>
+            <LineBreak/>
+            <Run Text="This add-in is FREE, but I would be grateful for a review: "/><Bold>
+                <LineBreak/>
+                <Hyperlink TextDecorations="" Click="GalleryLink_Click" x:Name="GalleryLink">
+            <Run Text="Visual Studio Marketplace"/></Hyperlink></Bold>
+        </TextBlock>
+        <dw:DialogButton IsCancel="True" IsDefault="True" Name="OKButton" Click="OKButton_Click" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,12,11.5" Height="24" Width="75">OK</dw:DialogButton>
+    </StackPanel>
+    <!--<Grid ClipToBounds="False" Margin="0,0,0,38">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="41.5" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Name="Version" VerticalAlignment="Center" Margin="10,65,0,383" Height="16">Version:</TextBlock>
+    </Grid>-->
+</dw:DialogWindow>

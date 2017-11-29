@@ -52,6 +52,10 @@
       <Group guid="guidDbContextPackageCmdSet" id="cmdidEdmViewMenuItemsGroup" priority="0x0100">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmMenu" />
       </Group>
+      
+      <Group guid="guidDbContextPackageCmdSet" id="cmdidAboutMenuItemsGroup" priority="0x0900">
+        <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmMenu" />
+      </Group>
 
     </Groups>
 
@@ -119,6 +123,16 @@
         </Strings>
       </Button>
 
+      <Button guid="guidDbContextPackageCmdSet" id="cmdidAbout" priority="0x0100" type="Button">
+        <Parent guid="guidDbContextPackageCmdSet" id="cmdidAboutMenuItemsGroup" />
+        <Icon guid="guidImage5" id="bmpPic5" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidAbout</CommandName>
+          <ButtonText>About</ButtonText>
+        </Strings>
+      </Button>
+
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -132,7 +146,7 @@
       <Bitmap guid="guidImage2" href="Resources\2.png" usedList="bmpPic2" />
       <Bitmap guid="guidImage3" href="Resources\3.png" usedList="bmpPic3" />
       <Bitmap guid="guidImage4" href="Resources\4.png" usedList="bmpPic4" />
-
+      <Bitmap guid="guidImage5" href="Resources\h.png" usedList="bmpPic5" />
     </Bitmaps>
 
   </Commands>
@@ -157,11 +171,12 @@
       <IDSymbol name="cmdidViewEntityDataModelXml" value="0x0200" />
       <IDSymbol name="cmdidPrecompileEntityDataModelViews" value="0x0300" />
       <IDSymbol name="cmdidViewEntityModelDdl" value="0x0400" />
+      <IDSymbol name="cmdidAbout" value="0x0450" />
       <IDSymbol name="cmdidEdmMenu" value="0x0500" />
       <IDSymbol name="cmdidEdmMenuGroup" value="0x0600" />
       <IDSymbol name="cmdidEdmMenuItemsGroup" value="0x0700" />
       <IDSymbol name="cmdidEdmViewMenuItemsGroup" value="0x0800" />
-
+      <IDSymbol name="cmdidAboutMenuItemsGroup" value="0x0900" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImage1" value="{92a8e017-4f3b-4613-b78c-179f86113adb}">
@@ -178,6 +193,10 @@
 
     <GuidSymbol name="guidImage4" value="{92a8e017-4f3b-4613-b78c-179f86009adb}">
       <IDSymbol name="bmpPic4" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImage5" value="{92a8e017-4f3b-4613-b78c-179f86188adb}">
+      <IDSymbol name="bmpPic5" value="1" />
     </GuidSymbol>
 
   </Symbols>

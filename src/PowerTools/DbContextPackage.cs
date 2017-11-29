@@ -33,6 +33,7 @@ namespace Microsoft.DbContextPackage
         private readonly OptimizeContextHandler _optimizeContextHandler;
         private readonly ViewContextHandler _viewContextHandler;
         private readonly ViewDdlHandler _viewDdlHandler;
+        private readonly AboutHandler _aboutHandler;
         private HashSet<string> _tempFileNames;
 
         private DTE2 _dte2;
@@ -42,6 +43,7 @@ namespace Microsoft.DbContextPackage
             _optimizeContextHandler = new OptimizeContextHandler(this);
             _viewContextHandler = new ViewContextHandler(this);
             _viewDdlHandler = new ViewDdlHandler(this);
+            _aboutHandler = new AboutHandler(this);
             _tempFileNames = new HashSet<string>();
         }
 
@@ -85,6 +87,11 @@ namespace Microsoft.DbContextPackage
                 var menuItem4 = new OleMenuCommand(OnItemContextMenuInvokeHandler, null, OnItemMenuBeforeQueryStatus, menuCommandID4);
 
                 oleMenuCommandService.AddCommand(menuItem4);
+
+                var menuCommandID5 = new CommandID(GuidList.guidDbContextPackageCmdSet, (int)PkgCmdIDList.cmdidAbout);
+                var menuItem5 = new OleMenuCommand(OnItemContextMenuInvokeHandler, null, OnItemMenuBeforeQueryStatus, menuCommandID5);
+
+                oleMenuCommandService.AddCommand(menuItem5);
             }
         }
 
@@ -148,6 +155,12 @@ namespace Microsoft.DbContextPackage
 
             if (menuCommand == null)
             {
+                return;
+            }
+
+            if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidAbout)
+            {
+                _aboutHandler.ShowDialog();
                 return;
             }
 
