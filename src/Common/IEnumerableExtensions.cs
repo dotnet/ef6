@@ -25,7 +25,7 @@ namespace System.Data.Entity.Utilities
             var uniqueString = targetString;
             var i = 0;
 
-            while (inputStrings.Any(n => String.Equals(n, uniqueString, StringComparison.Ordinal)))
+            while (inputStrings.Any(n => string.Equals(n, uniqueString, StringComparison.Ordinal)))
             {
                 uniqueString = targetString + ++i;
             }
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Utilities
 
             selector = selector ?? (t => t.ToString());
 
-            return String.Join(separator, ts.Where(t => !ReferenceEquals(t, null)).Select(selector));
+            return string.Join(separator, ts.Where(t => !ReferenceEquals(t, null)).Select(selector));
         }
 
         public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource value)
