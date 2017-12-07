@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.IO;
@@ -341,6 +342,56 @@ namespace System.Data.Entity.Migrations
             var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v2");
 
             Assert.Equal(2, Regex.Matches(generatedMigration.UserCode, "RenameTable").Count);
+        }
+
+        [MigrationsTheory]
+        public void Migration_should_contain_xmldocs_before_class()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
+
+            var lines = generatedMigration.UserCode
+                .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+            var classLines = lines.FindAllIndex(x => x.StartsWith("public partial class"));
+
+            foreach (var classLineIndex in classLines)
+            {
+                // Should not be first line of file
+                Assert.NotEqual(0, classLineIndex);
+                var prevLine = lines[classLineIndex - 1];
+                Assert.Contains("<inheritdoc />", prevLine.Trim());
+            }
+        }
+
+        [MigrationsTheory]
+        public void Migration_should_contain_xmldocs_before_method()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
+
+            var lines = generatedMigration.UserCode
+                .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+            var classLines = lines.FindAllIndex(x => x.StartsWith("public override void"));
+
+            foreach (var classLineIndex in classLines)
+            {
+                // Should not be first line of file
+                Assert.NotEqual(0, classLineIndex);
+                var prevLine = lines[classLineIndex - 1];
+                Assert.Contains("<inheritdoc />", prevLine.Trim());
+            }
         }
 
         [MigrationsTheory]

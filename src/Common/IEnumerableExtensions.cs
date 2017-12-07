@@ -4,6 +4,8 @@
 namespace System.Data.Entity.SqlServer.Utilities
 #elif SQLSERVERCOMPACT
 namespace System.Data.Entity.SqlServerCompact.Utilities
+#elif EF_FUNCTIONALS
+namespace System.Data.Entity.Functionals.Utilities
 #else
 namespace System.Data.Entity.Utilities
 #endif
@@ -23,7 +25,7 @@ namespace System.Data.Entity.Utilities
             var uniqueString = targetString;
             var i = 0;
 
-            while (inputStrings.Any(n => string.Equals(n, uniqueString, StringComparison.Ordinal)))
+            while (inputStrings.Any(n => String.Equals(n, uniqueString, StringComparison.Ordinal)))
             {
                 uniqueString = targetString + ++i;
             }
@@ -71,7 +73,7 @@ namespace System.Data.Entity.Utilities
 
             selector = selector ?? (t => t.ToString());
 
-            return string.Join(separator, ts.Where(t => !ReferenceEquals(t, null)).Select(selector));
+            return String.Join(separator, ts.Where(t => !ReferenceEquals(t, null)).Select(selector));
         }
 
         public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource value)
@@ -96,6 +98,12 @@ namespace System.Data.Entity.Utilities
             }
 
             yield return value;
+        }
+
+        public static int[] FindAllIndex<T>(this T[] array, Predicate<T> match)
+        {
+            return array.Select((value, index) => match(value) ? index : -1)
+                .Where(index => index != -1).ToArray();
         }
     }
 }
