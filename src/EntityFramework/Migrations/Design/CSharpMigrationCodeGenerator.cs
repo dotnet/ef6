@@ -97,6 +97,7 @@ namespace System.Data.Entity.Migrations.Design
                         @namespace, className, writer, "DbMigration", designer: false,
                         namespaces: GetNamespaces(operations));
 
+                    writer.WriteLine("/// <inheritdoc />");
                     writer.WriteLine("public override void Up()");
                     writer.WriteLine("{");
                     writer.Indent++;
@@ -111,6 +112,7 @@ namespace System.Data.Entity.Migrations.Design
 
                     writer.WriteLine();
 
+                    writer.WriteLine("/// <inheritdoc />");
                     writer.WriteLine("public override void Down()");
                     writer.WriteLine("{");
                     writer.Indent++;
@@ -262,6 +264,8 @@ namespace System.Data.Entity.Migrations.Design
             (namespaces ?? GetDefaultNamespaces(designer)).Each(n => writer.WriteLine("using " + n + ";"));
 
             writer.WriteLine();
+
+            writer.WriteLine("/// <inheritdoc cref=\"DbMigration\" />");
 
             WriteClassAttributes(writer, designer);
 
