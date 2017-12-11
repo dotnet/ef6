@@ -353,20 +353,9 @@ namespace System.Data.Entity.Migrations
 
             var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
 
-            var lines = generatedMigration.UserCode
-                .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim())
-                .Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            CheckSpecificLinesHasXmlDocBeforeThem(generatedMigration.UserCode, "public partial class");
 
-            var classLines = lines.FindAllIndex(x => x.StartsWith("public partial class"));
-
-            foreach (var classLineIndex in classLines)
-            {
-                // Should not be first line of file
-                Assert.NotEqual(0, classLineIndex);
-                var prevLine = lines[classLineIndex - 1];
-                Assert.Contains("<inheritdoc />", prevLine.Trim());
-            }
+            CheckSpecificLinesHasXmlDocBeforeThem(generatedMigration.UserCode, "Public Partial Class");
         }
 
         [MigrationsTheory]
@@ -378,19 +367,28 @@ namespace System.Data.Entity.Migrations
 
             var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
 
-            var lines = generatedMigration.UserCode
+            CheckSpecificLinesHasXmlDocBeforeThem(generatedMigration.UserCode, "public override void");
+
+            CheckSpecificLinesHasXmlDocBeforeThem(generatedMigration.UserCode, "Public Overrides Sub");
+        }
+
+        private static void CheckSpecificLinesHasXmlDocBeforeThem(string code, string lineToAppend)
+        {
+            var lines = code
                 .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
-                .Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToArray();
 
-            var classLines = lines.FindAllIndex(x => x.StartsWith("public override void"));
+            var classLines = lines.FindAllIndex(x => x.StartsWith(lineToAppend));
 
             foreach (var classLineIndex in classLines)
             {
                 // Should not be first line of file
                 Assert.NotEqual(0, classLineIndex);
                 var prevLine = lines[classLineIndex - 1];
-                Assert.Contains("<inheritdoc />", prevLine.Trim());
+                //Both <inheritdoc/> and <inheritdoc cref=""> should work
+                Assert.Contains("<inheritdoc ", prevLine.Trim());
             }
         }
 

@@ -96,6 +96,7 @@ namespace System.Data.Entity.Migrations.Design
                         @namespace, className, writer, "Inherits DbMigration", designer: false,
                         namespaces: GetNamespaces(operations));
 
+                    writer.WriteLine("''' <inheritdoc />");
                     writer.WriteLine("Public Overrides Sub Up()");
                     writer.Indent++;
 
@@ -109,6 +110,7 @@ namespace System.Data.Entity.Migrations.Design
 
                     writer.WriteLine();
 
+                    writer.WriteLine("''' <inheritdoc />");
                     writer.WriteLine("Public Overrides Sub Down()");
                     writer.Indent++;
 
@@ -269,6 +271,11 @@ namespace System.Data.Entity.Migrations.Design
             }
 
             WriteClassAttributes(writer, designer);
+
+            if (!designer)
+            {
+                writer.WriteLine("''' <inheritdoc cref=\"DbMigration\" />");
+            }
 
             writer.Write("Public ");
 
