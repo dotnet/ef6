@@ -10,6 +10,7 @@ namespace Microsoft.DbContextPackage
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Threading;
     using System.Xml.Linq;
     using EnvDTE;
     using EnvDTE80;
@@ -17,18 +18,19 @@ namespace Microsoft.DbContextPackage
     using Microsoft.DbContextPackage.Handlers;
     using Microsoft.DbContextPackage.Resources;
     using Microsoft.DbContextPackage.Utilities;
+    using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Design;
     using Microsoft.VisualStudio.Shell.Interop;
     using Configuration = System.Configuration.Configuration;
     using ConfigurationManager = System.Configuration.ConfigurationManager;
 
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "0.9.2", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidDbContextPackagePkgString)]
-    [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
-    public sealed class DbContextPackage : Package
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string, PackageAutoLoadFlags.BackgroundLoad)]
+    public sealed class DbContextPackage : AsyncPackage
     {
         private readonly OptimizeContextHandler _optimizeContextHandler;
         private readonly ViewContextHandler _viewContextHandler;
@@ -52,11 +54,11 @@ namespace Microsoft.DbContextPackage
             get { return _dte2; }
         }
 
-        protected override void Initialize()
+        protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            base.Initialize();
+            await base.InitializeAsync(cancellationToken, progress);
 
-            _dte2 = GetService(typeof(DTE)) as DTE2;
+            _dte2 = GetServiceAsync(typeof(DTE)) as DTE2;
 
             if (_dte2 == null)
             {
@@ -64,7 +66,9 @@ namespace Microsoft.DbContextPackage
             }
 
             var oleMenuCommandService
-                = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+                = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             if (oleMenuCommandService != null)
             {
