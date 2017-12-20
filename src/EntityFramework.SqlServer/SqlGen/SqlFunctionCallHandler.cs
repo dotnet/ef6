@@ -244,6 +244,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             functionHandlers.Add("CurrentUtcDateTime", HandleCanonicalFunctionCurrentUtcDateTime);
             functionHandlers.Add("CurrentDateTimeOffset", HandleCanonicalFunctionCurrentDateTimeOffset);
             functionHandlers.Add("GetTotalOffsetMinutes", HandleCanonicalFunctionGetTotalOffsetMinutes);
+            functionHandlers.Add("LocalDateTime", HandleCanonicalFunctionLocalDateTime);
             functionHandlers.Add("TruncateTime", HandleCanonicalFunctionTruncateTime);
             functionHandlers.Add("CreateDateTime", HandleCanonicalFunctionCreateDateTime);
             functionHandlers.Add("CreateDateTimeOffset", HandleCanonicalFunctionCreateDateTimeOffset);
@@ -1106,6 +1107,24 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private static ISqlFragment HandleCanonicalFunctionGetTotalOffsetMinutes(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleCanonicalFunctionDatepart(sqlgen, "tzoffset", e);
+        }
+
+        // <summary>
+        // Handler for canonical funcitons for GetTotalOffsetMinutes.
+        // GetTotalOffsetMinutes(e) --> Datepart(tzoffset, e)
+        // </summary>
+        private static ISqlFragment HandleCanonicalFunctionLocalDateTime(SqlGenerator sqlgen, DbFunctionExpression e)
+        {
+            sqlgen.AssertKatmaiOrNewer(e);
+            var result = new SqlBuilder();
+            result.Append("CAST (");
+
+            Debug.Assert(e.Arguments.Count == 1, "LocalDateTime translation should have exactly one argument");
+            result.Append(e.Arguments[0].Accept(sqlgen));
+
+            result.Append(" AS DATETIME2)");
+
+            return result;
         }
 
         // <summary>

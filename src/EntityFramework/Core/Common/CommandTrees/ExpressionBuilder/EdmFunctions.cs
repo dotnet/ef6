@@ -481,6 +481,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return InvokeCanonicalFunction("GetTotalOffsetMinutes", dateTimeOffsetArgument);
         }
 
+        /// <summary>
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that gets local DateTime using CAST expressions from specified argument, which must have a DateTimeOffset result type. The result type of the expression is DateTime.
+        /// </summary>
+        /// <returns>A new DbFunctionExpression that cast DATETIMEOFFSET to DATEIME2, discarding offset part</returns>
+        /// <param name="dateTimeOffsetArgument">An expression that specifies the DateTimeOffset value.</param>
+        public static DbFunctionExpression LocalDateTime(this DbExpression dateTimeOffsetArgument)
+        {
+            Check.NotNull(dateTimeOffsetArgument, "dateTimeOffsetArgument");
+            return InvokeCanonicalFunction("LocalDateTime", dateTimeOffsetArgument);
+        }
+
         #endregion
 
         #region Date/Time creation methods - CurrentDateTime, CurrentDateTimeOffset, CurrentUtcDateTime, CreateDateTime, CreateDateTimeOffset, CreateTime, TruncateTime
