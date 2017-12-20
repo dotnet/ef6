@@ -193,7 +193,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 using (var context = new ArubaContext())
                 {
                     var query = context.AllTypes.Select(a => a.c30_datetimeoffset.LocalDateTime);
-                    Assert.Contains("SYSDATETIMEOFFSET", query.ToString().ToUpperInvariant());
+                    Assert.Contains("AS DATETIME2)", query.ToString().ToUpperInvariant());
                 }
             }
 
@@ -226,7 +226,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 {
                     DateTimeOffset? x = DateTimeOffset.Now;
                     var query = context.AllTypes.Where(a => a.c29_datetime2 < x.Value.LocalDateTime);
-                    Assert.Contains("SELECT", query.ToString().ToUpperInvariant());
+                    Assert.Contains("AS DATETIME2)", query.ToString().ToUpperInvariant());
                 }
             }
 
@@ -247,7 +247,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 using (var context = new ArubaContext())
                 {
                     var query = context.AllTypes.Select(a => a.c39_nullabledatetimeoffset.Value.LocalDateTime);
-                    Assert.Contains("SYSDATETIMEOFFSET", query.ToString().ToUpperInvariant());
+                    Assert.Contains("AS DATETIME2)", query.ToString().ToUpperInvariant());
                 }
             }
 
