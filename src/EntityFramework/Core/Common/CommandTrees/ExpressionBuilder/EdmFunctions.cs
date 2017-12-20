@@ -484,7 +484,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that gets local DateTime using CAST expressions from specified argument, which must have a DateTimeOffset result type. The result type of the expression is DateTime.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that cast DATETIMEOFFSET to DATEIME2, discarding offset part</returns>
+        /// <returns>A new DbFunctionExpression that casts DATETIMEOFFSET to DATEIME2, discarding offset part</returns>
         /// <param name="dateTimeOffsetArgument">An expression that specifies the DateTimeOffset value.</param>
         public static DbFunctionExpression LocalDateTime(this DbExpression dateTimeOffsetArgument)
         {
@@ -495,7 +495,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that gets UTC DateTime using CAST expressions from specified argument, which must have a DateTimeOffset result type. The result type of the expression is DateTime.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that cast DATETIMEOFFSET to Utc DATEIME2 </returns>
+        /// <returns>A new DbFunctionExpression that casts DATETIMEOFFSET to Utc DATEIME2 </returns>
         /// <param name="dateTimeOffsetArgument">An expression that specifies the DateTimeOffset value.</param>
         public static DbFunctionExpression UtcDateTime(this DbExpression dateTimeOffsetArgument)
         {
