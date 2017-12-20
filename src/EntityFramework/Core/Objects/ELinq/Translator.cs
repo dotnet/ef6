@@ -636,6 +636,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             typeof(DateTimeOffset).GetDeclaredProperty("Second"),
                             typeof(DateTimeOffset).GetDeclaredProperty("Millisecond"),
                             typeof(DateTimeOffset).GetDeclaredProperty("LocalDateTime"),
+                            typeof(DateTimeOffset).GetDeclaredProperty("UtcDateTime"),
                         };
                 }
 
