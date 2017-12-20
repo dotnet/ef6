@@ -209,6 +209,17 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
 
             [Fact]
+            public void DateTimeOffset_UtcDateTimeConstant_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var x = DateTimeOffset.Now;
+                    var query = context.AllTypes.Where(a => a.c29_datetime2 < x.UtcDateTime);
+                    Assert.Contains("SELECT", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
             public void DateTimeOffset_NullableConstant_properly_to_function()
             {
                 using (var context = new ArubaContext())
@@ -231,6 +242,18 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
 
             [Fact]
+            public void DateTimeOffset_NullableUtcDateTimeConstant_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    DateTimeOffset? x = DateTimeOffset.Now;
+                    var query = context.AllTypes.Where(a => a.c29_datetime2 < x.Value.UtcDateTime);
+                    Assert.Contains("CONVERT (DATETIME2,", query.ToString().ToUpperInvariant());
+                    Assert.Contains(", 1)", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
             public void DateTimeOffset_Nullable_DateTime_properly_to_function()
             {
                 using (var context = new ArubaContext())
@@ -248,6 +271,17 @@ namespace System.Data.Entity.Query.LinqToEntities
                 {
                     var query = context.AllTypes.Select(a => a.c39_nullabledatetimeoffset.Value.LocalDateTime);
                     Assert.Contains("AS DATETIME2)", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_NullableUtcDateTime_DateTime_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var query = context.AllTypes.Select(a => a.c39_nullabledatetimeoffset.Value.UtcDateTime);
+                    Assert.Contains("CONVERT (DATETIME2,", query.ToString().ToUpperInvariant());
+                    Assert.Contains(", 1)", query.ToString().ToUpperInvariant());
                 }
             }
 

@@ -706,6 +706,8 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
                 PrimitiveTypeKind.Int32, "GetTotalOffsetMinutes", PrimitiveTypeKind.DateTimeOffset, "dateTimeOffsetArgument");
             functions.AddFunction(
                 PrimitiveTypeKind.DateTime, "LocalDateTime", PrimitiveTypeKind.DateTimeOffset, "dateTimeOffsetArgument");
+            functions.AddFunction(
+                PrimitiveTypeKind.DateTime, "UtcDateTime", PrimitiveTypeKind.DateTimeOffset, "dateTimeOffsetArgument");
 
             functions.AddFunction(PrimitiveTypeKind.DateTime, "CurrentUtcDateTime");
 
