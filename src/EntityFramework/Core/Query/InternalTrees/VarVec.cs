@@ -339,7 +339,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // </summary>
         // <param name="varMap"> dictionary of renamed vars </param>
         // <returns> a new VarVec </returns>
-        internal VarVec Remap(Dictionary<Var, Var> varMap)
+        internal VarVec Remap(IDictionary<Var, Var> varMap)
         {
             var newVec = m_command.CreateVarVec();
             foreach (var v in this)
