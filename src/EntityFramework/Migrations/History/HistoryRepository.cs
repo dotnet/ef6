@@ -577,33 +577,6 @@ namespace System.Data.Entity.Migrations.History
                     tableName = HistoryContext.DefaultTableName;
                 }
 
-                using (var context = new LegacyHistoryContext(connection))
-                {
-                    var createdOnExists = false;
-
-                    try
-                    {
-                        InjectInterceptionContext(context);
-
-                        using (new TransactionScope(TransactionScopeOption.Suppress))
-                        {
-                            context.History
-                                .Select(h => h.CreatedOn)
-                                .FirstOrDefault();
-                        }
-
-                        createdOnExists = true;
-                    }
-                    catch (EntityException)
-                    {
-                    }
-
-                    if (createdOnExists)
-                    {
-                        yield return new DropColumnOperation(tableName, "CreatedOn");
-                    }
-                }
-
                 using (var context = CreateContext(connection))
                 {
                     if (!_contextKeyColumnExists)
