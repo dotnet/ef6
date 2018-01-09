@@ -19,27 +19,25 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             get
             {
-                var o = ModelElement;
-                if (o == null)
+                var baseName = Resources.Acc_Unnamed;
+                var derivedName = Resources.Acc_Unnamed;
+
+                if (ModelElement != null)
                 {
-                    return Resources.Acc_Unnamed;
+                    if (ModelElement.TargetEntityType != null
+                        && !string.IsNullOrEmpty(ModelElement.TargetEntityType.Name))
+                    {
+                        baseName = ModelElement.TargetEntityType.Name;
+                    }
+
+                    if (ModelElement.SourceEntityType != null
+                        && !string.IsNullOrEmpty(ModelElement.SourceEntityType.Name))
+                    {
+                        derivedName = ModelElement.SourceEntityType.Name;
+                    }
                 }
 
-                if (o.SourceEntityType == null
-                    ||
-                    string.IsNullOrEmpty(o.SourceEntityType.Name))
-                {
-                    return Resources.Acc_Unnamed;
-                }
-
-                if (o.TargetEntityType == null
-                    ||
-                    string.IsNullOrEmpty(o.TargetEntityType.Name))
-                {
-                    return o.SourceEntityType.Name + "." + Resources.Acc_Unnamed;
-                }
-
-                return o.SourceEntityType.Name + "." + o.TargetEntityType.Name;
+                return string.Format(CultureInfo.CurrentCulture, Resources.IsInheritedFrom, baseName, derivedName);
             }
         }
 

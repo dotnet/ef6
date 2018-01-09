@@ -3,7 +3,9 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Input;
 using System.Windows.Controls;
 using Microsoft.Data.Entity.Design.UI.ViewModels;
@@ -134,6 +136,27 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
                 finally
                 {
                     _isManualEditCommit = false;
+                }
+            }
+        }
+
+        private void DgEnumTypeMembers_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            foreach (var row in dgEnumTypeMembers.FindDescendants<DataGridRow>().Where(r => r.IsNewItem).ToList())
+            {
+                foreach (var cell in row.FindDescendants<DataGridCell>().ToList())
+                {
+                    if (cell.Column != null)
+                    {
+                        if (cell.Column.DisplayIndex == 0)
+                        {
+                            cell.SetValue(AutomationProperties.NameProperty, EntityDesignerResources.EnumDialog_EnumTypeMemberNameLabel);
+                        }
+                        else if (cell.Column.DisplayIndex == 1)
+                        {
+                            cell.SetValue(AutomationProperties.NameProperty, EntityDesignerResources.EnumDialog_EnumTypeMemberValueLabel);
+                        }
+                    }
                 }
             }
         }

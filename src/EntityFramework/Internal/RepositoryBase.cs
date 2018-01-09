@@ -9,7 +9,7 @@ namespace System.Data.Entity.Internal
 
     internal abstract class RepositoryBase
     {
-        private readonly DbConnection _existingConnection;
+        private readonly InternalContext _usersContext;
         private readonly string _connectionString;
         private readonly DbProviderFactory _providerFactory;
 
@@ -19,27 +19,30 @@ namespace System.Data.Entity.Internal
             DebugCheck.NotEmpty(connectionString);
             DebugCheck.NotNull(providerFactory);
 
-            var existingConnection = usersContext.Connection;
-            if (existingConnection != null)
-            {
-                _existingConnection = existingConnection;
-            }
-
+            _usersContext = usersContext;
             _connectionString = connectionString;
             _providerFactory = providerFactory;
         }
 
         protected DbConnection CreateConnection()
         {
-            if (_existingConnection != null
-                && _existingConnection.State == ConnectionState.Open)
+            DbConnection connection;
+            if (!_usersContext.IsDisposed
+                && (connection = _usersContext.Connection) != null)
             {
-                return _existingConnection;
+                if (connection.State == ConnectionState.Open)
+                {
+                    return connection;
+                }
+
+                connection = DbProviderServices.GetProviderServices(connection)
+                    .CloneDbConnection(connection, _providerFactory);
+            }
+            else
+            {
+                connection = _providerFactory.CreateConnection();
             }
 
-            var connection = _existingConnection == null
-                ? _providerFactory.CreateConnection()
-                : DbProviderServices.GetProviderServices(_existingConnection).CloneDbConnection(_existingConnection, _providerFactory);
             DbInterception.Dispatch.Connection.SetConnectionString(connection,
                 new DbConnectionPropertyInterceptionContext<string>().WithValue(_connectionString));
 
@@ -48,7 +51,8 @@ namespace System.Data.Entity.Internal
 
         protected void DisposeConnection(DbConnection connection)
         {
-            if (connection != null && _existingConnection == null)
+            if (connection != null
+                && (_usersContext.IsDisposed || connection != _usersContext.Connection))
             {
                 DbInterception.Dispatch.Connection.Dispose(connection, new DbInterceptionContext());
             }

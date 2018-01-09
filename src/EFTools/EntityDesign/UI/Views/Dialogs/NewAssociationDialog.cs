@@ -7,6 +7,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     using System.ComponentModel;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Globalization;
     using System.Windows.Forms;
     using Microsoft.Data.Entity.Design.Model;
@@ -113,6 +114,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             UpdateEnd2NavigationPropertyName();
             UpdateExplanationText();
             UpdateCreateForeignKeysCheckBox();
+
+            cancelButton.BackColor = SystemColors.Control;
+            cancelButton.ForeColor = SystemColors.ControlText;
+            okButton.BackColor = SystemColors.Control;
+            okButton.ForeColor = SystemColors.ControlText;
         }
 
         internal string AssociationName

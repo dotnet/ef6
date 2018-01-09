@@ -39,12 +39,6 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
                 previews.AddRange(CreatePreviewNodesForVsLang(fileChanges));
             }
 
-            // No change proposals so return an empty preview node
-            if (previews.Count == 0)
-            {
-                previews.Add(CreateEmptyNode());
-            }
-
             return previews;
         }
 

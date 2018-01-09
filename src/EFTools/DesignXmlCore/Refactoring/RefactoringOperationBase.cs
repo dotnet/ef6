@@ -8,6 +8,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Runtime.InteropServices;
+    using System.Windows;
     using System.Windows.Forms;
     using Microsoft.Data.Entity.Design.Common;
     using Microsoft.Data.Tools.VSXmlDesignerBase.Common;
@@ -204,9 +205,23 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
                             return;
                         }
 
-                        // After feed the preview window with PreviewChangesEngine, the engine will call back the ApplyChanges
-                        // method in this Operation if user clicks Apply button.
-                        ShowPreviewWindow();
+                        if (PreviewData.ChangeList == null
+                            || PreviewData.ChangeList.Count == 0)
+                        {
+                            if (System.Windows.MessageBox.Show(
+                                    Resources.RefactoringOperation_NoChangesToPreview,
+                                    Resources.RefactoringOperation_NoChangesToPreviewTitle,
+                                    MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                            {
+                                ApplyChanges();
+                            }
+                        }
+                        else
+                        {
+                            // After feed the preview window with PreviewChangesEngine, the engine will call back the ApplyChanges
+                            // method in this Operation if user clicks Apply button.
+                            ShowPreviewWindow();
+                        }
                     }
                     else
                     {

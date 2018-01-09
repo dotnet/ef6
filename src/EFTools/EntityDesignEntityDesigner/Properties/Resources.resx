@@ -392,6 +392,9 @@ Add existing entities and relationships to this diagram by dragging them from th
   <data name="Acc_Unnamed" xml:space="preserve">
     <value>Unnamed</value>
   </data>
+  <data name="IsInheritedFrom" xml:space="preserve">
+    <value>{0} is inherited from {1}</value>
+  </data>
   <data name="Tx_AddEntityType" xml:space="preserve">
     <value>Add EntityType</value>
   </data>

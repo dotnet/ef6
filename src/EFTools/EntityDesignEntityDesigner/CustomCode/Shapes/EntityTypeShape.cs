@@ -244,7 +244,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             var hslColor = HslColor.FromRgbColor(fillColor);
             return new FillColorAppearance
                 {
-                    TextColor = fillColor.GetBrightness() < 0.5 ? Color.FromArgb(255, 246, 246, 246) : Color.FromArgb(255, 9, 9, 9),
+                    TextColor = GetTextColor(fillColor),
                     OutlineColor
                         = new HslColor
                             {
@@ -265,6 +265,38 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                     ChevronCollapsed = ChevronCollapsed
 #endif
                 };
+        }
+
+        private static readonly double _blackBrightness = GetRelativeBrightness(Color.Black);
+        private static readonly double _whiteBrightness = GetRelativeBrightness(Color.White);
+
+        private static Color GetTextColor(Color fillColor)
+        {
+            var fillBrightness = GetRelativeBrightness(fillColor);
+            return GetContrast(_blackBrightness, fillBrightness)
+                   > GetContrast(_whiteBrightness, fillBrightness)
+                ? Color.Black
+                : Color.White;
+        }
+
+        private static double GetContrast(double b1, double b2)
+        {
+            return b1 > b2
+                ? (b1 + 0.05) / (b2 + 0.05)
+                : (b2 + 0.05) / (b1 + 0.05);
+        }
+
+        private static double GetRelativeBrightness(Color color)
+        {
+            return 0.2126 * GetRelativeColorPart(color.R)
+                   + 0.7152 * GetRelativeColorPart(color.G)
+                   + 0.0722 * GetRelativeColorPart(color.B);
+        }
+
+        private static double GetRelativeColorPart(byte colorPart)
+        {
+            var part = (colorPart / 255.0);
+            return part <= 0.03928 ? part / 12.92 : Math.Pow((part + 0.055) / 1.055, 2.4);
         }
 
         /// <summary>
@@ -588,12 +620,13 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             get
             {
-                if (ModelElement == null)
-                {
-                    return base.AccessibleName;
-                }
-
-                return TypedModelElement.Name;
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.AccDesc_EntityType,
+                    TypedModelElement != null
+                    && !string.IsNullOrWhiteSpace(TypedModelElement.Name)
+                        ? TypedModelElement.Name
+                        : Resources.Acc_Unnamed);
             }
         }
 

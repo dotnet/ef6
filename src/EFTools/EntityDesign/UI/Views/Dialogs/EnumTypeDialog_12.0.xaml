@@ -167,13 +167,14 @@
                 CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False"
                 HorizontalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}" VerticalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}"
                 AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_AccEnumTypeMembers}"
-                Margin="5,10,5,5">
-        <DataGrid.RowValidationRules>
+                Margin="5,10,5,5"
+                Loaded="DgEnumTypeMembers_OnLoaded">
+            <DataGrid.RowValidationRules>
           <vm:RowDataInfoValidationRule ValidationStep="UpdatedValue" />
         </DataGrid.RowValidationRules>
         <DataGrid.Columns>
-        
-          <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberNameLabel}" CanUserSort="False" MinWidth="225" MaxWidth="325" Width="Auto">
+
+        <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberNameLabel}" CanUserSort="False" MinWidth="225" MaxWidth="325" Width="Auto" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_EnumTypeMemberNameLabel}">
             <DataGridTextColumn.Binding>
               <Binding Path="Name">
                 <Binding.ValidationRules>
@@ -183,7 +184,7 @@
             </DataGridTextColumn.Binding>
           </DataGridTextColumn>
 
-          <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberValueLabel}" CanUserSort="False" MinWidth="200" MaxWidth="300" Width="Auto">
+        <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberValueLabel}" CanUserSort="False" MinWidth="200" MaxWidth="300" Width="Auto" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_EnumTypeMemberValueLabel}">
             <DataGridTextColumn.Binding>
               <Binding Path="Value">
                 <Binding.ValidationRules>
@@ -222,12 +223,13 @@
          <Button Name="btnOk"
                  Margin="5,15,5,5" MinWidth="70" IsDefault="True" 
                  Click="btnOk_Click" Content="{x:Static ded:Resources.EnumDialog_OkButtonLabel}"
-                 IsEnabled="{Binding Path=IsValid}" AutomationProperties.Name="{Binding Name}"/>
+                 IsEnabled="{Binding Path=IsValid}"
+                 AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_OkButtonLabel}"/>
         
         <Button Name="btnCancel" 
                 Margin="5,15,5,5" MinWidth="70" IsCancel="True" 
                 Click="btnCancel_Click" Content="{x:Static ded:Resources.EnumDialog_CancelButtonLabel}"
-                AutomationProperties.Name="{Binding Name}"/>
+                AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_CancelButtonLabel}"/>
       </StackPanel>
   </Grid>
 </vs:DialogWindow>

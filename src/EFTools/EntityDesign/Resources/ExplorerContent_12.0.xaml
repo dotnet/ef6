@@ -753,6 +753,7 @@
       <Border x:Name="comboPanel">
         <Grid>
           <xdb:SearchComboBox x:Name="searchBox"
+                    AutomationProperties.Name="{x:Static Design:Resources.ExplorerContent_PromptSearch}"
                     BorderThickness="0.0"
                     Background="{DynamicResource VsBrush.ComboBoxBackground}"
                     Foreground="{DynamicResource VsBrush.ComboBoxGlyph}"
@@ -774,6 +775,7 @@
                      TextTrimming="CharacterEllipsis"
                      Background="{DynamicResource VsBrush.ComboBoxBackground}"
                      Foreground="{DynamicResource VsBrush.GrayText}"
+                     AutomationProperties.Name="{x:Static Design:Resources.ExplorerContent_PromptSearch}"
                      Text="{x:Static Design:Resources.ExplorerContent_PromptSearch}" >
             <TextBlock.Style>
               <Style TargetType="{x:Type TextBlock}">

@@ -5,6 +5,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Windows.Forms;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Entity;
@@ -61,6 +62,12 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
                 StorageEntitySetsListBox.Items.AddRange(entitySets.ToArray());
                 ViewUtils.DisplayHScrollOnListBoxIfNecessary(StorageEntitySetsListBox);
             }
+            YesButton.BackColor = SystemColors.Control;
+            YesButton.ForeColor = SystemColors.ControlText;
+            NoButton.BackColor = SystemColors.Control;
+            NoButton.ForeColor = SystemColors.ControlText;
+            DeleteStorageEntitySetsDialogCancelButton.BackColor = SystemColors.Control;
+            DeleteStorageEntitySetsDialogCancelButton.ForeColor = SystemColors.ControlText;
         }
 
         protected override void OnHelpRequested(HelpEventArgs hevent)
