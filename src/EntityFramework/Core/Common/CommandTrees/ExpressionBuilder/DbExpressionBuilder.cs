@@ -247,7 +247,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbFunctionAggregate Aggregate(this EdmFunction function, IEnumerable<DbExpression> arguments)
         {
             Check.NotNull(function, "function");
-            if (arguments?.Any() == false)
+            Check.NotNull(arguments, "argument");
+
+            if (arguments.Any() == false)
             {
                 throw new ArgumentNullException("arguments");
             }
@@ -266,7 +268,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, IEnumerable<DbExpression> arguments)
         {
             Check.NotNull(function, "function");
-            if (arguments?.Any() == false)
+            Check.NotNull(arguments, "argument");
+
+            if (arguments.Any() == false)
             {
                 throw new ArgumentNullException("arguments");
             }
