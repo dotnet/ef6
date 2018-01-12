@@ -210,7 +210,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             if (aggregate != null)
             {
                 var newArguments = VisitExpressionList(aggregate.Arguments);
-                Debug.Assert(newArguments.Count == 1, "Group aggregate had more than one argument?");
 
                 if (!ReferenceEquals(aggregate.Arguments, newArguments))
                 {
