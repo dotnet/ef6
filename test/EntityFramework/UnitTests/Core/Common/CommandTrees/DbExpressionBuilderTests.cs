@@ -2179,6 +2179,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         #region Null checks
 
         [Fact]
+        public void Null_check_Aggregate_MultipleArguments() {
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Aggregate(null, new List<DbExpression> { DbExpressionBuilder.True }));
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Aggregate(new EdmFunction("F", "N", DataSpace.SSpace), (IEnumerable<DbExpression>)null));
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Aggregate(new EdmFunction("F", "N", DataSpace.SSpace), new List<DbExpression>()));
+        }
+
+        [Fact]
+        public void Null_check_AggregateDistinct_MultipleArguments() {
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.AggregateDistinct(null, new List<DbExpression> { DbExpressionBuilder.True }));
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.AggregateDistinct(new EdmFunction("F", "N", DataSpace.SSpace), (IEnumerable<DbExpression>)null));
+            Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.AggregateDistinct(new EdmFunction("F", "N", DataSpace.SSpace), new List<DbExpression>()));
+        }
+        [Fact]
         public void Null_check_Aggregate()
         {
             Assert.Throws<ArgumentNullException>(() => DbExpressionBuilder.Aggregate(null, DbExpressionBuilder.True));
