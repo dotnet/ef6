@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Collections.Generic;
 
     // <summary>
     // An instance of a class derived from ObjectQueryState is used to model every instance of
@@ -294,6 +295,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         // Must return a <see cref="TypeUsage" /> that describes the result typeof this query in terms of C-Space metadata
         // </returns>
         protected abstract TypeUsage GetResultType();
+
+        internal virtual IList<string> GetLastQueryMappedColumnList()
+        {
+            return null;
+        }
 
         // <summary>
         // Helper method to return the first non-null merge option from the specified nullable merge options,
