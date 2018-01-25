@@ -212,6 +212,11 @@ namespace System.Data.Entity.Core.Objects
             return _state.GetExecutionPlan(null).ToTraceString();
         }
 
+        /// <summary>Returns the mapped result column name.</summary>
+        /// <returns>
+        /// A List of column names.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IList<string> GetLastQueryMappedColumnList()
         {
             return _state.GetLastQueryMappedColumnList();

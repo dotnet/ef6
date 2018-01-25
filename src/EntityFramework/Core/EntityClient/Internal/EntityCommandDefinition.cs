@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     {
                         var providerCommandDefinition = _storeProviderServices.CreateCommandDefinition(
                             providerCommandInfo.CommandTree, interceptionContext);
-                        _mappedCommandReturnTypes.Add(this.GetRowTypeFromCommandTree(providerCommandInfo.CommandTree));
+                        _mappedCommandReturnTypes.Add(GetRowTypeFromCommandTree(providerCommandInfo.CommandTree));
 
                         if (null == providerCommandDefinition)
                         {
@@ -370,7 +370,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
         #region internal methods
 
-        private RowType GetRowTypeFromCommandTree(DbCommandTree tree)
+        private static RowType GetRowTypeFromCommandTree(DbCommandTree tree)
         {
             DbQueryCommandTree commandTree = tree as DbQueryCommandTree;
 
