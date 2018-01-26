@@ -214,21 +214,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>Returns the commands to execute against the data source.</summary>
-        /// <returns>A string that represents the commands that the query executes against the data source.</returns> 
-        public string GetExecutionPlanTemplate(bool tryCacheFirst, bool encaseInSubQuery)
+        /// <returns>A string that represents the commands that the query executes against the data source.</returns>
+        public ExecutionPlanTemplate GetExecutionPlanTemplate(bool tryCacheFirst)
         {
             // Get the cached template first, if there is one. We do not need to generate a new ExecutionPlan.
-            return _state.GetExecutionPlanTemplate(tryCacheFirst, encaseInSubQuery);
-        }
-
-        /// <summary>Returns the mapped result column name.</summary>
-        /// <returns>
-        /// A List of column names.
-        /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public IList<string> GetLastQueryMappedColumnList()
-        {
-            return _state.GetLastQueryMappedColumnList();
+            return _state.GetExecutionPlanTemplate(tryCacheFirst);
         }
 
         /// <summary>Returns information about the result type of the query.</summary>

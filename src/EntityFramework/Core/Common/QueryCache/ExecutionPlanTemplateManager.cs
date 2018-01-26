@@ -1,16 +1,18 @@
 ﻿namespace System.Data.Entity.Core.Common.QueryCache
 {
     using System.Collections.Concurrent;
+    using System.Collections;
+    using System.Collections.Generic;
 
     internal class ExecutionPlanTemplateManager
     {
-        private readonly ConcurrentDictionary<LinqQueryCacheKey, string> templates = new ConcurrentDictionary<LinqQueryCacheKey, string>();
+        private readonly ConcurrentDictionary<LinqQueryCacheKey, ExecutionPlanTemplate> templates = new ConcurrentDictionary<LinqQueryCacheKey, ExecutionPlanTemplate>();
 
         public static ExecutionPlanTemplateManager Instance { get; } = new ExecutionPlanTemplateManager();
 
-        public string GetExecutionPlanTemplate(LinqQueryCacheKey key)
+        public ExecutionPlanTemplate GetExecutionPlanTemplate(LinqQueryCacheKey key)
         {
-            string cachedTemplate = null;
+            ExecutionPlanTemplate cachedTemplate = null;
             if (this.templates.TryGetValue(key, out cachedTemplate))
             {
                 return cachedTemplate;
@@ -19,9 +21,9 @@
             return null;
         }
 
-        public void AddExecutionPlanTemplate(LinqQueryCacheKey key, string template)
+        public void AddExecutionPlanTemplate(LinqQueryCacheKey key, ExecutionPlanTemplate template)
         {
-            this.templates.TryAdd(key, template);
+            this.templates.AddOrUpdate(key, template, (oldKey, oldValue) => template);
         }
     }
 }

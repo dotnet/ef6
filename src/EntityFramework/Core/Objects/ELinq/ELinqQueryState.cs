@@ -89,15 +89,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return converter.Convert().ResultType;
         }
 
-        internal override IList<string> GetLastQueryMappedColumnList()
-        {
-            if (_cachedPlan != null)
-            {
-                return GetMappedColumnList(_cachedPlan);
-            }
-
-            return null;
-        }
+        
 
         private static IList<string> GetMappedColumnList(ObjectQueryExecutionPlan plan)
         {
@@ -186,130 +178,119 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return columnsPosNameMap;
         }
 
-        internal override string GetExecutionPlanTemplate(bool tryCacheFirst, bool enCaseInSubQuery)
+        internal LinqQueryCacheKey GetExecutionPlanKey()
         {
-            string planTemplate = null;
             LinqQueryCacheKey cacheKey = null;
+
+            // Translate LINQ expression to a DbExpression
+            var converter = CreateExpressionConverter();
+            var queryExpression = converter.Convert();
+
+            // This delegate tells us when a part of the expression tree has changed requiring a recompile.
+            _recompileRequired = converter.RecompileRequired;
+
+            // Determine the merge option, with the following precedence:
+            // 1. A merge option was specified explicitly as the argument to Execute(MergeOption).
+            // 2. The user has set the MergeOption property on the ObjectQuery instance.
+            // 3. A merge option has been extracted from the 'root' query and propagated to the root of the expression tree.
+            // 4. The global default merge option.
+            var mergeOption = EnsureMergeOption(
+                MergeOption.AppendOnly,
+                UserSpecifiedMergeOption,
+                converter.PropagatedMergeOption);
+
+            _useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+
+            // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
+            _linqParameters = converter.GetParameters();
+            if (_linqParameters != null
+                && _linqParameters.Any())
+            {
+                var currentParams = EnsureParameters();
+                currentParams.SetReadOnly(false);
+                foreach (var pair in _linqParameters)
+                {
+                    // Note that it is safe to add the parameter directly only
+                    // because parameters are cloned before they are added to the
+                    // converter's parameter collection, or they came from this
+                    // instance's parameter collection in the first place.
+                    var convertedParam = pair.Item1;
+                    currentParams.Add(convertedParam);
+                }
+                currentParams.SetReadOnly(true);
+            }
+
+            // Try retrieving the execution plan from the global query cache (if plan caching is enabled).
+            // Create a new cache key that reflects the current state of the Parameters collection
+            // and the Span object (if any), and uses the specified merge option.
+            string expressionKey;
+            if (ExpressionKeyGen.TryGenerateKey(queryExpression, out expressionKey))
+            {
+                cacheKey = new LinqQueryCacheKey(
+                    expressionKey,
+                    (null == Parameters ? 0 : Parameters.Count),
+                    (null == Parameters ? null : Parameters.GetCacheKey()),
+                    (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
+                    mergeOption,
+                    EffectiveStreamingBehavior,
+                    _useCSharpNullComparisonBehavior,
+                    ElementType);
+            }
+
+            // Evaluate parameter values for the query.
+            if (_linqParameters != null)
+            {
+                foreach (var pair in _linqParameters)
+                {
+                    var parameter = pair.Item1;
+                    var parameterExpression = pair.Item2;
+                    if (null != parameterExpression)
+                    {
+                        parameter.Value = parameterExpression.EvaluateParameter(null);
+                    }
+                }
+            }
+
+            return cacheKey;
+        }
+
+        private IList<string> GetLastQueryMappedColumnList()
+        {
+            // Otherwise try to get the last query saved value.
+            if (_cachedPlan != null)
+            {
+                return GetMappedColumnList(_cachedPlan);
+            }
+
+            return null;
+        }
+
+        internal override ExecutionPlanTemplate GetExecutionPlanTemplate(bool tryCacheFirst)
+        {
+            LinqQueryCacheKey cacheKey = null;
+            ExecutionPlanTemplate planTemplate = null;
 
             if (tryCacheFirst)
             {
-                // Translate LINQ expression to a DbExpression
-                var converter = CreateExpressionConverter();
-                var queryExpression = converter.Convert();
-
-                // This delegate tells us when a part of the expression tree has changed requiring a recompile.
-                _recompileRequired = converter.RecompileRequired;
-
-                // Determine the merge option, with the following precedence:
-                // 1. A merge option was specified explicitly as the argument to Execute(MergeOption).
-                // 2. The user has set the MergeOption property on the ObjectQuery instance.
-                // 3. A merge option has been extracted from the 'root' query and propagated to the root of the expression tree.
-                // 4. The global default merge option.
-                var mergeOption = EnsureMergeOption(
-                    MergeOption.AppendOnly,
-                    UserSpecifiedMergeOption,
-                    converter.PropagatedMergeOption);
-
-                _useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
-
-                // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
-                _linqParameters = converter.GetParameters();
-                if (_linqParameters != null
-                    && _linqParameters.Any())
-                {
-                    var currentParams = EnsureParameters();
-                    currentParams.SetReadOnly(false);
-                    foreach (var pair in _linqParameters)
-                    {
-                        // Note that it is safe to add the parameter directly only
-                        // because parameters are cloned before they are added to the
-                        // converter's parameter collection, or they came from this
-                        // instance's parameter collection in the first place.
-                        var convertedParam = pair.Item1;
-                        currentParams.Add(convertedParam);
-                    }
-                    currentParams.SetReadOnly(true);
-                }
-
-                // Try retrieving the execution plan from the global query cache (if plan caching is enabled).
-                // Create a new cache key that reflects the current state of the Parameters collection
-                // and the Span object (if any), and uses the specified merge option.
-                string expressionKey;
-                if (ExpressionKeyGen.TryGenerateKey(queryExpression, out expressionKey))
-                {
-                    cacheKey = new LinqQueryCacheKey(
-                        expressionKey,
-                        (null == Parameters ? 0 : Parameters.Count),
-                        (null == Parameters ? null : Parameters.GetCacheKey()),
-                        (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
-                        mergeOption,
-                        EffectiveStreamingBehavior,
-                        _useCSharpNullComparisonBehavior,
-                        ElementType);
-                }
-
-                // Evaluate parameter values for the query.
-                if (_linqParameters != null)
-                {
-                    foreach (var pair in _linqParameters)
-                    {
-                        var parameter = pair.Item1;
-                        var parameterExpression = pair.Item2;
-                        if (null != parameterExpression)
-                        {
-                            parameter.Value = parameterExpression.EvaluateParameter(null);
-                        }
-                    }
-                }
-
+                cacheKey = this.GetExecutionPlanKey();
                 planTemplate = ExecutionPlanTemplateManager.Instance.GetExecutionPlanTemplate(cacheKey);
             }
 
-            if (string.IsNullOrEmpty(planTemplate))
+            if (planTemplate == null)
             {
-                planTemplate = this.GetExecutionPlan(null).ToTraceString();
+                var planQuery = this.GetExecutionPlan(null).ToTraceString();
+                var resultsColumns = this.GetLastQueryMappedColumnList();
 
-                if (enCaseInSubQuery)
+                planTemplate = new ExecutionPlanTemplate(planQuery, resultsColumns);
+
+                // Always add it to cache.
+                if (tryCacheFirst)
                 {
-                    planTemplate = this.EncaseInMappedSubquery(planTemplate);
+                    ExecutionPlanTemplateManager.Instance.AddExecutionPlanTemplate(cacheKey, planTemplate);
                 }
             }
 
-            if (tryCacheFirst && cacheKey != null)
-            {
-                ExecutionPlanTemplateManager.Instance.AddExecutionPlanTemplate(cacheKey, planTemplate);
-            }
-
             return planTemplate;
-        }
-
-        private string EncaseInMappedSubquery(string oldQuery)
-        {
-            IList<string> mappedColumnList = this.GetLastQueryMappedColumnList();
-
-            if (mappedColumnList == null || !mappedColumnList.Any())
-            {
-                return oldQuery;
-            }
-
-            StringBuilder stringBuilderSQL = new StringBuilder();
-
-            stringBuilderSQL.AppendLine("SELECT ");
-
-            foreach (var mapped in mappedColumnList)
-            {
-                stringBuilderSQL.AppendFormat("[{0}], ", mapped);
-            }
-
-            stringBuilderSQL.Remove(stringBuilderSQL.Length - 2, 2).AppendLine();
-
-            stringBuilderSQL.AppendLine("  FROM (");
-            stringBuilderSQL.AppendLine(oldQuery);
-            stringBuilderSQL.AppendLine(") AS EntitySubTable");
-
-            // Intentionally leaving out ; as it will added by calling entities
-
-            return stringBuilderSQL.ToString();
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)

@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <returns> an execution plan capable of retrieving the results of this query using the specified merge option </returns>
         internal abstract ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption);
 
-        internal virtual string GetExecutionPlanTemplate(bool tryCacheFirst, bool enCaseInSubQuery)
+        internal virtual ExecutionPlanTemplate GetExecutionPlanTemplate(bool tryCacheFirst)
         {
             throw new NotImplementedException();
         }
@@ -301,11 +301,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         // Must return a <see cref="TypeUsage" /> that describes the result typeof this query in terms of C-Space metadata
         // </returns>
         protected abstract TypeUsage GetResultType();
-
-        internal virtual IList<string> GetLastQueryMappedColumnList()
-        {
-            throw new NotImplementedException();
-        }
 
         // <summary>
         // Helper method to return the first non-null merge option from the specified nullable merge options,
