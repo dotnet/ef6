@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Reflection;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Text;
 
     // <summary>
     // Models a Linq to Entities ObjectQuery
@@ -185,7 +186,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return columnsPosNameMap;
         }
 
-        internal override string GetExecutionPlanTemplate(bool tryCacheFirst)
+        internal override string GetExecutionPlanTemplate(bool tryCacheFirst, bool enCaseInSubQuery)
         {
             string planTemplate = null;
             LinqQueryCacheKey cacheKey = null;
@@ -267,6 +268,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
             if (string.IsNullOrEmpty(planTemplate))
             {
                 planTemplate = this.GetExecutionPlan(null).ToTraceString();
+
+                if (enCaseInSubQuery)
+                {
+                    planTemplate = this.EncaseInMappedSubquery(planTemplate);
+                }
             }
 
             if (tryCacheFirst && cacheKey != null)
@@ -275,6 +281,35 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             return planTemplate;
+        }
+
+        private string EncaseInMappedSubquery(string oldQuery)
+        {
+            IList<string> mappedColumnList = this.GetLastQueryMappedColumnList();
+
+            if (mappedColumnList == null || !mappedColumnList.Any())
+            {
+                return oldQuery;
+            }
+
+            StringBuilder stringBuilderSQL = new StringBuilder();
+
+            stringBuilderSQL.AppendLine("SELECT ");
+
+            foreach (var mapped in mappedColumnList)
+            {
+                stringBuilderSQL.AppendFormat("[{0}], ", mapped);
+            }
+
+            stringBuilderSQL.Remove(stringBuilderSQL.Length - 2, 2).AppendLine();
+
+            stringBuilderSQL.AppendLine("  FROM (");
+            stringBuilderSQL.AppendLine(oldQuery);
+            stringBuilderSQL.AppendLine(") AS EntitySubTable");
+
+            // Intentionally leaving out ; as it will added by calling entities
+
+            return stringBuilderSQL.ToString();
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
