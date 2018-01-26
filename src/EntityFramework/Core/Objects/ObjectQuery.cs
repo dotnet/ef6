@@ -216,16 +216,10 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>Returns the commands to execute against the data source.</summary>
         /// <returns>A string that represents the commands that the query executes against the data source.</returns> 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public string GetExecutionPlanAsString()
+        public string GetExecutionPlanTemplate()
         {
-            var plan = _state.GetCachedStaticExecutionPlan();
-
-            if (!string.IsNullOrEmpty(plan))
-            {
-                return plan;
-            }
-
-            return this.ToTraceString();
+            // Get the cached template first, if there is one. We do not need to generate a new ExecutionPlan.
+             return _state.GetExecutionPlanTemplate();
         }
 
         /// <summary>Returns the mapped result column name.</summary>

@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <returns> an execution plan capable of retrieving the results of this query using the specified merge option </returns>
         internal abstract ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption);
 
-        internal virtual string GetCachedStaticExecutionPlan()
+        internal virtual string GetExecutionPlanTemplate()
         {
             throw new NotImplementedException();
         }

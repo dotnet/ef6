@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return columnsPosNameMap;
         }
 
-        internal override string GetCachedStaticExecutionPlan()
+        internal override string GetExecutionPlanTemplate()
         {
             // Translate LINQ expression to a DbExpression
             var converter = CreateExpressionConverter();
@@ -257,7 +257,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            return StaticQueryCacheManager.Instance.GetStaticQueryPlan(cacheKey);
+            var stringPlanTemplate = QueryTemplateCacheManager.Instance.GetExecutionPlanTemplate(cacheKey);
+
+            if (string.IsNullOrEmpty(stringPlanTemplate))
+            {
+                stringPlanTemplate = this.GetExecutionPlan(null).ToTraceString();
+
+                QueryTemplateCacheManager.Instance.AddExecutionPlanTemplate(cacheKey, stringPlanTemplate);
+            }
+
+            return stringPlanTemplate;
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)

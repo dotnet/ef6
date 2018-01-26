@@ -2,22 +2,26 @@
 {
     using System.Collections.Concurrent;
 
-    internal class StaticQueryCacheManager
+    internal class QueryTemplateCacheManager
     {
         private readonly ConcurrentDictionary<LinqQueryCacheKey, string> staticCommandCache = new ConcurrentDictionary<LinqQueryCacheKey, string>();
 
-        public static StaticQueryCacheManager Instance { get; } = new StaticQueryCacheManager();
+        public static QueryTemplateCacheManager Instance { get; } = new QueryTemplateCacheManager();
 
-        public string GetStaticQueryPlan(LinqQueryCacheKey key)
+        public string GetExecutionPlanTemplate(LinqQueryCacheKey key)
         {
             string cachedStaticQueryPlan = null;
             if (this.staticCommandCache.TryGetValue(key, out cachedStaticQueryPlan))
             {
                 return cachedStaticQueryPlan;
-
             }
 
             return null;
+        }
+
+        public void AddExecutionPlanTemplate(LinqQueryCacheKey key, string queryTemplate)
+        {
+            this.staticCommandCache.TryAdd(key, queryTemplate);
         }
     }
 }
