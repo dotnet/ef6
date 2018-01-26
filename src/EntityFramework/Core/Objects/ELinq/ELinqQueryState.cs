@@ -185,84 +185,92 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return columnsPosNameMap;
         }
 
-        internal override string GetExecutionPlanTemplate()
+        internal override string GetExecutionPlanTemplate(bool tryCacheFirst)
         {
-            // Translate LINQ expression to a DbExpression
-            var converter = CreateExpressionConverter();
-            var queryExpression = converter.Convert();
-
-            // This delegate tells us when a part of the expression tree has changed requiring a recompile.
-            _recompileRequired = converter.RecompileRequired;
-
-            // Determine the merge option, with the following precedence:
-            // 1. A merge option was specified explicitly as the argument to Execute(MergeOption).
-            // 2. The user has set the MergeOption property on the ObjectQuery instance.
-            // 3. A merge option has been extracted from the 'root' query and propagated to the root of the expression tree.
-            // 4. The global default merge option.
-            var mergeOption = EnsureMergeOption(
-                MergeOption.AppendOnly,
-                UserSpecifiedMergeOption,
-                converter.PropagatedMergeOption);
-
-            _useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
-
-            // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
-            _linqParameters = converter.GetParameters();
-            if (_linqParameters != null
-                && _linqParameters.Any())
-            {
-                var currentParams = EnsureParameters();
-                currentParams.SetReadOnly(false);
-                foreach (var pair in _linqParameters)
-                {
-                    // Note that it is safe to add the parameter directly only
-                    // because parameters are cloned before they are added to the
-                    // converter's parameter collection, or they came from this
-                    // instance's parameter collection in the first place.
-                    var convertedParam = pair.Item1;
-                    currentParams.Add(convertedParam);
-                }
-                currentParams.SetReadOnly(true);
-            }
-
-            // Try retrieving the execution plan from the global query cache (if plan caching is enabled).
+            string planTemplate = null;
             LinqQueryCacheKey cacheKey = null;
-            // Create a new cache key that reflects the current state of the Parameters collection
-            // and the Span object (if any), and uses the specified merge option.
-            string expressionKey;
-            if (ExpressionKeyGen.TryGenerateKey(queryExpression, out expressionKey))
-            {
-                cacheKey = new LinqQueryCacheKey(
-                    expressionKey,
-                    (null == Parameters ? 0 : Parameters.Count),
-                    (null == Parameters ? null : Parameters.GetCacheKey()),
-                    (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
-                    mergeOption,
-                    EffectiveStreamingBehavior,
-                    _useCSharpNullComparisonBehavior,
-                    ElementType);
-            }
 
-            // Evaluate parameter values for the query.
-            if (_linqParameters != null)
+            if (tryCacheFirst)
             {
-                foreach (var pair in _linqParameters)
+                // Translate LINQ expression to a DbExpression
+                var converter = CreateExpressionConverter();
+                var queryExpression = converter.Convert();
+
+                // This delegate tells us when a part of the expression tree has changed requiring a recompile.
+                _recompileRequired = converter.RecompileRequired;
+
+                // Determine the merge option, with the following precedence:
+                // 1. A merge option was specified explicitly as the argument to Execute(MergeOption).
+                // 2. The user has set the MergeOption property on the ObjectQuery instance.
+                // 3. A merge option has been extracted from the 'root' query and propagated to the root of the expression tree.
+                // 4. The global default merge option.
+                var mergeOption = EnsureMergeOption(
+                    MergeOption.AppendOnly,
+                    UserSpecifiedMergeOption,
+                    converter.PropagatedMergeOption);
+
+                _useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+
+                // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
+                _linqParameters = converter.GetParameters();
+                if (_linqParameters != null
+                    && _linqParameters.Any())
                 {
-                    var parameter = pair.Item1;
-                    var parameterExpression = pair.Item2;
-                    if (null != parameterExpression)
+                    var currentParams = EnsureParameters();
+                    currentParams.SetReadOnly(false);
+                    foreach (var pair in _linqParameters)
                     {
-                        parameter.Value = parameterExpression.EvaluateParameter(null);
+                        // Note that it is safe to add the parameter directly only
+                        // because parameters are cloned before they are added to the
+                        // converter's parameter collection, or they came from this
+                        // instance's parameter collection in the first place.
+                        var convertedParam = pair.Item1;
+                        currentParams.Add(convertedParam);
+                    }
+                    currentParams.SetReadOnly(true);
+                }
+
+                // Try retrieving the execution plan from the global query cache (if plan caching is enabled).
+                // Create a new cache key that reflects the current state of the Parameters collection
+                // and the Span object (if any), and uses the specified merge option.
+                string expressionKey;
+                if (ExpressionKeyGen.TryGenerateKey(queryExpression, out expressionKey))
+                {
+                    cacheKey = new LinqQueryCacheKey(
+                        expressionKey,
+                        (null == Parameters ? 0 : Parameters.Count),
+                        (null == Parameters ? null : Parameters.GetCacheKey()),
+                        (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
+                        mergeOption,
+                        EffectiveStreamingBehavior,
+                        _useCSharpNullComparisonBehavior,
+                        ElementType);
+                }
+
+                // Evaluate parameter values for the query.
+                if (_linqParameters != null)
+                {
+                    foreach (var pair in _linqParameters)
+                    {
+                        var parameter = pair.Item1;
+                        var parameterExpression = pair.Item2;
+                        if (null != parameterExpression)
+                        {
+                            parameter.Value = parameterExpression.EvaluateParameter(null);
+                        }
                     }
                 }
-            }
 
-            var planTemplate = ExecutionPlanTemplateManager.Instance.GetExecutionPlanTemplate(cacheKey);
+                planTemplate = ExecutionPlanTemplateManager.Instance.GetExecutionPlanTemplate(cacheKey);
+            }
 
             if (string.IsNullOrEmpty(planTemplate))
             {
                 planTemplate = this.GetExecutionPlan(null).ToTraceString();
+            }
 
+            if (tryCacheFirst && cacheKey != null)
+            {
                 ExecutionPlanTemplateManager.Instance.AddExecutionPlanTemplate(cacheKey, planTemplate);
             }
 
