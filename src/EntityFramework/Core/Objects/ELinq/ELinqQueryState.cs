@@ -257,16 +257,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            var stringPlanTemplate = QueryTemplateCacheManager.Instance.GetExecutionPlanTemplate(cacheKey);
+            var planTemplate = ExecutionPlanTemplateManager.Instance.GetExecutionPlanTemplate(cacheKey);
 
-            if (string.IsNullOrEmpty(stringPlanTemplate))
+            if (string.IsNullOrEmpty(planTemplate))
             {
-                stringPlanTemplate = this.GetExecutionPlan(null).ToTraceString();
+                planTemplate = this.GetExecutionPlan(null).ToTraceString();
 
-                QueryTemplateCacheManager.Instance.AddExecutionPlanTemplate(cacheKey, stringPlanTemplate);
+                ExecutionPlanTemplateManager.Instance.AddExecutionPlanTemplate(cacheKey, planTemplate);
             }
 
-            return stringPlanTemplate;
+            return planTemplate;
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
