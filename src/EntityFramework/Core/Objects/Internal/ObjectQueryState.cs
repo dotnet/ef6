@@ -304,7 +304,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal virtual IList<string> GetLastQueryMappedColumnList()
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         // <summary>
