@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
             {
                 return false;
             }
-            return _columnMapKey.Equals(other._columnMapKey, _stringComparison)
+            return _columnMapKey.Equals(other._columnMapKey, stringComparison)
                    && _mergeOption == other._mergeOption
                    && _isValueLayer == other._isValueLayer
                    && _streaming == other._streaming;

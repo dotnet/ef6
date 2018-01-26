@@ -18,6 +18,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Threading;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.QueryCache;
 
     /// <summary>
     /// This class implements untyped queries at the object-layer.
@@ -217,6 +218,11 @@ namespace System.Data.Entity.Core.Objects
         /// A List of column names.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        public LinqQueryCacheKey GetCacheKey()
+        {
+            return _state.GetCacheKey();
+        }
+
         public IList<string> GetLastQueryMappedColumnList()
         {
             return _state.GetLastQueryMappedColumnList();
