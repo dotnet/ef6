@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return columnsPosNameMap;
         }
 
-        internal override LinqQueryCacheKey GetCacheKey()
+        internal override string GetCachedStaticExecutionPlan()
         {
             // Translate LINQ expression to a DbExpression
             var converter = CreateExpressionConverter();
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            return cacheKey;
+            return StaticQueryCacheManager.Instance.GetStaticQueryPlan(cacheKey);
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)

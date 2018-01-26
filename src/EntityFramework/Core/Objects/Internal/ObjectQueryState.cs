@@ -276,7 +276,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <returns> an execution plan capable of retrieving the results of this query using the specified merge option </returns>
         internal abstract ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption);
 
-        internal abstract LinqQueryCacheKey GetCacheKey();
+        internal virtual string GetCachedStaticExecutionPlan()
+        {
+            throw new NotImplementedException();
+        }
 
         // <summary>
         // Must returns a new ObjectQueryState instance that is a duplicate of this instance and additionally contains the specified Include path in its

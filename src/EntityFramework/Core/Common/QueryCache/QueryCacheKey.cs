@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
     // <summary>
     // represents an abstract cache key
     // </summary>
-    public abstract class QueryCacheKey
+    internal abstract class QueryCacheKey
     {
         #region Constants
 
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         // <summary>
         // default string comparison kind - Ordinal
         // </summary>
-        protected static StringComparison stringComparison = StringComparison.Ordinal;
+        protected static StringComparison _stringComparison = StringComparison.Ordinal;
 
         #endregion
 
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         // </summary>
         protected virtual bool Equals(string s, string t)
         {
-            return String.Equals(s, t, stringComparison);
+            return String.Equals(s, t, _stringComparison);
         }
 
         #endregion

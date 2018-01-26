@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
     // <summary>
     // Represents an ELinq-based ObjectQuery Cache key context
     // </summary>
-    public sealed class LinqQueryCacheKey : QueryCacheKey
+    internal sealed class LinqQueryCacheKey : QueryCacheKey
     {
         // <summary>
         // Aggregate hashcode based the hashcode of the properties of this cache key

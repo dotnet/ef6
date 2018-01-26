@@ -127,10 +127,6 @@ namespace System.Data.Entity.Core.Objects
             ApplySettingsTo(retState);
             return retState;
         }
-        internal override LinqQueryCacheKey GetCacheKey()
-        {
-            throw new NotImplementedException();
-        }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
         {

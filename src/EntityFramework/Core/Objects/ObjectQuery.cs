@@ -213,16 +213,26 @@ namespace System.Data.Entity.Core.Objects
             return _state.GetExecutionPlan(null).ToTraceString();
         }
 
+        /// <summary>Returns the commands to execute against the data source.</summary>
+        /// <returns>A string that represents the commands that the query executes against the data source.</returns> 
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        public string GetExecutionPlanAsString()
+        {
+            var plan = _state.GetCachedStaticExecutionPlan();
+
+            if (!string.IsNullOrEmpty(plan))
+            {
+                return plan;
+            }
+
+            return this.ToTraceString();
+        }
+
         /// <summary>Returns the mapped result column name.</summary>
         /// <returns>
         /// A List of column names.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public LinqQueryCacheKey GetCacheKey()
-        {
-            return _state.GetCacheKey();
-        }
-
         public IList<string> GetLastQueryMappedColumnList()
         {
             return _state.GetLastQueryMappedColumnList();
