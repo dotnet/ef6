@@ -215,6 +215,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns the commands to execute against the data source.</summary>
         /// <returns>A string that represents the commands that the query executes against the data source.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public ExecutionPlanTemplate GetExecutionPlanTemplate()
         {
             // Get the cached template first, if there is one. We do not need to generate a new ExecutionPlan.
