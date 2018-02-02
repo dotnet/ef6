@@ -89,8 +89,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return converter.Convert().ResultType;
         }
 
-        
-
         private static IList<string> GetMappedColumnList(ObjectQueryExecutionPlan plan)
         {
             // Get the column name position map in cspace.
