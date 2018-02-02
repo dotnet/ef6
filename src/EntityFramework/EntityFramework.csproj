@@ -116,7 +116,6 @@
       <Link>Utilities\PropertyInfoExtensions.cs</Link>
     </Compile>
     <Compile Include="Core\Common\QueryCache\ExecutionPlanTemplate.cs" />
-    <Compile Include="Core\Common\QueryCache\ExecutionPlanTemplateManager.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingComposableHelper.cs" />
     <Compile Include="Core\Mapping\FunctionImportResultMapping.cs" />
     <Compile Include="Core\Mapping\IsNullConditionMapping.cs" />

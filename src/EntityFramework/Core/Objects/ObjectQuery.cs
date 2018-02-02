@@ -215,10 +215,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns the commands to execute against the data source.</summary>
         /// <returns>A string that represents the commands that the query executes against the data source.</returns>
-        public ExecutionPlanTemplate GetExecutionPlanTemplate(bool tryCacheFirst)
+        public ExecutionPlanTemplate GetExecutionPlanTemplate()
         {
             // Get the cached template first, if there is one. We do not need to generate a new ExecutionPlan.
-            return _state.GetExecutionPlanTemplate(tryCacheFirst);
+            return _state.GetExecutionPlanTemplate();
         }
 
         /// <summary>Returns information about the result type of the query.</summary>
