@@ -140,7 +140,7 @@ namespace System.Data.Entity.Migrations.Extensions
 
             project.EditFile(path);
             Directory.CreateDirectory(Path.GetDirectoryName(absolutePath));
-            File.WriteAllText(absolutePath, contents);
+            File.WriteAllText(absolutePath, contents, Text.Encoding.UTF8);
 
             project.AddFile(path);
         }
