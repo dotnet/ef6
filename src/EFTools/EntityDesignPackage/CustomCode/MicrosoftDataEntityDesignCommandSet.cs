@@ -1299,9 +1299,30 @@ namespace Microsoft.Data.Entity.Design.Package
             return true;
         }
 
+        internal static string RegKeyConfirmDelete = "ShowConfirmDeleteDialog";
+
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)")]
         internal void OnMenuDelete(object sender, EventArgs e)
         {
+            // confirm user wants to delete (see Accessibility bugs 457903 & 457904)
+            bool displayConfirmDeleteDialog = true;
+            var shouldConfirmDelete = EdmUtils.GetUserSetting(RegKeyConfirmDelete);
+            if (!string.IsNullOrEmpty(shouldConfirmDelete))
+            {
+                bool.TryParse(shouldConfirmDelete, out displayConfirmDeleteDialog);
+            }
+            if (displayConfirmDeleteDialog
+                && DismissableWarningDialog.ShowWarningDialogAndSaveDismissOption(
+                    DialogsResource.ConfirmDeleteDialog_Title,
+                    DialogsResource.ConfirmDeleteDialog_DescriptionLabel_Text,
+                    RegKeyConfirmDelete,
+                    DismissableWarningDialog.ButtonMode.YesNo))
+            {
+                    return;
+            }
+
             var diagram = GetDiagram();
             if (diagram != null
                 && ((diagram.Partition.GetLocks() & Locks.Delete) == Locks.Delete))
