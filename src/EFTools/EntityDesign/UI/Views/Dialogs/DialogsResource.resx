@@ -430,4 +430,10 @@ The exception message is:
   <data name="NewFunctionImportDialog_IsComposableTooltipText" xml:space="preserve">
     <value>Editing composable Function Imports is not supported for EDMX files with version less than or equal to {0}</value>
   </data>
+  <data name="ConfirmDeleteDialog_DescriptionLabel_Text" xml:space="preserve">
+    <value>Are you sure you want to delete these items?</value>
+  </data>
+  <data name="ConfirmDeleteDialog_Title" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
 </root>
