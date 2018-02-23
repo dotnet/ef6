@@ -1563,14 +1563,6 @@ namespace Microsoft.Data.Entity.Design.Package
                         }
                     }
                 }
-                else
-                {
-                    // Add delete command for the entity type to the queue.
-                    foreach (var efElement in toBeDeletedElements)
-                    {
-                        commands.Add(efElement.GetDeleteCommand());
-                    }
-                }
             }
         }
 
