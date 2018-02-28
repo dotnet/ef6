@@ -67,6 +67,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             Wizard.EnableButton(ButtonType.Next, _state != RuntimeConfigState.Error);
 
             base.OnActivated();
+
+            versionsPanel.Controls.OfType<RadioButton>()
+                .FirstOrDefault(b => b.Checked)?.Select();
         }
 
         public override bool OnDeactivate()
