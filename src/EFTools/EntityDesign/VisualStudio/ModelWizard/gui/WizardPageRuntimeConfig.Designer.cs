@@ -69,20 +69,12 @@
             resources.ApplyResources(this.notificationLabel, "notificationLabel");
             this.notificationLabel.Name = "notificationLabel";
             // 
-            // tableLayoutPanel1
+            // notificationLinkLabel
             // 
-            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
-            this.tableLayoutPanel1.Controls.Add(this.notificationPanel, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.versionsPanel, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.promptLabel, 0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            // 
-            // notificationPanel
-            // 
-            resources.ApplyResources(this.notificationPanel, "notificationPanel");
-            this.notificationPanel.Controls.Add(this.notificationPictureBox, 0, 0);
-            this.notificationPanel.Controls.Add(this.tableLayoutPanel2, 1, 0);
-            this.notificationPanel.Name = "notificationPanel";
+            resources.ApplyResources(this.notificationLinkLabel, "notificationLinkLabel");
+            this.notificationLinkLabel.Name = "notificationLinkLabel";
+            this.notificationLinkLabel.TabStop = true;
+            this.notificationLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HandleLinkClicked);
             // 
             // tableLayoutPanel2
             // 
@@ -91,12 +83,20 @@
             this.tableLayoutPanel2.Controls.Add(this.notificationLinkLabel, 0, 1);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             // 
-            // notificationLinkLabel
+            // notificationPanel
             // 
-            resources.ApplyResources(this.notificationLinkLabel, "notificationLinkLabel");
-            this.notificationLinkLabel.Name = "notificationLinkLabel";
-            this.notificationLinkLabel.TabStop = true;
-            this.notificationLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.HandleLinkClicked);
+            resources.ApplyResources(this.notificationPanel, "notificationPanel");
+            this.notificationPanel.Controls.Add(this.notificationPictureBox, 0, 0);
+            this.notificationPanel.Controls.Add(this.tableLayoutPanel2, 1, 0);
+            this.notificationPanel.Name = "notificationPanel";
+            // 
+            // tableLayoutPanel1
+            // 
+            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
+            this.tableLayoutPanel1.Controls.Add(this.promptLabel, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.versionsPanel, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.notificationPanel, 0, 2);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // WizardPageRuntimeConfig
             // 
@@ -106,11 +106,11 @@
             this.Controls.SetChildIndex(this.infoPanel, 0);
             this.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
             ((System.ComponentModel.ISupportInitialize)(this.notificationPictureBox)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.notificationPanel.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.notificationPanel.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
