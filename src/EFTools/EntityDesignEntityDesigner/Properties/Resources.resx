@@ -521,4 +521,7 @@ The Entity Framework is not available in the target framework currently specifie
   <data name="IsInAssociationWith" xml:space="preserve">
     <value>{0} is in an association with {1}</value>
   </data>
+  <data name="AccHelp_EntityType" xml:space="preserve">
+    <value>Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys.</value>
+  </data>
 </root>
