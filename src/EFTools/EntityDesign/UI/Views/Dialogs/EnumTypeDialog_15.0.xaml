@@ -163,12 +163,12 @@
               ToolTip="{x:Static ded:Resources.PropertyWindow_Description_EnumUnderlyingType}"/>
 
       <DataGrid Grid.Column="0" Grid.Row="4" HorizontalAlignment="Stretch"
-                Name="dgEnumTypeMembers" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Members}"
-                CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False"
-                HorizontalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}" VerticalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}"
-                AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_AccEnumTypeMembers}"
-                Margin="5,10,5,5"
-                Loaded="DgEnumTypeMembers_OnLoaded">>
+              Name="dgEnumTypeMembers" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Members}"
+              CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False"
+              HorizontalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}" VerticalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}"
+              AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_AccEnumTypeMembers}"
+              Margin="5,10,5,5"
+              Loaded="DgEnumTypeMembers_OnLoaded">
         <DataGrid.RowValidationRules>
           <vm:RowDataInfoValidationRule ValidationStep="UpdatedValue" />
         </DataGrid.RowValidationRules>
