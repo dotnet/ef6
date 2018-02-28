@@ -48,7 +48,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             this.treeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeView.CheckBoxes = true;
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.HideSelection = false;
+            this.treeView.HideSelection = true;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
             this.treeView.Size = new System.Drawing.Size(397, 200);
