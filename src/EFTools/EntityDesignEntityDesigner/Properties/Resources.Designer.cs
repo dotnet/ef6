@@ -915,6 +915,15 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} is in an association with {1}.
+        /// </summary>
+        internal static string IsInAssociationWith {
+            get {
+                return ResourceManager.GetString("IsInAssociationWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is inherited from {1}.
         /// </summary>
         internal static string IsInheritedFrom {

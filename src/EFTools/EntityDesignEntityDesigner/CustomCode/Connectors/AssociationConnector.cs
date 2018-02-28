@@ -123,33 +123,28 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             get
             {
-                var o = ModelElement;
-                if (o == null)
+                var sourceEntityTypeName = Properties.Resources.Acc_Unnamed;
+                var targetEntityTypeName = Properties.Resources.Acc_Unnamed;
+
+                if (ModelElement != null)
                 {
-                    return Properties.Resources.Acc_Unnamed;
+                    if (ModelElement.SourceEntityType != null
+                        && !string.IsNullOrEmpty(ModelElement.SourceEntityType.Name))
+                    {
+                        sourceEntityTypeName = ModelElement.SourceEntityType.Name;
+                    }
+
+                    if (ModelElement.TargetEntityType != null
+                        && !string.IsNullOrEmpty(ModelElement.TargetEntityType.Name))
+                    {
+                        targetEntityTypeName = ModelElement.TargetEntityType.Name;
+                    }
                 }
 
-                // DevDiv Bugs 75962: Use the diagram object name for its AccessibleName.
-                if (!string.IsNullOrEmpty(o.Name))
-                {
-                    return o.Name;
-                }
-
-                if (o.SourceEntityType == null
-                    ||
-                    string.IsNullOrEmpty(o.SourceEntityType.Name))
-                {
-                    return Properties.Resources.Acc_Unnamed;
-                }
-
-                if (o.TargetEntityType == null
-                    ||
-                    string.IsNullOrEmpty(o.TargetEntityType.Name))
-                {
-                    return o.SourceEntityType.Name + "." + Properties.Resources.Acc_Unnamed;
-                }
-
-                return o.SourceEntityType.Name + "." + o.TargetEntityType.Name;
+                return string.Format(CultureInfo.CurrentCulture,
+                    Properties.Resources.IsInAssociationWith,
+                    sourceEntityTypeName,
+                    targetEntityTypeName);
             }
         }
 
