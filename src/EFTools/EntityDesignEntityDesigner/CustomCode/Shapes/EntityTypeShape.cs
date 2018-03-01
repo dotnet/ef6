@@ -641,6 +641,16 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             }
         }
 
+        public override string AccessibleHelp
+        {
+            get
+            {
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.AccHelp_EntityType);
+            }
+        }
+
         /// <summary>
         ///     Remove shadow from the entity type shape.
         /// </summary>

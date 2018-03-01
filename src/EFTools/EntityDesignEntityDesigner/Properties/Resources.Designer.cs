@@ -151,6 +151,15 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys..
+        /// </summary>
+        internal static string AccHelp_EntityType {
+            get {
+                return ResourceManager.GetString("AccHelp_EntityType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string AccName_EntityTypeHeader {
@@ -911,6 +920,15 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         internal static string ImageFormatTiff {
             get {
                 return ResourceManager.GetString("ImageFormatTiff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is in an association with {1}.
+        /// </summary>
+        internal static string IsInAssociationWith {
+            get {
+                return ResourceManager.GetString("IsInAssociationWith", resourceCulture);
             }
         }
         

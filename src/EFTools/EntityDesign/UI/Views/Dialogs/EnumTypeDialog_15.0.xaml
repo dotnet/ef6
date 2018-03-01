@@ -206,8 +206,8 @@
         
       <Border MaxWidth="{Binding ElementName=chkIsFlag,Path=ActualWidth}" Grid.Column="0" Grid.Row="7" Margin="0,0,0,0" BorderThickness="0,0,0,0">
         <TextBox Margin="23,5,5,5" Name="txtExternalType" HorizontalAlignment="Left" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_ExternalTypeLabel}"
-                 Width="230px" ToolTip="{x:Static ded:Resources.PropertyWindow_Description_EnumExternalTypeAttribute}"
-                 Style="{StaticResource ExternalTypeNameStyle}" IsReadOnly="{Binding Path=IsChecked, ElementName=chkReferenceExternalType, Converter={StaticResource InverseBooleanConverter}}"
+                 Width="230px" Style="{StaticResource ExternalTypeNameStyle}"
+                 IsReadOnly="{Binding Path=IsChecked, ElementName=chkReferenceExternalType, Converter={StaticResource InverseBooleanConverter}}"
                  TextChanged="OnTextBoxTextChanged" LostFocus="OnTextBoxLostFocus">
             <TextBox.Text>
               <Binding Path="ExternalTypeName">
