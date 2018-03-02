@@ -10883,7 +10883,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         private void GetAccessibilityTextFields(
             int row, int column, ref VirtualTreeItemInfo info, out string name, out string value, out string description,
-            out string helpFile, out int helpId, out AccessibleStates state, out bool contentIsCheckBox)
+            out string helpFile, out int helpId, out AccessibleStates state, out bool contentIsCheckBox, out string helpText)
         {
             var accData = info.Branch.GetAccessibilityData(info.Row, info.Column);
             helpFile = accData.HelpFile;
@@ -10892,6 +10892,11 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                 helpFile = string.Empty;
             }
             helpId = accData.HelpContextId;
+            helpText = accData.HelpText;
+            if (helpText == null)
+            {
+                helpText = string.Empty;
+            }
             AccessibilityReplacementField[] replacementFields;
             var locValue = info.Branch.GetAccessibleValue(info.Row, info.Column);
             var locName = accData.NameFormatString;
@@ -11602,6 +11607,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             protected readonly string myName;
             protected readonly string myValue;
             protected readonly string myDescription;
+            protected readonly string myHelpText;
             protected readonly string myHelpFile;
             protected readonly int myHelpId;
             protected readonly int myRow;
@@ -11677,7 +11683,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                 myCtl = ctl;
                 ctl.GetAccessibilityTextFields(
                     row, displayColumn, ref info, out myName, out myValue, out myDescription, out myHelpFile, out myHelpId, out myState,
-                    out myCheckBoxContent);
+                    out myCheckBoxContent, out myHelpText);
                 myRow = row;
                 myDisplayColumn = displayColumn;
                 myNativeColumn = nativeColumn;
@@ -11713,6 +11719,11 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             public override string Description
             {
                 get { return myDescription; }
+            }
+
+            public override string Help
+            {
+                get { return myHelpText; }
             }
 
             public override int GetHelpTopic(out string fileName)
