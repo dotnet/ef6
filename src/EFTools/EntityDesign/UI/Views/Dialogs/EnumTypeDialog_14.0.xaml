@@ -41,57 +41,50 @@
         </VisualBrush.Visual>
       </VisualBrush>
 
-      <!-- Base style for all text-boxes -->
-      <Style x:Key="BaseTextBoxStyle" TargetType="TextBox">
-          <Setter Property="Validation.ErrorTemplate">
-              <Setter.Value>
-                  <ControlTemplate>
-                    <DockPanel LastChildFill="True">
-                      <AdornedElementPlaceholder Name="customAdorner"/>
-                      <Image Source="{StaticResource WarningPngIcon}" Margin="3,0,3,0" VerticalAlignment="Center"
-                             AutomationProperties.Name="WarningError" Stretch="None" ToolTip="{Binding ElementName=customAdorner, 
-                                       Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
-                    </DockPanel>
-                  </ControlTemplate>
-              </Setter.Value>
-          </Setter>
-          <Style.Triggers>
-              <Trigger Property="Validation.HasError" Value="true">
-                  <Setter Property="Background" Value="{DynamicResource VsBrush.ControlEditRequiredBackground}" />
-                  <Setter Property="Foreground" Value="{DynamicResource VsBrush.ControlEditRequiredHintText}" />
-                  <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
-               </Trigger>
-          </Style.Triggers>
+      <Style x:Key="ErrorImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="AutomationProperties.Name" Value="{x:Static ded:Resources.EnumDialog_Error_AccName}" />
+        <Setter Property="Source" Value="{StaticResource WarningPngIcon}" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="Stretch" Value="None" />
+        <Setter Property="VerticalAlignment" Value="Center" />
       </Style>
 
-      <!-- Style for external type name text-box -->
-      <Style x:Key="ExternalTypeNameStyle" TargetType="TextBox" BasedOn="{StaticResource BaseTextBoxStyle}">
+      <Style x:Key="BasePopupStyle" TargetType="{x:Type Popup}">
+        <Setter Property="AutomationProperties.Name" Value="{x:Static ded:Resources.EnumDialog_Error_AccName}" />
+        <Setter Property="Margin" Value="3,3,3,3" />
+        <Setter Property="Placement" Value="Bottom" />
+        <Setter Property="VerticalOffset" Value="6" />
+      </Style>
+
+      <Style x:Key="EnumTypeNamePopupStyle" TargetType="{x:Type Popup}" BasedOn="{StaticResource BasePopupStyle}">
+        <Setter Property="PlacementTarget" Value="{Binding ElementName=txtEnumTypeNameWarningImage}" />
         <Style.Triggers>
-          <MultiTrigger>
-            <MultiTrigger.Conditions>
-              <Condition Property="Text" Value="" />
-              <!-- <Condition Property="IsKeyboardFocusWithin" Value="False"/> -->
-            </MultiTrigger.Conditions>
-            <Setter Property="Background" Value="{StaticResource ExternalTypeHint}"/>
-          </MultiTrigger>
-          <Trigger Property="Validation.HasError" Value="true">
-            <Setter Property="Background" Value="{DynamicResource VsBrush.ControlEditRequiredBackground}" />
-            <Setter Property="Foreground" Value="{DynamicResource VsBrush.ControlEditRequiredHintText}" />
-            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
-          </Trigger>
-          <Trigger Property="Visibility" Value="Visible">
-            <Trigger.EnterActions>
-              <BeginStoryboard>
-                <Storyboard>
-                  <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                   From="0"
-                                   To="1"
-                                   Duration="0:0:1" />
-                </Storyboard>
-              </BeginStoryboard>
-            </Trigger.EnterActions>
-          </Trigger>
-        </Style.Triggers>        
+          <DataTrigger Binding="{Binding ElementName=txtEnumTypeName, Path=(Validation.HasError)}" Value="true" >
+            <Setter Property="IsOpen" Value="true"/>
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+
+      <Style x:Key="ExternalTypePopupStyle" TargetType="{x:Type Popup}" BasedOn="{StaticResource BasePopupStyle}">
+        <Setter Property="PlacementTarget" Value="{Binding ElementName=txtExternalTypeWarningImage}" />
+        <Style.Triggers>
+          <DataTrigger Binding="{Binding ElementName=txtExternalType, Path=(Validation.HasError)}" Value="true" >
+            <Setter Property="IsOpen" Value="true"/>
+          </DataTrigger>
+        </Style.Triggers>
+      </Style>
+
+      <Style x:Key="PopupBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" />
+      </Style>
+
+      <Style x:Key="PopupTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}" />
+        <Setter Property="Margin" Value="4,3,4,3" />
+        <Setter Property="VerticalAlignment" Value="Center" />
       </Style>
 
       <Style TargetType="{x:Type DataGridRow}">
@@ -140,18 +133,52 @@
       <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static ded:Resources.EnumDialog_NameLabel}" 
                  VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,5,5,2"/>
 
-      <TextBox Grid.Column="0" Grid.Row="1" 
-               Name="txtEnumTypeName" HorizontalAlignment="Left" 
-               Margin="5,0,5,5" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_NameLabel}" 
-               Width="250px" TextChanged="OnTextBoxTextChanged" LostFocus="OnTextBoxLostFocus" Style="{StaticResource BaseTextBoxStyle}">
-        <TextBox.Text>
-          <Binding Path="Name">
-            <Binding.ValidationRules>
-              <vm:CellDataInfoValidationRule ValidationStep="UpdatedValue"/>
-            </Binding.ValidationRules>
-          </Binding>
-        </TextBox.Text>
-      </TextBox>
+      <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+        <TextBox Name="txtEnumTypeName" HorizontalAlignment="Left" 
+                 Margin="5,0,5,5" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_NameLabel}"
+                 Width="250px" TextChanged="OnTextBoxTextChanged" LostFocus="OnTextBoxLostFocus" >
+          <TextBox.Text>
+            <Binding Path="Name">
+              <Binding.ValidationRules>
+                <vm:CellDataInfoValidationRule ValidationStep="UpdatedValue"/>
+              </Binding.ValidationRules>
+            </Binding>
+          </TextBox.Text>
+          <TextBox.Style>
+            <Style TargetType="{x:Type TextBox}">
+              <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                  <Setter Property="Background" Value="{DynamicResource VsBrush.ControlEditRequiredBackground}" />
+                  <Setter Property="Foreground" Value="{DynamicResource VsBrush.ControlEditRequiredHintText}" />
+                  <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+          </TextBox.Style>
+        </TextBox>
+        <Image Name="txtEnumTypeNameWarningImage" Margin="3,0,3,5">
+          <Image.Style>
+            <Style TargetType="{x:Type Image}" BasedOn="{StaticResource ErrorImageStyle}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=txtEnumTypeName, Path=(Validation.HasError)}" Value="true" >
+                  <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=txtEnumTypeName, Path=(Validation.HasError)}" Value="false" >
+                  <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Image.Style>
+        </Image>
+        <Popup Style="{StaticResource EnumTypeNamePopupStyle}">
+          <Border Style="{StaticResource PopupBorderStyle}">
+            <TextBlock
+                AutomationProperties.Name="{Binding ElementName=txtEnumTypeName, Path=(Validation.Errors)[0].ErrorContent}"
+                Style="{StaticResource PopupTextBlockStyle}"
+                Text="{Binding ElementName=txtEnumTypeName, Path=(Validation.Errors)[0].ErrorContent}"/>
+          </Border>
+        </Popup>
+      </StackPanel>
 
       <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static ded:Resources.EnumDialog_UnderlyingTypeLabel}" Margin="5,2,5,2" />
 
@@ -203,12 +230,12 @@
       <CheckBox Content="{x:Static ded:Resources.EnumDialog_ExternalTypeLabel}" Grid.Column="0" Grid.Row="6"
                 Name="chkReferenceExternalType" VerticalAlignment="Center" Margin="8,5,5,2" Padding="8,0,5,0" IsChecked="{Binding Path=IsReferenceExternalType}"
                 ToolTip="{x:Static ded:Resources.PropertyWindow_Description_EnumExternalTypeAttribute}" Click="OnRefrenceExternalTypeClick"/>
-        
-      <Border MaxWidth="{Binding ElementName=chkIsFlag,Path=ActualWidth}" Grid.Column="0" Grid.Row="7" Margin="0,0,0,0" BorderThickness="0,0,0,0">
-        <TextBox Margin="23,5,5,5" Name="txtExternalType" HorizontalAlignment="Left" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_ExternalTypeLabel}"
-                 Width="230px" Style="{StaticResource ExternalTypeNameStyle}"
-                 IsReadOnly="{Binding Path=IsChecked, ElementName=chkReferenceExternalType, Converter={StaticResource InverseBooleanConverter}}"
-                 TextChanged="OnTextBoxTextChanged" LostFocus="OnTextBoxLostFocus">
+
+      <StackPanel Grid.Column="0" Grid.Row="7" Orientation="Horizontal">
+        <Border MaxWidth="{Binding ElementName=chkIsFlag,Path=ActualWidth}" Margin="0,0,0,0" BorderThickness="0,0,0,0">
+          <TextBox Margin="23,5,5,5" Name="txtExternalType" HorizontalAlignment="Left" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_ExternalTypeLabel}"
+                   Width="230px" IsReadOnly="{Binding Path=IsChecked, ElementName=chkReferenceExternalType, Converter={StaticResource InverseBooleanConverter}}"
+                   TextChanged="OnTextBoxTextChanged" LostFocus="OnTextBoxLostFocus">
             <TextBox.Text>
               <Binding Path="ExternalTypeName">
                 <Binding.ValidationRules>
@@ -216,16 +243,69 @@
                 </Binding.ValidationRules>
               </Binding>
             </TextBox.Text>
-        </TextBox>
-      </Border>
-    
+            <TextBox.Style>
+              <Style TargetType="{x:Type TextBox}">
+                <Style.Triggers>
+                  <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                      <Condition Property="Text" Value="" />
+                      <!-- <Condition Property="IsKeyboardFocusWithin" Value="False"/> -->
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="{StaticResource ExternalTypeHint}"/>
+                  </MultiTrigger>
+                  <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="Background" Value="{DynamicResource VsBrush.ControlEditRequiredBackground}" />
+                    <Setter Property="Foreground" Value="{DynamicResource VsBrush.ControlEditRequiredHintText}" />
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                  </Trigger>
+                  <Trigger Property="Visibility" Value="Visible">
+                    <Trigger.EnterActions>
+                      <BeginStoryboard>
+                        <Storyboard>
+                          <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                           From="0"
+                                           To="1"
+                                           Duration="0:0:1" />
+                        </Storyboard>
+                      </BeginStoryboard>
+                    </Trigger.EnterActions>
+                  </Trigger>
+                </Style.Triggers>
+              </Style>
+            </TextBox.Style>
+          </TextBox>
+        </Border>
+        <Image Name="txtExternalTypeWarningImage" Margin="3,0,3,2">
+          <Image.Style>
+            <Style TargetType="{x:Type Image}" BasedOn="{StaticResource ErrorImageStyle}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=txtExternalType, Path=(Validation.HasError)}" Value="true" >
+                  <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=txtExternalType, Path=(Validation.HasError)}" Value="false" >
+                  <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Image.Style>
+        </Image>
+        <Popup Style="{StaticResource ExternalTypePopupStyle}">
+          <Border Style="{StaticResource PopupBorderStyle}">
+            <TextBlock
+                AutomationProperties.Name="{Binding ElementName=txtExternalType, Path=(Validation.Errors)[0].ErrorContent}"
+                Style="{StaticResource PopupTextBlockStyle}"
+                Text="{Binding ElementName=txtExternalType, Path=(Validation.Errors)[0].ErrorContent}"/>
+          </Border>
+        </Popup>
+      </StackPanel>
+
       <StackPanel Grid.Column="0" Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
          <Button Name="btnOk"
                  Margin="5,15,5,5" MinWidth="70" IsDefault="True" 
                  Click="btnOk_Click" Content="{x:Static ded:Resources.EnumDialog_OkButtonLabel}"
                  IsEnabled="{Binding Path=IsValid}"
                  AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_OkButtonLabel}"/>
-        
+
         <Button Name="btnCancel" 
                 Margin="5,15,5,5" MinWidth="70" IsCancel="True" 
                 Click="btnCancel_Click" Content="{x:Static ded:Resources.EnumDialog_CancelButtonLabel}"
