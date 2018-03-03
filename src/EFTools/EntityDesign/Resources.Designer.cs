@@ -838,6 +838,15 @@ namespace Microsoft.Data.Entity.Design {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string EnumDialog_Error_AccName {
+            get {
+                return ResourceManager.GetString("EnumDialog_Error_AccName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name of referenced external type is required..
         /// </summary>
         public static string EnumDialog_ErrorEnterValueForExternalTypeName {
