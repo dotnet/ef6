@@ -68,8 +68,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
             base.OnActivated();
 
-            versionsPanel.Controls.OfType<RadioButton>()
-                .FirstOrDefault(b => b.Checked)?.Select();
+            var radioButton = versionsPanel.Controls
+                .OfType<RadioButton>().FirstOrDefault(b => b.Checked);
+            if (radioButton != null)
+            {
+                radioButton.Select();
+            }
         }
 
         public override bool OnDeactivate()
