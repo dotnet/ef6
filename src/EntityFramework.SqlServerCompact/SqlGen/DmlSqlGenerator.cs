@@ -670,6 +670,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 if (e.List.Count == 0)
                 {
                     Visit(DbExpressionBuilder.False);
+                    return;
                 }
 
                 e.Item.Accept(this);

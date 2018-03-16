@@ -815,6 +815,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 if (e.List.Count == 0)
                 {
                     Visit(DbExpressionBuilder.False);
+                    return;
                 }
 
                 e.Item.Accept(this);
