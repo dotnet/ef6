@@ -6,6 +6,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
@@ -805,6 +806,36 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         argument.Accept(this);
                     }
                 }
+            }
+
+            public override void Visit(DbInExpression e)
+            {
+                Check.NotNull(e, "e");
+
+                if (e.List.Count == 0)
+                {
+                    Visit(DbExpressionBuilder.False);
+                }
+
+                e.Item.Accept(this);
+                _commandText.Append(" IN (");
+
+                var first = true;
+                foreach (var item in e.List)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        _commandText.Append(", ");
+                    }
+
+                    item.Accept(this);
+                }
+
+                _commandText.Append(")");
             }
 
             private void VisitBinary(DbBinaryExpression expression, string separator)
