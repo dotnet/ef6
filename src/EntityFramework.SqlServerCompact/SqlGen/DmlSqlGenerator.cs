@@ -556,7 +556,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 Check.NotNull(expression, "expression");
 
                 _commandText.AppendKeyword("not (");
-                expression.Accept(this);
+                expression.Argument.Accept(this);
                 _commandText.Append(")");
             }
 
