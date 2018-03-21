@@ -36,22 +36,25 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _connection = entityConnection;
             _storeSchemaModelVersion = storeSchemaModelVersion;
 
-            var switchOffMetadataMergeJoins = false;
-            var metadataMergeJoinsAppSettings =
-                ConfigurationManager.AppSettings.GetValues(SwitchOffMetadataMergeJoins);
-            if (metadataMergeJoinsAppSettings != null)
+            if (needsMergeJoinHint)
             {
-                var metadataMergeJoinsAppSetting =
-                    metadataMergeJoinsAppSettings.FirstOrDefault();
-                if (metadataMergeJoinsAppSetting != null)
+                var switchOffMetadataMergeJoins = false;
+                var metadataMergeJoinsAppSettings =
+                    ConfigurationManager.AppSettings.GetValues(SwitchOffMetadataMergeJoins);
+                if (metadataMergeJoinsAppSettings != null)
                 {
-                    bool.TryParse(
-                        metadataMergeJoinsAppSetting, out switchOffMetadataMergeJoins);
+                    var metadataMergeJoinsAppSetting =
+                        metadataMergeJoinsAppSettings.FirstOrDefault();
+                    if (metadataMergeJoinsAppSetting != null)
+                    {
+                        bool.TryParse(
+                            metadataMergeJoinsAppSetting, out switchOffMetadataMergeJoins);
+                    }
                 }
-            }
-            if (!switchOffMetadataMergeJoins && needsMergeJoinHint)
-            {
-                _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
+                if (!switchOffMetadataMergeJoins)
+                {
+                    _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
+                }
             }
         }
 
