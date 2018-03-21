@@ -16,6 +16,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
     internal class ModelGenerator
     {
+        private const string SqlServerInvariantName = "System.Data.SqlClient";
         private readonly ModelBuilderSettings _settings;
         private readonly string _storeModelNamespace;
 
@@ -87,7 +88,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             return
                 new EntityStoreSchemaGeneratorDatabaseSchemaLoader(
                     connection,
-                    storeSchemaModelVersion);
+                    storeSchemaModelVersion,
+                    string.Equals(_settings.RuntimeProviderInvariantName, SqlServerInvariantName, StringComparison.Ordinal));
         }
 
         // internal virtual for testing

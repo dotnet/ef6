@@ -24,7 +24,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private readonly IDbCommandInterceptor _addOptionMergeJoinInterceptor;
 
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)")]
-        public EntityStoreSchemaGeneratorDatabaseSchemaLoader(EntityConnection entityConnection, Version storeSchemaModelVersion)
+        public EntityStoreSchemaGeneratorDatabaseSchemaLoader(
+            EntityConnection entityConnection,
+            Version storeSchemaModelVersion,
+            bool needsMergeJoinHint)
         {
             Debug.Assert(entityConnection != null, "entityConnection != null");
             Debug.Assert(entityConnection.State == ConnectionState.Closed, "expected closed connection");
@@ -46,11 +49,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                         metadataMergeJoinsAppSetting, out switchOffMetadataMergeJoins);
                 }
             }
-            if (!switchOffMetadataMergeJoins
-                && _connection != null
-                && typeof(System.Data.SqlClient.SqlConnection) == _connection.StoreConnection.GetType())
+            if (!switchOffMetadataMergeJoins && needsMergeJoinHint)
             {
-                    _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
+                _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
             }
         }
 
@@ -534,38 +535,13 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         /// which in turn causes bad performance running the queries above on large models.
         /// We can workaround this by directing SQL Server to use MERGE JOINs.
         /// </summary>
-        private sealed class AddOptionMergeJoinInterceptor : IDbCommandInterceptor
+        private sealed class AddOptionMergeJoinInterceptor : DbCommandInterceptor
         {
-            void IDbCommandInterceptor.NonQueryExecuted(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
-            {
-                // do nothing
-            }
-
-            void IDbCommandInterceptor.NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
-            {
-                // do nothing
-            }
-
-            void IDbCommandInterceptor.ReaderExecuted(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
-            {
-                // do nothing
-            }
-
             [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities",
                 Justification = "The user has no control over the text added to the SQL.")]
-            void IDbCommandInterceptor.ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
             {
                 command.CommandText = command.CommandText + Environment.NewLine + "OPTION (MERGE JOIN)";
-            }
-
-            void IDbCommandInterceptor.ScalarExecuted(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
-            {
-                // do nothing
-            }
-
-            void IDbCommandInterceptor.ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
-            {
-                // do nothing
             }
         }
     }

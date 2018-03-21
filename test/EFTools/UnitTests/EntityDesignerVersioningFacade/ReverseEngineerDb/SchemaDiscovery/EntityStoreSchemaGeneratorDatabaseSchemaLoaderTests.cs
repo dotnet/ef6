@@ -20,7 +20,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             var command =
                 new EntityStoreSchemaGeneratorDatabaseSchemaLoader(
                     new Mock<EntityConnection>().Object,
-                    EntityFrameworkVersion.Version3)
+                    EntityFrameworkVersion.Version3,
+                    false)
                     .CreateFilteredCommand(
                         "baseQuery",
                         "orderbyClause",
@@ -53,7 +54,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
             Func<Version, string> getCommandText = (version) =>
                                                    new EntityStoreSchemaGeneratorDatabaseSchemaLoader(
-                                                       new Mock<EntityConnection>().Object, version)
+                                                       new Mock<EntityConnection>().Object, version, false)
                                                        .CreateFunctionDetailsCommand(Enumerable.Empty<EntityStoreSchemaFilterEntry>())
                                                        .CommandText;
 
@@ -357,7 +358,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             }
 
             public EntityStoreSchemaGeneratorDatabaseSchemaLoaderFake(EntityCommand[] entityCommands)
-                : base(new Mock<EntityConnection>().Object, EntityFrameworkVersion.Version3)
+                : base(new Mock<EntityConnection>().Object, EntityFrameworkVersion.Version3, false)
             {
                 _entityCommands = entityCommands;
             }
