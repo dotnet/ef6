@@ -183,25 +183,31 @@
       <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static ded:Resources.EnumDialog_UnderlyingTypeLabel}" Margin="5,2,5,2" />
 
       <ComboBox Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Left" Name="cmbUnderlyingType"
-              Margin="5,0,5,5" Width="250px"
-              ItemsSource="{Binding Path=UnderlyingTypes}"
-              SelectedItem="{Binding Path=SelectedUnderlyingType,Mode=TwoWay}"
-              AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_UnderlyingTypeLabel}" 
-              ToolTip="{x:Static ded:Resources.PropertyWindow_Description_EnumUnderlyingType}"/>
+                Margin="5,0,5,5" Width="250px"
+                ItemsSource="{Binding Path=UnderlyingTypes}"
+                SelectedItem="{Binding Path=SelectedUnderlyingType,Mode=TwoWay}"
+                AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_UnderlyingTypeLabel}" 
+                ToolTip="{x:Static ded:Resources.PropertyWindow_Description_EnumUnderlyingType}"/>
 
       <DataGrid Grid.Column="0" Grid.Row="4" HorizontalAlignment="Stretch"
-              Name="dgEnumTypeMembers" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Members}"
-              CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False"
-              HorizontalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}" VerticalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}"
-              AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_AccEnumTypeMembers}"
-              Margin="5,10,5,5"
-              Loaded="DgEnumTypeMembers_OnLoaded">
+                Name="dgEnumTypeMembers" VerticalAlignment="Stretch" ItemsSource="{Binding Path=Members}"
+                CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False"
+                HorizontalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}"
+                VerticalGridLinesBrush="{DynamicResource VsBrush.ThreeDFace}"
+                AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_AccEnumTypeMembers}"
+                Margin="5,10,5,5"
+                CellEditEnding="dgEnumTypeMembers_CellEditEnding"
+                CurrentCellChanged="dgEnumTypeMembers_CurrentCellChanged"
+                Loaded="dgEnumTypeMembers_OnLoaded">
         <DataGrid.RowValidationRules>
           <vm:RowDataInfoValidationRule ValidationStep="UpdatedValue" />
         </DataGrid.RowValidationRules>
         <DataGrid.Columns>
 
-          <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberNameLabel}" CanUserSort="False" MinWidth="225" MaxWidth="325" Width="Auto" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_EnumTypeMemberNameLabel}">
+          <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberNameLabel}"
+                              CanUserSort="False" MinWidth="225" MaxWidth="325" Width="Auto"
+                              AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_EnumTypeMemberNameLabel}"
+                              AutomationProperties.HelpText="{x:Static ded:Resources.EnumDialog_EnumTypeMemberHelpText}">
             <DataGridTextColumn.Binding>
               <Binding Path="Name">
                 <Binding.ValidationRules>
@@ -211,7 +217,10 @@
             </DataGridTextColumn.Binding>
           </DataGridTextColumn>
 
-          <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberValueLabel}" CanUserSort="False" MinWidth="200" MaxWidth="300" Width="Auto" AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_EnumTypeMemberValueLabel}">
+                <DataGridTextColumn Header="{x:Static ded:Resources.EnumDialog_EnumTypeMemberValueLabel}"
+                                    CanUserSort="False" MinWidth="200" MaxWidth="300" Width="Auto"
+                                    AutomationProperties.Name="{x:Static ded:Resources.EnumDialog_EnumTypeMemberValueLabel}"
+                                    AutomationProperties.HelpText="{x:Static ded:Resources.EnumDialog_EnumTypeMemberHelpText}">
             <DataGridTextColumn.Binding>
               <Binding Path="Value">
                 <Binding.ValidationRules>

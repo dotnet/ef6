@@ -820,6 +820,15 @@ namespace Microsoft.Data.Entity.Design {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start typing or press &apos;F2&apos; to edit.
+        /// </summary>
+        public static string EnumDialog_EnumTypeMemberHelpText {
+            get {
+                return ResourceManager.GetString("EnumDialog_EnumTypeMemberHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Member Name.
         /// </summary>
         public static string EnumDialog_EnumTypeMemberNameLabel {
