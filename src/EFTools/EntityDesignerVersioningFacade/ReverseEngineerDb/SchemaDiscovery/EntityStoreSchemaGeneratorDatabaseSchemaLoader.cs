@@ -9,6 +9,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -18,16 +19,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     /// </summary>
     internal class EntityStoreSchemaGeneratorDatabaseSchemaLoader
     {
-        private const string SwitchOffMetadataMergeJoins = "Switch.Microsoft.Data.Entity.Design.DoNotUseSqlServerMetadataMergeJoins";
+        private const string SqlServerInvariantName = "System.Data.SqlClient";
+        private const string SwitchOffMetadataMergeJoinsKey =
+            "Switch.Microsoft.Data.Entity.Design.DoNotUseSqlServerMetadataMergeJoins";
         private readonly EntityConnection _connection;
         private readonly Version _storeSchemaModelVersion;
         private readonly IDbCommandInterceptor _addOptionMergeJoinInterceptor;
 
-        [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)")]
         public EntityStoreSchemaGeneratorDatabaseSchemaLoader(
             EntityConnection entityConnection,
-            Version storeSchemaModelVersion,
-            bool needsMergeJoinHint)
+            Version storeSchemaModelVersion)
         {
             Debug.Assert(entityConnection != null, "entityConnection != null");
             Debug.Assert(entityConnection.State == ConnectionState.Closed, "expected closed connection");
@@ -36,26 +37,37 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _connection = entityConnection;
             _storeSchemaModelVersion = storeSchemaModelVersion;
 
-            if (needsMergeJoinHint)
+            if (_connection != null
+                && _connection.StoreConnection != null
+                && string.Equals(
+                    _connection.StoreConnection.GetProviderInvariantName(),
+                    SqlServerInvariantName,
+                    StringComparison.Ordinal)
+                && !SwitchOffMetadataMergeJoins())
             {
-                var switchOffMetadataMergeJoins = false;
-                var metadataMergeJoinsAppSettings =
-                    ConfigurationManager.AppSettings.GetValues(SwitchOffMetadataMergeJoins);
-                if (metadataMergeJoinsAppSettings != null)
+                _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
+            }
+        }
+
+        // Checks AppSettings for the quirk which can switch off metadata merge joins
+        [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)")]
+        private static bool SwitchOffMetadataMergeJoins()
+        {
+            var switchOffMetadataMergeJoins = false;
+            var metadataMergeJoinsAppSettings =
+                ConfigurationManager.AppSettings.GetValues(SwitchOffMetadataMergeJoinsKey);
+            if (metadataMergeJoinsAppSettings != null)
+            {
+                var metadataMergeJoinsAppSetting =
+                    metadataMergeJoinsAppSettings.FirstOrDefault();
+                if (metadataMergeJoinsAppSetting != null)
                 {
-                    var metadataMergeJoinsAppSetting =
-                        metadataMergeJoinsAppSettings.FirstOrDefault();
-                    if (metadataMergeJoinsAppSetting != null)
-                    {
-                        bool.TryParse(
-                            metadataMergeJoinsAppSetting, out switchOffMetadataMergeJoins);
-                    }
-                }
-                if (!switchOffMetadataMergeJoins)
-                {
-                    _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
+                    bool.TryParse(
+                        metadataMergeJoinsAppSetting, out switchOffMetadataMergeJoins);
                 }
             }
+
+            return switchOffMetadataMergeJoins;
         }
 
         // virtual for testing
