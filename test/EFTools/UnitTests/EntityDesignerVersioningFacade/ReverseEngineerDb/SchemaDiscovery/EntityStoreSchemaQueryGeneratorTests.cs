@@ -349,8 +349,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
             Assert.Equal(2, parameters.Count);
             Assert.Equal("p0", parameters[0].ParameterName);
-            Assert.Equal("p0", parameters[0].ParameterName);
+            Assert.Equal("p1", parameters[1].ParameterName);
             Assert.Equal(parameters["p0"].Value, "name");
+            Assert.Equal(parameters["p1"].Value, "name");
         }
 
         [Fact]
