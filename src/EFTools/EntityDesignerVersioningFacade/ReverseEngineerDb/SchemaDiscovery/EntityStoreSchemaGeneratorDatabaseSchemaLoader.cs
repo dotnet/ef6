@@ -8,6 +8,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Data;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -240,9 +241,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                         CommandTimeout = 0
                     };
 
+            var optimizeParameters =
+                ((StoreItemCollection)_connection
+                    .GetMetadataWorkspace()
+                    .GetItemCollection(DataSpace.SSpace))
+                        .ProviderManifest
+                        .SupportsParameterOptimizationInSchemaQueries();
+
             command.CommandText =
                 new EntityStoreSchemaQueryGenerator(sql, orderByClause, queryTypes, filters, filterAliases)
-                    .GenerateQuery(command.Parameters);
+                    .GenerateQuery(new ParameterCollectionBuilder(command.Parameters, optimizeParameters));
 
             return command;
         }

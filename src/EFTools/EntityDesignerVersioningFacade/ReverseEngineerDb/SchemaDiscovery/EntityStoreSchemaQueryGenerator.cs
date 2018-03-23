@@ -6,7 +6,6 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityClient;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
 
@@ -27,7 +26,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _filterAliases = filterAliases;
         }
 
-        public string GenerateQuery(EntityParameterCollection parameters)
+        public string GenerateQuery(ParameterCollectionBuilder parameters)
         {
             Debug.Assert(parameters != null, "parameters != null");
 
@@ -60,12 +59,12 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         }
 
         // internal to allow unit testing
-        internal StringBuilder CreateWhereClause(EntityParameterCollection parameters)
+        internal StringBuilder CreateWhereClause(ParameterCollectionBuilder parameters)
         {
             Debug.Assert(parameters != null, "parameters != null");
 
             var whereClause = new StringBuilder();
-            var parameterMap = new Dictionary<string, string>(StringComparer.Ordinal);
+
             foreach (var alias in _filterAliases)
             {
                 var allows = new StringBuilder();
@@ -74,12 +73,12 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                 {
                     if (entry.Effect == EntityStoreSchemaFilterEffect.Allow)
                     {
-                        AppendFilterEntry(allows, alias, entry, parameterMap);
+                        AppendFilterEntry(allows, alias, entry, parameters);
                     }
                     else
                     {
                         Debug.Assert(entry.Effect == EntityStoreSchemaFilterEffect.Exclude, "did you add new value?");
-                        AppendFilterEntry(excludes, alias, entry, parameterMap);
+                        AppendFilterEntry(excludes, alias, entry, parameters);
                     }
                 }
 
@@ -111,31 +110,25 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                         .Append(")");
                 }
             }
-
-            foreach(var entry in parameterMap)
-            {
-                parameters.AddWithValue(entry.Value, entry.Key);
-            }
-
             return whereClause;
         }
 
         // internal to allow unit testing
         internal static StringBuilder AppendFilterEntry(
-            StringBuilder segment, string alias, EntityStoreSchemaFilterEntry entry, Dictionary<string, string> parameterMap)
+            StringBuilder segment, string alias, EntityStoreSchemaFilterEntry entry, ParameterCollectionBuilder parameters)
         {
             Debug.Assert(segment != null, "segment != null");
             Debug.Assert(alias != null, "alias != null");
             Debug.Assert(entry != null, "entry != null");
-            Debug.Assert(parameterMap != null, "parameters != null");
+            Debug.Assert(parameters != null, "parameters != null");
 
             var filterText = new StringBuilder();
-            AppendComparison(filterText, alias, "CatalogName", entry.Catalog, parameterMap);
-            AppendComparison(filterText, alias, "SchemaName", entry.Schema, parameterMap);
+            AppendComparison(filterText, alias, "CatalogName", entry.Catalog, parameters);
+            AppendComparison(filterText, alias, "SchemaName", entry.Schema, parameters);
             AppendComparison(
                 filterText, alias, "Name",
                 entry.Catalog == null && entry.Schema == null && entry.Name == null ? "%" : entry.Name,
-                parameterMap);
+                parameters);
             segment
                 .AppendIfNotEmpty(" OR ")
                 .Append("(")
@@ -147,30 +140,20 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         // internal to allow unit testing
         internal static StringBuilder AppendComparison(
-            StringBuilder filterFragment, string alias, string propertyName, string value, Dictionary<string, string> parameterMap)
+            StringBuilder filterFragment, string alias, string propertyName, string value, ParameterCollectionBuilder parameters)
         {
             Debug.Assert(filterFragment != null, "filterFragment != null");
             Debug.Assert(alias != null, "alias != null");
             Debug.Assert(propertyName != null, "propertyName != null");
-            Debug.Assert(parameterMap != null, "parameters != null");
+            Debug.Assert(parameters != null, "parameters != null");
 
             if (value != null)
             {
-                string parameterName = null;                
-                if (!parameterMap.TryGetValue(value, out parameterName))
-                { 
-                    parameterName = GetParameterName(parameterMap.Count);
-                    parameterMap.Add(value, parameterName);
-                }
+                var parameterName = parameters.GetOrAdd(value);
                 AppendComparisonFragment(filterFragment, alias, propertyName, parameterName);
             }
 
             return filterFragment;
-        }
-
-        private static string GetParameterName(int position)
-        {
-            return "p" + position.ToString(CultureInfo.InvariantCulture);
         }
 
         private static void AppendComparisonFragment(

@@ -5,7 +5,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -19,7 +21,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         {
             var command =
                 new EntityStoreSchemaGeneratorDatabaseSchemaLoader(
-                    new Mock<EntityConnection>().Object,
+                    GetMockEntityConnection(false).Object,
                     EntityFrameworkVersion.Version3)
                     .CreateFilteredCommand(
                         "baseQuery",
@@ -53,7 +55,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
             Func<Version, string> getCommandText = (version) =>
                                                    new EntityStoreSchemaGeneratorDatabaseSchemaLoader(
-                                                       new Mock<EntityConnection>().Object, version)
+                                                       GetMockEntityConnection(true).Object, version)
                                                        .CreateFunctionDetailsCommand(Enumerable.Empty<EntityStoreSchemaFilterEntry>())
                                                        .CommandText;
 
@@ -344,6 +346,29 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                     .Zip(results, (i, r) => i[1] == r["SchemaName"] && i[2] == r["TableName"] && i[3] == r["ColumnName"])
                     .All(z => z)
                 );
+        }
+
+        private Mock<EntityConnection> GetMockEntityConnection(
+            bool supportsParameterOptimizationInSchemaQueries)
+        {
+            var mockProviderManifest = new Mock<DbProviderManifest>();
+            mockProviderManifest
+                .Setup<bool>(pm => pm.SupportsParameterOptimizationInSchemaQueries())
+                .Returns(supportsParameterOptimizationInSchemaQueries);
+            var mockStoreItemCollection = new Mock<StoreItemCollection>();
+            mockStoreItemCollection
+                .SetupGet<DbProviderManifest>(p => p.ProviderManifest)
+                .Returns(mockProviderManifest.Object);
+            var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+            mockMetadataWorkspace
+                .Setup<ItemCollection>(mw => mw.GetItemCollection(DataSpace.SSpace))
+                .Returns(mockStoreItemCollection.Object);
+            var mockEntityConnection = new Mock<EntityConnection>();
+            mockEntityConnection
+                .Setup<MetadataWorkspace>(ec => ec.GetMetadataWorkspace())
+                .Returns(mockMetadataWorkspace.Object);
+
+            return mockEntityConnection;
         }
 
         private class EntityStoreSchemaGeneratorDatabaseSchemaLoaderFake : EntityStoreSchemaGeneratorDatabaseSchemaLoader
