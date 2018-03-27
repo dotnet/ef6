@@ -151,11 +151,29 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys..
+        ///   Looks up a localized string similar to Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys. Collapse or expand using Ctrl+Up and Ctrl+Down..
         /// </summary>
         internal static string AccHelp_EntityType {
             get {
                 return ResourceManager.GetString("AccHelp_EntityType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigation Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down..
+        /// </summary>
+        internal static string AccHelp_EntityTypeNavigationPropertyCompartment {
+            get {
+                return ResourceManager.GetString("AccHelp_EntityTypeNavigationPropertyCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down..
+        /// </summary>
+        internal static string AccHelp_EntityTypeScalarPropertyCompartment {
+            get {
+                return ResourceManager.GetString("AccHelp_EntityTypeScalarPropertyCompartment", resourceCulture);
             }
         }
         
@@ -169,7 +187,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Navigation.
+        ///   Looks up a localized string similar to Navigation Properties.
         /// </summary>
         internal static string AccName_EntityTypeNavigationPropertyCompartment {
             get {

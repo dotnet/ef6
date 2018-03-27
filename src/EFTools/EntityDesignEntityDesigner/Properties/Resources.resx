@@ -374,7 +374,7 @@ Add existing entities and relationships to this diagram by dragging them from th
     <comment>MSAA Name for the properties compartment of the EntityType shape.</comment>
   </data>
   <data name="AccName_EntityTypeNavigationPropertyCompartment" xml:space="preserve">
-    <value>Navigation</value>
+    <value>Navigation Properties</value>
     <comment>MSAA Name for the navigation properties compartment of the EntityType shape.</comment>
   </data>
   <data name="CompClassName_Inheritance" xml:space="preserve">
@@ -522,6 +522,12 @@ The Entity Framework is not available in the target framework currently specifie
     <value>{0} is in an association with {1}</value>
   </data>
   <data name="AccHelp_EntityType" xml:space="preserve">
-    <value>Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys.</value>
+    <value>Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys. Collapse or expand using Ctrl+Up and Ctrl+Down.</value>
+  </data>
+  <data name="AccHelp_EntityTypeNavigationPropertyCompartment" xml:space="preserve">
+    <value>Navigation Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down.</value>
+  </data>
+  <data name="AccHelp_EntityTypeScalarPropertyCompartment" xml:space="preserve">
+    <value>Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down.</value>
   </data>
 </root>

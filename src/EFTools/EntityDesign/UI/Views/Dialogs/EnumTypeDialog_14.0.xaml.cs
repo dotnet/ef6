@@ -36,7 +36,6 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             {
                 this.Title = EntityDesignerResources.EnumDialog_EditEnumWindowTitle;
             }
-            this.dgEnumTypeMembers.CellEditEnding += dgEnumTypeMembers_CellEditEnding;
             this.HasHelpButton = false;
         }
 
@@ -140,9 +139,19 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             }
         }
 
-        private void DgEnumTypeMembers_OnLoaded(object sender, RoutedEventArgs e)
+        private void dgEnumTypeMembers_OnLoaded(object sender, RoutedEventArgs e)
         {
-            foreach (var row in dgEnumTypeMembers.FindDescendants<DataGridRow>().Where(r => r.IsNewItem).ToList())
+            EnsureAccessibilityValues();
+        }
+
+        private void dgEnumTypeMembers_CurrentCellChanged(object sender, EventArgs e)
+        {
+            EnsureAccessibilityValues();
+        }
+
+        private void EnsureAccessibilityValues()
+        {
+            foreach (var row in dgEnumTypeMembers.FindDescendants<DataGridRow>().ToList())
             {
                 foreach (var cell in row.FindDescendants<DataGridCell>().ToList())
                 {
@@ -151,10 +160,12 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
                         if (cell.Column.DisplayIndex == 0)
                         {
                             cell.SetValue(AutomationProperties.NameProperty, EntityDesignerResources.EnumDialog_EnumTypeMemberNameLabel);
+                            cell.SetValue(AutomationProperties.HelpTextProperty, EntityDesignerResources.EnumDialog_EnumTypeMemberHelpText);
                         }
                         else if (cell.Column.DisplayIndex == 1)
                         {
                             cell.SetValue(AutomationProperties.NameProperty, EntityDesignerResources.EnumDialog_EnumTypeMemberValueLabel);
+                            cell.SetValue(AutomationProperties.HelpTextProperty, EntityDesignerResources.EnumDialog_EnumTypeMemberHelpText);
                         }
                     }
                 }

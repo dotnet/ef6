@@ -1552,4 +1552,7 @@ Full error message:
   <data name="EnumDialog_Error_AccName" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="EnumDialog_EnumTypeMemberHelpText" xml:space="preserve">
+    <value>Start typing or press 'F2' to edit</value>
+  </data>
 </root>
