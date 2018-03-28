@@ -33,7 +33,6 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         private static Image _complexPropertyBitmap;
         private static Image _navigationPropertyBitmap;
         private bool _isAdjustedForFillColor;
-        private EntityChevronButtonField _expandCollapseField;
 
         internal class EntityChevronButtonField : ChevronButtonField
         {
@@ -104,6 +103,9 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             bounds.Location = randomized;
             AbsoluteBounds = bounds;
             EntityDesignerViewModel.EntityShapeLocationSeed++;
+
+            // Provide keyboard shortcuts for collapse and expand of this EntityType shape
+            this.KeyUp += EntityTypeShape_KeyUp;
         }
 
         /// <summary>
@@ -446,16 +448,11 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             // replace default glyphs in header with ones that respond to filler color and scale with the UX
             ReplaceField(
                 shapeFields, "ExpandCollapse",
-                fieldName =>
-                    {
-                        _expandCollapseField =
-                            new EntityChevronButtonField(fieldName)
-                            {
-                                DefaultSelectable = false,
-                                DefaultFocusable = false
-                            };
-                        return _expandCollapseField;
-                    });
+                fieldName => new EntityChevronButtonField(fieldName)
+                                {
+                                    DefaultSelectable = false,
+                                    DefaultFocusable = false
+                                });
             ReplaceField(
                 shapeFields, "IconDecorator",
                 fieldName => new EntityImageField(fieldName, appearance => appearance.EntityGlyph));
@@ -487,11 +484,11 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             SetAccessibilityOnCompartment(NavigationCompartment, false);
 
             // need to add our own handler for KeyUp event in order to disable Insert key for Navigation Compartment
-            // and provide keyboard shorcuts for expand and collapse.
+            // and provide keyboard shortcuts for expand and collapse.
             NavigationCompartment.KeyUp += NavigationCompartmentKeyUpHandler;
 
             // since Properties compartment contains now two DomainClasses (Scalar and Complex) we need to handle Insert key on our own
-            // and provide keyboard shorcuts for expand and collapse.
+            // and provide keyboard shortcuts for expand and collapse.
             PropertiesCompartment.KeyUp += PropertiesCompartmentKeyUpHandler;
         }
 
@@ -690,28 +687,35 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             }
         }
 
-        public override void OnKeyUp(DiagramKeyEventArgs e)
+        private void EntityTypeShape_KeyUp(object sender, DiagramKeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.Up)
             {
-                var isExpanded = _expandCollapseField.IsExpanded(this);
-                if (isExpanded.HasValue && isExpanded.Value)
+                if (IsExpanded)
                 {
-                    _expandCollapseField.ChangeState(this);
-                    e.Handled = true;
+                    using (var txn = Store.TransactionManager.BeginTransaction())
+                    {
+                        IsExpanded = false;
+                        txn.Commit();
+                    }
                 }
-            }
-            if (e.Control && e.KeyCode == Keys.Down)
-            {
-                var isExpanded = _expandCollapseField.IsExpanded(this);
-                if (isExpanded.HasValue && !isExpanded.Value)
-                {
-                    _expandCollapseField.ChangeState(this);
-                    e.Handled = true;
-                }
+
+                e.Handled = true;
             }
 
-            base.OnKeyUp(e);
+            if (e.Control && e.KeyCode == Keys.Down)
+            {
+                if (!IsExpanded)
+                {
+                    using (var txn = Store.TransactionManager.BeginTransaction())
+                    {
+                        IsExpanded = true;
+                        txn.Commit();
+                    }
+                }
+
+                e.Handled = true;
+            }
         }
 
         /// <summary>

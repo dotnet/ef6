@@ -121,7 +121,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             {
                 using (var txn = Store.TransactionManager.BeginTransaction())
                 {
-                    Collapse();
+                    IsExpanded = false;
                     txn.Commit();
                 }
             }
@@ -134,7 +134,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             {
                 using (var txn = Store.TransactionManager.BeginTransaction())
                 {
-                    Expand();
+                    IsExpanded = true;
                     txn.Commit();
                 }
             }
