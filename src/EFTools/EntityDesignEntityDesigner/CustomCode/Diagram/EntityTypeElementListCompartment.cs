@@ -114,30 +114,5 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                 return Resources.AccHelp_EntityTypeNavigationPropertyCompartment;
             }
         }
-
-        internal void CollapseInTransaction()
-        {
-            if (IsExpanded)
-            {
-                using (var txn = Store.TransactionManager.BeginTransaction())
-                {
-                    Collapse();
-                    txn.Commit();
-                }
-            }
-        }
-
-
-        internal void ExpandInTransaction()
-        {
-            if (!IsExpanded)
-            {
-                using (var txn = Store.TransactionManager.BeginTransaction())
-                {
-                    Expand();
-                    txn.Commit();
-                }
-            }
-        }
     }
 }
