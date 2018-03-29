@@ -515,13 +515,13 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             // Provide keyboard shortcuts for expand and collapse.
             if (e.Control && e.KeyCode == Keys.Up)
             {
-                PropertiesCompartment.CollapseInTransaction();
+                PropertiesCompartment.EnsureExpandedState(false);
                 e.Handled = true;
             }
 
             if (e.Control && e.KeyCode == Keys.Down)
             {
-                PropertiesCompartment.ExpandInTransaction();
+                PropertiesCompartment.EnsureExpandedState(true);
                 e.Handled = true;
             }
         }
@@ -542,13 +542,13 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
 
             if (e.Control && e.KeyCode == Keys.Up)
             {
-                NavigationCompartment.CollapseInTransaction();
+                NavigationCompartment.EnsureExpandedState(false);
                 e.Handled = true;
             }
 
             if (e.Control && e.KeyCode == Keys.Down)
             {
-                NavigationCompartment.ExpandInTransaction();
+                NavigationCompartment.EnsureExpandedState(true);
                 e.Handled = true;
             }
         }
@@ -691,29 +691,13 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             if (e.Control && e.KeyCode == Keys.Up)
             {
-                if (IsExpanded)
-                {
-                    using (var txn = Store.TransactionManager.BeginTransaction())
-                    {
-                        IsExpanded = false;
-                        txn.Commit();
-                    }
-                }
-
+                this.EnsureExpandedState(false);
                 e.Handled = true;
             }
 
             if (e.Control && e.KeyCode == Keys.Down)
             {
-                if (!IsExpanded)
-                {
-                    using (var txn = Store.TransactionManager.BeginTransaction())
-                    {
-                        IsExpanded = true;
-                        txn.Commit();
-                    }
-                }
-
+                this.EnsureExpandedState(true);
                 e.Handled = true;
             }
         }
