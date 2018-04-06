@@ -683,7 +683,8 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             {
                 return string.Format(
                     CultureInfo.CurrentCulture,
-                    Resources.AccHelp_EntityType);
+                    Resources.AccHelp_EntityType,
+                    IsExpanded ? Resources.ExpandedStateExpanded : Resources.ExpandedStateCollapsed);
             }
         }
 
