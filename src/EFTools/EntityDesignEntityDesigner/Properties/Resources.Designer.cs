@@ -151,7 +151,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys. Collapse or expand using Ctrl+Up and Ctrl+Down..
+        ///   Looks up a localized string similar to Rename using the &apos;F2&apos; key. Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}..
         /// </summary>
         internal static string AccHelp_EntityType {
             get {
@@ -160,7 +160,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Navigation Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down..
+        ///   Looks up a localized string similar to Navigation Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}..
         /// </summary>
         internal static string AccHelp_EntityTypeNavigationPropertyCompartment {
             get {
@@ -169,7 +169,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down..
+        ///   Looks up a localized string similar to Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}..
         /// </summary>
         internal static string AccHelp_EntityTypeScalarPropertyCompartment {
             get {
@@ -821,6 +821,24 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         internal static string ErrorCode_PropertyNameInvalid {
             get {
                 return ResourceManager.GetString("ErrorCode_PropertyNameInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collapsed.
+        /// </summary>
+        internal static string ExpandedStateCollapsed {
+            get {
+                return ResourceManager.GetString("ExpandedStateCollapsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expanded.
+        /// </summary>
+        internal static string ExpandedStateExpanded {
+            get {
+                return ResourceManager.GetString("ExpandedStateExpanded", resourceCulture);
             }
         }
         

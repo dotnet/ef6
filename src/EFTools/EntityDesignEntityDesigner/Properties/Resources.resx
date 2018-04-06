@@ -522,12 +522,20 @@ The Entity Framework is not available in the target framework currently specifie
     <value>{0} is in an association with {1}</value>
   </data>
   <data name="AccHelp_EntityType" xml:space="preserve">
-    <value>Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys. Collapse or expand using Ctrl+Up and Ctrl+Down.</value>
+    <value>Rename using the 'F2' key. Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}.</value>
   </data>
   <data name="AccHelp_EntityTypeNavigationPropertyCompartment" xml:space="preserve">
-    <value>Navigation Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down.</value>
+    <value>Navigation Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}.</value>
   </data>
   <data name="AccHelp_EntityTypeScalarPropertyCompartment" xml:space="preserve">
-    <value>Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down.</value>
+    <value>Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}.</value>
+  </data>
+  <data name="ExpandedStateCollapsed" xml:space="preserve">
+    <value>Collapsed</value>
+    <comment>Used with various AccHelp_ resources to make the collapsed/expanded state available to the Narrator.</comment>
+  </data>
+  <data name="ExpandedStateExpanded" xml:space="preserve">
+    <value>Expanded</value>
+    <comment>Used with various AccHelp_ resources to make the collapsed/expanded state available to the Narrator.</comment>
   </data>
 </root>
