@@ -3,6 +3,7 @@
 namespace Microsoft.Data.Entity.Design.EntityDesigner.View
 {
     using System.Diagnostics;
+    using System.Globalization;
     using Microsoft.Data.Entity.Design.EntityDesigner.ViewModel;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Designer;
@@ -108,10 +109,16 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             {
                 if (_isScalarPropertiesCompartment)
                 {
-                    return Resources.AccHelp_EntityTypeScalarPropertyCompartment;
+                    return string.Format(
+                        CultureInfo.CurrentCulture,
+                        Resources.AccHelp_EntityTypeScalarPropertyCompartment,
+                        IsExpanded ? Resources.ExpandedStateExpanded : Resources.ExpandedStateCollapsed);
                 }
 
-                return Resources.AccHelp_EntityTypeNavigationPropertyCompartment;
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.AccHelp_EntityTypeNavigationPropertyCompartment,
+                    IsExpanded ? Resources.ExpandedStateExpanded : Resources.ExpandedStateCollapsed);
             }
         }
     }

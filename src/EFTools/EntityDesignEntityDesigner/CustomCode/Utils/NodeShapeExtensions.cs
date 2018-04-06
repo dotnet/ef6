@@ -16,26 +16,12 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.CustomCode.Utils
         /// <param name="expanded">if true, ensure that nodeShape is expanded, if false esnure that it is collapsed</param>
         public static void EnsureExpandedState(this NodeShape nodeShape, bool expanded)
         {
-            if (expanded)
+            if (nodeShape.IsExpanded != expanded)
             {
-                if (!nodeShape.IsExpanded)
+                using (var txn = nodeShape.Store.TransactionManager.BeginTransaction())
                 {
-                    using (var txn = nodeShape.Store.TransactionManager.BeginTransaction())
-                    {
-                        nodeShape.IsExpanded = true;
-                        txn.Commit();
-                    }
-                }
-            }
-            else
-            {
-                if (nodeShape.IsExpanded)
-                {
-                    using (var txn = nodeShape.Store.TransactionManager.BeginTransaction())
-                    {
-                        nodeShape.IsExpanded = false;
-                        txn.Commit();
-                    }
+                    nodeShape.IsExpanded = expanded;
+                    txn.Commit();
                 }
             }
         }
