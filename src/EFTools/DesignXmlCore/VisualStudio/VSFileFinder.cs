@@ -1,30 +1,16 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
-// This file is linked in the DataEntityDesign project as well as the DslPackage project.
-// It is being used by the bootstrap package so that a dependency is not introduced on DataEntityDesign.
-// This #if fixes the namespace so that each project will build correctly.
-#if !IS_BOOTSTRAP_PACKAGE
 using Microsoft.Data.Entity.Design.VisualStudio.Package;
-#endif
-
-#if IS_BOOTSTRAP_PACKAGE
-using VSHelpers = Microsoft.Data.Entity.Design.BootstrapPackage.BootstrapUtils;
-namespace Microsoft.Data.Entity.Design.BootstrapPackage
-#else
 
 namespace Microsoft.Data.Entity.Design.VisualStudio
-#endif
 
 {
     using System;
     using Microsoft.VisualStudio.Shell.Interop;
-#if !IS_BOOTSTRAP_PACKAGE
-
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#endif
 
     /// <summary>
     ///     This class will find all  files in the specified VS project or VS solution with the specified input.
@@ -32,8 +18,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
     /// </summary>
     internal class VSFileFinder
     {
-#if !IS_BOOTSTRAP_PACKAGE
-
         internal struct VSFileInfo
         {
             internal string Path;
@@ -43,49 +27,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         private readonly List<VSFileInfo> _paths = new List<VSFileInfo>();
 
-#endif
-
         private readonly string _input;
-        private bool _foundMatch;
 
         internal VSFileFinder(string input)
         {
             _input = input;
-        }
-
-        internal bool ExistInProject(IVsHierarchy projectHierarchy)
-        {
-            // Reset _foundMatch value.
-            _foundMatch = false;
-
-            var vsp4 = projectHierarchy as IVsProject4;
-            if (vsp4 != null)
-            {
-                // use IVsProject4 if available - it is much faster than the other other mechanism, but all projects may not implement it
-                _foundMatch = ExistInProjectFast(vsp4);
-            }
-            else
-            {
-                var visitor = new HierarchyVisitor(DoesItemMatch);
-                visitor.VisitHierarchy(projectHierarchy);
-            }
-
-            return _foundMatch;
-        }
-
-        private bool ExistInProjectFast(IVsProject4 vsp4)
-        {
-            var pfDoesContain = 0;
-            VSErrorHandler.ThrowOnFailure(vsp4.ContainsFileEndingWith(_input, out pfDoesContain));
-            return (pfDoesContain != 0);
-        }
-
-        private void DoesItemMatch(IVsHierarchy item, uint id, VsProjectItemPath projectItemPath)
-        {
-            if (DoItemNamesComparison(_input, projectItemPath))
-            {
-                _foundMatch = true;
-            }
         }
 
         private static bool DoItemNamesComparison(string input, VsProjectItemPath projectItemPath)
@@ -100,8 +46,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 return projectItemPath.RelativePath.EndsWith(input, StringComparison.OrdinalIgnoreCase);
             }
         }
-
-#if !IS_BOOTSTRAP_PACKAGE
 
         internal List<VSFileInfo> MatchingFiles
         {
@@ -179,8 +123,5 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 }
             }
         }
-
-#endif
-
     }
 }

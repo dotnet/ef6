@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets" />
   <PropertyGroup>
     <DPSkipAsmMeta>true</DPSkipAsmMeta>
   </PropertyGroup>
@@ -67,8 +67,7 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
-    <Reference Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
-               Include="Microsoft.VisualStudio.Shell.Interop.15.3.DesignTime" />
+    <Reference Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'" Include="Microsoft.VisualStudio.Shell.Interop.15.3.DesignTime" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Design" />
     <Reference Include="vslangproj" />
@@ -79,25 +78,17 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\DesignXmlCore\VisualStudio\Package\HierarchyVisitor.cs">
-      <Link>LinkedFiles\HierarchyVisitor.cs</Link>
-    </Compile>
-    <Compile Include="..\DesignXmlCore\VisualStudio\VSFileFinder.cs">
-      <Link>LinkedFiles\VSFileFinder.cs</Link>
-    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BootstrapUtils.cs" />
     <Compile Include="MicrosoftDataEntityDesignBootstrapPackage.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage_preDev15.pkgdef" />
     <None Include="PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage_Dev15.pkgdef" />
   </ItemGroup>
   <ItemGroup>
@@ -108,12 +99,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PkgDefFile Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">Microsoft.Data.Entity.Design.BootstrapPackage_preDev15.pkgdef</PkgDefFile>
-    <PkgDefFile Condition="'$(PkgDefFile)' == ''">Microsoft.Data.Entity.Design.BootstrapPackage_Dev15.pkgdef</PkgDefFile>
-  </PropertyGroup>
   <Target Name="AfterBuild">
     <MakeDir Directories="$(OutputPath)PkgDefData" />
-    <RegexReplaceInFile InputFileName="PkgDefData\$(PkgDefFile)" OutputFileName="$(OutputPath)PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage.pkgdef" Patterns="EFDESIGNERVERSIONTOKEN" Replacements="$(AssemblyVersion)" />
+    <RegexReplaceInFile InputFileName="PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage_Dev15.pkgdef" OutputFileName="$(OutputPath)PkgDefData\Microsoft.Data.Entity.Design.BootstrapPackage.pkgdef" Patterns="EFDESIGNERVERSIONTOKEN" Replacements="$(AssemblyVersion)" />
   </Target>
 </Project>
