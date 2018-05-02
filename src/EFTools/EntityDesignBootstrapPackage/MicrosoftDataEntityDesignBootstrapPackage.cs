@@ -12,7 +12,6 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
     using System.Runtime.InteropServices;
     using System.Threading;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.VisualStudio.Shell;
 
     internal static class Constants
     {
@@ -53,7 +52,7 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
 
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsSolution.AdviseSolutionEvents(Microsoft.VisualStudio.Shell.Interop.IVsSolutionEvents,System.UInt32@)")]
         protected override System.Threading.Tasks.Task InitializeAsync(
-            CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+            CancellationToken cancellationToken, IProgress<VSShell.ServiceProgressData> progress)
         {
             CheckAndLoadEDMPackage();
 
