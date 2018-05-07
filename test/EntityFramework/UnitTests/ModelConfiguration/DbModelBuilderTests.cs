@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
@@ -1053,5 +1054,65 @@ namespace System.Data.Entity.ModelConfiguration
                 databaseMapping.Model.Container.Annotations.Count(
                     a => a.Name == XmlConstants.UseClrTypesAnnotationWithPrefix && a.Value.Equals("true")));
         }
+
+        [Fact]
+        public void Registering_two_indexes_with_a_shared_property_puts_two_index_attributes_in_the_index_annotation()
+        {
+            var builder = new DbModelBuilder();
+
+            var entityTypeConfiguration = builder.Entity<TestType>();
+
+            entityTypeConfiguration
+                .HasIndex(x => new { x.Property1, x.Property2 });
+
+            entityTypeConfiguration
+                .HasIndex(x => new { x.Property2, x.Property3 });
+
+            var model = builder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var mapping = model.DatabaseMapping;
+
+            var database = mapping.Database;
+
+            var entity = database.EntityTypes.Single(x => x.Name == nameof (TestType));
+
+            var property1 = entity.DeclaredProperties.Single(x => x.Name == nameof (TestType.Property1));
+            var property2 = entity.DeclaredProperties.Single(x => x.Name == nameof (TestType.Property2));
+            var property3 = entity.DeclaredProperties.Single(x => x.Name == nameof (TestType.Property3));
+
+            var property1Attributes = property1.Annotations
+                .Where(x => x.Name == XmlConstants.IndexAnnotationWithPrefix)
+                .Select(x => x.Value)
+                .Cast<IndexAnnotation>()
+                .SelectMany(x => x.Indexes)
+                .ToList();
+
+            var property2Attributes = property2.Annotations
+                .Where(x => x.Name == XmlConstants.IndexAnnotationWithPrefix)
+                .Select(x => x.Value)
+                .Cast<IndexAnnotation>()
+                .SelectMany(x => x.Indexes)
+                .ToList();
+
+            var property3Attributes = property3.Annotations
+                .Where(x => x.Name == XmlConstants.IndexAnnotationWithPrefix)
+                .Select(x => x.Value)
+                .Cast<IndexAnnotation>()
+                .SelectMany(x => x.Indexes)
+                .ToList();
+
+            Assert.Equal(property1Attributes.Count, 1);
+            Assert.Equal(property2Attributes.Count, 2);
+            Assert.Equal(property3Attributes.Count, 1);
+        }
+    }
+
+    public class TestType
+    {
+        public int Id { get; set; }
+
+        public int Property1 { get; set; }
+        public int Property2 { get; set; }
+        public int Property3 { get; set; }
     }
 }
