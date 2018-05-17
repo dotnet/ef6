@@ -27,6 +27,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private readonly Version _storeSchemaModelVersion;
         private readonly IDbCommandInterceptor _addOptionMergeJoinInterceptor;
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "For this purpose we want to ignore any exception that is thrown.")]
         public EntityStoreSchemaGeneratorDatabaseSchemaLoader(
             EntityConnection entityConnection,
             Version storeSchemaModelVersion)
@@ -38,13 +40,26 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             _connection = entityConnection;
             _storeSchemaModelVersion = storeSchemaModelVersion;
 
-            if (_connection != null
-                && _connection.StoreConnection != null
-                && string.Equals(
-                    _connection.StoreConnection.GetProviderInvariantName(),
-                    SqlServerInvariantName,
-                    StringComparison.Ordinal)
-                && !SwitchOffMetadataMergeJoins())
+            var isSqlServer = false;
+            try
+            {
+                if (_connection != null
+                    && _connection.StoreConnection != null
+                    && string.Equals(
+                        _connection.StoreConnection.GetProviderInvariantName(),
+                        SqlServerInvariantName,
+                        StringComparison.Ordinal))
+                {
+                    isSqlServer = true;
+                }
+            }
+            catch (Exception)
+            {
+                // Several exceptions can be thrown from GetProviderInvariantName().
+                // Assume that the provider is not SqlServer unless we can confirm it is.
+            }
+
+            if (isSqlServer && !SwitchOffMetadataMergeJoins())
             {
                 _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
             }
