@@ -82,7 +82,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_returns_code_when_cs_and_customized()
         {
-            var project = MockDTE.CreateProject();
+            var project = MockDTE.CreateProject(
+                assemblyReferences: new[] { MockDTE.CreateReference("Microsoft.CodeAnalysis", "2.7.0.0") });
 
             using (AddCustomizedTemplates(project))
             {
@@ -99,7 +100,9 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_returns_code_when_vb_and_customized()
         {
-            var project = MockDTE.CreateProject(kind: MockDTE.VBProjectKind);
+            var project = MockDTE.CreateProject(
+                assemblyReferences: new[] { MockDTE.CreateReference("Microsoft.CodeAnalysis", "2.7.0.0") },
+                kind: MockDTE.VBProjectKind);
 
             using (AddCustomizedTemplates(project))
             {
@@ -116,7 +119,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_throws_when_error_in_context_template()
         {
-            var project = MockDTE.CreateProject();
+            var project = MockDTE.CreateProject(
+                assemblyReferences: new[] { MockDTE.CreateReference("Microsoft.CodeAnalysis", "2.7.0.0") });
             var token = Guid.NewGuid().ToString();
 
             using (AddCustomizedTemplates(project))
@@ -152,7 +156,8 @@ namespace Microsoft.Data.Entity.Design.CodeGeneration
         [Fact]
         public void Generate_throws_when_error_in_entity_type_template()
         {
-            var project = MockDTE.CreateProject();
+            var project = MockDTE.CreateProject(
+                assemblyReferences: new[] { MockDTE.CreateReference("Microsoft.CodeAnalysis", "2.7.0.0") });
             var token = Guid.NewGuid().ToString();
 
             using (AddCustomizedTemplates(project))
