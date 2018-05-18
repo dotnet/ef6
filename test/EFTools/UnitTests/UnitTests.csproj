@@ -71,6 +71,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.IO.FileSystem">
+      <HintPath>$(VS150COMNTOOLS)..\..\MSBuild\15.0\bin\Roslyn\System.IO.FileSystem.dll</HintPath>
+    </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Windows.Forms" />
