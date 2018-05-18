@@ -47,7 +47,9 @@
   <ItemGroup>
     <Reference Include="EnvDte" />
     <Reference Include="EnvDte80" />
-    <Reference Include="Microsoft.CodeAnalysis" />
+    <Reference Include="Microsoft.CodeAnalysis">
+      <HintPath>$(VS150COMNTOOLS)..\..\MSBuild\15.0\bin\Roslyn\Microsoft.CodeAnalysis.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Data.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.DataTools.Interop" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
