@@ -119,7 +119,8 @@
             Assert.IsType<TextTemplatingSession>(new TextTemplatingHost().CreateSession());
         }
 
-        [Fact]
+        // Test stopped working with 15.6 Preview 7 - plan to re-enable with https://github.com/aspnet/EntityFramework6/issues/541
+        // [Fact]
         public void ProcessTemplate_returns_result()
         {
             Assert.Equal("Result", new TextTemplatingHost().ProcessTemplate("Dummy.tt", "<#= \"Result\" #>"));
