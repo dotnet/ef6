@@ -2,7 +2,16 @@
 
 using VSErrorHandler = Microsoft.VisualStudio.ErrorHandler;
 
+// This file is linked in the DataEntityDesign project as well as the DslPackage project.
+// It is being used by the bootstrap package so that a dependency is not introduced on DataEntityDesign.
+// This #if fixes the namespace so that each project will build correctly.
+#if IS_BOOTSTRAP_PACKAGE
+using VSHelpers = Microsoft.Data.Entity.Design.BootstrapPackage.BootstrapUtils;
+namespace Microsoft.Data.Entity.Design.BootstrapPackage
+#else
+
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
+#endif
 {
     using System;
     using System.IO;
