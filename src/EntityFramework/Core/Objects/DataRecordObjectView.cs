@@ -135,40 +135,48 @@ namespace System.Data.Entity.Core.Objects
 
         PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
         {
-            PropertyDescriptorCollection propertyDescriptors;
-
-            if (listAccessors == null
-                || listAccessors.Length == 0)
+            if (listAccessors == null || listAccessors.Length == 0)
             {
                 // Caller is requesting property descriptors for the root element type.
-                propertyDescriptors = _propertyDescriptorsCache;
+                return _propertyDescriptorsCache;
             }
-            else
+
+            //SEE ALSO: FieldDescriptor.DetermineClrType()
+
+            Type itemType = null;
+
+            // Use the last PropertyDescriptor in the array to build the collection of returned property descriptors.
+            var propertyDescriptor = listAccessors[listAccessors.Length - 1];
+            var fieldDescriptor = propertyDescriptor as FieldDescriptor;
+            if (fieldDescriptor != null && fieldDescriptor.EdmProperty != null)
             {
-                // Use the last PropertyDescriptor in the array to build the collection of returned property descriptors.
-                var propertyDescriptor = listAccessors[listAccessors.Length - 1];
-                var fieldDescriptor = propertyDescriptor as FieldDescriptor;
+                var edmType = fieldDescriptor.EdmProperty.TypeUsage.EdmType;
+
+                // Unwrap collection types
+                if (edmType.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+                {
+                    edmType = ((CollectionType)edmType).TypeUsage.EdmType;
+                }
 
                 // If the property descriptor describes a data record with the EDM type of RowType,
                 // construct the collection of property descriptors from the property's EDM metadata.
-                // Otherwise use the CLR type of the property.
-                if (fieldDescriptor != null
-                    && fieldDescriptor.EdmProperty != null
-                    && fieldDescriptor.EdmProperty.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+                if (edmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
                 {
                     // Retrieve property descriptors from EDM metadata.
-                    propertyDescriptors =
-                        MaterializedDataRecord.CreatePropertyDescriptorCollection(
-                            (RowType)fieldDescriptor.EdmProperty.TypeUsage.EdmType, typeof(IDataRecord), true);
+                    return MaterializedDataRecord.CreatePropertyDescriptorCollection((RowType)edmType, typeof(IDataRecord), true);
                 }
-                else
-                {
-                    // Use the CLR type.
-                    propertyDescriptors = TypeDescriptor.GetProperties(GetListItemType(propertyDescriptor.PropertyType));
-                }
+
+                itemType = edmType.ClrType;
+            }
+            
+            // Use the CLR type.
+
+            if (itemType == null)
+            {
+                itemType = GetListItemType(propertyDescriptor.PropertyType);
             }
 
-            return propertyDescriptors;
+            return TypeDescriptor.GetProperties(itemType);
         }
 
         string ITypedList.GetListName(PropertyDescriptor[] listAccessors)
