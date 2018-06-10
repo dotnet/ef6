@@ -137,6 +137,8 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(item, "item");
 
+            if (item is DBNull) return item;
+
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
                 throw new ArgumentException(Strings.ObjectView_IncompatibleArgument);
@@ -155,6 +157,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return propertyValue;
+            //return propertyValue is DBNull ? null : propertyValue;
         }
 
         public override void ResetValue(object item)
