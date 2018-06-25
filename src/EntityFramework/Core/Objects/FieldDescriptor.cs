@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Objects
                     break;
 
                 case BuiltInTypeKind.RowType:
-                    result = typeof(IDataRecord);
+                    result = typeof(DbDataRecord);
                     break;
 
                 default:

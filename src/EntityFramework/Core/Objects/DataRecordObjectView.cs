@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.Objects
             IObjectViewData<DbDataRecord> viewData, object eventDataSource, RowType rowType, Type propertyComponentType)
             : base(viewData, eventDataSource)
         {
-            if (!typeof(IDataRecord).IsAssignableFrom(propertyComponentType))
+            if (!typeof(DbDataRecord).IsAssignableFrom(propertyComponentType))
             {
-                propertyComponentType = typeof(IDataRecord);
+                propertyComponentType = typeof(DbDataRecord);
             }
 
             _rowType = rowType;
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Objects
                 if (edmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
                 {
                     // Retrieve property descriptors from EDM metadata.
-                    return MaterializedDataRecord.CreatePropertyDescriptorCollection((RowType)edmType, typeof(IDataRecord), true);
+                    return MaterializedDataRecord.CreatePropertyDescriptorCollection((RowType)edmType, typeof(DbDataRecord), true);
                 }
 
                 itemType = edmType.ClrType;

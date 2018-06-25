@@ -457,7 +457,7 @@ namespace System.Data.Entity.Core.Objects
                 // Create a new PropertyDescriptorCollection with read-only properties
                 _propertyDescriptors = CreatePropertyDescriptorCollection(
                     DataRecordInfo.RecordType.EdmType as StructuralType,
-                    typeof(MaterializedDataRecord), true);
+                    typeof(DbDataRecord), true);
             }
 
             return _propertyDescriptors;

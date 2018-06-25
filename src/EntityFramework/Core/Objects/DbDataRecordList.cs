@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Objects
             : base(recordList)
         {
             _rowType = rowType;
-            _propertyDescriptorsCache = MaterializedDataRecord.CreatePropertyDescriptorCollection(_rowType, typeof(IDataRecord), true);
+            _propertyDescriptorsCache = MaterializedDataRecord.CreatePropertyDescriptorCollection(_rowType, typeof(DbDataRecord), true);
         }
 
         #region ITypedList Members
