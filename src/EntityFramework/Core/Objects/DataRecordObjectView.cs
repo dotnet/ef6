@@ -131,16 +131,8 @@ namespace System.Data.Entity.Core.Objects
             return itemType;
         }
 
-        #region ITypedList Members
-
-        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
+        internal static PropertyDescriptorCollection GetItemProperties(PropertyDescriptor[] listAccessors)
         {
-            if (listAccessors == null || listAccessors.Length == 0)
-            {
-                // Caller is requesting property descriptors for the root element type.
-                return _propertyDescriptorsCache;
-            }
-
             //SEE ALSO: FieldDescriptor.DetermineClrType()
 
             Type itemType = null;
@@ -177,6 +169,19 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return TypeDescriptor.GetProperties(itemType);
+        }
+
+        #region ITypedList Members
+
+        PropertyDescriptorCollection ITypedList.GetItemProperties(PropertyDescriptor[] listAccessors)
+        {
+            if (listAccessors == null || listAccessors.Length == 0)
+            {
+                // Caller is requesting property descriptors for the root element type.
+                return _propertyDescriptorsCache;
+            }
+
+            return GetItemProperties(listAccessors);
         }
 
         string ITypedList.GetListName(PropertyDescriptor[] listAccessors)

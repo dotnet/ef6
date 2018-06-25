@@ -141,6 +141,7 @@
     <Compile Include="Core\Metadata\Edm\MslXmlSchemaWriter.cs" />
     <Compile Include="Core\Metadata\Edm\SsdlSerializer.cs" />
     <Compile Include="Core\Metadata\Edm\XmlSchemaWriter.cs" />
+    <Compile Include="Core\Objects\DbDataRecordList.cs" />
     <Compile Include="Core\Objects\ELinq\StringTranslatorUtil.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataRecord.cs" />
     <Compile Include="Core\Objects\Internal\ShapedBufferedDataRecord.cs" />

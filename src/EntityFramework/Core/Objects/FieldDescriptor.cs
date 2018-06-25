@@ -137,23 +137,29 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(item, "item");
 
+            if (item is DBNull) return item;
+
             if (!_itemType.IsAssignableFrom(item.GetType()))
             {
                 throw new ArgumentException(Strings.ObjectView_IncompatibleArgument);
             }
 
-            object propertyValue;
-
             var dbDataRecord = item as DbDataRecord;
-            if (dbDataRecord != null)
+            if (dbDataRecord == null)
             {
-                propertyValue = (dbDataRecord.GetValue(dbDataRecord.GetOrdinal(_property.Name)));
-            }
-            else
-            {
-                propertyValue = DelegateFactory.GetValue(_property, item);
+                return DelegateFactory.GetValue(_property, item);
             }
 
+            var propertyValue = dbDataRecord.GetValue(dbDataRecord.GetOrdinal(_property.Name));
+
+            var recordList = propertyValue as IList<DbDataRecord>;
+            if (recordList != null)
+            {
+                var collectionType = (CollectionType)_property.TypeUsage.EdmType;
+                return new DbDataRecordList(recordList, (RowType)collectionType.TypeUsage.EdmType);
+            }
+
+            //return propertyValue is DBNull ? null : propertyValue;
             return propertyValue;
         }
 
