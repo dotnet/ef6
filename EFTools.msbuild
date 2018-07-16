@@ -108,7 +108,7 @@
                  Text="Error in DetermineVSInstallPath: $(MSBuildProgramFiles32)\Microsoft Visual Studio\Installer\vswhere.exe does not exist."
                  Importance="High" />
 
-        <Exec Condition="'$(VSInstallationPath)' != ''"
+        <Exec Condition="'$(VSInstallationPath)' == ''"
               ConsoleToMSBuild="true"
               Command='"$(MSBuildProgramFiles32)\Microsoft Visual Studio\Installer\vswhere.exe" -prerelease -latest -property installationPath' >
             <Output TaskParameter="ConsoleOutput" PropertyName="VSInstallationPath" />
