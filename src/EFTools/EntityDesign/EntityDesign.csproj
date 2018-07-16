@@ -49,10 +49,7 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
-    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='11.0'">%25VS110COMNTOOLS%25</VsCommonToolsEnvVarName>
-    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='12.0'">%25VS120COMNTOOLS%25</VsCommonToolsEnvVarName>
-    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='14.0'">%25VS140COMNTOOLS%25</VsCommonToolsEnvVarName>
-    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='15.0'">%24(DevEnvDir)</VsCommonToolsEnvVarName>
+    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='15.0'">%24(VSInstallationPath)\Common7\Tools</VsCommonToolsEnvVarName>
   </PropertyGroup>
   <Import Project="$(RepositoryRoot)tools\EFToolsVsReferences.settings.targets" />
   <ItemGroup>

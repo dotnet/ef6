@@ -103,7 +103,24 @@
                  Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
 
-    <Target Name="GenerateInstallerInputs" DependsOnTargets="BuildFrameworkPackages">
+    <Target Name="DetermineVSInstallPath">
+        <Error Condition="!Exists('$(MSBuildProgramFiles32)\Microsoft Visual Studio\Installer\vswhere.exe')"
+                 Text="Error in DetermineVSInstallPath: $(MSBuildProgramFiles32)\Microsoft Visual Studio\Installer\vswhere.exe does not exist."
+                 Importance="High" />
+
+        <Exec Condition="'$(VSInstallationPath)' != ''"
+              ConsoleToMSBuild="true"
+              Command='"$(MSBuildProgramFiles32)\Microsoft Visual Studio\Installer\vswhere.exe" -prerelease -latest -property installationPath' >
+            <Output TaskParameter="ConsoleOutput" PropertyName="VSInstallationPath" />
+        </Exec>
+
+        <Error Condition="'$(VSInstallationPath)' == ''"
+               Text="Unable to determine VSInstallationPath." />
+
+        <Message Text="Using VSInstallationPath = $(VSInstallationPath)" />
+    </Target>
+
+  <Target Name="GenerateInstallerInputs" DependsOnTargets="BuildFrameworkPackages">
         <Message Condition="'$(IsDev14OrLower)' != 'True'"
                  Text="Visual Studio $(VisualStudioVersion) does not use MSI installer. Skipping generating MSI installer inputs."
                  Importance="High" />
