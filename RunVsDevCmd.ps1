@@ -12,6 +12,7 @@ if ($installationPath -and (Test-Path "$installationPath\Common7\Tools\VSDevCmd.
   & "${env:COMSPEC}" /s /c "`"$installationPath\Common7\Tools\VSDevCmd.bat`" -no_logo && set" | foreach-object {
     $name, $value = $_ -split '=', 2
     Write-Host "Setting $name to $value"
-    Set-Content env:\"$name" $value
+    [Environment]::SetEnvironmentVariable($name, $value, "User")
+    # Set-Content env:\"$name" $value
   }
 }
