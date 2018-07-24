@@ -5,11 +5,13 @@
 
   <Target Name="LocalizeDLLs">
     <ItemGroup>
-      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\EFTools\Microsoft.Data.Entity.*.dll;$(RepositoryRootDirectory)bin\Debug\EFTools\Microsoft.Data.Tools.XmlCore.dll;$(RepositoryRootDirectory)bin\Debug\EFTools\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
+      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.Data.Entity.*.dll" />
+      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.Data.Tools.XmlCore.dll" />
+      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
     </ItemGroup>
     <ItemGroup>
       <FilesToLocalize Include="@(EFToolsDLLs)">
-        <TranslationFile Condition="'%(Extension)' == '.dll'">$(LocalizationRootDirectory)\{Lang}\%(Ficd lc	lename).dll.lcl</TranslationFile>    <!--Required: translation file-->
+        <TranslationFile Condition="'%(Extension)' == '.dll'">$(LocalizationRootDirectory)\{Lang}\%(Filename).dll.lcl</TranslationFile>    <!--Required: translation file-->
 	<LciCommentFile Condition="'%(Extension)' == '.dll'">$(LciRootDirectory)\%(Filename).dll.lci</LciCommentFile>
       </FilesToLocalize>
     </ItemGroup>
