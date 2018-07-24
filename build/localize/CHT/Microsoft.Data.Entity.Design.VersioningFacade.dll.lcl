@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="Microsoft.Data.Entity.Design.VersioningFacade.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="zh-TW" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.VersioningFacade.Resources.VersioningFacade.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+      <Item ItemId=";AssociationMissingKeyColumn" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The association between '{0}' and '{1}' will not be created because the key column '{2}' was not found to be part of the table definition (see previous warnings).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不會建立 '{0}' 和 '{1}' 之間的關聯，因為發現索引鍵資料行 '{2}' 是資料表定義的一部分 (請參閱先前的警告)。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";CannotCreateEntityWithNoPrimaryKeyDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料表/檢視 '{0}' 未定義主索引鍵，也無法推斷有效的主索引鍵。此資料表/檢視已被排除。如果要使用此實體，您必須檢閱您的結構描述，加入正確的索引鍵，並將它取消註解。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ColumnFacetValueOutOfRange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The facet '{0}' with a value '{1}' is outside the range {2}-{3} specified by the facet description.  The column '{4}' in the table '{5}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[值為 '{1}' 的 Facet '{0}' 位於 Facet 描述所指定的範圍 {2}-{3} 之外。已排除資料表 '{5}' 中的資料行 '{4}'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EF6Providers_InstanceMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Entity Framework 提供者類型 '{0}' 沒有名為 'Instance' 的靜態屬性或欄位。Entity Framework 提供者必須宣告名為 'Instance' 並且傳回提供者之單一執行個體的靜態屬性或欄位。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-05-07T03:34:15Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EF6Providers_NotDbProviderServices" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Entity Framework 提供者類型 '{0}' 的 'Instance' 成員並未傳回繼承自 'System.Data.Entity.Core.Common.DbProviderServices' 的物件。Entity Framework 提供者必須擴充自此類別，而且 'Instance' 成員必須傳回提供者的單一執行個體。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-05-07T03:34:15Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityClient_InvalidStoreProvider" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified store provider '{0}' cannot be found in the configuration, or '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[在這個組態中找不到指定的存放區提供者 '{0}'，或是 '{0}' 無效。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExcludedColumnWasAKeyColumnEntityIsInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The table/view has been excluded.  Please fix the entity in the schema file, and uncomment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[已排除資料表/檢視 '{1}' 上的資料行 '{0}'，而且是索引鍵資料行。已排除此資料表/檢視。請修正結構描述檔中的實體，並取消註解。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExcludedColumnWasAKeyColumnEntityIsReadOnly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The remaining key(s) were used and table/view has been created as read-only.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[已排除資料表/檢視 '{1}' 上的資料行 '{0}'，而且是索引鍵資料行。已使用其餘的索引鍵並將資料表/檢視建立成唯讀。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidSchemaEncountered" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Schema specified is not valid. Errors: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[指定的結構描述無效。錯誤: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidStringArgument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter '{0}' is not valid. String arguments cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[參數 '{0}' 無效。字串引數不可為空白。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidTypeForPrimaryKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' has column '{1}' defined as a primary key, but the column type '{2}' is not a valid type for a key in the EDM. An attempt will be made to define the table/view as a read-only table/view.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料表/檢視 '{0}' 的資料行 '{1}' 定義為主索引鍵，但資料行型別 '{2}' 對 EDM 中的索引鍵不是有效的型別。將嘗試將此資料表/檢視定義成唯讀資料表/檢視。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ModelGeneration_UnGeneratableType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The GlobalItem of type '{0}' has no model generation patterns defined.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[型別 '{0}' 的 GlobalItem 未定義模型產生模式。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="GlobalItem"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NoPrimaryKeyDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料表/檢視 '{0}' 未定義主索引鍵。已推斷此索引鍵，並將定義建立成唯讀的資料表/檢視。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ParameterDirectionNotValid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a parameter '{1}' that has a parameter direction value '{2}', which is not valid. Please use 'IN', 'OUT', or 'INOUT'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[函式 '{0}' 的參數 '{1}' 具有無效的參數方向值 '{2}'。請使用 'IN'、'OUT' 或 'INOUT'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="IN","OUT","INOUT"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProviderFactoryReturnedNullFactory" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The '{0}' DbProviderFactory returned a null value from the CreateConnection method.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' DbProviderFactory 從 CreateConnection 方法傳回了 Null 值。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderFactory"} {StrContains="CreateConnection"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SharedForeignKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Foreign key constraint '{0}' has been omitted from the storage model. Column '{1}' of table '{2}' is a foreign key participating in multiple relationships. A one-to-one Entity Model will not validate since data inconsistency is possible.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[儲存體模型已省略外部索引鍵條件約束 '{0}'。資料表 '{2}' 的資料行 '{1}' 是參與多個關聯性的外部索引鍵。將不會驗證一對一實體模型，因為資料可能不一致。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";StronglyTypedAccessToNullValue" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value for column '{0}' in table '{1}' is DBNull.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料表 '{1}' 中資料行 '{0}' 的值是 DBNull。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DBNull"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TableReferencedByAssociationWasNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table '{0}' is referenced by a relationship, but cannot be found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料表 '{0}' 被某個關聯性參考，但是找不到。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TableReferencedByTvfWasNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The return table of the function '{0}' is not defined. Either all columns have been excluded or the table has no columns. The function has been excluded. To use the function, you will need to review your schema, specify the return type of the function, and uncomment it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未定義函式 '{0}' 的傳回資料表。已排除所有資料行，或者資料表沒有任何資料行。已排除此函式。若要使用此函式，您必須檢閱結構描述、指定函式的傳回型別，並將它取消註解。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnableToGenerateFunctionImportParameterName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to generate function import parameter name for the parameter '{0}' of the store function '{1}'. The store function will be ignored and the function import will not be generated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法針對存放區函式 '{1}' 的參數 '{0}' 產生函式匯入參數名稱。系統將會忽略存放區函式，而且不會產生函式匯入。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnableToGenerateFunctionImportReturnType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to generate function import return type of the store function '{0}'. The store function will be ignored and the function import will not be generated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法產生存放區函式 '{0}' 的函式匯入傳回型別。系統將會忽略存放區函式，而且不會產生函式匯入。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type '{0}' is currently not supported for the target Entity Framework version; the column '{2}' in the table '{1}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[目標 Entity Framework 版本目前不支援資料型別 '{0}'; 已排除資料表 '{1}' 中的資料行 '{2}'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type '{0}' is not supported for the target Entity Framework version schema. The column '{2}' in the table '{1}' was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[目標 Entity Framework 版本結構描述不支援資料類型 '{0}'。已從模型中排除資料表 '{1}' 中的資料行 '{2}'。若要使用資料類型 '{0}'，請將目標鎖定為 Entity Framework 結構描述版本 3.0 或更高版本。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The data type '{0}' is not supported for the target EntityFramework version schema. The column '{2}' in the table '{1}' was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-19T03:52:23Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO4" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedDataTypeUnknownType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type of the column '{0}' is currently not supported so the column '{0}' in table '{1}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[目前不支援資料行 '{0}' 的資料型別，因此已排除資料表 '{1}' 中的資料行 '{0}'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedDbRelationship" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The relationship '{0}' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[關聯性 '{0}' 在主要端上，有不屬於資料表索引鍵的資料行。已排除此關聯性。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedForeignKeyPattern" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The relationship '{0}' uses the set of foreign keys '{1}' that are partially contained in the set of primary keys '{2}' of the table '{3}'.  The set of foreign keys must be fully contained in the set of primary keys, or fully not contained in the set of primary keys to be mapped to a model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[關聯性 '{0}' 使用了部分包含在資料表 '{3}' 之主索引鍵集 '{2}' 中的外部索引鍵集 '{1}'。外部索引鍵集必須完全包含在主索引鍵集中，或是完全不包含在主索引鍵集中，這樣才能對應到模型。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedFunctionParameterDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a parameter '{1}' at parameter index {2} that has a data type '{3}' which is currently not supported for the target Entity Framework version. The function was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[函式 '{0}' 在參數索引 {2} 位置的參數 '{1}' 具有目標 Entity Framework 版本目前不支援的資料類型 '{3}'。已排除此函式。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has a parameter '{1}' at parameter index {2} that has a data type '{3}' which is currently not supported for the target .NET Framework version. The function was excluded.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-19T03:52:23Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO4" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedFunctionParameterDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has the parameter '{1}' at the parameter index {2} that has the data type '{3}' which is not supported for the target Entity Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher."]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[函式 '{0}' 在參數索引 {2} 位置的參數 '{1}' 具有目標 Entity Framework 版本不支援的資料類型 '{3}'。已將此函式從模型中排除。若要使用資料類型 '{0}'，請將目標鎖定為 Entity Framework 結構描述版本 3.0 或更高版本。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has the parameter '{1}' at the parameter index {2} that has the data type '{3}' which is not supported for the target .NET Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher."]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-19T03:52:23Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO4" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedFunctionReturnDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a return data type '{1}' that is currently not supported for the target Entity Framework version. The function was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[函式 '{0}' 具有目標 Entity Framework 版本目前不支援的傳回資料類型 '{1}'。已排除此函式。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has a return data type '{1}' that is currently not supported for the target .NET Framework version. The function was excluded.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-19T03:52:23Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO4" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedFunctionReturnDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' returns the data type '{1}' that is not supported for the target Entity Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[函式 '{0}' 具有目標 Entity Framework 版本不支援的傳回資料類型 '{1}'。已將此函式從模型中排除。若要使用資料類型 '{0}'，請將目標鎖定為 Entity Framework 結構描述版本 3.0 或更高版本。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' returns the data type '{1}' that is not supported for the target .NET Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-19T03:52:23Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO4" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:42Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation. 著作權所有，並保留一切權利。]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2014-01-22T06:17:49Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+  </Item>
+</LCX>

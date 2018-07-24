@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="Microsoft.Data.Entity.Design.VersioningFacade.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ru-RU" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="dagna.kaminska" DateTime="2013-04-22T11:02:29Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.VersioningFacade.Resources.VersioningFacade.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="dagna.kaminska" DateTime="2013-04-22T11:02:29Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="dagna.kaminska" DateTime="2013-04-22T11:02:29Z" />
+      <Item ItemId=";AssociationMissingKeyColumn" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The association between '{0}' and '{1}' will not be created because the key column '{2}' was not found to be part of the table definition (see previous warnings).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Сопоставление между "{0}" и "{1}" не будет создано, поскольку обнаружено, что ключевой столбец "{2}" не является частью определения таблицы (см. предыдущие предупреждения).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";CannotCreateEntityWithNoPrimaryKeyDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Первичный ключ в таблице или представлении "{0}" не определен, его не удалось вывести. Эта таблица или представление исключены. Чтобы использовать сущность, необходимо проверить схему, добавить правильные ключи и раскомментировать ее.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";ColumnFacetValueOutOfRange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The facet '{0}' with a value '{1}' is outside the range {2}-{3} specified by the facet description.  The column '{4}' in the table '{5}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Аспект "{0}" со значением "{1}" находится вне диапазона {2}-{3}, указанного в описании аспекта.  Столбец "{4}" в таблице "{5}" исключен.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";EF6Providers_InstanceMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[У типа поставщика Entity Framework "{0}" не было статического свойства или поля с именем "Instance". Поставщики Entity Framework должны объявлять статическое свойство или поле с именем "Instance", которое возвращает одноэлементный экземпляр поставщика.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-05-06T08:37:38Z" />
+      </Item>
+      <Item ItemId=";EF6Providers_NotDbProviderServices" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Элемент "Instance" типа поставщика Entity Framework "{0}" не возвратил объект, который наследует от "System.Data.Entity.Core.Common.DbProviderServices". Поставщики Entity Framework должны быть производными от этого класса, а элемент "Instance" должен возвращать одноэлементный экземпляр поставщика.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-05-06T08:37:38Z" />
+      </Item>
+      <Item ItemId=";EntityClient_InvalidStoreProvider" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified store provider '{0}' cannot be found in the configuration, or '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Указанный поставщик хранилища "{0}" не найден в конфигурации или недопустим.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";ExcludedColumnWasAKeyColumnEntityIsInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The table/view has been excluded.  Please fix the entity in the schema file, and uncomment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Столбец "{0}" в таблице или представлении "{1}" является ключевым столбцом и был исключен.  Эта таблица или представление исключены.  Исправьте сущность в файле схемы и раскомментируйте ее.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";ExcludedColumnWasAKeyColumnEntityIsReadOnly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The remaining key(s) were used and table/view has been created as read-only.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Столбец "{0}" в таблице или представлении "{1}" является ключевым столбцом и был исключен.  Оставшиеся ключи были использованы, и таблица или представление были созданы в режиме только для чтения.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";InvalidSchemaEncountered" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Schema specified is not valid. Errors: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Указанная схема недопустима. Ошибки: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";InvalidStringArgument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter '{0}' is not valid. String arguments cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Недопустимый параметр "{0}". Строковые аргументы не могут быть пустыми.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";InvalidTypeForPrimaryKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' has column '{1}' defined as a primary key, but the column type '{2}' is not a valid type for a key in the EDM. An attempt will be made to define the table/view as a read-only table/view.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[В таблице или представлении "{0}" имеется столбец "{1}", определенный в качестве первичного ключа, однако тип столбца "{2}" является недопустимым для ключа в модели EDM. Будет сделана попытка определить эту таблицу или представление как предназначенные только для чтения.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";ModelGeneration_UnGeneratableType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The GlobalItem of type '{0}' has no model generation patterns defined.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[В элементе GlobalItem с типом "{0}" не определены шаблоны создания модели.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="GlobalItem"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NoPrimaryKeyDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[В таблице или представлении "{0}" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";ParameterDirectionNotValid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a parameter '{1}' that has a parameter direction value '{2}', which is not valid. Please use 'IN', 'OUT', or 'INOUT'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[В функции "{0}" имеется параметр "{1}" с недопустимым значением направления "{2}". Используйте значения IN, OUT или INOUT.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="IN","OUT","INOUT"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ProviderFactoryReturnedNullFactory" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The '{0}' DbProviderFactory returned a null value from the CreateConnection method.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Класс DbProviderFactory "{0}" вернул значение null из метода CreateConnection.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderFactory"} {StrContains="CreateConnection"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SharedForeignKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Foreign key constraint '{0}' has been omitted from the storage model. Column '{1}' of table '{2}' is a foreign key participating in multiple relationships. A one-to-one Entity Model will not validate since data inconsistency is possible.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Ограничение внешнего ключа "{0}" отсутствует в модели хранения. Столбец "{1}" таблицы "{2}" является внешним ключом, участвующим в нескольких связях. Модель сущностей "один к одному" не пройдет проверку, поскольку возможна несогласованность данных.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";StronglyTypedAccessToNullValue" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value for column '{0}' in table '{1}' is DBNull.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Значение столбца "{0}" в таблице "{1}" равно DBNull.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DBNull"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TableReferencedByAssociationWasNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table '{0}' is referenced by a relationship, but cannot be found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Невозможно найти таблицу "{0}", на которую ссылается связь.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";TableReferencedByTvfWasNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The return table of the function '{0}' is not defined. Either all columns have been excluded or the table has no columns. The function has been excluded. To use the function, you will need to review your schema, specify the return type of the function, and uncomment it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Возвращаемая таблица функции "{0}" не определена. Столбцы были исключены, либо в таблице нет столбцов. Функция была исключена. Чтобы использовать функцию, необходимо проверить схему, задать возвращаемый тип и раскомментировать ее.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-05-06T08:45:55Z" />
+      </Item>
+      <Item ItemId=";UnableToGenerateFunctionImportParameterName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to generate function import parameter name for the parameter '{0}' of the store function '{1}'. The store function will be ignored and the function import will not be generated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Невозможно сформировать имя параметра импорта функции для параметра "{0}" функции хранилища "{1}". Функция хранилища не будет обработана; импорт функции не будет сформирован.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";UnableToGenerateFunctionImportReturnType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to generate function import return type of the store function '{0}'. The store function will be ignored and the function import will not be generated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Невозможно сформировать возвращаемый тип импорта функции для функции хранилища "{0}". Функция хранилища не будет обработана; импорт функции не будет сформирован.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";UnsupportedDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type '{0}' is currently not supported for the target Entity Framework version; the column '{2}' in the table '{1}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Тип данных "{0}" в настоящее время не поддерживается для целевой версии платформы Entity Framework; столбец "{2}" в таблице "{1}" был исключен.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";UnsupportedDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type '{0}' is not supported for the target Entity Framework version schema. The column '{2}' in the table '{1}' was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Тип данных "{0}" не поддерживается для схемы целевой версии платформы EntityFramework. Столбец "{2}" в таблице "{1}" был исключен из модели. Для использования типа данных "{0}" целевая версия среды Entity Framework должна быть 3.0 или выше.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The data type '{0}' is not supported for the target EntityFramework version schema. The column '{2}' in the table '{1}' was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-16T08:23:31Z" />
+      </Item>
+      <Item ItemId=";UnsupportedDataTypeUnknownType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type of the column '{0}' is currently not supported so the column '{0}' in table '{1}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Тип данных столбца "{0}" в настоящее время не поддерживается, поэтому столбец "{0}" в таблице "{1}" исключен.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";UnsupportedDbRelationship" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The relationship '{0}' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[В связи "{0}" имеются столбцы, которые не являются частью ключа таблицы на первичной стороне связи. Связь исключена.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";UnsupportedForeignKeyPattern" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The relationship '{0}' uses the set of foreign keys '{1}' that are partially contained in the set of primary keys '{2}' of the table '{3}'.  The set of foreign keys must be fully contained in the set of primary keys, or fully not contained in the set of primary keys to be mapped to a model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Связь "{0}" использует набор внешних ключей "{1}", которые частично содержались в наборе первичных ключей "{2}" таблицы "{3}".  Для сопоставления с моделью набор внешних ключей должен полностью содержаться в наборе первичных ключей или полностью не содержаться в нем.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+      </Item>
+      <Item ItemId=";UnsupportedFunctionParameterDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a parameter '{1}' at parameter index {2} that has a data type '{3}' which is currently not supported for the target Entity Framework version. The function was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Функция "{0}" имеет параметр "{1}" (с индексом {2}), тип данных "{3}" которого в настоящее время не поддерживается для целевой версии платформы Entity Framework. Функция исключена.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has a parameter '{1}' at parameter index {2} that has a data type '{3}' which is currently not supported for the target .NET Framework version. The function was excluded.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-16T12:50:29Z" />
+      </Item>
+      <Item ItemId=";UnsupportedFunctionParameterDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has the parameter '{1}' at the parameter index {2} that has the data type '{3}' which is not supported for the target Entity Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher."]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Функция "{0}" имеет параметр "{1}" (с индексом {2}), тип данных "{3}" которого в настоящее время не поддерживается для целевой версии платформы Entity Framework. Эта функция была исключена из модели. Для использования типа данных "{0}" целевая версия среды Entity Framework должна быть 3.0 или выше.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has the parameter '{1}' at the parameter index {2} that has the data type '{3}' which is not supported for the target .NET Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher."]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-16T08:22:30Z" />
+      </Item>
+      <Item ItemId=";UnsupportedFunctionReturnDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a return data type '{1}' that is currently not supported for the target Entity Framework version. The function was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Функция "{0}" имеет возвращаемый тип данных "{1}", который в настоящее время не поддерживается для целевой версии платформы Entity Framework. Функция исключена.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has a return data type '{1}' that is currently not supported for the target .NET Framework version. The function was excluded.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-16T08:21:33Z" />
+      </Item>
+      <Item ItemId=";UnsupportedFunctionReturnDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' returns the data type '{1}' that is not supported for the target Entity Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Функция "{0}" возвращает тип данных "{1}", который не поддерживается для целевой версии платформы Entity Framework. Эта функция была исключена из модели. Для использования типа данных "{0}" целевая версия среды Entity Framework должна быть 3.0 или выше.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' returns the data type '{1}' that is not supported for the target .NET Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-16T08:21:04Z" />
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="dagna.kaminska" DateTime="2013-04-22T11:02:29Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:20:21Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Корпорация Майкрософт (Microsoft Corporation)]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:03:33Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:20:21Z" />
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Корпорация Майкрософт (Microsoft Corporation). Все права защищены.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:03:33Z" />
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:20:21Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="dagna.kaminska" DateTime="2013-04-22T11:03:06Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="dagna.kaminska" DateTime="2013-04-22T11:02:29Z" />
+  </Item>
+</LCX>

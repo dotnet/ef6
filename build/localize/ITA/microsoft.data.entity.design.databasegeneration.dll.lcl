@@ -1,0 +1,655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="d:\bt\4668889\bins\retail\i386\Microsoft.Data.Entity.Design.DatabaseGeneration.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="it-IT" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.DatabaseGeneration.Properties.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+      <Item ItemId=";CodeViewFKConstraintDerivedType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[FK_{0}_inherits_{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked} {NoLocRule}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CodeViewManyToManyAssocName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[FK_{0}_{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked} {NoLocRule}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorComplexTypeCycle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL contains a circular reference among complex types. The complex type '{1}' contains complex property '{0}', which is of complex type '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Riferimento circolare tra tipi complessi nel CSDL specificato. Il tipo complesso '{1}' contiene la proprietà complessa '{0}', che è del tipo complesso '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[LIOXITA: translation in VS10 dumps changed, in order to apply a more correct solution]]></Note>
+        </Notes>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotCreateCSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An EdmItemCollection could not be created from the supplied CSDL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile creare un oggetto EdmItemCollection dal CSDL specificato.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EdmItemCollection"} {StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindCSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The CSDL input could not be found. Make sure that a previous activity has supplied this CSDL and that the current activity has declared that it will receive the CSDL as input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile trovare l'input CSDL. Assicurarsi che questo CSDL sia stato fornito da un'attività precedente e che l'attività corrente abbia dichiarato che riceverà il CSDL come input.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[LIOXITA: translation in VS10 dumps changed, in order to apply a more correct solution]]></Note>
+        </Notes>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindProviderManifest" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not load the DbProviderManifest from the provider invariant name '{0}' and provider manifest token '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile caricare DbProviderManifest dal nome invariante '{0}' e dal token del manifesto '{1}' del provider.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindSSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The SSDL input could not be found. Make sure that a previous activity has supplied this SSDL and that the current activity has declared that it will receive the SSDL as input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile trovare l'input SSDL. Assicurarsi che questo SSDL sia stato fornito da un'attività precedente e che l'attività corrente abbia dichiarato che riceverà l'SSDL come input.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCsdlNotValid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL is not valid because of the following errors: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" Confidence="100">
+            <Val><![CDATA[CSDL specificato non valido a causa dei seguenti errori: {0}]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The supplied CSDL is not valid because of the following errors: {1}]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-23T16:21:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorFindingEntityTypeForEnd" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the EntityType for the AssociationEnd.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare EntityType per AssociationEnd.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"} {StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorGetDependentEndOnManyToMany" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot call GetDependentEnd on a many-to-many association. Verify that the Association is many-to-many before calling this method.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile chiamare GetDependentEnd in un'associazione many-to-many. Verificare che Association sia di tipo many-to-many prima di chiamare il metodo.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="GetDependentEnd"} {StrContains="Association"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[LioxRome: Association reverted to ENG for LocVer error]]></Note>
+        </Notes>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorIncompatibleTypeForProvider" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type '{0}' of the Property '{1}' is not supported by the specified database. Choose a different type or a different target database.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il tipo '{0}' nell'elemento Property '{1}' non è supportato dal database specificato. Scegliere un tipo diverso o un altro database di destinazione.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Property"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorInvalidCharsException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DDL generation failed because the name '{0}' was found to contain one of the following illegal strings:;, --, /*, */ or starts with 'xp_'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Generazione DDL non riuscita perché il nome '{0}' contiene una delle stringhe non valide seguenti:;, --, /*, */ oppure inizia con 'xp_'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNameCollision" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database generation process encountered a naming conflict while attempting to generate the SSDL. Usually this is because a generated SSDL name conflicts with an existing name in the CSDL. Try again after performing the appropriate renames in the CSDL. Naming conflicts can occur when:]D;]A;- Generating table names from derived types]D;]A;- Generating scalar property names from properties within complex types]D;]A;- Generating the names of properties corresponding to foreign keys]D;]A;]D;]A;The specific error message is: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Si è verificato un conflitto di denominazione nel processo di generazione del database durante il tentativo di generare SSDL. Questo problema si verifica in genere se il nome SSDL generato è in conflitto con un nome esistente in CSDL. Riprovare dopo aver eseguito le ridenominazioni appropriate in CSDL. I conflitti di denominazione possono verificarsi durante:]D;]A;- La generazione di nomi di tabelle da tipi derivati]D;]A;- La generazione di nomi di proprietà scalari da proprietà in tipi complessi]D;]A;- La generazione di nomi di proprietà corrispondenti a chiavi esterne]D;]A;]D;]A;Messaggio di errore specifico: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoCodeViewType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The OutputGeneratorType '{0}' defined in the workflow could not be found and loaded. Please make sure the OutputGeneratorType attribute on the activity is valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare e caricare OutputGeneratorType '{0}' definito nel flusso di lavoro. Assicurarsi che l'attributo OutputGeneratorType sull'attività sia valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="OutputGeneratorType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoEdmItemCollection" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the CSDL generated by the activity called 'CsdlToSsdlAndMslActivity'. Try re-running the workflow.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare il CSDL generato dall'attività denominata 'CsdlToSsdlAndMslActivity'. Provare a eseguire nuovamente il flusso di lavoro.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"} {StrContains="CsdlToSsdlAndMslActivity"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoEdmParameterBag" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The EdmParameterBag was not found in the Workflow. Verify that it was added to the SymbolResolver, which is added as an Extension to the Workflow.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[EdmParameterBag non trovato nel flusso di lavoro. Assicurarsi che sia stato aggiunto a SymbolResolver, che viene aggiunto come Extension al flusso di lavoro.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EdmParameterBag"} {StrContains="SymbolResolver"} {StrContains="Extension"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[LIOXITA: translation in VS10 dumps changed, in order to apply a more correct solution]]></Note>
+        </Notes>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoEntityContainer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No EntityContainer was found in the supplied ItemCollection.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Nessun EntityContainer trovato nell'oggetto ItemCollection specificato.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"} {StrContains="ItemCollection"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoParameterDefined" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The necessary Workflow parameter '{0}' is not defined]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Parametro Workflow '{0}' necessario non definito]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Workflow"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoPropertyInRefConstraint" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the property '{0}' among the principal keys in the ReferentialConstraint between role '{1}' and role '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare la proprietà '{0}' tra le chiavi principali in ReferentialConstraint tra il ruolo '{1}' e il ruolo '{2}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ReferentialConstraint"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonSpecificComplexTypeCycle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL contains a circular reference among complex types. The complex property '{0}' is of a complex type which contains this same complex property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Riferimento circolare tra tipi complessi nel CSDL specificato. La proprietà complessa '{0}' è di un tipo complesso contenente la medesima proprietà complessa.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[LIOXITA: translation in VS10 dumps changed, in order to apply a more correct solution]]></Note>
+        </Notes>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidAssociationEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationEnds are not properly defined in the Association '{0}'. Verify that there are exactly two AssociationEnds in the Association.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Elementi AssociationEnds non definiti correttamente nell'oggetto Association '{0}'. Assicurarsi che nell'oggetto Association siano presenti esattamente due elementi AssociationEnd.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnds","Association"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[LioxITA: AssociationEnds reverted to ENG for Locver error]]></Note>
+        </Notes>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidDataSpace" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to retrieve the StoreGeneratedPattern attribute from the non-valid DataSpace '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile recuperare l'attributo StoreGeneratedPattern da DataSpace '{0}' non valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="StoreGeneratedPattern"} {StrContains="DataSpace"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidSsdl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The SSDL generated by the activity called 'CsdlToSsdlAndMslActivity' is not valid and has the following errors: ]D;]A;{0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[L'SSDL generato dall'attività denominata 'CsdlToSsdlAndMslActivity' non è valido e contiene gli errori seguenti:]D;]A;{0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CsdlToSsdlAndMslActivity"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidTargetVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified TargetVersion parameter '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il parametro TargetVersion '{0}' specificato non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TargetVersion"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorProviderManifestEx_ProviderInvariantName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider invariant name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare l'elemento DbProviderManifest appropriato per generare l'SSDL. Il nome invariante specificato '{0}' del provider non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorProviderManifestEx_ProviderManifestToken" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider manifest token '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare l'elemento DbProviderManifest appropriato per generare l'SSDL. Il token del manifesto specificato '{0}' del provider non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"} {StrContains="SSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorSerializing_CsdlToMsl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not generate the MSL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile generare l'MSL dal CSDL specificato a causa di eccezioni XML. Verificare che l'input non contenga caratteri XML non validi. Messaggio di errore specifico: '{0}']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MSL"} {StrContains="CSDL"} {StrContains="XML"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorSerializing_CsdlToSsdl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not generate the SSDL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile generare l'SSDL dal CSDL specificato a causa di eccezioni XML. Verificare che l'input non contenga caratteri XML non validi. Messaggio di errore specifico: '{0}']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CSDL"} {StrContains="XML"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";TargetVersionSchemaVersionMismatch" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The target Entity Framework version requires the edmx schema version {0} or lower. The specified schema is version {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La versione di Entity Framework di destinazione richiede la versione di schema edmx {0} o precedente. La versione di schema specificata è {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-23T16:21:22Z" />
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_New" />
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" Confidence="100">
+          <Val><![CDATA[© Microsoft Corporation. Tutti i diritti sono riservati.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 2" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+</LCX>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="AfterBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.props"/>
+
+  <Target Name="LocalizeDLLs">
+    <ItemGroup>
+      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\EFTools\Microsoft.Data.Entity.*.dll;$(RepositoryRootDirectory)bin\Debug\EFTools\Microsoft.Data.Tools.XmlCore.dll;$(RepositoryRootDirectory)bin\Debug\EFTools\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <FilesToLocalize Include="@(EFToolsDLLs)">
+        <TranslationFile Condition="'%(Extension)' == '.dll'">$(LocalizationRootDirectory)\{Lang}\%(Ficd lc	lename).dll.lcl</TranslationFile>    <!--Required: translation file-->
+	<LciCommentFile Condition="'%(Extension)' == '.dll'">$(LciRootDirectory)\%(Filename).dll.lci</LciCommentFile>
+      </FilesToLocalize>
+    </ItemGroup>
+
+    <Message Text="Files to localize : @(FilesToLocalize, '%0a')" Importance="High"/>
+  </Target>
+
+  <Target Name="AfterBuild" DependsOnTargets="LocalizeDLLs"/>
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.targets" />
+</Project>

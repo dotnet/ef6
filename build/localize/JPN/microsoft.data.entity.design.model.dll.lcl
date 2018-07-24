@@ -1,0 +1,1463 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="microsoft.data.entity.design.model.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ja-JP" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="ericbaud" DateTime="2007-01-23T18:02:21Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Model.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="orikasah" DateTime="2009-01-30T03:52:50Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="orikasah" DateTime="2009-01-30T03:52:50Z" />
+      <Item ItemId=";BAD_DIAGRAM_NAME" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A diagram name must contain at least one non-whitespace character.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ダイアグラム名には、空白以外の文字が少なくとも 1 文字含まれている必要があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:46:02Z" />
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";BadEnumTypeMemberValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' is not a valid enum member value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' は有効な列挙メンバー値ではありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="yuka.matsumoto" DateTime="2011-05-30T08:24:01Z" />
+      </Item>
+      <Item ItemId=";BadFunctionParameterType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter {0} type is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[パラメーター {0} の型が無効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-07-12T02:04:00Z" />
+      </Item>
+      <Item ItemId=";Command_InvalidModelItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The item passed in is not a valid model item for this command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[渡されたアイテムは、このコマンドに対して有効なモデル アイテムではありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";ComplexPropertyUndefinedType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Undefined]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未定義]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";CyclicInheritanceHierarchy" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Detected a circular inheritance hierarchy containing entity type '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エンティティ型 '{0}' を含む循環継承階層を検出しました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";DataServicesNodeWarning" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This file contains DataServices element and cannot be opened in the Entity Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[このファイルには DataServices 要素が含まれているので、Entity Designer で開くことはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-07-12T02:04:00Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DataServices"} {StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DatabaseColumnNameFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}::{1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0}::{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";DatabaseObjectNameFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}::{1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0}::{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Default_Alias" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Self]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[自己]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";DuplicatedElementMsg" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Duplicated {0} element encountered.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[重複した {0} 要素が見つかりました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EntityContainerNameConflictsWithNamespaceName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name '{0}' can not be used for both the entity container name and the namespace name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名前 '{0}' は、エンティティ コンテナー名と名前空間名の両方には使用できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EnumPropertyHasNonEmptyStoreGeneratedPattern" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using the StoreGeneratedPattern facet on a property of enum type may cause a mismatch between the enum value of the property and the actual value inserted into the database.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[列挙型のプロパティに StoreGeneratedPattern ファセットを使用すると、プロパティの列挙型とデータベース内に挿入された実際の値の間で不一致が発生する可能性があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="StoreGeneratedPattern"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_ConceptualModelMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the conceptual model to validate.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[検証する概念モデルが見つかりませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidCSDLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the conceptual model's Schema element is not supported on this Entity Framework schema version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[概念モデルの Schema 要素の XML 名前空間は、この Entity Framework スキーマ バージョンではサポートされません。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The XML namespace for the conceptual model's Schema element is not supported on this project's target framework version.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-08-19T06:59:56Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Schema"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidMSLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the Mapping element is not supported on this Entity Framework schema version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Mapping 要素の XML 名前空間は、この Entity Framework スキーマ バージョンではサポートされません。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The XML namespace for the Mapping element is not supported on this project's target framework version.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-08-19T06:59:56Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Mapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidSSDLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the storage model's Schema element is not supported on this Entity Framework schema version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[格納モデルの Schema 要素の XML 名前空間は、この Entity Framework スキーマ バージョンではサポートされません。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The XML namespace for the storage model's Schema element is not supported on this project's target framework version.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-08-19T06:59:56Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Schema"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_MappingModelMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the mapping model to validate.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[検証するマッピング モデルが見つかりませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_StorageModelMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the storage model to validate.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[検証する格納モデルが見つかりませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Error_AssociationEndInAssocNotUnique" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The role name '{0}' is not valid because it is equal to the role name of the other association end within this association.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ロール名 '{0}' は、このアソシエーション内の他のアソシエーション End のロール名と同じであるため無効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Error_CircularComplexTypeDefinitionOnAdd" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot add a property of type {0} to this type – this would cause circular loop for this type definition.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[型 {0} のプロパティはこの型に追加できません。追加すると、この型定義で循環ループが発生します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Error_CircularComplexTypeDefinitionOnChange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot change this property type to {0} – this would cause circular loop for the enclosing type definition.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[このプロパティの型は {0} に変更できません。変更すると、囲む型の定義で循環ループが発生します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Error_ComplexTypePropertyNameNotUnique" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name '{0}' is not unique in the '{1}' ComplexType.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名前 '{0}' は '{1}' ComplexType 内で一意ではありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ComplexType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Error_MemberNameNotUnique" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name '{0}' is not unique in the '{1}' inheritance hierarchy.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名前 '{0}' は '{1}' 継承階層内で一意ではありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Error_MemberNameSameAsParent" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name '{0}' cannot be used in type '{1}'. Member names cannot be the same as their enclosing type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名前 '{0}' を型 '{1}' で使用することはできません。メンバー名をそれを含む型と同じ名前にすることはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Error_PropertyNameInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property name '{0}' is not valid. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[プロパティ名 '{0}' は無効です。別の名前を指定してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_AssociationWithtouAssociationSet" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association '{0}' has no association set.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[アソシエーション '{0}' にはアソシエーション セットがありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_CiricularComplexTypeDefinition" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A circular complex type definition has been found for {0} complex type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} 複合型の循環複合型定義が見つかりました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_CiricularInheritance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A circular inheritance chain has been found involving entity types {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エンティティ型 {0} を含む循環継承チェーンが見つかりました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_ComplexTypesNotSupported" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ComplexType elements are not supported in the Entity Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Entity Designer では ComplexType 要素はサポートされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-07-12T02:04:00Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ComplexType"} {StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_EntityTypesWithoutEntitySets" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' has no entity set.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エンティティ型 '{0}' にはエンティティ セットがありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_IgnoreMappedFKAssociation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Mapping Association '{0}' is redundant: Its referential integrity constraint provides sufficient information.  You can safely delete the mapping information for this association.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[マッピング Association '{0}' が重複しています: 対応する参照整合性制約には十分な情報があります。このアソシエーションのマッピング情報は削除しても安全です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:48:57Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_MultipleEntitySetsPerType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' exists in multiple entity sets: {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エンティティ型 '{0}' が複数のエンティティ セットに存在します: {1}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_UndefinedComplexPropertyType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type of property {0} is undefined. A type must be provided for this property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[プロパティ {0} の型が定義されていません。このプロパティには型を指定する必要があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[アソシエーション '{0}' はマップされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociationEnd" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association End '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Association End '{0}' はマップされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:48:57Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association End"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociationEndKey" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association End key property '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Association End キー プロパティ '{0}' はマップされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:48:57Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association End"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedEntityType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エンティティ型 '{0}' はマップされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[プロパティ '{0}' はマップされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";EscherValidation_UsingNotSupported" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using elements are not supported in the Entity Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Entity Designer では Using 要素はサポートされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-07-12T02:04:00Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";GenerateDatabaseScriptExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception of type '{0}' occurred while attempting to generate the database script from the model. The exception message is: '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[モデルからデータベース スクリプトを生成する際に '{0}' 型の例外が発生しました。例外メッセージ: '{1}'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-04-07T07:55:33Z" />
+      </Item>
+      <Item ItemId=";INVALID_FORMAT" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Value '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[値 '{0}' は無効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";INVALID_NC_NAME_CHAR" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名前 '{0}' は無効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Incorrect_Enum_UnderlyingType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Primitive type '{0}' is not a valid underlying type for an enum.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[プリミティブ型 '{0}' は列挙の基になる型として有効ではありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="yuka.matsumoto" DateTime="2011-05-30T08:24:01Z" />
+      </Item>
+      <Item ItemId=";InvalidNamespaceName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The namespace '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名前空間 '{0}' は無効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";MappingModel_AliasDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}:{1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0}:{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";MappingModel_AssociationSetMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (AssociationSet)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (AssociationSet)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_ConditionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Condition on {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} の Condition]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:48:57Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Condition"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_DeleteFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (DeleteFunction)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (DeleteFunction)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DeleteFunction"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_EndPropertyDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EndProperty)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (EndProperty)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EndProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_EntityContainerMappingDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} <==> {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} <==> {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";MappingModel_EntitySetMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EntitySet)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (EntitySet)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_EntityTypeMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EntityType)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (EntityType)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_FunctionAssociationEndDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} {1}->{2} (AssociationEnd)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} {1}->{2} (AssociationEnd)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_InsertFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (InsertFunction)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (InsertFunction)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="InsertFunction"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_MappingFragmentDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (TableName)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (TableName)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TableName"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_ModificationFunctionMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ModificationFunctionMapping for {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} の ModificationFunctionMapping]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ModificationFunctionMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_UpdateFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (UpdateFunction)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} (UpdateFunction)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="UpdateFunction"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ModelParse_AliasElementMissingKeyAttribute" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alias elements require a Key attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エイリアス要素には Key 属性が必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Key"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ModelParse_AliasElementMissingValueAttribute" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alias elements require a Value attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エイリアス要素には Value 属性が必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Value"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ModelParse_GhostNodeNotSupportedByDesigner" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The attribute '{0}' on element '{1}' is not supported by the EDM Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[要素 '{1}' の属性 '{0}' は、EDM デザイナーではサポートされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";ModelParse_MutuallyExclusiveAttributeAndChildElement" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The attribute '{0}' is only valid if the element does not have any '{1}' elements.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[属性 '{0}' は、要素に '{1}' 要素が含まれない場合にのみ有効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";ModelParse_NonQualifiedElement" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The element '{0}' does not have the expected namespace value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[要素 '{0}' には、想定される名前空間の値がありません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";Model_DefaultComplexTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[ComplexType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultDiagramName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Diagram]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Model_DefaultEntitySetSuffix" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Set]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultEntityTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Entity]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultEnumTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[EnumType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_IdPropertyName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Id]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NAME_NOT_UNIQUE" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name {0} cannot be duplicated in this context. Please choose another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[このコンテキストでは名前 {0} は重複できません。別の名前を選択してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";NavPropNameSameAsContainer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The suggested NavigationProperty name '{0}' cannot be the same as the name of the containing EntityType.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[NavigationProperty の候補名 '{0}' と親 EntityType の名前を同じにすることはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="NavigationProperty"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NonValidDesignerProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value '{0}' for the designer property '{1}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[デザイナーのプロパティ '{1}' の値 '{0}' は無効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-04-07T07:55:33Z" />
+      </Item>
+      <Item ItemId=";OperationRequiresValidSchema" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This operation requires a consistent schema. Please validate schemas and fix all errors.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[この操作には一貫したスキーマが必要です。スキーマを検証してすべてのエラーを修正してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";RESOLVE_CONDITION_BOUND_TO_PROP_AND_COLUMN" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A condition cannot be bound to a property and a column at the same time.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[条件をプロパティと列に同時にバインドすることはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";RESOLVE_UNRESOLVED_ALIAS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An alias element in the MSL references an unresolvable namespace '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[MSL のエイリアス要素が解決できない名前空間 '{0}' を参照しています。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MSL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SeparatorCharacterForMultipleItemsInAnErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[, ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[, ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";SetRowsAffectedParameterErrorMessage_CannotUse" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The parameter {0} cannot be used as a RowsAffectedParameter. The mode must be Out and the type must be convertible to integer - the parameter passed has mode {1} and type {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[パラメーター {0} は RowsAffectedParameter として使用できません。モードを Out にし、型を整数に変換できるようにする必要があります。渡されたパラメーターはモードが {1} で型が {2} です]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="RowsAffectedParameter"} {StrContains="Out"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_DOCUMENTATION_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[More than one Documentation element was declared. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[複数の Documentation 要素が宣言されました。 ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Documentation"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_ENTITY_CONTAINER_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple EntityContainer elements were detected in namespace '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[複数の EntityContainer 要素が名前空間 '{0}' で検出されました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_KEY_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[More than one Key element was declared. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[複数の Key 要素が宣言されました。 ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Key"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_REFERENTIAL_CONSTRAINTS_IN_ASSOCIATION" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The ReferentialConstraint in the association named '{0}' is not valid. Multiple ReferentialConstraints are illegal for associations.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' という名前のアソシエーションでは ReferentialConstraint は無効です。複数の ReferentialConstraints をアソシエーションに使用することはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:48:57Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ReferentialConstraint"} {StrContains="ReferentialConstraints"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UnexpectedElementMsg" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unexpected {0} element encountered.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[予期しない {0} 要素が見つかりました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UnresolvedAssociationSet_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association type '{0}' has an undeclared association set or is malformed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[アソシエーション型 '{0}' に宣言されていないアソシエーション セットがあるか型の形式が不適切です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UnresolvedBaseType_1" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Base type '{0}' of entity type '{1}' is unresolved.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エンティティ型 '{1}' の基本型 '{0}' は未解決です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UnresolvedEntitySet_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' has an undeclared entity set.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[エンティティ型 '{0}' に宣言されていないエンティティ セットがあります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UnresolvedReference_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unresolved reference '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未解決の参照 '{0}' です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UnresolvedReferentialConstraint_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unresolved referential constraint on association '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[アソシエーション '{0}' の未解決の参照に関する制約です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UnresolvedTypeReferences_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unresolved type references {0} in EntityTypeMapping.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[EntityTypeMapping の未解決の型参照 {0} です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationEndNoTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the target for AssociationEnd '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationEnd '{0}' のターゲットを解決できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationNoMatchingNavProp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to locate the navigation property for EntityType '{0}', AssociationEnd '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。EntityType '{0}'、AssociationEnd '{1}' のナビゲーション プロパティを特定できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"} {StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFind" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find database AssociationSetMapping for association '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。アソシエーション '{0}' のデータベース AssociationSetMapping が見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindEntityTypeForProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot find the EntityType for property '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。プロパティ '{0}' の EntityType が見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Within AssociationSetMapping, unable to clone scalar property '{0}'. Cannot find matching EntityType for database EntityType '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationSetMapping 内でスカラー プロパティ '{0}' を複製できません。データベース EntityType '{1}' に一致する EntityType が見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType", "EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Within AssociationSetMapping, unable to clone scalar property '{0}'. Cannot find matching property for database property '{1}' in EntityType '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationSetMapping 内でスカラー プロパティ '{0}' を複製できません。EntityType '{2}' でデータベース プロパティ '{1}' に一致するプロパティが見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingSSideEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find a matching storage EntitySet for the database EntitySet named '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。'{0}' という名前のデータベース EntitySet に一致するストレージ EntitySet が見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet", "EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingSSideProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find a matching storage property for database storage property '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationSetMapping の処理中にスカラー プロパティ '{0}' を複製できません。データベース ストレージ プロパティ '{1}' に一致するストレージ プロパティが見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindOrCreateMatchingProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find or create a matching property for the database property '{1}' in EntityType '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationSetMapping の処理中にスカラー プロパティ '{0}' を複製できません。EntityType '{2}' でデータベース プロパティ '{1}' に一致するプロパティが見つからないか作成できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindSSideForCSideProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find a mapped storage property for conceptual property '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationSetMapping の処理中にスカラー プロパティ '{0}' を複製できません。概念プロパティ '{1}' にマップされたストレージ プロパティが見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindTempSSideEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find database storage EntitySet for AssociationSetMapping '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationSetMapping '{0}' のデータベース ストレージ EntitySet が見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"} {StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingWrongNumberAssociationSetEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. AssociationSet '{0}' has an incorrect number of ends, '{1}'. There should be 2 ends.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。AssociationSet '{0}' に含まれる End 数 '{1}' が正しくありません。End 数は 2 である必要があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingWrongNumberAssociationSetMappingEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The database AssociationSetMapping {0} has an incorrect number of ends, {1}. There should be 2 ends.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。データベース AssociationSetMapping {0} に含まれる End 数 {1} が正しくありません。End 数は 2 である必要があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationWrongNumberEnds" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The database association '{0}' has an incorrect number of ends, {1}. There should be 2 ends.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。データベース アソシエーション '{0}' に含まれる End 数 {1} が正しくありません。End 数は 2 である必要があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create a copy of database association '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。データベース アソシエーション '{0}' のコピーを作成できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping based on the existing AssociationSet '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。既存の AssociationSet '{0}' に基づく AssociationSetMapping を作成できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping", "AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMappingEndProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping EndProperty based on the existing AssociationSetEnd '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。既存の AssociationSetEnd '{0}' に基づく AssociationSetMapping EndProperty を作成できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EndProperty"} {StrContains="AssociationSetEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMappingScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping based on the existing conceptual property '{0}' and the storage property '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。既存の概念プロパティ '{0}' およびストレージ プロパティ '{1}' に基づく AssociationSetMapping を作成できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create a copy of database EntityType '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。データベース EntityType '{0}' のコピーを作成できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotFindRootEntityTypeForProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The attempt to add {0} new properties for DatabaseObject '{1}' failed. Cannot locate any matching root EntityType.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。DatabaseObject '{1}' の {0} 個の新しいプロパティを追加できませんでした。一致するルート EntityType を特定できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DatabaseObject"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseEntitySetMappingCannotFindEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone the EntitySetMapping. Cannot find matching a EntityType for the database EntityType '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。EntitySetMapping を複製できません。データベース EntityType '{0}' に一致する EntityType が見つかりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySetMapping"} {StrContains="EntityType", "EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception of type '{0}' occurred while attempting to update from the database. The exception message is: '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新しようとしているときに型 '{0}' の例外が発生しました。例外メッセージ: '{1}'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseScalarPropertyNoColumnNameTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the ColumnName Target for ScalarProperty '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。ScalarProperty '{0}' の ColumnName Target を解決できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:48:57Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ColumnName"} {StrContains="Target"} {StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseScalarPropertyNoNameTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the Name Target for ScalarProperty '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[データベースから更新できません。ScalarProperty '{0}' の Name Target を解決できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-01-30T04:30:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Name Target"} {StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseUnableToBringRefConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The association '{0}' between the types in the model '{1}' and '{2}' was excluded because it had a referential constraint which referenced properties {3} which could not be found in those types.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[モデル '{1}' と '{2}' の型の間のアソシエーション '{0}' が除外されました。このアソシエーションには参照に関する制約があり、これらの型にないプロパティ {3} を参照していました。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The referential constraint between types '{0}' and '{1}' on association '{2}' was excluded, because properties {3} could not be found in the model.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="orikasah" DateTime="2009-09-10T02:47:20Z" />
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="ericbaud" DateTime="2007-01-23T18:02:21Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+        <Prev Cat="Text">
+          <Val><![CDATA[1.0.0.0]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+      <Props>
+        <Str Name="Custom5" Val="To be reviewd next time" />
+      </Props>
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.Model]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+      <Props>
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+        <Prev Cat="Text">
+          <Val><![CDATA[9.0.30417.0]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+      <Props>
+        <Str Name="Custom5" Val="To be reviewd next time" />
+      </Props>
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+      <Props>
+        <Str Name="Custom5" Val="To be reviewd next time" />
+      </Props>
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+      <Props>
+        <Str Name="Custom5" Val="To be reviewd next time" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+      <Props>
+        <Str Name="Custom5" Val="To be reviewd next time" />
+      </Props>
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+        <Prev Cat="Text">
+          <Val><![CDATA[9.0.30417.0]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+      <Props>
+        <Str Name="Custom5" Val="To be reviewd next time" />
+      </Props>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="ericbaud" DateTime="2007-01-23T18:02:21Z" />
+  </Item>
+</LCX>

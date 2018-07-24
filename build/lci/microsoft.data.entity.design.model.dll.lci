@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="Microsoft.Data.Entity.Design.Model.dll" PsrId="211" FileType="1" SrcCul="en-US" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <OwnedComments>
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Loc" />
+  </OwnedComments>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Model.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";DataServicesNodeWarning" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This file contains DataServices element and cannot be opened in the Entity Designer.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DataServices"} {StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EnumPropertyHasNonEmptyStoreGeneratedPattern" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using the StoreGeneratedPattern facet on a property of enum type may cause a mismatch between the enum value of the property and the actual value inserted into the database.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="StoreGeneratedPattern"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidCSDLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the conceptual model's Schema element is not supported on this Entity Framework schema version.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Schema"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidMSLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the Mapping element is not supported on this Entity Framework schema version.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Mapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidSSDLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the storage model's Schema element is not supported on this Entity Framework schema version.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Schema"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Error_ComplexTypePropertyNameNotUnique" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name '{0}' is not unique in the '{1}' ComplexType.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ComplexType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_ComplexTypesNotSupported" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ComplexType elements are not supported in the Entity Designer.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ComplexType"} {StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_IgnoreMappedFKAssociation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Mapping Association '{0}' is redundant: Its referential integrity constraint provides sufficient information.  You can safely delete the mapping information for this association.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociationEnd" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association End '{0}' is not mapped.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association End"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociationEndKey" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association End key property '{0}' is not mapped.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association End"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EscherValidation_UsingNotSupported" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using elements are not supported in the Entity Designer.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_AssociationSetMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (AssociationSet)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_ConditionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Condition on {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Condition"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_DeleteFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (DeleteFunction)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DeleteFunction"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_EndPropertyDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EndProperty)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EndProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_EntitySetMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EntitySet)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_EntityTypeMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EntityType)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_FunctionAssociationEndDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} {1}->{2} (AssociationEnd)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_InsertFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (InsertFunction)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="InsertFunction"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_MappingFragmentDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (TableName)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TableName"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_ModificationFunctionMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ModificationFunctionMapping for {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ModificationFunctionMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingModel_UpdateFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (UpdateFunction)]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="UpdateFunction"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ModelParse_AliasElementMissingKeyAttribute" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alias elements require a Key attribute.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Key"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ModelParse_AliasElementMissingValueAttribute" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alias elements require a Value attribute.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Value"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultComplexTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[ComplexType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultDiagramName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Diagram]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultEntitySetSuffix" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Set]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultEntityTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Entity]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_DefaultEnumTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[EnumType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Model_IdPropertyName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Id]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NavPropNameSameAsContainer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The suggested NavigationProperty name '{0}' cannot be the same as the name of the containing EntityType.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="NavigationProperty"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RESOLVE_UNRESOLVED_ALIAS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An alias element in the MSL references an unresolvable namespace '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MSL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SetRowsAffectedParameterErrorMessage_CannotUse" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The parameter {0} cannot be used as a RowsAffectedParameter. The mode must be Out and the type must be convertible to integer - the parameter passed has mode {1} and type {2}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="RowsAffectedParameter"} {StrContains="Out"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_DOCUMENTATION_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[More than one Documentation element was declared. ]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Documentation"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_ENTITY_CONTAINER_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple EntityContainer elements were detected in namespace '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_KEY_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[More than one Key element was declared. ]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Key"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TOO_MANY_REFERENTIAL_CONSTRAINTS_IN_ASSOCIATION" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The ReferentialConstraint in the association named '{0}' is not valid. Multiple ReferentialConstraints are illegal for associations.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ReferentialConstraint"} {StrContains=!1055;"ReferentialConstraints"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationEndNoTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the target for AssociationEnd '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationNoMatchingNavProp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to locate the navigation property for EntityType '{0}', AssociationEnd '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"} {StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFind" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find database AssociationSetMapping for association '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindEntityTypeForProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot find the EntityType for property '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Within AssociationSetMapping, unable to clone scalar property '{0}'. Cannot find matching EntityType for database EntityType '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType", "EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Within AssociationSetMapping, unable to clone scalar property '{0}'. Cannot find matching property for database property '{1}' in EntityType '{2}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingSSideEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find a matching storage EntitySet for the database EntitySet named '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet", "EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingSSideProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find a matching storage property for database storage property '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindOrCreateMatchingProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find or create a matching property for the database property '{1}' in EntityType '{2}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindSSideForCSideProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find a mapped storage property for conceptual property '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindTempSSideEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find database storage EntitySet for AssociationSetMapping '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"} {StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingWrongNumberAssociationSetEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. AssociationSet '{0}' has an incorrect number of ends, '{1}'. There should be 2 ends.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingWrongNumberAssociationSetMappingEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The database AssociationSetMapping {0} has an incorrect number of ends, {1}. There should be 2 ends.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping based on the existing AssociationSet '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping", "AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMappingEndProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping EndProperty based on the existing AssociationSetEnd '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EndProperty"} {StrContains="AssociationSetEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMappingScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping based on the existing conceptual property '{0}' and the storage property '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create a copy of database EntityType '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotFindRootEntityTypeForProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The attempt to add {0} new properties for DatabaseObject '{1}' failed. Cannot locate any matching root EntityType.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DatabaseObject"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseEntitySetMappingCannotFindEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone the EntitySetMapping. Cannot find matching a EntityType for the database EntityType '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySetMapping"} {StrContains="EntityType", "EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseScalarPropertyNoColumnNameTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the ColumnName Target for ScalarProperty '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ColumnName"} {StrContains="Target"} {StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseScalarPropertyNoNameTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the Name Target for ScalarProperty '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Name Target"} {StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+</LCX>

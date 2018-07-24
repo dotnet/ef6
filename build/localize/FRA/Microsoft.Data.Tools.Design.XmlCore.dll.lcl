@@ -1,0 +1,3055 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="microsoft.data.tools.design.xmlcore.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="fr-FR" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="DUIData" />
+    <Cmt Name="GoldMine" />
+    <Cmt Name="Goldmine8" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Loc" />
+    <Cmt Name="ManifestData" />
+    <Cmt Name="Mnemonic" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+    <Cmt Name="UIType" />
+    <Cmt Name="UTSData" />
+    <Cmt Name="UTSUI" />
+    <Cmt Name="zLocLevel" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.Design.XmlCore.g.resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.XmlDesignerBase.Common.CommonResource.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-yalang" DateTime="2013-04-16T01:53:48Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-yalang" DateTime="2013-04-16T01:53:48Z" />
+      <Item ItemId=";AbortDueToFatalError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A critical error has occurred. The computer is out of memory or system resources. The application must close.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur grave s'est produite. L'ordinateur manque de mémoire ou de ressources système. L'application doit être fermée.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ArgumentParsing_ArgumentValueMissingError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The argument string is missing the value of one of the arguments.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Il manque à la chaîne d'arguments la valeur de l'un des arguments.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ArgumentParsing_DoubleQuoteMissingError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The argument string is missing a closing double quote.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Il manque à la chaîne d'arguments un guillemet double fermant.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AssemblySource" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Assembly Source]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Source de l'assembly]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ClusteredIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Clustered]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Cluster]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ConnectionStringParser_InvalidConnectionString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The connection string could not be parsed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La chaîne de connexion n'a pas pu être analysée.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";CopyOfFormatString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Copy of ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Copie de ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";CopyOfFormatString2" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Copy ({0}) of ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Copie ({0}) de ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DatabaseEncryptionKeyName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DatabaseKey]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[DatabaseKey]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DefaultCaption" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Visual Studio]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Microsoft Visual Studio]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DefaultRelatedElementTypeDescription" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[object]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[objet]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Deserialize_Relationships" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deserializing relationships between database objects.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Désérialisation des relations entre les objets de base de données.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DisplayName_Sql100Dsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server 2008]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DisplayName_Sql110Dsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server 2012]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DisplayName_Sql90Dsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server 2005]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DisplayName_SqlAzureDsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server Azure]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EE_BatchError_Exception" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while the batch was being processed. The error message is: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur s'est produite lors du traitement du lot. Le message d'erreur est : {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_BatchExecutionError_Halting" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while the batch was being executed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur s'est produite lors de l'exécution du lot.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_BatchExecutionError_Ignoring" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while the batch was being executed, but the error has been ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur s'est produite lors de l'exécution du lot, mais elle a été ignorée.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_BatchExecutionInfo_RowsAffected" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]D;]A;({0} row(s) affected)]D;]A;]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]D;]A;({0} ligne(s) affectée(s))]D;]A;]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionError_CommandNotSupported" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Command {0} is not supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La commande {0} n'est pas prise en charge.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionError_InvalidPath" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following path could not be used because an error occurred:  {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible d'utiliser le chemin d'accès suivant, car une erreur s'est produite : {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionError_ReadingFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following file could not be read because an error occurred: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de lire le fichier suivant, car une erreur s'est produite : {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionError_VariableNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The variable {0} could not be found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de trouver la variable {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionInfo_FinalizingLoop" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Execution completed {0} times...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Exécution effectuée à {0} reprises…]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionInfo_InitilizingLoop" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Starting execution loop of {0} times...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Démarrage de la boucle d'exécution pour {0} fois…]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionInfo_QueryCancelledbyUser" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cancelled the query.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Vous avez annulé la requête.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ExecutionNotYetCompleteError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The previous execution is not yet complete.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[L'exécution précédente n'est pas encore terminée.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ScriptError_Error" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A scripting error occurred.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur de script s'est produite.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ScriptError_FatalError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A fatal error occurred.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur irrécupérable s'est produite.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ScriptError_ParsingSyntax" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Incorrect syntax was encountered while {0} was being parsed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une syntaxe incorrecte a été trouvée lors de l'analyse de {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EE_ScriptError_Warning" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Scripting warning.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Avertissement de script.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorString_TooManyErrors" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The maximum number of {0} errors has been reached. {1} total errors, {2} total warnings, and {3} total messages were encountered.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le nombre maximal d'erreurs de connexions {0} a été atteint. {1} erreurs au total, {2} avertissements au total et {3} messages au total ont été détectés.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionArrayWithNullOrEmptyString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of '{0}' cannot contain any null or empty strings.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La valeur de '{0}' ne peut pas contenir de chaînes Null ou vides.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionEmptyCollection" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The collection '{0}' cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La collection '{0}' ne peut pas être vide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionEmptyString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of '{0}' cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La valeur de '{0}' ne peut pas être vide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionEnumerationNotDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} is not a valid value for {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} n'est pas une valeur valide pour {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionExpectedType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type is not valid. The type '{0}' was expected.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le type n'est pas valide. Le type '{0}' était attendu.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionIndexOutOfRange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of {0} must be between {1} and {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La valeur de {0} doit être comprise entre {1} et {2}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionInvalidNullNameArgument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name for '{0}' cannot be null or an empty string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le nom de '{0}' ne peut pas être une chaîne Null ou vide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionMaxLengthExceeded" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following value for {1} is longer than {2} characters: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La longueur de valeur suivante pour {1} est supérieure à {2} caractères : '{0}']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionNullOrWhiteSpaceString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of '{0}' cannot be null, empty or contain only white space.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La valeur de '{0}' ne peut pas être Null, vide, ou contenir uniquement un espace blanc.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExceptionUnexpected" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An unexpected error occurred.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur inattendue s'est produite.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";FullTextIndexName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Full-text Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Index de recherche en texte intégral]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";FulltextIndexDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} on {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} sur {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";FunctionBody" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function Body]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Corps de la fonction]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";FunctionImplementation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function Implementation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Implémentation de la fonction]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Import_MergingChildren" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Merging children]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Fusion des enfants]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InlineConstraintOnDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[on {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[sur {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";IntegerRange_EndLessThanBegin" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The end value cannot be less than the begin value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La valeur de fin ne peut pas être inférieure à la valeur de début.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MasterKeyName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Master Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Clé principale]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NonClusteredIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Non-Clustered]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Non cluster]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NonUniqueIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Non-Unique]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Non unique]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Not_connected" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An internal error occurred while trying to connect to the design-time validation database.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur interne s'est produite lors de la tentative de connexion à la base de données de validation au moment du design.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PartitionValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Partition Value]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Valeur de la partition]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Permission" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Permission]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Autorisation]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployScriptAlreadyDeployed" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment did not occur because the script has already been deployed to the target server.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le déploiement n'a pas eu lieu, car le script a déjà été déployé sur le serveur cible.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseCompat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database compatibility level of the build script %i does not match the compatibility level of the target database %i. Verify whether your database project settings are correct and whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le niveau de compatibilité de la base de données du script de compilation %i ne correspond pas au niveau de compatibilité de la base de données cible %i. Vérifiez si les paramètres de votre projet de base de données sont corrects et si votre script de compilation est à jour.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseExists" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot deploy this update script to target {0}. The database for which this script was built, {1}, does not exist on this server.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Vous ne pouvez pas déployer ce script de mise à jour pour la cible {0}. La base de données pour laquelle le script a été généré, {1}, n'existe pas sur ce serveur.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseExistsUnknownServer" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot deploy this update script to target server. The database for which this script was built, {0}, does not exist on this server.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Vous ne pouvez pas déployer ce script de mise à jour sur le serveur cible. La base de données pour laquelle le script a été généré, {0}, n'existe pas sur ce serveur.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database name in the build script %s does not match the name of the target database %s. Verify whether your database project settings are correct and  whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le nom de la base de données du script de compilation %s ne correspond pas au nom de la base de données cible %s. Vérifiez si les paramètres de votre projet de base de données sont corrects et si votre script de compilation est à jour.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseState" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The state of the target database, %s, is not set to ONLINE. To deploy to this database, its state must be set to ONLINE.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[L'état de la base de données cible, %s, n'a pas la valeur ONLINE. Pour effectuer un déploiement sur cette base de données, son état doit être défini sur ONLINE.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ONLINE", "ONLINE"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployVerifyServerName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The server name in the build script %s does not match the name of the target server %s. Verify whether your database project settings are correct and whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le nom de serveur du script de compilation %s ne correspond pas au nom du serveur cible %s. Vérifiez si les paramètres de votre projet de base de données sont corrects et si votre script de compilation est à jour.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PredeployVerifyServerVersion" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The version of SQL Server in the build script %i does not match the version on the target server, %i. Verify whether your database project settings are correct and whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La version de SQL Server du script de compilation %i ne correspond pas à la version sur le serveur cible, %i. Vérifiez si les paramètres de votre projet de base de données sont corrects et si votre script de compilation est à jour.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PrimaryXML_LabelPart" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Primary XML]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[XML primaire]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XML"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Registry_CannotAccessInstallDirKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The installation directory for Visual Studio could not be located.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de trouver le répertoire d'installation de Visual Studio.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SchemaDependencyInfoMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{3} ({2}) depends on {1} ({0}). {1} must be updated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{3} ({2}) dépend de {1} ({0}). {1} doit être mis à jour.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SchemaDependencyInfoMessage2" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ {1} ({0}) depends on {3} ({2}). {1} must be updated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ {1} ({0}) dépend de {3} ({2}). {1} doit être mis à jour.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_CannotFoundConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An expected constraint was not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une contrainte attendue est introuvable.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_CannotFoundTrigger" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A trigger was not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Déclencheur introuvable.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_ChildWithoutName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name of the child constraint was not specified. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le nom de la contrainte enfant n'a pas été spécifié. ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_NoMultipleConstraintsInOneStatement" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot add multiple constraints in one statement. You must put only one object or child object in each file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Vous ne pouvez pas ajouter plusieurs contraintes dans une instruction. Vous ne devez placer qu'un seul objet ou objet enfant dans chaque fichier.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_NoMultipleObjectsInOneFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot put more than one object in the same script. You must put only one object or child object in each file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Vous ne pouvez pas mettre plusieurs objets dans le même script. Vous ne devez placer qu'un seul objet ou objet enfant dans chaque fichier.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_NoObjectIDFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The object identifier was not found in the script.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[L'identificateur d'objet est introuvable dans le script.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_ObjectIsAlreadyCreated" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The object {0} was already created.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[L'objet {0} a déjà été créé.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Schema_ObjectNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The object {0} was not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[L'objet {0} est introuvable.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SecondaryXML_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Secondary XML]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[XML secondaire]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Serialize_Relationships" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Serializing relationships between database objects]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Sérialisation des relations entre les objets de base de données]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SettingsRequireSysAdmin" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database settings for DB_CHAINING or TRUSTWORTHY could not be modified. You must be a SysAdmin to apply these settings.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de modifier les paramètres de base de données pour DB_CHAINING ou TRUSTWORTHY. Vous devez être SysAdmin pour appliquer ces paramètres.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DB_CHAINING"} {StrContains="TRUSTWORTHY"} {StrContains="SysAdmin"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SignatureName_NoSignable" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Signature for unknown object]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Signature pour objet inconnu]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SignatureName_WithSignable" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Signature for '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Signature pour '{0}']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SolutionExplorer_SchemaObjects" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Schema Objects]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Objets de schéma]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_BuildAndDeploy" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[VSDB Build And Deploy]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Génération et déploiement VSDB]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_Default" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_DesignDatabaseManager" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB DesignDBManager]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_ReverseEngineeringFeature" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB ReverseEngineer]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_SchemaCompare" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB Schema Compare]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SystemDefinedSqlCmdVariableFound" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Predefined SQLCMD variable found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Variable SQLCMD prédéfinie trouvée.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SQLCMD"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Threading_InvalidStateChange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The job state change {0} -> {1} is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La modification de l'état du travail {0} - > {1} n'est pas valide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Threading_JobAlreadyManaged" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Job Manager is already managing this job.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le Gestionnaire de travaux gère déjà ce travail.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Threading_JobListChangedJobName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[JobListChangedJob]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[JobListChangedJob]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Threading_JobManagerNotInitialized" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Job Manager was not initialized.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le Gestionnaire de travaux n'a pas été initialisé]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Aggregate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Aggregate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Agrégat]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ApplicationRole" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Application Role]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Rôle d'application]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Assembly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Assembly]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Assembly]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_AssemblyFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Assembly File]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Fichier d'assembly]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_AsymmetricKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Asymmetric Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Clé asymétrique]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_BrokerPriority" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Broker Priority]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Priorité de Service Broker]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_BuiltInServerRole" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Built-in ServerRole]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ServerRole intégré]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_BuiltInType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Built-in Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Type intégré]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Certificate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Certificat]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_CheckConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Check Constraint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Contrainte CHECK]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Column" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Column]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Colonne]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ColumnStoreIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Column Store Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Index de la banque des colonnes]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ComputedColumn" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Computed Column]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Colonne calculée]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Contract" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Contract]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Contrat]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Credential" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Credential]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Informations d'identification]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_CryptographicProvider" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cryptographic Provider]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Fournisseur de services de chiffrement]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_CustomErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Error Message]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Message d'erreur personnalisé]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_DataCompressionOption" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Data Compression Option]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Option de compression de données]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_DatabaseAuditSpecification" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Database Audit Specifications]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Spécifications de l'audit de la base de données]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_DatabaseEncryptionKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Database Encryption Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Clé de chiffrement de la base de données]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_DatabaseOptions" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Database Options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Options de la base de données]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Default" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Default]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Par défaut]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_DefaultConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Default Constraint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Contrainte par défaut]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Endpoint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Endpoint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Point de terminaison]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_EventNotification" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Event Notification]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Notification d'événement]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_EventSession" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Event Session]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Session d'événements]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ExtendedProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Extended Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Propriété étendue]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_File" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[File]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Fichier]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_FileTable" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[FileTable]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[FileTable]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ForeignKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Foreign Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Clé étrangère]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_FullTextCatalog" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Full-text Catalog]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Catalogue de texte intégral]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_FullTextIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Full-text Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Index de recherche en texte intégral]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Index" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Index]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_LinkedServer" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Linked Server]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Serveur lié]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_LinkedServerLogin" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Linked Server Login]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Connexion de serveur lié]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Login" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Login]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Connexion]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_MasterKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Master Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Clé principale]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_MessageType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Message Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Type de message]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Parameter" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Paramètre]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_PartitionFunction" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Partition Function]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Fonction de partition]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_PartitionScheme" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Partition Scheme]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Schéma de partition]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Permission" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Permission]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Autorisation]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_PrimaryKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Primary Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Clé primaire]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Procedure" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Procedure]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Procédure]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Queue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Queue]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[File d'attente]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_RemoteServiceBinding" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Remote Service Binding]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Liaison de service distant]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Role" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Role]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Rôle]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_RoleMembership" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Role Membership]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Appartenance au rôle]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Route" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Route]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Itinéraire]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Rule" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Rule]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Règle]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ScalarFunction" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Fonction]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Schema" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Schema]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Schéma]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_SearchPropertyList" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Search Property List]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Liste des propriétés de recherche]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Sequence" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Sequence]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Séquence]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ServerAudit" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Audit]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Audit du serveur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ServerAuditSpecification" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Audit Specification]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Spécification de l'audit du serveur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ServerOptions" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Options du serveur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ServerRole" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Role]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Rôle serveur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_ServerRoleMembership" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Role Membership]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Appartenance au rôle de serveur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Service" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Service]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Service]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Signature" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Signature]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Signature]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_SpatialIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Spatial Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Index spatial]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_SqlType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Sql Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Type SQL]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Statistic" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Statistic]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Statistique]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_SymmetricKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Symmetric Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Clé symétrique]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Synonym" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Synonym]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Synonyme]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Table" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Table]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Table]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_TableFunction" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Fonction]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_Trigger" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Trigger]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Déclencheur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_UniqueConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unique Constraint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Contrainte unique]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_User" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Utilisateur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_UserDefinedDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User-Defined Data Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Type de données défini par l'utilisateur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_UserDefinedTableType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User-Defined Table Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Type de table défini par l'utilisateur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_UserDefinedType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User-Defined Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Type défini par l'utilisateur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_View" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[View]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Afficher]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_XmlIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Index XML]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TypeDescription_XmlSchemaCollection" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML Schema Collection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Collection de schémas XML]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UniqueIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unique]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Unique]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Unnamed" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[<unnamed>]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[<Sans nom>]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlIndex_Path" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Chemin d'accès]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlIndex_Property" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Propriété]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlIndex_Value" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Value]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Valeur]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotDeserializeType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type {0} could not be deserialized.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de désérialiser le type '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotGetValidType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type {0} could not be deserialized because no valid type was found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de désérialiser le type '{0}', car aucun type valide n'a été trouvé.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotParseToEnum" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value {0} for enumeration {1} could not be parsed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible d'analyser la valeur {0} de l'énumération {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotToAttribute" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} could not be serialized to an XML attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de sérialiser {0} en un attribut XML.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_DuplicateAttribute" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple XmlElement or XmlAttribute attributes cannot be applied to the same field.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible d'appliquer plusieurs attributs XmlElement ou XmlAttribute au même champ.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_DuplicateKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The key {0} was duplicated in the dictionary.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La clé {0} a été dupliquée dans le dictionnaire.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_DuplicateXmlInclude" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Duplicate declaration of XmlInclude type '{0}' on class '{1}' definition.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Déclaration en double de type XmlInclude '{0}' dans la définition '{1}' de la classe.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_EmptyContent" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The content is empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le contenu est vide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_IncompatiableType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Type {0} is incompatible with type {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le type {0} est incompatible avec le type {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_InvalidEnumValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The enumeration value cannot be null.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La valeur d'énumération ne peut pas être Null.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_InvalidXmlReaderPosition" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XmlReader should be positioned at the start of an element, but it is at {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[XmlReader doit être placé au début d'un élément, mais il est placé à {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_KeyIsNull" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The key is null.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La clé est Null.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_NameReserved" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} is reserved. Use XmlAttributeAttribute to specify a different name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} est réservé. Utilisez XmlAttributeAttribute pour spécifier un autre nom.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_ReuseNames" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}.{1} and {2}.{3} use the same name, {4}. Use XmlElementAttribute or XmlAttributeAttribute to specify a different name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0}.{1} et {2}.{3} utilisent le même nom, {4}. Utilisez XmlElementAttribute ou XmlAttributeAttribute pour spécifier un autre nom.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XmlElementAttribute"} {StrContains="XmlAttributeAttribute"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";XmlSerialization_WrongType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Expecting {1}; actual {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Attendu {1} ; réel {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.XmlDesignerBase.Core.Controls.ControlsResources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-yalang" DateTime="2013-04-16T01:53:48Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-yalang" DateTime="2013-04-16T01:53:48Z" />
+      <Item ItemId=";CancelButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cancel]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Annuler]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ContinueButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Continue]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Continuer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_False" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[False]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[False]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_True" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[True]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[True]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SkipAllErrors" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skip all errors]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Ignorer toutes les erreurs]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.XmlDesignerBase.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+      <Item ItemId=";BadInsertBadChildType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot insert a child of type '{0}' into a parent of type '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossible d'insérer un enfant de type '{0}' dans un parent de type '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:58:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";BadInsertChildAlreadyExists" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot insert a child of type '{0}' into a parent of type '{1}' because the child already exists.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossible d'insérer un enfant de type '{0}' dans un parent de type '{1}' car l'enfant existe déjà.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:58:08Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";BadRemoveChildNotParent" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot remove the child '{0}' from the node '{1}' because the node is not the child's parent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossible de supprimer l'enfant '{0}' du nœud '{1}' car le nœud n'est pas le parent de l'enfant.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:58:55Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";ConversionExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value '{0}' is not valid for this converter]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La valeur '{0}' n'est pas valide pour ce convertisseur.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="rlefevre" DateTime="2010-11-04T10:33:57Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";ConverterIncorrectValueForAttribute" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value '{0}' is not valid for attribute '{1}'. Please enter a different value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[La valeur '{0}' n'est pas valide pour l'attribut '{1}'. Entrez une valeur différente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:59:23Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerViewCommandsText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Change Center]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Modifier le centre]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:00:28Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorResolvingItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error resolving item '{0}'. The exception message is: '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Erreur lors de la résolution de l'élément '{0}'. Message d'exception : '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:43:59Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_Message_With_Error_Code_Prefix" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error {0}: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Erreur {0} : {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:00:39Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExplorerSearchResults_IndividualFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[[{0}]5D; = {1} ({2})]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[[{0}]5D; = {1} ({2})]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="V-Consuelo.Aldana" DateTime="2011-05-31T15:41:22Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExplorerSearchResults_OverallFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Number of Search Results = {0}]D;]A;Results = [{1}]5D;]D;]A;Index of Previous = {2}]D;]A;Index of Next = {3}]D;]A;Current Selection in Search Results = {4}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Nombre de résultats de la recherche = {0}]D;]A;Résultats = [{1}]5D;]D;]A;Index des résultats précédents = {2}]D;]A;Index des résultats suivants = {3}]D;]A;Sélection actuelle dans les résultats de la recherche = {4}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T09:00:15Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";FileNotEditableErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Operation cancelled because the following files are not editable: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Opération annulée car les fichiers suivants ne sont pas modifiables : '{0}']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:45:53Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";INVALID_FORMAT" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Value '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[La valeur '{0}' n'est pas valide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:05:05Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";INVALID_NC_NAME_CHAR" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Le nom '{0}' n'est pas valide.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:06:10Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NAME_NOT_UNIQUE" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name {0} cannot be duplicated in this context. Please choose another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossible de dupliquer le nom {0} dans ce contexte. Choisissez un autre nom.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T09:00:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";NORMALIZE_DUPLICATE_SYMBOL_DEFINED" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The symbol '{0}' has already been defined.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Le symbole '{0}' a déjà été défini.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:46:22Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";NoneDisplayValueUsedForUX" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[(None)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[(Aucune)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:06:36Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NumOfSearchResultsFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[({0} found)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[({0} trouvé)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:07:18Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Category_General" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[General]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Général]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:07:35Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_DisplayName_Name" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Nom]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:07:51Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_False" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[False]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[False]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T07:32:18Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_True" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[True]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[True]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T07:32:18Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RenameTransactionNameFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Rename {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Renommer {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:08:05Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SwitchConverterErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} is OneWay]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} est OneWay]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:08:18Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TreeBuilder_UnknownNodeType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown Node Type encountered in XmlReader.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Type de nœud inconnu détecté dans XmlReader.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T07:57:49Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XmlReader"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_PropertyChangeUndoString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Définir {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T08:08:37Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";VanillaProvider_DtdNodesReadOnly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DTD nodes cannot be edited.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossible de modifier les nœuds DTD.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T07:52:18Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";VanillaProvider_TxAlreadyCompleted" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Transaction already completed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[La transaction est déjà terminée.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T07:56:38Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:26Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:26Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:26Z" />
+      <Props>
+        <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation.  Tous droits réservés.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:41Z" />
+      <Props>
+        <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:26Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+</LCX>

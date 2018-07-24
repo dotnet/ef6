@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0">
+  <!-- Helper properties -->
+  <!--PropertyGroup>
+    <IsXPlat>false</IsXPlat>
+    <IsXPlat Condition=" $(MSBuildProjectFullPath.StartsWith('/')) == 'true' OR $(MSBuildProjectFullPath.StartsWith('\')) == 'true' ">true</IsXPlat>
+  </PropertyGroup -->
+
+  <!-- Common -->
+  <PropertyGroup>
+    <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
+    <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
+    <SolutionPackagesFolder>$(RepositoryRootDirectory)packages\</SolutionPackagesFolder>
+    <!-- SolutionFile>$(RepositoryRootDirectory)$(RepositoryName).sln</SolutionFile>
+    <ArtifactsDirectory>$(RepositoryRootDirectory)artifacts\</ArtifactsDirectory>
+    <DotnetExePath>$(RepositoryRootDirectory)cli\dotnet.exe</DotnetExePath>
+    <DotnetExePath Condition=" '$(IsXPlat)' == 'true' ">$(RepositoryRootDirectory)cli\dotnet</DotnetExePath>
+    <DotnetSharedSDKDirectory>$(RepositoryRootDirectory)cli1.0.4\shared\Microsoft.NETCore.App\1.0.4\</DotnetSharedSDKDirectory>
+    <NuGetExePath>$(RepositoryRootDirectory).nuget\nuget.exe</NuGetExePath>
+    <SharedDirectory>$(BuildCommonDirectory)Shared</SharedDirectory>
+    <NuGetCoreSrcDirectory>$(RepositoryRootDirectory)src\NuGet.Core\</NuGetCoreSrcDirectory>
+    <NuGetClientsSrcDirectory>$(RepositoryRootDirectory)src\NuGet.Clients\</NuGetClientsSrcDirectory>
+    <NupkgOutputDirectory Condition=" '$(BuildRTM)' != 'true' ">$(ArtifactsDirectory)nupkgs\</NupkgOutputDirectory>
+    <NupkgOutputDirectory Condition=" '$(BuildRTM)' == 'true' ">$(ArtifactsDirectory)ReleaseNupkgs\</NupkgOutputDirectory>
+    <XunitConsoleExePath>$(SolutionPackagesFolder)xunit.runner.console.2.3.1\tools\net452\xunit.console.x86.exe</XunitConsoleExePath>
+    <ILMergeExePath>$(SolutionPackagesFolder)ILMerge.2.14.1208\tools\ILMerge.exe</ILMergeExePath>
+    <XunitXmlLoggerDirectory>$(SolutionPackagesFolder)XunitXml.TestLogger.2.0.0\build\_common</XunitXmlLoggerDirectory>
+    <EnlistmentRoot>$(RepositoryRootDirectory)</EnlistmentRoot>
+    <EnlistmentRootSrc>$(RepositoryRootDirectory)src</EnlistmentRootSrc>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(RepositoryRootDirectory)</SolutionDir>
+    <ArtifactRoot>$(ArtifactsDirectory)</ArtifactRoot>
+    <TestUtilitiesDirectory>$(RepositoryRootDirectory)test\TestUtilities\</TestUtilitiesDirectory>
+    <NuGetBuildLocalizationRepository>$(RepositoryRootDirectory)submodules\NuGet.Build.Localization\</NuGetBuildLocalizationRepository -->
+    <LocalizationRootDirectory>$(BuildCommonDirectory)localize</LocalizationRootDirectory>
+    <LciRootDirectory>$(BuildCommonDirectory)lci</LciRootDirectory>
+    <LocalizationFilesDirectory>$(RepositoryRootDirectory)LocalizedFiles</LocalizationFilesDirectory>
+    <MicroBuildDirectory>$(SolutionPackagesFolder)MicroBuild.Core.0.2.0\build\</MicroBuildDirectory>
+    <!-- IsBuildOnlyXPLATProjects>$(DotNetBuildFromSource)</IsBuildOnlyXPLATProjects>
+    <BlobPublishTargetsPath>$(SolutionPackagesFolder)Microsoft.DotNet.Build.Tasks.Feed.2.1.0-prerelease-02419-02\build\Microsoft.DotNet.Build.Tasks.Feed.targets</BlobPublishTargetsPath -->
+  </PropertyGroup>
+</Project>

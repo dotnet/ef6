@@ -1,0 +1,625 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="Microsoft.Data.Entity.Design.dll" PsrId="211" FileType="1" SrcCul="en-US" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <OwnedComments>
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Loc" />
+  </OwnedComments>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";Application_Caption" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET Entity Data Model Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ArgumentExceptionMessageParameter" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter is expected to be an instance of either the 'Type' or the 'Guid' type.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Type"} {StrContains="Guid"}]A;]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ConnectionManager_GetConfigError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the configuration file. Verify that it is in the correct project or restart Visual Studio.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Visual Studio"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ConnectionManager_MarsError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not add the MultipleActiveResultSets attribute to the connection string because the server version could not be determined.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MultipleActiveResultSets"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ConnectionManager_SaveXmlError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not save the XML to the configuration file '{0}' because of the error '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XML"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ConnectionManager_ValidateNoConnection" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Because the connection type is not specified, the model will be validated assuming a SQL Server 2005 connection.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SQL Server"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DatabaseCreation_ErrorTemplateFileNotInProject" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The template activity '{0}' cannot be invoked because the given 'TemplatePath' input file '{{0}}' is not included in the project.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{NoLocRule} {StrContains="{0}"} {StrContains="{{0}}"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DatabaseCreation_ErrorTemplatePathNonFile" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'TemplatePath' input file, '{{0}}', for the template activity '{0}' in this workflow is not valid because non-file and UNC paths are not supported.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{NoLocRule}{StrContains="{{0}}","{0}"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[FP LocVer:  quotes to be deleted in line with Czech SG]]></Note>
+        </Notes>
+      </Item>
+      <Item ItemId=";DatabaseCreation_ErrorTemplatePathNotValid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'TemplatePath' attribute value, '{{0}}', for the template activity '{0}' in this workflow either is not valid or does not exist.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{NoLocRule}{StrContains="{{0}}","{0}"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[FP LocVer:  quotes to be deleted in line with Czech SG]]></Note>
+        </Notes>
+      </Item>
+      <Item ItemId=";DatabaseCreation_ExceptionParsingTemplateFilePath" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception occurred while attempting to parse the 'TemplatePath' '{{0}}' in the template activity '{0}'. The specific message is: '{{1}}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{NoLocRule} {StrContains="{0}"} {StrContains="{{1}}"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DatabaseCreation_TemplateFileNotExists" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The template activity '{0}' cannot be invoked because the given 'TemplatePath' input file '{{0}}' does not exist.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{NoLocRule} {StrContains="{0}"} {StrContains="{{0}}"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EntityContainerNodeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityContainer: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EnumDialog_IsFlagLabel" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set Flags attribute]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Flags"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Extensibility_NoConverterForExtension" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Designer is being opened on a non-EDMX file and there is not an IModelConversionExtension registered for this extension.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"} {StrContains="IModelConversionExtension"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";LoadDataPackageError" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while loading the Visual Studio Data Package.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Visual Studio"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_DeleteFunction_CreatorNode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[<Select Delete Function>]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Delete Function"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrDupePropertyNames" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The inheritance hierarchy for EntityType '{0}' contains duplicate properties with name(s): '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslBadEntitySetMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[There is a broken relationship between this EntityType's EntitySet and one of its related EntitySetMappings.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"} {StrContains=!1055;"EntitySetMappings"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslCantFindAssociationSet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot find an AssociationSet for the selected Association.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslCantFindEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot find an EntitySet for the selected EntityType.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslEtmRefsMultipleTypes" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An EntityTypeMapping is assigned to multiple EntityTypes.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityTypeMapping"} {StrContains=!1055;"EntityTypes"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslFunctionMappingsShouldBeSeparate" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An EntityTypeMapping that contains function mappings cannot also contain MappingFragments.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityTypeMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslTooManyAssociationSetMappings" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot have multiple AssociationSetMappings for an Association.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains=!1055;"AssociationSetMappings"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslTooManyDefaultEtms" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This EntityType has more than one type-specific EntityTypeMapping.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityTypeMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslTooManyEntitySetMappings" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot have multiple EntitySetMappings for an EntityType.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains=!1055;"EntitySetMappings"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslTooManyFragments" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot have multiple MappingFragments for an EntityTypeMapping.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityTypeMapping"} {StrContains="MappingFragment"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslTooManyFunctionETMs" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This EntityType has more than one EntityTypeMapping with function mappings.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityTypeMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_ErrMslTooManyIsTypeOfETMs" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This EntityType has more than one IsTypeOf EntityTypeMapping.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityTypeMapping"} {StrContains="IsTypeOf"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_InsertFunction_CreatorNode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[<Select Insert Function>]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Insert Function"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_OperatorIs" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Is]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked="Is"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_UpdateFunction_CreatorNode" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[<Select Update Function>]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Update Function"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MappingDetails_Watermark" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select an Entity or Association on the Entity Designer or {0} to edit its mappings.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ModelObjectItemWizard_NonValidXmlAttributeValue" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model items and file names should only contain valid XML attributes.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"} {StrContains="XML"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NoDefaultConnectionString" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No default connection string is defined in the App.config file. SqlClient will be used as the default provider.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SqlClient"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";PropertyWindow_Description_UseStrongSpatialTypes" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Sets code generation to use strong type support for all Spatial types. If set to false, the base classes DbGeography and DbGeometry are used in generated code.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[Used as the Property Window description of the UseStrongSpatialTypes attribute on an Entity Model. DbGeography and DbGeometry are class names ands should not be localized {StrContains="DbGeography"} {StrContains="DbGeometry"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RenameModelMessageBox_Text" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot rename or move the file. Close the file in the Entity Designer before renaming or moving it.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";RuntimeValidationException_FailureToLoadStoreItemCollection" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following exception occurred while trying to create the StoreItemCollection: '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="StoreItemCollection"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_ChangeResultBinding" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Change ResultBinding]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ResultBinding"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_ChangeScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Change ScalarProperty]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_CreateAssociationSetMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create AssociationSetMapping]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_CreateFunctionImport" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create FunctionImport]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="FunctionImport"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_CreateFunctionMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create FunctionMapping]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="FunctionMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_CreateMappingFragment" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create MappingFragment]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MappingFragment"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_CreateResultBinding" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create ResultBinding]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ResultBinding"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_CreateScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create ScalarProperty]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_DeleteAssociationSetMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete AssociationSetMapping]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_DeleteFunctionMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete FunctionMapping]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="FunctionMapping"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_DeleteMappingFragment" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete MappingFragment]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MappingFragment"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_DeleteResultBinding" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete ResultBinding]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ResultBinding"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_DeleteScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete ScalarProperty]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.UI.Views.Dialogs.DialogsResource.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";NewEntityDialog_EnsureUniqueSetNameMsg" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Verify that the EntitySet name is unique.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NewEntityDialog_InvalidEntitySetMsg" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The EntitySet name is not valid.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NewFunctionImportDialog_EnsureUniqueNameMsg" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Verify that the FunctionImport name is unique.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="FunctionImport"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";Engine_AppConfigException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to update the App.Config file because of the following exception: '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="App.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Engine_AppConfigSuccess" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Added the connection string to the App.Config file.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="App.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Engine_WebConfigAssemblyException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to register the assembly '{0}' in the Web.Config file because of the following exception: '{1}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Web.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Engine_WebConfigAssemblySuccess" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Successfully registered the assembly '{0}' in the Web.Config file.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Web.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Engine_WebConfigBPException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to register the build provider in the Web.Config file because of the following exception: '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Web.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Engine_WebConfigBPSuccess" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Successfully registered the build provider in the Web.Config file.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Web.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Engine_WebConfigException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to update the Web.Config file because of the following exception: '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Web.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Engine_WebConfigSuccess" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Added the connection string to the Web.Config file.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Web.Config"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";WritingModelTimeMsg" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Writing the .edmx file took {0}.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="edmx"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.Strings.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";GetDefaultExtensionFailed" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The call to GetDefaultExtension() has failed because of the exception:]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="GetDefaultExtension()"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UnknownLanguage" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown or unsupported language. If this is a Web Site project, this probably means that the .edmx file is not under the App_Code directory.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="edmx"} {StrContains="App_Code"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+      <Str Cat="Text" UsrLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Cmts>
+        <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+      </Cmts>
+    </Item>
+  </Item>
+</LCX>

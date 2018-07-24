@@ -1,0 +1,471 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="Microsoft.Data.Entity.Design.VersioningFacade.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ko-KR" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="minji.kim" DateTime="2013-04-22T17:02:01Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.VersioningFacade.Resources.VersioningFacade.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="minji.kim" DateTime="2013-04-22T17:02:01Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="minji.kim" DateTime="2013-04-22T17:02:01Z" />
+      <Item ItemId=";AssociationMissingKeyColumn" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The association between '{0}' and '{1}' will not be created because the key column '{2}' was not found to be part of the table definition (see previous warnings).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[키 열 '{2}'이(가) 테이블 정의의 일부가 아니므로 '{0}'과(와) '{1}' 사이의 연결이 만들어지지 않습니다(이전 경고 참조).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";CannotCreateEntityWithNoPrimaryKeyDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[테이블/뷰 '{0}'에 기본 키가 정의되어 있지 않고 올바른 기본 키를 유추할 수 없습니다. 이 테이블/뷰가 제외되었습니다. 엔터티를 사용하려면 스키마를 검토하고 올바른 키를 추가하고 주석 처리를 제거하십시오.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";ColumnFacetValueOutOfRange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The facet '{0}' with a value '{1}' is outside the range {2}-{3} specified by the facet description.  The column '{4}' in the table '{5}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[값이 '{1}'인 '{0}' 패싯이 패싯 설명에 지정된 범위 {2}-{3}을(를) 벗어납니다. '{5}' 테이블의 '{4}' 열이 제외되었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T05:45:31Z" />
+      </Item>
+      <Item ItemId=";EF6Providers_InstanceMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Entity Framework 공급자 형식 '{0}'에 'Instance'라는 정적 속성 또는 필드가 없습니다. Entity Framework 공급자는 해당 공급자의 Singleton 인스턴스를 반환하는 'Instance'라는 이름의 정적 속성 또는 필드를 선언해야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="user" DateTime="2013-05-06T06:25:43Z" />
+      </Item>
+      <Item ItemId=";EF6Providers_NotDbProviderServices" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Entity Framework 공급자 형식 '{0}'의 'Instance' 멤버가 'System.Data.Entity.Core.Common.DbProviderServices'에서 상속된 개체를 반환하지 않았습니다. Entity Framework 공급자는 이 클래스에서 확장되어야 하며 'Instance' 멤버는 해당 공급자의 Singleton 인스턴스를 반환해야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="user" DateTime="2013-05-06T06:25:43Z" />
+      </Item>
+      <Item ItemId=";EntityClient_InvalidStoreProvider" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified store provider '{0}' cannot be found in the configuration, or '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[지정한 저장소 공급자 '{0}'을(를) 구성에서 찾을 수 없거나 '{0}'이(가) 잘못되었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";ExcludedColumnWasAKeyColumnEntityIsInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The table/view has been excluded.  Please fix the entity in the schema file, and uncomment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[테이블/뷰 '{1}'의 키 열인 '{0}'이(가) 제외되었습니다.  테이블/뷰가 제외되었습니다. 스키마 파일에서 엔터티를 수정하고 주석 처리를 제거하십시오.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T05:45:38Z" />
+      </Item>
+      <Item ItemId=";ExcludedColumnWasAKeyColumnEntityIsReadOnly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The remaining key(s) were used and table/view has been created as read-only.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[테이블/뷰 '{1}'의 키 열인 '{0}'이(가) 제외되었습니다. 나머지 키가 사용되었고 테이블/뷰는 읽기 전용으로 만들어졌습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T05:45:45Z" />
+      </Item>
+      <Item ItemId=";InvalidSchemaEncountered" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Schema specified is not valid. Errors: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[지정된 스키마가 잘못되었습니다. 오류: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";InvalidStringArgument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter '{0}' is not valid. String arguments cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' 매개 변수가 잘못되었습니다. 문자열 인수는 비워 둘 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";InvalidTypeForPrimaryKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' has column '{1}' defined as a primary key, but the column type '{2}' is not a valid type for a key in the EDM. An attempt will be made to define the table/view as a read-only table/view.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[테이블/뷰 '{0}'에 기본 키로 정의된 '{1}' 열이 있지만 열 형식 '{2}'이(가) EDM의 키에 사용할 수 없는 형식입니다. 테이블/뷰를 읽기 전용 테이블/뷰로 정의하려고 시도합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";ModelGeneration_UnGeneratableType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The GlobalItem of type '{0}' has no model generation patterns defined.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' 형식의 GlobalItem에 모델 생성 패턴이 정의되지 않았습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="GlobalItem"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";NoPrimaryKeyDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table/view '{0}' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[테이블/뷰 '{0}'에 기본 키가 정의되지 않았습니다. 키가 유추되었고 읽기 전용 테이블/뷰로 정의되었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";ParameterDirectionNotValid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a parameter '{1}' that has a parameter direction value '{2}', which is not valid. Please use 'IN', 'OUT', or 'INOUT'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' 함수에 잘못된 매개 변수 방향 값 '{2}'을(를) 가진 '{1}' 매개 변수가 있습니다. 'IN', 'OUT' 또는 'INOUT'을 사용하십시오.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="IN","OUT","INOUT"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ProviderFactoryReturnedNullFactory" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The '{0}' DbProviderFactory returned a null value from the CreateConnection method.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' DbProviderFactory가 CreateConnection 메서드에서 Null 값을 반환했습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderFactory"} {StrContains="CreateConnection"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SharedForeignKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Foreign key constraint '{0}' has been omitted from the storage model. Column '{1}' of table '{2}' is a foreign key participating in multiple relationships. A one-to-one Entity Model will not validate since data inconsistency is possible.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[외래 키 제약 조건 '{0}'이(가) 저장소 모델에서 누락되었습니다. '{2}' 테이블의 '{1}' 열이 여러 관계에 참여하는 외래 키입니다. 데이터가 일치하지 않을 수 있으므로 일대일 엔터티 모델의 유효성을 검사하지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";StronglyTypedAccessToNullValue" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value for column '{0}' in table '{1}' is DBNull.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{1}' 테이블에서 '{0}' 열의 값이 DBNull입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DBNull"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";TableReferencedByAssociationWasNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The table '{0}' is referenced by a relationship, but cannot be found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[관계에서 참조되는 '{0}' 테이블을 찾을 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";TableReferencedByTvfWasNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The return table of the function '{0}' is not defined. Either all columns have been excluded or the table has no columns. The function has been excluded. To use the function, you will need to review your schema, specify the return type of the function, and uncomment it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' 함수의 반환 테이블이 정의되지 않았습니다. 모든 열이 제외되었거나 테이블에 열이 없습니다. 함수가 제외되었습니다. 함수를 사용하려면 스키마를 검토하고, 함수의 반환 형식을 지정하고, 주석 처리를 제거해야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";UnableToGenerateFunctionImportParameterName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to generate function import parameter name for the parameter '{0}' of the store function '{1}'. The store function will be ignored and the function import will not be generated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[저장소 함수 '{1}'의 '{0}' 매개 변수에 대한 함수 가져오기 매개 변수 이름을 생성할 수 없습니다. 저장소 함수가 무시되고 함수 가져오기가 생성되지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";UnableToGenerateFunctionImportReturnType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to generate function import return type of the store function '{0}'. The store function will be ignored and the function import will not be generated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[저장소 함수 '{0}'의 함수 가져오기 반환 형식을 생성할 수 없습니다. 저장소 함수가 무시되고 함수 가져오기가 생성되지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";UnsupportedDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type '{0}' is currently not supported for the target Entity Framework version; the column '{2}' in the table '{1}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[데이터 타입 '{0}'은(는) 현재 대상 Entity Framework 버전에서 지원되지 않습니다. 테이블 '{1}'의 열 '{2}'이(가) 제외되었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-05-07T05:40:38Z" />
+      </Item>
+      <Item ItemId=";UnsupportedDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type '{0}' is not supported for the target Entity Framework version schema. The column '{2}' in the table '{1}' was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[데이터 형식 '{0}'은(는) 대상 Entity Framework 버전 스키마에서 지원되지 않습니다. 테이블 '{1}'의 열 '{2}'이(가) 모델에서 제외되었습니다. 데이터 형식 '{0}'을(를) 사용하려면 Entity Framework 스키마 버전 3.0 이상을 대상으로 지정하십시오.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The data type '{0}' is not supported for the target EntityFramework version schema. The column '{2}' in the table '{1}' was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="skkim" DateTime="2013-08-16T22:44:20Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_SWHO4_updated" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedDataTypeUnknownType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The data type of the column '{0}' is currently not supported so the column '{0}' in table '{1}' was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' 열의 데이터 타입은 현재 지원되지 않으므로 '{1}' 테이블의 '{0}' 열이 제외되었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-05-07T05:40:38Z" />
+      </Item>
+      <Item ItemId=";UnsupportedDbRelationship" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The relationship '{0}' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[관계의 기본 측에 있는 테이블의 키 일부가 아닌 열이 '{0}' 관계에 있습니다. 관계가 제외되었습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T07:42:37Z" />
+      </Item>
+      <Item ItemId=";UnsupportedForeignKeyPattern" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The relationship '{0}' uses the set of foreign keys '{1}' that are partially contained in the set of primary keys '{2}' of the table '{3}'.  The set of foreign keys must be fully contained in the set of primary keys, or fully not contained in the set of primary keys to be mapped to a model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' 관계에서 '{3}' 테이블의 기본 키 집합 '{2}'에 부분적으로 포함된 외래 키 집합 '{1}'을(를) 사용합니다. 외래 키 집합은 모델에 매핑되도록 기본 키 집합에 완전히 포함되지 않거나, 아니면 기본 키 집합에 완전히 포함되어야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="minji.kim" DateTime="2013-04-23T05:45:56Z" />
+      </Item>
+      <Item ItemId=";UnsupportedFunctionParameterDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a parameter '{1}' at parameter index {2} that has a data type '{3}' which is currently not supported for the target Entity Framework version. The function was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA['{0}' 함수의 매개 변수 인덱스 {2}에 현재 대상 Entity Framework 버전에서 지원되지 않는 데이터 형식 '{3}'을(를) 가진 '{1}' 매개 변수가 있습니다. 함수가 제외되었습니다.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has a parameter '{1}' at parameter index {2} that has a data type '{3}' which is currently not supported for the target .NET Framework version. The function was excluded.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="skkim" DateTime="2013-08-16T22:44:20Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_SWHO4_updated" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedFunctionParameterDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has the parameter '{1}' at the parameter index {2} that has the data type '{3}' which is not supported for the target Entity Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher."]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA['{0}' 함수의 매개 변수 인덱스 {2}에 대상 Entity Framework 버전에서 지원되지 않는 데이터 형식 '{3}'을(를) 가진 '{1}' 매개 변수가 있습니다. 함수가 모델에서 제외되었습니다. 데이터 형식 '{0}'을(를) 사용하려면 Entity Framework 스키마 버전 3.0 이상을 대상으로 지정하십시오.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has the parameter '{1}' at the parameter index {2} that has the data type '{3}' which is not supported for the target .NET Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher."]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="skkim" DateTime="2013-08-16T22:44:20Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_SWHO4_updated" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedFunctionReturnDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' has a return data type '{1}' that is currently not supported for the target Entity Framework version. The function was excluded.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA['{0}' 함수에 현재 대상 Entity Framework 버전에서 지원되지 않는 반환 데이터 형식 '{1}'이(가) 있습니다. 함수가 제외되었습니다.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' has a return data type '{1}' that is currently not supported for the target .NET Framework version. The function was excluded.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="skkim" DateTime="2013-08-16T22:44:20Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_SWHO4_updated" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedFunctionReturnDataTypeForTarget" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The function '{0}' returns the data type '{1}' that is not supported for the target Entity Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA['{0}' 함수가 대상 Entity Framework 버전에서 지원되지 않는 데이터 형식 '{1}'을(를) 반환합니다. 함수가 모델에서 제외되었습니다. 데이터 형식 '{0}'을(를) 사용하려면 Entity Framework 스키마 버전 3.0 이상을 대상으로 지정하십시오.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The function '{0}' returns the data type '{1}' that is not supported for the target .NET Framework version. The function was excluded from the model. To use the data type '{0}', target the Entity Framework schema version 3.0 or higher.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="skkim" DateTime="2013-08-16T22:44:20Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_SWHO4_updated" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="minji.kim" DateTime="2013-04-22T17:02:01Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="nams" DateTime="2013-08-22T03:13:48Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-sujeong.park" DateTime="2013-08-22T01:22:46Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-sujeong.park" DateTime="2013-08-22T01:22:46Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-sujeong.park" DateTime="2013-08-22T01:22:46Z" />
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="nams" DateTime="2013-08-22T03:13:48Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="nams" DateTime="2013-08-22T03:13:48Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-sujeong.park" DateTime="2013-08-22T01:22:46Z" />
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.VersioningFacade.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="nams" DateTime="2013-08-22T03:13:48Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-sujeong.park" DateTime="2013-08-22T01:22:46Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="nams" DateTime="2013-08-22T03:13:48Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="minji.kim" DateTime="2013-04-22T17:02:01Z" />
+  </Item>
+</LCX>

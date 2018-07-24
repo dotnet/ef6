@@ -1,0 +1,596 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="d:\bt\4668889\bins\retail\i386\Microsoft.Data.Entity.Design.DatabaseGeneration.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="es-ES" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.DatabaseGeneration.Properties.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+      <Item ItemId=";CodeViewFKConstraintDerivedType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[FK_{0}_inherits_{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Ana" DateTime="2011-06-16T09:52:49Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked} {NoLocRule}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";CodeViewManyToManyAssocName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[FK_{0}_{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Ana" DateTime="2011-06-16T09:52:49Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked} {NoLocRule}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorComplexTypeCycle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL contains a circular reference among complex types. The complex type '{1}' contains complex property '{0}', which is of complex type '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[El CSDL proporcionado contiene una referencia circular entre tipos complejos. El tipo complejo '{1}' contiene la propiedad compleja '{0}', que es de tipo complejo '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotCreateCSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An EdmItemCollection could not be created from the supplied CSDL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se puede crear EdmItemCollection a partir del CSDL proporcionado.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EdmItemCollection"} {StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindCSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The CSDL input could not be found. Make sure that a previous activity has supplied this CSDL and that the current activity has declared that it will receive the CSDL as input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se encuentra la entrada de CSDL. Asegúrese de que una actividad anterior ha proporcionado este CSDL y de que la actividad actual ha declarado que recibirá el CSDL como entrada.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindProviderManifest" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not load the DbProviderManifest from the provider invariant name '{0}' and provider manifest token '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[No se puede cargar DbProviderManifest desde el nombre invariable del proveedor '{0}' y el token de manifiesto del proveedor '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindSSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The SSDL input could not be found. Make sure that a previous activity has supplied this SSDL and that the current activity has declared that it will receive the SSDL as input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se encuentra la entrada de SSDL. Asegúrese de que una actividad anterior ha proporcionado este CSDL y de que la actividad actual ha declarado que recibirá el CSDL como entrada.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCsdlNotValid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL is not valid because of the following errors: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" Confidence="100">
+            <Val><![CDATA[El CSDL proporcionado no es válido debido a los siguientes errores: {0}]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The supplied CSDL is not valid because of the following errors: {1}]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-23T11:45:53Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+          <Str Name="Custom5" Val="EF6.0_Autx_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorFindingEntityTypeForEnd" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the EntityType for the AssociationEnd.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se encuentra el EntityType para AssociationEnd.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"} {StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorGetDependentEndOnManyToMany" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot call GetDependentEnd on a many-to-many association. Verify that the Association is many-to-many before calling this method.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se puede llamar a GetDependentEnd en una asociación de varios a varios. Compruebe que Association está establecida de varios a varios antes de llamar a este método.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="GetDependentEnd"} {StrContains="Association"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorIncompatibleTypeForProvider" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type '{0}' of the Property '{1}' is not supported by the specified database. Choose a different type or a different target database.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[El tipo '{0}' de Property '{1}' no se admite en la base de datos especificada. Elija otro tipo o una base de datos de destino diferente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Property"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorInvalidCharsException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DDL generation failed because the name '{0}' was found to contain one of the following illegal strings:;, --, /*, */ or starts with 'xp_'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Error al generar el archivo DDL porque se detectó que el nombre '{0}' contiene una de las siguientes cadenas no válidas:;, --, /*, */ o empieza por 'xp_'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNameCollision" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database generation process encountered a naming conflict while attempting to generate the SSDL. Usually this is because a generated SSDL name conflicts with an existing name in the CSDL. Try again after performing the appropriate renames in the CSDL. Naming conflicts can occur when:]D;]A;- Generating table names from derived types]D;]A;- Generating scalar property names from properties within complex types]D;]A;- Generating the names of properties corresponding to foreign keys]D;]A;]D;]A;The specific error message is: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[El proceso de generación de la base de datos encontró un conflicto de nombres al intentar generar el SSDL. Normalmente esto se debe a un conflicto de un nombre SSDL generado con un nombre existente en el CSDL. Inténtelo de nuevo después de realizar los cambios de nombres pertinentes en el CSDL. Los conflictos de nombres se pueden producir:]D;]A;- Al generar nombres de tabla a partir de tipos derivados]D;]A;- Al generar nombres de propiedades escalares a partir de propiedades en tipos complejos]D;]A;- Al generar los nombres de las propiedades correspondientes a claves externas]D;]A;]D;]A;El mensaje de error específico es: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoCodeViewType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The OutputGeneratorType '{0}' defined in the workflow could not be found and loaded. Please make sure the OutputGeneratorType attribute on the activity is valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[El atributo OutputGeneratorType '{0}' definido en el flujo de trabajo no se encuentra y no se puede cargar. Asegúrese de que el atributo OutputGeneratorType de la actividad es válido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="OutputGeneratorType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoEdmItemCollection" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the CSDL generated by the activity called 'CsdlToSsdlAndMslActivity'. Try re-running the workflow.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[No se encontró el CSDL generado por la actividad denominada 'CsdlToSsdlAndMslActivity'. Intente ejecutar de nuevo el flujo de trabajo.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"} {StrContains="CsdlToSsdlAndMslActivity"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoEdmParameterBag" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The EdmParameterBag was not found in the Workflow. Verify that it was added to the SymbolResolver, which is added as an Extension to the Workflow.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se encuentra EdmParameterBag en el flujo de trabajo. Compruebe que se agregó a SymbolResolver, que se agrega como Extension al flujo de trabajo.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EdmParameterBag"} {StrContains="SymbolResolver"} {StrContains="Extension"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoEntityContainer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No EntityContainer was found in the supplied ItemCollection.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se encontró ningún EntityContainer en el ItemCollection proporcionado.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"} {StrContains="ItemCollection"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoParameterDefined" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The necessary Workflow parameter '{0}' is not defined]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[No se ha definido el parámetro Workflow '{0}' necesario]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Noelia" DateTime="2014-05-08T14:46:32Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Workflow"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNoPropertyInRefConstraint" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the property '{0}' among the principal keys in the ReferentialConstraint between role '{1}' and role '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se encuentra la propiedad '{0}' entre las claves principales de ReferentialConstraint entre el rol '{1}' y el rol '{2}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ReferentialConstraint"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonSpecificComplexTypeCycle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL contains a circular reference among complex types. The complex property '{0}' is of a complex type which contains this same complex property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[El CSDL proporcionado contiene una referencia circular entre tipos complejos. La propiedad compleja '{0}' es de un tipo complejo que contiene la misma propiedad compleja.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidAssociationEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationEnds are not properly defined in the Association '{0}'. Verify that there are exactly two AssociationEnds in the Association.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Los AssociationEnds no se han definido correctamente en Association '{0}'. Compruebe que hay exactamente dos AssociationEnds en Association.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnds","Association"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidDataSpace" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to retrieve the StoreGeneratedPattern attribute from the non-valid DataSpace '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se puede recuperar el atributo StoreGeneratedPattern del DataSpace '{0}', que no es válido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="StoreGeneratedPattern"} {StrContains="DataSpace"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidSsdl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The SSDL generated by the activity called 'CsdlToSsdlAndMslActivity' is not valid and has the following errors: ]D;]A;{0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[El SSDL generado por la actividad denominada 'CsdlToSsdlAndMslActivity' no es válido y tiene los siguientes errores: ]D;]A;{0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CsdlToSsdlAndMslActivity"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorNonValidTargetVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified TargetVersion parameter '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[El parámetro TargetVersion especificado '{0}' no es válido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TargetVersion"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorProviderManifestEx_ProviderInvariantName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider invariant name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[No se encuentra el DbProviderManifest adecuado para generar el SSDL. El nombre invariable del proveedor proporcionado '{0}' no es válido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorProviderManifestEx_ProviderManifestToken" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider manifest token '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se encuentra el DbProviderManifest adecuado para generar el SSDL. El token de manifiesto del proveedor proporcionado '{0}' no es válido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"} {StrContains="SSDL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorSerializing_CsdlToMsl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not generate the MSL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[No se puede generar el MSL a partir del CSDL proporcionado debido a excepciones XML. Compruebe que la entrada no contiene caracteres XML no válidos. El mensaje de error específico es: '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="olga" DateTime="2010-11-04T09:32:30Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MSL"} {StrContains="CSDL"} {StrContains="XML"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorSerializing_CsdlToSsdl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not generate the SSDL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[No se pudo generar el SSDL a partir del CSDL proporcionado debido a excepciones XML. Compruebe que la entrada no contiene caracteres XML no válidos. El mensaje de error específico es: '{0}']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="DiegoR" DateTime="2014-05-08T16:02:02Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CSDL"} {StrContains="XML"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="autotrans_olga" />
+        </Props>
+      </Item>
+      <Item ItemId=";TargetVersionSchemaVersionMismatch" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The target Entity Framework version requires the edmx schema version {0} or lower. The specified schema is version {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[La versión de destino de Entity Framework necesita la versión del esquema de edmx {0} o anterior. La versión del esquema especificada es {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-23T11:45:53Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Ana" DateTime="2011-06-16T09:52:49Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="cbarragan" DateTime="2013-08-21T08:21:21Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="cbarragan" DateTime="2013-08-21T08:21:21Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="cbarragan" DateTime="2013-08-21T08:21:21Z" />
+      <Props>
+        <Str Name="Custom4" Val="new_olga" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30506.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Ana" DateTime="2011-06-16T09:52:49Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Ana" DateTime="2011-06-16T09:52:49Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation. Todos los derechos reservados.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="cbarragan" DateTime="2013-08-21T08:21:21Z" />
+      <Props>
+        <Str Name="Custom4" Val="new_olga" />
+        <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DatabaseGeneration.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Ana" DateTime="2011-06-16T09:52:49Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="cbarragan" DateTime="2013-08-21T08:21:21Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.1-alpha1-30506]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Ana" DateTime="2011-06-16T09:52:49Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+</LCX>
