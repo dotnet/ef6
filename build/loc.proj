@@ -11,7 +11,7 @@
       BuildNumber=$(BuildNumber);
       BuildRTM=$(BuildRTM);
     </CommonMSBuildProperties>
-    <OutDir>$(RepositoryRootDirectory)bin\${Configuration}</OutDir> <!-- needed for Localization plugin -->
+    <OutDir>$(RepositoryRootDirectory)bin\Debug</OutDir> <!-- needed for Localization plugin -->
   </PropertyGroup>
 
   <Target Name="LocalizeDLLs">
