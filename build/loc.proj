@@ -3,6 +3,17 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
   <Import Project="$(MicroBuildDirectory)MicroBuild.Core.props"/>
 
+  <!-- Configuration/global properties -->
+  <PropertyGroup>
+    <CommonMSBuildProperties>
+      Configuration=$(Configuration);
+      ReleaseLabel=$(ReleaseLabel);
+      BuildNumber=$(BuildNumber);
+      BuildRTM=$(BuildRTM);
+    </CommonMSBuildProperties>
+    <OutDir>$(RepositoryRootDirectory)bin\${Configuration}</OutDir> <!-- needed for Localization plugin -->
+  </PropertyGroup>
+
   <Target Name="LocalizeDLLs">
     <ItemGroup>
       <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.Data.Entity.*.dll" />
@@ -11,7 +22,8 @@
     </ItemGroup>
     <ItemGroup>
       <FilesToLocalize Include="@(EFToolsDLLs)">
-        <TranslationFile Condition="'%(Extension)' == '.dll'">$(LocalizationRootDirectory)\{Lang}\%(Filename).dll.lcl</TranslationFile>    <!--Required: translation file-->
+        <Languages>$(LocLanguages)</Languages>
+        <TranslationFile Condition="'%(Extension)' == '.dll'">$(LclRootDirectory)\{Lang}\%(Filename).dll.lcl</TranslationFile>
 	<LciCommentFile Condition="'%(Extension)' == '.dll'">$(LciRootDirectory)\%(Filename).dll.lci</LciCommentFile>
       </FilesToLocalize>
     </ItemGroup>

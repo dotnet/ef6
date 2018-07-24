@@ -31,8 +31,10 @@
     <ArtifactRoot>$(ArtifactsDirectory)</ArtifactRoot>
     <TestUtilitiesDirectory>$(RepositoryRootDirectory)test\TestUtilities\</TestUtilitiesDirectory>
     <NuGetBuildLocalizationRepository>$(RepositoryRootDirectory)submodules\NuGet.Build.Localization\</NuGetBuildLocalizationRepository -->
-    <LocalizationRootDirectory>$(BuildCommonDirectory)localize</LocalizationRootDirectory>
-    <LciRootDirectory>$(BuildCommonDirectory)lci</LciRootDirectory>
+    <LocalizationRootDirectory>$(RepositoryRootDirectory)loc</LocalizationRootDirectory>
+    <LocLanguages>CHS,CHT,DEU,ESN,FRA,ITA,JPN,KOR,PTB,RUS</LocLanguages>
+    <LciRootDirectory>$(LocalizationRootDirectory)\lci</LciRootDirectory>
+    <LclRootDirectory>$(LocalizationRootDirectory)\lcl</LclRootDirectory>
     <LocalizationFilesDirectory>$(RepositoryRootDirectory)LocalizedFiles</LocalizationFilesDirectory>
     <MicroBuildDirectory>$(SolutionPackagesFolder)MicroBuild.Core.0.2.0\build\</MicroBuildDirectory>
     <!-- IsBuildOnlyXPLATProjects>$(DotNetBuildFromSource)</IsBuildOnlyXPLATProjects>
