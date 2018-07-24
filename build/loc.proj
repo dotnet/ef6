@@ -11,7 +11,7 @@
       BuildNumber=$(BuildNumber);
       BuildRTM=$(BuildRTM);
     </CommonMSBuildProperties>
-    <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)</OutDir> <!-- needed for Localization plugin -->
+    <OutDir>$(RepositoryRootDirectory)bin\Debug</OutDir> <!-- needed for Localization plugin -->
   </PropertyGroup>
 
   <Target Name="LocalizeDLLs">
@@ -29,6 +29,11 @@
     </ItemGroup>
 
     <Message Text="Files to localize : @(FilesToLocalize, '%0a')" Importance="High"/>
+    <Message Text="BuildConfiguration : $(BuildConfiguration)" Importance="High"/>
+    <Message Text="Configuration : $(Configuration)" Importance="High"/>
+    <Message Text="ReleaseLabel : $(ReleaseLabel)" Importance="High"/>
+    <Message Text="BuildNumber : $(BuildNumber)" Importance="High"/>
+    <Message Text="BuildRTM : $(BuildRTM)" Importance="High"/>
   </Target>
 
   <Target Name="AfterBuild" DependsOnTargets="LocalizeDLLs"/>
