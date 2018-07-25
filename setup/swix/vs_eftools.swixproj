@@ -25,15 +25,14 @@
   <Import Project="$(MicroBuildDirectory)MicroBuild.Core.targets" />
   <!-- Import Project="$(Wix4Root)\SimplifiedWix.targets" / -->
 
-  <!-- Variables added here will be usable in the swr file -->
   <PropertyGroup>
+    <!-- Variables added here will be usable in the swr file -->
     <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);Version=$(ToolingVersionMajor).$(ToolingVersionMinor).$(VersionBuild).$(VersionRevision)</PackagePreprocessorDefinitions>
     <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);VsDdeApplication=VisualStudio.$(VisualStudioVersion)</PackagePreprocessorDefinitions>
     <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);OutputPath=$(OutputPath);LocOutDir=$(LocOutDir)</PackagePreprocessorDefinitions>
     <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);ToolingSetupRepositoryRoot=$(RepositoryRootDirectory)</PackagePreprocessorDefinitions>
     <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);IntellisenseLocRootDirectory=$(IntellisenseLocRootDirectory)</PackagePreprocessorDefinitions>
     <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</PackagePreprocessorDefinitions>
-    IntellisenseLocRootDirectory
   </PropertyGroup>
 
   <ItemGroup>
