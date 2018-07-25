@@ -13,14 +13,15 @@
     </CommonMSBuildProperties>
     <IntermediateOutputPath>$(RepositoryRootDirectory)bin\$(Configuration)</IntermediateOutputPath>
     <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)\signed</OutDir>
+    <LocOutDir>$(RepositoryRootDirectory)bin\$(Configuration)\localize</LocOutDir>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <Target Name="BatchSign">
     <ItemGroup>
-      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.Data.Entity.*.dll" />
-      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.Data.Tools.Design.XmlCore.dll" />
-      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
+      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.Data.Entity.*.dll" />
+      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.Data.Tools.Design.XmlCore.dll" />
+      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
       <LocalizedEFToolsDLLs Include="$(LocOutDir)\**\*.resources.dll" />
     </ItemGroup>
     <ItemGroup>
