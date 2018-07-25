@@ -5,7 +5,8 @@ package name=eftools
         vs.package.chip=neutral
         vs.package.language=en-us
 
-folder id=InstallDir external=true
+# already defined by VsixExternalFolders.swr in MicroBuild Plugin
+#folder id=InstallDir external=true
 
 folder "InstallDir:\Common7\IDE"
   file source="$(OutputPath)\EntityFramework.dll" vs.file.ngen=yes
