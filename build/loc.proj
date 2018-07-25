@@ -11,14 +11,14 @@
       BuildNumber=$(BuildNumber);
       BuildRTM=$(BuildRTM);
     </CommonMSBuildProperties>
-    <OutDir>$(RepositoryRootDirectory)bin\Debug</OutDir> <!-- needed for Localization plugin -->
+    <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)</OutDir> <!-- needed for Localization plugin -->
   </PropertyGroup>
 
   <Target Name="LocalizeDLLs">
     <ItemGroup>
-      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.Data.Entity.*.dll" />
-      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.Data.Tools.Design.XmlCore.dll" />
-      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\Debug\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
+      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.Data.Entity.*.dll" />
+      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.Data.Tools.Design.XmlCore.dll" />
+      <EFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
     </ItemGroup>
     <ItemGroup>
       <FilesToLocalize Include="@(EFToolsDLLs)">
