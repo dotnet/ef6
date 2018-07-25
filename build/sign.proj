@@ -30,6 +30,11 @@
       </FilesToSign>
     </ItemGroup>
 
+    <Message Text="BuildConfiguration : $(BuildConfiguration)" Importance="High"/>
+    <Message Text="Configuration : $(Configuration)" Importance="High"/>
+    <Message Text="ReleaseLabel : $(ReleaseLabel)" Importance="High"/>
+    <Message Text="BuildNumber : $(BuildNumber)" Importance="High"/>
+    <Message Text="BuildRTM : $(BuildRTM)" Importance="High"/>
     <Message Text="SigningType: $(SigningType)" Importance="High"/>
     <Message Text="Files to sign: @(FilesToSign, '%0a')" Importance="High"/>
   </Target>
