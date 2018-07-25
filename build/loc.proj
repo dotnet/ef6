@@ -25,6 +25,7 @@
         <Languages>$(LocLanguages)</Languages>
         <TranslationFile Condition="'%(Extension)' == '.dll'">$(LclRootDirectory)\{Lang}\%(Filename).dll.lcl</TranslationFile>
 	<LciCommentFile Condition="'%(Extension)' == '.dll'">$(LciRootDirectory)\%(Filename).dll.lci</LciCommentFile>
+        <HasLceComments>false</HasLceComments> 
       </FilesToLocalize>
     </ItemGroup>
 
