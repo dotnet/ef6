@@ -12,7 +12,7 @@
       BuildRTM=$(BuildRTM);
     </CommonMSBuildProperties>
     <IntermediateOutputPath>$(RepositoryRootDirectory)bin\$(Configuration)</IntermediateOutputPath>
-    <OutDir>$(RepositoryRootDirectory)signed</OutDir>
+    <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)\signed</OutDir>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
