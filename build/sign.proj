@@ -11,9 +11,8 @@
       BuildNumber=$(BuildNumber);
       BuildRTM=$(BuildRTM);
     </CommonMSBuildProperties>
-    <IntermediateOutputPath>$(RepositoryRootDirectory)bin\Debug</IntermediateOutputPath>
-    <OutDir>$(RepositoryRootDirectory)bin\Debug</OutDir>
-    <LocOutDir>$(OutDir)\localize</LocOutDir>
+    <IntermediateOutputPath>$(RepositoryRootDirectory)bin\$(Configuration)</IntermediateOutputPath>
+    <OutDir>$(RepositoryRootDirectory)signed</OutDir>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
