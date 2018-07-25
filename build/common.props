@@ -2,4 +2,5 @@
 <Project ToolsVersion="15.0">
   <!-- Common project props -->
   <Import Project="common.project.props"/>
+  <Import Project="config.props"/>
 </Project>

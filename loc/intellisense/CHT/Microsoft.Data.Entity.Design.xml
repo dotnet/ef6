@@ -1,0 +1,2206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Resources">
+      <summary>強類型資源類別，用於查詢當地語系化字串等等。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources._SentenceConcat">
+      <summary>查詢類似 {0} {1} 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Application_Caption">
+      <summary>查詢類似「ADO.NET 實體資料模型設計工具」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionErrorMessage">
+      <summary>查詢類似「參數 '{0}' 的值 '{1}' 不正確。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionMessageParameter">
+      <summary>查詢類似「參數必須是類型 'Type' 或 'Guid' 的執行個體。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.AssociationSetsGhostNodeName">
+      <summary>查詢類似「關聯集」(Association Sets) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BAD_FIRST_CHAR_IN_NC_NAME">
+      <summary>查詢類似「名稱 '{0}' 的第一個字元無效。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadChildForParentException">
+      <summary>查詢類似「類型 '{0}' 的模型瀏覽器物件不支援類型 '{1}' 的子系。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadRemoveBadChildType">
+      <summary>查詢類似「無法從名稱為 {1} 的類型 {2} 父系中移除類型 {0} 的子系。類型 '{2}' 的項目不允許類型 '{0}' 的子系。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CanNotCreateWindow">
+      <summary>查詢類似「無法建立工具視窗。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateDesignTimeConnectionString">
+      <summary>查詢類似「無法將設計階段連接字串轉換為其執行階段對等項目。{0} 連接字串: {1}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateRuntimeConnectionString">
+      <summary>查詢類似「無法將執行階段連接字串轉換為其設計階段對等項目。{0} 連接字串: {1}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ChangingModelOutsideTransaction">
+      <summary>查詢類似「您不能在交易外編輯模型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_LegacyObjectContext">
+      <summary>查詢類似「舊版 ObjectContext」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_T4">
+      <summary>查詢類似 T4 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.COLON_IN_NC_NAME">
+      <summary>查詢類似「名稱 '{0}' 中有冒號。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ComplexTypesGhostNodeName">
+      <summary>查詢類似「複雜類型」(Complex Types) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualAssociationsGhostNodeName">
+      <summary>查詢類似「關聯」(Associations) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualTypesGhostNodeName">
+      <summary>查詢類似「實體類型」(Entity Types) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_AddError">
+      <summary>查詢類似「無法加入新的連接字串，因為發生錯誤: '{0}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_CorruptConfig">
+      <summary>查詢類似「組態檔的格式錯誤。請嘗試手動編輯檔案，然後儲存檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetConfigError">
+      <summary>查詢類似「找不到組態檔。請確定檔案位於正確的專案中，或重新啟動 Visual Studio。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetSiteError">
+      <summary>查詢類似「找不到這個組態的服務提供者。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_InitializeError">
+      <summary>查詢類似「無法剖析組態檔。錯誤訊息是: '{0}'。請嘗試手動編輯檔案，然後儲存檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MarsError">
+      <summary>查詢類似「無法將 MultipleActiveResultSets 屬性加入連接字串，因為無法判斷伺服器版本。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MetadataMismatch">
+      <summary>查詢類似「連接字串的中繼資料不符合組態檔中的中繼資料。舊中繼資料: {0}。請用組態檔中實體容器名稱 '{1}' 更正連接字串，然後儲存檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_NoConnectionString">
+      <summary>查詢類似「在組態檔中找不到連接字串。請確定組態檔包含名稱為 '{0}' 的連接字串，然後儲存檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_SaveXmlError">
+      <summary>查詢類似「無法儲存 XML 到組態檔 '{0}'，因為發生錯誤 '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_UpdateError">
+      <summary>查詢類似「無法更新組態檔中的 {0}。錯誤訊息是: '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateNoConnection">
+      <summary>查詢類似「因為未指定連接字串，模型將使用 SQL Server 2005 連接進行驗證。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateWithoutConnection">
+      <summary>查詢類似「如果未選取資料連接，可能無法正確驗證模型。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Culture">
+      <summary>使用此強類型資源類別，為所有資源查閱覆寫目前執行緒的 CurrentUICulture 屬性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadError">
+      <summary>查詢類似「自訂資料庫產生工作流程檔案參考主控專案中現有的組件 '{0}'，但無法載入，因為發生下列例外狀況: '{1}'。在重新執行工作流程前，先確定參考是有效的。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadErrorWithInner">
+      <summary>查詢類似「自訂資料庫產生工作流程檔案參考主控專案中現有的組件 '{0}'，但無法載入，因為發生下列例外狀況: '{1}'。例外狀況還包含下列詳細資料: '{2}' 在重新執行工作流程前，先確定參考是有效的。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowCancelled">
+      <summary>查詢類似「不允許執行自訂工作流程檔案 '{0}'。請選取 [上一步] 返回 [選擇您的資料連接] 頁面，並嘗試重新執行工作流程。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowWarningTitle">
+      <summary>查詢類似「自訂工作流程安全性警告」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_DDLOverwriteWarningTitle">
+      <summary>查詢類似「DDL 覆寫警告」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_EdmxOverwriteWarningTitle">
+      <summary>查詢類似「SSDL/MSL 覆寫警告」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorInvalidTargetVersion">
+      <summary>查詢類似「指定的 TargetVersion 參數 '{0}' 無效。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoEdmParameterBag">
+      <summary>查詢類似「在工作流程中找不到 EdmParameterBag。請確認已將它加入 SymbolResolver。SymbolResolver 是以 Extension 的形式加入工作流程。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNonValidWorkflowUri">
+      <summary>查詢類似「由資料庫產生工作流程路徑 '{0}' 建立的 URI 無效。請確認相對於專案而言，指定的路徑為有效的絕對檔案路徑，或是有效的相對檔案路徑。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoParameterDefined">
+      <summary>查詢類似「未定義必要的資料庫產生工作流程參數 '{0}'」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateFileNotInProject">
+      <summary>查詢類似「無法叫用範本活動 '{0}'，因為指定的 'TemplatePath' 輸入檔案 '{{0}}' 未包含在專案中。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateOutputNotSet">
+      <summary>查詢類似「未針對資料庫產生工作流程中的範本活動 '{0}' 設定範本輸出。請確認已正確寫入範本。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNonFile">
+      <summary>查詢類似「在這個工作流程中，範本活動 '{0}' 的 'TemplatePath' 輸出檔案 '{{0}}' 無效，因為不支援非檔案及 UNC 路徑。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotSet">
+      <summary>查詢類似「未針對這個工作流程中的範本活動 '{0}' 設定 'TemplatePath' 屬性。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotValid">
+      <summary>查詢類似「在這個工作流程中，範本活動 '{0}' 的 'TemplatePath' 屬性值 '{{0}}' 可能無效或不存在。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTextTemplatingServiceNotFound">
+      <summary>查詢類似「找不到要處理範本 '{0}' 的 ITextTemplating 服務。這項服務僅能在 Visual Studio 中使用。請確認這個工作流程是在 Visual Studio 中執行。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowFileNotInProject">
+      <summary>查詢類似「自訂工作流程檔案 '{0}' 必須包含在專案中，產生資料庫精靈才能繼續執行。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowOutputNotFound">
+      <summary>查詢類似「工作流程未擴展產生資料庫精靈需要的 '{0}' 輸出參數。請確認工作流程檔案定義這項參數，而工作流程會擴展這項參數。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowPathNotSet">
+      <summary>查詢類似「未在 EDMX 檔案中設定資料庫產生工作流程路徑。請確認已設定這個路徑，再執行產生資料庫精靈」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdl">
+      <summary>查詢類似「嘗試將 DDL 寫入檔案 '{0}' 時發生例外狀況。例外狀況訊息是: '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdlWithInner">
+      <summary>查詢類似「嘗試將 DDL 寫入檔案 '{0} 時發生例外狀況。例外狀況訊息是: '{1}'。例外狀況還包含下列詳細資料: '{2}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingTemplateFilePath">
+      <summary>查詢類似「嘗試剖析範本活動 '{0}' 中的 'TemplatePath' '{{0}}' 時發生例外狀況。確實訊息為: '{{1}}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingWorkflowFilePath">
+      <summary>查詢類似「嘗試剖析資料庫產生工作流程檔案路徑 '{0}' 時發生例外狀況。確實訊息為: '{1}'」的當地語系化字串。.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NoDDLTemplatePathSpecified">
+      <summary>查詢類似「未針對 '{0}' 活動指定 TemplatePath 引數。它必須在工作流程檔案中的這個活動上指定，或透過 EdmParameterBag 中的 'DDLTemplatePath' 參數在執行階段傳入。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NonFileWorkflow">
+      <summary>查詢類似「未叫用指定的資料庫產生工作流程檔案 '{0}'，因為不支援非檔案路徑和 UNC 路徑。請確認在 EDMX 檔案的 [選項] 區段中指定的資料庫產生工作流程路徑，不是 UNC 路徑，而且對應至存在於本機的檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_TemplateFileNotExists">
+      <summary>查詢類似「無法叫用範本活動 '{0}'，因為指定的 'TemplatePath' 輸入檔案 '{{0}}' 不存在。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ValidationFailed">
+      <summary>查詢類似「這個模型中所有的驗證錯誤都必須修正，才能產生資料庫指令碼。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningCustomWorkflow">
+      <summary>查詢類似「已針對產生資料庫精靈，定義自訂工作流程 (請參照這個 EDMX 模型的 [資料庫產生工作流程] 屬性)。以非預設的工作流程執行這個精靈，可能損害您的電腦。如果您是由不受信任的來源取得這個 EDMX 檔案，請不要執行這個精靈。按 [確定] 會執行工作流程。按 [取消] 會停止處理序。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteDdl">
+      <summary>查詢類似「產生資料庫精靈會覆寫 DDL 檔案 '{0}'。要繼續嗎?」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteMappings">
+      <summary>查詢類似「產生資料庫精靈會覆寫現有的存放區結構描述 (SSDL) 與現有的對應 (MSL)。要繼續嗎?」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WorkflowFileNotExists">
+      <summary>查詢類似「嘗試由模型產生資料庫指令碼時，發生例外狀況，因為指定的工作流程檔案 '{0}' 不存在。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibileListConverter_UserDir">
+      <summary>查詢類似「(使用者)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibleListConverter_VSDir">
+      <summary>查詢類似「(VS)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DDEXNotInstalled">
+      <summary>查詢類似「並未針對提供者 '{0}' 安裝基於設計目的要讓 Visual Studio 與資料庫進行通訊 (DDEX 提供者) 所需的程式庫。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Default">
+      <summary>查詢類似「預設值」(Default) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DiagramTypesGhostNodeName">
+      <summary>查詢類似「圖表」(Diagrams) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DisabledFeatureTooltip">
+      <summary>查詢類似「設為目標的 Entity Framework 版本無法使用這項功能。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DuplicateEntityContainerName">
+      <summary>查詢類似「EntityContainer 名稱 '{0}' 已被專案中的另一個實體資料模型所使用。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption">
+      <summary>查詢類似「[設計]」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption_ReadOnly">
+      <summary>查詢類似「[唯讀]」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EDMOutputWindowPaneTitle">
+      <summary>查詢類似「實體資料模型」(Entity Data Model) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EdmUtils_NotValidTargetFramework">
+      <summary>查詢類似「專案的目標 Framework 不包含 Entity Framework 執行階段組件。請在專案的屬性頁面中，檢閱目標 Framework 資訊。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityContainerNodeName">
+      <summary>查詢類似「EntityContainer: {0}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_CreateNewProperty">
+      <summary>查詢類似「建立新的屬性。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_DeleteProperty">
+      <summary>查詢類似「刪除屬性。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersion6_x">
+      <summary>查詢類似「6.x」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersionName">
+      <summary>查詢類似「Entity Framework {0}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntitySetsGhostNodeName">
+      <summary>查詢類似「實體集」(Entity Sets) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AccEnumTypeMembers">
+      <summary>查詢類似「列舉類型成員」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AutomationName">
+      <summary>查詢類似「列舉對話方塊」(Enum Dialog) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_CancelButtonLabel">
+      <summary>查詢類似「取消」(Cancel) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EditEnumWindowTitle">
+      <summary>查詢類似「編輯列舉類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnsureEnumTypeUnique">
+      <summary>查詢類似「確定列舉類型名稱是唯一的」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberNameLabel">
+      <summary>查詢類似「成員名稱」(Member Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberValueLabel">
+      <summary>查詢類似「值 (選擇性)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnterValueForExternalTypeName">
+      <summary>查詢類似「參考之外部類型的名稱是必要項。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberBadname">
+      <summary>查詢類似「'{0}' 不是列舉成員的有效值。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberDuplicateName">
+      <summary>查詢類似「列舉成員 '{0}' 已經存在。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumTypeBadname">
+      <summary>查詢類似「'{0}' 不是列舉類型的有效值。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeHint">
+      <summary>查詢類似 Namespace.Type 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeLabel">
+      <summary>查詢類似「參考外部類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabel">
+      <summary>查詢類似「設定旗標屬性」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabelDescription">
+      <summary>查詢類似「讓列舉類型的執行個體能夠使用位元運算子來儲存定義值的任何組合。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NameLabel">
+      <summary>查詢類似「列舉類型名稱:」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NewEnumWindowTitle">
+      <summary>查詢類似「加入列舉類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_OkButtonLabel">
+      <summary>查詢類似「確定」(OK) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_UnderlyingTypeLabel">
+      <summary>查詢類似「基礎類型:」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumTypesGhostNodeName">
+      <summary>查詢類似「列舉類型」(Enum Types) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CannotEditRefConstraint">
+      <summary>查詢類似「設計工具無法編輯這個關聯上的現有參考限制式。您必須使用 XML 編輯器手動編輯。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CircularInheritanceAborted">
+      <summary>查詢類似「將 '{0}' 的基底類型設定為 '{1}' 會導致循環繼承。加入繼承已中止。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FailedApplyChangeToFile">
+      <summary>查詢類似「無法套用變更到檔案 {0}。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FileNotFound">
+      <summary>查詢類似「找不到檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlCeUpgrade">
+      <summary>查詢類似「升級 EDMX 檔案和組態檔中的 SQLCE 參考時擲回例外狀況。發生錯誤時正在處理的檔案:{0}.完整錯誤訊息: {1}。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlDatabaseFileUpgrade">
+      <summary>查詢類似「升級組態檔中的 SQL 資料庫檔案參考時擲回例外狀況。發生錯誤時正在處理的檔案:{0}.完整錯誤訊息:{1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorNonValidFileName">
+      <summary>查詢類似「檔案名稱 '{0}' 不可:- 含有下列任何字元:\ / :* ? " &amp;amp;lt; &amp;amp;gt; | - 為系統保留名稱，例如 'CON'、'AUX'、'PRN'、'COM1' 或 'LPT2'。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorReadingWritingUserSetting">
+      <summary>查詢類似「在登錄中讀取或寫入使用者設定 '{0}' 時發生錯誤。確實錯誤為: '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorSynchingEdmxNamespaces">
+      <summary>查詢類似「更新 xml 命名空間時發生例外狀況。\n檔案名稱: {0}。」的當地語系化字串。\n完整的錯誤訊息:\n {1}」。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExceptionMessageNullFactoryType">
+      <summary>查詢類似「處理站類型不可以是 null。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExistingConfigurationFileWarning">
+      <summary>查詢類似「專案包含檔案 '{0}'。這個檔案可能會覆寫精靈在專案根目錄的檔案 '{1}' 中產生的組態資訊。請確認專案中的應用程式組態檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_ClearSearch">
+      <summary>查詢類似「清除搜尋」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_CollapseSearchResults">
+      <summary>查詢類似「按這裡檢視摺疊的搜尋結果」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_PromptSearch">
+      <summary>查詢類似「在這裡輸入要搜尋的文字」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_Search">
+      <summary>查詢類似「搜尋」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavNext">
+      <summary>查詢類似「移至下一個搜尋結果」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavPrev">
+      <summary>查詢類似「移至上一個搜尋結果」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowCaption">
+      <summary>查詢類似「檔案總管」(Explorer) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowTitle">
+      <summary>查詢類似「模型瀏覽器」(Model Browser) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditModel">
+      <summary>查詢類似「模型產生擴充嘗試對目前的模型以外的模型進行變更。這是不受支援的動作」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditOriginalOnSave">
+      <summary>查詢類似「序列化擴充嘗試在儲存期間編輯原始模型，但不受支援」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_AlreadyComplete">
+      <summary>查詢類似「呼叫變更範圍上的 Complete() 後，屬性擴充無法進行編輯」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_EditingWrongNamespace">
+      <summary>查詢類似「屬性擴充無法編輯 Entity Framework 命名空間內的項目」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_Missing">
+      <summary>查詢類似「屬性擴充在進行任何模型編輯前，必須先啟始變更範圍」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ErrorOccurredDuringCallToExtension">
+      <summary>查詢類似「執行 ADO.Net Entity Framework Extension 時發生錯誤。擴充的類型名稱為 {0}。例外狀況訊息是 {1}。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel">
+      <summary>查詢類似「模型產生擴充對由資料庫產生的模型做了無效變更」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel_Update">
+      <summary>查詢類似「模型產生擴充對更新的模型做了無效變更」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_NoConverterForExtension">
+      <summary>查詢類似「Entity Designer 即將在非 EDMX 檔案上開啟，而且沒有為這個副檔案註冊 IModelConversionExtension。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_StartChangeScopeFailed">
+      <summary>查詢類似「已存在變更範圍」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_TooManyConverters">
+      <summary>查詢類似「這個副檔名註冊了一個以上的 IModelConversionExtension: {0}。只允許一個。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImport_CannotCreateFromComposableFunction">
+      <summary>查詢類似「無法從版本小於或等於 {0} 的 EDMX 檔案為可組合函式建立函式匯入。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImportsGhostNodeName">
+      <summary>查詢類似「函式匯入」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_DisableLayer">
+      <summary>查詢類似「停用 {0} 支援」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_EnableLayer">
+      <summary>查詢類似「啟用 {0} 支援」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LEADING_OR_TRAILING_SPACES_IN_NCNAME">
+      <summary>查詢類似「名稱 '{0}' 中有前端或後端空格。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadDataPackageError">
+      <summary>查詢類似「載入 Visual Studio Data Package 時發生錯誤。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadOurPackageError">
+      <summary>查詢類似「載入實體資料模型工具套件時發生錯誤。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LocalDatabaseFileAlreadyExists">
+      <summary>查詢類似「'{0}' 已存在於專案中，您要加以覆寫嗎? 按一下 [否] 即會使用現有的檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocMappingNoTable">
+      <summary>查詢類似「(必須先對應資料表)。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd1">
+      <summary>查詢類似 1 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd2">
+      <summary>查詢類似 2 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEndDisplay">
+      <summary>查詢類似「End{0}:({2} 之 {1})」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_AssociationHeader">
+      <summary>查詢類似「關聯」(Association) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnMappingsName">
+      <summary>查詢類似「資料行對應」(Column Mappings) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnName">
+      <summary>查詢類似「資料行」(Column) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionCreatorNode">
+      <summary>查詢類似「&amp;amp;lt;加入函式&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine1">
+      <summary>查詢類似 When {0} 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine2">
+      <summary>查詢類似 And {0} 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_CreatorNode">
+      <summary>查詢類似「&amp;amp;lt;選取刪除函式&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_Display">
+      <summary>查詢類似「使用 {0} 刪除」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrComplexTypePropertiesNotSupported">
+      <summary>查詢類似「[在函式匯入對應中不支援複雜類型屬性]」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNames">
+      <summary>查詢類似「EntityType '{0}' 的繼承階層架構包含下列名稱的重複屬性: '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNamesSeparator">
+      <summary>查詢類似 , 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDuplicatePropertyNameForAssociationEndEntity">
+      <summary>查詢類似「這個關聯的對應具有對 '{0}' 實體類型的參考，而這個實體類型包含下列名稱的重複屬性: '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrKeyInDerivedType">
+      <summary>查詢類似「衍生的 EntityType 已定義索引鍵。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMappingNotSupported">
+      <summary>查詢類似「在專案的目標 Framework 版本中不能使用這個功能。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslAssociationSetMappingHasQueryView">
+      <summary>查詢類似「這個關聯的對應包含 QueryView，但設計工具無法轉譯這一項。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslBadEntitySetMapping">
+      <summary>查詢類似「這個 EntityType 的 EntitySet 與它的一個相關 EntitySetMappings 之間有不完整的關聯性。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindAssociationSet">
+      <summary>查詢類似「找不到所選 Association 的 AssociationSet。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindEntitySet">
+      <summary>查詢類似「找不到所選 EntityType 的 EntitySet。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindFunctionImportMapping">
+      <summary>查詢類似「針對選取的 FunctionImport 找不到 FunctionImportMapping。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindMappedFunction">
+      <summary>查詢類似「找不到對應至選取的 FunctionImport 的函式。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEntitySetMappingHasQueryView">
+      <summary>查詢類似「這個 EntityType 的對應包含 QueryView，但設計工具無法轉譯這一項。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEtmRefsMultipleTypes">
+      <summary>查詢類似「EntityTypeMapping 指定給多個 EntityTypes。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslFunctionMappingsShouldBeSeparate">
+      <summary>查詢類似「包含函式對應的 EntityTypeMapping 不能也包含 MappingFragments。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslGeneral">
+      <summary>查詢類似「對應可能已在設計工具外編輯過」的當地語系化字串。{0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyAssociationSetMappings">
+      <summary>查詢類似「您不可以有 Association 的多個 AssociationSetMappings。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyDefaultEtms">
+      <summary>查詢類似「這個 EntityType 有一個以上特定類型的 EntityTypeMapping。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyEntitySetMappings">
+      <summary>查詢類似「您不可以有 EntityType 的多個 EntitySetMappings。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFragments">
+      <summary>查詢類似「您不可以有 EntityTypeMapping 的多個 MappingFragments。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFunctionETMs">
+      <summary>查詢類似「這個 EntityType 有一個以上具函式對應的 EntityTypeMapping。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyIsTypeOfETMs">
+      <summary>查詢類似「這個 EntityType 有一個以上的 IsTypeOf EntityTypeMapping。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnresolvedItems">
+      <summary>查詢類似「所選物件的對應包含無法解析的參考。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnsupportedCondition">
+      <summary>查詢類似「不支援在 EntityType 屬性上設定條件。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUsesGhostNodes">
+      <summary>查詢類似「這個 EntityType 的對應使用速記標記法，但設計工具不支援這種用法。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_FunctionsHeader">
+      <summary>查詢類似「函式」(Functions) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_CreatorNode">
+      <summary>查詢類似「&amp;amp;lt;選取插入函式&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_Display">
+      <summary>查詢類似「使用 {0} 插入」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovDelete">
+      <summary>查詢類似「&amp;amp;lt;刪除&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovEmpty">
+      <summary>查詢類似「(空白)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_NoDependentEndOnReferentialConstraint">
+      <summary>查詢類似「在參考限制式上沒有相依端點。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Operator">
+      <summary>查詢類似「運算子」(Operator) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorEquals">
+      <summary>查詢類似 = 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorIs">
+      <summary>查詢類似 Is 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ParameterName">
+      <summary>查詢類似「參數 / 資料行」(Parameter / Column) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Parameters">
+      <summary>查詢類似「參數」(Parameters) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Property">
+      <summary>查詢類似「屬性」(Property) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM">
+      <summary>查詢類似「對公開外部索引鍵的關聯，不允許有對應。請 {0} 或 {1}。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Delete">
+      <summary>查詢類似「刪除對應」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Display">
+      <summary>查詢類似「顯示對應以編輯」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_NoASM">
+      <summary>查詢類似「對公開外部索引鍵的關聯，不允許有對應。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM">
+      <summary>查詢類似「這些對應已被定義於這個關聯上的參考完整性限制式覆寫，將會忽略。您可以安心 {0}，或 {1}。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Delete">
+      <summary>查詢類似「刪除這些對應」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Display">
+      <summary>查詢類似「顯示這些對應以編輯」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM">
+      <summary>查詢類似「對應已被定義於這個關聯上的參考完整性限制式覆寫，將會忽略」的當地語系化字串。{0}..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM_Display">
+      <summary>查詢類似「顯示對應編輯器」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintWithNonKeyProperties">
+      <summary>查詢類似「當對應涉及牽涉到非索引鍵屬性的參考完整性限制式時，不允許有對應。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindingCreatorNode">
+      <summary>查詢類似「&amp;amp;lt;加入結果繫結&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindings">
+      <summary>查詢類似「結果資料行繫結」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_RowsAffectedParameterColumn">
+      <summary>查詢類似「受影響資料列參數」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText">
+      <summary>查詢類似「將實體對應到函式」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText_NotSupported">
+      <summary>查詢類似「對應實體到函式 (CTP2 版本不支援這項功能)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TableCreatorNode">
+      <summary>查詢類似「&amp;amp;lt;加入資料表或檢視&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesButtonText">
+      <summary>查詢類似「將實體對應到資料表 / 檢視」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesHeader">
+      <summary>查詢類似「資料表」(Tables) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Toolbar_AccessibleName">
+      <summary>查詢類似「對應詳細資料工具列」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnName">
+      <summary>查詢類似 ?? 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnType">
+      <summary>查詢類似 ?? 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndMultiplicity">
+      <summary>查詢類似 ?? 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndType">
+      <summary>查詢類似 ?? 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyName">
+      <summary>查詢類似 ?? 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyType">
+      <summary>查詢類似 ?? 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_CreatorNode">
+      <summary>查詢類似「&amp;amp;lt;選取更新函式&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_Display">
+      <summary>查詢類似「使用 {0} 更新」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UseOriginalValueColumn">
+      <summary>查詢類似「使用原始值」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Value">
+      <summary>查詢類似「值 / 屬性」(Value / Property) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueEmptyString">
+      <summary>查詢類似「&amp;amp;lt;空字串&amp;amp;gt;」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNotNull">
+      <summary>查詢類似「非 Null」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNull">
+      <summary>查詢類似 Null 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Watermark">
+      <summary>查詢類似「選取 Entity Designer 或 {0} 上的實體或關聯，以編輯其對應。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WatermarkLabelText">
+      <summary>查詢類似「選取實體或關聯以編輯其對應。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WindowTitle">
+      <summary>查詢類似「對應詳細資料」(Mapping Details) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsArrowsImageList">
+      <summary>查詢類型 System.Drawing.Bitmap 的當地語系化資源。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsCommandStrip">
+      <summary>查詢類型 System.Drawing.Bitmap 的當地語系化資源。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsIconsImageList">
+      <summary>查詢類型 System.Drawing.Bitmap 的當地語系化資源。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsViewModel_StorageEntityTypeName">
+      <summary>查詢類似「對應至 {0}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_CantBeRelative">
+      <summary>查詢類似「不同裝置上的檔案不能使用相對路徑。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileAlreadyExists">
+      <summary>查詢類似「您所選擇的模型檔案名稱將會覆寫檔案 '{0}'。請選擇另一個模型檔案名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileIsLinkedFile">
+      <summary>查詢類似「無法加入名稱為 '{0}' 的模型。這個資料夾中已經有同名的連結檔案」的當地語系化字串。.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_NonValidXmlAttributeValue">
+      <summary>查詢類似「ADO.NET 實體資料模型項目和檔案名稱應該只包含有效的 XML 屬性。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_UnexpectedExceptionHasOccurred">
+      <summary>查詢類似「發生未預期的例外狀況。例外狀況訊息是: '{0}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MsgBox_InheritanceWillRemoveKeys">
+      <summary>查詢類似「從 '{1}' 繼承 '{0}' 將會移除於 '{0}' 及其子類型中定義的所有實體索引鍵。\n要繼續嗎?」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_CollectionText">
+      <summary>查詢類似「{0} 的集合」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_InstanceText">
+      <summary>查詢類似「{0} 的執行個體」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NoDefaultConnectionString">
+      <summary>查詢類似「App.config 檔案中未定義預設連接字串。將選取 SqlClient 做為預設提供者。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.None">
+      <summary>查詢類似「無」(None) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisRelease">
+      <summary>查詢類似「這個版本不支援這項功能。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisReleaseInWebsite">
+      <summary>查詢類似「這個版本的網站不支援這項功能。請使用 Web 應用程式。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PackageLoadFailureExceptionMessage">
+      <summary>查詢類似「無法載入實體資料模型工具套件。結果為 {0}。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_CodeGeneration">
+      <summary>查詢類似「程式碼產生」(Code Generation) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Connection">
+      <summary>查詢類似「連接」(Connection) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Constraint">
+      <summary>查詢類似「條件約束」(Constraints) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_DatabaseScriptGeneration">
+      <summary>查詢類似「資料庫指令碼產生」(Database Script Generation) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Diagram">
+      <summary>查詢類似「圖表」(Diagram) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Ends">
+      <summary>查詢類似「末端」(Ends) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Facets">
+      <summary>查詢類似 Facet 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_General">
+      <summary>查詢類似「一般」(General) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Navigation">
+      <summary>查詢類似「導覽」(Navigation) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Schema">
+      <summary>查詢類似「結構描述」(Schema) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Abstract">
+      <summary>查詢類似「決定實體類型是否為抽象的。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Access">
+      <summary>查詢類似「指定類型的存取層級。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Association">
+      <summary>查詢類似「關聯屬性的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_CodeGenerationStrategy">
+      <summary>查詢類似「用於設定這個模型的程式碼產生策略。與這個模型相關聯的 [自訂工具] (可從方案總管的這個項目上的屬性存取) 將讀取這個屬性，以決定如何產生程式碼。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ComplexTypeName">
+      <summary>查詢類似「這個 ComplexType 的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Composable">
+      <summary>查詢類似「如果函式匯入代表在資料庫中呼叫資料表值函式的程式設計方法，則為可組合的」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ConnectionString">
+      <summary>查詢類似「描述資料庫連接和中繼資料檔的連接字串。這位於組態檔內。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseGenerationWorkflow">
+      <summary>查詢類似「由模型精靈中產生資料庫使用的 Windows Workflow Foundation 檔案路徑。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseName">
+      <summary>查詢類似「資料庫上基礎物件的名稱」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchema">
+      <summary>查詢類似「基礎資料庫物件的結構描述名稱」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchemaName">
+      <summary>查詢類似「會在產生的 DDL 中參考的資料庫結構描述名稱」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DDLGenerationTemplate">
+      <summary>查詢類似「T4 文字範本已用來在產生資料庫精靈中將 SSDL 轉換為 DDL。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DefaultValue">
+      <summary>查詢類似「屬性的預設值。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DiagramName">
+      <summary>查詢類似「名稱」(Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityBaseType">
+      <summary>查詢類似「實體的基底類型。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityContainerAccess">
+      <summary>查詢類似「實體容器的存取修飾詞。這個實體容器包含所有實體資料模型實體的執行個體。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityKey">
+      <summary>查詢類似「決定屬性是否為所屬實體的實體索引鍵。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityName">
+      <summary>查詢類似「實體的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntitySetName">
+      <summary>查詢類似「包含實體執行個體的 EntitySet 名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityShapeColor">
+      <summary>查詢類似「實體類型圖案的色彩。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumExternalTypeAttribute">
+      <summary>查詢類似「參考外部類型會停用這個列舉類型的程式碼產生」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumTypeName">
+      <summary>查詢類似「列舉類型的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumUnderlyingType">
+      <summary>查詢類似「列舉的資料類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_FromRole">
+      <summary>查詢類似「這個關聯角色是導覽的來源。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_GenerateUpdateViews">
+      <summary>查詢類似「控制 Entity Framework 是否會產生更新陳述式以修改資料。停用這個功能會啟用其他的對應功能，而且防止透過預存程序以外方式進行的資料修改。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Getter">
+      <summary>查詢類似「決定 Getter 屬性的存取。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceBaseType">
+      <summary>查詢類似「繼承關係的基底類型。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceDerivedType">
+      <summary>查詢類似「繼承關係的衍生類型。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LazyLoadingEnabled">
+      <summary>查詢類似「用於設定所產生 ObjectContext 的預設消極式載入行為。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LongDescription">
+      <summary>查詢類似「文件。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_MetadataArtifactProcessing">
+      <summary>查詢類似「決定建置時對應和模型檔的處理方式。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavigationPropertyName">
+      <summary>查詢類似「導覽屬性的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropMultiplicity">
+      <summary>查詢類似「目標關聯的末端多重性。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropType">
+      <summary>查詢類似「這個導覽屬性的傳回類型。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Nullable">
+      <summary>查詢類似「決定屬性是否可為 null。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Parameter">
+      <summary>查詢類似「預存程序參數的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PluralizeNewObjects">
+      <summary>查詢類似「決定系統是否會自動將新物件的名稱複數化。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ProcessDependentTemplatesOnSave">
+      <summary>查詢類似「決定在儲存 EDMX 檔案時，系統是否要處理相依於 EDMX 的 T4 檔案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PropertyName">
+      <summary>查詢類似「屬性的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Setter">
+      <summary>查詢類似「決定 Setter 屬性的存取。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_StoreGeneratedPattern">
+      <summary>查詢類似「決定在進行插入和更新作業時，是否會在資料庫中自動產生對應的資料行」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Summary">
+      <summary>查詢類似「文件摘要。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_SynchronizePropertyFacets">
+      <summary>查詢類似「更新模型將會更新實體屬性 Facet，例如 Null 屬性和整數位數，以符合對應的資料庫資料行的值。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ToRole">
+      <summary>查詢類似「這個關聯角色是導覽的目標。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Type">
+      <summary>查詢類似「純量屬性的類型。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseLegacyProvider">
+      <summary>查詢類似「使用舊版提供者在設計階段連接至資料庫。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseStrongSpatialTypes">
+      <summary>查詢類似「將程式碼產生設定為針對所有空間類型使用強式類型支援。如果設定為 false，DbGeography 和 DbGeometry 基底類別就會用於產生的程式碼。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ValidateOnBuild">
+      <summary>查詢類似「決定系統是否要在建置時驗證模型。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationName">
+      <summary>查詢類似「關聯的名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationSetName">
+      <summary>查詢類似「包含關聯的關聯集名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndNavigationProperty">
+      <summary>查詢類似「在這個端點傳回值的實體屬性名稱」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndOnDelete">
+      <summary>查詢類似「指定當這個端點上的實體被刪除時，要採取的行動」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EntityContainerName">
+      <summary>查詢類似「包含所有實體資料模型實體執行個體的實體容器名稱。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Multiplicity">
+      <summary>查詢類似「在關聯的這個端點允許的實體數」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Namespace">
+      <summary>查詢類似「實體資料模型的命名空間。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Role">
+      <summary>查詢類似「這個端點的名稱」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Abstract">
+      <summary>查詢類似「抽象」(Abstract) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Access">
+      <summary>查詢類似「存取」(Access) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Aggregate">
+      <summary>查詢類似「彙總」(Aggregate) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Alias">
+      <summary>查詢類似「別名」(Alias) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Association">
+      <summary>查詢類似「關聯」(Association) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_AssociationSetName">
+      <summary>查詢類似「關聯集名稱」(Association Set Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BaseType">
+      <summary>查詢類似「基底類型」(Base Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BuiltIn">
+      <summary>查詢類似「內建」(Built In) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CodeGenerationStrategy">
+      <summary>查詢類似「程式碼產生策略」(Code Generation Strategy) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Collation">
+      <summary>查詢類似「定序」(Collation) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CommandText">
+      <summary>查詢類似「命令文字」(Command Text) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Composable">
+      <summary>查詢類似「可組合」(Composable) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConcurrencyMode">
+      <summary>查詢類似「並行模式」(Concurrency Mode) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConnectionString">
+      <summary>查詢類似「連接字串」(Connection String) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseGenerationWorkflow">
+      <summary>查詢類似「資料庫產生工作流程」(Database Generation Workflow) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseName">
+      <summary>查詢類似「資料庫物件名稱」(Database Object Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchema">
+      <summary>查詢類似「資料庫結構描述」(Database Schema) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchemaName">
+      <summary>查詢類似「資料庫結構描述名稱」(Database Schema Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DDLGenerationTemplate">
+      <summary>查詢類似「DLL 產生範本」(DDL Generation Template) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DefaultValue">
+      <summary>查詢類似「預設值」(Default Value) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DerivedType">
+      <summary>查詢類似「衍生類型」(Derived Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Documentation">
+      <summary>查詢類似「文件」(Documentation) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End">
+      <summary>查詢類似「結束」(End) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Multiplicity">
+      <summary>查詢類似「End1 多重性」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1NavigationProperty">
+      <summary>查詢類似「End1 導覽屬性」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1OnDelete">
+      <summary>查詢類似 End1 OnDelete 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Role">
+      <summary>查詢類似「End1 角色名稱」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Multiplicity">
+      <summary>查詢類似「End2 多重性」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2NavigationProperty">
+      <summary>查詢類似「End2 導覽屬性」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2OnDelete">
+      <summary>查詢類似 End2 OnDelete 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Role">
+      <summary>查詢類似「End2 角色名稱」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerAccess">
+      <summary>查詢類似「實體容器存取」(Entity Container Access) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerName">
+      <summary>查詢類似「實體容器名稱」(Entity Container Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityKey">
+      <summary>查詢類似「實體索引鍵」(Entity Key) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntitySetName">
+      <summary>查詢類似「實體集名稱」(Entity Set Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityShapeColor">
+      <summary>查詢類似「填滿色彩」(Fill Color) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityType">
+      <summary>查詢類似「類型」(Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumExternalTypeAttribute">
+      <summary>查詢類似「外部類型」(External Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumFlagAttribute">
+      <summary>查詢類似「旗標」(Flags) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumUnderlyingType">
+      <summary>查詢類似「基礎類型」(Underlying Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FixedLength">
+      <summary>查詢類似「固定長度」(Fixed Length) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FromRole">
+      <summary>查詢類似「來源角色」(From Role) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_GenerateUpdateViews">
+      <summary>查詢類似「產生更新檢視表」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Getter">
+      <summary>查詢類似 Getter 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LazyLoadingEnabled">
+      <summary>查詢類似「消極式載入已啟用」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LongDescription">
+      <summary>查詢類似「完整描述」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_CopyToOutputDirectory">
+      <summary>查詢類似「複製到輸出目錄」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_EmbedInOutputAssembly">
+      <summary>查詢類似「內嵌在輸出組件中」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MaxLength">
+      <summary>查詢類似「最大長度」(Max Length) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MetadataArtifactProcessing">
+      <summary>查詢類似「中繼資料成品處理」(Metadata Artifact Processing) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Mode">
+      <summary>查詢類似「模式」(Mode) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Namespace">
+      <summary>查詢類似「命名空間」(Namespace) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropMultiplicity">
+      <summary>查詢類似「多重性」(Multiplicity) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropType">
+      <summary>查詢類似「傳回類型」(Return Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Niladic">
+      <summary>查詢類似 Niladic 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Nullable">
+      <summary>查詢類似「可為 Null」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Parameter">
+      <summary>查詢類似「參數」(Parameter) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ParameterTypeSemantics">
+      <summary>查詢類似「參數類型語意」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_PluralizeNewObjects">
+      <summary>查詢類似「將新物件複數化」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Precision">
+      <summary>查詢類似「精確度」(Precision) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ProcessDependentTemplatesOnSave">
+      <summary>查詢類似「儲存時轉換相關文字範本」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_RefConstraint">
+      <summary>查詢類似「參考限制式」(Referential Constraint) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ReturnType">
+      <summary>查詢類似「傳回類型」(Return Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Scale">
+      <summary>查詢類似「小數位數」(Scale) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Setter">
+      <summary>查詢類似 Setter 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoredProcedureName">
+      <summary>查詢類似「預存程序名稱」(Stored Procedure Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreFunctionName">
+      <summary>查詢類似「存放區函式名稱」(Store Function Name) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreGeneratedPattern">
+      <summary>查詢類似 StoreGeneratedPattern 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Summary">
+      <summary>查詢類似「摘要」(Summary) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_SynchronizePropertyFacets">
+      <summary>查詢類似「更新屬性 Facet」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ToRole">
+      <summary>查詢類似「目標角色」(To Role) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Type">
+      <summary>查詢類似「類型」(Type) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Unicode">
+      <summary>查詢類似 Unicode 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseLegacyProvider">
+      <summary>查詢類似「使用舊版提供者」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseStrongSpatialTypes">
+      <summary>查詢類似「使用強式空間類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ValidateOnBuild">
+      <summary>查詢類似「建置時驗證」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_MessageBox_SetAbstract">
+      <summary>查詢類似「將實體類型定義為抽象將會移除該實體類型的所有現有函式對應。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityMany">
+      <summary>查詢類似「* (多)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityManyOf">
+      <summary>查詢類似「* ({0} 的集合)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOne">
+      <summary>查詢類似「1 (一)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOneOf">
+      <summary>查詢類似「1 ({0} 其中之一)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOne">
+      <summary>查詢類似「0..1 (零或一)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOneOf">
+      <summary>查詢類似「0..1 (零或 {0} 其中之一)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorPreviewGroupName">
+      <summary>查詢類似「程式碼物件」(Code Objects) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_InvalidName">
+      <summary>查詢類似「指定的名稱不是有效的識別碼。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_UndoDescription">
+      <summary>查詢類似「將 {0} 重新命名為 {1}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Cancel">
+      <summary>查詢類似「取消」(Cancel) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_LocationLabel">
+      <summary>查詢類似「位置:」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_NewNameLabel">
+      <summary>查詢類似「新名稱:」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_OK">
+      <summary>查詢類似「確定」(OK) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_PreviewReferenceChangesLabel">
+      <summary>查詢類似「預覽參考變更」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Title">
+      <summary>查詢類似「重新命名」(Rename) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_ConfirmButtonText">
+      <summary>查詢類似「套用(&amp;amp;amp;A)」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Description">
+      <summary>查詢類似「重新命名」(Rename) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_TextViewDescription">
+      <summary>查詢類似「預覽變更:」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Title">
+      <summary>查詢類似「預覽變更 - 重新命名」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCDependentProperty">
+      <summary>查詢類似「{0} (錯誤:找不到)。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCPrincipalProperty">
+      <summary>查詢類似「{0} (錯誤:找不到，將刪除參考。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RenameModelMessageBox_Text">
+      <summary>查詢類似「無法重新命名或移動檔案。請在 Entity Designer 中關閉檔案後，再重新命名或移動。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ResourceManager">
+      <summary>傳回這個類別所使用的快取 ResourceManager 例項。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeErrorMessage">
+      <summary>查詢類似「無法擷取預存程序或函式傳回類型資訊。錯誤訊息 {0}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeInfoMessage">
+      <summary>查詢類似「正在擷取預存程序或函式傳回類型資訊 {0}/{1} - '{2}.{3}'」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogDescription">
+      <summary>查詢類似「正在擷取預存程序或函式傳回類型資訊」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogInitialStatus">
+      <summary>查詢類似「等候資料庫連接...」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogTitle">
+      <summary>查詢類似「請稍候...」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_FailureToLoadStoreItemCollection">
+      <summary>查詢類似「嘗試建立 StoreItemCollection 時發生下列例外狀況: '{0}'」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_StoreItemCollectionMayRequireDatabaseConnection">
+      <summary>查詢類似「無法從提供者處理站載入 StoreItemCollection。載入 StoreItemCollection 之前必須先開啟資料庫連接。例外狀況訊息是: '{0}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultItemsMatching">
+      <summary>查詢類似「符合 {0} 的項目」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultSearchCriteria">
+      <summary>查詢類似 '{0}' 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageAssociationsGhostNodeName">
+      <summary>查詢類似「條件約束」(Constraints) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageFunctionsGhostNodeName">
+      <summary>查詢類似「預存程序 / 函式」(Stored Procedures / Functions) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageTypesGhostNodeName">
+      <summary>查詢類似「資料表 / 檢視」(Tables / Views) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.T4_ItemTemplate_CSharp_Comment">
+      <summary>取得類似「T4 項目範本 CSharp 註解」的當地語系化字串。</summary>
+      <returns>類似「T4 項目範本 CSharp 註解」的當地語系化字串。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateError">
+      <summary>查詢類似「行 {0}，資料行 {1}: '{2}'」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateErrorsEncountered">
+      <summary>查詢類似「處理範本 '{0} 時發生下列錯誤: {1}」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ToolWindowTitle">
+      <summary>查詢類似「模型瀏覽器」(Model Browser) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TransactionAlreadyCompleted">
+      <summary>查詢類似「交易已經完成。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_AddComplexType">
+      <summary>查詢類似「加入複雜類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionColumn">
+      <summary>查詢類似「變更條件資料行」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionValue">
+      <summary>查詢類似「變更條件值」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpMapping">
+      <summary>查詢類似「變更函式匯入對應」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpRetType">
+      <summary>查詢類似「變更 FunctionImport 傳回類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeMetadataArtifactProcessing">
+      <summary>查詢類似「變更中繼資料成品處理」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeResultBinding">
+      <summary>查詢類似「變更 ResultBinding」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeScalarProperty">
+      <summary>查詢類似「變更 ScalarProperty」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateAssociationSetMapping">
+      <summary>查詢類似「建立 AssociationSetMapping」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateCondition">
+      <summary>查詢類似「建立條件」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateDiagram">
+      <summary>查詢類似「建立圖表」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateEnumType">
+      <summary>查詢類似「建立列舉類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionImport">
+      <summary>查詢類似「建立 FunctionImport」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionMapping">
+      <summary>查詢類似「建立 FunctionMapping」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateMappingFragment">
+      <summary>查詢類似「建立 MappingFragment」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateResultBinding">
+      <summary>查詢類似「建立 ResultBinding」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateScalarProperty">
+      <summary>查詢類似「建立 ScalarProperty」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteAssociationSetMapping">
+      <summary>查詢類似「刪除 AssociationSetMapping」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteCondition">
+      <summary>查詢類似「刪除條件」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteFunctionMapping">
+      <summary>查詢類似「刪除 FunctionMapping」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteMappingFragment">
+      <summary>查詢類似「刪除 MappingFragment」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteResultBinding">
+      <summary>查詢類似「刪除 ResultBinding」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteScalarProperty">
+      <summary>查詢類似「刪除 ScalarProperty」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_GenerateDatabaseScriptFromModel">
+      <summary>查詢類似「由模型產生資料庫」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerDisable">
+      <summary>查詢類似「停用圖層 '{0}'」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerEnable">
+      <summary>查詢類似「啟用圖層 '{0}'」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_RefactorRenameCommand">
+      <summary>查詢類似「重新命名」(Rename) 的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ReferentialContraint">
+      <summary>查詢類似「變更參考限制式」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_SetCodeGenerationStrategy">
+      <summary>查詢類似「設定程式碼產生策略」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateAssociationSetMapping">
+      <summary>查詢類似「更新 AssociationSetMapping」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateEnumType">
+      <summary>查詢類似「更新列舉類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionImport">
+      <summary>查詢類似「更新 FunctionImport」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionMapping">
+      <summary>查詢類似「更新 FunctionMapping」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateMappingFragment">
+      <summary>查詢類似「更新 MappingFragment」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateModelFromDatabase">
+      <summary>查詢類似「從資料庫更新模型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdatePropertyType">
+      <summary>查詢類似「更新屬性類型」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UnsupportedProjectLanguage">
+      <summary>查詢類似「不支援的專案語言。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UpdateEdmxNamespacesSuccessful">
+      <summary>查詢類似「在專案 {0} 中的 .edmx 檔案內，儲存體、概念及對應區段中的命名空間都已正確更新，符合專案的目標 .NET Framework。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UsingDefaultConnectionString_1">
+      <summary>查詢類似「使用取自 '{1}' 檔案的資料提供者和資料庫連接 '{0}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VsUtils_ErrorResolvingMacro">
+      <summary>查詢類似「無法解析巨集: '{0}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionConvertingProject">
+      <summary>查詢類似「將階層架構轉換成專案時發生例外狀況。階層架構不是專案。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionParsingXml">
+      <summary>查詢類似「剖析檔案 '{0}' 時發生下列例外狀況: '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_InnerExceptionErrorFormat">
+      <summary>查詢類似「攔截的內部例外狀況類型為 '{0}'，錯誤訊息如下: '{1}'。」的當地語系化字串。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration">
+      <summary>表示用來設定關聯之串聯刪除選項的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.DeleteBehavior">
+      <summary>取得或設定串聯刪除選項。</summary>
+      <returns>串聯刪除選項。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper">
+      <summary>表示用來產生程式碼的 Helper 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>為指定的屬性指定匿名類型 Lambda。</summary>
+      <returns>Lambda。</returns>
+      <param name="properties">屬性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration)">
+      <summary>傳回用來套用指定組態的資料註解屬性。</summary>
+      <returns>用來套用指定組態的資料註解屬性。</returns>
+      <param name="configuration">組態。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(System.String)">
+      <summary>傳回具有指定主體的屬性。</summary>
+      <returns>屬性。</returns>
+      <param name="attributeBody">屬性的主體。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.CodeProvider">
+      <summary>取得所產生程式碼之語言的提供者。</summary>
+      <returns>所產生之程式碼的語言的提供者。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.MethodChain(Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration)">
+      <summary>取得用來套用指定之組態的 Code First Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="configuration">組態。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EdmMember)">
+      <summary>為指定的成員指定屬性識別項。</summary>
+      <returns>識別碼。</returns>
+      <param name="member">成員。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EntitySetBase)">
+      <summary>為指定的實體集指定屬性識別項。</summary>
+      <returns>識別碼。</returns>
+      <param name="entitySet">實體集。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>取得指定值的字串陣列常值。</summary>
+      <returns>常值。</returns>
+      <param name="values">值。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>為指定的屬性指定類型。</summary>
+      <returns>類型。</returns>
+      <param name="property">屬性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmType)">
+      <summary>為指定的類型指定類型識別項。</summary>
+      <returns>識別碼。</returns>
+      <param name="edmType">類型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EntityContainer)">
+      <summary>為指定的容器指定類型識別項。</summary>
+      <returns>識別碼。</returns>
+      <param name="container">容器。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.NavigationProperty)">
+      <summary>為指定的導覽屬性指定類型。</summary>
+      <returns>類型。</returns>
+      <param name="navigationProperty">導覽屬性。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration">
+      <summary>表示用來設定屬性之資料行名稱、類型和順序的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得屬性主體。</summary>
+      <returns>屬性主體。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Name">
+      <summary>取得或設定資料行的名稱。</summary>
+      <returns>資料行名稱。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Order">
+      <summary>取得或設定此資料行應該出現在資料庫資料表中的順序。</summary>
+      <returns>此資料行應該出現在資料庫資料表中的順序。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.TypeName">
+      <summary>取得或設定資料庫提供者特有的資料類型名稱。</summary>
+      <returns>資料庫提供者特有的資料類型名稱。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper">
+      <summary>提供用來產生 C# 程式碼的 Helper 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>取得指定之屬性的匿名類型 Lambda。</summary>
+      <returns>Lambda。</returns>
+      <param name="properties">屬性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.Attribute(System.String)">
+      <summary>取得具有指定主體的屬性。</summary>
+      <returns>屬性。</returns>
+      <param name="attributeBody">屬性的主體。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.CodeProvider">
+      <summary>取得用來產生及編譯 C# 程式碼的程式碼提供者。</summary>
+      <returns>用來產生及編譯 C# 程式碼的程式碼提供者。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>取得指定值的字串陣列常值。</summary>
+      <returns>常值。</returns>
+      <param name="values">值。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration">
+      <summary>表示用來設定屬性之資料庫產生選項的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得與此組態相關聯的屬性主體。</summary>
+      <returns>與此組態相關聯的屬性主體。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的 Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.StoreGeneratedPattern">
+      <summary>取得或設定模式，此模式是用來在資料庫中產生屬性的值。</summary>
+      <returns>用來針對資料庫中的屬性產生值的模式。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper">
+      <summary>提供用來分析模型的 Helper 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.#ctor(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper" /> 類別的新執行個體。</summary>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>取得用來套用至指定之屬性的模型組態。</summary>
+      <returns>組態。</returns>
+      <param name="property">屬性。</param>
+      <param name="model">模型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EntitySet,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>取得用來套用至指定之實體類型的模型組態。</summary>
+      <returns>組態。</returns>
+      <param name="entitySet">實體類型的集合。</param>
+      <param name="model">模型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>取得用來套用至指定之導覽屬性的模型組態。</summary>
+      <returns>組態。</returns>
+      <param name="navigationProperty">導覽屬性。</param>
+      <param name="model">模型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetMultiplicityConfiguration(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Boolean@)">
+      <summary>取得用來套用至指定之導覽屬性的多重性模型組態。</summary>
+      <returns>組態。</returns>
+      <param name="navigationProperty">導覽屬性。</param>
+      <param name="isDefault">表示預設是否會套用組態的值。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration">
+      <summary>表示用來將字串或二進位屬性標記為固定長度的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的 Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration">
+      <summary>表示用來設定關聯之外部索引鍵屬性的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.Properties">
+      <summary>取得用於關聯之外部索引鍵的屬性。</summary>
+      <returns>用於關聯之外部索引鍵的屬性。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration">
+      <summary>表示可以使用資料註解套用的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的資料註解屬性主體。</summary>
+      <returns>屬性的主體。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IConfiguration">
+      <summary>表示模型組態。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration">
+      <summary>表示可以使用 Code First Fluent 應用程式開發介面套用的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的 Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration">
+      <summary>表示用來設定多對多關聯之聯結資料表和資料行名稱的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.LeftKeys">
+      <summary>針對左邊實體的資料表，取得其外部索引鍵的資料行名稱。</summary>
+      <returns>實體資料表左方之外部索引鍵的資料行名稱。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.RightKeys">
+      <summary>針對右邊實體的資料表，取得其外部索引鍵的資料行名稱。</summary>
+      <returns>實體資料表右方之外部索引鍵的資料行名稱。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Schema">
+      <summary>取得或設定資料表的結構描述。</summary>
+      <returns>資料表的結構描述。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Table">
+      <summary>取得或設定資料表的名稱。</summary>
+      <returns>資料表的名稱。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration">
+      <summary>表示用來設定實體之索引鍵的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得組態的方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.KeyProperties">
+      <summary>取得用於實體之索引鍵的屬性。</summary>
+      <returns>用於實體之索引鍵的屬性。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration">
+      <summary>表示模型組態，可用來包含屬性使其成為實體的索引鍵。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得屬性主體。</summary>
+      <returns>屬性主體。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration">
+      <summary>表示用來設定字串或二進位屬性之長度上限的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>傳回與長度組態相關聯的屬性主體。</summary>
+      <returns>與此長度組態相關聯的屬性主體。</returns>
+      <param name="code">組態的程式碼協助程式。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>傳回與長度組態相關聯的方法鏈結。</summary>
+      <returns>與長度組態相關聯的方法鏈結。</returns>
+      <param name="code">組態的程式碼協助程式。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.MaxLength">
+      <summary>取得或設定屬性的長度上限。</summary>
+      <returns>此屬性的最大長度。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration">
+      <summary>表示用來設定字串屬性之長度上限的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得與此組態相關聯的屬性主體。</summary>
+      <returns>與此組態相關聯的屬性主體。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration">
+      <summary>表示用來設定關聯多重性的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的 Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftEntityType">
+      <summary>取得或設定關聯左端的實體類型。</summary>
+      <returns>關聯左端的實體類型。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftNavigationProperty">
+      <summary>取得或設定關聯左端的導覽屬性。</summary>
+      <returns>關聯左端的導覽屬性。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.RightNavigationProperty">
+      <summary>取得或設定關聯右端的導覽屬性。</summary>
+      <returns>關聯右端的導覽屬性。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration">
+      <summary>表示用來將字串屬性標記為非 Unicode 的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的 Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration">
+      <summary>表示用來設定暫時屬性精確度的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的 Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.Precision">
+      <summary>取得或設定此屬性的有效位數。</summary>
+      <returns>此屬性的有效位數。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration">
+      <summary>表示用來設定十進位屬性之精確度和小數位數的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Precision">
+      <summary>取得或設定此屬性的有效位數。</summary>
+      <returns>此屬性的有效位數。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Scale">
+      <summary>取得或設定此屬性的小數位數。</summary>
+      <returns>此屬性的小數位數。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration">
+      <summary>表示用來將屬性標記為必要項的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得屬性主體。</summary>
+      <returns>屬性主體。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration">
+      <summary>表示用來設定實體之資料表的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得與此組態相關聯的屬性主體。</summary>
+      <returns>與此組態相關聯的屬性主體。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得用來套用組態的 Fluent 應用程式開發介面方法鏈結。</summary>
+      <returns>方法鏈結。</returns>
+      <param name="code">用來產生程式碼的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Schema">
+      <summary>取得或設定資料表的資料庫結構描述。</summary>
+      <returns>資料表的資料庫結構描述。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Table">
+      <summary>取得或設定資料表的名稱。</summary>
+      <returns>資料表的名稱。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration">
+      <summary>表示用來將二進位資料行標記為時間戳記的模型組態。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得與此組態相關聯的屬性主體。</summary>
+      <returns>與此組態相關聯的屬性主體。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>取得與此組態相關聯的方法鏈結。</summary>
+      <returns>與此組態相關聯的方法鏈結。</returns>
+      <param name="code">程式碼協助程式。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper">
+      <summary>提供用來產生 Visual Basic 程式碼的 Helper 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>取得指定之屬性的匿名類型 Lambda。</summary>
+      <returns>Lambda。</returns>
+      <param name="properties">屬性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.Attribute(System.String)">
+      <summary>取得具有指定主體的屬性。</summary>
+      <returns>屬性。</returns>
+      <param name="attributeBody">屬性的主體。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.CodeProvider">
+      <summary>取得用來產生及編譯 Visual Basic 程式碼的程式碼提供者。</summary>
+      <returns>用來產生及編譯 Visual Basic 程式碼的程式碼提供者。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>取得指定值的字串陣列常值。</summary>
+      <returns>常值。</returns>
+      <param name="values">值。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>允許使用 TemplateActivity 將 SSDL 轉換為 DDL 的 SsdlToDdlActivity。請注意，此類別應避免與 Microsoft.Data.Entity.Design.* 命名空間中 (Microsoft.Data.Entity.Design.CreateDatabase 除外) 的任何執行個體類型 (特別是由 Entity Designer 執行個體化的類型) 具有任何相依性。此類別係基於 VS 相依性的緣故而存在於本專案中。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>Windows Workflow <see cref="T:System.Activities.OutArgument`1" />，指定產生自 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> 和 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> 屬性中之存放結構定義語言 (SSDL) 的資料定義語言 (DDL)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>Windows Workflow <see cref="T:System.Activities.InArgument`1" />，指定從中產生資料定義語言 (DDL) 用以卸除現有資料庫物件的現有存放結構定義語言 (SSDL)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>Windows Workflow <see cref="T:System.Activities.InArgument`1" />，指定從中產生資料定義語言 (DDL) 用以建立新資料庫物件的存放結構定義語言 (SSDL)。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData">
+      <summary>LayerManager 用來區別不同圖層的父介面。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData.LayerName">
+      <summary>此擴充性圖層的名稱。</summary>
+      <returns>傳回 <see cref="T:System.String" />。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <returns>傳回 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection" />。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardStage">
+      <summary>WizardStage 表示精靈擴充頁面會在模型產生之前或之後出現於精靈中。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PostModelGeneration">
+      <summary>精靈擴充頁面會在模型產生之後出現。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PreModelGeneration">
+      <summary>精靈擴充頁面會在模型產生之前出現。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Templates.TemplateResources">
+      <summary>強類型資源類別，用於查詢當地語系化字串等等。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Culture">
+      <summary>使用此強類型資源類別，為所有資源查閱覆寫目前執行緒的 CurrentUICulture 屬性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.ResourceManager">
+      <summary>傳回此類別所使用的快取 ResourceManager 例項。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveEntitySetConflict">
+      <summary>查詢類似「EntitySet '{0}.{1}' 和現有的 EntitySet 僅有大小寫不同，且與目前的語言選項不相容。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveMemberConflict">
+      <summary>查詢類似「Member '{0}.{1}' 和現有的 Member 僅有大小寫不同，且與目前的語言選項不相容。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveTypeConflict">
+      <summary>查詢類似「類型 '{0}' 不是唯一的。這可能是因為僅有大小寫不同的類型和目前的語言選項不相容所導致。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine1">
+      <summary>查詢類似「此程式碼是由範本產生。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine2">
+      <summary>查詢類似「對此檔案進行手動變更可能導致您的應用程式產生未預期的行為。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine3">
+      <summary>查詢類似「如果重新產生程式碼，將會覆寫對此檔案的手動變更。」的當地語系化字串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_ReplaceVsItemTemplateToken">
+      <summary>查詢類似「請使用您要從中產生 .edmx 檔的實際名稱，覆寫替代語彙基元 '$edmxInputFile$'。」的當地語系化字串。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>這必須是公用的，因為進行當地語系化需要可從附屬資源 DLL 存取此項</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>附加事件和名稱至編譯內容。</summary>
+      <param name="connectionId">用來區分呼叫的識別項語彙基元。</param>
+      <param name="target">事件和名稱的連接目標。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>在已編譯的內容中，於事件 Setter 及範本上附加事件。</summary>
+      <param name="connectionId">用於事件連接 (Event Wiring) 的唯一連接識別碼。</param>
+      <param name="target">事件連接的目標。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="projectItem">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="project">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="projectItem">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="automationObject">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+      <param name="replacementsDictionary">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+      <param name="runKind">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+      <param name="customParams">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <returns>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</returns>
+      <param name="filePath">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>當「ADO.NET 實體資料模型」類型的新項目加入至現有的專案時，Visual Studio 會叫用此精靈。此精靈是登錄於 .vstemplate 檔案項目範本中。此項目範本所加入的檔案為：+- modelName.edmx | +- modelName.edmx.diagram | +- modelName.Designer.cs [或 vb] =&amp;amp;gt; 程式碼產生器輸出 (針對 EF5 和舊版 ObjectContext 產生器) 或 +- ModelName.cs [或 vb] - 針對 CodeFirst</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>在開啟任何具有 OpenInEditor 屬性的項目之前，會呼叫此方法。藉此便能在開啟範本中的項目之前執行自訂精靈邏輯</summary>
+      <param name="projectItem">將要開啟的專案項目</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>在建立專案之後，會呼叫此方法。藉此便能在專案完成產生動作時執行自訂精靈邏輯</summary>
+      <param name="project">專案。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>此方法只針對項目範本呼叫，而非針對專案範本</summary>
+      <param name="projectItem">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>在範本精靈執行結束時，會呼叫此方法。藉此便能在精靈完成所有工作時執行自訂精靈邏輯，而且將為 .vstemplate 所加入的檔案設定專案項目相依性</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>在範本精靈開始執行時，會呼叫此方法。藉此便能在尚未建立任何項目前執行自訂精靈邏輯，而且適合處置執行方式將會據以改變的事項，例如收集使用者輸入</summary>
+      <param name="automationObject">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+      <param name="replacementsDictionary">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+      <param name="runKind">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+      <param name="customParams">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>指出指定的專案項目是否應該加入至專案</summary>
+      <returns>若應加入項目，則為 true，否則為 false。</returns>
+      <param name="filePath">專案項目的路徑。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.#ctor">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="projectItem">專案項目。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="project">專案。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="projectItem">專案項目。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunFinished">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="automationObject">Automation 物件。</param>
+      <param name="replacementsDictionary">取代字典。</param>
+      <param name="runKind">執行種類。</param>
+      <param name="customParams">自訂參數。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ShouldAddProjectItem(System.String)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <returns>若應加入專案項目，則為 true，否則為 false。</returns>
+      <param name="filePath">檔案路徑。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>Managed 包裝函式，適用於 VS 的 IVsSingleFileGenerator 概念，這是一種在建置期間叫用的自訂工具，可以接受任何檔案做為輸入，並提供可編譯的程式碼檔案做為輸出。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>實作 IVsSingleFileGenerator.DefaultExtension 方法。傳回產生之檔案的副檔名</summary>
+      <returns>如果成功，則為 S_OK，否則為 E_FAIL</returns>
+      <param name="pbstrDefaultExtension">Out 參數，含有要指定給輸出檔案名稱的副檔名。傳回的副檔名必須包含前置句號</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>取得此產生器的預設副檔名</summary>
+      <returns>含有此產生器之預設副檔名的字串</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>執行與釋放 (Free)、釋放 (Release) 或重設 Unmanaged 資源相關聯之應用程式定義的工作。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>釋放 Unmanaged 和 Managed 資源 (後者為選擇性釋放)。</summary>
+      <param name="disposing">true 表示會同時釋放 Managed 和 Unmanaged 資源，false 則表示只釋放 Unmanaged 資源。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>終結 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> 類別的執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>VS Shell 所呼叫以執行產生作業的 main 方法</summary>
+      <returns>狀態碼。</returns>
+      <param name="wszInputFilePath">輸入檔的路徑</param>
+      <param name="bstrInputFileContents">輸入檔以字串表示的內容 (Shell 會處理 UTF-8 與 Unicode 之間諸如此類的類型轉換)</param>
+      <param name="wszDefaultNamespace">產生之程式碼檔案的預設命名空間</param>
+      <param name="rgbOutputFileContents">輸出檔內容的位元組陣列</param>
+      <param name="pcbOutput">輸出位元組陣列中的位元組計數</param>
+      <param name="pGenerateProgress">傳送進度更新至 Shell 的介面</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>指定輸入檔實際產生程式碼的方法。</summary>
+      <returns>產生的程式碼檔案以位元組陣列表示</returns>
+      <param name="inputFileName">輸入檔名稱</param>
+      <param name="inputFileContent">字串形式的檔案內容</param>
+      <param name="defaultNamespace">預設命名空間。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>將透過 Shell 回呼機制傳達錯誤的方法。</summary>
+      <param name="warning">如果此為警告，則為 true</param>
+      <param name="level">層級或嚴重性</param>
+      <param name="message">向使用者顯示的文字</param>
+      <param name="line">錯誤/警告的行號</param>
+      <param name="column">錯誤/警告的欄號</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>此類別是要在前置處理器建置步驟中共同建立。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>傳回 CodeDomProvider 物件，代表包含呼叫產生器之專案項目的專案所用語言。</summary>
+      <returns>CodeDomProvider 物件</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>釋放 Unmanaged 和 Managed 資源 (後者為選擇性釋放)。</summary>
+      <param name="disposing">true 表示會同時釋放 Managed 和 Unmanaged 資源，false 則表示只釋放 Unmanaged 資源。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>取得 Vs ErrorList 物件</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>依其類型取得服務的方法</summary>
+      <returns>實作要求之服務的物件</returns>
+      <param name="serviceType">要擷取的服務類型</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>IOleObjectWithSite 的 GetSite 方法</summary>
+      <param name="riid">要取得的介面</param>
+      <param name="ppvSite">要在其中填入傳回值的陣列</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>傳回包含呼叫程式碼產生器之專案項目的專案其 EnvDTE.Project 物件</summary>
+      <returns>包含呼叫程式碼產生器之專案項目的專案其 EnvDTE.Project 物件</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>傳回對應至呼叫程式碼產生器之專案項目的 EnvDTE.ProjectItem 物件</summary>
+      <returns>呼叫程式碼產生器之專案項目的 EnvDTE.ProjectItem 物件</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>IOleObjectWithSite 的 SetSite 方法</summary>
+      <param name="pUnkSite">供此物件使用的站台</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>依給定的 IOleServiceProvider 視需要建立 ServiceProvider</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>SFG 架構程式碼產生器的運作方式：1。讀取 EDMX 檔案中的 CodeGenerationStrategy 選項 2。若 CodeGenerationStrategy 設為 'Default'，會繼續執行 Codegen：3。呼叫 System.Data.Entity.Design CodeGen 應用程式開發介面</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+      <param name="itemId">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+      <param name="oldInputName">此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>此應用程式開發介面支援 Entity Framework 基礎結構，並非設計直接由您的程式碼所使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>取得 CodeDomProvider 提供之輸出檔的預設副檔名</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>呼叫 CodeGen 應用程式開發介面以便從 CSDL 檔案產生程式碼檔案</summary>
+      <returns>null 表示錯誤，否則為檔案的內容</returns>
+      <param name="inputFileName">經由 ProjectItem 傳入的 CSDL 檔案所在完整路徑</param>
+      <param name="inputFileContent">CSDL 檔案的內容，一定要使用此項才能從記憶體中文件產生</param>
+      <param name="defaultNamespace">預設命名空間。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>允許在 WF 工作流程內轉換 T4 範本的 TemplateActivity。請注意，此類別應避免與 Microsoft.Data.Entity.Design.* 命名空間中 (Microsoft.Data.Entity.Design.CreateDatabase 除外) 的任何執行個體類型 (特別是由 Entity Designer 執行個體化的類型) 具有任何相依性。此類別係基於 VS 相依性的緣故而存在於本專案中。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" /> 類別的新執行個體。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>透過呼叫 Visual Studio STextTemplatingService，轉換 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 屬性中所指定的文字範本。</summary>
+      <param name="context">目前活動的狀態。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>填入用來提供輸入給文字範本的 <see cref="T:System.Collections.IDictionary" />。此方去可以在衍生類別中被覆寫用來提供自訂輸入。這些輸入會放在 <see cref="T:System.Runtime.Remoting.Messaging.CallContext" /> 中供文字範本使用。</summary>
+      <param name="context">目前活動的狀態。</param>
+      <param name="inputs">將輸入名稱關聯到輸入值供文字範本使用的字典。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>使用 Visual Studio 的文字範本化服務處理 T4 範本，而其路徑可能包含巨集 (例如 "$(DevEnvDir)\...")。注意：範本路徑不得為非檔案或 UNC 路徑</summary>
+      <returns>處理範本後的輸出。</returns>
+      <param name="templatePath">範本的檔案路徑，其中可能包含以專案為基礎的巨集</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>由 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 屬性指定之範本的輸出。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>所處理之文字範本的路徑。</summary>
+    </member>
+    <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+      <summary>GeneratedInternalTypeHelper</summary>
+    </member>
+    <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.#ctor">
+      <summary>初始化 <see cref="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper" /> 類別的新執行個體。</summary>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,2206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Resources">
+      <summary>强类型的资源类，用于查找本地化的字符串等。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources._SentenceConcat">
+      <summary>查找类似于 {0} {1} 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Application_Caption">
+      <summary>查找类似于 ADO.NET 实体数据模型设计器的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionErrorMessage">
+      <summary>查找类似于以下内容的本地化字符串：参数“{0}”的值“{1}”不正确。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionMessageParameter">
+      <summary>查找类似于以下内容的本地化字符串：参数应为 "Type" 或 "Guid" 类型的一个实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.AssociationSetsGhostNodeName">
+      <summary>查找类似于关联集的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BAD_FIRST_CHAR_IN_NC_NAME">
+      <summary>查找类似于以下内容的本地化字符串：名称“{0}”中的第一个字符无效。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadChildForParentException">
+      <summary>查找类似于以下内容的本地化字符串：类型“{0}”的模型浏览器对象不支持类型“{1}”的子类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadRemoveBadChildType">
+      <summary>查找类似于以下内容的本地化字符串：无法从“{2}”类型的名为“{1}”的父元素中删除“{0}”类型的子元素。“{2}”类型的元素不支持“{0}”类型的子元素。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CanNotCreateWindow">
+      <summary>查找类似于以下内容的本地化字符串：无法创建工具窗口。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateDesignTimeConnectionString">
+      <summary>查找类似于以下内容的本地化字符串：无法将设计时连接字符串转换为其运行时等效连接字符串。{0} 连接字符串：{1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateRuntimeConnectionString">
+      <summary>查找类似于以下内容的本地化字符串：无法将运行时连接字符串转换为其设计时等效连接字符串。{0} 连接字符串：{1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ChangingModelOutsideTransaction">
+      <summary>查找类似于以下内容的本地化字符串：无法编辑事务以外的模型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_LegacyObjectContext">
+      <summary>查找类似于旧 ObjectContext 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_T4">
+      <summary>查找类似于 T4 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.COLON_IN_NC_NAME">
+      <summary>查找类似于以下内容的本地化字符串：名称“{0}”中有一个冒号。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ComplexTypesGhostNodeName">
+      <summary>查找类似于复杂类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualAssociationsGhostNodeName">
+      <summary>查找类似于关联的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualTypesGhostNodeName">
+      <summary>查找类似于实体类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_AddError">
+      <summary>查找类似于以下内容的本地化字符串：因为以下错误：“{0}”，无法添加新的连接字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_CorruptConfig">
+      <summary>查找类似于以下内容的本地化字符串：配置文件格式不正确。请尝试手动编辑文件并保存。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetConfigError">
+      <summary>查找类似于以下内容的本地化字符串：找不到配置文件。请确认它位于正确的项目中或重新启动 Visual Studio。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetSiteError">
+      <summary>查找类似于以下内容的本地化字符串：找不到此配置的服务提供程序。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_InitializeError">
+      <summary>查找类似于以下内容的本地化字符串：无法分析配置文件。错误消息为：“{0}”。请尝试手动编辑文件并保存。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MarsError">
+      <summary>查找类似于以下内容的本地化字符串：由于无法确定服务器版本，无法将 MultipleActiveResultSets 属性添加到连接字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MetadataMismatch">
+      <summary>查找类似于以下内容的本地化字符串：连接字符串的元数据与配置文件中的元数据不匹配。旧元数据为：{0}。请用配置文件中的实体容器名称“{1}”更正连接字符串并保存。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_NoConnectionString">
+      <summary>查找类似于以下内容的本地化字符串：无法在配置文件中找到连接字符串。请确保配置文件包含名称为“{0}”的连接字符串并保存该文件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_SaveXmlError">
+      <summary>查找类似于以下内容的本地化字符串：由于存在错误“{1}”，无法将 XML 保存到配置文件“{0}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_UpdateError">
+      <summary>查找类似于以下内容的本地化字符串：无法更新配置文件中的 {0}。错误消息为：“{1}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateNoConnection">
+      <summary>查找类似于以下内容的本地化字符串：由于未指定连接类型，因此将使用 SQL Server 2005 连接来验证模型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateWithoutConnection">
+      <summary>查找类似于以下内容的本地化字符串：如果不选择数据连接，可能无法正确验证模型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Culture">
+      <summary>为使用此强类型资源类进行的所有资源查找替代当前线程的 CurrentUICulture 属性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadError">
+      <summary>查找类似于以下内容的本地化字符串：自定义数据库生成工作流文件引用所属项目中存在的程序集“{0}”，但由于以下异常无法加载:'{1}'.在重新运行工作流之前，请确保引用是有效的。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadErrorWithInner">
+      <summary>查找类似于以下内容的本地化字符串：自定义数据库生成工作流文件引用所属项目中存在的程序集“{0}”，但由于以下异常无法加载:'{1}'.该异常还包含以下详细信息:“{2}”在重新运行工作流之前，请确保引用是有效的。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowCancelled">
+      <summary>查找类似于以下内容的本地化字符串：不允许运行自定义工作流文件“{0}”。请选择“上一步”返回“选择您的数据连接”页面，尝试重新运行工作流。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowWarningTitle">
+      <summary>查找类似于自定义工作流安全警告的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_DDLOverwriteWarningTitle">
+      <summary>查找类似于 DDL 覆盖警告的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_EdmxOverwriteWarningTitle">
+      <summary>查找类似于 SSDL/MSL 覆盖警告的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorInvalidTargetVersion">
+      <summary>查找类似于以下内容的本地化字符串：指定的 TargetVersion 参数“{0}”无效。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoEdmParameterBag">
+      <summary>查找类似于以下内容的本地化字符串：未在工作流中找到 EdmParameterBag。请确保将其添加到作为扩展添加到工作流的 SymbolResolver。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNonValidWorkflowUri">
+      <summary>查找类似于以下内容的本地化字符串：根据“数据库生成工作流”路径“{0}”创建的 URI 无效。请确保指定的路径是有效的绝对文件路径，或者是相对于项目的有效相对文件路径。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoParameterDefined">
+      <summary>查找类似于以下内容的本地化字符串：未定义必要的“数据库生成工作流”参数“{0}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateFileNotInProject">
+      <summary>查找类似于以下内容的本地化字符串：无法调用模板活动“{0}”，因为项目中不包括给定的 "TemplatePath" 输入文件“{{0}}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateOutputNotSet">
+      <summary>查找类似于以下内容的本地化字符串：没有为“数据库生成工作流”中的模板活动“{0}”设置模板输出。请确保正确写入了模板。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNonFile">
+      <summary>查找类似于以下内容的本地化字符串：此工作流中模板活动“{0}”的 "TemplatePath" 输入文件“{{0}}”无效，因为不支持非文件和 UNC 路径。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotSet">
+      <summary>查找类似于以下内容的本地化字符串：没有为此工作流中的模板活动“{0}”设置 "TemplatePath" 属性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotValid">
+      <summary>查找类似于以下内容的本地化字符串：此工作流中模板活动“{0}”的“TemplatePath”属性值“{{0}}”无效或不存在。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTextTemplatingServiceNotFound">
+      <summary>查找类似于以下内容的本地化字符串：找不到 ITextTemplating 服务，无法处理模板“{0}”。仅 Visual Studio 中提供有此服务。请确保此工作流正在 Visual Studio 中运行。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowFileNotInProject">
+      <summary>查找类似于以下内容的本地化字符串：必须在项目中包括自定义工作流文件“{0}”，然后才能继续运行“生成数据库”向导。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowOutputNotFound">
+      <summary>查找类似于以下内容的本地化字符串：工作流未填充“生成数据库”向导所需的“{0}”输出参数。请确保工作流文件定义此参数，并且工作流填充此参数。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowPathNotSet">
+      <summary>查找类似于以下内容的本地化字符串：没有在 EDMX 文件中设置“数据库生成工作流”路径。请确保设置了此路径，然后再运行“生成数据库”向导。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdl">
+      <summary>查找类似于以下内容的本地化字符串：将 DDL 写入文件“{0}”时出现异常。异常消息为:'{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdlWithInner">
+      <summary>查找类似于以下内容的本地化字符串：将 DDL 写入文件“{0}”时出现异常。异常消息为:'{1}'.该异常还包含以下详细信息:'{2}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingTemplateFilePath">
+      <summary>查找类似于以下内容的本地化字符串：尝试分析模板活动“{0}”中的“TemplatePath”“{{0}}”时出现异常。具体的消息为：“{{1}}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingWorkflowFilePath">
+      <summary>查找类似于以下内容的本地化字符串：尝试分析“数据库生成工作流”文件路径“{0}”时出现异常。具体的消息为：“{1}”。.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NoDDLTemplatePathSpecified">
+      <summary>查找类似于以下内容的本地化字符串：没有为“{0}”活动指定 TemplatePath 参数。该参数必须在工作流文件中的此活动上指定，或者在运行时通过 EdmParameterBag 中的 "DDLTemplatePath" 参数传入。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NonFileWorkflow">
+      <summary>查找类似于以下内容的本地化字符串：未调用指定的“数据库生成工作流”文件“{0}”，因为不支持非文件路径和 UNC 路径。请确保在 EDMX 文件的 "Options" 部分中指定的“数据库生成工作流”路径不是 UNC 路径，并且对应于本地存在的文件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_TemplateFileNotExists">
+      <summary>查找类似于以下内容的本地化字符串：无法调用模板活动“{0}”，因为给定的 "TemplatePath" 输入文件“{{0}}”不存在。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ValidationFailed">
+      <summary>查找类似于以下内容的本地化字符串：必须修复此模型中的所有验证错误，然后再生成数据库脚本。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningCustomWorkflow">
+      <summary>查找类似于以下内容的本地化字符串：对于“生成数据库”向导，定义了自定义工作流(请参考此 EDMX 模型的“数据库生成工作流”属性)。用非默认工作流运行向导可能会危害计算机。如果是从不受信任的源收到的此 EDMX 文件，请勿运行此向导。单击“确定”运行工作流。单击“取消”停止此过程。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteDdl">
+      <summary>查找类似于以下内容的本地化字符串：“生成数据库”向导将覆盖 DDL 文件“{0}”。是否继续？</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteMappings">
+      <summary>查找类似于以下内容的本地化字符串：“生成数据库”向导将覆盖现有的存储架构(SSDL)和现有的映射(MSL)。是否继续？</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WorkflowFileNotExists">
+      <summary>查找类似于以下内容的本地化字符串：尝试根据模型生成数据库脚本时出现异常，因为指定的工作流文件“{0}”不存在。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibileListConverter_UserDir">
+      <summary>查找类似于 (用户) 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibleListConverter_VSDir">
+      <summary>查找类似于 (VS) 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DDEXNotInstalled">
+      <summary>查找类似于以下内容的本地化字符串：没有为提供程序“{0}”安装出于设计目的（DDEX 提供程序）使 Visual Studio 能够与数据库通信所需的库。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Default">
+      <summary>查找类似于默认值的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DiagramTypesGhostNodeName">
+      <summary>查找类似于关系图的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DisabledFeatureTooltip">
+      <summary>查找类似于以下内容的本地化字符串：目标实体框架版本中不提供此功能。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DuplicateEntityContainerName">
+      <summary>查找类似于以下内容的本地化字符串：EntityContainer 名称“{0}”已由项目中的另一个实体数据模型使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption">
+      <summary>查找类似于 [设计] 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption_ReadOnly">
+      <summary>查找类似于 [只读] 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EDMOutputWindowPaneTitle">
+      <summary>查找类似于实体数据模型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EdmUtils_NotValidTargetFramework">
+      <summary>查找类似于以下内容的本地化字符串：项目的目标框架不包含实体框架运行时程序集。请查看项目属性页中的目标框架信息。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityContainerNodeName">
+      <summary>查找类似于“EntityContainer:{0}”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_CreateNewProperty">
+      <summary>查找类似于“创建新属性。”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_DeleteProperty">
+      <summary>查找类似于“删除属性。”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersion6_x">
+      <summary>查找类似于 6.x 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersionName">
+      <summary>查找类似于实体框架 {0} 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntitySetsGhostNodeName">
+      <summary>查找类似于实体集的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AccEnumTypeMembers">
+      <summary>查找类似于枚举类型成员的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AutomationName">
+      <summary>查找类似于枚举对话框的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_CancelButtonLabel">
+      <summary>查找类似于取消的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EditEnumWindowTitle">
+      <summary>查找类似于编辑枚举类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnsureEnumTypeUnique">
+      <summary>查找类似于以下内容的本地化字符串：验证枚举类型名称是唯一的。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberNameLabel">
+      <summary>查找类似于成员名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberValueLabel">
+      <summary>查找类似于“值(可选)”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnterValueForExternalTypeName">
+      <summary>查找类似于以下内容的本地化字符串：需要引用的外部类型的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberBadname">
+      <summary>查找类似于以下内容的本地化字符串：“{0}”不是枚举成员的有效名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberDuplicateName">
+      <summary>查找类似于以下内容的本地化字符串：枚举成员“{0}”已存在。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumTypeBadname">
+      <summary>查找类似于以下内容的本地化字符串：“{0}”不是枚举类型的有效名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeHint">
+      <summary>查找类似于 Namespace.Type 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeLabel">
+      <summary>查找类似于引用外部类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabel">
+      <summary>查找类似于设置 Flags 特性的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabelDescription">
+      <summary>查找类似于以下内容的本地化字符串：启用枚举类型的实例，以便通过使用位运算符存储定义的值的任何组合。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NameLabel">
+      <summary>查找类似于“枚举类型名称:”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NewEnumWindowTitle">
+      <summary>查找类似于添加枚举类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_OkButtonLabel">
+      <summary>查找类似于确定的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_UnderlyingTypeLabel">
+      <summary>查找类似于“基础类型:”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumTypesGhostNodeName">
+      <summary>查找类似于枚举类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CannotEditRefConstraint">
+      <summary>查找类似于以下内容的本地化字符串：设计器无法编辑此关联上的现有引用约束，需要使用 XML 编辑器手动编辑该约束。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CircularInheritanceAborted">
+      <summary>查找类似于以下内容的本地化字符串：将“{0}”的基类型设置为“{1}”可能会导致循环继承。已中止添加继承。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FailedApplyChangeToFile">
+      <summary>查找类似于以下内容的本地化字符串：无法将更改应用于文件 {0}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FileNotFound">
+      <summary>查找类似于以下内容的本地化字符串：找不到文件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlCeUpgrade">
+      <summary>查找类似于以下内容的本地化字符串：在 EDMX 文件和配置文件中升级 SQLCE 引用时引发了异常。出错时要处理的文件:{0}.完整错误消息:{1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlDatabaseFileUpgrade">
+      <summary>查找类似于以下内容的本地化字符串：在配置文件中升级 SQL Database 文件引用时引发了异常。出错时要处理的文件:{0}.完整错误消息:{1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorNonValidFileName">
+      <summary>查找类似于以下内容的本地化字符串：文件名“{0}”不能:- 包含以下任何字符：\ / :* ? "&amp;amp;lt; &amp;amp;gt; | - 是系统保留名称，如 "CON"、"AUX"、"PRN"、"COM1" 或 "LPT2"。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorReadingWritingUserSetting">
+      <summary>查找类似于以下内容的本地化字符串：读取或写入注册表中的用户设置“{0}”时出错。具体错误为：“{1}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorSynchingEdmxNamespaces">
+      <summary>查找类似于在更新 XML 命名空间时引发异常的本地化字符串。\n文件名：{0}。\n完整错误消息:\n {1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExceptionMessageNullFactoryType">
+      <summary>查找类似于以下内容的本地化字符串：工厂类型不能为 null。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExistingConfigurationFileWarning">
+      <summary>查找类似于以下内容的本地化字符串：项目包含文件“{0}”。该文件可能会覆盖向导在位于项目根目录的文件“{1}”中生成的配置信息。请验证项目中的应用程序配置文件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_ClearSearch">
+      <summary>查找类似于“清除搜索”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_CollapseSearchResults">
+      <summary>查找类似于以下内容的本地化字符串：单击此处以查看折叠的搜索结果。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_PromptSearch">
+      <summary>查找类似于以下内容的本地化字符串：在此键入进行搜索。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_Search">
+      <summary>查找类似于“搜索”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavNext">
+      <summary>查找类似于以下内容的本地化字符串：转至下一搜索结果。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavPrev">
+      <summary>查找类似于以下内容的本地化字符串：转至前一搜索结果。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowCaption">
+      <summary>查找类似于资源管理器的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowTitle">
+      <summary>查找类似于模型浏览器的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditModel">
+      <summary>查找类似于以下内容的本地化字符串：模型生成扩展尝试对当前模型以外的模型作出更改，不支持此操作。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditOriginalOnSave">
+      <summary>查找类似于以下内容的本地化字符串：序列化扩展尝试在保存期间编辑原始模型，不支持此操作。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_AlreadyComplete">
+      <summary>查找类似于以下内容的本地化字符串：对更改范围调用 Complete() 后，属性扩展无法进行编辑。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_EditingWrongNamespace">
+      <summary>查找类似于以下内容的本地化字符串：属性扩展无法编辑实体框架命名空间中的项。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_Missing">
+      <summary>查找类似于以下内容的本地化字符串：属性扩展必须启动更改范围，然后再编辑任何模型</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ErrorOccurredDuringCallToExtension">
+      <summary>查找类似于以下内容的本地化字符串：执行 ADO.Net 实体框架扩展时出错。扩展的类型名称为 {0}。异常消息为 {1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel">
+      <summary>查找类似于以下内容的本地化字符串：模型生成扩展对从数据库生成的模型作出了无效的更改。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel_Update">
+      <summary>查找类似于以下内容的本地化字符串：模型生成扩展对更新的模型作出了无效的更改。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_NoConverterForExtension">
+      <summary>查找类似于以下内容的本地化字符串：实体设计器已在非 EDMX 文件上打开，不存在为此扩展名注册的 IModelConversionExtension。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_StartChangeScopeFailed">
+      <summary>查找类似于以下内容的本地化字符串：已存在更改范围。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_TooManyConverters">
+      <summary>查找类似于以下内容的本地化字符串：为此文件扩展名：{0} 注册了多个 IModelConversionExtension。仅允许注册一个。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImport_CannotCreateFromComposableFunction">
+      <summary>查找类似于以下内容的本地化字符串：无法从版本低于或等于 {0} 的 EDMX 文件为可组合函数创建函数导入。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImportsGhostNodeName">
+      <summary>查找类似于函数导入的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_DisableLayer">
+      <summary>查找类似于以下内容的本地化字符串：禁用 {0} 支持。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_EnableLayer">
+      <summary>查找类似于以下内容的本地化字符串：启用 {0} 支持。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LEADING_OR_TRAILING_SPACES_IN_NCNAME">
+      <summary>查找类似于以下内容的本地化字符串：名称“{0}”中包含前导或尾随空格。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadDataPackageError">
+      <summary>查找类似于以下内容的本地化字符串：加载 Visual Studio 数据包时出错。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadOurPackageError">
+      <summary>查找类似于以下内容的本地化字符串：加载实体数据模型工具包时出错。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LocalDatabaseFileAlreadyExists">
+      <summary>查找类似于以下内容的本地化字符串：项目中已存在“{0}”。是否要将其覆盖?单击“否”使用现有文件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocMappingNoTable">
+      <summary>查找类似于以下内容的本地化字符串：(必须先映射表。)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd1">
+      <summary>查找类似于 1 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd2">
+      <summary>查找类似于 2 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEndDisplay">
+      <summary>查找类似于以下内容的本地化字符串：结束 {0}:({1}/{2})。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_AssociationHeader">
+      <summary>查找类似于关联的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnMappingsName">
+      <summary>查找类似于列映射的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnName">
+      <summary>查找类似于列的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionCreatorNode">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;添加条件&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine1">
+      <summary>查找类似于以下内容的本地化字符串：当 {0}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine2">
+      <summary>查找类似于以下内容的本地化字符串：和 {0}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_CreatorNode">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;选择删除函数&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_Display">
+      <summary>查找类似于以下内容的本地化字符串：使用 {0} 删除。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrComplexTypePropertiesNotSupported">
+      <summary>查找类似于以下内容的本地化字符串：[函数导入映射中不支持复杂类型属性]。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNames">
+      <summary>查找类似于以下内容的本地化字符串：EntityType“{0}”的继承层级包含名为“{1}”的重复属性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNamesSeparator">
+      <summary>查找类似于“,”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDuplicatePropertyNameForAssociationEndEntity">
+      <summary>查找类似于以下内容的本地化字符串：此关联的映射引用了包含名为“{1}”的重复属性的“{0}”实体类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrKeyInDerivedType">
+      <summary>查找类似于以下内容的本地化字符串：已经对派生的 EntityType 定义了键。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMappingNotSupported">
+      <summary>查找类似于以下内容的本地化字符串：项目的目标框架版本中不提供此功能。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslAssociationSetMappingHasQueryView">
+      <summary>查找类似于以下内容的本地化字符串：此关联的映射包括一个无法在设计器中呈现的 QueryView。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslBadEntitySetMapping">
+      <summary>查找类似于以下内容的本地化字符串：此 EntityType 的 EntitySet 与它的一个相关 EntitySetMappings 之间存在断开的关系。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindAssociationSet">
+      <summary>查找类似于以下内容的本地化字符串：找不到所选 Association 的 AssociationSet。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindEntitySet">
+      <summary>查找类似于以下内容的本地化字符串：找不到所选 EntityType 的 EntitySet。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindFunctionImportMapping">
+      <summary>查找类似于以下内容的本地化字符串：找不到所选 FunctionImport 的 FunctionImportMapping。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindMappedFunction">
+      <summary>查找类似于以下内容的本地化字符串：找不到映射到所选 FunctionImport 的函数。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEntitySetMappingHasQueryView">
+      <summary>查找类似于以下内容的本地化字符串：此 EntityType 的映射包括一个无法在设计器中呈现的 QueryView。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEtmRefsMultipleTypes">
+      <summary>查找类似于以下内容的本地化字符串：一个 EntityTypeMapping 分配给多个 EntityTypes。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslFunctionMappingsShouldBeSeparate">
+      <summary>查找类似于以下内容的本地化字符串：包含函数映射的 EntityTypeMapping 不能同时包含 MappingFragments。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslGeneral">
+      <summary>查找类似于以下内容的本地化字符串：很可能已在设计器外部编辑映射。{0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyAssociationSetMappings">
+      <summary>查找类似于以下内容的本地化字符串：一个 Association 不能有多个 AssociationSetMappings。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyDefaultEtms">
+      <summary>查找类似于以下内容的本地化字符串：此 EntityType 有多个类型特定的 EntityTypeMapping。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyEntitySetMappings">
+      <summary>查找类似于以下内容的本地化字符串：一个 EntityType 不能有多个 EntitySetMappings。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFragments">
+      <summary>查找类似于以下内容的本地化字符串：一个 EntityTypeMapping 不能有多个 MappingFragments。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFunctionETMs">
+      <summary>查找类似于以下内容的本地化字符串：此 EntityType 包含多个具有函数映射的 EntityTypeMapping。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyIsTypeOfETMs">
+      <summary>查找类似于以下内容的本地化字符串：此 EntityType 包含多个 IsTypeOf EntityTypeMapping。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnresolvedItems">
+      <summary>查找类似于以下内容的本地化字符串：所选对象的映射包含无法解析的引用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnsupportedCondition">
+      <summary>查找类似于以下内容的本地化字符串：不支持 EntityType 属性的条件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUsesGhostNodes">
+      <summary>查找类似于以下内容的本地化字符串：此 EntityType 的映射使用了设计器不支持的速记表示法。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_FunctionsHeader">
+      <summary>查找类似于函数的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_CreatorNode">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;选择插入函数&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_Display">
+      <summary>查找类似于以下内容的本地化字符串：使用 {0} 插入。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovDelete">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;删除&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovEmpty">
+      <summary>查找类似于“(空)”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_NoDependentEndOnReferentialConstraint">
+      <summary>查找类似于以下内容的本地化字符串：引用约束上没有依赖端。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Operator">
+      <summary>查找类似于运算符的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorEquals">
+      <summary>查找类似于 = 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorIs">
+      <summary>查找类似于 Is 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ParameterName">
+      <summary>查找类似于参数/列的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Parameters">
+      <summary>查找类似于参数的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Property">
+      <summary>查找类似于属性的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM">
+      <summary>查找类似于以下内容的本地化字符串：不允许关联通过公开外键进行映射。{0} 或 {1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Delete">
+      <summary>查找类似于删除映射的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Display">
+      <summary>查找类似于以下内容的本地化字符串：显示映射进行编辑。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_NoASM">
+      <summary>查找类似于以下内容的本地化字符串：不允许关联通过公开外键进行映射。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM">
+      <summary>查找类似于以下内容的本地化字符串：对此关联定义的引用完整性约束重写了这些映射，将忽略这些映射。您可以安全地 {0}，或 {1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Delete">
+      <summary>查找类似于以下内容的本地化字符串：删除这些映射。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Display">
+      <summary>查找类似于以下内容的本地化字符串：显示这些映射进行编辑。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM">
+      <summary>查找类似于以下内容的本地化字符串：对此关联定义的引用完整性约束重写了映射，将忽略这些映射。{0}..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM_Display">
+      <summary>查找类似于以下内容的本地化字符串：显示映射编辑器。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintWithNonKeyProperties">
+      <summary>查找类似于以下内容的本地化字符串：不允许涉及引用完整性约束(涉及非键属性)的关联进行映射。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindingCreatorNode">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;添加结果绑定&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindings">
+      <summary>查找类似于结果列绑定的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_RowsAffectedParameterColumn">
+      <summary>查找类似于以下内容的本地化字符串：“影响的行数”参数。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText">
+      <summary>查找类似于以下内容的本地化字符串：将实体映射到函数。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText_NotSupported">
+      <summary>查找类似于以下内容的本地化字符串：将实体映射到函数(CTP2 版本中不支持此功能)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TableCreatorNode">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;添加表或视图&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesButtonText">
+      <summary>查找类似于以下内容的本地化字符串：将实体映射到表/视图。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesHeader">
+      <summary>查找类似于表的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Toolbar_AccessibleName">
+      <summary>查找类似于“映射详细信息工具栏”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnName">
+      <summary>查找类似于 ?? 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnType">
+      <summary>查找类似于 ?? 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndMultiplicity">
+      <summary>查找类似于 ?? 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndType">
+      <summary>查找类似于 ?? 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyName">
+      <summary>查找类似于 ?? 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyType">
+      <summary>查找类似于 ?? 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_CreatorNode">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;选择更新函数&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_Display">
+      <summary>查找类似于以下内容的本地化字符串：使用 {0} 更新。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UseOriginalValueColumn">
+      <summary>查找类似于“使用原始值”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Value">
+      <summary>查找类似于“值/属性”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueEmptyString">
+      <summary>查找类似于以下内容的本地化字符串：&amp;amp;lt;空字符串&amp;amp;gt;。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNotNull">
+      <summary>查找类似于“非 Null”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNull">
+      <summary>查找类似于 Null 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Watermark">
+      <summary>查找类似于以下内容的本地化字符串：在实体设计器或 {0} 上选择实体或关联以编辑其映射。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WatermarkLabelText">
+      <summary>查找类似于以下内容的本地化字符串：选择实体或关联，以编辑其映射。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WindowTitle">
+      <summary>查找类似于映射详细信息的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsArrowsImageList">
+      <summary>查找类型 System.Drawing.Bitmap 的本地化资源。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsCommandStrip">
+      <summary>查找类型 System.Drawing.Bitmap 的本地化资源。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsIconsImageList">
+      <summary>查找类型 System.Drawing.Bitmap 的本地化资源。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsViewModel_StorageEntityTypeName">
+      <summary>查找类似于以下内容的本地化字符串：映射到 {0}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_CantBeRelative">
+      <summary>查找类似于以下内容的本地化字符串：不能对不同设备上的文件使用相对路径。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileAlreadyExists">
+      <summary>查找类似于以下内容的本地化字符串：您选择的模型文件名称将覆盖文件“{0}”。请另选一个模型文件名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileIsLinkedFile">
+      <summary>查找类似于以下内容的本地化字符串：无法添加名称为“{0}”的模型。此文件夹中已有同名的链接文件。.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_NonValidXmlAttributeValue">
+      <summary>查找类似于以下内容的本地化字符串：ADO.NET 实体数据模型项和文件名称应仅包含有效的 XML 属性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_UnexpectedExceptionHasOccurred">
+      <summary>查找类似于以下内容的本地化字符串：出现异常。异常消息为:'{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MsgBox_InheritanceWillRemoveKeys">
+      <summary>查找类似于以下内容的本地化字符串：从“{1}”继承“{0}”将删除在“{0}”及其子类型中定义的所有实体键。\n是否继续？</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_CollectionText">
+      <summary>查找类似于以下内容的本地化字符串：{0} 的集合。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_InstanceText">
+      <summary>查找类似于以下内容的本地化字符串：{0} 的实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NoDefaultConnectionString">
+      <summary>查找类似于以下内容的本地化字符串：App.config 文件中未定义默认连接字符串。将使用 SqlClient 作为默认提供程序。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.None">
+      <summary>查找类似于“无”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisRelease">
+      <summary>查找类似于以下内容的本地化字符串：此版本中不支持此功能。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisReleaseInWebsite">
+      <summary>查找类似于以下内容的本地化字符串：此版本中不支持针对网站的这个功能。请使用 Web 应用程序。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PackageLoadFailureExceptionMessage">
+      <summary>查找类似于以下内容的本地化字符串：无法加载实体数据模型工具包。结果为 {0}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_CodeGeneration">
+      <summary>查找类似于代码生成的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Connection">
+      <summary>查找类似于连接的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Constraint">
+      <summary>查找类似于约束的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_DatabaseScriptGeneration">
+      <summary>查找类似于数据库脚本生成的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Diagram">
+      <summary>查找类似于关系图的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Ends">
+      <summary>查找类似于端的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Facets">
+      <summary>查找类似于方面的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_General">
+      <summary>查找类似于常规的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Navigation">
+      <summary>查找类似于导航的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Schema">
+      <summary>查找类似于架构的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Abstract">
+      <summary>查找类似于以下内容的本地化字符串：确定实体类型是否为抽象类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Access">
+      <summary>查找类似于以下内容的本地化字符串：指定类型的访问级别。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Association">
+      <summary>查找类似于以下内容的本地化字符串：关联属性的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_CodeGenerationStrategy">
+      <summary>查找类似于以下内容的本地化字符串：用于设置此模型的代码生成策略。与此模型关联的“自定义工具”将通过读取此属性来确定如何生成代码。此工具可从解决方案资源管理器中此项的属性中调出。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ComplexTypeName">
+      <summary>查找类似于以下内容的本地化字符串：此 ComplexType 的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Composable">
+      <summary>查找类似于以下内容的本地化字符串：如果函数导入表示以编程方式调用数据库中的表值函数，则它是可组合的。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ConnectionString">
+      <summary>查找类似于以下内容的本地化字符串：描述数据库连接和元数据文件的连接字符串。可在配置文件中找到此连接字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseGenerationWorkflow">
+      <summary>查找类似于以下内容的本地化字符串：“根据模型生成数据库”向导所使用的 Windows Workflow Foundation 文件的路径。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseName">
+      <summary>查找类似于以下内容的本地化字符串：数据库基础对象的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchema">
+      <summary>查找类似于以下内容的本地化字符串：数据库基础对象的架构名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchemaName">
+      <summary>查找类似于以下内容的本地化字符串：得到的 DDL 中将引用的数据库架构的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DDLGenerationTemplate">
+      <summary>查找类似于以下内容的本地化字符串：“生成数据库”向导中用于将 SSDL 转换为 DDL 的 T4 文本模板。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DefaultValue">
+      <summary>查找类似于以下内容的本地化字符串：属性的默认值。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DiagramName">
+      <summary>查找类似于名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityBaseType">
+      <summary>查找类似于以下内容的本地化字符串：实体的基类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityContainerAccess">
+      <summary>查找类似于以下内容的本地化字符串：实体容器的访问修饰符，该容器包含实体数据模型中实体的所有实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityKey">
+      <summary>查找类似于以下内容的本地化字符串：确定属性是否为包含实体的实体键。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityName">
+      <summary>查找类似于以下内容的本地化字符串：实体的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntitySetName">
+      <summary>查找类似于以下内容的本地化字符串：包含实体实例的 EntitySet 名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityShapeColor">
+      <summary>查找类似于以下内容的本地化字符串：实体类型形状的颜色。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumExternalTypeAttribute">
+      <summary>查找类似于以下内容的本地化字符串：引用外部类型将禁用针对此枚举类型的代码生成。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumTypeName">
+      <summary>查找类似于以下内容的本地化字符串：枚举类型的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumUnderlyingType">
+      <summary>查找类似于枚举的数据类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_FromRole">
+      <summary>查找类似于以下内容的本地化字符串：此关联角色是导航源。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_GenerateUpdateViews">
+      <summary>查找类似于以下内容的本地化字符串：控制实体框架是否将生成更新语句来修改数据。禁用此功能将启用其他映射功能，并禁止修改数据，除非通过存储过程修改数据。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Getter">
+      <summary>查找类似于以下内容的本地化字符串：确定对属性 Getter 的访问。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceBaseType">
+      <summary>查找类似于以下内容的本地化字符串：继承关系的基类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceDerivedType">
+      <summary>查找类似于以下内容的本地化字符串：继承关系的派生类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LazyLoadingEnabled">
+      <summary>查找类似于以下内容的本地化字符串：用于设置生成的 ObjectContext 的默认延迟加载行为。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LongDescription">
+      <summary>查找类似于文档的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_MetadataArtifactProcessing">
+      <summary>查找类似于以下内容的本地化字符串：确定生成时如何处理映射和模型文件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavigationPropertyName">
+      <summary>查找类似于以下内容的本地化字符串：导航属性的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropMultiplicity">
+      <summary>查找类似于以下内容的本地化字符串：目标关联端的多重性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropType">
+      <summary>查找类似于以下内容的本地化字符串：此导航属性的返回类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Nullable">
+      <summary>查找类似于以下内容的本地化字符串：确定属性是否可以为 null。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Parameter">
+      <summary>查找类似于以下内容的本地化字符串：存储过程参数的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PluralizeNewObjects">
+      <summary>查找类似于以下内容的本地化字符串：确定系统是否将自动以复数形式表示新对象的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ProcessDependentTemplatesOnSave">
+      <summary>查找类似于以下内容的本地化字符串：确定保存 EDMX 文件后系统是否处理依赖于 EDMX 的 T4 文件。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PropertyName">
+      <summary>查找类似于以下内容的本地化字符串：属性的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Setter">
+      <summary>查找类似于以下内容的本地化字符串：确定对属性 Setter 的访问。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_StoreGeneratedPattern">
+      <summary>查找类似于以下内容的本地化字符串：确定在进行插入和更新操作的过程中是否将自动生成数据库中的相应列。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Summary">
+      <summary>查找类似于文档摘要的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_SynchronizePropertyFacets">
+      <summary>查找类似于以下内容的本地化字符串：更新该模型将更新实体属性方面(例如为 Null 性和精度)，以便匹配映射的数据库列的值。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ToRole">
+      <summary>查找类似于以下内容的本地化字符串：此关联角色是导航目标。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Type">
+      <summary>查找类似于以下内容的本地化字符串：标量属性的类型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseLegacyProvider">
+      <summary>查找类似于以下内容的本地化字符串：在设计时，使用旧提供程序连接到数据库。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseStrongSpatialTypes">
+      <summary>查找类似于以下内容的本地化字符串：将代码生成设置为对于所有空间类型使用强类型支持。如果设置为 false，则在生成的代码中使用基类 DbGeography 和 DbGeometry。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ValidateOnBuild">
+      <summary>查找类似于以下内容的本地化字符串：确定系统在生成时是否验证模型。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationName">
+      <summary>查找类似于以下内容的本地化字符串：关联的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationSetName">
+      <summary>查找类似于以下内容的本地化字符串：包含关联的关联集的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndNavigationProperty">
+      <summary>查找类似于以下内容的本地化字符串：在这一端返回值的实体属性的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndOnDelete">
+      <summary>查找类似于以下内容的本地化字符串：指定删除这一端上的实体后要进行的操作。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EntityContainerName">
+      <summary>查找类似于以下内容的本地化字符串：实体容器的名称，该容器包含实体数据模型中实体的所有实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Multiplicity">
+      <summary>查找类似于以下内容的本地化字符串：关联的这一端允许的实体数。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Namespace">
+      <summary>查找类似于以下内容的本地化字符串：实体数据模型的命名空间。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Role">
+      <summary>查找类似于以下内容的本地化字符串：这一端的名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Abstract">
+      <summary>查找类似于抽象的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Access">
+      <summary>查找类似于访问的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Aggregate">
+      <summary>查找类似于聚合的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Alias">
+      <summary>查找类似于别名的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Association">
+      <summary>查找类似于关联的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_AssociationSetName">
+      <summary>查找类似于关联集名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BaseType">
+      <summary>查找类似于基类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BuiltIn">
+      <summary>查找类似于内置的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CodeGenerationStrategy">
+      <summary>查找类似于代码生成策略的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Collation">
+      <summary>查找类似于排序规则的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CommandText">
+      <summary>查找类似于命令文本的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Composable">
+      <summary>查找类似于可组合的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConcurrencyMode">
+      <summary>查找类似于并发模式的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConnectionString">
+      <summary>查找类似于连接字符串的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseGenerationWorkflow">
+      <summary>查找类似于数据库生成工作流的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseName">
+      <summary>查找类似于数据库对象名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchema">
+      <summary>查找类似于数据库架构的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchemaName">
+      <summary>查找类似于数据库架构名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DDLGenerationTemplate">
+      <summary>查找类似于 DDL 生成模板的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DefaultValue">
+      <summary>查找类似于默认值的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DerivedType">
+      <summary>查找类似于派生类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Documentation">
+      <summary>查找类似于文档的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End">
+      <summary>查找类似于端的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Multiplicity">
+      <summary>查找类似于 End1 多重性的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1NavigationProperty">
+      <summary>查找类似于 End1 导航属性的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1OnDelete">
+      <summary>查找类似于 End1 OnDelete 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Role">
+      <summary>查找类似于 End1 角色名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Multiplicity">
+      <summary>查找类似于 End2 多重性的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2NavigationProperty">
+      <summary>查找类似于 End2 导航属性的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2OnDelete">
+      <summary>查找类似于End2 OnDelete 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Role">
+      <summary>查找类似于 End2 角色名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerAccess">
+      <summary>查找类似于实体容器访问的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerName">
+      <summary>查找类似于实体容器名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityKey">
+      <summary>查找类似于实体键的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntitySetName">
+      <summary>查找类似于实体集名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityShapeColor">
+      <summary>查找类似于填充颜色的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityType">
+      <summary>查找类似于类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumExternalTypeAttribute">
+      <summary>查找类似于外部类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumFlagAttribute">
+      <summary>查找类似于标志的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumUnderlyingType">
+      <summary>查找类似于基础类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FixedLength">
+      <summary>查找类似于固定长度的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FromRole">
+      <summary>查找类似于发件人角色的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_GenerateUpdateViews">
+      <summary>查找类似于生成更新视图的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Getter">
+      <summary>查找类似于 Getter 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LazyLoadingEnabled">
+      <summary>查找类似于启用延迟加载的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LongDescription">
+      <summary>查找类似于详细说明的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_CopyToOutputDirectory">
+      <summary>查找类似于复制到输出目录的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_EmbedInOutputAssembly">
+      <summary>查找类似于嵌入输出程序集中的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MaxLength">
+      <summary>查找类似于最大长度的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MetadataArtifactProcessing">
+      <summary>查找类似于元数据项目处理的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Mode">
+      <summary>查找类似于模式的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Namespace">
+      <summary>查找类似于命名空间的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropMultiplicity">
+      <summary>查找类似于多重性的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropType">
+      <summary>查找类似于返回类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Niladic">
+      <summary>查找类似于 Niladic 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Nullable">
+      <summary>查找类似于“非 Null”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Parameter">
+      <summary>查找类似于参数的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ParameterTypeSemantics">
+      <summary>查找类似于参数类型语义的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_PluralizeNewObjects">
+      <summary>查找类似于“以复数形式表示新对象”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Precision">
+      <summary>查找类似于精度的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ProcessDependentTemplatesOnSave">
+      <summary>查找类似于以下内容的本地化字符串：保存时转换相关的文本模板。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_RefConstraint">
+      <summary>查找类似于引用约束的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ReturnType">
+      <summary>查找类似于返回类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Scale">
+      <summary>查找类似于缩放比例的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Setter">
+      <summary>查找类似于 Setter 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoredProcedureName">
+      <summary>查找类似于存储过程名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreFunctionName">
+      <summary>查找类似于存储函数名称的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreGeneratedPattern">
+      <summary>查找类似于 StoreGeneratedPattern 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Summary">
+      <summary>查找类似于摘要的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_SynchronizePropertyFacets">
+      <summary>查找类似于更新属性方面的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ToRole">
+      <summary>查找类似于收件人角色的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Type">
+      <summary>查找类似于类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Unicode">
+      <summary>查找类似于 Unicode 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseLegacyProvider">
+      <summary>查找类似于以下内容的本地化字符串：使用旧提供程序。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseStrongSpatialTypes">
+      <summary>查找类似于“使用强空间类型”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ValidateOnBuild">
+      <summary>查找类似于生成时验证的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_MessageBox_SetAbstract">
+      <summary>查找类似于以下内容的本地化字符串：将实体类型定义为抽象将删除该实体类型的所有现有函数映射。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityMany">
+      <summary>查找类似于“* (多个)”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityManyOf">
+      <summary>查找类似于以下内容的本地化字符串：({0} 的集合)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOne">
+      <summary>查找类似于“1 (一个)”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOneOf">
+      <summary>查找类似于“1 (一个 {0})”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOne">
+      <summary>查找类似于“0..1 (零或一个)”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOneOf">
+      <summary>查找类似于“0..1 (零或一个 {0})”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorPreviewGroupName">
+      <summary>查找类似于代码对象的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_InvalidName">
+      <summary>查找类似于以下内容的本地化字符串：指定的名称不是有效的标识符。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_UndoDescription">
+      <summary>查找类似于以下内容的本地化字符串：从 {0} 重命名为 {1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Cancel">
+      <summary>查找类似于取消的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_LocationLabel">
+      <summary>查找类似于“位置:”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_NewNameLabel">
+      <summary>查找类似于“新名称:”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_OK">
+      <summary>查找类似于确定的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_PreviewReferenceChangesLabel">
+      <summary>查找类似于预览引用更改的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Title">
+      <summary>查找类似于重命名的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_ConfirmButtonText">
+      <summary>查找类似于“&amp;amp;amp;应用”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Description">
+      <summary>查找类似于重命名的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_TextViewDescription">
+      <summary>查找类似于“预览更改:”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Title">
+      <summary>查找类似于“预览更改 - 重命名”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCDependentProperty">
+      <summary>查找类似于以下内容的本地化字符串：{0} (错误:未找到)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCPrincipalProperty">
+      <summary>查找类似于以下内容的本地化字符串：{0} (错误:未找到，将删除引用)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RenameModelMessageBox_Text">
+      <summary>查找类似于以下内容的本地化字符串：无法重命名或移动文件。重命名或移动文件之前应在实体设计器中将其关闭。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ResourceManager">
+      <summary>返回此类使用的已缓存 ResourceManager 实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeErrorMessage">
+      <summary>查找类似于以下内容的本地化字符串：检索存储过程或函数返回类型信息时失败。错误消息 {0}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeInfoMessage">
+      <summary>查找类似于以下内容的本地化字符串：正在检索存储过程或函数 {0}/{1} -“{2}.{3}”的返回类型信息。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogDescription">
+      <summary>查找类似于以下内容的本地化字符串：正在检索存储过程或函数返回类型信息。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogInitialStatus">
+      <summary>查找类似于以下内容的本地化字符串：正在等待数据库连接...</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogTitle">
+      <summary>查找类似于以下内容的本地化字符串：请稍候...</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_FailureToLoadStoreItemCollection">
+      <summary>查找类似于以下内容的本地化字符串：尝试创建 StoreItemCollection:“{0}”时出现以下异常。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_StoreItemCollectionMayRequireDatabaseConnection">
+      <summary>查找类似于以下内容的本地化字符串：无法从提供程序工厂加载 StoreItemCollection。可能需要打开一个数据库连接以加载 StoreItemCollection。异常消息为:'{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultItemsMatching">
+      <summary>查找类似于以下内容的本地化字符串：与 {0} 匹配的项。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultSearchCriteria">
+      <summary>查找类似于“{0}”的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageAssociationsGhostNodeName">
+      <summary>查找类似于约束的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageFunctionsGhostNodeName">
+      <summary>查找类似于存储过程/函数的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageTypesGhostNodeName">
+      <summary>查找类似于表/视图的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.T4_ItemTemplate_CSharp_Comment">
+      <summary>获取类似于以下内容的本地化字符串：T4 项模板 CSharp 注释。</summary>
+      <returns>类似于以下内容的本地化字符串：T4 项模板 CSharp 注释。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateError">
+      <summary>查找类似于以下内容的本地化字符串：第 {0} 行，第 {1} 列:'{2}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateErrorsEncountered">
+      <summary>查找类似于以下内容的本地化字符串：处理模板“{0}”时遇到了以下错误：{1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ToolWindowTitle">
+      <summary>查找类似于模型浏览器的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TransactionAlreadyCompleted">
+      <summary>查找类似于以下内容的本地化字符串：事务已完成。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_AddComplexType">
+      <summary>查找类似于添加复杂类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionColumn">
+      <summary>查找类似于更改条件列的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionValue">
+      <summary>查找类似于更改条件值的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpMapping">
+      <summary>查找类似于更改函数导入映射的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpRetType">
+      <summary>查找类似于更改 FunctionImport 返回类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeMetadataArtifactProcessing">
+      <summary>查找类似于更改元数据项目处理的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeResultBinding">
+      <summary>查找类似于更改 ResultBinding 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeScalarProperty">
+      <summary>查找类似于更改 ScalarProperty 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateAssociationSetMapping">
+      <summary>查找类似于创建 AssociationSetMapping 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateCondition">
+      <summary>查找类似于创建条件的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateDiagram">
+      <summary>查找类似于创建关系图的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateEnumType">
+      <summary>查找类似于创建枚举类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionImport">
+      <summary>查找类似于创建 FunctionImport 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionMapping">
+      <summary>查找类似于创建 FunctionMapping 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateMappingFragment">
+      <summary>查找类似于创建 MappingFragment 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateResultBinding">
+      <summary>查找类似于创建 ResultBinding 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateScalarProperty">
+      <summary>查找类似于创建 ScalarProperty 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteAssociationSetMapping">
+      <summary>查找类似于删除 AssociationSetMapping 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteCondition">
+      <summary>查找类似于删除条件的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteFunctionMapping">
+      <summary>查找类似于删除 FunctionMapping 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteMappingFragment">
+      <summary>查找类似于删除 MappingFragment 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteResultBinding">
+      <summary>查找类似于删除 ResultBinding 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteScalarProperty">
+      <summary>查找类似于删除 ScalarProperty 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_GenerateDatabaseScriptFromModel">
+      <summary>查找类似于根据模型生成数据库的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerDisable">
+      <summary>查找类似于以下内容的本地化字符串：禁用层“{0}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerEnable">
+      <summary>查找类似于以下内容的本地化字符串：启用层“{0}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_RefactorRenameCommand">
+      <summary>查找类似于重命名的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ReferentialContraint">
+      <summary>查找类似于更改引用约束的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_SetCodeGenerationStrategy">
+      <summary>查找类似于设置代码生成策略的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateAssociationSetMapping">
+      <summary>查找类似于更新 AssociationSetMapping 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateEnumType">
+      <summary>查找类似于更新枚举类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionImport">
+      <summary>查找类似于更新 FunctionImport 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionMapping">
+      <summary>查找类似于更新 FunctionMapping 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateMappingFragment">
+      <summary>查找类似于更新 MappingFragment 的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateModelFromDatabase">
+      <summary>查找类似于从数据库更新模型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdatePropertyType">
+      <summary>查找类似于更新属性类型的本地化字符串。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UnsupportedProjectLanguage">
+      <summary>查找类似于以下内容的本地化字符串：不支持的项目语言。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UpdateEdmxNamespacesSuccessful">
+      <summary>查找类似于以下内容的本地化字符串：成功更新了项目 {0} 中 .edmx 文件的存储、概念和映射部分的命名空间，从而与项目的目标 .NET Framework 相匹配。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UsingDefaultConnectionString_1">
+      <summary>查找类似于以下内容的本地化字符串：使用从文件“{1}”获得的数据提供程序和数据库连接“{0}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VsUtils_ErrorResolvingMacro">
+      <summary>查找类似于以下内容的本地化字符串：无法解析宏：“{0}”。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionConvertingProject">
+      <summary>查找类似于以下内容的本地化字符串：将层次结构转换为项目时出现异常。层次结构不是一个项目。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionParsingXml">
+      <summary>查找类似于以下内容的本地化字符串：分析文件“{0}”时出现以下异常:'{1}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_InnerExceptionErrorFormat">
+      <summary>查找类似于以下内容的本地化字符串：捕获的内部异常属于“{0}”类型，带有此错误消息: '{1}'..</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration">
+      <summary>表示用于设置关联的级联删除选项的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.DeleteBehavior">
+      <summary>获取或设置级联删除选项。</summary>
+      <returns>级联删除选项。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper">
+      <summary>表示生成代码的帮助程序方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>指定所指定属性的匿名类型 lambda。</summary>
+      <returns>Lambda。</returns>
+      <param name="properties">属性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration)">
+      <summary>返回用于应用指定配置的数据注释属性。</summary>
+      <returns>用于应用指定配置的数据注释属性。</returns>
+      <param name="configuration">配置。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(System.String)">
+      <summary>返回带指定主体的属性。</summary>
+      <returns>属性。</returns>
+      <param name="attributeBody">此属性的主体。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.CodeProvider">
+      <summary>获取与所生成代码的语言相对应的提供程序。</summary>
+      <returns>与所生成代码的语言相对应的提供程序。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.MethodChain(Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration)">
+      <summary>获取用于应用指定配置的 Code First Fluent API 方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="configuration">配置。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EdmMember)">
+      <summary>指定所指定成员的属性标识符。</summary>
+      <returns>标识符。</returns>
+      <param name="member">成员。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EntitySetBase)">
+      <summary>指定所指定实体集的属性标识符。</summary>
+      <returns>标识符。</returns>
+      <param name="entitySet">实体集。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>获取指定值的字符串数组文本。</summary>
+      <returns>文本。</returns>
+      <param name="values">值。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>指定所指定属性的类型。</summary>
+      <returns>类型。</returns>
+      <param name="property">属性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmType)">
+      <summary>指定所指定类型的类型标识符。</summary>
+      <returns>标识符。</returns>
+      <param name="edmType">类型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EntityContainer)">
+      <summary>指定所指定容器的类型标识符。</summary>
+      <returns>标识符。</returns>
+      <param name="container">容器。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.NavigationProperty)">
+      <summary>指定所指定导航属性的类型。</summary>
+      <returns>类型。</returns>
+      <param name="navigationProperty">导航属性。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration">
+      <summary>表示用于设置属性的列名称、类型和顺序的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取属性主体。</summary>
+      <returns>属性主体。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Name">
+      <summary>获取或设置列名称。</summary>
+      <returns>列的名称。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Order">
+      <summary>获取或设置此列应在数据库表中的显示顺序。</summary>
+      <returns>此列应在数据库表中出现的顺序。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.TypeName">
+      <summary>获取或设置特定于数据库提供程序的数据类型的名称。</summary>
+      <returns>特定于数据库提供程序的数据类型的名称。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper">
+      <summary>提供用于生成 C# 代码的 Helper 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>为指定属性获取匿名类型 lambda。</summary>
+      <returns>Lambda。</returns>
+      <param name="properties">属性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.Attribute(System.String)">
+      <summary>获取具有指定主体的特性。</summary>
+      <returns>属性。</returns>
+      <param name="attributeBody">此属性的主体。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.CodeProvider">
+      <summary>获取用于生成和编译 C# 代码的代码提供程序。</summary>
+      <returns>用于生成和编译 C# 代码的代码提供程序。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>获取指定值的字符串数组文本。</summary>
+      <returns>文本。</returns>
+      <param name="values">值。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration">
+      <summary>表示用于设置属性的数据库生成选项的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取与配置关联的属性主体。</summary>
+      <returns>与配置关联的属性主体。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取 Fluent API 方法链以应用配置。</summary>
+      <returns>方法链。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.StoreGeneratedPattern">
+      <summary>获取或设置用于在数据库中为此属性生成值的模式。</summary>
+      <returns>用于在数据库中生成属性值的模式。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper">
+      <summary>提供用于分析模型的 Helper 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.#ctor(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper" /> 类的新实例。</summary>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>获取要应用于指定属性的模型配置。</summary>
+      <returns>配置。</returns>
+      <param name="property">属性。</param>
+      <param name="model">模型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EntitySet,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>获取要应用于指定实体类型的模型配置。</summary>
+      <returns>配置。</returns>
+      <param name="entitySet">实体类型的集合。</param>
+      <param name="model">模型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>获取要应用于指定导航属性的模型配置。</summary>
+      <returns>配置。</returns>
+      <param name="navigationProperty">导航属性。</param>
+      <param name="model">模型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetMultiplicityConfiguration(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Boolean@)">
+      <summary>获取要应用于指定导航属性的多重性模型配置。</summary>
+      <returns>配置。</returns>
+      <param name="navigationProperty">导航属性。</param>
+      <param name="isDefault">一个指示默认情况下是否将应用此配置的值。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration">
+      <summary>表示用于将字符串或二进制属性标记为固定长度的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取 Fluent API 方法链以应用配置。</summary>
+      <returns>方法链。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration">
+      <summary>表示用于设置关联的外键属性的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.Properties">
+      <summary>获取用于关联的外键的属性。</summary>
+      <returns>用于关联外键的属性。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration">
+      <summary>表示可使用数据注释应用的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取数据注释属性的主体以应用配置。</summary>
+      <returns>此属性的主体。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IConfiguration">
+      <summary>表示模型配置。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration">
+      <summary>表示可使用 Code First Fluent API 应用的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取 Fluent API 方法链以应用配置。</summary>
+      <returns>方法链。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration">
+      <summary>表示用于设置多对多关联的联接表和列名称的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.LeftKeys">
+      <summary>获取左侧实体的表的外键列的名称。</summary>
+      <returns>左侧实体的表的外键列的名称。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.RightKeys">
+      <summary>获取右侧实体的表的外键列的名称。</summary>
+      <returns>右侧实体的表的外键列的名称。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Schema">
+      <summary>获取或设置表架构。</summary>
+      <returns>表的架构。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Table">
+      <summary>获取或设置表名称。</summary>
+      <returns>表的名称。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration">
+      <summary>表示用于设置实体的键的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取配置的方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.KeyProperties">
+      <summary>获取用于实体的键的属性。</summary>
+      <returns>用于实体的键的属性。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration">
+      <summary>表示要在实体键中包括属性的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取属性主体。</summary>
+      <returns>属性主体。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration">
+      <summary>表示用于设置字符串或二进制属性的最大长度的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>返回与长度配置关联的属性主体。</summary>
+      <returns>与长度配置关联的属性主体。</returns>
+      <param name="code">配置的代码帮助程序。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>返回与长度配置关联的方法链。</summary>
+      <returns>与长度配置关联的方法链。</returns>
+      <param name="code">配置的代码帮助程序。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.MaxLength">
+      <summary>获取或设置属性的最大长度。</summary>
+      <returns>属性的最大长度。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration">
+      <summary>表示用于设置字符串属性的最大长度的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取与配置关联的属性主体。</summary>
+      <returns>与配置关联的属性主体。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration">
+      <summary>表示用于设置关联的多重性的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取 Fluent API 方法链以应用配置。</summary>
+      <returns>方法链。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftEntityType">
+      <summary>获取或设置此关联左端的实体类型。</summary>
+      <returns>关联左端的实体类型。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftNavigationProperty">
+      <summary>获取或设置此关联左端的导航属性。</summary>
+      <returns>关联左端的导航属性。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.RightNavigationProperty">
+      <summary>获取或设置此关联右端的导航属性。</summary>
+      <returns>关联右端的导航属性。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration">
+      <summary>表示用于将字符串属性标记为非 Unicode 的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取 Fluent API 方法链以应用配置。</summary>
+      <returns>方法链。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration">
+      <summary>表示用于设置临时属性的精度的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取 Fluent API 方法链以应用配置。</summary>
+      <returns>方法链。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.Precision">
+      <summary>获取或设置属性的精度。</summary>
+      <returns>属性的精度。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration">
+      <summary>表示用于设置十进制属性的精度和小数位数的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Precision">
+      <summary>获取或设置属性的精度。</summary>
+      <returns>属性的精度。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Scale">
+      <summary>获取或设置属性的小数位数。</summary>
+      <returns>属性的小数位数。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration">
+      <summary>表示将属性标记为必需的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取属性主体。</summary>
+      <returns>属性主体。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取方法链。</summary>
+      <returns>方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration">
+      <summary>表示用于设置实体的表的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取与配置关联的属性主体。</summary>
+      <returns>与配置关联的属性主体。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取 Fluent API 方法链以应用配置。</summary>
+      <returns>方法链。</returns>
+      <param name="code">用于生成代码的 Helper。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Schema">
+      <summary>获取或设置表的数据库架构。</summary>
+      <returns>表的数据库架构。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Table">
+      <summary>获取或设置表名称。</summary>
+      <returns>表的名称。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration">
+      <summary>表示用于将二进制列标记为时间戳的模型配置。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取与配置关联的属性主体。</summary>
+      <returns>与配置关联的属性主体。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>获取与配置关联的方法链。</summary>
+      <returns>与配置关联的方法链。</returns>
+      <param name="code">代码帮助程序。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper">
+      <summary>提供用于生成 Visual Basic 代码的 Helper 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>为指定属性获取匿名类型 lambda。</summary>
+      <returns>Lambda。</returns>
+      <param name="properties">属性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.Attribute(System.String)">
+      <summary>获取具有指定主体的特性。</summary>
+      <returns>属性。</returns>
+      <param name="attributeBody">此属性的主体。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.CodeProvider">
+      <summary>获取用于生成和编译 Visual Basic 代码的代码提供程序。</summary>
+      <returns>用于生成和编译 Visual Basic 代码的代码提供程序。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>获取指定值的字符串数组文本。</summary>
+      <returns>文本。</returns>
+      <param name="values">值。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>允许使用 TemplateActivity 将 SSDL 转换到 DDL 的 SsdlToDdlActivity。请注意，在 Microsoft.Data.Entity.Design.* 命名空间（Microsoft.Data.Entity.Design.CreateDatabase 除外）中，该类应该避免针对任何实体类型（特别是实体设计器实例化的类型）的任何依赖项。该类由于 VS 依赖项而在此项目中存在。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>一个 Windows 工作流 <see cref="T:System.Activities.OutArgument`1" />，用于指定从 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> 和 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> 属性中的存储架构定义语言 (SSDL) 生成的数据定义语言 (DDL)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>一个 Windows 工作流 <see cref="T:System.Activities.InArgument`1" />，用于指定现有的存储架构定义语言 (SSDL)，将从此 SSDL 生成用于删除现有数据库对象的数据定义语言 (DDL)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>一个 Windows 工作流 <see cref="T:System.Activities.InArgument`1" />，用于指定存储架构定义语言 (SSDL)，将从此 SSDL 生成用于创建新数据库对象的数据定义语言 (DDL)。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData">
+      <summary>LayerManager 用于区分不同层的父接口。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData.LayerName">
+      <summary>此扩展层的名称。</summary>
+      <returns>返回 <see cref="T:System.String" />。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <returns>返回 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection" />。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardStage">
+      <summary>WizardStage 指示向导扩展页在模型生成前还是模型生成后在向导中出现。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PostModelGeneration">
+      <summary>向导扩展页在模型生成后出现。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PreModelGeneration">
+      <summary>向导扩展页在模型生成前出现。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Templates.TemplateResources">
+      <summary>强类型的资源类，用于查找本地化的字符串等。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Culture">
+      <summary>为使用此强类型资源类进行的所有资源查找替代当前线程的 CurrentUICulture 属性。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.ResourceManager">
+      <summary>返回此类使用的已缓存 ResourceManager 实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveEntitySetConflict">
+      <summary>查找类似于以下内容的本地化字符串：EntitySet“{0}.{1}”仅大小写与现有 EntitySet 不同，并且与当前的语言选项不兼容。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveMemberConflict">
+      <summary>查找类似于以下内容的本地化字符串：Member“{0}.{1}”仅大小写与现有 Member 不同，并且与当前的语言选项不兼容。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveTypeConflict">
+      <summary>查找类似于以下内容的本地化字符串：类型“{0}”不唯一。原因可能是多个类型仅大小写不同，这种情况与当前的语言选项不兼容。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine1">
+      <summary>查找类似于以下内容的本地化字符串：此代码是根据模板生成的。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine2">
+      <summary>查找类似于以下内容的本地化字符串：手动更改此文件可能会导致应用程序中发生异常行为。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine3">
+      <summary>查找类似于以下内容的本地化字符串：如果重新生成代码，将覆盖对此文件的手动更改。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_ReplaceVsItemTemplateToken">
+      <summary>查找类似于以下内容的本地化字符串：请用要从中进行生成的 .edmx 文件的实际名称覆盖替换标记“$edmxInputFile$”。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>这必须是公共的，因为需要可从用于本地化的附属资源 DLL 访问它</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>将事件和名称附加到已编译的内容。</summary>
+      <param name="connectionId">用于区分调用的标识符令牌。</param>
+      <param name="target">事件和名称所连接到的目标。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>在已编译的内容中附加事件 setter 上的事件以及模板。</summary>
+      <param name="connectionId">用于事件连接用途的唯一连接 ID。</param>
+      <param name="target">事件连接的目标。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="projectItem">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="project">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="projectItem">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="automationObject">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+      <param name="replacementsDictionary">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+      <param name="runKind">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+      <param name="customParams">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <returns>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</returns>
+      <param name="filePath">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>将类型为“ADO.NET 实体数据模型”的新项添加到现有项目时，Visual Studio 调用此向导。此向导在 .vstemplate 文件项模板中注册。此项模板添加的文件是：+- modelName.edmx | +- modelName.edmx.diagram | +- modelName.Designer.cs [或 vb] =&amp;amp;gt; 代码生成器输出（对于 EF5 和旧 ObjectContext 生成器）或 +- ModelName.cs [或 vb] - 对于 CodeFirst</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>在打开具有 OpenInEditor 特性的任何项之前调用此方法。这允许我们在模板中打开某一项之前运行自定义向导逻辑</summary>
+      <param name="projectItem">将打开的项目项</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>在已创建项目之后调用此方法。这允许我们在项目已完成生成时运行自定义向导逻辑</summary>
+      <param name="project">项目。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>仅对项模板调用此方法，不对项目模板调用</summary>
+      <param name="projectItem">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>在模板向导运行结束时调用此方法。这允许我们在向导已完成所有任务时运行自定义向导逻辑。我们在此处为 .vstemplate 添加的文件设置项目项依赖项</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>在模板向导运行开始时调用此方法。这允许我们在创建任何内容之前运行自定义向导逻辑，并且还具有一些优点，例如收集将以某种方式更改运行的用户输入</summary>
+      <param name="automationObject">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+      <param name="replacementsDictionary">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+      <param name="runKind">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+      <param name="customParams">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>指示是否应将指定的项目项添加到项目中</summary>
+      <returns>如果应添加项，则为 true；否则为 false。</returns>
+      <param name="filePath">项目项的路径。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.#ctor">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="projectItem">项目项。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="project">项目。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="projectItem">项目项。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunFinished">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="automationObject">自动化对象。</param>
+      <param name="replacementsDictionary">替换字典。</param>
+      <param name="runKind">运行种类。</param>
+      <param name="customParams">自定义参数。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ShouldAddProjectItem(System.String)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <returns>如果应添加项目项，则为 true，否则为 false。</returns>
+      <param name="filePath">文件路径。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>用于 VS 的 IVsSingleFileGenerator 概念的托管包装，该包装是生成期间调用的自定义工具，该工具可接受任何文件作为输入，并提供可兼容的代码文件作为输出。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>实现 IVsSingleFileGenerator.DefaultExtension 方法。返回生成的文件的扩展名</summary>
+      <returns>如果成功，则为 S_OK；否则为 E_FAIL</returns>
+      <param name="pbstrDefaultExtension">Out 参数，将承载提供给输出文件名的文件扩展名。返回的扩展名必须包括前导句点</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>获取此生成器的默认扩展名</summary>
+      <returns>具有此生成器的默认扩展名的字符串</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>执行与释放或重置非托管资源关联的应用程序定义的任务。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>释放非托管资源和（可选）托管资源。</summary>
+      <param name="disposing">如果为 true，则同时释放托管资源和非托管资源；如果为 false，则仅释放非托管资源。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>终结 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> 类的实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>VS shell 为执行生成而调用的 Main 方法</summary>
+      <returns>状态代码。</returns>
+      <param name="wszInputFilePath">输入文件的路径</param>
+      <param name="bstrInputFileContents">字符串形式的输入文件的内容（shell 处理 UTF-8 到 Unicode 以及这些类型的转换）</param>
+      <param name="wszDefaultNamespace">生成的代码文件的默认命名空间</param>
+      <param name="rgbOutputFileContents">输出文件内容的字节数组</param>
+      <param name="pcbOutput">输出字节数组中字节的计数</param>
+      <param name="pGenerateProgress">用于将进度更新发送到 shell 的接口</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>在提供了输入文件的情况下执行实际代码生成工作的方法。</summary>
+      <returns>字节数组形式的生成的代码文件</returns>
+      <param name="inputFileName">输入文件名</param>
+      <param name="inputFileContent">字符串形式的文件内容</param>
+      <param name="defaultNamespace">默认命名空间。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>将通过 shell 回调机制传达错误的方法。</summary>
+      <param name="warning">如果此为警告，则为 true</param>
+      <param name="level">级别或严重级别</param>
+      <param name="message">显示给用户的文本</param>
+      <param name="line">错误/警告的行号</param>
+      <param name="column">错误/警告的列号</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>此类是在预处理器生成步骤中共同创建的。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>为包含对其调用生成器的项目项的项目语言返回 CodeDomProvider 对象</summary>
+      <returns>CodeDomProvider 对象</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>释放非托管资源和（可选）托管资源。</summary>
+      <param name="disposing">如果为 true，则同时释放托管资源和非托管资源；如果为 false，则仅释放非托管资源。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>获取 Vs ErrorList 对象</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>按其类型获取服务的方法</summary>
+      <returns>实现请求的服务的对象</returns>
+      <param name="serviceType">要检索的服务类型</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>IOleObjectWithSite 的 GetSite 方法</summary>
+      <param name="riid">要获取的接口</param>
+      <param name="ppvSite">要在其中装入返回值的数组</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>返回包含对其调用代码生成器的项目项的项目的 EnvDTE.Project 对象</summary>
+      <returns>包含对其调用代码生成器的项目项的项目的 EnvDTE.Project 对象</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>返回与对其调用代码生成器的项目项相对应的 EnvDTE.ProjectItem 对象</summary>
+      <returns>对其调用代码生成器的项目项的 EnvDTE.ProjectItem</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>IOleObjectWithSite 的 SetSite 方法</summary>
+      <param name="pUnkSite">要使用的此对象的站点</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>在给定 IOleServiceProvider 的情况下按需创建 ServiceProvider</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>我们的基于 SFG 的代码生成器通过：1 工作。读取 EDMX 文件 2 中的 CodeGenerationStrategy 选项。如果 CodeGenerationStrategy 设置为“默认值”，则我们将继续执行 codegen:3。调用 System.Data.Entity.Design CodeGen API</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+      <param name="itemId">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+      <param name="oldInputName">此 API 支持实体框架基础结构，但不适合直接在代码中使用。</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>获取来自 CodeDomProvider 的输出文件的默认扩展</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>调用 CodeGen API 以便从 CSDL 文件生成代码文件</summary>
+      <returns>null 意味着错误，否则为文件的内容</returns>
+      <param name="inputFileName">CSDL 文件的完整路径；这是从 ProjectItem 纳入的</param>
+      <param name="inputFileContent">CSDL 文件的内容 - 应该始终使用此内容，以便我们可以脱离内存文档</param>
+      <param name="defaultNamespace">默认命名空间。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>允许在 WF 工作流内转换 T4 模板的 TemplateActivity。请注意，在 Microsoft.Data.Entity.Design.* 命名空间（Microsoft.Data.Entity.Design.CreateDatabase 除外）中，该类应该避免针对任何实体类型（特别是实体设计器实例化的类型）的任何依赖项。该类由于 VS 依赖项而在此项目中存在。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>通过调用 Visual Studio STextTemplatingService，转换 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 属性中指定的文本模板。</summary>
+      <param name="context">当前活动的状态。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>填充用于向文本模板提供输入的 <see cref="T:System.Collections.IDictionary" />。可在派生类中重写此方法，以便提供自定义输入。这些输入被放到 <see cref="T:System.Runtime.Remoting.Messaging.CallContext" /> 中，以供文本模板使用。</summary>
+      <param name="context">当前活动的状态。</param>
+      <param name="inputs">一个字典，用于将输入名称与输入值关联，以供文本模板使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>使用 Visual Studio 的文本模板服务处理 T4 模板，假定可包含宏的路径（例如“$(DevEnvDir)\...”）。注意：不允许不是文件或者作为 UNC 路径的模板路径</summary>
+      <returns>处理模板的输出。</returns>
+      <param name="templatePath">可包含基于项目的宏的模板的文件路径</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>由 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 属性指定的模板的输出。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>所处理的文本模板的路径。</summary>
+    </member>
+    <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+      <summary>GeneratedInternalTypeHelper</summary>
+    </member>
+    <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.#ctor">
+      <summary>初始化 <see cref="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper" /> 类的新实例。</summary>
+    </member>
+  </members>
+</doc>

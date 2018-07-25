@@ -1,0 +1,2240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Resources">
+      <summary>ローカライズされた文字列などを調べるために、厳密に型指定されたリソース クラス。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources._SentenceConcat">
+      <summary>「{0} {1}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Application_Caption">
+      <summary>「ADO.NET Entity Data Model Designer」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionErrorMessage">
+      <summary>「パラメーター '{0}' は不適切な値 '{1}' を含んでいます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionMessageParameter">
+      <summary>「パラメーターは、'Type' 型または 'Guid' 型のインスタンスである必要があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.AssociationSetsGhostNodeName">
+      <summary>「アソシエーション セット」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BAD_FIRST_CHAR_IN_NC_NAME">
+      <summary>「名前 '{0}' の最初の文字が無効です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadChildForParentException">
+      <summary>「型 '{0}' のモデル ブラウザー オブジェクトでは、型 '{1}' の子はサポートされません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadRemoveBadChildType">
+      <summary>「型 '{0}' の子を、型 '{2}' の '{1}' という名前の親から削除できません。型 '{2}' の要素は、型 '{0}' の子を持つことができません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CanNotCreateWindow">
+      <summary>「ツール ウィンドウを作成できません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateDesignTimeConnectionString">
+      <summary>「デザイン タイム接続文字列をランタイム接続文字列に変換できません」に類似したローカライズされた文字列を検索します。{0} 接続文字列: {1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateRuntimeConnectionString">
+      <summary>「ランタイム接続文字列をデザイン タイム接続文字列に変換できません」に類似したローカライズされた文字列を検索します。{0} 接続文字列: {1}。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ChangingModelOutsideTransaction">
+      <summary>「トランザクションの外部でモデルを編集することはできません」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_LegacyObjectContext">
+      <summary>「Legacy ObjectContext」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_T4">
+      <summary>「T4」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.COLON_IN_NC_NAME">
+      <summary>「名前 '{0}' にコロンが含まれています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ComplexTypesGhostNodeName">
+      <summary>「複合型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualAssociationsGhostNodeName">
+      <summary>「アソシエーション」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualTypesGhostNodeName">
+      <summary>「エンティティ型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_AddError">
+      <summary>「次のエラーにより、新しい接続文字列を追加できませんでした: '{0}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_CorruptConfig">
+      <summary>「構成ファイルの形式が正しくありません。ファイルを手動で編集してから保存してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetConfigError">
+      <summary>「構成ファイルが見つかりませんでした。ファイルが適切なプロジェクトに含まれていることを確認するか、Visual Studio を再起動してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetSiteError">
+      <summary>「この構成用のサービス プロバイダーが見つかりませんでした。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_InitializeError">
+      <summary>「構成ファイルを解析できませんでした。エラー メッセージ: '{0}'。ファイルを手動で編集してから保存してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MarsError">
+      <summary>「サーバー バージョンを特定できなかったため、MultipleActiveResultSets 属性を接続文字列に追加できませんでした。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MetadataMismatch">
+      <summary>「接続文字列のメタデータが構成ファイル内のメタデータと一致しません。古いメタデータ: {0}。構成ファイルでエンティティ コンテナー名が '{1}' の接続文字列を修正し、構成ファイルを保存してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_NoConnectionString">
+      <summary>「接続文字列が構成ファイル内に見つかりませんでした。'{0}' という名前の接続文字列が構成ファイルに含まれていることを確認して、構成ファイルを保存してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_SaveXmlError">
+      <summary>「エラー '{1}' により、構成ファイル '{0}' に XML を保存できませんでした。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_UpdateError">
+      <summary>「構成ファイルの {0} を更新できませんでした。エラー メッセージ: '{1}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateNoConnection">
+      <summary>「接続の種類が指定されていないため、モデルは、SQL Server 2005 への接続を仮定して検証されます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateWithoutConnection">
+      <summary>「データ接続が選択されていない場合、モデルは正しく検証されない可能性があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Culture">
+      <summary>この厳密に型指定されたリソース クラスを使用して、すべてのリソース ルックアップに対して現在のスレッドの CurrentUICulture プロパティをオーバーライドします。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadError">
+      <summary>「カスタム データベース生成ワークフロー ファイルは、オーナーになっているプロジェクトに存在するアセンブリ '{0}' を参照していますが、次の例外が原因で読み込めませんでした: '{1}'。ワークフローを再実行する前に、参照が有効であることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadErrorWithInner">
+      <summary>「カスタム データベース生成ワークフロー ファイルは、オーナーになっているプロジェクトに存在するアセンブリ '{0}' を参照していますが、次の例外が原因で読み込めませんでした: '{1}'。この例外には次の詳細も含まれています: '{2}' ワークフローを再実行する前に、参照が有効であることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowCancelled">
+      <summary>「カスタム ワークフロー ファイル '{0}' の実行が許可されていませんでした。[前へ] を選択して [データ接続の選択] ページに戻り、ワークフローを再度実行してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowWarningTitle">
+      <summary>「カスタム ワークフローのセキュリティ警告」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_DDLOverwriteWarningTitle">
+      <summary>「DDL の上書きの警告」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_EdmxOverwriteWarningTitle">
+      <summary>「SSDL/MSL の上書きの警告」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorInvalidTargetVersion">
+      <summary>「指定された TargetVersion パラメーター '{0}' は無効です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoEdmParameterBag">
+      <summary>「ワークフローに EdmParameterBag が見つかりませんでした。これが SymbolResolver に追加されていることと、SymbolResolver が拡張機能としてワークフローに追加されていることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNonValidWorkflowUri">
+      <summary>「データベース生成ワークフローのパス '{0}' から作成された URI が無効です。指定したパスが有効な絶対ファイル パスであるか、プロジェクトを基準とする有効な相対ファイル パスであることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoParameterDefined">
+      <summary>「データベース生成ワークフローに必要なパラメーター '{0}' が定義されていません」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateFileNotInProject">
+      <summary>「指定された 'TemplatePath' 入力ファイル '{{0}}' がプロジェクトに含まれていないため、テンプレート アクティビティ '{0}' を呼び出すことができません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateOutputNotSet">
+      <summary>「データベース生成ワークフローで、テンプレート出力がテンプレート アクティビティ '{0}' に対して設定されませんでした。テンプレートが正しく記述されていることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNonFile">
+      <summary>「このワークフローのテンプレート アクティビティ '{0}' の 'TemplatePath' 入力ファイル '{{0}}' は、ファイル以外のパスおよび UNC パスがサポートされていないため、無効です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotSet">
+      <summary>「'TemplatePath' 属性が、このワークフローのテンプレート アクティビティ '{0}' に対して設定されていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotValid">
+      <summary>「このワークフローのテンプレート アクティビティ '{0}' の 'TemplatePath' 属性値 '{{0}}' は、無効であるか存在しません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTextTemplatingServiceNotFound">
+      <summary>「テンプレート '{0}' を処理するための ITextTemplating サービスが見つかりませんでした。このサービスは、Visual Studio 内でのみ使用できます。このワークフローが Visual Studio 内で実行されていることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowFileNotInProject">
+      <summary>「データベース生成ウィザードを続行するには、カスタム ワークフロー ファイル '{0}' をプロジェクトに含める必要があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowOutputNotFound">
+      <summary>「データベース生成ウィザードで必要になる '{0}' 出力パラメーターが、ワークフローで設定されませんでした。このパラメーターがワークフロー ファイルで定義され、ワークフローで設定されることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowPathNotSet">
+      <summary>「EDMX ファイルにデータベース生成ワークフローのパスが設定されていません。データベース生成ウィザードを実行する前に、このパスが設定されていることを確認してください」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdl">
+      <summary>「DDL をファイル '{0}' に書き込もうとしているときに例外が発生しました。例外メッセージ: '{1}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdlWithInner">
+      <summary>「DDL をファイル '{0}' に書き込もうとしているときに例外が発生しました。例外メッセージ: '{1}'。この例外には次の詳細も含まれています: '{2}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingTemplateFilePath">
+      <summary>「テンプレート アクティビティ '{0}' の 'TemplatePath' '{{0}}' を解析する際に例外が発生しました。メッセージ: '{{1}}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingWorkflowFilePath">
+      <summary>「データベース生成ワークフローのファイル パス '{0}' を解析する際に例外が発生しました。メッセージ: '{1}'。」に類似したローカライズされた文字列を検索します。.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NoDDLTemplatePathSpecified">
+      <summary>「'{0}' アクティビティに対して TemplatePath 引数が指定されませんでした。この値はワークフロー ファイル内でこのアクティビティに対して指定するか、EdmParameterBag の 'DDLTemplatePath' パラメーターを介して実行時に渡す必要があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NonFileWorkflow">
+      <summary>「指定されたデータベース生成ワークフロー ファイル '{0}' は、ファイル以外のパスおよび UNC パスがサポートされていないため、呼び出されませんでした。EDMX ファイルの 'Options' セクションに指定したデータベース生成ワークフローのパスが UNC パスではなく、ローカルに存在するファイルに対応していることを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_TemplateFileNotExists">
+      <summary>「指定された 'TemplatePath' 入力ファイル '{{0}}' が存在しないため、テンプレート アクティビティ '{0}' を呼び出すことができません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ValidationFailed">
+      <summary>「データベース スクリプトを生成する前に、このモデルの検証エラーをすべて修正する必要があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningCustomWorkflow">
+      <summary>「データベース生成ウィザードに対してカスタム ワークフローが定義されています (この EDMX モデルの 'データベース生成ワークフロー' プロパティを参照してください)。既定以外のワークフローでウィザードを実行すると、コンピューターで問題が発生する可能性があります。この EDMX ファイルの入手元が信頼できる入手元でない場合は、このウィザードを実行しないでください。ワークフローを実行するには [OK] をクリックしてください。処理を中止するには [キャンセル] をクリックしてください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteDdl">
+      <summary>「データベース生成ウィザードによって、DDL ファイル '{0}' が上書きされます。続行しますか?」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteMappings">
+      <summary>「データベース生成ウィザードによって、既存のストア スキーマ (SSDL) と既存のマッピング (MSL) が上書きされます。続行しますか?」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WorkflowFileNotExists">
+      <summary>「指定されたワークフロー ファイル '{0}' が存在しないため、モデルからデータベース スクリプトを作成する際に例外が発生しました。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibileListConverter_UserDir">
+      <summary>「(ユーザー)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibleListConverter_VSDir">
+      <summary>「(VS)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DDEXNotInstalled">
+      <summary>「Visual Studio がデザイン目的でデータベースと通信できるために必要なライブラリ (DDEX (プロバイダー)) がプロバイダー '{0}' のためにインストールされていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Default">
+      <summary>「既定」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DiagramTypesGhostNodeName">
+      <summary>「ダイアグラム」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DisabledFeatureTooltip">
+      <summary>「この機能は、対象となっている Entity Framework のバージョンでは使用できません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DuplicateEntityContainerName">
+      <summary>「EntityContainer 名 '{0}' は、プロジェクト内の別の Entity Data Model によって既に使用されています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption">
+      <summary>「[デザイン]」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption_ReadOnly">
+      <summary>「[読み取り専用]」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EDMOutputWindowPaneTitle">
+      <summary>「Entity Data Model」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EdmUtils_NotValidTargetFramework">
+      <summary>「プロジェクトのターゲット フレームワークに Entity Framework ランタイム アセンブリが含まれていません。「プロジェクトのプロパティ ページでターゲット フレームワーク情報を確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityContainerNodeName">
+      <summary>「EntityContainer: {0}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_CreateNewProperty">
+      <summary>「新しいプロパティを作成します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_DeleteProperty">
+      <summary>「プロパティを削除します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersion6_x">
+      <summary>「6.x」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersionName">
+      <summary>「Entity Framework {0}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntitySetsGhostNodeName">
+      <summary>「エンティティ セット」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AccEnumTypeMembers">
+      <summary>「列挙型メンバー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AutomationName">
+      <summary>「Enum ダイアログ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_CancelButtonLabel">
+      <summary>「キャンセル」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EditEnumWindowTitle">
+      <summary>「列挙型の編集」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnsureEnumTypeUnique">
+      <summary>「列挙型の名前が一意であることを確認してください」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberNameLabel">
+      <summary>「メンバー名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberValueLabel">
+      <summary>「値 (省略可能)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnterValueForExternalTypeName">
+      <summary>「参照先の外部の型の名前が必要です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberBadname">
+      <summary>「'{0}' は列挙メンバーとして有効な名前ではありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberDuplicateName">
+      <summary>「列挙メンバー '{0}' は既に存在します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumTypeBadname">
+      <summary>「'{0}' は列挙型として有効な名前ではありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeHint">
+      <summary>「Namespace.Type」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeLabel">
+      <summary>「外部の型の参照」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabel">
+      <summary>「Flags 属性の設定」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabelDescription">
+      <summary>「ビットごとの演算子を使用して、列挙型のインスタンスに、定義された値の任意の組み合わせを格納できるようにします。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NameLabel">
+      <summary>「列挙型の名前:」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NewEnumWindowTitle">
+      <summary>「列挙型の追加」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_OkButtonLabel">
+      <summary>「OK」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_UnderlyingTypeLabel">
+      <summary>「基になる型:」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumTypesGhostNodeName">
+      <summary>「列挙型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CannotEditRefConstraint">
+      <summary>「このアソシエーションの既存の参照に関する制約は、デザイナーでは編集できません。XML エディターを使用して手動で編集する必要があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CircularInheritanceAborted">
+      <summary>「'{0}' の基本型を '{1}' に設定すると循環継承が発生します。継承の追加を中止しました。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FailedApplyChangeToFile">
+      <summary>「ファイル {0} に変更を適用できませんでした。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FileNotFound">
+      <summary>「ファイルが見つかりません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlCeUpgrade">
+      <summary>「EDMX ファイルと構成ファイルの SQLCE 参照をアップグレードしているときに例外がスローされました。エラーの発生時に処理されていたファイル: {0}。エラー メッセージ全文: {1}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlDatabaseFileUpgrade">
+      <summary>「構成ファイルの SQL データベース ファイル参照をアップグレードしているときに、例外がスローされました。エラーの発生時に処理されていたファイル: {0}。エラー メッセージ全文: {1}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorNonValidFileName">
+      <summary>「ファイル名 '{0}' には次の制限があります - 次の文字を含めることはできません: \ / : * ? "&amp;amp;lt; &amp;amp;gt; | - 'CON'、'AUX'、'PRN'、'COM1'、'LPT2' などのシステム予約名を含めることはできません」。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorReadingWritingUserSetting">
+      <summary>「レジストリのユーザー設定 '{0}' の読み取りまたは書き込みの途中でエラーが発生しました。エラー: '{1}'」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorSynchingEdmxNamespaces">
+      <summary>次に類似したローカライズされた文字列を検索します: 「(XML 名前空間の更新中に例外がスローされました。\nファイル名: {0}。\nエラー メッセージ全文:\n {1}」。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExceptionMessageNullFactoryType">
+      <summary>「ファクトリ型を NULL にすることはできません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExistingConfigurationFileWarning">
+      <summary>「プロジェクトにファイル '{0}' が含まれています。このファイルは、ウィザードでプロジェクト ルート ディレクトリ内のファイル '{1}' に生成された構成情報をオーバーライドする可能性があります。プロジェクト内のアプリケーション構成ファイルを確認してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_ClearSearch">
+      <summary>「検索のクリア」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_CollapseSearchResults">
+      <summary>「縮小した検索結果を表示するには、ここをクリックしてください」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_PromptSearch">
+      <summary>「検索する語句をここに入力」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_Search">
+      <summary>「検索」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavNext">
+      <summary>「次の検索結果に移動」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavPrev">
+      <summary>「前の検索結果に移動」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowCaption">
+      <summary>「エクスプローラー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowTitle">
+      <summary>「モデル ブラウザー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditModel">
+      <summary>「モデル生成拡張機能が現在のモデル以外のモデルを変更しようとしました。この操作はサポートされていません」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditOriginalOnSave">
+      <summary>「シリアル化拡張機能が保存中に元のモデルを編集しようとしましたが、この操作はサポートされていません」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_AlreadyComplete">
+      <summary>「プロパティ拡張機能では、変更スコープで Complete() を呼び出した後に編集を行うことはできません」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_EditingWrongNamespace">
+      <summary>「プロパティ拡張機能では、Entity Framework の名前空間のアイテムを編集することはできません」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_Missing">
+      <summary>「プロパティ拡張機能では、モデルを編集する前に変更スコープを開始する必要があります」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ErrorOccurredDuringCallToExtension">
+      <summary>「ADO.Net Entity Framework の拡張機能の実行中にエラーが発生しました。拡張機能の種類の名前: {0}。例外メッセージ: {1}。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel">
+      <summary>「データベースから生成されたモデルに対して行われたモデル生成拡張機能による変更が無効です」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel_Update">
+      <summary>「更新されたモデルに対して行われたモデル生成拡張機能による変更が無効です」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_NoConverterForExtension">
+      <summary>「Entity Designer を EDMX 以外のファイルに対して開こうとしています。この拡張子に対して登録されている IModelConversionExtension はありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_StartChangeScopeFailed">
+      <summary>「変更スコープが既に存在します」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_TooManyConverters">
+      <summary>「このファイル拡張子に対して複数の IModelConversionExtension が登録されています: {0}。登録は 1 つしか許可されていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImport_CannotCreateFromComposableFunction">
+      <summary>「{0} またはそれ以前のバージョンの EDMX ファイルからコンポーザブルな関数の関数インポートを作成することはできません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImportsGhostNodeName">
+      <summary>「関数インポート」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_DisableLayer">
+      <summary>「{0} サポートを無効にする」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_EnableLayer">
+      <summary>「{0} サポートを有効にする」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LEADING_OR_TRAILING_SPACES_IN_NCNAME">
+      <summary>「名前 '{0}' の先頭または末尾にスペースが含まれています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadDataPackageError">
+      <summary>「Visual Studio Data Package の読み込み中にエラーが発生しました。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadOurPackageError">
+      <summary>「Entity Data Model ツール パッケージの読み込み中にエラーが発生しました。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LocalDatabaseFileAlreadyExists">
+      <summary>「'{0}' は、プロジェクトに既に存在します。上書きしますか?既存のファイルを使用する場合は、[いいえ] をクリックしてください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocMappingNoTable">
+      <summary>「(最初にテーブルをマップする必要があります。)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd1">
+      <summary>「1」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd2">
+      <summary>「2」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEndDisplay">
+      <summary>「End{0}: ({2} の {1})」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_AssociationHeader">
+      <summary>「アソシエーション」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnMappingsName">
+      <summary>「列マッピング」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnName">
+      <summary>「列」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionCreatorNode">
+      <summary>「&amp;amp;lt;条件の追加&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine1">
+      <summary>「{0} の場合」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine2">
+      <summary>「および {0}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_CreatorNode">
+      <summary>「&amp;amp;lt;削除関数の選択&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_Display">
+      <summary>「{0} を使用して削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrComplexTypePropertiesNotSupported">
+      <summary>「[複合型プロパティは関数インポート マッピングではサポートされません]」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNames">
+      <summary>「EntityType '{0}' の継承階層には、名前が '{1}' の重複するプロパティが含まれています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNamesSeparator">
+      <summary>「,」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDuplicatePropertyNameForAssociationEndEntity">
+      <summary>「このアソシエーションのマッピングには、名前が '{1}' の重複するプロパティが含まれている '{0}' エンティティ型への参照があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrKeyInDerivedType">
+      <summary>「キーが派生 EntityType で定義されています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMappingNotSupported">
+      <summary>「この機能は、プロジェクトの対象となっているフレームワークのバージョンでは使用できません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslAssociationSetMappingHasQueryView">
+      <summary>「このアソシエーションのマッピングには、デザイナーで表示できない QueryView が含まれています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslBadEntitySetMapping">
+      <summary>「この EntityType の EntitySet とそれに関連する EntitySetMappings の 1 つとの間のリレーションシップが壊れています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindAssociationSet">
+      <summary>「選択された Association の AssociationSet が見つかりません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindEntitySet">
+      <summary>「選択された EntityType の EntitySet が見つかりません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindFunctionImportMapping">
+      <summary>「選択された FunctionImport の FunctionImportMapping が見つかりません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindMappedFunction">
+      <summary>「選択された FunctionImport にマップされた Function が見つかりません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEntitySetMappingHasQueryView">
+      <summary>「この EntityType のマッピングには、デザイナーで表示できない QueryView が含まれています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEtmRefsMultipleTypes">
+      <summary>「EntityTypeMapping が複数の EntityTypes に割り当てられています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslFunctionMappingsShouldBeSeparate">
+      <summary>「関数マッピングが含まれている EntityTypeMapping に、MappingFragment も含めることはできません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslGeneral">
+      <summary>「マッピングはデザイナーの外部で編集された可能性があります。{0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyAssociationSetMappings">
+      <summary>「1 つの Association に対する複数の AssociationSetMappings はサポートされていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyDefaultEtms">
+      <summary>「この EntityType には、型固有の EntityTypeMapping が複数あります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyEntitySetMappings">
+      <summary>「1 つの EntityType に対する複数の EntitySetMappings はサポートされていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFragments">
+      <summary>「1 つの EntityTypeMapping に対する複数の MappingFragment はサポートされていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFunctionETMs">
+      <summary>「この EntityType には、関数マッピングを含む EntityTypeMapping が複数あります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyIsTypeOfETMs">
+      <summary>「この EntityType には、IsTypeOf の EntityTypeMapping が複数あります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnresolvedItems">
+      <summary>「選択したオブジェクトのマッピングには、解決できない参照が含まれています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnsupportedCondition">
+      <summary>「EntityType プロパティの条件はサポートされていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUsesGhostNodes">
+      <summary>「この EntityType のマッピングでは省略表記が使用されています。これはデザイナーではサポートされていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_FunctionsHeader">
+      <summary>「関数」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_CreatorNode">
+      <summary>「&amp;amp;lt;挿入関数の選択&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_Display">
+      <summary>「{0} を使用して挿入」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovDelete">
+      <summary>「&amp;amp;lt;削除&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovEmpty">
+      <summary>「(なし)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_NoDependentEndOnReferentialConstraint">
+      <summary>「参照に関する制約の依存 End がありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Operator">
+      <summary>「演算子」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorEquals">
+      <summary>「=」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorIs">
+      <summary>「Is」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ParameterName">
+      <summary>「パラメーター/列」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Parameters">
+      <summary>「パラメーター」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Property">
+      <summary>「プロパティ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM">
+      <summary>「公開されている外部キーを使用したアソシエーションに対し、マッピングは許可されていません。{0} または {1}。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Delete">
+      <summary>「マッピングを削除する」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Display">
+      <summary>「マッピングを表示して編集する」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_NoASM">
+      <summary>「公開されている外部キーを使用したアソシエーションに対し、マッピングは許可されていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM">
+      <summary>「これらのマッピングは、このアソシエーションで定義されている参照整合性制約によってオーバーライドされるため、無視されます。したがって、安全に {0} または {1} できます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Delete">
+      <summary>「これらのマッピングを削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Display">
+      <summary>「これらのマッピングを表示して編集」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM">
+      <summary>「マッピングは、このアソシエーションで定義されている参照整合性制約によってオーバーライドされるため、無視されます。{0}..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM_Display">
+      <summary>「マッピング エディターの表示」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintWithNonKeyProperties">
+      <summary>「キー以外のプロパティを含む参照整合性制約を含むアソシエーションに対し、マッピングは許可されていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindingCreatorNode">
+      <summary>「&amp;amp;lt;結果バインドの追加&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindings">
+      <summary>「結果列のバインド」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_RowsAffectedParameterColumn">
+      <summary>「処理行数パラメーター」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText">
+      <summary>「エンティティを関数にマップ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText_NotSupported">
+      <summary>「エンティティを関数にマップ (この機能は、CTP2 リリースではサポートされていません)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TableCreatorNode">
+      <summary>「&amp;amp;lt;テーブルまたはビューの追加&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesButtonText">
+      <summary>「エンティティをテーブル/ビューにマップ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesHeader">
+      <summary>「テーブル」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Toolbar_AccessibleName">
+      <summary>「マッピングの詳細ツール バー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnName">
+      <summary>「??」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnType">
+      <summary>「??」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndMultiplicity">
+      <summary>「??」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndType">
+      <summary>「??」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyName">
+      <summary>「??」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyType">
+      <summary>「??」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_CreatorNode">
+      <summary>「&amp;amp;lt;更新関数の選択&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_Display">
+      <summary>「{0} を使用して更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UseOriginalValueColumn">
+      <summary>「元の値を使用する」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Value">
+      <summary>「値/プロパティ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueEmptyString">
+      <summary>「&amp;amp;lt;空の文字列&amp;amp;gt;」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNotNull">
+      <summary>「NULL 以外」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNull">
+      <summary>「NULL」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Watermark">
+      <summary>「Entity Designer または {0} でエンティティまたはアソシエーションを選択し、そのマッピングを編集します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WatermarkLabelText">
+      <summary>「エンティティまたはアソシエーションを選択し、そのマッピングを編集します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WindowTitle">
+      <summary>「マッピングの詳細」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsArrowsImageList">
+      <summary>System.Drawing.Bitmap 型のローカライズされたリソースを検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsCommandStrip">
+      <summary>System.Drawing.Bitmap 型のローカライズされたリソースを検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsIconsImageList">
+      <summary>System.Drawing.Bitmap 型のローカライズされたリソースを検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsViewModel_StorageEntityTypeName">
+      <summary>「{0} にマップ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_CantBeRelative">
+      <summary>「別のデバイス上のファイルの場合、相対パスを使用できません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileAlreadyExists">
+      <summary>「ファイル '{0}' を上書きすることになるモデル ファイル名を選択しました。別のモデル ファイル名を選択してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileIsLinkedFile">
+      <summary>「'{0}' という名前のモデルを追加できません。同じ名前のリンク ファイルがこのフォルダーに既に存在します。」に類似したローカライズされた文字列を検索します。.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_NonValidXmlAttributeValue">
+      <summary>「ADO.NET Entity Data Model の項目およびファイル名には、有効な XML 属性のみが含まれている必要があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_UnexpectedExceptionHasOccurred">
+      <summary>「予期しない例外が発生しました。例外メッセージ: '{0}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MsgBox_InheritanceWillRemoveKeys">
+      <summary>「'{1}' から '{0}' を継承すると、'{0}' で定義されたすべてのエンティティ キーとそのサブタイプが削除されます。」に類似したローカライズされた文字列を検索します。\n続行しますか?</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_CollectionText">
+      <summary>「{0} のコレクション」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_InstanceText">
+      <summary>「{0} のインスタンス」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NoDefaultConnectionString">
+      <summary>「既定の接続文字列が App.config ファイルで定義されていません。既定のプロバイダーとして SqlClient が使用されます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.None">
+      <summary>「なし」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisRelease">
+      <summary>「この機能は、このリリースではサポートされていません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisReleaseInWebsite">
+      <summary>「この機能は、このリリースの Web サイトではサポートされていません。Web アプリケーションを使用してください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PackageLoadFailureExceptionMessage">
+      <summary>「Entity Data Model ツール パッケージを読み込めませんでした。結果: {0}。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_CodeGeneration">
+      <summary>「コード生成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Connection">
+      <summary>「接続」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Constraint">
+      <summary>「制約」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_DatabaseScriptGeneration">
+      <summary>「データベース スクリプトの生成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Diagram">
+      <summary>「ダイアグラム」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Ends">
+      <summary>「End」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Facets">
+      <summary>「ファセット」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_General">
+      <summary>「全般」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Navigation">
+      <summary>「ナビゲーション」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Schema">
+      <summary>「スキーマ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Abstract">
+      <summary>「エンティティ型が抽象であるかどうかを決定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Access">
+      <summary>「型のアクセス レベルを指定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Association">
+      <summary>「アソシエーション プロパティの名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_CodeGenerationStrategy">
+      <summary>「このモデルのコード生成方法を設定するために使用されます。このモデルに関連付けられている 'カスタム ツール' は、このプロパティを読み取ってコードの生成方法を決定します。'カスタム ツール' には、ソリューション エクスプローラーにある、この項目のプロパティからアクセスできます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ComplexTypeName">
+      <summary>「この ComplexType の名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Composable">
+      <summary>「インポート関数がデータベース内のテーブル値関数をプログラムによって呼び出す方法を表している場合、そのインポート関数はコンポーザブルです」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ConnectionString">
+      <summary>「データベース接続とメタデータ ファイルを示す接続文字列です。これは、構成ファイルで見つかります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseGenerationWorkflow">
+      <summary>「モデルからのデータベース生成ウィザードで使用される Windows Workflow Foundation ファイルのパスです。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseName">
+      <summary>「データベース上の基になるオブジェクトの名前」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchema">
+      <summary>「基になるデータベース オブジェクトのスキーマの名前」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchemaName">
+      <summary>「生成される DDL で参照されるデータベース スキーマの名前」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DDLGenerationTemplate">
+      <summary>「データベース生成ウィザードで、SSDL を DDL に変換するために使用される T4 テキスト テンプレートです。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DefaultValue">
+      <summary>「プロパティの既定値です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DiagramName">
+      <summary>「名前」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityBaseType">
+      <summary>「エンティティの基本型です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityContainerAccess">
+      <summary>「Entity Data Model のエンティティのインスタンスがすべて含まれているエンティティ コンテナーのアクセス修飾子。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityKey">
+      <summary>「プロパティが親エンティティのエンティティ キーであるかどうかを判断します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityName">
+      <summary>「エンティティの名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntitySetName">
+      <summary>「エンティティのインスタンスを含む EntitySet の名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityShapeColor">
+      <summary>「エンティティ型図形の色。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumExternalTypeAttribute">
+      <summary>「外部の型を参照すると、この列挙型のコード生成は無効になります」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumTypeName">
+      <summary>「列挙型の名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumUnderlyingType">
+      <summary>「列挙のデータ型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_FromRole">
+      <summary>「このアソシエーション ロールはナビゲーションのソースです。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_GenerateUpdateViews">
+      <summary>「Entity Framework で、データを変更するための更新ステートメントが生成されるかどうかを制御します。この機能を無効にすると、その他のマッピング機能が有効になり、ストアド プロシージャを経由しないデータ変更が無効になります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Getter">
+      <summary>「プロパティ Getter のアクセスを決定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceBaseType">
+      <summary>「継承関係の基本型です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceDerivedType">
+      <summary>「継承関係の派生型です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LazyLoadingEnabled">
+      <summary>「生成された ObjectContext に適用される既定の遅延読み込み動作を設定するために使用します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LongDescription">
+      <summary>「ドキュメントです。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_MetadataArtifactProcessing">
+      <summary>「ビルド時のマッピング ファイルとモデル ファイルの処理方法を決定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavigationPropertyName">
+      <summary>「ナビゲーション プロパティの名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropMultiplicity">
+      <summary>「ターゲット アソシエーションの End の複数要素の接続性です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropType">
+      <summary>「このナビゲーション プロパティの戻り値の型です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Nullable">
+      <summary>「プロパティが NULL 許容かどうかを判断します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Parameter">
+      <summary>「ストアド プロシージャ パラメーターの名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PluralizeNewObjects">
+      <summary>「システムで自動的に新しいオブジェクトの名前を複数化するかどうかを決定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ProcessDependentTemplatesOnSave">
+      <summary>「EDMX ファイルの保存時に EDMX に依存する T4 ファイルをシステムで処理するかどうかを決定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PropertyName">
+      <summary>「プロパティの名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Setter">
+      <summary>「プロパティ Setter のアクセスを決定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_StoreGeneratedPattern">
+      <summary>「挿入操作と更新操作の際に、データベース内で対応する列が自動的に生成されるかどうかを決定します」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Summary">
+      <summary>「ドキュメントの概要です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_SynchronizePropertyFacets">
+      <summary>「モデルを更新すると、マップされたデータベースの列値と一致させるために、NULL 許可属性や有効桁数など、エンティティ プロパティのファセットが更新されます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ToRole">
+      <summary>「このアソシエーション ロールはナビゲーションのターゲットです。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Type">
+      <summary>「スカラー プロパティの型です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseLegacyProvider">
+      <summary>「レガシ プロバイダーを使用してデザイン タイムにデータベースに接続します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseStrongSpatialTypes">
+      <summary>「すべての空間型に対して厳密な型のサポートを使用するように、コード生成を設定します。false に設定した場合、生成されたコードで基本クラスの DbGeography および DbGeometry が使用されます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ValidateOnBuild">
+      <summary>「ビルド時にシステムがモデルを検証するかどうかを決定します。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationName">
+      <summary>「アソシエーションの名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationSetName">
+      <summary>「アソシエーションを含むアソシエーション セットの名前です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndNavigationProperty">
+      <summary>「この End の値を返すエンティティ プロパティの名前」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndOnDelete">
+      <summary>「この End のエンティティが削除されたときに実行するアクションを指定します」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EntityContainerName">
+      <summary>「Entity Data Model のエンティティのインスタンスがすべて含まれているエンティティ コンテナーの名前。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Multiplicity">
+      <summary>「アソシエーションのこの End で許可されるエンティティ数」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Namespace">
+      <summary>「Entity Data Model の名前空間です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Role">
+      <summary>「この End の名前」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Abstract">
+      <summary>「抽象」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Access">
+      <summary>「アクセス」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Aggregate">
+      <summary>「集計」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Alias">
+      <summary>「別名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Association">
+      <summary>「アソシエーション」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_AssociationSetName">
+      <summary>「アソシエーション セット名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BaseType">
+      <summary>「基本型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BuiltIn">
+      <summary>「ビルトイン」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CodeGenerationStrategy">
+      <summary>「コード生成方法」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Collation">
+      <summary>「照合順序」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CommandText">
+      <summary>「コマンド テキスト」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Composable">
+      <summary>「コンポーザブル」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConcurrencyMode">
+      <summary>「同時実行モード」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConnectionString">
+      <summary>「接続文字列」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseGenerationWorkflow">
+      <summary>「データベース生成ワークフロー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseName">
+      <summary>「データベース オブジェクト名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchema">
+      <summary>「データベース スキーマ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchemaName">
+      <summary>「データベース スキーマの名前」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DDLGenerationTemplate">
+      <summary>「DDL 生成テンプレート」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DefaultValue">
+      <summary>「既定値」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DerivedType">
+      <summary>「派生型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Documentation">
+      <summary>「ドキュメント」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End">
+      <summary>「End」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Multiplicity">
+      <summary>「End1 の複数要素の接続性」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1NavigationProperty">
+      <summary>「End1 のナビゲーション プロパティ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1OnDelete">
+      <summary>「End1 の OnDelete」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Role">
+      <summary>「End1 のロール名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Multiplicity">
+      <summary>「End2 の複数要素の接続性」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2NavigationProperty">
+      <summary>「End2 のナビゲーション プロパティ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2OnDelete">
+      <summary>「End2 の OnDelete」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Role">
+      <summary>「End2 のロール名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerAccess">
+      <summary>「エンティティ コンテナーのアクセス」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerName">
+      <summary>「エンティティ コンテナー名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityKey">
+      <summary>「エンティティ キー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntitySetName">
+      <summary>「エンティティ セット名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityShapeColor">
+      <summary>「塗りつぶしの色」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityType">
+      <summary>「型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumExternalTypeAttribute">
+      <summary>「外部型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumFlagAttribute">
+      <summary>「フラグ」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumUnderlyingType">
+      <summary>「基になる型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FixedLength">
+      <summary>「固定長」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FromRole">
+      <summary>「From ロール」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_GenerateUpdateViews">
+      <summary>「更新ビューの生成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Getter">
+      <summary>「Getter」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LazyLoadingEnabled">
+      <summary>「遅延読み込みが有効です」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LongDescription">
+      <summary>「長い説明」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_CopyToOutputDirectory">
+      <summary>「出力ディレクトリにコピー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_EmbedInOutputAssembly">
+      <summary>「出力アセンブリに組み込む」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MaxLength">
+      <summary>「最大長」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MetadataArtifactProcessing">
+      <summary>「メタデータ成果物の処理」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Mode">
+      <summary>「モード」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Namespace">
+      <summary>「名前空間」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropMultiplicity">
+      <summary>「複数要素の接続性」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropType">
+      <summary>「戻り値の型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Niladic">
+      <summary>「ニラディック」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Nullable">
+      <summary>「Null 許容」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Parameter">
+      <summary>「パラメーター」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ParameterTypeSemantics">
+      <summary>「パラメーター型のセマンティクス」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_PluralizeNewObjects">
+      <summary>「新しいオブジェクトの複数化」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Precision">
+      <summary>「有効桁数」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ProcessDependentTemplatesOnSave">
+      <summary>「保存時に関連するテキスト テンプレートを変換する」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_RefConstraint">
+      <summary>「参照に関する制約」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ReturnType">
+      <summary>「戻り値の型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Scale">
+      <summary>「小数点以下桁数」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Setter">
+      <summary>「Setter」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoredProcedureName">
+      <summary>「ストアド プロシージャ名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreFunctionName">
+      <summary>「格納関数名」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreGeneratedPattern">
+      <summary>「StoreGeneratedPattern」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Summary">
+      <summary>「概要」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_SynchronizePropertyFacets">
+      <summary>「プロパティ ファセットの更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ToRole">
+      <summary>「To ロール」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Type">
+      <summary>「型」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Unicode">
+      <summary>「Unicode」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseLegacyProvider">
+      <summary>「レガシ プロバイダーの試用」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseStrongSpatialTypes">
+      <summary>「厳密な空間型の使用」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ValidateOnBuild">
+      <summary>「ビルド時に検証」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_MessageBox_SetAbstract">
+      <summary>「エンティティ型を抽象として定義すると、そのエンティティ型に対する既存の関数マッピングがすべて削除されます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityMany">
+      <summary>「* (多)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityManyOf">
+      <summary>「* ({0} のコレクション)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOne">
+      <summary>「1 (1)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOneOf">
+      <summary>「1 ({0} の 1)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOne">
+      <summary>「0..1 (0 または 1)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOneOf">
+      <summary>「0..1 ({0} の 0 または 1)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorPreviewGroupName">
+      <summary>「コード オブジェクト」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_InvalidName">
+      <summary>「指定した名前には有効な識別子がありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_UndoDescription">
+      <summary>「{0} から {1} への名前の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Cancel">
+      <summary>「キャンセル」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_LocationLabel">
+      <summary>「場所:」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_NewNameLabel">
+      <summary>「新しい名前:」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_OK">
+      <summary>「OK」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_PreviewReferenceChangesLabel">
+      <summary>「参照の変更のプレビュー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Title">
+      <summary>「名前の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_ConfirmButtonText">
+      <summary>「適用」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Description">
+      <summary>「名前の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_TextViewDescription">
+      <summary>「変更のプレビュー:」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Title">
+      <summary>「変更のプレビュー - 名前の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCDependentProperty">
+      <summary>「{0} (エラー: 見つかりません))」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCPrincipalProperty">
+      <summary>「{0} (エラー: 見つかりません。参照が削除されます)」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RenameModelMessageBox_Text">
+      <summary>「ファイル名の変更やファイルの移動を行うことはできません。ファイル名の変更やファイルの移動を行う前に、Entity Designer でファイルを閉じてください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ResourceManager">
+      <summary>このクラスで使用される、キャッシュされた ResourceManager インスタンスに戻ります。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeErrorMessage">
+      <summary>「ストアド プロシージャまたは関数の戻り値の型情報を取得できませんでした。エラー メッセージ {0}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeInfoMessage">
+      <summary>「ストアド プロシージャまたは関数の戻り値の型情報を取得しています {0}/{1} - '{2}.{3}'」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogDescription">
+      <summary>「ストアド プロシージャまたは関数の戻り値の型情報を取得しています」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogInitialStatus">
+      <summary>「データベース接続を待機しています...」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogTitle">
+      <summary>「お待ちください...」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_FailureToLoadStoreItemCollection">
+      <summary>「StoreItemCollection を作成しようとしているときに次の例外が発生しました: '{0}'」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_StoreItemCollectionMayRequireDatabaseConnection">
+      <summary>「StoreItemCollection をプロバイダー ファクトリから読み込むことができません。StoreItemCollection を読み込むには、データベース接続を開くことが必要になる場合があります。例外メッセージ: '{0}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultItemsMatching">
+      <summary>「{0} に一致する項目」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultSearchCriteria">
+      <summary>「'{0}'」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageAssociationsGhostNodeName">
+      <summary>「制約」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageFunctionsGhostNodeName">
+      <summary>「ストアド プロシージャ/関数」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageTypesGhostNodeName">
+      <summary>「テーブル/ビュー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.T4_ItemTemplate_CSharp_Comment">
+      <summary>次に類似したローカライズされた文字列を取得します: 「T4 項目テンプレートの CSharp のコメント」。</summary>
+      <returns>次に類似したローカライズされた文字列: 「T4 項目テンプレートの CSharp のコメント」。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateError">
+      <summary>「行 {0}、列 {1}: '{2}'」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateErrorsEncountered">
+      <summary>「テンプレート '{0}' の処理中に次のエラーが発生しました: {1}」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ToolWindowTitle">
+      <summary>「モデル ブラウザー」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TransactionAlreadyCompleted">
+      <summary>「トランザクションは既に完了しています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_AddComplexType">
+      <summary>「複合型の追加」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionColumn">
+      <summary>「条件列の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionValue">
+      <summary>「条件値の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpMapping">
+      <summary>「関数インポート マッピングの変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpRetType">
+      <summary>「FunctionImport の戻り値の型の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeMetadataArtifactProcessing">
+      <summary>「メタデータ成果物の処理の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeResultBinding">
+      <summary>「ResultBinding の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeScalarProperty">
+      <summary>「ScalarProperty の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateAssociationSetMapping">
+      <summary>「AssociationSetMapping の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateCondition">
+      <summary>「Condition の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateDiagram">
+      <summary>「ダイアグラムの作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateEnumType">
+      <summary>「列挙型の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionImport">
+      <summary>「FunctionImport の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionMapping">
+      <summary>「FunctionMapping の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateMappingFragment">
+      <summary>「MappingFragment の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateResultBinding">
+      <summary>「ResultBinding の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateScalarProperty">
+      <summary>「ScalarProperty の作成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteAssociationSetMapping">
+      <summary>「AssociationSetMapping の削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteCondition">
+      <summary>「Condition の削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteFunctionMapping">
+      <summary>「FunctionMapping の削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteMappingFragment">
+      <summary>「MappingFragment の削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteResultBinding">
+      <summary>「ResultBinding の削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteScalarProperty">
+      <summary>「ScalarProperty の削除」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_GenerateDatabaseScriptFromModel">
+      <summary>「モデルからのデータベース生成」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerDisable">
+      <summary>「レイヤー '{0}' を無効にする」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerEnable">
+      <summary>「レイヤー '{0}' を有効にする」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_RefactorRenameCommand">
+      <summary>「名前の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ReferentialContraint">
+      <summary>「参照に関する制約の変更」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_SetCodeGenerationStrategy">
+      <summary>「CodeGeneration 方法の設定」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateAssociationSetMapping">
+      <summary>「AssociationSetMapping の更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateEnumType">
+      <summary>「列挙型の更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionImport">
+      <summary>「FunctionImport の更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionMapping">
+      <summary>「FunctionMapping の更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateMappingFragment">
+      <summary>「MappingFragment の更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateModelFromDatabase">
+      <summary>「データベースからモデルを更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdatePropertyType">
+      <summary>「プロパティの型の更新」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UnsupportedProjectLanguage">
+      <summary>「サポートされていないプロジェクト言語です。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UpdateEdmxNamespacesSuccessful">
+      <summary>「プロジェクト {0} の .edmx ファイルの storage セクション、conceptual セクション、および mapping セクションの名前空間が、プロジェクトの対象となる .NET Framework に合わせて更新されました。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UsingDefaultConnectionString_1">
+      <summary>「ファイル '{1}' から取得したデータ プロバイダーとデータベース接続 '{0}' を使用しています。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VsUtils_ErrorResolvingMacro">
+      <summary>「マクロ '{0}' を解決できませんでした。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionConvertingProject">
+      <summary>「階層をプロジェクトに変換しているときに例外が発生しました。階層はプロジェクトではありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionParsingXml">
+      <summary>「ファイル '{0}' を解析中に次の例外が発生しました: '{1}'」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_InnerExceptionErrorFormat">
+      <summary>「発生した内部例外の型: '{0}'。エラー メッセージ: '{1}'。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration">
+      <summary>アソシエーションの連鎖削除オプションを設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.DeleteBehavior">
+      <summary>連鎖削除オプションを取得または設定します。</summary>
+      <returns>連鎖削除オプション。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper">
+      <summary>コードを生成するためのヘルパー メソッドを表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>指定したプロパティの匿名型ラムダを指定します。</summary>
+      <returns>ラムダ。</returns>
+      <param name="properties">プロパティ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration)">
+      <summary>指定された構成を適用するために使用するデータ注釈属性を返します。</summary>
+      <returns>指定された構成を適用するために使用するデータ注釈属性。</returns>
+      <param name="configuration">構成。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(System.String)">
+      <summary>指定された本体の属性を返します。</summary>
+      <returns>属性。</returns>
+      <param name="attributeBody">属性の本体。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.CodeProvider">
+      <summary>生成されたコードの言語のプロバイダーを取得します。</summary>
+      <returns>生成されたコードの言語のプロバイダー。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.MethodChain(Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration)">
+      <summary>指定された構成を適用するために使用する Code First Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="configuration">構成。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EdmMember)">
+      <summary>指定されたメンバーのプロパティ識別子を指定します。</summary>
+      <returns>識別子。</returns>
+      <param name="member">メンバー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EntitySetBase)">
+      <summary>指定されたエンティティ セットのプロパティ識別子を指定します。</summary>
+      <returns>識別子。</returns>
+      <param name="entitySet">エンティティ セット。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>指定された値の文字列配列リテラルを取得します。</summary>
+      <returns>リテラル。</returns>
+      <param name="values">値。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>指定されたプロパティの型を指定します。</summary>
+      <returns>型。</returns>
+      <param name="property">プロパティ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmType)">
+      <summary>指定された型の型識別子を指定します。</summary>
+      <returns>識別子。</returns>
+      <param name="edmType">型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EntityContainer)">
+      <summary>指定されたコンテナーの型識別子を指定します。</summary>
+      <returns>識別子。</returns>
+      <param name="container">コンテナー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.NavigationProperty)">
+      <summary>指定されたナビゲーション プロパティの型を指定します。</summary>
+      <returns>型。</returns>
+      <param name="navigationProperty">ナビゲーション プロパティ。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration">
+      <summary>プロパティの列名、型、および順序を設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>属性の本体を取得します。</summary>
+      <returns>属性の本体。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Name">
+      <summary>列の名前を取得または設定します。</summary>
+      <returns>列の名前。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Order">
+      <summary>この列がデータベース テーブルに出現する順序を取得または設定します。</summary>
+      <returns>この列がデータベース テーブルに出現する順序。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.TypeName">
+      <summary>データベース プロバイダー固有のデータ型の名前を取得または設定します。</summary>
+      <returns>データベース プロバイダー固有のデータ型の名前。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper">
+      <summary>C# コードを生成するためのヘルパー メソッドを提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>指定したプロパティの匿名型ラムダを取得します。</summary>
+      <returns>ラムダ。</returns>
+      <param name="properties">プロパティ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.Attribute(System.String)">
+      <summary>指定された本体の属性を取得します。</summary>
+      <returns>属性。</returns>
+      <param name="attributeBody">属性の本体。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.CodeProvider">
+      <summary>C# コードを生成したりコンパイルしたりするために使うコード プロバイダーを取得します。</summary>
+      <returns>C# コードを生成したりコンパイルしたりするために使うコード プロバイダー。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>指定された値の文字列配列リテラルを取得します。</summary>
+      <returns>リテラル。</returns>
+      <param name="values">値。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration">
+      <summary>データベースによって生成されるプロパティのオプションを設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成に関連付けられている属性の本体を取得します。</summary>
+      <returns>構成に関連付けられている属性の本体。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用する Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.StoreGeneratedPattern">
+      <summary>データベースでプロパティの値を生成するために使用するパターンを取得または設定します。</summary>
+      <returns>データベースでプロパティの値を生成するために使用するパターン。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper">
+      <summary>モデルを分析するためのヘルパー メソッドを提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.#ctor(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper" /> クラスの新しいインスタンスを初期化します。</summary>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>指定したプロパティに適用するモデル構成を取得します。</summary>
+      <returns>構成。</returns>
+      <param name="property">プロパティ。</param>
+      <param name="model">モデル。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EntitySet,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>指定したエンティティ型に適用するモデル構成を取得します。</summary>
+      <returns>構成。</returns>
+      <param name="entitySet">エンティティ型のセット。</param>
+      <param name="model">モデル。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>指定したナビゲーション プロパティに適用するモデル構成を取得します。</summary>
+      <returns>構成。</returns>
+      <param name="navigationProperty">ナビゲーション プロパティ。</param>
+      <param name="model">モデル。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetMultiplicityConfiguration(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Boolean@)">
+      <summary>指定したナビゲーション プロパティに適用する複数要素の接続性モデル構成を取得します。</summary>
+      <returns>構成。</returns>
+      <param name="navigationProperty">ナビゲーション プロパティ。</param>
+      <param name="isDefault">既定で構成が適用されるかどうかを示す値。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration">
+      <summary>文字列またはバイナリ プロパティを固定長としてマークするモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用する Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration">
+      <summary>アソシエーションの外部キー プロパティを設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.Properties">
+      <summary>アソシエーションの外部キーに使用するプロパティを取得します。</summary>
+      <returns>アソシエーションの外部キーに使用するプロパティ。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration">
+      <summary>データ注釈を使用して適用できるモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用するデータ注釈属性の本体を取得します。</summary>
+      <returns>属性の本体。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IConfiguration">
+      <summary>モデル構成を表します。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration">
+      <summary>Code First Fluent API を使用して適用できるモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用する Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration">
+      <summary>多対多アソシエーションの結合テーブル名および列名を設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.LeftKeys">
+      <summary>左側のエンティティのテーブルへの外部キーの列の名前を取得します。</summary>
+      <returns>左側のエンティティのテーブルへの外部キーの列の名前。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.RightKeys">
+      <summary>右側のエンティティのテーブルへの外部キーの列の名前を取得します。</summary>
+      <returns>右側のエンティティのテーブルへの外部キーの列の名前。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Schema">
+      <summary>テーブルのスキーマを取得または設定します。</summary>
+      <returns>テーブルのスキーマ。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Table">
+      <summary>テーブルの名前を取得または設定します。</summary>
+      <returns>テーブルの名前。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration">
+      <summary>エンティティのキーを設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成のメソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.KeyProperties">
+      <summary>エンティティのキーに使用するプロパティを取得します。</summary>
+      <returns>エンティティのキーに使用するプロパティ。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration">
+      <summary>プロパティをエンティティのキーの一部として含めるモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>属性の本体を取得します。</summary>
+      <returns>属性の本体。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration">
+      <summary>文字列またはバイナリ プロパティの最大長を設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>長さの構成に関連付けられている属性の本体を返します。</summary>
+      <returns>長さの構成に関連付けられている属性の本体。</returns>
+      <param name="code">構成のコード ヘルパー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>長さの構成に関連付けられているメソッド チェーンを返します。</summary>
+      <returns>長さの構成に関連付けられているメソッド チェーン。</returns>
+      <param name="code">構成のコード ヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.MaxLength">
+      <summary>プロパティの最大長を取得または設定します。</summary>
+      <returns>プロパティの最大長。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration">
+      <summary>文字列プロパティの最大長を設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成に関連付けられている属性の本体を取得します。</summary>
+      <returns>構成に関連付けられている属性の本体。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration">
+      <summary>アソシエーションの複数要素の接続性を設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用する Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftEntityType">
+      <summary>アソシエーションの左端のエンティティ型を取得または設定します。</summary>
+      <returns>アソシエーションの左端のエンティティ型。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftNavigationProperty">
+      <summary>アソシエーションの左端のナビゲーション プロパティを取得または設定します。</summary>
+      <returns>アソシエーションの左端のナビゲーション プロパティ。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.RightNavigationProperty">
+      <summary>アソシエーションの右端のナビゲーション プロパティを取得または設定します。</summary>
+      <returns>アソシエーションの右端のナビゲーション プロパティ。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration">
+      <summary>文字列プロパティを non-Unicode としてマークするモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用する Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration">
+      <summary>一時的なプロパティの精度を設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用する Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.Precision">
+      <summary>プロパティの有効桁数を取得または設定します。</summary>
+      <returns>プロパティの有効桁数。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration">
+      <summary>Decimal 型のプロパティの有効桁数と小数部桁数を設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Precision">
+      <summary>プロパティの有効桁数を取得または設定します。</summary>
+      <returns>プロパティの有効桁数。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Scale">
+      <summary>プロパティの小数点以下桁数を取得または設定します。</summary>
+      <returns>プロパティの小数点以下桁数。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration">
+      <summary>必要に応じてプロパティをマークするモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>属性の本体を取得します。</summary>
+      <returns>属性の本体。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration">
+      <summary>エンティティのテーブルを設定するモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成に関連付けられている属性の本体を取得します。</summary>
+      <returns>構成に関連付けられている属性の本体。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成を適用する Fluent API メソッド チェーンを取得します。</summary>
+      <returns>メソッド チェーン。</returns>
+      <param name="code">コードの生成に使用するヘルパー。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Schema">
+      <summary>テーブルのデータベース スキーマを取得または設定します。</summary>
+      <returns>テーブルのデータベース スキーマ。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Table">
+      <summary>テーブルの名前を取得または設定します。</summary>
+      <returns>テーブルの名前。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration">
+      <summary>バイナリ列をタイムスタンプとしてマークするモデル構成を表します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成に関連付けられている属性の本体を取得します。</summary>
+      <returns>構成に関連付けられている属性の本体。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>構成に関連付けられているメソッド チェーンを取得します。</summary>
+      <returns>構成に関連付けられているメソッド チェーン。</returns>
+      <param name="code">コード ヘルパー。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper">
+      <summary>Visual Basic コードを生成するためのヘルパー メソッドを提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>指定したプロパティの匿名型ラムダを取得します。</summary>
+      <returns>ラムダ。</returns>
+      <param name="properties">プロパティ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.Attribute(System.String)">
+      <summary>指定された本体の属性を取得します。</summary>
+      <returns>属性。</returns>
+      <param name="attributeBody">属性の本体。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.CodeProvider">
+      <summary>Visual Basic コードを生成したりコンパイルしたりするために使うコード プロバイダーを取得します。</summary>
+      <returns>Visual Basic コードを生成したりコンパイルしたりするために使うコード プロバイダー。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>指定された値の文字列配列リテラルを取得します。</summary>
+      <returns>リテラル。</returns>
+      <param name="values">値。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>TemplateActivity を使用して SSDL から DDL への変換を可能にする SsdlToDdlActivity。このクラスでは、Microsoft.Data.Entity.Design.CreateDatabase を除く Microsoft.Data.Entity.Design.* 名前空間内のインスタンス型 (特に、エンティティ デザイナーによってインスタンス化される型) への依存を避ける必要があります。このクラスは、VS 依存関係により、このプロジェクトに存在しています。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> プロパティと <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> プロパティでストア スキーマ定義言語 (SSDL) から生成されるデータ定義言語 (DDL) を指定する Windows Workflow <see cref="T:System.Activities.OutArgument`1" />。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>既存のデータベース オブジェクトを破棄するデータ定義言語 (DDL) の生成元である、既存のストア スキーマ定義言語 (SSDL) を指定する Windows Workflow <see cref="T:System.Activities.InArgument`1" />。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>新しいデータベース オブジェクトを作成するデータ定義言語 (DDL) の生成元であるストア スキーマ定義言語 (SSDL) を指定する Windows Workflow <see cref="T:System.Activities.InArgument`1" />。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData">
+      <summary>さまざまなレイヤーを区別するために LayerManager によって使用される親インターフェイス。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData.LayerName">
+      <summary>この機能拡張レイヤーの名前。</summary>
+      <returns>
+        <see cref="T:System.String" /> を返します。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <returns>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection" /> を返します。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardStage">
+      <summary>WizardStage は、ウィザードでウィザード拡張ページをモデル生成の前または後のどちらで実行するかを示します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PostModelGeneration">
+      <summary>ウィザード拡張ページはモデル生成の後に実行されます。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PreModelGeneration">
+      <summary>ウィザード拡張ページはモデル生成の前に実行されます。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Templates.TemplateResources">
+      <summary>ローカライズされた文字列などを調べるために、厳密に型指定されたリソース クラス。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Culture">
+      <summary>この厳密に型指定されたリソース クラスを使用して、すべてのリソース ルックアップに対して現在のスレッドの CurrentUICulture プロパティをオーバーライドします。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.ResourceManager">
+      <summary>このクラスで使用される、キャッシュされた ResourceManager インスタンスに戻ります。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveEntitySetConflict">
+      <summary>「EntitySet '{0}.{1}' は、既存の EntitySet とは大文字と小文字のみが異なり、現在の言語オプションと互換性がありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveMemberConflict">
+      <summary>「Member '{0}.{1}' は、既存の Member とは大文字と小文字のみが異なり、現在の言語オプションと互換性がありません。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveTypeConflict">
+      <summary>「Type '{0}' は一意ではありません」に類似したローカライズされた文字列を検索します。これは、現在の言語オプションと互換性がない Type の大文字と小文字のみが異なっていることが原因である可能性があります。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine1">
+      <summary>「このコードはテンプレートから生成されました。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine2">
+      <summary>「このファイルを手動で変更すると、アプリケーションで予期しない動作が発生する可能性があります。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine3">
+      <summary>「このファイルに対する手動の変更は、コードが再生成されると上書きされます。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_ReplaceVsItemTemplateToken">
+      <summary>「置換トークン '$edmxInputFile$' を、生成元になる .edmx ファイルの実際の名前で上書きしてください。」に類似したローカライズされた文字列を検索します。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>これは、ローカライズ用のサテライト リソース DLL からアクセスできる必要があるため、パブリックである必要があります。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>イベントと名前をコンパイルされたコンテンツにアタッチします。</summary>
+      <param name="connectionId">呼び出しを区別するための識別子トークン。</param>
+      <param name="target">イベントおよび名前を結び付けるターゲット。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>コンパイルしたコンテンツでイベント setter およびテンプレートにイベントをアタッチします。</summary>
+      <param name="connectionId">イベント接続に使用する一意の接続 ID。</param>
+      <param name="target">イベント接続のターゲット。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="projectItem">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="project">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="projectItem">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="automationObject">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+      <param name="replacementsDictionary">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+      <param name="runKind">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+      <param name="customParams">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <returns>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</returns>
+      <param name="filePath">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>"ADO.NET Entity Data Model" 型の新しい項目が既存のプロジェクトに追加されると、Visual Studio はこのウィザードを起動します。このウィザードは、.vstemplate ファイルの項目テンプレートに登録されます。この項目テンプレートで追加されたファイルは次のとおりです。+- modelName.edmx | +- modelName.edmx.diagram | +- modelName.Designer.cs [or vb] =&amp;amp;gt; コード ジェネレーター出力 (EF5 および Legacy ObjectContext ジェネレーターの場合) または +- ModelName.cs [or vb] - (CodeFirst の場合)</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>このメソッドは、OpenInEditor 属性を含む項目を開く前に呼び出されます。これにより、テンプレートの項目を開く前にカスタム ウィザードのロジックを実行します</summary>
+      <param name="projectItem">開かれるプロジェクト項目</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>このメソッドは、プロジェクトが作成された後に呼び出されます。これにより、プロジェクトが生成を完了したときにカスタム ウィザードのロジックを実行します</summary>
+      <param name="project">プロジェクト。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>このメソッドは、プロジェクト テンプレートではなく、項目テンプレートに対してのみ呼び出されます</summary>
+      <param name="projectItem">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>このメソッドは、テンプレート ウィザードの実行終了時に呼び出されます。これにより、ウィザードがすべてのタスクを完了したときにカスタム ウィザードのロジックを実行します。.vstemplate によって追加されたファイルに対して、ここでプロジェクト項目の依存関係を設定します</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>このメソッドは、テンプレート ウィザードの実行開始時に呼び出されます。これにより、何も作成されていない状態でカスタム ウィザードのロジックを実行できます。たとえば、何らかの方法で実行に影響を与えるユーザー入力を収集する用途に適しています</summary>
+      <param name="automationObject">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+      <param name="replacementsDictionary">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+      <param name="runKind">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+      <param name="customParams">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>指定されたプロジェクト項目がプロジェクトに追加されるべきかどうかを示します。</summary>
+      <returns>プロジェクト項目が追加されるべきものである場合は true、それ以外は false。</returns>
+      <param name="filePath">プロジェクト項目のパス。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.#ctor">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="projectItem">プロジェクト項目。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="project">プロジェクト。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="projectItem">プロジェクト項目。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunFinished">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="automationObject">オートメーション オブジェクト。</param>
+      <param name="replacementsDictionary">置換ディクショナリ。</param>
+      <param name="runKind">実行される種類。</param>
+      <param name="customParams">カスタム パラメーター。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ShouldAddProjectItem(System.String)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <returns>プロジェクト項目が追加されるべきものである場合は true、それ以外は false。</returns>
+      <param name="filePath">ファイル パス。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>VS における IVsSingleFileGenerator の概念のマネージ ラッパー。これは、ビルド時に呼び出され、ファイルを入力として受け取り、コンパイル可能なコード ファイルを出力として提供できるカスタム ツールです。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>IVsSingleFileGenerator.DefaultExtension メソッドを実装します。生成されたファイルの拡張子を返します</summary>
+      <returns>成功した場合は S_OK、それ以外の場合は E_FAIL</returns>
+      <param name="pbstrDefaultExtension">Out パラメーターは、出力ファイル名に付けられる拡張子を保持します。返される拡張子には、先頭にピリオドがある必要があります</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>このジェネレーターの既定の拡張子を取得します</summary>
+      <returns>このジェネレーターの既定の拡張子を表す文字列</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>アンマネージ リソースの解放またはリセットに関連付けられているアプリケーション定義のタスクを実行します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>アンマネージ リソースおよび (オプションで) マネージ リソースを解放します。</summary>
+      <param name="disposing">マネージ リソースとアンマネージ リソースの両方を解放する場合は true。アンマネージ リソースだけを解放する場合は false。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> クラスのインスタンスを終了処理します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>生成を行うために VS シェルが呼び出すメイン メソッド</summary>
+      <returns>状態コード。</returns>
+      <param name="wszInputFilePath">入力ファイルへのパス</param>
+      <param name="bstrInputFileContents">文字列としての入力ファイルの内容 (UTF-8 から Unicode への変換などの変換をシェルが処理します)</param>
+      <param name="wszDefaultNamespace">生成されたコード ファイルの既定の名前空間</param>
+      <param name="rgbOutputFileContents">出力ファイルの内容のバイト配列</param>
+      <param name="pcbOutput">出力バイト配列内のバイト数</param>
+      <param name="pGenerateProgress">進行状況の更新をシェルに送信するインターフェイス</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>指定された入力ファイルに対して、コードの生成を実際に行うメソッド。</summary>
+      <returns>バイト配列として生成されたコード ファイル</returns>
+      <param name="inputFileName">入力ファイル名</param>
+      <param name="inputFileContent">文字列としてのファイルの内容</param>
+      <param name="defaultNamespace">既定の名前空間。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>シェルのコールバック機構でエラーを通知するメソッド。</summary>
+      <param name="warning">これが警告の場合は true</param>
+      <param name="level">重大度レベル</param>
+      <param name="message">ユーザーに表示されるテキスト</param>
+      <param name="line">エラー/警告の行番号</param>
+      <param name="column">エラー/警告の列番号</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>このクラスは、プリプロセッサ ビルド ステップで共同作成するために存在します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>ジェネレーターが呼び出されたプロジェクト項目を含むプロジェクトの言語の CodeDomProvider オブジェクトを返します</summary>
+      <returns>CodeDomProvider オブジェクト</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>アンマネージ リソースおよび (オプションで) マネージ リソースを解放します。</summary>
+      <param name="disposing">マネージ リソースとアンマネージ リソースの両方を解放する場合は true。アンマネージ リソースだけを解放する場合は false。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>Vs ErrorList オブジェクトを取得します</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>型によってサービスを取得するメソッド</summary>
+      <returns>要求されたサービスを実装するオブジェクト</returns>
+      <param name="serviceType">取得するサービスの型</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>IOleObjectWithSite の GetSite メソッド</summary>
+      <param name="riid">取得するインターフェイス</param>
+      <param name="ppvSite">戻り値を格納する配列</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>コード ジェネレーターが呼び出されたプロジェクト項目を含むプロジェクトの EnvDTE.Project オブジェクトを返します</summary>
+      <returns>コード ジェネレーターが呼び出されたプロジェクト項目を含むプロジェクトの EnvDTE.Project オブジェクト</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>コード ジェネレーターが呼び出されたプロジェクト項目に対応する EnvDTE.ProjectItem オブジェクトを返します</summary>
+      <returns>コード ジェネレーターが呼び出されたプロジェクト項目の EnvDTE.ProjectItem</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>IOleObjectWithSite の SetSite メソッド</summary>
+      <param name="pUnkSite">このオブジェクトに使用するサイト</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>IOleServiceProvider を指定して ServiceProvider を要求に基づいて作成します</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>SFG ベースのコード ジェネレーターは、次の処理を実行します。1.EDMX ファイル内の CodeGenerationStrategy オプションを読み取る。2.CodeGenerationStrategy が 'Default' に設定されている場合、コード生成を続行する。3.System.Data.Entity.Design CodeGen API を呼び出す</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+      <param name="itemId">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+      <param name="oldInputName">この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>この API は、Entity Framework インフラストラクチャをサポートします。独自に作成したコードから直接使用するためのものではありません。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>CodeDomProvider から出力ファイルの既定の拡張子を取得します</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>CodeGen API を呼び出して、CSDL ファイルからコード ファイルを生成します</summary>
+      <returns>null はエラーを意味します。それ以外の場合は、ファイルの内容が返されます</returns>
+      <param name="inputFileName">CSDL ファイルの完全パス。これは、ProjectItem から提供されます</param>
+      <param name="inputFileContent">CSDL ファイルの内容。メモリ内のドキュメントから離れて生成できるように、常にこれを使用する必要があります</param>
+      <param name="defaultNamespace">既定の名前空間。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>WF ワークフロー内で T4 テンプレートの変換を可能にする TemplateActivity。このクラスでは、Microsoft.Data.Entity.Design.CreateDatabase を除く Microsoft.Data.Entity.Design.* 名前空間内のインスタンス型 (特に、エンティティ デザイナーによってインスタンス化される型) への依存を避ける必要があります。このクラスは、VS 依存関係により、このプロジェクトに存在しています。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Visual Studio STextTemplatingService を呼び出して、<see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> プロパティで指定されたテキスト テンプレートを変換します。</summary>
+      <param name="context">現在のアクティビティの状態。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>テキスト テンプレートへの入力を提供するために使用される <see cref="T:System.Collections.IDictionary" /> を設定します。このメソッドは、カスタム入力を提供するために派生クラスでオーバーライドできます。これらの入力は、テキスト テンプレートで使用できるように <see cref="T:System.Runtime.Remoting.Messaging.CallContext" /> に書き込まれます。</summary>
+      <param name="context">現在のアクティビティの状態。</param>
+      <param name="inputs">テキスト テンプレートで使用するために入力名を入力値に関連付けるディクショナリ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>Visual Studio のテキスト テンプレート サービスを使用し、マクロを含むパス (つまり、"$(DevEnvDir)\...") を指定して、T4 テンプレートを処理します。メモ: ファイルでないテンプレート パスや UNC パスであるテンプレート パスは使用できません。</summary>
+      <returns>テンプレート処理の出力。</returns>
+      <param name="templatePath">プロジェクトベースのマクロが含まれる、テンプレートのファイル パス</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> プロパティで指定されるテンプレートの出力。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>処理されるテキスト テンプレートのパス。</summary>
+    </member>
+    <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+      <summary>GeneratedInternalTypeHelper</summary>
+    </member>
+    <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.#ctor">
+      <summary>
+        <see cref="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+  </members>
+</doc>

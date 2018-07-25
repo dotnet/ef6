@@ -1,0 +1,2206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Resources">
+      <summary>Строго типизированный класс ресурсов для поиска локализованных строк и т. д.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources._SentenceConcat">
+      <summary>Ищет локализованную строку, аналогичную строке «{0} {1}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Application_Caption">
+      <summary>Ищет локализованную строку, аналогичную строке «Entity Data Model Designer ADO.NET».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionErrorMessage">
+      <summary>Ищет локализованную строку, аналогичную строке «Параметр "{0}" имеет неверное значение "{1}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionMessageParameter">
+      <summary>Ищет локализованную строку, аналогичную строке «Параметр должен являться экземпляром типа "Type" или "Guid"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.AssociationSetsGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Наборы ассоциаций».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BAD_FIRST_CHAR_IN_NC_NAME">
+      <summary>Ищет локализованную строку, аналогичную строке «Первый символ в имени "{0}" недопустим».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadChildForParentException">
+      <summary>Ищет локализованную строку, аналогичную строке «Объекты браузера моделей типа "{0}" не поддерживают дочерние элементы типа "{1}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadRemoveBadChildType">
+      <summary>Ищет локализованную строку, аналогичную строке «Невозможно удалить дочерний элемент типа "{0}" на родителе "{1}" типа "{2}"».Элементы типа «{2}» не имеют дочерних элементов типа «{0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CanNotCreateWindow">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось создать окно инструментов».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateDesignTimeConnectionString">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось преобразовать строку подключения времени разработки в эквивалент для времени выполнения».Строка подключения {0}: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateRuntimeConnectionString">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось преобразовать строку подключения времени выполнения в эквивалент времени разработки».Строка подключения {0}: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ChangingModelOutsideTransaction">
+      <summary>Ищет локализованную строку, аналогичную строке «Нельзя изменить модель вне транзакции».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_LegacyObjectContext">
+      <summary>Ищет локализованную строку, аналогичную строке «Устаревший ObjectContext».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_T4">
+      <summary>Ищет локализованную строку, аналогичную строке «T4».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.COLON_IN_NC_NAME">
+      <summary>Ищет локализованную строку, аналогичную строке «Двоеточие в имени "{0}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ComplexTypesGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Сложные типы».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualAssociationsGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Ассоциации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualTypesGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Типы сущностей».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_AddError">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось добавить новую строку подключения из-за следующей ошибки: '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_CorruptConfig">
+      <summary>Ищет локализованную строку, аналогичную строке «Недопустимый формат файла конфигурации.Измените файл вручную и затем сохраните».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetConfigError">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось найти файл конфигурации.Убедитесь, что он в соответствующем проекте или перезапустите Visual Studio».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetSiteError">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось найти поставщика службы для этой конфигурации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_InitializeError">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось обработать файл конфигурации.Сообщение об ошибке: '{0}'.Измените файл вручную и затем сохраните».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MarsError">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось добавить атрибут MultipleActiveResultSets в строку подключения, поскольку невозможно определить версию сервера».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MetadataMismatch">
+      <summary>Ищет локализованную строку, аналогичную строке «Метаданные строки подключения не соответствуют метаданным в файле конфигурации.Старые метаданные: {0}.Исправьте строку подключения с учетом имени контейнера сущностей "{1}" в файле конфигурации и сохраните ее».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_NoConnectionString">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось найти строку подключения в файле конфигурации.Убедитесь, что файл конфигурации содержит именованную строку подключения "{0}", и сохраните файл».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_SaveXmlError">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось сохранить XML в файл конфигурации "{0}" из-за ошибки "{1}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_UpdateError">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось обновить {0} в файле конфигурации.Сообщение об ошибке: '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateNoConnection">
+      <summary>Ищет локализованную строку, аналогичную строке «Поскольку тип соединения не задан, будет выполнена проверка модели, исходя из того, что используется соединение с SQL Server 2005».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateWithoutConnection">
+      <summary>Ищет локализованную строку, аналогичную строке «Модель не будет проверена должным образом, если не выбрано подключение к данным».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Culture">
+      <summary>Переопределяет свойство CurrentUICulture текущего потока для всех поисков ресурсов с использованием этого строго типизированного класса ресурсов.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadError">
+      <summary>Ищет локализованную строку, аналогичную строке «Пользовательский файл рабочего процесса создания базы данных ссылается на сборку "{0}", которая существует в проекте-владельце, но не может быть загружена из-за следующего исключения: '{1}'.Убедитесь, что ссылка действительна перед запуском рабочего процесса.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadErrorWithInner">
+      <summary>Ищет локализованную строку, аналогичную строке «Пользовательский файл рабочего процесса создания базы данных ссылается на сборку "{0}", которая существует в проекте-владельце, но не может быть загружена из-за следующего исключения: '{1}'.Исключение также содержит следующие сведения: "{2}". Убедитесь, что ссылка действительна перед запуском рабочего процесса.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowCancelled">
+      <summary>Ищет локализованную строку, аналогичную строке «Не разрешен запуск пользовательского файла рабочего процесса "{0}"».Щелкните «Назад», чтобы вернуться на страницу «Выбор подключения к данным» и попробовать повторно запустить рабочий процесс.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowWarningTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Предупреждение о конфиденциальности пользовательского рабочего процесса».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_DDLOverwriteWarningTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Предупреждение о перезаписи языка DDL».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_EdmxOverwriteWarningTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Предупреждение о перезаписи языка SSDL/MSL».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorInvalidTargetVersion">
+      <summary>Ищет локализованную строку, аналогичную строке «Указанный параметр TargetVersion "{0}" недопустим».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoEdmParameterBag">
+      <summary>Ищет локализованную строку, аналогичную строке «Объект EdmParameterBag не найден в рабочем процессе.Убедитесь, что объект добавляется в SymbolResolver, который добавляется в рабочий процесс в качестве расширения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNonValidWorkflowUri">
+      <summary>Ищет локализованную строку, аналогичную строке «Недопустимый URI, созданный из пути рабочего процесса создания базы данных "{0}".Убедитесь, что указан допустимый абсолютный путь к файлу или допустимый относительный путь к файлу, соответствующий проекту».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoParameterDefined">
+      <summary>Ищет локализованную строку, аналогичную строке «Не определен необходимый параметр рабочего процесса создания базы данных "{0}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateFileNotInProject">
+      <summary>Ищет локализованную строку, аналогичную строке «Невозможно вызвать действие шаблона "{0}", так как указанный входной файл TemplatePath "{{0}}" не включен в проект».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateOutputNotSet">
+      <summary>Ищет локализованную строку, аналогичную строке «Вывод шаблона не установлен для действия шаблона "{0}" в рабочем процессе создания базы данных.Убедитесь, что шаблон записан правильно».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNonFile">
+      <summary>Ищет локализованную строку, аналогичную строке «Входной файл TemplatePath "{{0}}" для действия шаблона "{0}" в этом рабочем процессе недопустим, так как нефайловые пути и UNC-пути не поддерживаются».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotSet">
+      <summary>Ищет локализованную строку, аналогичную строке «Не установлен атрибут TemplatePath для действия шаблона "{0}" в этом рабочем процессе».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotValid">
+      <summary>Ищет локализованную строку, аналогичную строке «Значение атрибута TemplatePath "{{0}}" для действия шаблона "{0}" в этом рабочем процессе недопустимо или не существует».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTextTemplatingServiceNotFound">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось найти службу ITextTemplating для обработки шаблона "{0}".Эта служба доступна только в пределах Visual Studio.Убедитесь, что рабочий процесс выполняется в составе Visual Studio».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowFileNotInProject">
+      <summary>Ищет локализованную строку, аналогичную строке «Пользовательский файл рабочего процесса "{0}" должен быть включен в проект, прежде чем можно будет продолжить выполнение мастера создания базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowOutputNotFound">
+      <summary>Ищет локализованную строку, аналогичную строке «Выходной параметр "{0}", обязательный для мастера создания базы данных, не заполнен рабочим процессом.Убедитесь, что файл рабочего процесса определяет этот параметр, а рабочий процесс заполняет его».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowPathNotSet">
+      <summary>Ищет локализованную строку, аналогичную строке «Путь рабочего процесса создания базы данных не задан в EDMX-файле.Убедитесь, что путь задан до запуска мастера создания базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdl">
+      <summary>Ищет локализованную строку, аналогичную строке «Произошло исключение при записи инструкций языка DDL в файл "{0}".Сообщение об исключении: '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdlWithInner">
+      <summary>Ищет локализованную строку, аналогичную строке «Произошло исключение при записи инструкций языка DDL в файл "{0}".Сообщение об исключении: '{1}'.Исключение также содержит следующие сведения: '{2}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingTemplateFilePath">
+      <summary>Ищет локализованную строку, аналогичную строке «Возникло исключение при синтаксическом анализе TemplatePath "{{0}}" в действии шаблона "{0}".Конкретное сообщение: '{{1}}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingWorkflowFilePath">
+      <summary>Ищет локализованную строку, аналогичную строке «Возникло исключение при синтаксическом анализе пути файла рабочего процесса создания базы данных "{0}".Конкретное сообщение: '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NoDDLTemplatePathSpecified">
+      <summary>Ищет локализованную строку, аналогичную строке «Не задан аргумент TemplatePath для действия "{0}".Аргумент необходимо либо указать для этого действия в файле рабочего процесса, либо передать его во время выполнения через параметр DDLTemplatePath в объекте EdmParameterBag».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NonFileWorkflow">
+      <summary>Ищет локализованную строку, аналогичную строке «Указанный файл рабочего процесса создания базы данных "{0}" не вызван, так как нефайловые пути и UNC-пути не поддерживаются.Убедитесь, что путь рабочего процесса создания базы данных, указанный в разделе «Параметры» файла EDMX, не является UNC-путем и соответствует локально существующему файлу».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_TemplateFileNotExists">
+      <summary>Ищет локализованную строку, аналогичную строке «Невозможно вызвать действие шаблона "{0}", так как указанный входной файл TemplatePath "{{0}}" не существует».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ValidationFailed">
+      <summary>Ищет локализованную строку, аналогичную строке «Все ошибки проверки в этой модели должны быть устранены перед формированием скрипта базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningCustomWorkflow">
+      <summary>Ищет локализованную строку, аналогичную строке «Для мастера создания базы данных определен пользовательский рабочий процесс» (см. свойство «Рабочий процесс создания базы данных» для этой модели EDMX).Запуск мастера с рабочим процессом, отличным от заданного по умолчанию, может нанести вред компьютеру.Не следует запускать этот мастер, если файл EDMX получен из ненадежного источника.Нажмите кнопку «ОК», чтобы запустить рабочий процесс.Нажмите кнопку «Отмена», чтобы отменить процесс».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteDdl">
+      <summary>Ищет локализованную строку, аналогичную строке «Мастер создания базы данных перезапишет DDL-файл "{0}".Продолжить?»</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteMappings">
+      <summary>Ищет локализованную строку, аналогичную строке «Мастер создания базы данных перезапишет существующую схему хранилища (SSDL) и существующие сопоставления (MSL).Продолжить?»</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WorkflowFileNotExists">
+      <summary>Ищет локализованную строку, аналогичную строке «При попытке создания скрипта базы данных из модели возникло исключение, так как указанный файл рабочего процесса "{0}" не существует».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibileListConverter_UserDir">
+      <summary>Ищет локализованную строку, аналогичную строке «(Пользователь)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibleListConverter_VSDir">
+      <summary>Ищет локализованную строку, аналогичную строке «(VS)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DDEXNotInstalled">
+      <summary>Ищет локализованную строку, аналогичную строке «Библиотеки, необходимые Visual Studio для взаимодействия с базой данных (работы поставщика DDEX), не установлены для поставщика "{0}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Default">
+      <summary>Ищет локализованную строку, аналогичную строке «По умолчанию».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DiagramTypesGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Диаграммы».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DisabledFeatureTooltip">
+      <summary>Ищет локализованную строку, аналогичную строке «Эта функция недоступна в целевой версии Entity Framework».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DuplicateEntityContainerName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя EntityContainer "{0}" уже используется в проекте другой моделью EDM».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption">
+      <summary>Ищет локализованную строку, аналогичную строке «[Конструктор]».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption_ReadOnly">
+      <summary>Ищет локализованную строку, аналогичную строке «[Только для чтения]».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EDMOutputWindowPaneTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Модель EDM».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EdmUtils_NotValidTargetFramework">
+      <summary>Ищет локализованную строку, аналогичную строке «Требуемая версия .NET Framework не содержит сборок времени выполнения платформы Entity Framework.Проверьте сведения о требуемой версии .NET Framework на странице свойств проекта».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityContainerNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «EntityContainer»: {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_CreateNewProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать новый проект».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_DeleteProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить свойство».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersion6_x">
+      <summary>Ищет локализованную строку, аналогичную строке «6.x».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersionName">
+      <summary>Ищет локализованную строку, аналогичную строке «Entity Framework {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntitySetsGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Наборы сущностей».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AccEnumTypeMembers">
+      <summary>Ищет локализованную строку, аналогичную строке «Элементы типа Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AutomationName">
+      <summary>Ищет локализованную строку, аналогичную строке «Диалоговое окно Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_CancelButtonLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Отмена».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EditEnumWindowTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить тип Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnsureEnumTypeUnique">
+      <summary>Ищет локализованную строку, аналогичную строке «Убедитесь, что имя типа Enum является уникальным».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberNameLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя элемента».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberValueLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Значение (необязательно)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnterValueForExternalTypeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Необходимо имя внешнего типа, на который указывает ссылка».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberBadname">
+      <summary>Ищет локализованную строку, аналогичную строке «"{0}" не является допустимым именем для элемента Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberDuplicateName">
+      <summary>Ищет локализованную строку, аналогичную строке «Элемент Enum "{0}" уже существует».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumTypeBadname">
+      <summary>Ищет локализованную строку, аналогичную строке «"{0}" не является допустимым именем для типа Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeHint">
+      <summary>Ищет локализованную строку, аналогичную строке «Namespace.Type».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Внешний тип ссылки».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Атрибут "Задать флаги"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabelDescription">
+      <summary>Ищет локализованную строку, аналогичную строке «Позволяет экземпляру типа Enum хранить любое сочетание определенных значений с использованием побитных операторов».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NameLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя типа Enum:».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NewEnumWindowTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Добавить тип Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_OkButtonLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «ОК».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_UnderlyingTypeLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Базовый тип:».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumTypesGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Типы Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CannotEditRefConstraint">
+      <summary>Ищет локализованную строку, аналогичную строке «Существующее справочное ограничение для этой ассоциации не может быть изменено в конструкторе, изменения необходимо вносить вручную с использованием редактора XML».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CircularInheritanceAborted">
+      <summary>Ищет локализованную строку, аналогичную строке «Смена базового типа "{0}" на "{1}" приведет к циклическому наследованию.Добавление наследования прервано».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FailedApplyChangeToFile">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось применить изменения к файлу {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FileNotFound">
+      <summary>Ищет локализованную строку, аналогичную строке «Файл не найден».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlCeUpgrade">
+      <summary>Ищет локализованную строку, аналогичную строке «При обновлении ссылок SQLCE в EDMX-файлах и файле конфигурации возникло исключение.Файл, обрабатываемый во время возникновения ошибки: {0}.Полное сообщение об ошибке: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlDatabaseFileUpgrade">
+      <summary>Ищет локализованную строку, аналогичную строке «При обновлении ссылок файла базы данных SQL в файле конфигурации возникло исключение».Файл, обрабатываемый во время возникновения ошибки: {0}.Полное сообщение об ошибке: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorNonValidFileName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя файла "{0}" не может: — содержать следующие символы: \ / : * ? "&amp;amp;lt; &amp;amp;gt; |: быть зарезервированным системным именем, например «CON», «AUX», «PRN», «COM1» или «LPT2».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorReadingWritingUserSetting">
+      <summary>Ищет локализованную строку, аналогичную строке «Произошла ошибка при чтении или записи параметра пользователя "{0}" в реестре.Конкретная ошибка: '{1}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorSynchingEdmxNamespaces">
+      <summary>Ищет локализованную строку, аналогичную строке «Возникло исключение при обновлении пространства имен xml.\nИмя файла: {0}.\nПолное сообщение об ошибке: {1}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExceptionMessageNullFactoryType">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип фабрики не может иметь значение null».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExistingConfigurationFileWarning">
+      <summary>Ищет локализованную строку, аналогичную строке «Проект содержит файл "{0}".Этот файл может переопределить сведения о конфигурации, которые мастер cформировал в файле "{1}" и сохранил в корневом каталоге проекта.Проверьте файлы конфигурации приложения в проекте».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_ClearSearch">
+      <summary>Ищет локализованную строку, аналогичную строке «Очистить поле поиска».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_CollapseSearchResults">
+      <summary>Ищет локализованную строку, аналогичную строке «Щелкните здесь, чтобы просмотреть свернутые результаты поиска».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_PromptSearch">
+      <summary>Ищет локализованную строку, аналогичную строке «Введите здесь критерий поиска».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_Search">
+      <summary>Ищет локализованную строку, аналогичную строке «Поиск».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavNext">
+      <summary>Находит локализованную строку, аналогичную строке «Перейти к следующему результату поиска».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavPrev">
+      <summary>Находит локализованную строку, аналогичную строке «Перейти к предыдущему результату поиска».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowCaption">
+      <summary>Ищет локализованную строку, аналогичную строке «Обозреватель».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Браузер моделей».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditModel">
+      <summary>Ищет локализованную строку, аналогичную строке «Расширение создания модели попыталось внести изменения в модель, которая отличается от текущей и не поддерживается».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditOriginalOnSave">
+      <summary>Ищет локализованную строку, аналогичную строке «Расширение сериализации попыталось изменить исходную модель во время сохранения, однако модель не поддерживается».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_AlreadyComplete">
+      <summary>Ищет локализованную строку, аналогичную строке «Модуль свойств не может вносить изменения после вызова метода Complete() для области изменений».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_EditingWrongNamespace">
+      <summary>Ищет локализованную строку, аналогичную строке «Модуль свойств не может изменить элемент из пространства имен платформы Entity Framework».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_Missing">
+      <summary>Ищет локализованную строку, аналогичную строке «Модуль свойств должен указать область изменений перед внесением каких-либо изменений в модели».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ErrorOccurredDuringCallToExtension">
+      <summary>Ищет локализованную строку, аналогичную строке «Произошла ошибка при выполнении расширения платформы ADO.Net Entity Framework.Имя типа расширения {0}.Сообщение об исключении {1}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel">
+      <summary>Ищет локализованную строку, аналогичную строке «Модуль создания модели внес недопустимые изменения в модель, созданную из базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel_Update">
+      <summary>Ищет локализованную строку, аналогичную строке «Модуль создания модели внес недопустимые изменения в обновленную модель».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_NoConverterForExtension">
+      <summary>Ищет локализованную строку, аналогичную строке «Конструктор Entity Designer открывается для редактирования файла, который не является EDMX-файлом, и для этого расширения не зарегистрирован обработчик IModelConversionExtension».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_StartChangeScopeFailed">
+      <summary>Ищет локализованную строку, аналогичную строке «Область изменений уже существует».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_TooManyConverters">
+      <summary>Ищет локализованную строку, аналогичную строке «Для этого расширения файла зарегистрировано несколько обработчиков IModelConversionExtension. {0}.Допускается только один обработчик».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImport_CannotCreateFromComposableFunction">
+      <summary>Ищет локализованную строку, аналогичную строке «Невозможно создать импорт функции для составляемых функций из файлов EDMX версии {0} или более ранней».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImportsGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Импорты функций».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_DisableLayer">
+      <summary>Ищет локализованную строку, аналогичную строке «Отключить поддержку {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_EnableLayer">
+      <summary>Ищет локализованную строку, аналогичную строке «Включить поддержку {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LEADING_OR_TRAILING_SPACES_IN_NCNAME">
+      <summary>Ищет локализованную строку, аналогичную строке «В имени "{0}" имеются начальные или конечные пробелы».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadDataPackageError">
+      <summary>Ищет локализованную строку, аналогичную строке «Ошибка при загрузке пакета данных Visual Studio».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadOurPackageError">
+      <summary>Ищет локализованную строку, аналогичную строке «Ошибка при загрузке пакета средств модели EDM».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LocalDatabaseFileAlreadyExists">
+      <summary>Ищет локализованную строку, аналогичную строке «Элемент "{0}" уже существует в проекте.Перезаписать?Нажмите «Нет», чтобы оставить существующий файл».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocMappingNoTable">
+      <summary>Ищет локализованную строку, аналогичную строке «(Сначала необходимо сопоставить таблицу.)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd1">
+      <summary>Ищет локализованную строку, аналогичную строке «1».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd2">
+      <summary>Ищет локализованную строку, аналогичную строке «2».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEndDisplay">
+      <summary>Ищет локализованную строку, аналогичную строке «Завершение {0}»: ({1} из {2}).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_AssociationHeader">
+      <summary>Ищет локализованную строку, аналогичную строке «Ассоциация».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnMappingsName">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставления столбцов».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnName">
+      <summary>Ищет локализованную строку, аналогичную строке «Столбец».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionCreatorNode">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Добавить условие&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine1">
+      <summary>Ищет локализованную строку, аналогичную строке «Когда {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine2">
+      <summary>Ищет локализованную строку, аналогичную строке «И {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_CreatorNode">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Выбор функции удаления&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_Display">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить с помощью {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrComplexTypePropertiesNotSupported">
+      <summary>Ищет локализованную строку, аналогичную строке «[Свойства сложных типов не поддерживаются в сопоставлении импорта функций]».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNames">
+      <summary>Ищет локализованную строку, аналогичную строке «Иерархия наследования для EntityType "{0}" содержит повторение свойств со следующими именами: '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNamesSeparator">
+      <summary>Ищет локализованную строку, аналогичную строке «,».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDuplicatePropertyNameForAssociationEndEntity">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставление для этой ассоциации имеет ссылку на тип сущности "{0}", который содержит повторяющиеся свойства со следующими именами: '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrKeyInDerivedType">
+      <summary>Ищет локализованную строку, аналогичную строке «Ключи были определены в производном типе EntityType».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMappingNotSupported">
+      <summary>Ищет локализованную строку, аналогичную строке «Эта функция недоступна в целевой версии .NET Framework для проекта».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslAssociationSetMappingHasQueryView">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставление для этой ассоциации включает QueryView, который не может быть подготовлен к просмотру в конструкторе».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslBadEntitySetMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Существует разорванная связь между EntitySet для этого EntityType и связанным с ним EntitySetMappings».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindAssociationSet">
+      <summary>Ищет локализованную строку, аналогичную строке «Не найден элемент AssociationSet для выбранной связи».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindEntitySet">
+      <summary>Ищет локализованную строку, аналогичную строке «Не найден набор EntitySet для выбранного EntityType».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindFunctionImportMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Не найден FunctionImportMapping для выбранного элемента FunctionImport».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindMappedFunction">
+      <summary>Ищет локализованную строку, аналогичную строке «Не найден элемент Function, сопоставленный с выбранным элементом FunctionImport».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEntitySetMappingHasQueryView">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставление для этого объекта EntityType включает QueryView, который не может быть подготовлен к просмотру в конструкторе».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEtmRefsMultipleTypes">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставление EntityTypeMapping присвоено нескольким типам EntityTypes».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslFunctionMappingsShouldBeSeparate">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставление EntityTypeMapping, содержащее сопоставления функций, не может также содержать MappingFragment».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslGeneral">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставления, возможно, были изменены вне конструктора».{0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyAssociationSetMappings">
+      <summary>Ищет локализованную строку, аналогичную строке «Ассоциация не может иметь несколько AssociationSetMappings».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyDefaultEtms">
+      <summary>Ищет локализованную строку, аналогичную строке «Этот EntityType имеет несколько элементов EntityTypeMapping, зависящих от типа».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyEntitySetMappings">
+      <summary>Ищет локализованную строку, аналогичную строке «EntityType не может иметь несколько элементов EntitySetMapping».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFragments">
+      <summary>Ищет локализованную строку, аналогичную строке «EntityTypeMapping не может иметь несколько элементов MappingFragment».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFunctionETMs">
+      <summary>Ищет локализованную строку, аналогичную строке «Этот EntityType имеет несколько элементов EntityTypeMapping с сопоставленными функциями».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyIsTypeOfETMs">
+      <summary>Ищет локализованную строку, аналогичную строке «Этот EntityType имеет несколько элементов EntityTypeMapping, связанных через функцию IsTypeOf».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnresolvedItems">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставления для выбранного объекта содержат несколько неразрешимых ссылок».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnsupportedCondition">
+      <summary>Ищет локализованную строку, аналогичную строке «Условия для свойств EntityType не поддерживаются».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUsesGhostNodes">
+      <summary>Ищет локализованную строку, аналогичную строке «В сопоставлениях EntityType используется сокращенное представление, которое не поддерживается конструктором».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_FunctionsHeader">
+      <summary>Ищет локализованную строку, аналогичную строке «Функции».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_CreatorNode">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Выбор функции вставки&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_Display">
+      <summary>Ищет локализованную строку, аналогичную строке «Вставить с помощью {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovDelete">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Удалить&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovEmpty">
+      <summary>Ищет локализованную строку, аналогичную строке «(Пусто)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_NoDependentEndOnReferentialConstraint">
+      <summary>Ищет локализованную строку, аналогичную строке «Отсутствует зависимый элемент справочного ограничения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Operator">
+      <summary>Ищет локализованную строку, аналогичную строке «Оператор».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorEquals">
+      <summary>Ищет локализованную строку, аналогичную строке «=».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorIs">
+      <summary>Ищет локализованную строку, аналогичную строке «Is».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ParameterName">
+      <summary>Ищет локализованную строку, аналогичную строке «Параметр или столбец».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Parameters">
+      <summary>Ищет локализованную строку, аналогичную строке «Параметры».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Property">
+      <summary>Ищет локализованную строку, аналогичную строке «Свойство».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставления для ассоциации через предоставленные внешние ключи не разрешены.{0} или {1}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Delete">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить сопоставления».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Display">
+      <summary>Ищет локализованную строку, аналогичную строке «Показать сопоставления для изменения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_NoASM">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставления для ассоциации через предоставленные внешние ключи не разрешены».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM">
+      <summary>Ищет локализованную строку, аналогичную строке «Эти сопоставления переопределены ограничением ссылочной целостности, определенным для ассоциации, и будут пропущены.Безопасно можно использовать {0} или {1}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Delete">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить эти сопоставления».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Display">
+      <summary>Ищет локализованную строку, аналогичную строке «Показать эти сопоставления для изменения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставления переопределены ограничением ссылочной целостности, определенным для ассоциации, и будут пропущены».{0}..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM_Display">
+      <summary>Ищет локализованную строку, аналогичную строке «Показать редактор сопоставлений».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintWithNonKeyProperties">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставления для ассоциаций, включающих ограничение ссылочной целостности с неключевыми свойствами, не разрешены».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindingCreatorNode">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Добавить привязку результата&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindings">
+      <summary>Ищет локализованную строку, аналогичную строке «Привязки к столбцу результатов».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_RowsAffectedParameterColumn">
+      <summary>Ищет локализованную строку, аналогичную строке «Параметр Rows Affected».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставить сущность с функциями».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText_NotSupported">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставить сущность с функциями (не поддерживается в выпуске CTP2)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TableCreatorNode">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Добавить таблицу или представление&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesButtonText">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставить сущность с таблицами или представлениями».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesHeader">
+      <summary>Ищет локализованную строку, аналогичную строке «Таблицы».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Toolbar_AccessibleName">
+      <summary>Находит локализованную строку, аналогичную строке «Панель инструментов — сведения о сопоставлении».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnName">
+      <summary>Ищет локализованную строку, аналогичную строке «??».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnType">
+      <summary>Ищет локализованную строку, аналогичную строке «??».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndMultiplicity">
+      <summary>Ищет локализованную строку, аналогичную строке «??».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndType">
+      <summary>Ищет локализованную строку, аналогичную строке «??».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyName">
+      <summary>Ищет локализованную строку, аналогичную строке «??».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyType">
+      <summary>Ищет локализованную строку, аналогичную строке «??».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_CreatorNode">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Выбор функции обновления&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_Display">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить с помощью {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UseOriginalValueColumn">
+      <summary>Ищет локализованную строку, аналогичную строке «Использовать исходное значение».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Value">
+      <summary>Ищет локализованную строку, аналогичную строке «Значение/cвойство».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueEmptyString">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;lt;Пустая Строка&amp;amp;gt;».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNotNull">
+      <summary>Ищет локализованную строку, аналогичную строке «Отличное от Null».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNull">
+      <summary>Ищет локализованную строку, аналогичную строке «Null».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Watermark">
+      <summary>Ищет локализованную строку, аналогичную строке «Выберите сущность или ассоциацию в конструкторе Entity Designer или {0} для изменения сопоставлений».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WatermarkLabelText">
+      <summary>Ищет локализованную строку, аналогичную строке «Выберите сущность или ассоциацию, чтобы изменить их сопоставления».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WindowTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Сведения о сопоставлении».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsArrowsImageList">
+      <summary>Ищет локализованный ресурс типа System.Drawing.Bitmap.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsCommandStrip">
+      <summary>Ищет локализованный ресурс типа System.Drawing.Bitmap.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsIconsImageList">
+      <summary>Ищет локализованный ресурс типа System.Drawing.Bitmap.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsViewModel_StorageEntityTypeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Сопоставляет с {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_CantBeRelative">
+      <summary>Ищет локализованную строку, аналогичную строке «Для файлов, находящихся на различных устройствах, относительный путь не поддерживается».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileAlreadyExists">
+      <summary>Ищет локализованную строку, аналогичную строке «Выбрано имя файла модели, которая перезапишет файл "{0}".Следует выбрать другое имя файла модели».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileIsLinkedFile">
+      <summary>Ищет локализованную строку, аналогичную строке «Невозможно добавить модель с именем "{0}".В этой папке уже есть связанный файл с таким именем»..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_NonValidXmlAttributeValue">
+      <summary>Ищет локализованную строку, аналогичную строке «Элементы модели EDM ADO.NET и имена файлов должны содержать только допустимые XML-атрибуты».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_UnexpectedExceptionHasOccurred">
+      <summary>Ищет локализованную строку, аналогичную строке «Возникло непредвиденное исключение.Сообщение об исключении: '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MsgBox_InheritanceWillRemoveKeys">
+      <summary>Ищет локализованную строку, аналогичную строке «Наследование "{0}" из "{1}" удалит все ключи сущности, определенные в "{0}", и все ее подтипы.\nПродолжить?».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_CollectionText">
+      <summary>Ищет локализованную строку, аналогичную строке «Коллекция {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_InstanceText">
+      <summary>Ищет локализованную строку, аналогичную строке «Экземпляр {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NoDefaultConnectionString">
+      <summary>Ищет локализованную строку, аналогичную строке «В файле конфигурации App.config не задана строка подключения.SqlClient используется в качестве поставщика по умолчанию».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.None">
+      <summary>Ищет локализованную строку, аналогичную строке «Нет».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisRelease">
+      <summary>Ищет локализованную строку, аналогичную строке «Эта функция не поддерживается в данном выпуске».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisReleaseInWebsite">
+      <summary>Ищет локализованную строку, аналогичную строке «Эта функция не поддерживается для вебсайтов в данном выпуске.Пользуйтесь веб-приложением».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PackageLoadFailureExceptionMessage">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось загрузить пакет средств модели EDM.Результат {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_CodeGeneration">
+      <summary>Ищет локализованную строку, аналогичную строке «Создание кода».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Connection">
+      <summary>Ищет локализованную строку, аналогичную строке «Соединение».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Constraint">
+      <summary>Ищет локализованную строку, аналогичную строке «Ограничения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_DatabaseScriptGeneration">
+      <summary>Ищет локализованную строку, аналогичную строке «Создание скрипта базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Diagram">
+      <summary>Ищет локализованную строку, аналогичную строке «Диаграмма».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Ends">
+      <summary>Ищет локализованную строку, аналогичную строке «Элемент».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Facets">
+      <summary>Ищет локализованную строку, аналогичную строке «Свойства».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_General">
+      <summary>Ищет локализованную строку, аналогичную строке «Общие».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Navigation">
+      <summary>Ищет локализованную строку, аналогичную строке «Навигация».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Schema">
+      <summary>Ищет локализованную строку, аналогичную строке «Схема».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Abstract">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, является ли тип сущности абстрактным».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Access">
+      <summary>Ищет локализованную строку, аналогичную строке «Указывает уровень доступа для типа».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Association">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя свойства ассоциации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_CodeGenerationStrategy">
+      <summary>Ищет локализованную строку, аналогичную строке «Используется для задания стратегии создания кода данной модели.Пользовательское средство, связанное с этой моделью и доступное из свойств в этом элементе в обозревателе решений, считывает это свойство, чтобы решить, как создать код».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ComplexTypeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя этого элемента ComplexType».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Composable">
+      <summary>Ищет локализованную строку, аналогичную строке «Импорт функции является составным, если представляет собой способ вызова возвращающей табличное значение функции в базе данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ConnectionString">
+      <summary>Ищет локализованную строку, аналогичную строке «Строка подключения, описывающая подключение к базе данных и файлы метаданных.Строка находится в файле конфигурации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseGenerationWorkflow">
+      <summary>Ищет локализованную строку, аналогичную строке «Путь для файла Windows Workflow Foundation, который используется мастером формирования базы данных на основе модели».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя базового объекта базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchema">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя схемы базового объекта базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchemaName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя схемы базы данных, на которую будет дана ссылка в результирующей инструкции языка DDL».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DDLGenerationTemplate">
+      <summary>Ищет локализованную строку, аналогичную строке «Текстовый шаблон Т4, используемый в мастере формирования базы данных для преобразования языка SSDL в DDL».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DefaultValue">
+      <summary>Ищет локализованную строку, аналогичную строке «Значение свойства по умолчанию».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DiagramName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityBaseType">
+      <summary>Ищет локализованную строку, аналогичную строке «Базовый тип сущности».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityContainerAccess">
+      <summary>Ищет локализованную строку, аналогичную строке «Модификатор доступа контейнера сущностей содержит все экземпляры сущности для модели EDM».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityKey">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, является ли свойство ключом сущности автономной сущности».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя сущности».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntitySetName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя набора EntitySet, который содержит экземпляры сущности».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityShapeColor">
+      <summary>Ищет локализованную строку, аналогичную строке «Цвет фигуры типа сущности».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumExternalTypeAttribute">
+      <summary>Ищет локализованную строку, аналогичную строке «Ссылка на внешний тип отключает формирование кода для этого типа Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumTypeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumUnderlyingType">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип данных Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_FromRole">
+      <summary>Ищет локализованную строку, аналогичную строке «Эта роль ассоциации является источником навигации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_GenerateUpdateViews">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, будет ли платформа Entity Framework создавать инструкции обновления для изменения данных.Отключение функции обеспечивает дополнительные функции сопоставления и разрешает изменять данные только через хранимые процедуры».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Getter">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет доступ к методу считывания свойства».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceBaseType">
+      <summary>Ищет локализованную строку, аналогичную строке «Базовый тип связи наследования».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceDerivedType">
+      <summary>Ищет локализованную строку, аналогичную строке «Производный тип связи наследования».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LazyLoadingEnabled">
+      <summary>Ищет локализованную строку, аналогичную строке «Используется, чтобы задать режим отложенной загрузки по умолчанию для созданного объекта ObjectContext».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LongDescription">
+      <summary>Ищет локализованную строку, аналогичную строке «Документация».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_MetadataArtifactProcessing">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет способ обработки файлов моделей и сопоставлений при сборке».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavigationPropertyName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя свойства навигации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropMultiplicity">
+      <summary>Ищет локализованную строку, аналогичную строке «Кратность элементов целевого элемента ассоциации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropType">
+      <summary>Ищет локализованную строку, аналогичную строке «Возвращаемый тип свойства навигации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Nullable">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, допускает ли свойство значение null».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Parameter">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя параметра хранимой процедуры».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PluralizeNewObjects">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, производится ли системой автоматический перевод имен новых объектов в множественное число».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ProcessDependentTemplatesOnSave">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, обрабатывает ли система T4-файлы, зависимые от EDMX, во время сохранения EDMX-файла».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PropertyName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя свойства».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Setter">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет доступ к методу задания свойства».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_StoreGeneratedPattern">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, будет ли выполнено автоматическое создание соответствующего столбца базы данных во время операций вставки и обновления».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Summary">
+      <summary>Ищет локализованную строку, аналогичную строке «Сводка по документации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_SynchronizePropertyFacets">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновление моделей приведет к обновлению аспектов свойств сущности, таких как допустимость значений null и точность, чтобы обеспечить соответствие связанным значениям столбцов базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ToRole">
+      <summary>Ищет локализованную строку, аналогичную строке «Эта роль ассоциации является целью навигации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Type">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип скалярного свойства».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseLegacyProvider">
+      <summary>Ищет локализованную строку, аналогичную строке «Используется устаревший поставщик данных для подключения к базе данных во время разработки».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseStrongSpatialTypes">
+      <summary>Ищет локализованную строку, аналогичную строке «Задает поддержку строгих типов для всех пространственных типов данных при создании кода.Если false, базовые классы DbGeography и DbGeometry используются в созданном коде».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ValidateOnBuild">
+      <summary>Ищет локализованную строку, аналогичную строке «Определяет, проверяется ли модель системой при сборке».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя ассоциации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationSetName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя набора ассоциаций, в котором находится данная ассоциация».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndNavigationProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя свойства сущности, которое содержит значение для этого элемента».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndOnDelete">
+      <summary>Ищет локализованную строку, аналогичную строке «Задает действие, предпринимаемое при удалении сущности из этого элемента».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EntityContainerName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя контейнера сущностей, который содержит все экземпляры сущности для модели EDM».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Multiplicity">
+      <summary>Ищет локализованную строку, аналогичную строке «Разрешенное число сущностей в этом элементе ассоциации».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Namespace">
+      <summary>Ищет локализованную строку, аналогичную строке «Пространство имен для модели EDM».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Role">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя этого элемента».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Abstract">
+      <summary>Ищет локализованную строку, аналогичную строке «Абстрактный».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Access">
+      <summary>Ищет локализованную строку, аналогичную строке «Доступ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Aggregate">
+      <summary>Ищет локализованную строку, аналогичную строке «Агрегатный».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Alias">
+      <summary>Ищет локализованную строку, аналогичную строке «Псевдоним».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Association">
+      <summary>Ищет локализованную строку, аналогичную строке «Ассоциация».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_AssociationSetName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя набора ассоциаций».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BaseType">
+      <summary>Ищет локализованную строку, аналогичную строке «Базовый тип».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BuiltIn">
+      <summary>Ищет локализованную строку, аналогичную строке «Встроенный».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CodeGenerationStrategy">
+      <summary>Ищет локализованную строку, аналогичную строке «Стратегия создания кода».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Collation">
+      <summary>Ищет локализованную строку, аналогичную строке «Параметры сортировки».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CommandText">
+      <summary>Ищет локализованную строку, аналогичную строке «Текст команды».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Composable">
+      <summary>Ищет локализованную строку, аналогичную строке «Составной».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConcurrencyMode">
+      <summary>Ищет локализованную строку, аналогичную строке «Режим параллелизма».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConnectionString">
+      <summary>Ищет локализованную строку, аналогичную строке «Строка подключения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseGenerationWorkflow">
+      <summary>Ищет локализованную строку, аналогичную строке «Рабочий процесс создания базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя объекта базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchema">
+      <summary>Ищет локализованную строку, аналогичную строке «Схема базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchemaName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя схемы базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DDLGenerationTemplate">
+      <summary>Ищет локализованную строку, аналогичную строке «Шаблон создания языка DDL».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DefaultValue">
+      <summary>Ищет локализованную строку, аналогичную строке «Значение по умолчанию».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DerivedType">
+      <summary>Ищет локализованную строку, аналогичную строке «Производный тип».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Documentation">
+      <summary>Ищет локализованную строку, аналогичную строке «Документация».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End">
+      <summary>Ищет локализованную строку, аналогичную строке «Элемент».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Multiplicity">
+      <summary>Ищет локализованную строку, аналогичную строке «Кратность элементов End1».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1NavigationProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Свойство навигации элемента End1».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1OnDelete">
+      <summary>Ищет локализованную строку, аналогичную строке «End1 OnDelete».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Role">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя роли End1».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Multiplicity">
+      <summary>Ищет локализованную строку, аналогичную строке «Кратность элементов End2».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2NavigationProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Свойство навигации элемента End2».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2OnDelete">
+      <summary>Ищет локализованную строку, аналогичную строке «End2 OnDelete».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Role">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя роли End2».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerAccess">
+      <summary>Ищет локализованную строку, аналогичную строке «Доступ к контейнеру сущностей».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя контейнера сущностей».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityKey">
+      <summary>Ищет локализованную строку, аналогичную строке «Ключ сущности».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntitySetName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя набора сущностей».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityShapeColor">
+      <summary>Ищет локализованную строку, аналогичную строке «Цвет заливки».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityType">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumExternalTypeAttribute">
+      <summary>Ищет локализованную строку, аналогичную строке «Внешний тип».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumFlagAttribute">
+      <summary>Ищет локализованную строку, аналогичную строке «Флаги».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumUnderlyingType">
+      <summary>Ищет локализованную строку, аналогичную строке «Базовый тип».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FixedLength">
+      <summary>Ищет локализованную строку, аналогичную строке «Фиксированная длина».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FromRole">
+      <summary>Ищет локализованную строку, аналогичную строке «От роли».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_GenerateUpdateViews">
+      <summary>Ищет локализованную строку, аналогичную строке «Создание представлений обновления».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Getter">
+      <summary>Ищет локализованную строку, аналогичную строке «Метод считывания».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LazyLoadingEnabled">
+      <summary>Ищет локализованную строку, аналогичную строке «Отложенная загрузка включена».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LongDescription">
+      <summary>Ищет локализованную строку, аналогичную строке «Полное описание».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_CopyToOutputDirectory">
+      <summary>Ищет локализованную строку, аналогичную строке «Копировать в целевую папку».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_EmbedInOutputAssembly">
+      <summary>Ищет локализованную строку, аналогичную строке «Внедрить в целевую сборку».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MaxLength">
+      <summary>Ищет локализованную строку, аналогичную строке «Максимальная длина».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MetadataArtifactProcessing">
+      <summary>Ищет локализованную строку, аналогичную строке «Обработка артефактов метаданных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Mode">
+      <summary>Ищет локализованную строку, аналогичную строке «Режим».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Namespace">
+      <summary>Ищет локализованную строку, аналогичную строке «Пространство имен».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropMultiplicity">
+      <summary>Ищет локализованную строку, аналогичную строке «Кратность».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropType">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип возврата».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Niladic">
+      <summary>Ищет локализованную строку, аналогичную строке «Niladic».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Nullable">
+      <summary>Ищет локализованную строку, аналогичную строке «Допускает значение Null».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Parameter">
+      <summary>Ищет локализованную строку, аналогичную строке «Параметр».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ParameterTypeSemantics">
+      <summary>Ищет локализованную строку, аналогичную строке «Семантика типа параметра».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_PluralizeNewObjects">
+      <summary>Ищет локализованную строку, аналогичную строке «Размножить новые объекты».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Precision">
+      <summary>Ищет локализованную строку, аналогичную строке «Точность».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ProcessDependentTemplatesOnSave">
+      <summary>Ищет локализованную строку, аналогичную строке «Преобразовать связанные текстовые шаблоны при сохранении».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_RefConstraint">
+      <summary>Ищет локализованную строку, аналогичную строке «Справочное ограничение».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ReturnType">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип возврата».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Scale">
+      <summary>Ищет локализованную строку, аналогичную строке «Область».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Setter">
+      <summary>Ищет локализованную строку, аналогичную строке «Метод задания».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoredProcedureName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя хранимой процедуры».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreFunctionName">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя функции сохранения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreGeneratedPattern">
+      <summary>Ищет локализованную строку, аналогичную строке «StoreGeneratedPattern».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Summary">
+      <summary>Ищет локализованную строку, аналогичную строке «Сводка».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_SynchronizePropertyFacets">
+      <summary>Ищет локализованную строку, аналогичную строке «Аспекты свойства обновления».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ToRole">
+      <summary>Ищет локализованную строку, аналогичную строке «В роль».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Type">
+      <summary>Ищет локализованную строку, аналогичную строке «Тип».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Unicode">
+      <summary>Ищет локализованную строку, аналогичную строке «Юникод».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseLegacyProvider">
+      <summary>Ищет локализованную строку, аналогичную строке «Использовать устаревший поставщик данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseStrongSpatialTypes">
+      <summary>Ищет локализованную строку, аналогичную строке «Использовать строгие пространственные типы».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ValidateOnBuild">
+      <summary>Ищет локализованную строку, аналогичную строке «Проверить по сборке».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_MessageBox_SetAbstract">
+      <summary>Ищет локализованную строку, аналогичную строке «Если задан абстрактный тип сущности, то все существующие сопоставления функции для данного типа сущности будут удалены».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityMany">
+      <summary>Ищет локализованную строку, аналогичную строке «* (несколько)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityManyOf">
+      <summary>Ищет локализованную строку, аналогичную строке «* (коллекция {0})».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOne">
+      <summary>Ищет локализованную строку, аналогичную строке «1 (один)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOneOf">
+      <summary>Ищет локализованную строку, аналогичную строке «1 (один из {0})».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOne">
+      <summary>Ищет локализованную строку, аналогичную строке «0...1 (ноль или один)».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOneOf">
+      <summary>Ищет локализованную строку, аналогичную строке «0...1 (ноль или один из {0})».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorPreviewGroupName">
+      <summary>Ищет локализованную строку, аналогичную строке «Объекты кода».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_InvalidName">
+      <summary>Ищет локализованную строку, аналогичную строке «Указанное имя не является допустимым идентификатором».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_UndoDescription">
+      <summary>Ищет локализованную строку, аналогичную строке «Переименовать из {0} в {1}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Cancel">
+      <summary>Ищет локализованную строку, аналогичную строке «Отмена».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_LocationLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Расположение:».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_NewNameLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать имя:».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_OK">
+      <summary>Ищет локализованную строку, аналогичную строке «ОК».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_PreviewReferenceChangesLabel">
+      <summary>Ищет локализованную строку, аналогичную строке «Просмотр изменений ссылок».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Title">
+      <summary>Ищет локализованную строку, аналогичную строке «Переименовать».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_ConfirmButtonText">
+      <summary>Ищет локализованную строку, аналогичную строке «&amp;amp;amp;Применить».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Description">
+      <summary>Ищет локализованную строку, аналогичную строке «Переименовать».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_TextViewDescription">
+      <summary>Ищет локализованную строку, аналогичную строке «Просмотр изменений:».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Title">
+      <summary>Ищет локализованную строку, аналогичную строке «Просмотр изменений — переименование».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCDependentProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «{0}» (ошибка: не найдено).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCPrincipalProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «{0}» (ошибка: не найдено, ссылка будет удалена).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RenameModelMessageBox_Text">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удается переименовать или переместить файл.Закройте файл в конструкторе Entity Designer, прежде чем переименовать или перемещать его.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ResourceManager">
+      <summary>Возвращает кэшированный экземпляр диспетчера ресурсов, используемый этим классом».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeErrorMessage">
+      <summary>Ищет локализованную строку, аналогичную строке «Сбой при извлечении сведений о типе данных, возвращаемых хранимой процедурой или функцией данных.Сообщение об ошибке {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeInfoMessage">
+      <summary>Ищет локализованную строку, аналогичную строке «Извлечение сведения о возвращаемом типе для хранимой процедуры или функции {0}/{1} — "{2}.{3}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogDescription">
+      <summary>Ищет локализованную строку, аналогичную строке «Извлечение сведения о возвращаемом типе для хранимой процедуры или функции».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogInitialStatus">
+      <summary>Ищет локализованную строку, аналогичную строке «Ожидание подключения базы данных...».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Подождите...».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_FailureToLoadStoreItemCollection">
+      <summary>Ищет локализованную строку, аналогичную строке «При создании объекта StoreItemCollection возникло следующее исключение: '{0}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_StoreItemCollectionMayRequireDatabaseConnection">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось загрузить коллекцию StoreItemCollection из фабрики поставщика.Может потребоваться установить подключение к базе данных, чтобы загрузить StoreItemCollection».Сообщение об исключении: '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultItemsMatching">
+      <summary>Ищет локализованную строку, аналогичную строке «Подходящие элементы {0}».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultSearchCriteria">
+      <summary>Ищет локализованную строку, аналогичную строке «"{0}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageAssociationsGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Ограничения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageFunctionsGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Хранимые процедуры или функции».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageTypesGhostNodeName">
+      <summary>Ищет локализованную строку, аналогичную строке «Таблицы или представления».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.T4_ItemTemplate_CSharp_Comment">
+      <summary>Возвращает локализованную строку, аналогичную строке «комментарий CSharp к шаблону элемента T4».</summary>
+      <returns>Локализованная строка, аналогичная строке «комментарий CSharp к шаблону элемента T4».</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateError">
+      <summary>Ищет локализованную строку, аналогичную строке «Строка {0}, столбец {1}: '{2}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateErrorsEncountered">
+      <summary>Ищет локализованную строку, аналогичную строке «При обработке шаблона "{0}" возникли следующие ошибки: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ToolWindowTitle">
+      <summary>Ищет локализованную строку, аналогичную строке «Браузер моделей».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TransactionAlreadyCompleted">
+      <summary>Ищет локализованную строку, аналогичную строке «Транзакция уже завершена».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_AddComplexType">
+      <summary>Ищет локализованную строку, аналогичную строке «Добавить сложный тип».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionColumn">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить столбец условия».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionValue">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить значение условия».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить сопоставление импорта функции».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpRetType">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить тип данных, возвращаемый FunctionImport».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeMetadataArtifactProcessing">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить обработку артефактов метаданных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeResultBinding">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить привязку результатов».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeScalarProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить скалярное свойство».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateAssociationSetMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать AssociationSetMapping».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateCondition">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать условие».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateDiagram">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать диаграмму».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateEnumType">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать тип Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionImport">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать FunctionImport».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать FunctionMapping».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateMappingFragment">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать MappingFragment».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateResultBinding">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать привязку результатов».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateScalarProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Создать скалярное свойство».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteAssociationSetMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить AssociationSetMapping».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteCondition">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить условие».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteFunctionMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить FunctionMapping».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteMappingFragment">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить MappingFragment».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteResultBinding">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить привязку результатов».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteScalarProperty">
+      <summary>Ищет локализованную строку, аналогичную строке «Удалить скалярное свойство».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_GenerateDatabaseScriptFromModel">
+      <summary>Ищет локализованную строку, аналогичную строке «Сформировать базу данных на основе модели».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerDisable">
+      <summary>Ищет локализованную строку, аналогичную строке «Отключить уровень "{0}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerEnable">
+      <summary>Ищет локализованную строку, аналогичную строке «Включить уровень "{0}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_RefactorRenameCommand">
+      <summary>Ищет локализованную строку, аналогичную строке «Переименовать».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ReferentialContraint">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменить справочное ограничение».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_SetCodeGenerationStrategy">
+      <summary>Ищет локализованную строку, аналогичную строке «Задать стратегию создания кода».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateAssociationSetMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить AssociationSetMapping».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateEnumType">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить тип Enum».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionImport">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить FunctionImport».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionMapping">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить FunctionMapping».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateMappingFragment">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить MappingFragment».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateModelFromDatabase">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить модель на основе базы данных».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdatePropertyType">
+      <summary>Ищет локализованную строку, аналогичную строке «Обновить тип свойства».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UnsupportedProjectLanguage">
+      <summary>Ищет локализованную строку, аналогичную строке «Неподдерживаемый язык проекта».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UpdateEdmxNamespacesSuccessful">
+      <summary>Ищет локализованную строку, аналогичную строке «Пространства имен в разделах концепции, хранения и сопоставления EDMX-файлов {0} в проекте успешно обновлены в соответствии с целевой платформой .NET Framework проекта».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UsingDefaultConnectionString_1">
+      <summary>Ищет локализованную строку, аналогичную строке «Используется поставщик данных и подключение к базе данных "{0}", полученные из файла "{1}"».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VsUtils_ErrorResolvingMacro">
+      <summary>Ищет локализованную строку, аналогичную строке «Не удалось разрешить макрос: '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionConvertingProject">
+      <summary>Ищет локализованную строку, аналогичную строке «Во время преобразования в иерархии проекта возникло исключение.Иерархия не является проектом».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionParsingXml">
+      <summary>Ищет локализованную строку, аналогичную строке «При синтаксическом анализе файла "{0}" возникло следующее исключение: '{1}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_InnerExceptionErrorFormat">
+      <summary>Ищет локализованную строку, аналогичную строке «Обнаружено внутреннее исключение типа "{0}" со следующим сообщением об ошибке: '{1}'..</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration">
+      <summary>Представляет конфигурацию модели для задания возможности каскадного удаления ассоциации.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.DeleteBehavior">
+      <summary>Возвращает или задает возможность каскадного удаления.</summary>
+      <returns>Параметр каскадного удаления.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper">
+      <summary>Представляет вспомогательные методы для формирования кода.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Задает лямбда-выражение анонимного типа для указанных свойств.</summary>
+      <returns>Лямбда-выражение.</returns>
+      <param name="properties">Свойства.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration)">
+      <summary>Возвращает атрибут заметок к данным для применения к указанной конфигурации.</summary>
+      <returns>Атрибут заметок к данным для применения к указанной конфигурации.</returns>
+      <param name="configuration">Конфигурация.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(System.String)">
+      <summary>Возвращает атрибут с указанным текстом.</summary>
+      <returns>Атрибут.</returns>
+      <param name="attributeBody">Текст атрибута.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.CodeProvider">
+      <summary>Возвращает поставщик языка для формируемого кода.</summary>
+      <returns>Поставщик языка для формируемого кода.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.MethodChain(Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration)">
+      <summary>Возвращает цепочку методов Code First Fluent API для применения к указанной конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="configuration">Конфигурация.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EdmMember)">
+      <summary>Возвращает идентификатор свойства для указанного элемента.</summary>
+      <returns>Идентификатор.</returns>
+      <param name="member">Элемент.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EntitySetBase)">
+      <summary>Указывает идентификатор свойства для указанного набора сущностей.</summary>
+      <returns>Идентификатор.</returns>
+      <param name="entitySet">Набор сущностей.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Возвращает литерал строкового массива для указанных значений.</summary>
+      <returns>Литерал.</returns>
+      <param name="values">Значения.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>Указывает тип заданного свойства.</summary>
+      <returns>Тип.</returns>
+      <param name="property">Свойство.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmType)">
+      <summary>Указывает идентификатор типа для заданного типа.</summary>
+      <returns>Идентификатор.</returns>
+      <param name="edmType">Тип.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EntityContainer)">
+      <summary>Указывает идентификатор типа для заданного контейнера.</summary>
+      <returns>Идентификатор.</returns>
+      <param name="container">Контейнер.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.NavigationProperty)">
+      <summary>Указывает тип заданного свойства навигации.</summary>
+      <returns>Тип.</returns>
+      <param name="navigationProperty">Свойство навигации.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration">
+      <summary>Представляет модель конфигурации для задания имени, типа и порядкового номера столбца для свойства.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает текст атрибута</summary>
+      <returns>Текст атрибута.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Name">
+      <summary>Возвращает или задает имя столбца.</summary>
+      <returns>Имя столбца.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Order">
+      <summary>Возвращает или задает порядковый номер, под которым этот столбец должен появиться в таблице базы данных.</summary>
+      <returns>Порядковый номер, под которым этот столбец должен появиться в таблице базы данных.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.TypeName">
+      <summary>Возвращает или задает имя типа данных, зависящего от поставщика баз данных.</summary>
+      <returns>Имя типа данных, зависящего от поставщика баз данных.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper">
+      <summary>Предоставляет вспомогательные методы для формирования кода C#.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Возвращает лямбда-выражение анонимного типа для указанных свойств.</summary>
+      <returns>Лямбда-выражение.</returns>
+      <param name="properties">Свойства.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.Attribute(System.String)">
+      <summary>Возвращает атрибут с указанным текстом.</summary>
+      <returns>Атрибут.</returns>
+      <param name="attributeBody">Текст атрибута.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.CodeProvider">
+      <summary>Получает источник кода для формирования и компиляции кода C#.</summary>
+      <returns>Источник кода для формирования и компиляции кода C#.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Возвращает литерал строкового массива для указанных значений.</summary>
+      <returns>Литерал.</returns>
+      <param name="values">Значения.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration">
+      <summary>Представляет конфигурацию модели для задания параметра формирования базы данных свойства.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает текст атрибута, связанного с конфигурацией.</summary>
+      <returns>Текст атрибута, связанного с конфигурацией.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов Fluent API для применения конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.StoreGeneratedPattern">
+      <summary>Возвращает или задает шаблон, используемый для формирования значений для этого свойства в базе данных.</summary>
+      <returns>Шаблон для формирования значений этого свойства в базе данных.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper">
+      <summary>Предоставляет вспомогательные методы для анализа модели.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.#ctor(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper" />.</summary>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>Возвращает конфигурации модели, применяемые к указанному свойству.</summary>
+      <returns>Конфигурации.</returns>
+      <param name="property">Свойство.</param>
+      <param name="model">Модель.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EntitySet,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>Возвращает конфигурации модели, применяемые к указанному типу сущности.</summary>
+      <returns>Конфигурации.</returns>
+      <param name="entitySet">Набор типов сущностей.</param>
+      <param name="model">Модель.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>Возвращает конфигурации модели, применяемые к указанному свойству навигации.</summary>
+      <returns>Конфигурации.</returns>
+      <param name="navigationProperty">Свойство навигации.</param>
+      <param name="model">Модель.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetMultiplicityConfiguration(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Boolean@)">
+      <summary>Возвращает кратность конфигурации модели, применяемую к указанному свойству навигации.</summary>
+      <returns>Конфигурация.</returns>
+      <param name="navigationProperty">Свойство навигации.</param>
+      <param name="isDefault">Значение, указывающее, будет ли конфигурация применяться по умолчанию.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration">
+      <summary>Представляет модель конфигурации для пометки строкового или двоичного свойства фиксированной длины.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов Fluent API для применения конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration">
+      <summary>Представляет конфигурацию модели для задания свойств внешнего ключа ассоциации.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.Properties">
+      <summary>Возвращает свойства, используемые для внешнего ключа в ассоциации.</summary>
+      <returns>Свойства, используемые для внешнего ключа в ассоциации.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration">
+      <summary>Представляет конфигурацию модели, которая может быть применена с помощью заметок к данным.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает текст атрибута заметки к данным, применяемого к конфигурации.</summary>
+      <returns>Текст атрибута.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IConfiguration">
+      <summary>Представляет конфигурацию модели.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration">
+      <summary>Представляет конфигурацию модели, которая может быть применена с помощью Code First Fluent API.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов Fluent API для применения конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration">
+      <summary>Представляет конфигурацию модели для присоединения имен таблиц и столбцов к ассоциации «многие ко многим».</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.LeftKeys">
+      <summary>Возвращает имена столбцов внешнего ключа таблицы для сущности слева.</summary>
+      <returns>Имена столбцов внешнего ключа таблицы для сущности слева.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.RightKeys">
+      <summary>Возвращает имена столбцов внешнего ключа таблицы для сущности справа.</summary>
+      <returns>Имена столбцов внешнего ключа таблицы для сущности справа.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Schema">
+      <summary>Возвращает или задает схему таблицы.</summary>
+      <returns>Схема таблицы.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Table">
+      <summary>Возвращает или задает имя таблицы.</summary>
+      <returns>Имя таблицы.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration">
+      <summary>Представляет конфигурацию модели для задания ключа сущности.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов для конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.KeyProperties">
+      <summary>Возвращает свойства, используемые для ключа сущности.</summary>
+      <returns>Свойства, используемые для ключа сущности.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration">
+      <summary>Представляет модель конфигурации для включения свойства в состав ключа сущности.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает текст атрибута</summary>
+      <returns>Текст атрибута.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration">
+      <summary>Представляет модель конфигурации для задания свойства максимальной длины строки или двоичного значения.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает текст атрибута, связанного с конфигурацией длины.</summary>
+      <returns>Текст атрибута, связанного с конфигурацией длины.</returns>
+      <param name="code">Подпрограмма написания кода для конфигурации.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов, связанную с конфигурацией длины.</summary>
+      <returns>Цепочка методов, связанная с конфигурацией длины.</returns>
+      <param name="code">Подпрограмма написания кода для конфигурации.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.MaxLength">
+      <summary>Возвращает или задает максимальную длину для свойства.</summary>
+      <returns>Максимальная длина для данного свойства.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration">
+      <summary>Представляет модель конфигурации для задания максимальной длины строкового свойства.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает текст атрибута, связанного с конфигурацией.</summary>
+      <returns>Текст атрибута, связанного с конфигурацией.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration">
+      <summary>Представляет конфигурацию модели для задания кратности ассоциации.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов Fluent API для применения конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftEntityType">
+      <summary>Возвращает или задает тип сущности слева в ассоциации.</summary>
+      <returns>Тип сущности для левого конца ассоциации.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftNavigationProperty">
+      <summary>Возвращает или задает свойство навигации для левого конца ассоциации.</summary>
+      <returns>Свойство навигации для левого конца ассоциации.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.RightNavigationProperty">
+      <summary>Возвращает или задает свойство навигации для правого конца ассоциации.</summary>
+      <returns>Свойство навигации для правого конца ассоциации.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration">
+      <summary>Представляет модель конфигурации для пометки строкового свойства не в Юникоде.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов Fluent API для применения конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration">
+      <summary>Представляет модель конфигурации для задания точности свойства temporal.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов Fluent API для применения конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.Precision">
+      <summary>Возвращает или задает точность свойства.</summary>
+      <returns>Точность свойства.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration">
+      <summary>Представляет модель конфигурации для задания точности и масштаба десятичного свойства.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Precision">
+      <summary>Возвращает или задает точность свойства.</summary>
+      <returns>Точность свойства.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Scale">
+      <summary>Возвращает или задает масштаб свойства.</summary>
+      <returns>Масштаб значения свойства.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration">
+      <summary>Представляет модель конфигурации для пометки свойства как обязательного.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает текст атрибута</summary>
+      <returns>Текст атрибута.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration">
+      <summary>Представляет конфигурацию модели для задания таблицы для сущности.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает текст атрибута, связанного с конфигурацией.</summary>
+      <returns>Текст атрибута, связанного с конфигурацией.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Возвращает цепочку методов Fluent API для применения конфигурации.</summary>
+      <returns>Цепочка методов.</returns>
+      <param name="code">Вспомогательный объект для формирования кода.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Schema">
+      <summary>Возвращает или задает схему базы данных для таблицы.</summary>
+      <returns>Имя схемы базы данных для таблицы.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Table">
+      <summary>Возвращает или задает имя таблицы.</summary>
+      <returns>Имя таблицы.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration">
+      <summary>Представляет модель конфигурации для пометки двоичного столбца как отметки времени.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает текст атрибута, связанного с конфигурацией.</summary>
+      <returns>Текст атрибута, связанного с конфигурацией.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Получает цепочку методов, связанную с конфигурацией.</summary>
+      <returns>Цепочка методов, связанная с конфигурацией.</returns>
+      <param name="code">Подпрограмма написания кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper">
+      <summary>Предоставляет вспомогательные методы для формирования кода Visual Basic.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Возвращает лямбда-выражение анонимного типа для указанных свойств.</summary>
+      <returns>Лямбда-выражение.</returns>
+      <param name="properties">Свойства.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.Attribute(System.String)">
+      <summary>Возвращает атрибут с указанным текстом.</summary>
+      <returns>Атрибут.</returns>
+      <param name="attributeBody">Текст атрибута.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.CodeProvider">
+      <summary>Получает источник кода для формирования и компиляции кода Visual Basic.</summary>
+      <returns>Источник кода для формирования и компиляции кода Visual Basic.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Возвращает литерал строкового массива для указанных значений.</summary>
+      <returns>Литерал.</returns>
+      <param name="values">Значения.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>SsdlToDdlActivity, который разрешает преобразование языка SSDL в DDL с помощью TemplateActivity.Обратите внимание, что для этого класса следует избегать любых зависимостей от любых типов экземпляров (особенно типов, созданных конструктором сущностей) в пространстве имен Microsoft.Data.Entity.Design.*, за исключением Microsoft.Data.Entity.Design.CreateDatabase.Этот класс существует в данном проекте из-за зависимостей VS.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>Аргумент <see cref="T:System.Activities.OutArgument`1" /> службы Windows Workflow, задающий код на языке описания данных DDL, который создается на основе кода языка SSDL в свойствах <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> и <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>Аргумент <see cref="T:System.Activities.InArgument`1" /> службы Windows Workflow, указывающий существующий код на языке SSDL, из которого создается код на языке описания данных DDL для удаления существующих объектов базы данных.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>Аргумент <see cref="T:System.Activities.InArgument`1" /> службы Windows Workflow, указывающий код на языке SSDL, из которого формируется код на языке описания данных DDL для создания новых объектов базы данных.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData">
+      <summary>Родительский интерфейс, используемый LayerManager для того, чтобы различать разные слои.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData.LayerName">
+      <summary>Имя этого слоя расширяемости.</summary>
+      <returns>Возвращает значение типа <see cref="T:System.String" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <returns>Возвращает значение типа <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardStage">
+      <summary>WizardStage указывает, отображается дополнительная страница мастера до или после создания модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PostModelGeneration">
+      <summary>Дополнительная страница мастера отображается после создания модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PreModelGeneration">
+      <summary>Дополнительная страница мастера отображается до создания модели.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Templates.TemplateResources">
+      <summary>Строго типизированный класс ресурсов для поиска локализованных строк и т. д.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Culture">
+      <summary>Переопределяет свойство CurrentUICulture текущего потока для всех поисков ресурсов с использованием этого строго типизированного класса ресурсов.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.ResourceManager">
+      <summary>Возвращает кэшированный экземпляр диспетчера ресурсов, используемый этим классом».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveEntitySetConflict">
+      <summary>Ищет локализованную строку, аналогичную строке «EntitySet "{0}.{1}" отличается только регистром символов от существующего EntitySet и несовместим с текущим параметром языка».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveMemberConflict">
+      <summary>Ищет локализованную строку, аналогичную строке «Имя члена "{0}.{1}" отличается только регистром символов от существующего члена и несовместимо с текущим параметром языка».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveTypeConflict">
+      <summary>Находит локализованную строку, аналогичную строке «Тип "{0}" не является уникальным.Возможная причина: имеются типы, отличающиеся только регистром символов, что несовместимо с текущим параметром языка».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine1">
+      <summary>Находит локализованную строку, аналогичную строке «Этот код был сформирован по шаблону».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine2">
+      <summary>Ищет локализованную строку, аналогичную строке «Внесение ручных изменений в этот файл может привести к непредвиденным результатам при работе приложения».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine3">
+      <summary>Ищет локализованную строку, аналогичную строке «Изменения, внесенные в этот файл вручную, будут перезаписаны при повторном формировании кода».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_ReplaceVsItemTemplateToken">
+      <summary>Ищет локализованную строку, аналогичную строке «Замените токен "$edmxInputFile$" на фактическое имя EDMX-файла, на основе которого следует проводить формирование».</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>Этот элемент должен быть открытым, так он должен быть доступен из вспомогательных DLL-библиотек ресурсов для локализации</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>Присоединяет события и имена к скомпилированному содержимому.</summary>
+      <param name="connectionId">Токен идентификации, чтобы различать вызовы.</param>
+      <param name="target">Целевой объект, к которому подключаются имена и события.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>Присоединяет события к методам задания событий и шаблонам в скомпилированном содержимом.</summary>
+      <param name="connectionId">Уникальный идентификатор подключения для привязки к событиям.</param>
+      <param name="target">Целевой объект для привязки события.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="projectItem">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="project">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="projectItem">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="automationObject">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+      <param name="replacementsDictionary">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+      <param name="runKind">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+      <param name="customParams">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <returns>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</returns>
+      <param name="filePath">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>Visual Studio вызывает этот мастер при добавлении в существующий проект нового элемента типа «Модель EDM ADO.NET».Этот мастер зарегистрирован в шаблоне элемента VSTEMPLATE-файла.Этим шаблоном элемента добавляются следующие файлы: +- modelName.edmx | +- modelName.edmx.diagram | +- modelName.Designer.cs [или vb] =&amp;amp;gt; выход генератора кода (для EF5 и генератора устаревшего ObjectContext) или +- ModelName.cs [или vb] — для CodeFirst</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Этот метод вызывается перед открытием любых элементов, имеющих атрибут OpenInEditor. Это позволяет выполнять пользовательскую логику мастера перед открытием элемента в шаблоне.</summary>
+      <param name="projectItem">Открываемый элемент проекта</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Этот метод вызывается после создания проекта. Позволяет выполнять пользовательскую логику мастера по окончании создания проекта.</summary>
+      <param name="project">Проект.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Этот метод вызывается только для шаблонов элементов, а не для шаблонов проектов.</summary>
+      <param name="projectItem">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>Этот метод вызывается в конце выполнения мастера шаблонов. Позволяет выполнять пользовательскую логику мастера, когда мастер завершил все задачи. Здесь настраиваются зависимости элементов проекта для файлов, добавленных .VSTEMPLATE.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Этот метод вызывается в начале выполнения мастера шаблонов. Позволяет выполнять пользовательскую логику мастера до создания чего бы то ни было и удобно, например, для сбора введенных пользователем данных, которые будут изменять выполнение каким-либо образом.</summary>
+      <param name="automationObject">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+      <param name="replacementsDictionary">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+      <param name="runKind">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+      <param name="customParams">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>Указывает, следует ли добавить в проект заданный элемент проекта.</summary>
+      <returns>true, если должен быть добавлен элемент; в противном случае — false.</returns>
+      <param name="filePath">Путь элемента проекта.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.#ctor">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="projectItem">Элемент проекта.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="project">Проект.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="projectItem">Элемент проекта.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunFinished">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="automationObject">Объект автоматизации.</param>
+      <param name="replacementsDictionary">Словарь замен.</param>
+      <param name="runKind">Вид запуска.</param>
+      <param name="customParams">Пользовательские параметры.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ShouldAddProjectItem(System.String)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <returns>true, если должен быть добавлен элемент проекта; в противном случае — false.</returns>
+      <param name="filePath">Путь файла.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>Управляемая оболочка для генератора IVsSingleFileGenerator в Visual Studio, который является настраиваемым инструментом, вызывается при сборке и создает выходной файл, содержащий совместимый код для любого предоставленного входного файла.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>Реализует метод IVsSingleFileGenerator.DefaultExtension.Возвращает расширение сформированного файла.</summary>
+      <returns>Значение S_OK, если операция завершилась успешно; в противном случае — E_FAIL.</returns>
+      <param name="pbstrDefaultExtension">Выходной параметр, содержащий расширение, задаваемое для имени выходного файла.Возвращаемое расширение должно включать в себя начальную точку.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>Возвращает расширение по умолчанию для данного генератора.</summary>
+      <returns>Строка, содержащая расширение по умолчанию для данного генератора.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>Выполняет определяемые приложением задачи, связанные с удалением, высвобождением или сбросом неуправляемых ресурсов.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>Освобождает неуправляемые и при необходимости управляемые ресурсы.</summary>
+      <param name="disposing">Значение true задает освобождение как управляемых, так и неуправляемых ресурсов; значение false задает освобождение только неуправляемых ресурсов.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>Финализирует экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>Метод main, который вызывает оболочка VS для создания</summary>
+      <returns>Код состояния.</returns>
+      <param name="wszInputFilePath">Путь к входному файлу</param>
+      <param name="bstrInputFileContents">Содержимое входного файла в виде строки (оболочка обрабатывает преобразование UTF-8 в Юникоде и эти типы преобразований)</param>
+      <param name="wszDefaultNamespace">Пространство имен по умолчанию для сформированного файла кода</param>
+      <param name="rgbOutputFileContents">Байтовый массив с содержимым выходного файла</param>
+      <param name="pcbOutput">Число байтов в выходном массиве</param>
+      <param name="pGenerateProgress">Интерфейс для передачи обновлений хода выполнения оболочке</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Этот метод создает код на основе входного файла.</summary>
+      <returns>Созданный файл исходного кода в виде массива байтов</returns>
+      <param name="inputFileName">Имя входного файла</param>
+      <param name="inputFileContent">Содержимое файла в виде строки</param>
+      <param name="defaultNamespace">Пространство имен по умолчанию.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>Метод, который сообщает об ошибке с помощью механизма обратного вызова оболочки.</summary>
+      <param name="warning">Значение true, если это предупреждение</param>
+      <param name="level">Степень серьезности</param>
+      <param name="message">Отображаемый для пользователя текст</param>
+      <param name="line">Номер строки ошибки или предупреждения</param>
+      <param name="column">Номер столбца ошибки или предупреждения</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>Этот класс предназначен для совместного создания на этапе сборки препроцессора.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>Возвращает объект CodeDomProvider для языка проекта, содержащего элемент, для которого был вызван генератор.</summary>
+      <returns>Объект CodeDomProvider</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>Освобождает неуправляемые и при необходимости управляемые ресурсы.</summary>
+      <param name="disposing">Значение true задает освобождение как управляемых, так и неуправляемых ресурсов; значение false задает освобождение только неуправляемых ресурсов.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>Получает объект ErrorList (список ошибок) Visual Studio.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>Метод для получения службы по типу</summary>
+      <returns>Объект, реализующий запрошенную службу</returns>
+      <param name="serviceType">Тип возвращаемой службы</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>Метод GetSite объекта IOleObjectWithSite</summary>
+      <param name="riid">Получаемый интерфейс</param>
+      <param name="ppvSite">Массив, в котором хранится возвращаемое значение</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>Возвращает объект EnvDTE.Project для проекта, содержащего элемент проекта, для которого был вызван генератор кода.</summary>
+      <returns>Объект EnvDTE.Project для проекта, содержащего элемент, для которого был вызван генератор кода.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>Возвращает объект EnvDTE.ProjectItem, соответствующий элементу проекта, для которого был вызван генератор кода.</summary>
+      <returns>Объект EnvDTE.ProjectItem элемента проекта, для которого был вызван генератор кода.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>Метод SetSite интерфейса IOleObjectWithSite</summary>
+      <param name="pUnkSite">Используемый сайт для объекта</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>Создает по требованию ServiceProvider на основе указанного IOleServiceProvider</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>Наш генератор кода на основе SFG работает на основе следующих операций: 1.Считывает параметр CodeGenerationStrategy в файле EDMX 2.Если для параметра CodeGenerationStrategy задано значение "Default", переходим к формированию кода: 3.Вызывает System.Data.Entity.Design в CodeGen API.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+      <param name="itemId">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+      <param name="oldInputName">Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>Этот API поддерживается в инфраструктуре Entity Framework и не предназначен для использования непосредственно из программного кода.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>Возвращает строку расширения выходного файла по умолчанию из CodeDomProvider.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Вызывает CodeGen API для создания файла исходного кода, сформированного из файла языка CSDL.</summary>
+      <returns>Значение null означает ошибку; в противном случае — содержимое файла.</returns>
+      <param name="inputFileName">Полный путь к файлу языка CSDL; извлекается из ProjectItem.</param>
+      <param name="inputFileContent">Содержимое файла языка CSDL. Следует использоваться всегда, чтобы можно было отключить формирование в документах, хранящихся в памяти.</param>
+      <param name="defaultNamespace">Пространство имен по умолчанию.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>TemplateActivity, который разрешает преобразование шаблона T4 в рабочем процессе WF.Обратите внимание, что для этого класса следует избегать любых зависимостей от любых типов экземпляров (особенно типов, созданных конструктором сущностей) в пространстве имен Microsoft.Data.Entity.Design.*, за исключением Microsoft.Data.Entity.Design.CreateDatabase.Этот класс существует в данном проекте из-за зависимостей VS.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Преобразует текстовый шаблон, указанный в свойстве <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" />, путем вызова службы STextTemplatingService в Visual Studio.</summary>
+      <param name="context">Состояние текущего действия.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Заполняет словарь <see cref="T:System.Collections.IDictionary" />, который используется для передачи входных данных в текстовый шаблон.Этот метод можно переопределять в производных классах с целью передачи настраиваемых входных данных.Такие входные данные помещаются в объект <see cref="T:System.Runtime.Remoting.Messaging.CallContext" /> для использования в текстовом шаблоне.</summary>
+      <param name="context">Состояние текущего действия.</param>
+      <param name="inputs">Словарь, который связывает входные имена с входными значениями для использования в текстовом шаблоне.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>Обрабатывает шаблон T4 с помощью службы текстовых шаблонов в Visual Studio с учетом пути, который может содержать макрос (т. е. «$(DevEnvDir)\...»).Примечание. Пути шаблонов, не указывающие на файлы и не являющиеся UNC-путями, не разрешены.</summary>
+      <returns>Вывод обработки шаблона.</returns>
+      <param name="templatePath">Путь к файлу шаблона, который может содержать основанный на проекте макрос</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>Выходные данные шаблона, указанного в свойстве <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>Путь к обрабатываемому текстовому шаблону.</summary>
+    </member>
+    <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+      <summary>GeneratedInternalTypeHelper</summary>
+    </member>
+    <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.#ctor">
+      <summary>Инициализирует новый экземпляр класса <see cref="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper" />.</summary>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.props"/>
+
+  <!-- Configuration/global properties -->
+  <PropertyGroup>
+    <CommonMSBuildProperties>
+      Configuration=$(Configuration);
+      ReleaseLabel=$(ReleaseLabel);
+      BuildNumber=$(BuildNumber);
+      BuildRTM=$(BuildRTM);
+    </CommonMSBuildProperties>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputArchitecture>neutral</OutputArchitecture>
+    <OutputLocalized>false</OutputLocalized>
+    <OutputType>vsix</OutputType>
+    <OutputPath>$(RepositoryRootDirectory)bin\$(Configuration)</OutputPath>
+    <LocOutDir>$(RepositoryRootDirectory)bin\$(Configuration)\localize</LocOutDir>
+    <EF6NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</EF6NuGetPackageVersion>
+  </PropertyGroup>
+
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.targets" />
+  <!-- Import Project="$(Wix4Root)\SimplifiedWix.targets" / -->
+
+  <PropertyGroup>
+    <!-- Variables added here will be usable in the swr file -->
+    <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);Version=$(ToolingVersionMajor).$(ToolingVersionMinor).$(VersionBuild).$(VersionRevision)</PackagePreprocessorDefinitions>
+    <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);VsDdeApplication=VisualStudio.$(VisualStudioVersion)</PackagePreprocessorDefinitions>
+    <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);OutputPath=$(OutputPath);LocOutDir=$(LocOutDir)</PackagePreprocessorDefinitions>
+    <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);ToolingSetupRepositoryRoot=$(RepositoryRootDirectory)</PackagePreprocessorDefinitions>
+    <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);IntellisenseLocRootDirectory=$(IntellisenseLocRootDirectory)</PackagePreprocessorDefinitions>
+    <PackagePreprocessorDefinitions>$(PackagePreprocessorDefinitions);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</PackagePreprocessorDefinitions>
+    IntellisenseLocRootDirectory
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Package Include="files.swr" />
+    <Package Include="registry.swr" />
+  </ItemGroup>
+
+  <!-- ItemGroup>
+     <PackageExtension Include="$(Wix4Root)\VsixSwixExtension.dll" />
+  </ItemGroup -->
+</Project>
