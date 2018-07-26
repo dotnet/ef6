@@ -18,6 +18,7 @@
     <OutputLocalized>false</OutputLocalized>
     <OutputType>vsix</OutputType>
     <OutputPath>$(RepositoryRootDirectory)bin\$(Configuration)</OutputPath>
+    <IntermediateOutputPath>$(RepositoryRootDirectory)bin\$(Configuration)</IntermediateOutputPath>
     <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)\setup</OutDir>
     <LocOutDir>$(RepositoryRootDirectory)bin\$(Configuration)\localize</LocOutDir>
     <EF6NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</EF6NuGetPackageVersion>
