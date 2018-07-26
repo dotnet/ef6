@@ -3,7 +3,8 @@
   <!-- PropertyGroup>
     <CustomBeforeEntityFrameworkTargets Condition="'$(CustomBeforeEntityFrameworkTargets)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory),EFBuild.msbuild))EntityFramework.Extensions.settings.targets</CustomBeforeEntityFrameworkTargets>
   </PropertyGroup -->
-  <Import Project="$(RuntimeRepositoryRoot)\tools\EntityFramework.settings.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
+  <Import Project="$(RepositoryRootDirectory)\tools\EntityFramework.settings.targets" />
   
   <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
