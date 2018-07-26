@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- PropertyGroup>
+    <CustomBeforeEntityFrameworkTargets Condition="'$(CustomBeforeEntityFrameworkTargets)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory),EFBuild.msbuild))EntityFramework.Extensions.settings.targets</CustomBeforeEntityFrameworkTargets>
+  </PropertyGroup -->
+  <Import Project="$(RuntimeRepositoryRoot)\tools\EntityFramework.settings.targets" />
+  
+  <PropertyGroup>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.7</ProductVersion>
+    <ProjectGuid>09B112B7-5836-465B-9551-F923A0ABB3E7</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputType>Package</OutputType>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <IncludeSearchPaths>..\include\</IncludeSearchPaths>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DefineConstants>Debug;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(SingletonMsiName)' == '' ">
+    <SingletonMsiName>EF6Tools</SingletonMsiName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Folders.wxs" />
+    <Compile Include="EFToolsWillowMsi.wxs" />
+    <Compile Include="Licenses.wxs" />
+    <Compile Include="NuGetPackages.wxs" />
+    <Compile Include="ReferenceCounting.wxs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WixExtension Include="WixDependencyExtension">
+      <HintPath>$(WixExtDir)\WixDependencyExtension.dll</HintPath>
+      <Name>WixDependencyExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+
+  <Target Name="Build">
+    <!-- Build target from WiX would have overwritten this target if wix had been installed -->
+    <Error Text="Wix Toolset not installed - directory $(MSBuildExtensionsPath)\Microsoft\WiX\v3.x does not exist" />
+  </Target>
+  <Target Name="Clean">
+    <!-- Clean target from WiX would have overwritten this target if wix had been installed -->
+    <Error Text="Wix Toolset not installed - directory $(MSBuildExtensionsPath)\Microsoft\WiX\v3.x does not exist" />
+  </Target>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets"
+          Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
+
+  <Target Name="BeforeBuild">
+    <PropertyGroup>
+      <!-- WixID must not contain hyphens -->
+      <EF6NuGetPackageWixId>$(EF6NuGetPackageVersion.Replace('-', '_'))</EF6NuGetPackageWixId>
+      <!-- WIX authoring inputs. This target ensures dependency properties has been resolved.  -->
+      <DefineConstants>$(DefineConstants);VisualStudioVersion=$(VisualStudioVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);RuntimeVersionMajor=$(RuntimeVersionMajor);RuntimeVersionMinor=$(RuntimeVersionMinor)</DefineConstants>
+      <DefineConstants>$(DefineConstants);VersionReleasePrefix=$(VersionReleasePrefix);VersionReleaseName=$(VersionReleaseName)</DefineConstants>
+      <DefineConstants>$(DefineConstants);VersionBuild=$(VersionBuild);VersionRevision=$(VersionRevision)</DefineConstants>
+      <DefineConstants>$(DefineConstants);ToolingVersionMajor=$(ToolingVersionMajor);OutputName=$(SingletonMsiName);EmbedCab=$(EmbedCab)</DefineConstants>
+      <DefineConstants>$(DefineConstants);MsiRuntimeInputsPackagesDir=$(MsiRuntimeInputsPackagesDir);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=true</DefineConstants>
+    </PropertyGroup>
+    
+    <Message Importance="High" Text="EFToolsWillowMsi DefineConstants=$(DefineConstants)" />
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>

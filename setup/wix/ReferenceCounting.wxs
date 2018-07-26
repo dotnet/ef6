@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:dep="http://schemas.microsoft.com/wix/DependencyExtension">
+  <Fragment>
+    <ComponentGroup Id="CG_ReferenceCounting">
+      <ComponentRef Id="C_ReferenceCounting"/>
+    </ComponentGroup>
+
+    <DirectoryRef Id="TARGETDIR">
+      <Component Id="C_ReferenceCounting">
+        <dep:Provides Key="Microsoft.EntityFrameworkCore.EFTools_Singleton_MSI.VS$(var.ToolingVersionMajor)" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

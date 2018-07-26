@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?if $(var.VisualStudioVersion) = 15.0?>
+    <?define UpgradeCode = {8D2CC6D5-E830-45A0-B699-5B604EA710A8}?>
+  <?endif?>
+</Include>
