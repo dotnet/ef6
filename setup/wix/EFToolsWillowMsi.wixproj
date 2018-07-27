@@ -89,6 +89,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props'))" />
     <Error Condition="!Exists('$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets'))" />
+    <Error Condition="!Exists('$(WixTargetsPath)')" Text="$([System.String]::Format('$(ErrorText)', '$(WixTargetsPath)'))" />
   </Target>
 
   <!-- Import nuget.targets to define RestorePackages target, add new package source to download Wix3 -->
