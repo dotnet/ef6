@@ -15,7 +15,7 @@
     </CommonMSBuildProperties>
     <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)</OutDir> <!-- needed for Localization plugin -->
     <OutputPath>$(OutDir)</OutputPath>
-    <MsiRuntimeInputsPackagesDir>$(OutDir)\packages</MsiRuntimeInputsPackagesDir>
+    <MsiRuntimeInputsPackagesDir>$(OutDir)\MsiRuntimeInputs\packages</MsiRuntimeInputsPackagesDir>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(SingletonMsiName)' == '' ">
