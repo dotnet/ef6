@@ -3,8 +3,20 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
   <Import Project="$(MicroBuildDirectory)MicroBuild.Core.props"/>
   <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props" />
-  <Import Project="$(RepositoryRootDirectory)\tools\EntityFramework.settings.targets" />
+  <!-- Import Project="$(RepositoryRootDirectory)\tools\EntityFramework.settings.targets" / -->
   
+  <!-- Configuration/global properties -->
+  <PropertyGroup>
+    <CommonMSBuildProperties>
+      Configuration=$(Configuration);
+      ReleaseLabel=$(ReleaseLabel);
+      BuildNumber=$(BuildNumber);
+      BuildRTM=$(BuildRTM);
+    </CommonMSBuildProperties>
+    <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)</OutDir> <!-- needed for Localization plugin -->
+    <MsiRuntimeInputsPackagesDir>$(OutDir)\packages</MsiRuntimeInputsPackagesDir>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(SingletonMsiName)' == '' ">
     <SingletonMsiName>EF6Tools</SingletonMsiName>
   </PropertyGroup>
@@ -25,6 +37,7 @@
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
     <IsPackage>true</IsPackage> <!-- prevents APIScan and BinScope running and erring on this project -->
+    <!-- Cultures>en-US,en</Cultures -->
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -39,9 +52,10 @@
     <Compile Include="ReferenceCounting.wxs" />
   </ItemGroup>
 
-  <!-- Use this certificate to sign outputs -->
+  <!-- Sign outputs using this certificate -->
   <PropertyGroup> 
     <SetupPackageCertificate>Microsoft</SetupPackageCertificate> 
+    <SignOutput>true</SignOutput>
   </PropertyGroup> 
 
   <Target Name="Build">

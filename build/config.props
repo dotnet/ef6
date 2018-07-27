@@ -19,6 +19,7 @@
     <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">389132</ProjectUrlFwLinkID>
     <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">389134</LicenseUrlFwLinkID>
     <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
+    <EF6NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionBuild)</EF6NuGetPackageVersion>
   </PropertyGroup>
 
 </Project>
