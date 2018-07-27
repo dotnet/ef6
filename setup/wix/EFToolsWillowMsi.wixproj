@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
   <Import Project="$(MicroBuildDirectory)MicroBuild.Core.props"/>
-  <Import Project="$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props" />
+  <Import Project="$(MSBuildThisFileDirectory)\packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props" />
   <Import Project="$(RepositoryRootDirectory)\tools\EntityFramework.settings.targets" />
   
   <PropertyGroup>
@@ -44,16 +44,16 @@
     </FilesToSign>
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- ItemGroup>
     <WixExtension Include="WixDependencyExtension">
-      <!-- HintPath>$(WixExtDir)\WixDependencyExtension.dll</HintPath>
-      <Name>WixDependencyExtension</Name -->
+      <HintPath>$(WixExtDir)\WixDependencyExtension.dll</HintPath>
+      <Name>WixDependencyExtension</Name>
     </WixExtension>
     <WixExtension Include="WixUIExtension">
-      <!-- HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
-      <Name>WixUIExtension</Name -->
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
     </WixExtension>
-  </ItemGroup>
+  </ItemGroup -->
 
   <Target Name="Build">
     <!-- Build target from WiX would have overwritten this target if wix had been installed -->
@@ -81,6 +81,7 @@
     </PropertyGroup>
     
     <Message Importance="High" Text="EFToolsWillowMsi DefineConstants=$(DefineConstants)" />
+    <Message Importance="High" Text="EFToolsWillowMsi MSBuildThisFileDirectory=$(MSBuildThisFileDirectory)" />
   </Target>
 
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -89,15 +90,19 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props'))" />
     <Error Condition="!Exists('$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets'))" />
-    <Error Condition="!Exists('$(WixTargetsPath)')" Text="$([System.String]::Format('$(ErrorText)', '$(WixTargetsPath)'))" />
+    <Error Condition="!Exists('$(SolutionPackagesFolder)Microsoft.Wix3.DependencyExtension.3.10.1.2213\build\Microsoft.Wix3.DependencyExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionPackagesFolder)Microsoft.Wix3.DependencyExtension.3.10.1.2213\build\Microsoft.Wix3.DependencyExtension.targets'))" />
+    <Error Condition="!Exists('$(SolutionPackagesFolder)Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionPackagesFolder)Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets'))" />
+    <Error Condition="!Exists('$(WixTargetsPath)')" Text="WixTargetsPath '$(WixTargetsPath)' does not exist." />
   </Target>
 
   <!-- Import nuget.targets to define RestorePackages target, add new package source to download Wix3 -->
-  <ItemGroup> 
+  <!-- ItemGroup> 
     <PackageSource Include="\\cpvsbuild\drops\dd\nuget"/> 
   </ItemGroup>
-  <Import Project="$(RepositoryRootDirectory)\.nuget\nuget.targets" />
+  <Import Project="$(RepositoryRootDirectory)\.nuget\nuget.targets" / -->
 
-  <Import Project="$(SolutionPackagesFolder)Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)\packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)\packages\Microsoft.Wix3.DependencyExtension.3.10.1.2213\build\Microsoft.Wix3.DependencyExtension.targets" /> <!-- adds WixDependencyExtension.dll to Wix3 extensions -->
+  <Import Project="$(MSBuildThisFileDirectory)\packages\Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets" /> <!-- adds WixUIExtension.dll to Wix3 extensions -->
   <Import Project="$(MicroBuildDirectory)MicroBuild.Core.targets" />
 </Project>
