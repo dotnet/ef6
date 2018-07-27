@@ -71,7 +71,7 @@
   </Target>
   <Import Project="$(WixTargetsPath)" />
 
-  <Target Name="DefineConstants" BeforeTargets="Build">
+  <Target Name="DefineConstants" AfterTargets="PrepareForBuild">
     <PropertyGroup>
       <!-- WixID must not contain hyphens -->
       <EF6NuGetPackageWixId>$(EF6NuGetPackageVersion.Replace('-', '_'))</EF6NuGetPackageWixId>
@@ -92,7 +92,7 @@
 
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+      <ErrorText>EFToolsWillowMsi: This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(WixTargetsPath)')" Text="WixTargetsPath '$(WixTargetsPath)' does not exist." />
     <Error Condition="!Exists('$(MSBuildThisFileDirectory)\packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)\packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props'))" />
