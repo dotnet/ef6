@@ -14,6 +14,7 @@
       BuildRTM=$(BuildRTM);
     </CommonMSBuildProperties>
     <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)</OutDir> <!-- needed for Localization plugin -->
+    <OutputPath>$(OutDir)</OutputPath>
     <MsiRuntimeInputsPackagesDir>$(OutDir)\packages</MsiRuntimeInputsPackagesDir>
   </PropertyGroup>
 
