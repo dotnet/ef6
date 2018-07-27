@@ -5,12 +5,17 @@
   <Import Project="$(MSBuildThisFileDirectory)\packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props" />
   <Import Project="$(RepositoryRootDirectory)\tools\EntityFramework.settings.targets" />
   
+  <PropertyGroup Condition=" '$(SingletonMsiName)' == '' ">
+    <SingletonMsiName>EF6Tools</SingletonMsiName>
+  </PropertyGroup>
+
   <PropertyGroup>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.7</ProductVersion>
     <ProjectGuid>09B112B7-5836-465B-9551-F923A0ABB3E7</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Package</OutputType>
+    <OutputName>$(SingletonMsiName)</OutputName>
     <WixTargetsPath Condition="'$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != ''">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath> 
     <WixTargetsPath Condition="'$(WixTargetsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath> 
     <DefineSolutionProperties>false</DefineSolutionProperties>
@@ -26,10 +31,6 @@
     <DefineConstants>Debug;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(SingletonMsiName)' == '' ">
-    <SingletonMsiName>EF6Tools</SingletonMsiName>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="Folders.wxs" />
     <Compile Include="EFToolsWillowMsi.wxs" />
@@ -38,11 +39,16 @@
     <Compile Include="ReferenceCounting.wxs" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- Use this certificate to sign outputs -->
+  <PropertyGroup> 
+    <SetupPackageCertificate>Microsoft</SetupPackageCertificate> 
+  </PropertyGroup> 
+
+  <!-- ItemGroup>
     <FilesToSign Include="$(TargetPath)">
       <Authenticode>Microsoft</Authenticode>
     </FilesToSign>
-  </ItemGroup>
+  </ItemGroup -->
 
   <!-- ItemGroup>
     <WixExtension Include="WixDependencyExtension">
@@ -74,7 +80,7 @@
       <DefineConstants>$(DefineConstants);RuntimeVersionMajor=$(RuntimeVersionMajor);RuntimeVersionMinor=$(RuntimeVersionMinor)</DefineConstants>
       <DefineConstants>$(DefineConstants);VersionReleasePrefix=$(VersionReleasePrefix);VersionReleaseName=$(VersionReleaseName)</DefineConstants>
       <DefineConstants>$(DefineConstants);VersionBuild=$(VersionBuild);VersionRevision=$(VersionRevision)</DefineConstants>
-      <DefineConstants>$(DefineConstants);ToolingVersionMajor=$(ToolingVersionMajor);OutputName=$(SingletonMsiName);EmbedCab=$(EmbedCab)</DefineConstants>
+      <DefineConstants>$(DefineConstants);ToolingVersionMajor=$(ToolingVersionMajor);OutputName=$(OutputName);EmbedCab=$(EmbedCab)</DefineConstants>
       <DefineConstants>$(DefineConstants);MsiRuntimeInputsPackagesDir=$(MsiRuntimeInputsPackagesDir);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</DefineConstants>
       <DefineConstants>$(DefineConstants);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
       <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=true</DefineConstants>
