@@ -1,3 +1,6 @@
+resources:
+- repo: self
+  clean: true
 queue:
   name: VSEng-MicroBuildVS2017
   condition: succeeded()
@@ -17,7 +20,6 @@ queue:
 #Your build pipeline references an undefined variable named ‘comspec’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 #Your build pipeline references the ‘EmbedCab’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
@@ -108,7 +110,7 @@ steps:
      vs_eftools.json
      $(SingletonMsiName).msi
      $(SingletonMsiName).cab
-     bin\$(BuildConfiguration)\$(SingletonMsiName).wixpdb
+     $(SingletonMsiName).wixpdb
     TargetFolder: '$(Build.ArtifactStagingDirectory)\SetupResults'
 
 - task: PublishBuildArtifacts@1
@@ -116,6 +118,7 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\SetupResults'
     ArtifactName: SetupResultsToVSTS
+  enabled: false
 
 - task: PublishBuildArtifacts@1
   displayName: Publish VSIX, MSI and CAB to Drop
@@ -142,6 +145,7 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\PdbsAndXmls'
     ArtifactName: PdbsAndXmlsToVSTS
+  enabled: false
 
 - task: PublishBuildArtifacts@1
   displayName: Publish PDB and XML Files To Drop
@@ -181,4 +185,5 @@ steps:
     ArtifactName: PackagesContents
   enabled: false
   condition: succeededOrFailed()
+
 
