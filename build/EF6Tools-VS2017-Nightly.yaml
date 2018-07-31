@@ -1,8 +1,8 @@
 name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd_HHmmss)_$(Rev:rr)
 
-##LAJresources:
-##LAJ- repo: self
-##LAJ  clean: true
+resources:
+  repo: self
+  clean: true
 queue:
   name: VSEng-MicroBuildVS2017
   timeoutInMinutes: 60
