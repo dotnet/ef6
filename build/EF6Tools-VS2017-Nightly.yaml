@@ -170,7 +170,7 @@ steps:
   condition: failed()
 
 - task: CopyFiles@2
-  displayName: Copy Files to: PackagesContents
+  displayName: Copy Files to PackagesContents
   inputs:
     SourceFolder: '$(Build.Repository.LocalPath)\setup\wix'
     Contents: 'packages\**'
