@@ -1,9 +1,11 @@
-resources:
-- repo: self
-  clean: true
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd_HHmmss)_$(Rev:rr)
+
+##LAJresources:
+##LAJ- repo: self
+##LAJ  clean: true
 queue:
   name: VSEng-MicroBuildVS2017
-  condition: succeeded()
+  timeoutInMinutes: 60
   demands: 
   - Cmd
   - msbuild
@@ -23,8 +25,8 @@ queue:
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
-variables:
-  SingletonMsiName: 'EF6Tools'
+##LAJvariables:
+##LAJ  SingletonMsiName: 'EF6Tools'
 steps:
 - powershell: |
    Get-Date -UFormat "%y%m%d_%H%M%S"
