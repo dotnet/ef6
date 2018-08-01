@@ -28,7 +28,7 @@ steps:
   displayName: Run EFBuild
   inputs:
     filename: '$(comspec)'
-    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\EFTools.msbuild /p:RunCodeAnalysis=false /p:Configuration=$(BuildConfiguration) /t:EnableSkipStrongNames;Clean;BuildDesigner"'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\EFTools.msbuild /v:d /p:RunCodeAnalysis=false /p:Configuration=$(BuildConfiguration) /t:EnableSkipStrongNames;Clean;BuildDesigner"'
 
 - task: ms-vseng.MicroBuildTasks.a0262b21-fb8f-46f8-bb9a-60ed560d4a87.MicroBuildLocalizationPlugin@1
   displayName: Install Localization Plugin
