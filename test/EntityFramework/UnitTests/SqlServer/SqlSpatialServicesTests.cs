@@ -13,8 +13,8 @@ namespace System.Data.Entity.SqlServer
 
     public class SqlSpatialServicesTests
     {
-        private const string SQL2012GeometryName =
-            "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
+        private const string SQL2012GeometryNamePrefix =
+            "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=";
 
         [Fact]
         public void Public_members_check_for_null_arguments()
@@ -155,7 +155,7 @@ namespace System.Data.Entity.SqlServer
         public void SqlSpatialServices_Singleton_uses_SQL_2012_types_on_dev_machine()
         {
             var typeName = SqlSpatialServices.Instance.GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName;
-            Assert.Equal(SQL2012GeometryName, typeName);
+            Assert.True(typeName.StartsWith(SQL2012GeometryNamePrefix, StringComparison.Ordinal));
         }
 
         [Fact]
@@ -224,7 +224,7 @@ namespace System.Data.Entity.SqlServer
                 Assert.Equal(90, geometry.XCoordinate);
                 Assert.Equal(50, geometry.YCoordinate);
                 var typeName = geometry.ProviderValue.GetType().AssemblyQualifiedName;
-                Assert.Equal(SQL2012GeometryName, typeName);
+                Assert.True(typeName.StartsWith(SQL2012GeometryNamePrefix, StringComparison.Ordinal));
             }
         }
     }

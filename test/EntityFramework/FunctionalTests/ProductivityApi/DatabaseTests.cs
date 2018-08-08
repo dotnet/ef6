@@ -354,7 +354,7 @@ END");
         }
 
         [Fact]
-        public void DatabaseExists_returns_true_for_existing_database_when_no_master_nor_database_permissions()
+        public void DatabaseExists_returns_false_for_existing_database_when_no_master_nor_database_permissions()
         {
             using (var context = new NoMasterPermissionContext(SimpleConnectionString<NoMasterPermissionContext>()))
             {
@@ -386,14 +386,7 @@ END");
 
             using (var context = new NoMasterPermissionContext(connectionString))
             {
-                if (DatabaseTestHelpers.IsSqlAzure(connectionString))
-                {
-                    Assert.False(context.Database.Exists());
-                }
-                else
-                {
-                    Assert.True(context.Database.Exists());
-                }
+                Assert.False(context.Database.Exists());
             }
         }
 
@@ -448,57 +441,6 @@ END");
             }
             finally
             {
-                using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
-                {
-                    context.Database.Delete();
-                }
-            }
-        }
-
-        [Fact]
-        public void DatabaseExists_returns_true_for_existing_attached_database_with_InitialCatalog_when_no_master_nor_database_permission()
-        {
-            DatabaseExists_returns_true_for_existing_attached_database_when_no_master_nor_database_permission(true);
-        }
-
-        [Fact]
-        public void DatabaseExists_returns_true_for_existing_attached_database_without_InitialCatalog_when_no_master_nor_database_permission()
-        {
-            DatabaseExists_returns_true_for_existing_attached_database_when_no_master_nor_database_permission(false);
-        }
-
-        private void DatabaseExists_returns_true_for_existing_attached_database_when_no_master_nor_database_permission(bool useInitialcatalog)
-        {
-            using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
-            {
-                if (DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString))
-                {
-                    // SQL Azure does not suppot attaching databases
-                    return;
-                }
-
-                // Ensure database is initialized
-                context.Database.Initialize(force: true);
-            }
-
-            // See CodePlex 1554 - Handle User Instance flakiness
-            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
-                SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy()));
-            try
-            {
-                using (var context = new AttachedContext(
-                    SimpleAttachConnectionStringWithCredentials<AttachedContext>(
-                        "EFTestSimpleModelUser",
-                        "Password1",
-                        useInitialcatalog)))
-                {
-                    Assert.True(context.Database.Exists(), "context.Database does not exist, actual connection string: " + context.Database.Connection.ConnectionString);
-                }
-            }
-            finally
-            {
-                MutableResolver.ClearResolvers();
-
                 using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
                 {
                     context.Database.Delete();

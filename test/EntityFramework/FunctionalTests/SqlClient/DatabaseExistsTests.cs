@@ -57,18 +57,6 @@ namespace System.Data.Entity.SqlServer
             ExistsTestNoMaster(NormalUser, persistSecurityInfo: false);
         }
 
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info()
-        {
-            ExistsTest(ImpairedUser, persistSecurityInfo: true);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info()
-        {
-            ExistsTest(ImpairedUser, persistSecurityInfo: false);
-        }
-
         [Fact]
         public void Not_exists_check_with_master_persist_info()
         {
@@ -163,18 +151,6 @@ namespace System.Data.Entity.SqlServer
         public void Exists_check_without_master_no_persist_info_closed_connection()
         {
             ExistsTestNoMasterWithConnection(NormalUser, persistSecurityInfo: false, openConnection: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info_closed_connection()
-        {
-            ExistsTestWithConnection(ImpairedUser, persistSecurityInfo: true, openConnection: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info_closed_connection()
-        {
-            ExistsTestWithConnection(ImpairedUser, persistSecurityInfo: false, openConnection: false);
         }
 
         [Fact]

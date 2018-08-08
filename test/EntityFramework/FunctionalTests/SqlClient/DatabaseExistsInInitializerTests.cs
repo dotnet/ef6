@@ -68,18 +68,6 @@ namespace System.Data.Entity.SqlServer
             ExistsTestNoMaster(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false);
         }
 
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info()
-        {
-            ExistsTest(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: true);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info()
-        {
-            ExistsTest(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: false);
-        }
-
         [Fact]
         public void Exists_check_with_master_persist_info_no_MigrationHistory()
         {
@@ -102,18 +90,6 @@ namespace System.Data.Entity.SqlServer
         public void Exists_check_without_master_no_persist_info_no_MigrationHistory()
         {
             ExistsTestNoMaster(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info_no_MigrationHistory()
-        {
-            ExistsTest(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: true);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info_no_MigrationHistory()
-        {
-            ExistsTest(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: false);
         }
 
         [Fact]
@@ -140,18 +116,6 @@ namespace System.Data.Entity.SqlServer
             ExistsTestNoMaster(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false);
         }
 
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info_out_of_date()
-        {
-            ExistsTest(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: true);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info_out_of_date()
-        {
-            ExistsTest(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: false);
-        }
-
         [Fact]
         public void Not_exists_check_with_master_persist_info()
         {
@@ -174,18 +138,6 @@ namespace System.Data.Entity.SqlServer
         public void Not_exists_check_without_master_no_persist_info()
         {
             NotExistsTestNoMaster(NormalUser, persistSecurityInfo: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Not_exists_check_with_no_master_query_persist_info()
-        {
-            NotExistsTest(ImpairedUser, persistSecurityInfo: true);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Not_exists_check_with_no_master_query_no_persist_info()
-        {
-            NotExistsTest(ImpairedUser, persistSecurityInfo: false);
         }
 
         [Fact] // CodePlex 2068
@@ -248,18 +200,6 @@ namespace System.Data.Entity.SqlServer
             ExistsTestNoMasterWithConnection(DatabaseWithMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: false);
         }
 
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info_closed_connection()
-        {
-            ExistsTestWithConnection(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: true, openConnection: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info_closed_connection()
-        {
-            ExistsTestWithConnection(DatabaseWithMigrationHistory, ImpairedUser, persistSecurityInfo: false, openConnection: false);
-        }
-
         [Fact] // CodePlex 2068
         public void Exists_check_with_master_persist_info_open_connection_no_MigrationHistory()
         {
@@ -320,18 +260,6 @@ namespace System.Data.Entity.SqlServer
             ExistsTestNoMasterWithConnection(DatabaseWithoutMigrationHistory, NormalUser, persistSecurityInfo: false, openConnection: false);
         }
 
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info_closed_connection_no_MigrationHistory()
-        {
-            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: true, openConnection: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info_closed_connection_no_MigrationHistory()
-        {
-            ExistsTestWithConnection(DatabaseWithoutMigrationHistory, ImpairedUser, persistSecurityInfo: false, openConnection: false);
-        }
-
         [Fact] // CodePlex 2068
         public void Exists_check_with_master_persist_info_open_connection_out_of_date()
         {
@@ -390,18 +318,6 @@ namespace System.Data.Entity.SqlServer
         public void Exists_check_without_master_no_persist_info_closed_connection_out_of_date()
         {
             ExistsTestNoMasterWithConnection(DatabaseOutOfDate, NormalUser, persistSecurityInfo: false, openConnection: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_persist_info_closed_connection_out_of_date()
-        {
-            ExistsTestWithConnection(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: true, openConnection: false);
-        }
-
-        [Fact] // CodePlex 2113
-        public void Exists_check_with_no_master_query_no_persist_info_closed_connection_out_of_date()
-        {
-            ExistsTestWithConnection(DatabaseOutOfDate, ImpairedUser, persistSecurityInfo: false, openConnection: false);
         }
 
         [Fact]
