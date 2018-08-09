@@ -354,43 +354,6 @@ END");
         }
 
         [Fact]
-        public void DatabaseExists_returns_false_for_existing_database_when_no_master_nor_database_permissions()
-        {
-            using (var context = new NoMasterPermissionContext(SimpleConnectionString<NoMasterPermissionContext>()))
-            {
-                context.Database.Delete();
-                context.Database.Initialize(force: false);
-            }
-
-            using (var connection = new SqlConnection(SimpleConnectionString<NoMasterPermissionContext>()))
-            {
-                connection.Open();
-
-                using (var command = connection.CreateCommand())
-                {
-                    // Double-check there's no user for this login
-                    command.CommandText
-                        = string.Format(
-                            @"IF EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
-                              BEGIN
-                                DROP USER [EFTestSimpleModelUser]
-                              END");
-                    command.ExecuteNonQuery();
-                }
-            }
-
-            var connectionString
-                = SimpleConnectionStringWithCredentials<NoMasterPermissionContext>(
-                    "EFTestSimpleModelUser",
-                    "Password1");
-
-            using (var context = new NoMasterPermissionContext(connectionString))
-            {
-                Assert.False(context.Database.Exists());
-            }
-        }
-
-        [Fact]
         public void DatabaseExists_returns_false_for_non_existing_database_when_no_master_permissions()
         {
             var connectionString
