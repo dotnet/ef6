@@ -2744,6 +2744,49 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal(0, operations.Count());
         }
 
+        [MigrationsTheory]
+        public void Should_drop_create_guid_foreign_key_when_principal_and_dependant_switched_within_one_to_one_relationship()
+        {
+            var modelBuilder1 = new DbModelBuilder();
+
+            modelBuilder1.Entity<Issue316.Order>()
+                .HasKey(t => t.OrderId)
+                .HasRequired(t => t.Options)
+                    .WithRequiredDependent(t => t.Order);
+
+            modelBuilder1.Entity<Issue316.OrderOptions>()
+                .HasKey(t => t.OrderId)
+                .HasRequired(t => t.Order)
+                    .WithRequiredPrincipal(t => t.Options);
+
+            var modelWithOriginalForeignKeyOwner = modelBuilder1.Build(ProviderInfo);
+
+            var modelBuilder2 = new DbModelBuilder();
+
+            modelBuilder2.Entity<Issue316.Order>()
+                .HasKey(t => t.OrderId)
+                .HasRequired(t => t.Options)
+                    .WithRequiredPrincipal(t => t.Order);
+
+            modelBuilder2.Entity<Issue316.OrderOptions>()
+                .HasKey(t => t.OrderId)
+                .HasRequired(t => t.Order)
+                    .WithRequiredDependent(t => t.Options);
+
+            var modelWithSwitchedForeignKeyOwner = modelBuilder2.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(modelWithOriginalForeignKeyOwner.GetModel(), modelWithSwitchedForeignKeyOwner.GetModel());
+
+            var dropForeignKeyOperations = operations.OfType<DropForeignKeyOperation>();
+            var addForeignKeyOperations = operations.OfType<AddForeignKeyOperation>();
+            
+            Assert.Equal(typeof(Guid), typeof(Issue316.Order).GetProperty("OrderId").PropertyType);
+            Assert.Equal(typeof(Guid), typeof(Issue316.OrderOptions).GetProperty("OrderId").PropertyType);
+            Assert.NotEmpty(dropForeignKeyOperations);
+            Assert.NotEmpty(addForeignKeyOperations);
+        }
+
         #endregion
 
         #region Changed PKs
