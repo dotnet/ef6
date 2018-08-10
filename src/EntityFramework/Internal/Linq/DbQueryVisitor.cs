@@ -42,21 +42,26 @@ namespace System.Data.Entity.Internal.Linq
             // a derived DbContext, then we will work with this as well.
             if (typeof(DbContext).IsAssignableFrom(node.Method.DeclaringType))
             {
-                var memberExpression = node.Object as MemberExpression;
                 DbContext context = null;
+                var memberExpression = node.Object as MemberExpression;
                 if (memberExpression != null)
                 {
                     context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
                 }
-                else if (node.Object is ConstantExpression constantExpression)
+                else
                 {
-                    context = constantExpression.Value as DbContext;
+                    var constantExpression = node.Object as ConstantExpression;
+                    if (constantExpression != null)
+                    {
+                        context = constantExpression.Value as DbContext;
+                    }
                 }
+
                 // Only try to invoke the method if it is on the context, is not parameterless, and is not attributed
                 // as a function.
                 if (context != null
-                        && !node.Method.GetCustomAttributes<DbFunctionAttribute>(inherit: false).Any()
-                        && node.Method.GetParameters().Length == 0)
+                    && !node.Method.GetCustomAttributes<DbFunctionAttribute>(inherit: false).Any()
+                    && node.Method.GetParameters().Length == 0)
                 {
                     var expression =
                         CreateObjectQueryConstant(
