@@ -13,6 +13,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Core.Query.InternalTrees;
 
     // <summary>
     // Models a Linq to Entities ObjectQuery
@@ -84,6 +86,178 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // This does not affect any cached execution plan or closure bindings that may be present.
             var converter = CreateExpressionConverter();
             return converter.Convert().ResultType;
+        }
+
+        internal override IList<string> GetLastQueryMappedColumnList()
+        {
+            if (_cachedPlan != null)
+            {
+                return GetMappedColumnList(_cachedPlan);
+            }
+
+            return null;
+        }
+
+        private static IList<string> GetMappedColumnList(ObjectQueryExecutionPlan plan)
+        {
+            // Get the column name position map in cspace.
+            var columnNamePosMap = ELinqQueryState.GetColumnNamePositionMap(plan);
+
+            if (columnNamePosMap == null || columnNamePosMap.Keys.Count == 0)
+            {
+                // Skip Generation if no Mapping Exists
+                return null;
+            }
+
+            var resultRowTypes = ELinqQueryState.GetMappedCommandReturnTypes(plan);
+
+            if (resultRowTypes == null || !resultRowTypes.Any())
+            {
+                return null;
+            }
+
+            IList<string> mappedColumnListSSpace = new List<string>();
+            foreach (var mapped in columnNamePosMap)
+            {
+                EdmProperty property = resultRowTypes[0].Properties[mapped.Value];
+                mappedColumnListSSpace.Add(property.Name);
+            }
+
+            return mappedColumnListSSpace;
+        }
+
+        private static IList<RowType> GetMappedCommandReturnTypes(ObjectQueryExecutionPlan plan)
+        {
+            EntityCommandDefinition command = plan.CommandDefinition as EntityCommandDefinition;
+
+            if (command == null)
+            {
+                return null;
+            }
+
+            return command.MappedCommandReturnTypes;
+        }
+
+        // Return the execution's column list in column position order.
+        private static IDictionary<string, int> GetColumnNamePositionMap(ObjectQueryExecutionPlan plan)
+        {
+            EntityCommandDefinition command = plan.CommandDefinition as EntityCommandDefinition;
+
+            if (command == null)
+            {
+                return null;
+            }
+
+            var columnMap = command.CreateColumnMap(null) as SimpleCollectionColumnMap;
+            if (columnMap == null)
+            {
+                return null;
+            }
+
+            var element = columnMap.Element as RecordColumnMap;
+
+            if (element == null)
+            {
+                return null;
+            }
+
+            var properties = element.Properties;
+
+            if (properties == null)
+            {
+                return null;
+            }
+
+            var columnsPosNameMap = new Dictionary<string, int>();
+
+            foreach (var property in properties)
+            {
+                var scalarProperty = property as ScalarColumnMap;
+
+                if (scalarProperty == null)
+                {
+                    return null;
+                }
+
+                columnsPosNameMap[scalarProperty.Name] = scalarProperty.ColumnPos;
+            }
+
+            return columnsPosNameMap;
+        }
+
+        internal override LinqQueryCacheKey GetCacheKey()
+        {
+            // Translate LINQ expression to a DbExpression
+            var converter = CreateExpressionConverter();
+            var queryExpression = converter.Convert();
+
+            // This delegate tells us when a part of the expression tree has changed requiring a recompile.
+            _recompileRequired = converter.RecompileRequired;
+
+            // Determine the merge option, with the following precedence:
+            // 1. A merge option was specified explicitly as the argument to Execute(MergeOption).
+            // 2. The user has set the MergeOption property on the ObjectQuery instance.
+            // 3. A merge option has been extracted from the 'root' query and propagated to the root of the expression tree.
+            // 4. The global default merge option.
+            var mergeOption = EnsureMergeOption(
+                MergeOption.AppendOnly,
+                UserSpecifiedMergeOption,
+                converter.PropagatedMergeOption);
+
+            _useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+
+            // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
+            _linqParameters = converter.GetParameters();
+            if (_linqParameters != null
+                && _linqParameters.Any())
+            {
+                var currentParams = EnsureParameters();
+                currentParams.SetReadOnly(false);
+                foreach (var pair in _linqParameters)
+                {
+                    // Note that it is safe to add the parameter directly only
+                    // because parameters are cloned before they are added to the
+                    // converter's parameter collection, or they came from this
+                    // instance's parameter collection in the first place.
+                    var convertedParam = pair.Item1;
+                    currentParams.Add(convertedParam);
+                }
+                currentParams.SetReadOnly(true);
+            }
+
+            // Try retrieving the execution plan from the global query cache (if plan caching is enabled).
+            LinqQueryCacheKey cacheKey = null;
+            // Create a new cache key that reflects the current state of the Parameters collection
+            // and the Span object (if any), and uses the specified merge option.
+            string expressionKey;
+            if (ExpressionKeyGen.TryGenerateKey(queryExpression, out expressionKey))
+            {
+                cacheKey = new LinqQueryCacheKey(
+                    expressionKey,
+                    (null == Parameters ? 0 : Parameters.Count),
+                    (null == Parameters ? null : Parameters.GetCacheKey()),
+                    (null == converter.PropagatedSpan ? null : converter.PropagatedSpan.GetCacheKey()),
+                    mergeOption,
+                    EffectiveStreamingBehavior,
+                    _useCSharpNullComparisonBehavior,
+                    ElementType);
+            }
+
+            // Evaluate parameter values for the query.
+            if (_linqParameters != null)
+            {
+                foreach (var pair in _linqParameters)
+                {
+                    var parameter = pair.Item1;
+                    var parameterExpression = pair.Item2;
+                    if (null != parameterExpression)
+                    {
+                        parameter.Value = parameterExpression.EvaluateParameter(null);
+                    }
+                }
+            }
+
+            return cacheKey;
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)

@@ -17,6 +17,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.QueryCache;
 
     /// <summary>
     /// This class implements untyped queries at the object-layer.
@@ -209,6 +211,16 @@ namespace System.Data.Entity.Core.Objects
         public string ToTraceString()
         {
             return _state.GetExecutionPlan(null).ToTraceString();
+        }
+
+        public LinqQueryCacheKey GetCacheKey()
+        {
+            return _state.GetCacheKey();
+        }
+
+        public IList<string> GetLastQueryMappedColumnList()
+        {
+            return _state.GetLastQueryMappedColumnList();
         }
 
         /// <summary>Returns information about the result type of the query.</summary>
