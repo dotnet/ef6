@@ -17,6 +17,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.QueryCache;
 
     /// <summary>
     /// This class implements untyped queries at the object-layer.
@@ -209,6 +211,15 @@ namespace System.Data.Entity.Core.Objects
         public string ToTraceString()
         {
             return _state.GetExecutionPlan(null).ToTraceString();
+        }
+
+        /// <summary>Returns the commands to execute against the data source.</summary>
+        /// <returns>A string that represents the commands that the query executes against the data source.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        public ExecutionPlanTemplate GetExecutionPlanTemplate()
+        {
+            // Get the cached template first, if there is one. We do not need to generate a new ExecutionPlan.
+            return _state.GetExecutionPlanTemplate();
         }
 
         /// <summary>Returns information about the result type of the query.</summary>

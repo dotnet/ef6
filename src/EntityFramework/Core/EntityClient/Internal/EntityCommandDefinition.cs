@@ -35,6 +35,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         // </summary>
         private readonly List<DbCommandDefinition> _mappedCommandDefinitions;
 
+        private readonly List<RowType> _mappedCommandReturnTypes;
+
         // <summary>
         // generates column map for the store result reader
         // </summary>
@@ -112,10 +114,12 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     // Then, generate the store commands from the resulting command tree(s)
                     _mappedCommandDefinitions = new List<DbCommandDefinition>(mappedCommandList.Count);
 
+                    _mappedCommandReturnTypes = new List<RowType>();
                     foreach (var providerCommandInfo in mappedCommandList)
                     {
                         var providerCommandDefinition = _storeProviderServices.CreateCommandDefinition(
                             providerCommandInfo.CommandTree, interceptionContext);
+                        _mappedCommandReturnTypes.Add(GetRowTypeFromCommandTree(providerCommandInfo.CommandTree));
 
                         if (null == providerCommandDefinition)
                         {
@@ -349,6 +353,11 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             get { return _entitySets; }
         }
 
+        internal List<RowType> MappedCommandReturnTypes
+        {
+            get { return this._mappedCommandReturnTypes; }
+        }
+
         // <summary>
         // Create a DbCommand object from the definition, that can be executed
         // </summary>
@@ -360,6 +369,41 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         #endregion
 
         #region internal methods
+
+        private static RowType GetRowTypeFromCommandTree(DbCommandTree tree)
+        {
+            DbQueryCommandTree commandTree = tree as DbQueryCommandTree;
+
+            if (commandTree == null)
+            {
+                return null;
+            }
+
+            DbProjectExpression projectExpression = commandTree.Query as DbProjectExpression;
+
+            // Try filter then
+            if (projectExpression == null)
+            {
+                DbFilterExpression filterExpression = commandTree.Query as DbFilterExpression;
+
+                if (filterExpression != null && filterExpression.Input != null)
+                {
+                    projectExpression = filterExpression.Input.Expression as DbProjectExpression;
+                }
+            }
+
+            if (projectExpression != null)
+            {
+                var newExpression = projectExpression.Projection;
+
+                if (newExpression != null)
+                {
+                    return newExpression.ResultType.EdmType as RowType;
+                }
+            }
+
+            return null;
+        }
 
         // <summary>
         // Creates ColumnMap for result assembly using the given reader.

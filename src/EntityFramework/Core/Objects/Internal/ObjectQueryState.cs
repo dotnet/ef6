@@ -10,6 +10,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.QueryCache;
 
     // <summary>
     // An instance of a class derived from ObjectQueryState is used to model every instance of
@@ -273,6 +275,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <param name="forMergeOption"> The merge option which should be supported by the returned execution plan </param>
         // <returns> an execution plan capable of retrieving the results of this query using the specified merge option </returns>
         internal abstract ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption);
+
+        internal virtual ExecutionPlanTemplate GetExecutionPlanTemplate()
+        {
+            throw new NotImplementedException();
+        }
 
         // <summary>
         // Must returns a new ObjectQueryState instance that is a duplicate of this instance and additionally contains the specified Include path in its

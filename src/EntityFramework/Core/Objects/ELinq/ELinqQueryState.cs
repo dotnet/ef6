@@ -13,6 +13,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Text;
 
     // <summary>
     // Models a Linq to Entities ObjectQuery
@@ -84,6 +87,100 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // This does not affect any cached execution plan or closure bindings that may be present.
             var converter = CreateExpressionConverter();
             return converter.Convert().ResultType;
+        }
+
+        private static IList<string> GetMappedColumnList(ObjectQueryExecutionPlan plan)
+        {
+            // Get the column name position map in cspace.
+            var columnNamePosMap = ELinqQueryState.GetColumnNamePositionMap(plan);
+
+            if (columnNamePosMap == null || columnNamePosMap.Keys.Count == 0)
+            {
+                // Skip Generation if no Mapping Exists
+                return null;
+            }
+
+            var resultRowTypes = ELinqQueryState.GetMappedCommandReturnTypes(plan);
+
+            if (resultRowTypes == null || !resultRowTypes.Any())
+            {
+                return null;
+            }
+
+            IList<string> mappedColumnListSSpace = new List<string>();
+            foreach (var mapped in columnNamePosMap)
+            {
+                EdmProperty property = resultRowTypes[0].Properties[mapped.Value];
+                mappedColumnListSSpace.Add(property.Name);
+            }
+
+            return mappedColumnListSSpace;
+        }
+
+        private static IList<RowType> GetMappedCommandReturnTypes(ObjectQueryExecutionPlan plan)
+        {
+            EntityCommandDefinition command = plan.CommandDefinition as EntityCommandDefinition;
+
+            if (command == null)
+            {
+                return null;
+            }
+
+            return command.MappedCommandReturnTypes;
+        }
+
+        // Return the execution's column list in column position order.
+        private static IDictionary<string, int> GetColumnNamePositionMap(ObjectQueryExecutionPlan plan)
+        {
+            EntityCommandDefinition command = plan.CommandDefinition as EntityCommandDefinition;
+
+            if (command == null)
+            {
+                return null;
+            }
+
+            var columnMap = command.CreateColumnMap(null) as SimpleCollectionColumnMap;
+            if (columnMap == null)
+            {
+                return null;
+            }
+
+            var element = columnMap.Element as RecordColumnMap;
+
+            if (element == null)
+            {
+                return null;
+            }
+
+            var properties = element.Properties;
+
+            if (properties == null)
+            {
+                return null;
+            }
+
+            var columnsPosNameMap = new Dictionary<string, int>();
+
+            foreach (var property in properties)
+            {
+                var scalarProperty = property as ScalarColumnMap;
+
+                if (scalarProperty == null)
+                {
+                    return null;
+                }
+
+                columnsPosNameMap[scalarProperty.Name] = scalarProperty.ColumnPos;
+            }
+
+            return columnsPosNameMap;
+        }
+
+        internal override ExecutionPlanTemplate GetExecutionPlanTemplate()
+        {
+            var plan = this.GetExecutionPlan(null);
+
+           return new ExecutionPlanTemplate(plan.ToTraceString(), GetMappedColumnList(plan));
         }
 
         internal override ObjectQueryExecutionPlan GetExecutionPlan(MergeOption? forMergeOption)
