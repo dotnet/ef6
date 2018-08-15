@@ -14,10 +14,10 @@ namespace System.Data.Entity.Core.Objects
         // </summary>
         private readonly object _entity;
 
-        // <summary>
-        // Constructs new arguments for the ObjectMaterialized event.
-        // </summary>
-        // <param name="entity"> The object that has been materialized. </param>
+        /// <summary>
+        /// Constructs new arguments for the ObjectMaterialized event.
+        /// </summary>
+        /// <param name="entity"> The object that has been materialized. </param>
         public ObjectMaterializedEventArgs(object entity)
         {
             _entity = entity;
