@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects
         // Constructs new arguments for the ObjectMaterialized event.
         // </summary>
         // <param name="entity"> The object that has been materialized. </param>
-        internal ObjectMaterializedEventArgs(object entity)
+        public ObjectMaterializedEventArgs(object entity)
         {
             _entity = entity;
         }
