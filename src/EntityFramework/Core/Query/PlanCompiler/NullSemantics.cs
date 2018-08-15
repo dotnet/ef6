@@ -51,8 +51,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     n = base.VisitDefault(n);
                     break;
                 case OpType.EQ:
+                case OpType.GT:
+                case OpType.GE:
+                case OpType.LT:
+                case OpType.LE:
                     _negated = false;
-                    n = HandleEQ(n, negated);
+                    n = HandleComparison(n, negated);
                     break;
                 case OpType.NE:
                     n = HandleNE(n);
@@ -95,12 +99,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return n;
         }
 
-        private Node HandleEQ(Node n, bool negated)
+        private Node HandleComparison(Node n, bool negated)
         {
             _modified |= 
                 !ReferenceEquals(n.Child0, n.Child0 = VisitNode(n.Child0)) ||
                 !ReferenceEquals(n.Child1, n.Child1 = VisitNode(n.Child1)) ||
-                !ReferenceEquals(n, n = ImplementEquality(n, negated));
+                !ReferenceEquals(n, n = ImplementComparison(n, negated));
 
             return n;
         }
@@ -129,10 +133,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 && _variableNullabilityTable[((VarRefOp)n.Op).Var];
         }
 
-        private Node ImplementEquality(Node n, bool negated)
+        private Node ImplementComparison(Node n, bool negated)
         {
-            Debug.Assert(n.Op.OpType == OpType.EQ);
-
             var comparisonOp = (ComparisonOp) n.Op;
 
             if (comparisonOp.UseDatabaseNullSemantics)

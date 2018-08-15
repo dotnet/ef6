@@ -2372,6 +2372,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override Node Visit(ComparisonOp op, Node n)
         {
             if (op.OpType == OpType.EQ ||
+                op.OpType == OpType.GT ||
+                op.OpType == OpType.GE ||
+                op.OpType == OpType.LT ||
+                op.OpType == OpType.LE ||
                 op.OpType == OpType.NE)
             {
                 m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.NullSemantics);
