@@ -58,7 +58,7 @@ namespace Microsoft.DbContextPackage
         {
             await base.InitializeAsync(cancellationToken, progress);
 
-            _dte2 = GetServiceAsync(typeof(DTE)) as DTE2;
+            _dte2 = await GetServiceAsync(typeof(DTE)) as DTE2;
 
             if (_dte2 == null)
             {
