@@ -162,6 +162,17 @@ namespace System.Data.Entity.Infrastructure
             set { _internalContext.ValidateOnSaveEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the value that determines the default <see cref="IsolationLevel"/> to use for all EF-initiated transactions.
+        /// Note that this also affects the behavior of <see cref="DbContext.SaveChanges()"/>.
+        /// In case you want to use the default configuration of the DB driver, keep the value at null.
+        /// </summary>
+        public IsolationLevel? DefaultIsolationLevel
+        {
+            get { return _internalContext.DefaultIsolationLevel; }
+            set { _internalContext.DefaultIsolationLevel = value; }
+        }
+
         #endregion
     }
 }

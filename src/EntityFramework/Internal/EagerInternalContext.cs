@@ -248,6 +248,17 @@ namespace System.Data.Entity.Internal
             set { ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior = !value; }
         }
 
+        // <summary>
+        // Gets or sets the value that determines the default <see cref="IsolationLevel"/> to use for all EF-initiated transactions.
+        // Note that this also affects the behavior of <see cref="DbContext.SaveChanges()"/>.
+        // In case you want to use the default configuration of the DB driver, keep the value at null.
+        // </summary>
+        public override IsolationLevel? DefaultIsolationLevel
+        {
+            get { return ObjectContextInUse.ContextOptions.DefaultIsolationLevel; }
+            set { ObjectContextInUse.ContextOptions.DefaultIsolationLevel = value; }
+        }
+
         public override int? CommandTimeout
         {
             get { return ObjectContextInUse.CommandTimeout; }

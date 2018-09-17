@@ -79,6 +79,9 @@ namespace System.Data.Entity.Internal
         // This flag is used to keep the user's database null comparison behavior option before the ObjectContext is initialized.  
         private bool _useDatabaseNullSemanticsFlag;
 
+        // This variable is used to keep the default isolation level option before the ObjectContext is initialized.  
+        private IsolationLevel? _defaultIsolationLevel;
+
         // This flag is used to keep the user's command timeout before the ObjectContext is initialized.  
         private int? _commandTimeout;
 
@@ -463,6 +466,7 @@ namespace System.Data.Entity.Internal
                     _objectContext.ContextOptions.LazyLoadingEnabled = _initialLazyLoadingFlag;
                     _objectContext.ContextOptions.ProxyCreationEnabled = _initialProxyCreationFlag;
                     _objectContext.ContextOptions.UseCSharpNullComparisonBehavior = !_useDatabaseNullSemanticsFlag;
+                    _objectContext.ContextOptions.DefaultIsolationLevel = _defaultIsolationLevel;
                     _objectContext.CommandTimeout = _commandTimeout;
 
                     _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = true;
@@ -801,6 +805,30 @@ namespace System.Data.Entity.Internal
                 {
                     _useDatabaseNullSemanticsFlag = value;
                 }
+            }
+        }
+
+        // <summary>
+        // Gets or sets the value that determines the default <see cref="IsolationLevel"/> to use for all EF-initiated transactions.
+        // Note that this also affects the behavior of <see cref="DbContext.SaveChanges()"/>.
+        // In case you want to use the default configuration of the DB driver, keep the value at null.
+        // </summary>
+        public override IsolationLevel? DefaultIsolationLevel
+        {
+            get
+            {
+                var objectContext = ObjectContextInUse;
+                return objectContext == null
+                    ? _defaultIsolationLevel
+                    : objectContext.ContextOptions.DefaultIsolationLevel;
+            }
+            set
+            {
+                var objectContext = ObjectContextInUse;
+                if (objectContext != null)
+                    objectContext.ContextOptions.DefaultIsolationLevel = value;
+                else
+                    _defaultIsolationLevel = value;
             }
         }
 

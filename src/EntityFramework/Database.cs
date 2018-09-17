@@ -120,7 +120,9 @@ namespace System.Data.Entity
         {
             var entityConnection = (EntityConnection)_internalContext.ObjectContext.Connection;
 
-            _dbContextTransaction = new DbContextTransaction(entityConnection);
+            _dbContextTransaction = _internalContext.DefaultIsolationLevel == null
+                ? new DbContextTransaction(entityConnection)
+                : new DbContextTransaction(entityConnection, _internalContext.DefaultIsolationLevel.Value);
             _entityTransaction = entityConnection.CurrentTransaction;
 
             return _dbContextTransaction;

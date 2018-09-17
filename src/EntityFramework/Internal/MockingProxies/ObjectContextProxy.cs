@@ -90,6 +90,7 @@ namespace System.Data.Entity.Internal.MockingProxies
                 source._objectContext.ContextOptions.UseConsistentNullReferenceBehavior;
             _objectContext.ContextOptions.UseLegacyPreserveChangesBehavior =
                 source._objectContext.ContextOptions.UseLegacyPreserveChangesBehavior;
+            _objectContext.ContextOptions.DefaultIsolationLevel = source._objectContext.ContextOptions.DefaultIsolationLevel;
             _objectContext.CommandTimeout = source._objectContext.CommandTimeout;
 
             _objectContext.InterceptionContext = source._objectContext.InterceptionContext.WithObjectContext(_objectContext);

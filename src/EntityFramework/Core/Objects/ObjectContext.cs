@@ -3266,7 +3266,9 @@ namespace System.Data.Entity.Core.Objects
                 // EntityConnection tracks the CurrentTransaction we don't need to pass it around
                 if (needLocalTransaction)
                 {
-                    localTransaction = connection.BeginTransaction();
+                    localTransaction = ContextOptions.DefaultIsolationLevel == null
+                        ? connection.BeginTransaction()
+                        : connection.BeginTransaction(ContextOptions.DefaultIsolationLevel.Value);
                 }
 
                 var result = func();
@@ -3348,7 +3350,9 @@ namespace System.Data.Entity.Core.Objects
                 // EntityConnection tracks the CurrentTransaction we don't need to pass it around
                 if (needLocalTransaction)
                 {
-                    localTransaction = connection.BeginTransaction();
+                    localTransaction = ContextOptions.DefaultIsolationLevel == null
+                        ? connection.BeginTransaction()
+                        : connection.BeginTransaction(ContextOptions.DefaultIsolationLevel.Value);
                 }
 
                 var result = await func().WithCurrentCulture();
