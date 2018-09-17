@@ -204,6 +204,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                            ? null
                                            : connection.CurrentTransaction.StoreTransaction);
                 command.Connection = connection.StoreConnection;
+
+                // FIX Klaus 12/09/2018: Prevents the previously assigned transaction from being deleted due to collateral effects during connection assignment.
+                command.Transaction = command.Transaction
+                                      ?? (connection.CurrentTransaction == null ? null : connection.CurrentTransaction.StoreTransaction);
+
                 if (Translator.CommandTimeout.HasValue)
                 {
                     command.CommandTimeout = Translator.CommandTimeout.Value;
