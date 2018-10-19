@@ -9,6 +9,7 @@ namespace Microsoft.DbContextPackage.Extensions
     {
         public static string GetDefaultNamespace(this ProjectItem projectItem)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             var project = projectItem.ContainingProject;
             var namespaceParts = new Stack<string>();
 

@@ -1,4 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+using Microsoft.VisualStudio.OLE.Interop;
+
 namespace Microsoft.DbContextPackage.Extensions
 {
     using System;
@@ -11,7 +13,7 @@ namespace Microsoft.DbContextPackage.Extensions
     using Microsoft.VisualStudio.ComponentModelHost;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
-    using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
+    using IServiceProvider = IServiceProvider;
 
     internal static class ProjectExtensions
     {
@@ -21,6 +23,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
         public static ProjectItem AddNewFile(this Project project, string path, string contents)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(project);
             DebugCheck.NotEmpty(path);
 
@@ -84,6 +87,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
         public static bool TryBuild(this Project project)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(project);
 
             var dte = project.DTE;
@@ -103,6 +107,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
         private static T GetPropertyValue<T>(this Project project, string propertyName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(project);
             DebugCheck.NotEmpty(propertyName);
 
@@ -118,6 +123,7 @@ namespace Microsoft.DbContextPackage.Extensions
 
         private static T GetConfigurationPropertyValue<T>(this Project project, string propertyName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(project);
             DebugCheck.NotEmpty(propertyName);
 
@@ -133,12 +139,14 @@ namespace Microsoft.DbContextPackage.Extensions
 
         private static IEnumerable<string> GetProjectTypes(this Project project)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(project);
 
             IVsSolution solution;
             using (var serviceProvider = new ServiceProvider((IServiceProvider)project.DTE))
             {
                 solution = (IVsSolution)serviceProvider.GetService(typeof(IVsSolution));
+                Assumes.Present(solution);
             }
 
             IVsHierarchy hierarchy;

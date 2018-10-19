@@ -28,3 +28,5 @@ Index.dat
 Storage.dat
 *.sln.ide
 .vs/
+/.idea/.idea.PowerTools
+/MigrationBackup

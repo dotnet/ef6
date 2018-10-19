@@ -1,4 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+using System.Configuration;
+
 namespace Microsoft.DbContextPackage
 {
     using System;
@@ -22,8 +24,8 @@ namespace Microsoft.DbContextPackage
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Design;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Configuration = System.Configuration.Configuration;
-    using ConfigurationManager = System.Configuration.ConfigurationManager;
+    using Configuration = Configuration;
+    using ConfigurationManager = ConfigurationManager;
 
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "0.9.2", IconResourceID = 400)]
@@ -59,7 +61,7 @@ namespace Microsoft.DbContextPackage
             await base.InitializeAsync(cancellationToken, progress);
 
             _dte2 = await GetServiceAsync(typeof(DTE)) as DTE2;
-
+            Assumes.Present(_dte2);
             if (_dte2 == null)
             {
                 return;
@@ -101,6 +103,7 @@ namespace Microsoft.DbContextPackage
 
         private void OnItemMenuBeforeQueryStatus(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             OnItemMenuBeforeQueryStatus(
                 sender,
                 new[] { FileExtensions.CSharp, FileExtensions.VisualBasic });
@@ -108,6 +111,7 @@ namespace Microsoft.DbContextPackage
 
         private void OnOptimizeContextBeforeQueryStatus(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             OnItemMenuBeforeQueryStatus(
                 sender,
                 new[] { FileExtensions.CSharp, FileExtensions.VisualBasic, FileExtensions.EntityDataModel });
@@ -115,6 +119,7 @@ namespace Microsoft.DbContextPackage
 
         private void OnItemMenuBeforeQueryStatus(object sender, IEnumerable<string> supportedExtensions)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(supportedExtensions);
 
             var menuCommand = sender as MenuCommand;
@@ -135,6 +140,7 @@ namespace Microsoft.DbContextPackage
 
         private string GetSelectedItemExtension()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var selectedItem = _dte2.SelectedItems.Item(1);
 
             if ((selectedItem.ProjectItem == null)
@@ -155,6 +161,7 @@ namespace Microsoft.DbContextPackage
 
         private void OnItemContextMenuInvokeHandler(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var menuCommand = sender as MenuCommand;
 
             if (menuCommand == null)
@@ -227,6 +234,7 @@ namespace Microsoft.DbContextPackage
 
         private void OnOptimizeContextInvokeHandler(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (_dte2.SelectedItems.Count != 1)
             {
                 return;
@@ -255,6 +263,7 @@ namespace Microsoft.DbContextPackage
 
         internal void LogError(string statusMessage, Exception exception)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotEmpty(statusMessage);
             DebugCheck.NotNull(exception);
 
@@ -285,6 +294,7 @@ namespace Microsoft.DbContextPackage
 
         private dynamic DiscoverUserContextType(out Type systemContextType)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             systemContextType = null;
             var project = _dte2.SelectedItems.Item(1).ProjectItem.ContainingProject;
 
@@ -300,7 +310,9 @@ namespace Microsoft.DbContextPackage
             using (var serviceProvider = new ServiceProvider((VisualStudio.OLE.Interop.IServiceProvider)_dte2.DTE))
             {
                 typeService = (DynamicTypeService)serviceProvider.GetService(typeof(DynamicTypeService));
+                Assumes.Present(typeService);
                 solution = (IVsSolution)serviceProvider.GetService(typeof(SVsSolution));
+                Assumes.Present(solution);
             }
 
             IVsHierarchy vsHierarchy;
@@ -392,6 +404,7 @@ namespace Microsoft.DbContextPackage
 
         private Project GetStartUpProject()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var startupProjectPaths = (object[])_dte2.Solution.SolutionBuild.StartupProjects;
 
             if (startupProjectPaths.Length == 1)
@@ -409,6 +422,7 @@ namespace Microsoft.DbContextPackage
                 return GetSolutionProjects().Single(
                     p =>
                     {
+                        ThreadHelper.ThrowIfNotOnUIThread();
                         string fullName;
                         try
                         {
@@ -428,6 +442,7 @@ namespace Microsoft.DbContextPackage
 
         private IEnumerable<Project> GetSolutionProjects()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var projects = new Stack<Project>();
 
             foreach (var project in _dte2.Solution.Projects.Cast<Project>())
@@ -456,6 +471,7 @@ namespace Microsoft.DbContextPackage
 
         private Configuration GetUserConfig(Project project, string assemblyFullName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(project);
 
             var userConfigDirectory
@@ -507,6 +523,7 @@ namespace Microsoft.DbContextPackage
 
         private static IEnumerable<CodeElement> FindClassesInCodeModel(CodeElements codeElements)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(codeElements);
 
             foreach (CodeElement codeElement in codeElements)
