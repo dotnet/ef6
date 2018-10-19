@@ -11,7 +11,6 @@ namespace Microsoft.DbContextPackage.Handlers
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
-    using System.Windows.Forms;
     using EnvDTE;
     using Microsoft.DbContextPackage.Extensions;
     using Microsoft.DbContextPackage.Resources;
