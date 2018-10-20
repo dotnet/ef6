@@ -2,13 +2,10 @@
 namespace Microsoft.DbContextPackage.Utilities
 {
     using System;
-    using System.Collections.Generic;
     using System.Data.Mapping;
     using System.IO;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.DbContextPackage.Extensions;
-    using Microsoft.DbContextPackage.Resources;
+    using Extensions;
+    using Resources;
     using Xunit;
 
     public class EdmxUtilityTests

@@ -1,4 +1,4 @@
-﻿<dw:DialogWindow x:Class="Microsoft.DbContextPackage.AboutDialog"
+﻿<dw:DialogWindow x:Class="Microsoft.DbContextPackage.Dialogs.AboutDialog"
              xmlns:dw="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,7 +22,7 @@
                 <Hyperlink TextDecorations="" Click="GalleryLink_Click" x:Name="GalleryLink">
             <Run Text="Visual Studio Marketplace"/></Hyperlink></Bold>
         </TextBlock>
-        <dw:DialogButton IsCancel="True" IsDefault="True" Name="OKButton" Click="OKButton_Click" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,12,11.5" Height="24" Width="75">OK</dw:DialogButton>
+        <dw:DialogButton IsCancel="True" IsDefault="True" Name="OKButton" Click="OKButton_Click" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,12,11.5" Height="24" Width="75">OK</dw:DialogButton>
     </StackPanel>
     <!--<Grid ClipToBounds="False" Margin="0,0,0,38">
         <Grid.RowDefinitions>

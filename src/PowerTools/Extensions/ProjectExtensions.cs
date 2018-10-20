@@ -1,5 +1,4 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
-using Microsoft.VisualStudio.OLE.Interop;
 
 namespace Microsoft.DbContextPackage.Extensions
 {
@@ -9,11 +8,10 @@ namespace Microsoft.DbContextPackage.Extensions
     using System.Linq;
     using System.Runtime.InteropServices;
     using EnvDTE;
-    using Microsoft.DbContextPackage.Utilities;
-    using Microsoft.VisualStudio.ComponentModelHost;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using IServiceProvider = IServiceProvider;
+    using Utilities;
+    using VisualStudio.ComponentModelHost;
+    using VisualStudio.Shell;
+    using VisualStudio.Shell.Interop;
 
     internal static class ProjectExtensions
     {

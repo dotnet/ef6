@@ -6,8 +6,8 @@ namespace Microsoft.DbContextPackage.Handlers
     using System.IO;
     using System.Reflection;
     using System.Xml;
-    using Microsoft.DbContextPackage.Resources;
-    using Microsoft.DbContextPackage.Utilities;
+    using Resources;
+    using Utilities;
 
     internal class ViewContextHandler
     {

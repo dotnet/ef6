@@ -2,9 +2,9 @@
 namespace Microsoft.DbContextPackage.Extensions
 {
     using EnvDTE;
-    using Microsoft.DbContextPackage.Utilities;
+    using Utilities;
 
-    internal static class SourceControlExtenstions
+    internal static class SourceControlExtensions
     {
         public static bool CheckOutItemIfNeeded(this SourceControl sourceControl, string itemName)
         {

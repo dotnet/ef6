@@ -4,7 +4,7 @@ namespace Microsoft.DbContextPackage.Extensions
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.DbContextPackage.Utilities;
+    using Utilities;
 
     internal static class XContainerExtensions
     {

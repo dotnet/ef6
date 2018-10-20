@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using System;
 
-namespace Microsoft.DbContextPackage
+namespace Microsoft.DbContextPackage.Dialogs
 {
     public partial class AboutDialog
     {

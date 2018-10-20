@@ -10,8 +10,8 @@ namespace Microsoft.DbContextPackage.Utilities
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.DbContextPackage.Extensions;
-    using Microsoft.DbContextPackage.Resources;
+    using Extensions;
+    using Resources;
 
     internal class EdmxUtility
     {

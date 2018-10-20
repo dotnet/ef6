@@ -350,7 +350,7 @@ namespace Microsoft.DbContextPackage.Resources
 
         private EntityRes()
         {
-            resources = new ResourceManager("Microsoft.DbContextPackage.Properties.Resources", typeof(Microsoft.DbContextPackage.DbContextPackage).Assembly);
+            resources = new ResourceManager("Microsoft.DbContextPackage.Properties.Resources", typeof(DbContextPackage).Assembly);
         }
 
         private static EntityRes GetLoader()
@@ -381,7 +381,7 @@ namespace Microsoft.DbContextPackage.Resources
             EntityRes sys = GetLoader();
             if (sys == null)
                 return null;
-            string res = sys.resources.GetString(name, EntityRes.Culture);
+            string res = sys.resources.GetString(name, Culture);
 
             if (args != null && args.Length > 0)
             {
@@ -406,7 +406,7 @@ namespace Microsoft.DbContextPackage.Resources
             EntityRes sys = GetLoader();
             if (sys == null)
                 return null;
-            return sys.resources.GetString(name, EntityRes.Culture);
+            return sys.resources.GetString(name, Culture);
         }
 
         public static string GetString(string name, out bool usedFallback)
@@ -421,7 +421,7 @@ namespace Microsoft.DbContextPackage.Resources
             EntityRes sys = GetLoader();
             if (sys == null)
                 return null;
-            return sys.resources.GetObject(name, EntityRes.Culture);
+            return sys.resources.GetObject(name, Culture);
         }
     }
 }

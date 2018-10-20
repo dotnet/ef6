@@ -5,13 +5,11 @@ namespace Microsoft.DbContextPackage.Extensions
     using System.Collections.Generic;
     using System.Data.Metadata.Edm;
     using System.Runtime.Serialization;
-    using Microsoft.DbContextPackage.Utilities;
+    using Utilities;
 
     [Serializable]
     public class EdmSchemaErrorException : Exception
     {
-        private readonly IEnumerable<EdmSchemaError> _errors;
-
         public EdmSchemaErrorException()
         {
         }
@@ -26,7 +24,7 @@ namespace Microsoft.DbContextPackage.Extensions
         {
             Check.NotNull(errors, "errors");
 
-            _errors = errors;
+            Errors = errors;
         }
 
         public EdmSchemaErrorException(string message, Exception innerException)
@@ -39,19 +37,16 @@ namespace Microsoft.DbContextPackage.Extensions
         {
             Check.NotNull(info, "info");
 
-            _errors = (IEnumerable<EdmSchemaError>)info.GetValue("Errors", typeof(IEnumerable<EdmSchemaError>));
+            Errors = (IEnumerable<EdmSchemaError>)info.GetValue("Errors", typeof(IEnumerable<EdmSchemaError>));
         }
 
-        public IEnumerable<EdmSchemaError> Errors
-        {
-            get { return _errors; }
-        }
+        public IEnumerable<EdmSchemaError> Errors { get; }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             Check.NotNull(info, "info");
 
-            info.AddValue("Errors", _errors);
+            info.AddValue("Errors", Errors);
 
             base.GetObjectData(info, context);
         }

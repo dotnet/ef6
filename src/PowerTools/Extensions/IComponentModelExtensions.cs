@@ -2,9 +2,8 @@
 namespace Microsoft.DbContextPackage.Extensions
 {
     using System;
-    using System.Diagnostics;
-    using Microsoft.DbContextPackage.Utilities;
-    using Microsoft.VisualStudio.ComponentModelHost;
+    using Utilities;
+    using VisualStudio.ComponentModelHost;
 
     internal static class IComponentModelExtensions
     {
