@@ -13,6 +13,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public void ShowDialog()
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             try
             {
                 var dialog = new AboutDialog(_package);

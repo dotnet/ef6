@@ -16,7 +16,9 @@ namespace Microsoft.DbContextPackage.Extensions
             return projectItems
                 .Cast<ProjectItem>()
                 .FirstOrDefault(
-                    pi => string.Equals(pi.Name, name, StringComparison.OrdinalIgnoreCase));
+                    pi => {
+                        VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                        return string.Equals(pi.Name, name, StringComparison.OrdinalIgnoreCase); });
         }
     }
 }

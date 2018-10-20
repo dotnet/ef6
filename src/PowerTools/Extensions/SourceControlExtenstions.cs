@@ -8,6 +8,7 @@ namespace Microsoft.DbContextPackage.Extensions
     {
         public static bool CheckOutItemIfNeeded(this SourceControl sourceControl, string itemName)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(sourceControl);
             DebugCheck.NotEmpty(itemName);
 

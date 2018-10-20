@@ -26,6 +26,7 @@ namespace Microsoft.DbContextPackage
 
         private void CodeplexLink_Click(object sender, RoutedEventArgs e)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             _package.DTE2.ItemOperations.Navigate("https://github.com/ErikEJ/EntityFramework6PowerTools");
         }
 

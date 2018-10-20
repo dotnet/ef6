@@ -22,6 +22,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public void ViewContext(MenuCommand menuCommand, dynamic context, Type systemContextType)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotNull(menuCommand);
             DebugCheck.NotNull(systemContextType);
 

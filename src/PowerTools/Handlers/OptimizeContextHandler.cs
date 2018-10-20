@@ -34,6 +34,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public void OptimizeContext(dynamic context)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             Type contextType = context.GetType();
 
             try
@@ -77,6 +78,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public void OptimizeEdmx(string inputPath)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotEmpty(inputPath);
 
             var baseFileName = Path.GetFileNameWithoutExtension(inputPath);
@@ -140,8 +142,10 @@ namespace Microsoft.DbContextPackage.Handlers
             SelectedItem selectedItem,
             Action<string> generateAction)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotEmpty(baseFileName);
 
+            // TODO: don't use Windows.Forms.Timer?
             var progressTimer = new Timer { Interval = 1000 };
 
             try
@@ -161,6 +165,7 @@ namespace Microsoft.DbContextPackage.Handlers
                 var progress = 1;
                 progressTimer.Tick += (sender, e) =>
                     {
+                        VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
                         _package.DTE2.StatusBar.Progress(true, string.Empty, progress, 100);
                         progress = progress == 100 ? 1 : progress + 1;
                         _package.DTE2.StatusBar.Text = Strings.Optimize_Begin(baseFileName);
@@ -168,14 +173,21 @@ namespace Microsoft.DbContextPackage.Handlers
 
                 progressTimer.Start();
 
+                // TODO: rewrite using async/await
+
+#pragma warning disable VSTHRD105 // Avoid method overloads that assume TaskScheduler.Current
                 Task.Factory.StartNew(
+#pragma warning restore VSTHRD105 // Avoid method overloads that assume TaskScheduler.Current
                         () =>
                         {
                             generateAction(viewsPath);
                         })
+#pragma warning disable VSTHRD110 // Observe result of async calls
                     .ContinueWith(
+#pragma warning restore VSTHRD110 // Observe result of async calls
                         t =>
                         {
+                            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
                             progressTimer.Stop();
                             _package.DTE2.StatusBar.Progress(false);
 
@@ -208,6 +220,7 @@ namespace Microsoft.DbContextPackage.Handlers
             StorageMappingItemCollection mappingCollection,
             SelectedItem selectedItem)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotEmpty(baseFileName);
             DebugCheck.NotNull(mappingCollection);
 
@@ -230,6 +243,7 @@ namespace Microsoft.DbContextPackage.Handlers
             SelectedItem selectedItem,
             string contextTypeName)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             DebugCheck.NotEmpty(baseFileName);
 
             OptimizeContextCore(

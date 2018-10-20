@@ -19,6 +19,7 @@ namespace Microsoft.DbContextPackage.Handlers
 
         public void ViewDdl(dynamic context)
         {
+            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
             Type contextType = context.GetType();
 
             try
