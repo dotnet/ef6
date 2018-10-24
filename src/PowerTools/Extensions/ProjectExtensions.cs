@@ -12,6 +12,7 @@ namespace Microsoft.DbContextPackage.Extensions
     using VisualStudio.ComponentModelHost;
     using VisualStudio.Shell;
     using VisualStudio.Shell.Interop;
+    using IServiceProvider = VisualStudio.OLE.Interop.IServiceProvider;
 
     internal static class ProjectExtensions
     {
