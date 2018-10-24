@@ -3,8 +3,8 @@ namespace Microsoft.DbContextPackage.Handlers
 {
     using System;
     using System.IO;
-    using Resources;
-    using Utilities;
+    using Microsoft.DbContextPackage.Resources;
+    using Microsoft.DbContextPackage.Utilities;
 
     internal class ViewDdlHandler
     {

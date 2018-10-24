@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.DbContextPackage.Dialogs;
 
 namespace Microsoft.DbContextPackage.Handlers
 {

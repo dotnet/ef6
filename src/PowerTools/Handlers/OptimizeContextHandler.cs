@@ -13,12 +13,13 @@ namespace Microsoft.DbContextPackage.Handlers
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using EnvDTE;
-    using Extensions;
-    using Resources;
-    using Utilities;
-    using VisualStudio.Shell.Design;
-    using VisualStudio.Shell.Interop;
+    using Microsoft.DbContextPackage.Extensions;
+    using Microsoft.DbContextPackage.Resources;
+    using Microsoft.DbContextPackage.Utilities;
+    using Microsoft.VisualStudio.Shell.Design;
+    using Microsoft.VisualStudio.Shell.Interop;
     using VSLangProj;
+    using Task = System.Threading.Tasks.Task;
 
     internal class OptimizeContextHandler
     {

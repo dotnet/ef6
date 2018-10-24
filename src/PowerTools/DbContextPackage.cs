@@ -16,14 +16,14 @@ namespace Microsoft.DbContextPackage
     using System.Xml.Linq;
     using EnvDTE;
     using EnvDTE80;
-    using Extensions;
-    using Handlers;
-    using Resources;
-    using Utilities;
-    using VisualStudio;
-    using VisualStudio.Shell;
-    using VisualStudio.Shell.Design;
-    using VisualStudio.Shell.Interop;
+    using Microsoft.DbContextPackage.Extensions;
+    using Microsoft.DbContextPackage.Handlers;
+    using Microsoft.DbContextPackage.Resources;
+    using Microsoft.DbContextPackage.Utilities;
+    using Microsoft.VisualStudio;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Shell.Design;
+    using Microsoft.VisualStudio.Shell.Interop;
     using Configuration = Configuration;
     using ConfigurationManager = ConfigurationManager;
 
@@ -627,8 +627,8 @@ namespace Microsoft.DbContextPackage
         {
             if (attr != null)
             {
-                string tempFileName;
-                string tempQualifiedFileName;
+                string tempFileName = null;
+                string tempQualifiedFileName = null;
                 do
                 {
                     tempFileName = Path.GetRandomFileName();

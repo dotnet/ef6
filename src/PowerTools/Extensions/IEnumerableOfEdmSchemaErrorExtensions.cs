@@ -4,7 +4,7 @@ namespace Microsoft.DbContextPackage.Extensions
     using System.Collections.Generic;
     using System.Data.Metadata.Edm;
     using System.Linq;
-    using Utilities;
+    using Microsoft.DbContextPackage.Utilities;
 
     internal static class IEnumerableOfEdmSchemaErrorExtensions
     {

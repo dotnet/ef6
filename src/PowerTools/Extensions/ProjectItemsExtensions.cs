@@ -4,7 +4,7 @@ namespace Microsoft.DbContextPackage.Extensions
     using System;
     using System.Linq;
     using EnvDTE;
-    using Utilities;
+    using Microsoft.DbContextPackage.Utilities;
 
     internal static class ProjectItemsExtensions
     {
