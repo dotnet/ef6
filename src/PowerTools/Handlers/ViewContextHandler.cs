@@ -51,7 +51,7 @@ namespace Microsoft.DbContextPackage.Handlers
                     if (_package.DTE2.ItemOperations.IsFileOpen(filePath))
                     {
                         var openDocuments = _package.DTE2.Documents
-                            .OfType<Document>()
+                            .OfType<EnvDTE.Document>()
                             .Where(d =>
                             {
                                 VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
