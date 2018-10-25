@@ -4,6 +4,7 @@ namespace Microsoft.DbContextPackage.Handlers
     using System;
     using System.ComponentModel.Design;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Xml;
     using Microsoft.DbContextPackage.Resources;
@@ -30,33 +31,55 @@ namespace Microsoft.DbContextPackage.Handlers
 
             try
             {
-                var filePath = Path.Combine(
-                    Path.GetTempPath(),
-                    contextType.Name
-                        + (menuCommand.CommandID.ID == PkgCmdIDList.cmdidViewEntityDataModel
-                            ? FileExtensions.EntityDataModel
-                            : FileExtensions.Xml));
+                // Use a unique sub-folder (the project GUID) to prevent clashes of same named contexts
+                // from different solutions.
+                var tmpFolder = Path.Combine(Path.GetTempPath(), _package.ProjectGuid.ToString());
+                Directory.CreateDirectory(tmpFolder);
+
+                // Use the context type 'FullName' to distinguish contexts from multiple projects in the same solution
+                var filePath = Path.Combine(tmpFolder, contextType.FullName);
+                filePath = Path.ChangeExtension(filePath,
+                    menuCommand.CommandID.ID == PkgCmdIDList.cmdidViewEntityDataModel
+                        ? FileExtensions.EntityDataModel
+                        : FileExtensions.Xml);
 
                 if (File.Exists(filePath))
                 {
                     File.SetAttributes(filePath, FileAttributes.Normal);
+
+                    // Close the file if already open to eliminate warning dialogs
+                    if (_package.DTE2.ItemOperations.IsFileOpen(filePath))
+                    {
+                        var openDocuments = _package.DTE2.Documents
+                            .OfType<EnvDTE.Document>()
+                            .Where(d =>
+                            {
+                                VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                                return d.FullName == filePath;
+                            })
+                            .ToList();
+
+                        openDocuments.ForEach(d =>
+                        {
+                            VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+                            d.Close();
+                        });
+                    }
                 }
 
                 using (var fileStream = File.Create(filePath))
+                using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
                 {
-                    using (var xmlWriter = XmlWriter.Create(fileStream, new XmlWriterSettings { Indent = true }))
-                    {
-                        var edmxWriterType = systemContextType.Assembly.GetType("System.Data.Entity.Infrastructure.EdmxWriter");
+                    var edmxWriterType = systemContextType.Assembly.GetType("System.Data.Entity.Infrastructure.EdmxWriter");
 
-                        if (edmxWriterType != null)
-                        {
-                            edmxWriterType.InvokeMember(
-                                "WriteEdmx",
-                                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
-                                null,
-                                null,
-                                new object[] { context, xmlWriter });
-                        }
+                    if (edmxWriterType != null)
+                    {
+                        edmxWriterType.InvokeMember(
+                            "WriteEdmx",
+                            BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public,
+                            null,
+                            null,
+                            new object[] { context, xmlWriter });
                     }
                 }
 

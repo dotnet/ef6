@@ -56,6 +56,8 @@ namespace Microsoft.DbContextPackage
             get { return _dte2; }
         }
 
+        internal Guid ProjectGuid { get; private set; }
+
         protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
@@ -305,6 +307,12 @@ namespace Microsoft.DbContextPackage
                 return null;
             }
 
+            var outputFolder = project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+            var projectPath = Path.GetDirectoryName(project.FileName);
+            
+            // Set current folder so that resolution/construction of the derived DbContext succeeds when there are referenced assemblies
+            Directory.SetCurrentDirectory(Path.Combine(projectPath, outputFolder));
+
             DynamicTypeService typeService;
             IVsSolution solution;
             using (var serviceProvider = new ServiceProvider((VisualStudio.OLE.Interop.IServiceProvider)_dte2.DTE))
@@ -317,6 +325,9 @@ namespace Microsoft.DbContextPackage
 
             IVsHierarchy vsHierarchy;
             var hr = solution.GetProjectOfUniqueName(_dte2.SelectedItems.Item(1).ProjectItem.ContainingProject.UniqueName, out vsHierarchy);
+
+            solution.GetGuidOfProject(vsHierarchy, out Guid projectGuid);
+            ProjectGuid = projectGuid;
 
             if (hr != ProjectExtensions.S_OK)
             {
