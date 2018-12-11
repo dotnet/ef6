@@ -4327,6 +4327,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "Error in Function '{0}'. Aggregate Functions should take exactly one input parameter."
+        // </summary>
+        internal static string InvalidNumberOfParametersForAggregateFunction(object p0)
+        {
+            return EntityRes.GetString(EntityRes.InvalidNumberOfParametersForAggregateFunction, p0);
+        }
+
+        // <summary>
         // A string like "Type of parameter '{0}' in function '{1}' is not valid. The aggregate function parameter type must be of CollectionType."
         // </summary>
         internal static string InvalidParameterTypeForAggregateFunction(object p0, object p1)
@@ -16265,6 +16273,7 @@ namespace System.Data.Entity.Resources
         internal const string Validator_UnsupportedEnumUnderlyingType = "Validator_UnsupportedEnumUnderlyingType";
         internal const string ExtraInfo = "ExtraInfo";
         internal const string Metadata_General_Error = "Metadata_General_Error";
+        internal const string InvalidNumberOfParametersForAggregateFunction = "InvalidNumberOfParametersForAggregateFunction";
         internal const string InvalidParameterTypeForAggregateFunction = "InvalidParameterTypeForAggregateFunction";
         internal const string InvalidSchemaEncountered = "InvalidSchemaEncountered";
         internal const string SystemNamespaceEncountered = "SystemNamespaceEncountered";

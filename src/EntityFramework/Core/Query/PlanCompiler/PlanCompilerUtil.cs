@@ -60,6 +60,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Is this function a collection aggregate function. It is, if
+        // - it has at least one child
         // - the first child is a collection type
         // - and the function has been marked with the aggregate attribute
         // </summary>
@@ -68,7 +69,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <returns> true, if this was a collection aggregate function </returns>
         internal static bool IsCollectionAggregateFunction(FunctionOp op, Node n)
         {
-            return (TypeSemantics.IsCollectionType(n.Child0.Op.Type) &&
+            return ((n.Children.Count >= 1) &&
+                    TypeSemantics.IsCollectionType(n.Child0.Op.Type) &&
                     TypeSemantics.IsAggregateFunction(op.Function));
         }
 

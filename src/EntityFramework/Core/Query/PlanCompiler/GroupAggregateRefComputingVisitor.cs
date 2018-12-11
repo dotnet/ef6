@@ -150,11 +150,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         public override void Visit(FunctionOp op, Node n)
         {
             VisitDefault(n);
-            if (!PlanCompilerUtil.IsCollectionAggregateFunction(op, n)) {
+            if (!PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
+            {
                 return;
             }
 
-            if (n.Children.Count > 1) {
+            if (n.Children.Count > 1)
+            {
                 return;
             }
 
@@ -165,10 +167,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 n.Child0, false, _command, _groupAggregateVarInfoManager, out referencedGroupAggregateVarInfo, out templateNode,
                 out isUnnested)
                 &&
-                (isUnnested || AggregatePushdownUtil.IsVarRefOverGivenVar(templateNode, referencedGroupAggregateVarInfo.GroupAggregateVar))) {
+                (isUnnested || AggregatePushdownUtil.IsVarRefOverGivenVar(templateNode, referencedGroupAggregateVarInfo.GroupAggregateVar)))
+                {
                 referencedGroupAggregateVarInfo.CandidateAggregateNodes.Add(new KeyValuePair<Node, List<Node>>(n, new List<Node> { templateNode }));
             }
-
         }
 
         #endregion
