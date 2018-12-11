@@ -15,17 +15,20 @@ Project global pre-settings.
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '12.0'">12</ToolingVersionMajor>
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '14.0'">14</ToolingVersionMajor>
     <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '15.0'">15</ToolingVersionMajor>
+    <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '16.0'">16</ToolingVersionMajor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '11.0'">2</ToolingVersionMinor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '12.0'">0</ToolingVersionMinor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '14.0'">0</ToolingVersionMinor>
     <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '15.0'">0</ToolingVersionMinor>
+    <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '16.0'">0</ToolingVersionMinor>
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
     <VersionReleasePrefix>0</VersionReleasePrefix>
     <VersionRelease>$(VersionReleasePrefix)</VersionRelease>
     <VersionReleaseName></VersionReleaseName>
     <ToolingDotNetFrameworkVersion Condition="'$(VisualStudioVersion)' == '11.0' OR '$(VisualStudioVersion)' == '12.0' OR '$(VisualStudioVersion)' == '14.0'">v4.5</ToolingDotNetFrameworkVersion>
-    <ToolingDotNetFrameworkVersion Condition="'$(ToolingDotNetFrameworkVersion)' == ''">v4.6</ToolingDotNetFrameworkVersion>
+    <ToolingDotNetFrameworkVersion Condition="'$(ToolingDotNetFrameworkVersion)' == '' AND '$(VisualStudioVersion)' == '15.0'">v4.6</ToolingDotNetFrameworkVersion>
+    <ToolingDotNetFrameworkVersion Condition="'$(ToolingDotNetFrameworkVersion)' == ''">v4.7.2</ToolingDotNetFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>

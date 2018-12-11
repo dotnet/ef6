@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using System;
 using System.Reflection;
@@ -21,6 +21,9 @@ using System.Runtime.InteropServices;
 #elif VS14
 [assembly: AssemblyVersion("14.0.0.0")]
 [assembly: AssemblyFileVersion("14.0.0.0")]
+#elif VS16
+[assembly: AssemblyVersion("16.0.0.0")]
+[assembly: AssemblyFileVersion("16.0.0.0")]
 #elif VS15
 [assembly: AssemblyVersion("15.0.0.0")]
 [assembly: AssemblyFileVersion("15.0.0.0")]

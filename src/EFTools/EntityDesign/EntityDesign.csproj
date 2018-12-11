@@ -53,20 +53,22 @@
     <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='12.0'">%25VS120COMNTOOLS%25</VsCommonToolsEnvVarName>
     <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='14.0'">%25VS140COMNTOOLS%25</VsCommonToolsEnvVarName>
     <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='15.0'">%24(DevEnvDir)</VsCommonToolsEnvVarName>
+    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='16.0'">%24(DevEnvDir)</VsCommonToolsEnvVarName>
   </PropertyGroup>
   <Import Project="$(RepositoryRoot)tools\EFToolsVsReferences.settings.targets" />
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TextTemplating.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.$(VisualStudioVersion15)" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.11.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.11.0" />
-    <Reference Include="Microsoft.VisualStudio.Shell.$(VisualStudioVersion)" />
-    <Reference Include="Microsoft.VisualStudio.Package.LanguageService.$(VisualStudioVersion)" />
-    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.$(VisualStudioVersion)" />
-    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.$(VisualStudioVersion)" />
-    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Shell.$(VisualStudioVersion)" />
-    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.GraphObject.$(VisualStudioVersion)" />
-    <Reference Include="Microsoft.VisualStudio.TextTemplating.VSHost.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.Shell.$(VisualStudioVersion15)" />
+    <Reference Condition="'$(VisualStudioVersion)' == '16.0'" Include="Microsoft.VisualStudio.Shell.Framework" />
+    <Reference Include="Microsoft.VisualStudio.Package.LanguageService.$(VisualStudioVersion15)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.$(VisualStudioVersion15)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.$(VisualStudioVersion15)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Shell.$(VisualStudioVersion15)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.GraphObject.$(VisualStudioVersion15)" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.VSHost.$(VisualStudioVersion15)" />
     <Reference Include="Microsoft.VisualStudio.Utilities" Condition="$(VisualStudioVersion)!='11.0' AND $(VisualStudioVersion)!='12.0'" />
     <Reference Include="Microsoft.VisualStudio.DataTools.Interop" />
     <Reference Include="Microsoft.WizardFramework" />
@@ -74,9 +76,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.VisualStudio.DataDesign.Common, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.DataDesign.Common" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Runtime.DurableInstancing" />
     <Reference Include="System.Activities" />
@@ -100,7 +102,7 @@
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="EnvDte" />
     <Reference Include="EnvDte80" />
-    <Reference Condition="$(VisualStudioVersion)=='15.0'" Include="Microsoft.VisualStudio.Imaging" />
+    <Reference Include="Microsoft.VisualStudio.Imaging" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
@@ -109,14 +111,14 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Design" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0" />
-    <Reference Include="Microsoft.VisualStudio.XmlEditor, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.XmlEditor" />
     <Reference Include="Microsoft.Data.ConnectionUI" />
     <Reference Include="Microsoft.VisualStudio.Data.Core" />
-    <Reference Include="Microsoft.VisualStudio.Data.Framework, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Data.Framework" />
     <Reference Include="Microsoft.VisualStudio.Data.Services" />
     <Reference Include="Microsoft.VIsualStudio.Designer.Interfaces" />
     <Reference Include="Microsoft.VisualStudio.TemplateWizardInterface" />
-    <Reference Include="Microsoft.VSDesigner, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VSDesigner" />
     <Reference Include="Microsoft.VisualStudio.VSHelp" />
     <Reference Include="Microsoft.VisualStudio.VSHelp80" />
     <Reference Include="vslangproj" />
@@ -258,11 +260,11 @@
     <Compile Include="UI\Views\Controls\ArrowOverrideRadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\Views\Dialogs\EnumTypeDialog_$(VisualStudioVersion).xaml.cs">
-      <DependentUpon>EnumTypeDialog_$(VisualStudioVersion).xaml</DependentUpon>
+    <Compile Include="UI\Views\Dialogs\EnumTypeDialog_$(VisualStudioVersion15).xaml.cs">
+      <DependentUpon>EnumTypeDialog_$(VisualStudioVersion15).xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Views\Dialogs\RefactorRenameDialog_$(VisualStudioVersion).xaml.cs">
-      <DependentUpon>RefactorRenameDialog_$(VisualStudioVersion).xaml</DependentUpon>
+    <Compile Include="UI\Views\Dialogs\RefactorRenameDialog_$(VisualStudioVersion15).xaml.cs">
+      <DependentUpon>RefactorRenameDialog_$(VisualStudioVersion15).xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Views\Explorer\DiagramManagerContextItem.cs" />
     <Compile Include="UI\Views\Explorer\IDiagramManager.cs" />
@@ -403,15 +405,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Resources\ExplorerContent_$(VisualStudioVersion).xaml">
+    <Page Include="Resources\ExplorerContent_$(VisualStudioVersion15).xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Views\Dialogs\EnumTypeDialog_$(VisualStudioVersion).xaml">
+    <Page Include="UI\Views\Dialogs\EnumTypeDialog_$(VisualStudioVersion15).xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\Views\Dialogs\RefactorRenameDialog_$(VisualStudioVersion).xaml">
+    <Page Include="UI\Views\Dialogs\RefactorRenameDialog_$(VisualStudioVersion15).xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

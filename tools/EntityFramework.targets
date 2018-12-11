@@ -14,15 +14,19 @@ Project global post-settings and targets.
     <DefineConstants Condition="'$(VisualStudioVersion)' == '11.0'">$(DefineConstants);VS11</DefineConstants>
     <DefineConstants Condition="'$(VisualStudioVersion)' == '12.0'">$(DefineConstants);VS12</DefineConstants>
     <DefineConstants Condition="'$(VisualStudioVersion)' == '14.0'">$(DefineConstants);VS14</DefineConstants>
-    <DefineConstants Condition="'$(VisualStudioVersion)' == '15.0'">$(DefineConstants);VS15</DefineConstants>
+    <DefineConstants Condition="'$(VisualStudioVersion)' == '15.0' OR '$(VisualStudioVersion)' == '16.0'">$(DefineConstants);VS15</DefineConstants>
+    <!-- DefineConstants Condition="'$(VisualStudioVersion)' == '16.0'">$(DefineConstants);VS16</DefineConstants -->
     <DefineConstants
      Condition="'$(VisualStudioVersion)' == '12.0'
              OR '$(VisualStudioVersion)' == '14.0'
-             OR '$(VisualStudioVersion)' == '15.0'">$(DefineConstants);VS12ORNEWER</DefineConstants>
+             OR '$(VisualStudioVersion)' == '15.0'
+             OR '$(VisualStudioVersion)' == '16.0'">$(DefineConstants);VS12ORNEWER</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'" >
-    <VsSDKDir Condition="'$(VisualStudioVersion)' == '15.0'">$(VSSDK150Install)</VsSDKDir>
+    <VisualStudioVersion15>15.0</VisualStudioVersion15> <!-- added to see where we are hard-coding 15.0 for now -->
+    <!-- VsSDKDir Condition="'$(VisualStudioVersion)' == '16.0'">$(VSSDK160Install)</VsSDKDir --> <!-- VSSDK160Install is not defined yet -->
+    <VsSDKDir Condition="'$(VisualStudioVersion)' == '15.0' OR '$(VisualStudioVersion)' == '16.0'">$(VSSDK150Install)</VsSDKDir>
     <VsSDKDir Condition="'$(VisualStudioVersion)' == '14.0'">$(VSSDK140Install)</VsSDKDir>
     <VsSDKDir Condition="'$(VisualStudioVersion)' == '12.0'">$(VSSDK120Install)</VsSDKDir>
     <VsSDKDir Condition="'$(VisualStudioVersion)' == '11.0'">$(VSSDK110Install)</VsSDKDir>
@@ -38,7 +42,7 @@ Project global post-settings and targets.
     </AssemblySearchPaths>
   </PropertyGroup>
 
-  <!-- For VisualStudioVersion 15.0 the VS installation no longer adds the VS dirs to the
+  <!-- For VisualStudioVersion 15.0++ the VS installation no longer adds the VS dirs to the
        assembly search paths via the GAC so need to add the following search paths to support
        references to Microsoft.VSDesigner, Microsoft.VisualStudio.XmlEditor and
        Microsoft.VisualStudio.Modeling.* DLLs -->
@@ -47,6 +51,14 @@ Project global post-settings and targets.
       $(VS150COMNTOOLS)\..\..\Common7\IDE;
       $(VS150COMNTOOLS)\..\..\Common7\IDE\Xml;
       $(VS150COMNTOOLS)\..\..\Common7\IDE\PrivateAssemblies;
+      $(AssemblySearchPaths)
+    </AssemblySearchPaths>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '16.0'" >
+    <AssemblySearchPaths>
+      $(VS160COMNTOOLS)\..\..\Common7\IDE;
+      $(VS160COMNTOOLS)\..\..\Common7\IDE\Xml;
+      $(VS160COMNTOOLS)\..\..\Common7\IDE\PrivateAssemblies;
       $(AssemblySearchPaths)
     </AssemblySearchPaths>
   </PropertyGroup>
@@ -92,7 +104,8 @@ Project global post-settings and targets.
           ('$(VisualStudioVersion)' != '11.0'
            AND '$(VisualStudioVersion)' != '12.0'
            AND '$(VisualStudioVersion)' != '14.0'
-           AND '$(VisualStudioVersion)' != '15.0')">true</VisualStudioVersionError>
+           AND '$(VisualStudioVersion)' != '15.0'
+           AND '$(VisualStudioVersion)' != '16.0')">true</VisualStudioVersionError>
     </PropertyGroup>
     <Error Condition="'$(VisualStudioVersionError)' == 'true'" Text="VisualStudioVersion property value is invalid or not supported: '$(VisualStudioVersion)'" />
   </Target>
