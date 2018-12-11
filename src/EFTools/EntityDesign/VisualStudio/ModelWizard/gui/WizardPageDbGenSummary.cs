@@ -614,6 +614,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                             {
                                 InferTablesAndDisplayDDL(ddlOutput);
                             }
+
+                            txtSaveDdlAs.Focus();
                         }
                     }, null);
         }

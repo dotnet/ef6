@@ -126,6 +126,7 @@
     <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlFunctionSqlGenerator.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="SqlHierarchyIdFunctions.cs" />
     <Compile Include="SqlGen\SqlStringBuilder.cs" />
     <Compile Include="SqlGen\SkipClause.cs" />
     <Compile Include="SqlServerMigrationSqlGenerator.cs" />

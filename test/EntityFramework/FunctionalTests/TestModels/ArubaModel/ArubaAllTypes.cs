@@ -69,5 +69,6 @@ namespace System.Data.Entity.TestModels.ArubaModel
         public DbGeometry c36_geometry_linestring { get; set; }
         public DbGeometry c37_geometry_polygon { get; set; }
         public ArubaShortEnum c38_shortenum { get; set; } 
+        public DateTimeOffset? c39_nullabledatetimeoffset { get; set; }
     }
 }

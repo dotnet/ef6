@@ -60,6 +60,7 @@
             <xs:enumeration value="GeometryMultiPolygon" />
             <xs:enumeration value="GeometryCollection" />
             <xs:enumeration value="Guid" />
+            <xs:enumeration value="HierarchyId" />
             <xs:enumeration value="Int16" />
             <xs:enumeration value="Int32" />
             <xs:enumeration value="Int64" />

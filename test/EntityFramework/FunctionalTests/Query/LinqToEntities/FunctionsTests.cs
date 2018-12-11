@@ -186,6 +186,105 @@ namespace System.Data.Entity.Query.LinqToEntities
                 }
             }
 
+
+            [Fact]
+            public void DateTimeOffset_LocalDateTime_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var query = context.AllTypes.Select(a => a.c30_datetimeoffset.LocalDateTime);
+                    Assert.Contains("AS DATETIME2)", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_LocalDateTimeConstant_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var x = DateTimeOffset.Now;
+                    var query = context.AllTypes.Where(a => a.c29_datetime2 < x.LocalDateTime);
+                    Assert.Contains("SELECT", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_UtcDateTimeConstant_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var x = DateTimeOffset.Now;
+                    var query = context.AllTypes.Where(a => a.c29_datetime2 < x.UtcDateTime);
+                    Assert.Contains("SELECT", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_NullableConstant_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    DateTimeOffset? x = DateTimeOffset.Now;
+                    var query = context.AllTypes.Where(a => a.c29_datetime2 < x.Value);
+                    Assert.Contains("SELECT", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_NullableLocalDateTimeConstant_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    DateTimeOffset? x = DateTimeOffset.Now;
+                    var query = context.AllTypes.Where(a => a.c29_datetime2 < x.Value.LocalDateTime);
+                    Assert.Contains("AS DATETIME2)", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_NullableUtcDateTimeConstant_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    DateTimeOffset? x = DateTimeOffset.Now;
+                    var query = context.AllTypes.Where(a => a.c29_datetime2 < x.Value.UtcDateTime);
+                    Assert.Contains("CONVERT (DATETIME2,", query.ToString().ToUpperInvariant());
+                    Assert.Contains(", 1)", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_Nullable_DateTime_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var query = context.AllTypes.Select(a => a.c39_nullabledatetimeoffset.Value);
+                    // just ensure no exception
+                    Assert.Contains("SELECT", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_NullableLocalDateTime_DateTime_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var query = context.AllTypes.Select(a => a.c39_nullabledatetimeoffset.Value.LocalDateTime);
+                    Assert.Contains("AS DATETIME2)", query.ToString().ToUpperInvariant());
+                }
+            }
+
+            [Fact]
+            public void DateTimeOffset_NullableUtcDateTime_DateTime_properly_to_function()
+            {
+                using (var context = new ArubaContext())
+                {
+                    var query = context.AllTypes.Select(a => a.c39_nullabledatetimeoffset.Value.UtcDateTime);
+                    Assert.Contains("CONVERT (DATETIME2,", query.ToString().ToUpperInvariant());
+                    Assert.Contains(", 1)", query.ToString().ToUpperInvariant());
+                }
+            }
+
             [Fact]
             public void Timespan_Hours_properly_translated_to_function()
             {
@@ -334,6 +433,26 @@ namespace System.Data.Entity.Query.LinqToEntities
             {
                 var query = context.Owners.Select(o => Guid.NewGuid());
                 Assert.Contains("NEWID", query.ToString().ToUpperInvariant());
+            }
+        }
+
+        [Fact]
+        public void GuidConstructor_translated_to_correct_function_in_database()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query = context.Owners.Select(o => new Guid("4b44ce33-b60e-4afd-85ad-59d3d7c53f75"));
+                Assert.Contains("CAST('4B44CE33-B60E-4AFD-85AD-59D3D7C53F75' AS UNIQUEIDENTIFIER)", query.ToString().ToUpperInvariant());
+            }
+        }
+
+        [Fact]
+        public void GuidConvert_translated_to_correct_function_in_database()
+        {
+            using (var context = new ArubaContext())
+            {
+                var query = context.AllTypes.Select(o => new Guid(o.c13_varchar_512_));
+                Assert.Contains("CAST( [EXTENT1].[C13_VARCHAR_512_] AS UNIQUEIDENTIFIER)", query.ToString().ToUpperInvariant());
             }
         }
 

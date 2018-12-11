@@ -249,6 +249,7 @@ namespace System.Data.Entity.SqlServer
             Assert.Equal(expectedCount, types.Count(t => t.Name.ToLowerInvariant() == "datetimeoffset"));
             Assert.Equal(expectedCount, types.Count(t => t.Name.ToLowerInvariant() == "geography"));
             Assert.Equal(expectedCount, types.Count(t => t.Name.ToLowerInvariant() == "geometry"));
+            Assert.Equal(expectedCount, types.Count(t => t.Name.ToLowerInvariant() == "hierarchyid"));
         }
 
         [Fact]

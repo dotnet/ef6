@@ -310,6 +310,7 @@
     <Compile Include="DbFunctionAttributeTests.cs" />
     <Compile Include="DbFunctionsTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
+    <Compile Include="Hierarchy\HierarchyIdUnitTests.cs" />
     <Compile Include="IDbAsyncEnumerableExtensionsTests.cs" />
     <Compile Include="Infrastructure\Annotations\AnnotationCodeGeneratorTests.cs" />
     <Compile Include="Infrastructure\Annotations\CompatibilityResultTests.cs" />

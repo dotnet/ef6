@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Spatial;
     using System.Diagnostics.CodeAnalysis;
@@ -41,6 +42,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public PrimitivePropertyConfiguration Property<T>(
             Expression<Func<TStructuralType, T?>> propertyExpression)
             where T : struct
+        {
+            return new PrimitivePropertyConfiguration(
+                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        /// Configures a <see cref="T:HierarchyId" /> property that is defined on this type.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PrimitivePropertyConfiguration Property(
+            Expression<Func<TStructuralType, HierarchyId>> propertyExpression)
         {
             return new PrimitivePropertyConfiguration(
                 Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));

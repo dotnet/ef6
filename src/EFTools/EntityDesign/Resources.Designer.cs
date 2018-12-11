@@ -820,6 +820,15 @@ namespace Microsoft.Data.Entity.Design {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start typing or press &apos;F2&apos; to edit.
+        /// </summary>
+        public static string EnumDialog_EnumTypeMemberHelpText {
+            get {
+                return ResourceManager.GetString("EnumDialog_EnumTypeMemberHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Member Name.
         /// </summary>
         public static string EnumDialog_EnumTypeMemberNameLabel {
@@ -834,6 +843,15 @@ namespace Microsoft.Data.Entity.Design {
         public static string EnumDialog_EnumTypeMemberValueLabel {
             get {
                 return ResourceManager.GetString("EnumDialog_EnumTypeMemberValueLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string EnumDialog_Error_AccName {
+            get {
+                return ResourceManager.GetString("EnumDialog_Error_AccName", resourceCulture);
             }
         }
         

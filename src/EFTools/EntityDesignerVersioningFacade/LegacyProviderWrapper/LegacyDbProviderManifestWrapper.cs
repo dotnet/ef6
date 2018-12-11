@@ -379,6 +379,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper
                 case PrimitiveTypeKind.Guid:
                 case PrimitiveTypeKind.Double:
                 case PrimitiveTypeKind.Single:
+                case PrimitiveTypeKind.HierarchyId:
                 case PrimitiveTypeKind.Geography:
                 case PrimitiveTypeKind.GeographyPoint:
                 case PrimitiveTypeKind.GeographyLineString:

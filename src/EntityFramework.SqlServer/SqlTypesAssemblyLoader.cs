@@ -5,12 +5,16 @@ namespace System.Data.Entity.SqlServer
     using System.Collections.Generic;
     using System.Data.Entity.SqlServer.Resources;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
 
     internal class SqlTypesAssemblyLoader
     {
+        private const string AssemblyNameTemplate 
+            = "Microsoft.SqlServer.Types, Version={0}.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
+        
         private static readonly SqlTypesAssemblyLoader _instance = new SqlTypesAssemblyLoader();
 
         public static SqlTypesAssemblyLoader DefaultInstance
@@ -24,15 +28,33 @@ namespace System.Data.Entity.SqlServer
 
         public SqlTypesAssemblyLoader(IEnumerable<string> assemblyNames = null)
         {
-            _preferredSqlTypesAssemblies
-                = assemblyNames
-                  ?? new[]
-                         {
-                             "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                             "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                         };
+            if (assemblyNames != null)
+            {
+                _preferredSqlTypesAssemblies = assemblyNames;
+            }
+            else
+            {
+                // Put the two we always knew about first to avoid breaking if they are available.
+                var knownAssemblyNames = new List<string>
+                {
+                    GenerateSqlServerTypesAssemblyName(11),
+                    GenerateSqlServerTypesAssemblyName(10),
+                };
+
+                for (var version = 20; version > 11; version--)
+                {
+                    knownAssemblyNames.Add(GenerateSqlServerTypesAssemblyName(version));
+                }
+
+                _preferredSqlTypesAssemblies = knownAssemblyNames.ToList();
+            }
 
             _latestVersion = new Lazy<SqlTypesAssembly>(BindToLatest, isThreadSafe: true);
+        }
+
+        private static string GenerateSqlServerTypesAssemblyName(int version)
+        {
+            return string.Format(CultureInfo.InvariantCulture, AssemblyNameTemplate, version);
         }
 
         // <summary>

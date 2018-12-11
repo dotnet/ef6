@@ -160,7 +160,7 @@
     <value>479, 273</value>
   </data>
   <data name="txtDDL.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>0</value>
   </data>
   <data name="&gt;&gt;txtDDL.Name" xml:space="preserve">
     <value>txtDDL</value>
@@ -184,7 +184,7 @@
     <value>485, 279</value>
   </data>
   <data name="CreateDatabaseTabDDL.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>0</value>
   </data>
   <data name="CreateDatabaseTabDDL.Text" xml:space="preserve">
     <value>DDL</value>
@@ -244,7 +244,7 @@
     <value>493, 305</value>
   </data>
   <data name="SummaryTabs.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>0</value>
   </data>
   <data name="&gt;&gt;SummaryTabs.Name" xml:space="preserve">
     <value>SummaryTabs</value>
@@ -301,7 +301,7 @@
     <value>493, 25</value>
   </data>
   <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>0</value>
   </data>
   <data name="&gt;&gt;tableLayoutPanel1.Name" xml:space="preserve">
     <value>tableLayoutPanel1</value>

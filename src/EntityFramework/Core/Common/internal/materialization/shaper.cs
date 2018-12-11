@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -303,10 +304,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                 var manager = Context.ObjectStateManager;
                 EntityState newEntryState;
-                // If there is an existing relationship entry, update it based on its current state and the MergeOption, otherwise add a new one            
+                // If there is an existing relationship entry, update it based on its current state and the MergeOption, otherwise add a new one        
+
+                var sourceRelationships = ObjectStateManager.GetRelationshipLookup(Context.ObjectStateManager, associationSet, sourceMember, sourceKey);
+
                 if (
                     !ObjectStateManager.TryUpdateExistingRelationships(
-                        Context, MergeOption, associationSet, sourceMember, sourceKey, wrappedEntity, targetMember, targetKey,
+                        Context, MergeOption, associationSet, sourceMember, sourceRelationships, wrappedEntity, targetMember, targetKey,
                          /*setIsLoaded*/ true, out newEntryState))
                 {
                     // Try to find a state entry for the target key
@@ -318,6 +322,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     {
                         case RelationshipMultiplicity.ZeroOrOne:
                         case RelationshipMultiplicity.One:
+
+                            var targetRelationships = ObjectStateManager.GetRelationshipLookup(Context.ObjectStateManager, associationSet, targetMember, targetKey);
+
                             // devnote: targetEntry can be a key entry (targetEntry.Entity == null), 
                             // but it that case this parameter won't be used in TryUpdateExistingRelationships
                             needNewRelationship = !ObjectStateManager.TryUpdateExistingRelationships(
@@ -325,7 +332,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                 MergeOption,
                                 associationSet,
                                 targetMember,
-                                targetKey,
+                                targetRelationships,
                                 targetEntry.WrappedEntity,
                                 sourceMember,
                                 sourceKey,
@@ -576,6 +583,17 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         {
             var result = new ColumnErrorHandlingValueReader<TColumn>().GetValue(Reader, ordinal);
             return result;
+        }
+
+        /// <summary>
+        ///     Get the hierarchyid value of a column with the given ordinal
+        /// </summary>
+        /// <param name="ordinal"> The ordinal of the column to retrieve the value </param>
+        /// <returns> The hierarchyid value </returns>
+        public HierarchyId GetHierarchyIdColumnValue(int ordinal)
+        {
+            var hierarchyId = Reader.GetValue(ordinal);
+            return new HierarchyId(hierarchyId.ToString());
         }
 
         protected virtual DbSpatialDataReader CreateSpatialDataReader()

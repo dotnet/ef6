@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -39,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                   let m = p.Getter()
                   where (includePrivate || (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType)))
                         && (!declaredOnly || type.BaseType().GetInstanceProperties().All(bp => bp.Name != p.Name))
-                        && (EdmV3FeaturesSupported || (!IsEnumType(p.PropertyType) && !IsSpatialType(p.PropertyType)))
+                        && (EdmV3FeaturesSupported || (!IsEnumType(p.PropertyType) && !IsSpatialType(p.PropertyType) && !IsHierarchyIdType(p.PropertyType)))
                         && (Ef6FeaturesSupported || !p.PropertyType.IsNested)
                   select p;
 
@@ -57,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 var firstBadProperty =
                     explicitlyMappedProperties.FirstOrDefault(
-                        p => IsEnumType(p.PropertyType) || IsSpatialType(p.PropertyType));
+                        p => IsEnumType(p.PropertyType) || IsSpatialType(p.PropertyType) || IsHierarchyIdType(p.PropertyType)); 
                 if (firstBadProperty != null)
                 {
                     throw Error.UnsupportedUseOfV3Type(type.Name, firstBadProperty.Name);
@@ -84,6 +85,13 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             type.TryUnwrapNullableType(out type);
 
             return type.IsEnum();
+        }
+
+        private static bool IsHierarchyIdType(Type type)
+        {
+            type.TryUnwrapNullableType(out type);
+
+            return type == typeof(HierarchyId);
         }
 
         private static bool IsSpatialType(Type type)

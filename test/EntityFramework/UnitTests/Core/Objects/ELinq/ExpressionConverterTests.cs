@@ -255,7 +255,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             var properties = new ExpressionConverter.MemberAccessTranslator.DefaultCanonicalFunctionPropertyTranslator().Properties;
 
-            Assert.Equal(15, properties.Count());
+            Assert.Equal(17, properties.Count());
             Assert.True(properties.All(p => p != null));
         }
 

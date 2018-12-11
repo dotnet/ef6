@@ -129,6 +129,15 @@
     <EmbeddedResource Include="TestModels\SpatialTvfsModel\226644SpatialModel.ssdl">
       <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.ssdl</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.csdl">
+      <LogicalName>FunctionalTests.ProductivityApi.HierarchyIdTvfsModel.226644HierarchyIdModel.csdl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.msl">
+      <LogicalName>FunctionalTests.ProductivityApi.HierarchyIdTvfsModel.226644HierarchyIdModel.msl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestModels\HierarchyIdTvfsModel\226644HierarchyIdModel.ssdl">
+      <LogicalName>FunctionalTests.ProductivityApi.HierarchyIdTvfsModel.226644HierarchyIdModel.ssdl</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.csdl" />
     <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.msl" />
     <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.ssdl" />
@@ -634,6 +643,7 @@
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
     <Compile Include="Objects\LazyLoadingTests.cs" />
     <Compile Include="Objects\SerializationScenarios.cs" />
+    <Compile Include="ProductivityApi\HierarchyIdTests.cs" />
     <Compile Include="ProductivityApi\DbConfigurationTests.cs" />
     <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />
@@ -659,6 +669,8 @@
     <Compile Include="TestHelpers\PartialTrustClassCommand.cs" />
     <Compile Include="TestHelpers\PartialTrustCommand.cs" />
     <Compile Include="TestHelpers\PartialTrustFixtureAttribute.cs" />
+    <Compile Include="TestModels\HierarchyIdTvfsModel\HierarchyIdNorthwindContext.cs" />
+    <Compile Include="TestModels\HierarchyIdTvfsModel\HierarchyIdNorthwindInitializer.cs" />
     <Compile Include="TestModels\SimpleModel\LocalDbLoginsContext.cs" />
     <Compile Include="TestModels\SimpleModel\SimpleLocalDbModelContext.cs" />
     <Compile Include="TestModels\SimpleModel\SimpleLocalDbModelContextWithNoData.cs" />

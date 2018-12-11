@@ -79,7 +79,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.LegacyProviderWrapper.Le
                 var legacyStoreItemCollection = legacyWorkspace.GetItemCollection(LegacyMetadata.DataSpace.SSpace);
 
                 Assert.Equal(
-                    storeItemCollection.GetItems<GlobalItem>().Count,
+                    storeItemCollection.GetItems<GlobalItem>().Count - 8, // 8 hierarchyid releated items
                     legacyStoreItemCollection.GetItems<LegacyMetadata.GlobalItem>().Count);
 
                 Assert.NotNull(

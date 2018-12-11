@@ -44,7 +44,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             protected override Image GetButtonImage(ShapeElement parentShape)
             {
                 var entityShape = parentShape as EntityTypeShape;
-                var state = GetValue(parentShape) as bool?;
+                var state = IsExpanded(parentShape);
                 if (state.HasValue
                     && entityShape != null)
                 {
@@ -53,6 +53,11 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                                : CachedFillColorAppearance(entityShape.FillColor).ChevronCollapsed;
                 }
                 return null;
+            }
+
+            internal bool? IsExpanded(ShapeElement parentShape)
+            {
+                return GetValue(parentShape) as bool?;
             }
         }
 
@@ -98,6 +103,9 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             bounds.Location = randomized;
             AbsoluteBounds = bounds;
             EntityDesignerViewModel.EntityShapeLocationSeed++;
+
+            // Provide keyboard shortcuts for collapse and expand of this EntityType shape
+            this.KeyUp += EntityTypeShape_KeyUp;
         }
 
         /// <summary>
@@ -349,14 +357,14 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             }
         }
 
-        public ElementListCompartment PropertiesCompartment
+        public EntityTypeElementListCompartment PropertiesCompartment
         {
-            get { return FindCompartment(PropertiesCompartmentName) as ElementListCompartment; }
+            get { return FindCompartment(PropertiesCompartmentName) as EntityTypeElementListCompartment; }
         }
 
-        public ElementListCompartment NavigationCompartment
+        public EntityTypeElementListCompartment NavigationCompartment
         {
-            get { return FindCompartment(NavigationCompartmentName) as ElementListCompartment; }
+            get { return FindCompartment(NavigationCompartmentName) as EntityTypeElementListCompartment; }
         }
 
         /// <summary>
@@ -441,10 +449,10 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             ReplaceField(
                 shapeFields, "ExpandCollapse",
                 fieldName => new EntityChevronButtonField(fieldName)
-                    {
-                        DefaultSelectable = false,
-                        DefaultFocusable = false
-                    });
+                                {
+                                    DefaultSelectable = false,
+                                    DefaultFocusable = false
+                                });
             ReplaceField(
                 shapeFields, "IconDecorator",
                 fieldName => new EntityImageField(fieldName, appearance => appearance.EntityGlyph));
@@ -476,9 +484,11 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             SetAccessibilityOnCompartment(NavigationCompartment, false);
 
             // need to add our own handler for KeyUp event in order to disable Insert key for Navigation Compartment
+            // and provide keyboard shortcuts for expand and collapse.
             NavigationCompartment.KeyUp += NavigationCompartmentKeyUpHandler;
 
             // since Properties compartment contains now two DomainClasses (Scalar and Complex) we need to handle Insert key on our own
+            // and provide keyboard shortcuts for expand and collapse.
             PropertiesCompartment.KeyUp += PropertiesCompartmentKeyUpHandler;
         }
 
@@ -501,9 +511,23 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                     e.Handled = true;
                 }
             }
+
+            // Provide keyboard shortcuts for expand and collapse.
+            if (e.Control && e.KeyCode == Keys.Up)
+            {
+                PropertiesCompartment.EnsureExpandedState(false);
+                e.Handled = true;
+            }
+
+            if (e.Control && e.KeyCode == Keys.Down)
+            {
+                PropertiesCompartment.EnsureExpandedState(true);
+                e.Handled = true;
+            }
         }
 
         // disable default ElementListCompartment action for KeyUp event if it's Insert key
+        // and provide keyboard shortcuts for expand and collapse.
         private void NavigationCompartmentKeyUpHandler(object sender, DiagramKeyEventArgs e)
         {
             if ((Partition.GetLocks() & Locks.Add) == Locks.Add)
@@ -513,6 +537,18 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
 
             if (e.KeyCode == Keys.Insert)
             {
+                e.Handled = true;
+            }
+
+            if (e.Control && e.KeyCode == Keys.Up)
+            {
+                NavigationCompartment.EnsureExpandedState(false);
+                e.Handled = true;
+            }
+
+            if (e.Control && e.KeyCode == Keys.Down)
+            {
+                NavigationCompartment.EnsureExpandedState(true);
                 e.Handled = true;
             }
         }
@@ -641,6 +677,32 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
             }
         }
 
+        public override string AccessibleHelp
+        {
+            get
+            {
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.AccHelp_EntityType,
+                    IsExpanded ? Resources.ExpandedStateExpanded : Resources.ExpandedStateCollapsed);
+            }
+        }
+
+        private void EntityTypeShape_KeyUp(object sender, DiagramKeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.Up)
+            {
+                this.EnsureExpandedState(false);
+                e.Handled = true;
+            }
+
+            if (e.Control && e.KeyCode == Keys.Down)
+            {
+                this.EnsureExpandedState(true);
+                e.Handled = true;
+            }
+        }
+
         /// <summary>
         ///     Remove shadow from the entity type shape.
         /// </summary>
@@ -668,7 +730,9 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                 if (originalElementListCompartmentDescription != null)
                 {
                     compartmentDescription[0] = new EntityTypeElementListCompartmentDescription(
-                        originalElementListCompartmentDescription, EntityDesignerDiagramConstant.IsDefaultShapeExpanded == false);
+                        originalElementListCompartmentDescription,
+                        !EntityDesignerDiagramConstant.IsDefaultShapeExpanded,
+                        true);
                 }
 
                 originalElementListCompartmentDescription = compartmentDescription[1] as ListCompartmentDescription;
@@ -679,7 +743,9 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                 if (originalElementListCompartmentDescription != null)
                 {
                     compartmentDescription[1] = new EntityTypeElementListCompartmentDescription(
-                        originalElementListCompartmentDescription, EntityDesignerDiagramConstant.IsDefaultShapeExpanded == false);
+                        originalElementListCompartmentDescription,
+                        !EntityDesignerDiagramConstant.IsDefaultShapeExpanded,
+                        false);
                 }
             }
             return compartmentDescription;

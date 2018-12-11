@@ -7,6 +7,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Model;
@@ -1292,6 +1293,17 @@ namespace System.Data.Entity.SqlServer
         protected virtual string Generate(TimeSpan defaultValue)
         {
             return "'" + defaultValue + "'";
+        }
+
+        /// <summary>
+        /// Generates SQL to specify a constant hierarchyid default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
+        /// </summary>
+        /// <param name="defaultValue"> The value to be set. </param>
+        /// <returns> SQL representing the default value. </returns>
+        protected virtual string Generate(HierarchyId defaultValue)
+        {
+            return "cast('" + defaultValue + "' as hierarchyid)";
         }
 
         /// <summary>

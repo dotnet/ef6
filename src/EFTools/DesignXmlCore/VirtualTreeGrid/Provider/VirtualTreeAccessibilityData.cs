@@ -172,6 +172,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         private string[] myImageDescriptions;
         private string[] myStateImageDescriptions;
         private AccessibleStates[] myStateImageAccessibleStates;
+        private string myHelpText;
 
         /// <summary>
         ///     Empty accessibility data, not special information is provided.
@@ -198,6 +199,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = null;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -226,6 +228,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -260,6 +263,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = stateImageDescriptions;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -290,6 +294,39 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = null;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
+        }
+
+        /// <summary>
+        ///     Construct accessibility data with name, description and help text settings
+        /// </summary>
+        /// <param name="nameFormat">
+        ///     The string to use as the item's accessibility name.
+        ///     Specify null for default behavior.
+        ///     Used as a format string if nameReplacementFields is not null.
+        /// </param>
+        /// <param name="nameReplacementFields">Replacement fields for the name string</param>
+        /// <param name="descriptionFormat">
+        ///     The string to use as the item's accessibility description.
+        ///     Specify null for default behavior.
+        ///     Used as a format string if descriptionReplacementFields is not null.
+        /// </param>
+        /// <param name="descriptionReplacementFields">Replacement fields for the description string</param>
+        /// <param name="helpText">The string to use as the item's accessibility help text</param>
+        public VirtualTreeAccessibilityData(
+            string nameFormat, AccessibilityReplacementField[] nameReplacementFields, string descriptionFormat,
+            AccessibilityReplacementField[] descriptionReplacementFields, string helpText)
+        {
+            myHelpFile = null;
+            myHelpContextId = 0;
+            myNameFormatString = nameFormat;
+            myNameReplacementFields = nameReplacementFields;
+            myDescriptionFormatString = descriptionFormat;
+            myDescriptionReplacementFields = descriptionReplacementFields;
+            myImageDescriptions = null;
+            myStateImageDescriptions = null;
+            myStateImageAccessibleStates = null;
+            myHelpText = helpText;
         }
 
         /// <summary>
@@ -325,6 +362,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -365,6 +403,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = stateImageDescriptions;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -383,6 +422,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = null;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -408,6 +448,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = null;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -439,6 +480,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -475,6 +517,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = stateImageDescriptions;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -507,6 +550,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = null;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -544,6 +588,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = null;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -587,6 +632,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
             myImageDescriptions = imageDescriptions;
             myStateImageDescriptions = stateImageDescriptions;
             myStateImageAccessibleStates = null;
+            myHelpText = null;
         }
 
         /// <summary>
@@ -605,6 +651,15 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         {
             get { return myHelpContextId; }
             set { myHelpContextId = value; }
+        }
+
+        /// <summary>
+        ///     Provide the help text used by accessibility
+        /// </summary>
+        public string HelpText
+        {
+            get { return myHelpText; }
+            set { myHelpText = value; }
         }
 
         /// <summary>

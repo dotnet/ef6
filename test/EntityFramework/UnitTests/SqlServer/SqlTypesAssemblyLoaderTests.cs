@@ -8,18 +8,25 @@ namespace System.Data.Entity.SqlServer
 
     public class SqlTypesAssemblyLoaderTests
     {
-        private const string SQL2008TypesName =
-            "Microsoft.SqlServer.Types, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
+        private const string AssemblyNameStart
+            = "Microsoft.SqlServer.Types, Version=";
 
-        private const string SQL2012TypesName =
-            "Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
+        private const string AssemblyNameEnd
+            = ", Culture=neutral, PublicKeyToken=89845dcd8080cc91";
+
+        private static bool IsSqlTypesAssemblyName(string assemblyName)
+        {
+            return assemblyName != null
+                   && assemblyName.StartsWith(AssemblyNameStart, StringComparison.Ordinal)
+                   && assemblyName.EndsWith(AssemblyNameEnd, StringComparison.Ordinal);
+        }
 
         [Fact]
-        public void TryGetSqlTypesAssembly_on_dev_machine_returns_assembly_for_SQL_2012_native_types()
+        public void TryGetSqlTypesAssembly_on_dev_machine_returns_assembly_for_SQL_native_types()
         {
             var assemblyName = new SqlTypesAssemblyLoader().TryGetSqlTypesAssembly().SqlGeographyType.Assembly.FullName;
 
-            Assert.True(assemblyName == SQL2012TypesName, assemblyName);
+            Assert.True(IsSqlTypesAssemblyName(assemblyName));
         }
 
         [Fact]
@@ -29,22 +36,24 @@ namespace System.Data.Entity.SqlServer
         }
 
         [Fact]
-        public void GetSqlTypesAssembly_on_dev_machine_returns_assembly_for_SQL_2012_native_types()
+        public void GetSqlTypesAssembly_on_dev_machine_returns_assembly_for_SQL_native_types()
         {
             var assemblyName = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType.Assembly.FullName;
 
-            Assert.True(assemblyName == SQL2012TypesName, assemblyName);
+            Assert.True(IsSqlTypesAssemblyName(assemblyName));
         }
 
         [Fact]
         public void GetSqlTypesAssembly_returns_specified_assembly()
         {
-            SqlProviderServices.SqlServerTypesAssemblyName = SQL2008TypesName;
+            var availableAssemblyName = new SqlTypesAssemblyLoader().TryGetSqlTypesAssembly().SqlGeographyType.Assembly.FullName;
+            
+            SqlProviderServices.SqlServerTypesAssemblyName = availableAssemblyName;
             try
             {
                 var assemblyName = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType.Assembly.FullName;
 
-                Assert.True(assemblyName == SQL2008TypesName, assemblyName);
+                Assert.True(assemblyName == availableAssemblyName, assemblyName);
             }
             finally
             {

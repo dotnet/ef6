@@ -119,6 +119,7 @@
             <xs:enumeration value="Geography" />
             <xs:enumeration value="Geometry" />
             <xs:enumeration value="Guid" />
+            <xs:enumeration value="HierarchyId" />
             <xs:enumeration value="Single" />
             <xs:enumeration value="SByte" />
             <xs:enumeration value="Int16" />

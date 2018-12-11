@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -199,6 +200,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         return typeof(DbGeometry);
                     case PrimitiveTypeKind.Guid:
                         return typeof(Guid);
+                    case PrimitiveTypeKind.HierarchyId:
+                        return typeof(HierarchyId);
                     case PrimitiveTypeKind.Single:
                         return typeof(Single);
                     case PrimitiveTypeKind.SByte:

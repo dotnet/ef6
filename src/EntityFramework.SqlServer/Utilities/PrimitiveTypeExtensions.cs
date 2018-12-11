@@ -14,5 +14,14 @@ namespace System.Data.Entity.SqlServer.Utilities
 
             return kind >= PrimitiveTypeKind.Geometry && kind <= PrimitiveTypeKind.GeographyCollection;
         }
+
+        internal static bool IsHierarchyIdType(this PrimitiveType type)
+        {
+            DebugCheck.NotNull(type);
+
+            var kind = type.PrimitiveTypeKind;
+
+            return kind == PrimitiveTypeKind.HierarchyId;
+        }
     }
 }

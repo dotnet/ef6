@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Hierarchy;
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
@@ -115,6 +116,34 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1>(new AddColumnWithDateTimeDefault());
 
             migrator.Update();
+        }
+
+        private class AddColumnWithHierarchyIdDefault : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn(
+                    "MigrationsCustomers", "hierarchyid_col",
+                    c => c.HierarchyId(nullable: false, defaultValue: HierarchyId.GetRoot()));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_column_with_hierarchyid_default()
+        {
+            WhenNotSqlCe(
+                () =>
+                    {
+                        ResetDatabase();
+
+                        var migrator = CreateMigrator<ShopContext_v1>();
+
+                        migrator.Update();
+
+                        migrator = CreateMigrator<ShopContext_v1>(new AddColumnWithHierarchyIdDefault());
+
+                        migrator.Update();
+                    });
         }
 
         private class AddColumnWithGeographyDefault : DbMigration

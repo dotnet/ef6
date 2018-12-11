@@ -164,6 +164,7 @@ PROCESS
             </FacetDescriptions>
         </Type>
         <Type Name="uniqueidentifier" PrimitiveTypeKind="Guid"></Type>
+        <Type Name="hierarchyid" PrimitiveTypeKind="HierarchyId"></Type>
         <Type Name="xml" PrimitiveTypeKind="String">
             <FacetDescriptions>
                 <MaxLength DefaultValue="1073741823" Constant="true" />
@@ -1698,6 +1699,41 @@ PROCESS
         <Function Name="ISDATE" BuiltIn="true">
             <ReturnType Type="Int32" />
             <Parameter Name="arg" Type="String" Mode="In" />
+        </Function>
+
+        <!-- HierarchyId Functions -->
+        <Function Name="GetAncestor" BuiltIn="true">
+            <ReturnType Type="HierarchyId" />
+            <Parameter Name="hierarchyIdValue" Type="HierarchyId" Mode="In" />
+            <Parameter Name="n" Type="Int32" Mode="In" />
+        </Function>
+        <Function Name="GetDescendant" BuiltIn="true">
+            <ReturnType Type="HierarchyId" />
+            <Parameter Name="hierarchyIdValue" Type="HierarchyId" Mode="In" />
+            <Parameter Name="child1" Type="HierarchyId" Mode="In" />
+            <Parameter Name="child2" Type="HierarchyId" Mode="In" />
+        </Function>
+        <Function Name="GetLevel" BuiltIn="true">
+            <ReturnType Type="Int16" />
+            <Parameter Name="hierarchyIdValue" Type="HierarchyId" Mode="In" />
+        </Function>
+        <Function Name="GetRoot" BuiltIn="true">
+            <ReturnType Type="HierarchyId" />
+        </Function>
+        <Function Name="IsDescendantOf" BuiltIn="true">
+            <ReturnType Type="Boolean" />
+            <Parameter Name="hierarchyIdValue" Type="HierarchyId" Mode="In" />
+            <Parameter Name="parent" Type="HierarchyId" Mode="In" />
+        </Function>
+        <Function Name="GetReparentedValue" BuiltIn="true">
+            <ReturnType Type="HierarchyId" />
+            <Parameter Name="hierarchyIdValue" Type="HierarchyId" Mode="In" />
+            <Parameter Name="oldRoot" Type="HierarchyId" Mode="In" />
+            <Parameter Name="newRoot" Type="HierarchyId" Mode="In" />
+        </Function>
+        <Function Name="Parse" BuiltIn="true">
+            <ReturnType Type="HierarchyId" />
+            <Parameter Name="input" Type="String" Mode="In" />
         </Function>
 
         <!-- Spatial Functions -->

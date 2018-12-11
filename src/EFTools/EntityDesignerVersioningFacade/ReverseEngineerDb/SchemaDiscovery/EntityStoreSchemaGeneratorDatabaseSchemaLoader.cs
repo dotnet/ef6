@@ -4,8 +4,13 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Data;
+    using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -15,10 +20,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
     /// </summary>
     internal class EntityStoreSchemaGeneratorDatabaseSchemaLoader
     {
+        private const string SqlServerInvariantName = "System.Data.SqlClient";
+        private const string SwitchOffMetadataMergeJoinsKey =
+            "Switch.Microsoft.Data.Entity.Design.DoNotUseSqlServerMetadataMergeJoins";
         private readonly EntityConnection _connection;
         private readonly Version _storeSchemaModelVersion;
+        private readonly IDbCommandInterceptor _addOptionMergeJoinInterceptor;
 
-        public EntityStoreSchemaGeneratorDatabaseSchemaLoader(EntityConnection entityConnection, Version storeSchemaModelVersion)
+        public EntityStoreSchemaGeneratorDatabaseSchemaLoader(
+            EntityConnection entityConnection,
+            Version storeSchemaModelVersion)
         {
             Debug.Assert(entityConnection != null, "entityConnection != null");
             Debug.Assert(entityConnection.State == ConnectionState.Closed, "expected closed connection");
@@ -26,6 +37,38 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
             _connection = entityConnection;
             _storeSchemaModelVersion = storeSchemaModelVersion;
+
+            if (_connection != null
+                && _connection.StoreConnection != null
+                && string.Equals(
+                    _connection.StoreConnection.GetProviderInvariantName(),
+                    SqlServerInvariantName,
+                    StringComparison.Ordinal)
+                && !SwitchOffMetadataMergeJoins())
+            {
+                _addOptionMergeJoinInterceptor = new AddOptionMergeJoinInterceptor();
+            }
+        }
+
+        // Checks AppSettings for the quirk which can switch off metadata merge joins
+        [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.Boolean.TryParse(System.String,System.Boolean@)")]
+        private static bool SwitchOffMetadataMergeJoins()
+        {
+            var switchOffMetadataMergeJoins = false;
+            var metadataMergeJoinsAppSettings =
+                ConfigurationManager.AppSettings.GetValues(SwitchOffMetadataMergeJoinsKey);
+            if (metadataMergeJoinsAppSettings != null)
+            {
+                var metadataMergeJoinsAppSetting =
+                    metadataMergeJoinsAppSettings.FirstOrDefault();
+                if (metadataMergeJoinsAppSetting != null)
+                {
+                    bool.TryParse(
+                        metadataMergeJoinsAppSetting, out switchOffMetadataMergeJoins);
+                }
+            }
+
+            return switchOffMetadataMergeJoins;
         }
 
         // virtual for testing
@@ -153,18 +196,32 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             where T : DataRow
 
         {
-            using (var command = CreateFilteredCommand(sql, null, queryTypes, filters.ToList(), filterAliases))
+            try
             {
-                using (var reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
+                if (_addOptionMergeJoinInterceptor != null)
                 {
-                    var values = new object[table.Columns.Count];
-                    while (reader.Read())
+                    DbInterception.Add(_addOptionMergeJoinInterceptor);
+                }
+                using (var command = CreateFilteredCommand(sql, null, queryTypes, filters.ToList(), filterAliases))
+                {
+                    using (var reader = command.ExecuteReader(CommandBehavior.SequentialAccess))
                     {
-                        reader.GetValues(values);
-                        table.Rows.Add(values);
-                    }
+                        var values = new object[table.Columns.Count];
+                        while (reader.Read())
+                        {
+                            reader.GetValues(values);
+                            table.Rows.Add(values);
+                        }
 
-                    return orderByFunc(((IEnumerable<T>)table));
+                        return orderByFunc(((IEnumerable<T>)table));
+                    }
+                }
+            }
+            finally
+            {
+                if (_addOptionMergeJoinInterceptor != null)
+                {
+                    DbInterception.Remove(_addOptionMergeJoinInterceptor);
                 }
             }
         }
@@ -184,9 +241,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
                         CommandTimeout = 0
                     };
 
+            var optimizeParameters =
+                ((StoreItemCollection)_connection
+                    .GetMetadataWorkspace()
+                    .GetItemCollection(DataSpace.SSpace))
+                        .ProviderManifest
+                        .SupportsParameterOptimizationInSchemaQueries();
+
             command.CommandText =
                 new EntityStoreSchemaQueryGenerator(sql, orderByClause, queryTypes, filters, filterAliases)
-                    .GenerateQuery(command.Parameters);
+                    .GenerateQuery(new ParameterCollectionBuilder(command.Parameters, optimizeParameters));
 
             return command;
         }
@@ -487,5 +551,21 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
             ,   sp.Name
             ,   sp.Ordinal
             ";
+
+        /// <summary>
+        /// This interceptor is added to work around a problem with SQL Server
+        /// cardinality estimation: https://github.com/aspnet/EntityFramework6/issues/4
+        /// which in turn causes bad performance running the queries above on large models.
+        /// We can workaround this by directing SQL Server to use MERGE JOINs.
+        /// </summary>
+        private sealed class AddOptionMergeJoinInterceptor : DbCommandInterceptor
+        {
+            [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities",
+                Justification = "The user has no control over the text added to the SQL.")]
+            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+            {
+                command.CommandText = command.CommandText + Environment.NewLine + "OPTION (MERGE JOIN)";
+            }
+        }
     }
 }

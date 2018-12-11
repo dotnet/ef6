@@ -151,6 +151,33 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rename using the &apos;F2&apos; key. Access properties of the EntityType by using the Up and Down arrow keys. Add or remove properties by using the Insert and Delete keys. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}..
+        /// </summary>
+        internal static string AccHelp_EntityType {
+            get {
+                return ResourceManager.GetString("AccHelp_EntityType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigation Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}..
+        /// </summary>
+        internal static string AccHelp_EntityTypeNavigationPropertyCompartment {
+            get {
+                return ResourceManager.GetString("AccHelp_EntityTypeNavigationPropertyCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties Compartment. Collapse or expand using Ctrl+Up and Ctrl+Down. Current state is: {0}..
+        /// </summary>
+        internal static string AccHelp_EntityTypeScalarPropertyCompartment {
+            get {
+                return ResourceManager.GetString("AccHelp_EntityTypeScalarPropertyCompartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string AccName_EntityTypeHeader {
@@ -160,7 +187,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Navigation.
+        ///   Looks up a localized string similar to Navigation Properties.
         /// </summary>
         internal static string AccName_EntityTypeNavigationPropertyCompartment {
             get {
@@ -798,6 +825,24 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collapsed.
+        /// </summary>
+        internal static string ExpandedStateCollapsed {
+            get {
+                return ResourceManager.GetString("ExpandedStateCollapsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expanded.
+        /// </summary>
+        internal static string ExpandedStateExpanded {
+            get {
+                return ResourceManager.GetString("ExpandedStateExpanded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export Diagram As.
         /// </summary>
         internal static string ExportAsImageTitle {
@@ -911,6 +956,15 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.Properties {
         internal static string ImageFormatTiff {
             get {
                 return ResourceManager.GetString("ImageFormatTiff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is in an association with {1}.
+        /// </summary>
+        internal static string IsInAssociationWith {
+            get {
+                return ResourceManager.GetString("IsInAssociationWith", resourceCulture);
             }
         }
         

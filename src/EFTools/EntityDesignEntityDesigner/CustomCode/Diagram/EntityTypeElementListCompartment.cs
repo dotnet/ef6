@@ -3,23 +3,31 @@
 namespace Microsoft.Data.Entity.Design.EntityDesigner.View
 {
     using System.Diagnostics;
+    using System.Globalization;
     using Microsoft.Data.Entity.Design.EntityDesigner.ViewModel;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Designer;
     using Microsoft.VisualStudio.Modeling;
     using Microsoft.VisualStudio.Modeling.Diagrams;
     using Diagram = Microsoft.Data.Entity.Design.Model.Designer.Diagram;
+    using Resources = Microsoft.Data.Entity.Design.EntityDesigner.Properties.Resources;
 
     [DomainObjectId("53d36908-9892-4495-8754-da5f4d7969d4")]
     internal class EntityTypeElementListCompartment : ElementListCompartment
     {
+        private bool _isScalarPropertiesCompartment;
+
         /// <summary>
         ///     EntityTypeElementListCompartment Constructor
         /// </summary>
         /// <param name="store">Store where new element is to be created.</param>
         /// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
-        public EntityTypeElementListCompartment(Store store, params PropertyAssignment[] propertyAssignments)
-            : this(store != null ? store.DefaultPartitionForClass(DomainClassId) : null, propertyAssignments)
+        public EntityTypeElementListCompartment(Store store,
+             bool isScalarPropertiesCompartment,
+             params PropertyAssignment[] propertyAssignments)
+            : this(store != null ? store.DefaultPartitionForClass(DomainClassId) : null,
+                  isScalarPropertiesCompartment,
+                  propertyAssignments)
         {
             Initialize();
         }
@@ -29,9 +37,13 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         /// </summary>
         /// <param name="partition">Partition where new element is to be created.</param>
         /// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
-        public EntityTypeElementListCompartment(Partition partition, params PropertyAssignment[] propertyAssignments)
+        public EntityTypeElementListCompartment(Partition partition,
+             bool isScalarPropertiesCompartment,
+             params PropertyAssignment[] propertyAssignments)
             : base(partition, propertyAssignments)
         {
+            _isScalarPropertiesCompartment = isScalarPropertiesCompartment;
+
             Initialize();
         }
 
@@ -88,6 +100,25 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                         itemDrawInfo.AlternateFont = true;
                     }
                 }
+            }
+        }
+
+        public override string AccessibleHelp
+        {
+            get
+            {
+                if (_isScalarPropertiesCompartment)
+                {
+                    return string.Format(
+                        CultureInfo.CurrentCulture,
+                        Resources.AccHelp_EntityTypeScalarPropertyCompartment,
+                        IsExpanded ? Resources.ExpandedStateExpanded : Resources.ExpandedStateCollapsed);
+                }
+
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    Resources.AccHelp_EntityTypeNavigationPropertyCompartment,
+                    IsExpanded ? Resources.ExpandedStateExpanded : Resources.ExpandedStateCollapsed);
             }
         }
     }

@@ -42,23 +42,33 @@ namespace System.Data.Entity.Internal.Linq
             // a derived DbContext, then we will work with this as well.
             if (typeof(DbContext).IsAssignableFrom(node.Method.DeclaringType))
             {
+                DbContext context = null;
                 var memberExpression = node.Object as MemberExpression;
                 if (memberExpression != null)
                 {
-                    // Only try to invoke the method if it is on the context, is not parameterless, and is not attributed
-                    // as a function.
-                    var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
-                    if (context != null
-                        && !node.Method.GetCustomAttributes<DbFunctionAttribute>(inherit: false).Any()
-                        && node.Method.GetParameters().Length == 0)
+                    context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
+                }
+                else
+                {
+                    var constantExpression = node.Object as ConstantExpression;
+                    if (constantExpression != null)
                     {
-                        var expression =
-                            CreateObjectQueryConstant(
-                                node.Method.Invoke(context, SetAccessBindingFlags, null, null, null));
-                        if (expression != null)
-                        {
-                            return expression;
-                        }
+                        context = constantExpression.Value as DbContext;
+                    }
+                }
+
+                // Only try to invoke the method if it is on the context, is not parameterless, and is not attributed
+                // as a function.
+                if (context != null
+                    && !node.Method.GetCustomAttributes<DbFunctionAttribute>(inherit: false).Any()
+                    && node.Method.GetParameters().Length == 0)
+                {
+                    var expression =
+                        CreateObjectQueryConstant(
+                            node.Method.Invoke(context, SetAccessBindingFlags, null, null, null));
+                    if (expression != null)
+                    {
+                        return expression;
                     }
                 }
             }
