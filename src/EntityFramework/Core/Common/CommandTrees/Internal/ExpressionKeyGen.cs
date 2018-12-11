@@ -766,6 +766,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 if (ga != null)
                 {
                     _key.Append("GA(");
+                    Debug.Assert(ga.Arguments.Count >= 1, "Group aggregate must have at least one argument.");
                     ga.Arguments[0].Accept(this);
                     _key.Append(')');
                 }

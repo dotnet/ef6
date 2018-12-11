@@ -4349,6 +4349,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             foreach (var aggregate in aggregates)
             {
+                Debug.Assert(aggregate.Arguments.Count >= 1);
                 if (GroupByAggregateNeedsInnerQuery(aggregate.Arguments[0], inputVarRefName))
                 {
                     return true;

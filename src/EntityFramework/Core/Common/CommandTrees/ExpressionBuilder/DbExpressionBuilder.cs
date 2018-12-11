@@ -208,7 +208,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="argument">The argument over which the aggregate function should be calculated.</param>
         /// <exception cref="T:System.ArgumentNullException">function or argument null.</exception>
         /// <exception cref="T:System.ArgumentException">function is not an aggregate function or has more than one argument, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
-        public static DbFunctionAggregate Aggregate(this EdmFunction function, DbExpression argument) {
+        public static DbFunctionAggregate Aggregate(this EdmFunction function, DbExpression argument)
+        {
             Check.NotNull(function, "function");
             Check.NotNull(argument, "argument");
 
@@ -223,14 +224,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="argument">The argument over which the aggregate function should be calculated.</param>
         /// <exception cref="T:System.ArgumentNullException">function or argument is null.</exception>
         /// <exception cref="T:System.ArgumentException">function is not an aggregate function or has more than one argument, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
-        public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, DbExpression argument) {
+        public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, DbExpression argument)
+        {
             Check.NotNull(function, "function");
             Check.NotNull(argument, "argument");
 
             return CreateFunctionAggregate(function, argument, true);
         }
 
-        private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, DbExpression argument, bool isDistinct) {
+        private static DbFunctionAggregate CreateFunctionAggregate(EdmFunction function, DbExpression argument, bool isDistinct)
+        {
             var funcArgs = ArgumentValidation.ValidateFunctionAggregate(function, new[] { argument });
             var resultType = function.ReturnParameter.TypeUsage;
             return new DbFunctionAggregate(resultType, funcArgs, function, isDistinct);

@@ -1884,6 +1884,9 @@
   <data name="Metadata_General_Error" xml:space="preserve">
     <value>Inconsistent metadata error</value>
   </data>
+  <data name="InvalidNumberOfParametersForAggregateFunction" xml:space="preserve">
+    <value>Error in Function '{0}'. Aggregate Functions should take at least one input parameter.</value>
+  </data>
   <data name="InvalidParameterTypeForAggregateFunction" xml:space="preserve">
     <value>Type of parameter '{0}' in function '{1}' is not valid. The aggregate function parameter type must be of CollectionType.</value>
   </data>

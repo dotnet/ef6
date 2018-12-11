@@ -107,9 +107,9 @@ FROM ( SELECT
 1 AS [C1], 
 [GroupBy1].[A1] AS [C2]
 FROM ( SELECT 
-	MAX([Filter1].[A1]) AS [A1]
+	MAX([Filter1].[A1_0]) AS [A1]
 	FROM ( SELECT 
-		[Extent1].[ProductID] - 3 AS [A1]
+		[Extent1].[ProductID] - 3 AS [A1_0]
 		FROM [dbo].[Products] AS [Extent1]
 		WHERE [Extent1].[Discontinued] IN (0,1)
 	)  AS [Filter1]
