@@ -618,6 +618,41 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
+        public void Configure_multiple_has_index_overlap_creates_indexes()
+        {
+            const string index1Name = "ID_Then_Type";
+            const string index2Name = "Type_Then_ID";
+
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Customer>()
+                .HasIndex(e => new { e.CustomerID, e.CustomerType })
+                .HasName(index1Name);
+
+            modelBuilder.Entity<Customer>()
+                .HasIndex(e => new { e.CustomerType, e.CustomerID })
+                .HasName(index2Name);
+
+            var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            {
+                var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerID");
+                Assert.Equal(2, indexAttributes.Count());
+
+                indexAttributes.First().AssertConfiguration(index1Name, 0, null, null);
+                indexAttributes.Skip(1).First().AssertConfiguration(index2Name, 1, null, null);
+            }
+
+            {
+                var indexAttributes = ConfiguredIndexAttributes(model, "Customer", "CustomerType");
+                Assert.Equal(2, indexAttributes.Count());
+
+                indexAttributes.First().AssertConfiguration(index1Name, 1, null, null);
+                indexAttributes.Skip(1).First().AssertConfiguration(index2Name, 0, null, null);
+            }
+        }
+
+        [Fact]
         public void Configure_has_key_has_index_creates_indexes_complex()
         {
             var modelBuilder = new AdventureWorksModelBuilder();
