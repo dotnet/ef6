@@ -80,18 +80,18 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\DesignXmlCore\VisualStudio\Package\HierarchyVisitor.cs">
+    <!-- Compile Include="..\DesignXmlCore\VisualStudio\Package\HierarchyVisitor.cs">
       <Link>LinkedFiles\HierarchyVisitor.cs</Link>
-    </Compile>
-    <Compile Include="..\DesignXmlCore\VisualStudio\VSFileFinder.cs">
+    </Compile -->
+    <!-- Compile Include="..\DesignXmlCore\VisualStudio\VSFileFinder.cs">
       <Link>LinkedFiles\VSFileFinder.cs</Link>
-    </Compile>
+    </Compile -->
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BootstrapUtils.cs" />
+    <!-- Compile Include="BootstrapUtils.cs" / -->
     <Compile Include="MicrosoftDataEntityDesignBootstrapPackage.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
