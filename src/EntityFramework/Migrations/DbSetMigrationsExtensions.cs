@@ -19,7 +19,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         /// Adds or updates entities by key when SaveChanges is called. Equivalent to an "upsert" operation
         /// from database terminology.
-        /// This method can useful when seeding data using Migrations.
+        /// This method can be useful when seeding data using Migrations.
         /// </summary>
         /// <typeparam name="TEntity">The type of entities to add or update.</typeparam>
         /// <param name="set">The set to which the entities belong.</param>
