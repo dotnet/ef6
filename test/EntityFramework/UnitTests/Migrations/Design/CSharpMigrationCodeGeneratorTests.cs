@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             CreateStoredProcedure(
                 ""Foo"",
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Migrations.Design
             
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropStoredProcedure(""Foo"");
         }
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AlterStoredProcedure(
                 ""Foo"",
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Migrations.Design
             
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             throw new NotSupportedException(""" + Strings.ScaffoldSprocInDownNotSupported + @""");
         }
@@ -169,12 +169,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             RenameStoredProcedure(name: ""Foo"", newName: ""Bar"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             RenameStoredProcedure(name: ""Bar"", newName: ""Foo"");
         }
@@ -212,12 +212,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             RenameIndex(table: ""Foo"", name: ""Bar"", newName: ""Baz"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             RenameIndex(table: ""Foo"", name: ""Baz"", newName: ""Bar"");
         }
@@ -253,13 +253,13 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             DropStoredProcedure(""Foo"");
             DropTable(""Bar"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             CreateTable(
                 ""Bar"",
@@ -310,12 +310,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddColumn(""T"", ""C"", c => c.Decimal(defaultValue: 123.45m));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropColumn(""T"", ""C"");
         }
@@ -365,12 +365,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddColumn(""T"", ""C"", c => c.Single(defaultValue: 123.45f));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropColumn(""T"", ""C"");
         }
@@ -441,12 +441,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             DropPrimaryKey(""T"", name: ""PK"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" }, name: ""PK"");
         }
@@ -487,12 +487,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             DropPrimaryKey(""T"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
         }
@@ -534,12 +534,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" }, name: ""PK"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropPrimaryKey(""T"", name: ""PK"");
         }
@@ -580,12 +580,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropPrimaryKey(""T"");
         }
@@ -628,12 +628,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddPrimaryKey(""T"", new[] { ""c1"", ""c2"" }, name: ""PK"", clustered: false);
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropPrimaryKey(""T"", name: ""PK"");
         }
@@ -676,12 +676,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddForeignKey(""Orders"", ""CustomerId"", ""Customers"", ""Id"", cascadeDelete: true);
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropForeignKey(""Orders"", ""CustomerId"", ""Customers"");
         }
@@ -725,12 +725,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddForeignKey(""Orders"", new[] { ""CustomerId1"", ""CustomerId2"" }, ""Customers"", new[] { ""Id1"", ""Id2"" });
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropForeignKey(""Orders"", new[] { ""CustomerId1"", ""CustomerId2"" }, ""Customers"");
         }
@@ -764,12 +764,12 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             DropColumn(""Customers"", ""Foo"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
         }
     }
@@ -808,7 +808,7 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             CreateTable(
                 ""Customers"",
@@ -819,7 +819,7 @@ namespace System.Data.Entity.Migrations.Design
             
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropTable(""Customers"");
         }
@@ -885,7 +885,7 @@ namespace System.Data.Entity.Migrations.Design
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             CreateTable(
                 ""Customers"",
@@ -900,7 +900,7 @@ namespace System.Data.Entity.Migrations.Design
             
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropIndex(""Customers"", new[] { ""Blog.Id"" });
             DropForeignKey(""Customers"", ""Blog.Id"", ""Blogs"");
@@ -939,6 +939,28 @@ namespace Foo
         {
             get { return Resources.GetString(""Target""); }
         }
+        
+        public override void Up()
+        {
+            BeforeUp();
+            MigrateUp();
+            AfterUp();
+        }
+        
+        public override void Down()
+        {
+            BeforeDown();
+            MigrateDown();
+            AfterDown();
+        }
+        
+        partial void BeforeUp();
+        partial void MigrateUp();
+        partial void AfterUp();
+        partial void BeforeDown();
+        partial void MigrateDown();
+        partial void AfterDown();
+        
     }
 }
 ",
@@ -995,7 +1017,7 @@ namespace Foo
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             CreateTable(
                 ""Customers"",
@@ -1008,7 +1030,7 @@ namespace Foo
             
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropIndex(""Customers"", ""MyIndex"");
             DropTable(""Customers"");
@@ -1051,12 +1073,12 @@ namespace Foo
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             CreateIndex(""MyTable"", ""MyColumn"", unique: true, clustered: true, name: ""MyIndex"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropIndex(""MyTable"", ""MyIndex"");
         }
@@ -1088,12 +1110,12 @@ namespace Foo
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             DropTable(""Customers"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
         }
     }
@@ -1124,12 +1146,12 @@ namespace Foo
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             MoveStoredProcedure(name: ""Insert_Customers"", newSchema: ""foo"");
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             MoveStoredProcedure(name: ""foo.Insert_Customers"", newSchema: null);
         }
@@ -1206,6 +1228,28 @@ namespace Foo
         {
             get { return Resources.GetString(""Target""); }
         }
+        
+        public override void Up()
+        {
+            BeforeUp();
+            MigrateUp();
+            AfterUp();
+        }
+        
+        public override void Down()
+        {
+            BeforeDown();
+            MigrateDown();
+            AfterDown();
+        }
+        
+        partial void BeforeUp();
+        partial void MigrateUp();
+        partial void AfterUp();
+        partial void BeforeDown();
+        partial void MigrateDown();
+        partial void AfterDown();
+        
     }
 }
 ",
@@ -1246,12 +1290,12 @@ namespace Foo
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddColumn(""T"", ""C"", c => c.Geography(nullable: false, defaultValue: DbGeography.FromText(""POINT (6 7)"", 4326)));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropColumn(""T"", ""C"");
         }
@@ -1292,12 +1336,12 @@ namespace Foo
     
     public partial class Bar : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddColumn(""T"", ""C"", c => c.Geometry(nullable: false, defaultValue: DbGeometry.FromText(""POINT (8 9)"", 0)));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropColumn(""T"", ""C"");
         }
@@ -1346,6 +1390,28 @@ public sealed partial class Bar : IMigrationMetadata
     {
         get { return Resources.GetString(""Target""); }
     }
+    
+    public override void Up()
+    {
+        BeforeUp();
+        MigrateUp();
+        AfterUp();
+    }
+    
+    public override void Down()
+    {
+        BeforeDown();
+        MigrateDown();
+        AfterDown();
+    }
+    
+    partial void BeforeUp();
+    partial void MigrateUp();
+    partial void AfterUp();
+    partial void BeforeDown();
+    partial void MigrateDown();
+    partial void AfterDown();
+    
 }
 ",
                 generatedMigration.DesignerCode);
@@ -1359,11 +1425,11 @@ using System.Data.Entity.Migrations;
 
 public partial class Bar : DbMigration
 {
-    public override void Up()
+    partial void MigrateUp()
     {
     }
     
-    public override void Down()
+    partial void MigrateDown()
     {
     }
 }
@@ -1412,7 +1478,7 @@ public partial class Bar : DbMigration
     
     public partial class MyMigration : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AlterColumn(""MyTable"", ""MyColumn"", c => c.Int(fixedLength: true,
                 annotations: new Dictionary<string, AnnotationValues>
@@ -1456,7 +1522,7 @@ public partial class Bar : DbMigration
                 }));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
         }
     }
@@ -1520,7 +1586,7 @@ public partial class Bar : DbMigration
     
     public partial class MyMigration : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AlterColumn(""MyTable"", ""MyColumn"", c => c.Int(
                 annotations: new Dictionary<string, AnnotationValues>
@@ -1532,7 +1598,7 @@ public partial class Bar : DbMigration
                 }));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             AlterColumn(""MyTable"", ""MyColumn"", c => c.Int(
                 annotations: new Dictionary<string, AnnotationValues>
@@ -1583,7 +1649,7 @@ public partial class Bar : DbMigration
     
     public partial class MyMigration : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddColumn(""MyTable"", ""MyColumn"", c => c.String(fixedLength: true,
                 annotations: new Dictionary<string, AnnotationValues>
@@ -1599,7 +1665,7 @@ public partial class Bar : DbMigration
                 }));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropColumn(""MyTable"", ""MyColumn"",
                 removedAnnotations: new Dictionary<string, object>
@@ -1654,7 +1720,7 @@ public partial class Bar : DbMigration
     
     public partial class MyMigration : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AddColumn(""MyTable"", ""MyColumn"", c => c.String(fixedLength: true,
                 annotations: new Dictionary<string, AnnotationValues>
@@ -1666,7 +1732,7 @@ public partial class Bar : DbMigration
                 }));
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropColumn(""MyTable"", ""MyColumn"",
                 removedAnnotations: new Dictionary<string, object>
@@ -1745,7 +1811,7 @@ public partial class Bar : DbMigration
     
     public partial class MyMigration : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             CreateTable(
                 ""Customers"",
@@ -1781,7 +1847,7 @@ public partial class Bar : DbMigration
             
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             DropTable(""Customers"",
                 removedAnnotations: new Dictionary<string, object>
@@ -1880,7 +1946,7 @@ public partial class Bar : DbMigration
     
     public partial class MyMigration : DbMigration
     {
-        public override void Up()
+        partial void MigrateUp()
         {
             AlterTableAnnotations(
                 ""Customers"",
@@ -1925,7 +1991,7 @@ public partial class Bar : DbMigration
             
         }
         
-        public override void Down()
+        partial void MigrateDown()
         {
             AlterTableAnnotations(
                 ""Customers"",

@@ -98,7 +98,7 @@ namespace System.Data.Entity.Migrations.Design
                         @namespace, className, writer, "DbMigration", designer: false,
                         namespaces: GetNamespaces(operations));
 
-                    writer.WriteLine("public override void Up()");
+                    writer.WriteLine("partial void MigrateUp()");
                     writer.WriteLine("{");
                     writer.Indent++;
 
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Migrations.Design
 
                     writer.WriteLine();
 
-                    writer.WriteLine("public override void Down()");
+                    writer.WriteLine("partial void MigrateDown()");
                     writer.WriteLine("{");
                     writer.Indent++;
 
@@ -188,11 +188,53 @@ namespace System.Data.Entity.Migrations.Design
                     writer.WriteLine();
                     WriteProperty("Target", "Resources.GetString(\"Target\")", writer);
 
+                    writer.WriteLine();
+                    WriteMigrateOverride("Up", writer);
+                    writer.WriteLine();
+                    WriteMigrateOverride("Down", writer);
+                    writer.WriteLine();
+
+                    WriteBeforeAfterPartials(writer);
+                    writer.WriteLine();
+
+
                     WriteClassEnd(@namespace, writer);
                 }
 
                 return stringWriter.ToString();
             }
+        }
+
+        private void WriteMigrateOverride(string UpOrDown, IndentedTextWriter writer)
+        {
+            writer.WriteLine("public override void {0}()", UpOrDown);
+            writer.WriteLine("{");
+            writer.Indent++;
+
+            writer.WriteLine("Before{0}();", UpOrDown);
+            writer.WriteLine("Migrate{0}();", UpOrDown);
+            writer.WriteLine("After{0}();", UpOrDown);
+
+            writer.Indent--;
+
+            writer.WriteLine("}");
+        }
+
+
+        /// <summary>
+        /// Adds declarations for user overrides in the migrations file.  Allows for manual tuning without walking over auto generated migrations.
+        /// </summary>
+        /// <param name="writer"></param>
+        protected virtual void WriteBeforeAfterPartials(IndentedTextWriter writer)
+        {
+
+            writer.WriteLine("partial void BeforeUp();");
+            writer.WriteLine("partial void MigrateUp();");
+            writer.WriteLine("partial void AfterUp();");
+            writer.WriteLine("partial void BeforeDown();");
+            writer.WriteLine("partial void MigrateDown();");
+            writer.WriteLine("partial void AfterDown();");
+
         }
 
         /// <summary>
