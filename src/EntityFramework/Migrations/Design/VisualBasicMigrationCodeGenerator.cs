@@ -97,7 +97,7 @@ namespace System.Data.Entity.Migrations.Design
                         @namespace, className, writer, "Inherits DbMigration", designer: false,
                         namespaces: GetNamespaces(operations));
 
-                    writer.WriteLine("Public Overrides Sub Up()");
+                    writer.WriteLine("Public Sub MigrateUp()");
                     writer.Indent++;
 
                     operations
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Migrations.Design
 
                     writer.WriteLine();
 
-                    writer.WriteLine("Public Overrides Sub Down()");
+                    writer.WriteLine("Public Sub MigrateDown()");
                     writer.Indent++;
 
                     operations
@@ -185,11 +185,52 @@ namespace System.Data.Entity.Migrations.Design
                     writer.WriteLine();
                     WriteProperty("Target", "Resources.GetString(\"Target\")", writer);
 
+                    writer.WriteLine();
+                    WriteMigrateOverride("Up", writer);
+                    writer.WriteLine();
+                    WriteMigrateOverride("Down", writer);
+                    writer.WriteLine();
+
+                    WriteBeforeAfterPartials(writer);
+                    writer.WriteLine();
+
                     WriteClassEnd(@namespace, writer);
                 }
 
                 return stringWriter.ToString();
             }
+        }
+
+        private void WriteMigrateOverride(string UpOrDown, IndentedTextWriter writer)
+        {
+            writer.WriteLine("Public Overrides Sub {0}()", UpOrDown);
+            writer.Indent++;
+
+            writer.WriteLine("Before{0}()", UpOrDown);
+            writer.WriteLine("Migrate{0}()", UpOrDown);
+            writer.WriteLine("After{0}()", UpOrDown);
+
+            writer.Indent--;
+
+            writer.WriteLine("End Sub");
+        }
+
+        private void WriteBeforeAfterPartials(IndentedTextWriter writer)
+        {
+
+            writer.WriteLine("Partial Private Sub BeforeUp()");
+            writer.WriteLine("End Sub");
+            writer.WriteLine("Partial Private Sub MigrateUp()");
+            writer.WriteLine("End Sub");
+            writer.WriteLine("Partial Private Sub AfterUp()");
+            writer.WriteLine("End Sub");
+            writer.WriteLine("Partial Private Sub BeforeDown()");
+            writer.WriteLine("End Sub");
+            writer.WriteLine("Partial Private Sub MigrateDown()");
+            writer.WriteLine("End Sub");
+            writer.WriteLine("Partial Private Sub AfterDown()");
+            writer.WriteLine("End Sub");
+
         }
 
         /// <summary>

@@ -56,7 +56,7 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             CreateStoredProcedure(
                 ""Foo"",
                 Function(p) New With
@@ -70,7 +70,7 @@ Namespace Foo
             
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropStoredProcedure(""Foo"")
         End Sub
     End Class
@@ -116,7 +116,7 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AlterStoredProcedure(
                 ""Foo"",
                 Function(p) New With
@@ -130,7 +130,7 @@ Namespace Foo
             
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             Throw New NotSupportedException(""" + Strings.ScaffoldSprocInDownNotSupported + @""")
         End Sub
     End Class
@@ -168,11 +168,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             RenameIndex(table := ""Foo"", name := ""Bar"", newName := ""Baz"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             RenameIndex(table := ""Foo"", name := ""Baz"", newName := ""Bar"")
         End Sub
     End Class
@@ -210,11 +210,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             RenameStoredProcedure(name := ""Foo"", newName := ""Bar"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             RenameStoredProcedure(name := ""Bar"", newName := ""Foo"")
         End Sub
     End Class
@@ -250,12 +250,12 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             DropStoredProcedure(""Foo"")
             DropTable(""Bar"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             CreateTable(
                 ""Bar"",
                 Function(c) New With
@@ -306,11 +306,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddColumn(""T"", ""C"", Function(c) c.Decimal(defaultValue := 123.45D))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropColumn(""T"", ""C"")
         End Sub
     End Class
@@ -360,11 +360,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddColumn(""T"", ""C"", Function(c) c.Single(defaultValue := 123.45F))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropColumn(""T"", ""C"")
         End Sub
     End Class
@@ -435,11 +435,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             DropPrimaryKey(""T"", name := ""PK"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             AddPrimaryKey(""T"", New String() { ""c1"", ""c2"" }, name := ""PK"")
         End Sub
     End Class
@@ -480,11 +480,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             DropPrimaryKey(""T"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             AddPrimaryKey(""T"", New String() { ""c1"", ""c2"" })
         End Sub
     End Class
@@ -526,11 +526,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddPrimaryKey(""T"", New String() { ""c1"", ""c2"" }, name := ""PK"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropPrimaryKey(""T"", name := ""PK"")
         End Sub
     End Class
@@ -571,11 +571,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddPrimaryKey(""T"", New String() { ""c1"", ""c2"" })
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropPrimaryKey(""T"")
         End Sub
     End Class
@@ -618,11 +618,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddPrimaryKey(""T"", New String() { ""c1"", ""c2"" }, name := ""PK"", clustered := False)
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropPrimaryKey(""T"", name := ""PK"")
         End Sub
     End Class
@@ -665,11 +665,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddForeignKey(""Orders"", ""CustomerId"", ""Customers"", ""Id"", cascadeDelete := True)
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropForeignKey(""Orders"", ""CustomerId"", ""Customers"")
         End Sub
     End Class
@@ -713,11 +713,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddForeignKey(""Orders"", New String() { ""CustomerId1"", ""CustomerId2"" }, ""Customers"", New String() { ""Id1"", ""Id2"" })
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropForeignKey(""Orders"", New String() { ""CustomerId1"", ""CustomerId2"" }, ""Customers"")
         End Sub
     End Class
@@ -751,11 +751,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             DropColumn(""Customers"", ""Foo"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
         End Sub
     End Class
 End Namespace
@@ -794,7 +794,7 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             CreateTable(
                 ""Customers"",
                 Function(c) New With
@@ -804,7 +804,7 @@ Namespace Foo
             
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropTable(""Customers"")
         End Sub
     End Class
@@ -870,7 +870,7 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             CreateTable(
                 ""Customers"",
                 Function(c) New With
@@ -884,7 +884,7 @@ Namespace Foo
             
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropIndex(""Customers"", New String() { ""Blog.Id"" })
             DropForeignKey(""Customers"", ""Blog.Id"", ""Blogs"")
             DropTable(""Customers"")
@@ -925,6 +925,32 @@ Namespace Foo
                 Return Resources.GetString(""Target"")
             End Get
         End Property
+        
+        Public Overrides Sub Up()
+            BeforeUp()
+            MigrateUp()
+            AfterUp()
+        End Sub
+        
+        Public Overrides Sub Down()
+            BeforeDown()
+            MigrateDown()
+            AfterDown()
+        End Sub
+        
+        Partial Private Sub BeforeUp()
+        End Sub
+        Partial Private Sub MigrateUp()
+        End Sub
+        Partial Private Sub AfterUp()
+        End Sub
+        Partial Private Sub BeforeDown()
+        End Sub
+        Partial Private Sub MigrateDown()
+        End Sub
+        Partial Private Sub AfterDown()
+        End Sub
+        
     End Class
 End Namespace
 ",
@@ -982,7 +1008,7 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             CreateTable(
                 ""Customers"",
                 Function(c) New With
@@ -994,7 +1020,7 @@ Namespace Foo
             
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropIndex(""Customers"", ""MyIndex"")
             DropTable(""Customers"")
         End Sub
@@ -1037,11 +1063,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             CreateIndex(""MyTable"", ""MyColumn"", unique := True, clustered := True, name := ""MyIndex"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropIndex(""MyTable"", ""MyIndex"")
         End Sub
     End Class
@@ -1073,11 +1099,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             DropTable(""Customers"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
         End Sub
     End Class
 End Namespace
@@ -1109,11 +1135,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             MoveStoredProcedure(name := ""Insert_Customers"", newSchema := ""foo"")
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             MoveStoredProcedure(name := ""foo.Insert_Customers"", newSchema := Nothing)
         End Sub
     End Class
@@ -1192,6 +1218,32 @@ Namespace Foo
                 Return Resources.GetString(""Target"")
             End Get
         End Property
+        
+        Public Overrides Sub Up()
+            BeforeUp()
+            MigrateUp()
+            AfterUp()
+        End Sub
+        
+        Public Overrides Sub Down()
+            BeforeDown()
+            MigrateDown()
+            AfterDown()
+        End Sub
+        
+        Partial Private Sub BeforeUp()
+        End Sub
+        Partial Private Sub MigrateUp()
+        End Sub
+        Partial Private Sub AfterUp()
+        End Sub
+        Partial Private Sub BeforeDown()
+        End Sub
+        Partial Private Sub MigrateDown()
+        End Sub
+        Partial Private Sub AfterDown()
+        End Sub
+        
     End Class
 End Namespace
 ",
@@ -1233,11 +1285,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddColumn(""T"", ""C"", Function(c) c.Geography(nullable := False, defaultValue := DbGeography.FromText(""POINT (6 7)"", 4326)))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropColumn(""T"", ""C"")
         End Sub
     End Class
@@ -1278,11 +1330,11 @@ Namespace Foo
     Public Partial Class Bar
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddColumn(""T"", ""C"", Function(c) c.Geometry(nullable := False, defaultValue := DbGeometry.FromText(""POINT (8 9)"", 0)))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropColumn(""T"", ""C"")
         End Sub
     End Class
@@ -1334,6 +1386,32 @@ Public NotInheritable Partial Class Bar
             Return Resources.GetString(""Target"")
         End Get
     End Property
+    
+    Public Overrides Sub Up()
+        BeforeUp()
+        MigrateUp()
+        AfterUp()
+    End Sub
+    
+    Public Overrides Sub Down()
+        BeforeDown()
+        MigrateDown()
+        AfterDown()
+    End Sub
+    
+    Partial Private Sub BeforeUp()
+    End Sub
+    Partial Private Sub MigrateUp()
+    End Sub
+    Partial Private Sub AfterUp()
+    End Sub
+    Partial Private Sub BeforeDown()
+    End Sub
+    Partial Private Sub MigrateDown()
+    End Sub
+    Partial Private Sub AfterDown()
+    End Sub
+    
 End Class
 ",
                 generatedMigration.DesignerCode);
@@ -1349,10 +1427,10 @@ Imports Microsoft.VisualBasic
 Public Partial Class Bar
     Inherits DbMigration
 
-    Public Overrides Sub Up()
+    Public Sub MigrateUp()
     End Sub
     
-    Public Overrides Sub Down()
+    Public Sub MigrateDown()
     End Sub
 End Class
 ",
@@ -1401,7 +1479,7 @@ Namespace MyNamespace
     Public Partial Class MyMigration
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AlterColumn(""MyTable"", ""MyColumn"", Function(c) c.Int(fixedLength := true,
                 annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
@@ -1444,7 +1522,7 @@ Namespace MyNamespace
                 }))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
         End Sub
     End Class
 End Namespace
@@ -1508,7 +1586,7 @@ Namespace MyNamespace
     Public Partial Class MyMigration
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AlterColumn(""MyTable"", ""MyColumn"", Function(c) c.Int(
                 annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
@@ -1519,7 +1597,7 @@ Namespace MyNamespace
                 }))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             AlterColumn(""MyTable"", ""MyColumn"", Function(c) c.Int(
                 annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
@@ -1570,7 +1648,7 @@ Namespace MyNamespace
     Public Partial Class MyMigration
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddColumn(""MyTable"", ""MyColumn"", Function(c) c.String(fixedLength := true,
                 annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
@@ -1585,7 +1663,7 @@ Namespace MyNamespace
                 }))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropColumn(""MyTable"", ""MyColumn"",
                 removedAnnotations := New Dictionary(Of String, Object)() From _
                 {
@@ -1640,7 +1718,7 @@ Namespace MyNamespace
     Public Partial Class MyMigration
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AddColumn(""MyTable"", ""MyColumn"", Function(c) c.String(fixedLength := true,
                 annotations := New Dictionary(Of String, AnnotationValues)() From _
                 {
@@ -1651,7 +1729,7 @@ Namespace MyNamespace
                 }))
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropColumn(""MyTable"", ""MyColumn"",
                 removedAnnotations := New Dictionary(Of String, Object)() From _
                 {
@@ -1730,7 +1808,7 @@ Namespace MyNamespace
     Public Partial Class MyMigration
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             CreateTable(
                 ""Customers"",
                 Function(c) New With
@@ -1765,7 +1843,7 @@ Namespace MyNamespace
             
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             DropTable(""Customers"",
                 removedAnnotations := New Dictionary(Of String, Object)() From _
                 {
@@ -1864,7 +1942,7 @@ Namespace MyNamespace
     Public Partial Class MyMigration
         Inherits DbMigration
     
-        Public Overrides Sub Up()
+        Public Sub MigrateUp()
             AlterTableAnnotations(
                 ""Customers"",
                 Function(c) New With
@@ -1908,7 +1986,7 @@ Namespace MyNamespace
             
         End Sub
         
-        Public Overrides Sub Down()
+        Public Sub MigrateDown()
             AlterTableAnnotations(
                 ""Customers"",
                 Function(c) New With
