@@ -179,16 +179,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Madskristensen.VisualStudio.SDK">
-      <Version>14.0.74-pre</Version>
+      <Version>14.0.81-pre</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers">
       <Version>15.8.36</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers">
-      <Version>15.8.168</Version>
+      <Version>15.8.209</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>15.8.3252</Version>
+      <Version>15.9.3032</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
