@@ -61,7 +61,6 @@ namespace System.Data.Entity.TestHelpers
         public FunctionalTestsConfiguration()
         {
             SetProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
-            SetProviderServices(SqlServerCompact.Legacy.SqlCeProviderServices.ProviderInvariantName, SqlServerCompact.Legacy.SqlCeProviderServices.Instance);
             SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
 
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());

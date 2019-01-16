@@ -71,26 +71,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.SqlServer",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.SqlServerCompact", "src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj", "{1EF9C524-7122-4677-B111-DD14BB2A9EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.SqlServerCompact.Legacy", "src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.Legacy.csproj", "{54BFA36B-8105-468E-AA22-F2E1D3B28B54}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalTests.Transitional", "test\EntityFramework\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj", "{3D65611F-E8FB-4A33-9196-7836969D6378}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalTests.ProviderAgnostic", "test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj", "{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntityFramework.SqlServerCompact.Legacy", "EntityFramework.SqlServerCompact.Legacy", "{C2B11BAB-58B7-4EEF-A5AB-1646B1063753}"
-	ProjectSection(SolutionItems) = preProject
-		src\NuGet\EntityFramework.SqlServerCompact.Legacy\EntityFramework.SqlServerCompact.Legacy.nuspec = src\NuGet\EntityFramework.SqlServerCompact.Legacy\EntityFramework.SqlServerCompact.Legacy.nuspec
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{26C3CC29-C8CF-43DC-B715-E5E120EE529B}"
-	ProjectSection(SolutionItems) = preProject
-		src\NuGet\EntityFramework.SqlServerCompact.Legacy\Content\App.config.transform = src\NuGet\EntityFramework.SqlServerCompact.Legacy\Content\App.config.transform
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{1075182E-E604-443F-B3E4-37117A0D71E6}"
-	ProjectSection(SolutionItems) = preProject
-		src\NuGet\EntityFramework.SqlServerCompact.Legacy\tools\install.ps1 = src\NuGet\EntityFramework.SqlServerCompact.Legacy\tools\install.ps1
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{66E9740E-1202-41FD-87E2-E6863FC8C60A}"
 	ProjectSection(SolutionItems) = preProject
@@ -175,14 +158,6 @@ Global
 		{1EF9C524-7122-4677-B111-DD14BB2A9EA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1EF9C524-7122-4677-B111-DD14BB2A9EA2}.ReleaseNet40|Any CPU.ActiveCfg = ReleaseNet40|Any CPU
 		{1EF9C524-7122-4677-B111-DD14BB2A9EA2}.ReleaseNet40|Any CPU.Build.0 = ReleaseNet40|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.DebugNet40|Any CPU.ActiveCfg = DebugNet40|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.DebugNet40|Any CPU.Build.0 = DebugNet40|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.ReleaseNet40|Any CPU.ActiveCfg = ReleaseNet40|Any CPU
-		{54BFA36B-8105-468E-AA22-F2E1D3B28B54}.ReleaseNet40|Any CPU.Build.0 = ReleaseNet40|Any CPU
 		{3D65611F-E8FB-4A33-9196-7836969D6378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3D65611F-E8FB-4A33-9196-7836969D6378}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D65611F-E8FB-4A33-9196-7836969D6378}.DebugNet40|Any CPU.ActiveCfg = DebugNet40|Any CPU
@@ -215,8 +190,5 @@ Global
 		{CF1C27F8-D603-4960-BE99-BCF348545368} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 		{3D65611F-E8FB-4A33-9196-7836969D6378} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
-		{C2B11BAB-58B7-4EEF-A5AB-1646B1063753} = {99CFD9EF-C7D4-4E98-AD69-E56C99902B31}
-		{26C3CC29-C8CF-43DC-B715-E5E120EE529B} = {C2B11BAB-58B7-4EEF-A5AB-1646B1063753}
-		{1075182E-E604-443F-B3E4-37117A0D71E6} = {C2B11BAB-58B7-4EEF-A5AB-1646B1063753}
 	EndGlobalSection
 EndGlobal

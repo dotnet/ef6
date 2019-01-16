@@ -17,7 +17,6 @@
     <ProjectToBuild Include="src\EntityFramework.PowerShell.Utility\EntityFramework.PowerShell.Utility.csproj" />
     <ProjectToBuild Include="src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
     <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
-    <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.Legacy.csproj" />
     <ProjectToBuild Include="src\Migrate\Migrate.csproj" />
   </ItemGroup>
 

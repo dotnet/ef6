@@ -532,13 +532,8 @@ namespace System.Data.Entity.SqlServerCompact.Resources
 
         private EntityRes()
         {
-#if SQLSERVERCOMPACT35
-            resources = new ResourceManager(
-                "System.Data.Entity.SqlServerCompact.Legacy.Properties.Resources.SqlServerCompact", typeof(System.Data.Entity.SqlServerCompact.Legacy.SqlCeProviderServices).Assembly);
-#else
             resources = new ResourceManager(
                 "System.Data.Entity.SqlServerCompact.Properties.Resources.SqlServerCompact", typeof(System.Data.Entity.SqlServerCompact.SqlCeProviderServices).Assembly);
-#endif
         }
 
         private static EntityRes GetLoader()

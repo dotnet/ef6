@@ -43,10 +43,5 @@ namespace System.Data.Entity
                                          .GetProviderManifest("4.0");
             }
         }
-
-        public static DbProviderInfo SqlCe35_ProviderInfo
-        {
-            get { return new DbProviderInfo("System.Data.SqlServerCe.3.5", "3.5"); }
-        }
     }
 }
