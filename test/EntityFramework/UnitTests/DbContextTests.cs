@@ -490,7 +490,7 @@ namespace ProductivityApiUnitTests
         }
 
 #if !NET40
-        [Fact]
+        [Fact(Skip = "Fails without SQL Server Authentication")]
         public void Can_initialize_database_when_using_secure_connection_string_with_SqlCredential_and_eager_connection()
         {
             EnsureEfTestUserExists();

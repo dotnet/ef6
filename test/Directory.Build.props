@@ -1,0 +1,20 @@
+<Project>
+  <!-- HACK: Our test projects don't match Arcade's conventions -->
+  <PropertyGroup>
+    <IsUnitTestProject>True</IsUnitTestProject>
+  </PropertyGroup>
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <StrongNameKeyId>Microsoft</StrongNameKeyId>
+    <StandardTestTfms>net45</StandardTestTfms>
+    <StandardTestTfms Condition="'$(DeveloperBuild)' != 'True'">net40;$(StandardTestTfms)</StandardTestTfms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

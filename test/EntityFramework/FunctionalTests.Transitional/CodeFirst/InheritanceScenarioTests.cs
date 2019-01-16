@@ -2234,8 +2234,7 @@ namespace FunctionalTests
         {
             Database.SetInitializer(new DomainModelContextInitializer());
 
-            using (var context = new DomainModelContext(
-                        @"Data Source=.\Sqlexpress;Initial Catalog=Issue1776;Integrated Security=True;MultipleActiveResultSets=True"))
+            using (var context = new DomainModelContext("Issue1776"))
             {
                 context.CustomOnModelCreating = modelBuilder =>
                 {

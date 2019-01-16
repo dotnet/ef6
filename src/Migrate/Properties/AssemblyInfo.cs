@@ -3,5 +3,3 @@
 using System.Reflection;
 
 [assembly: AssemblyDefaultAlias("migrate.exe")]
-[assembly: AssemblyDescription("migrate.exe")]
-[assembly: AssemblyTitle("migrate")]

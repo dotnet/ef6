@@ -3,5 +3,3 @@
 using System.Reflection;
 
 [assembly: AssemblyDefaultAlias("EntityFramework.Powershell.Utility.dll")]
-[assembly: AssemblyDescription("EntityFramework.PowerShell.Utility.dll")]
-[assembly: AssemblyTitle("EntityFramework.PowerShell.Utility")]

@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET45
+
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections;
@@ -97,3 +99,5 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
     }
 }
+
+#endif

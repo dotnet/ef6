@@ -29,7 +29,8 @@ namespace System.Data.Entity.TestHelpers
             foreach (var testCommand in _classCommand.EnumerateTestCommands(testMethod))
             {
                 if (testMethod.HasAttribute(typeof(FullTrustAttribute))
-                    || testCommand is PartialTrustCommand)
+                    || testCommand is PartialTrustCommand
+                    || testCommand is SkipCommand)
                 {
                     yield return testCommand;
                     continue;

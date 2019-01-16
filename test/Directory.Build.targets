@@ -1,0 +1,8 @@
+<Project>
+  <Import Project="..\Directory.Build.targets" />
+
+  <ItemGroup>
+    <!-- TODO: Remove when updating to xUnit.net 2 -->
+    <PackageReference Remove="xunit" />
+  </ItemGroup>
+</Project>

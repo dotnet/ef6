@@ -1,0 +1,22 @@
+
+<Project>
+  <PropertyGroup>
+    <VersionPrefix>6.3.0</VersionPrefix>
+    <PreReleaseVersionLabel>preview4</PreReleaseVersionLabel>
+    <SemanticVersioningV1>True</SemanticVersioningV1>
+    <IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
+    <UsingToolNetFrameworkReferenceAssemblies>True</UsingToolNetFrameworkReferenceAssemblies>
+    <UsingToolXliff>False</UsingToolXliff>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EnvDTEVersion>8.0.2</EnvDTEVersion>
+    <MicrosoftPowerShell2ReferenceAssembliesVersion>1.0.0</MicrosoftPowerShell2ReferenceAssembliesVersion>
+    <MicrosoftSqlServerCompactVersion>4.0.8876.1</MicrosoftSqlServerCompactVersion>
+    <MicrosoftSqlServerTypesVersion>14.0.1016.290</MicrosoftSqlServerTypesVersion>
+    <MicrosoftVisualStudioShellInterop80Version>8.0.50728</MicrosoftVisualStudioShellInterop80Version>
+    <MoqVersion>4.0.10827</MoqVersion>
+    <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
+    <VSLangProjVersion>7.0.3301</VSLangProjVersion>
+    <XunitExtensionsVersion>1.9.2</XunitExtensionsVersion>
+  </PropertyGroup>
+</Project>

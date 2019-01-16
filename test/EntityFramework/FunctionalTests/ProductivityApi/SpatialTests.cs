@@ -38,6 +38,8 @@ namespace ProductivityApiTests
             _connectionString = String.Format(
                 CultureInfo.InvariantCulture, baseConnectionString,
                 SimpleConnectionString<SpatialNorthwindContext>());
+
+            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         #endregion

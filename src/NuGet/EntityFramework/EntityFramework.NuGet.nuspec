@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    $CommonMetadataElements$
+    <language>$NeutralLanguage$</language>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.0" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.dll" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.xml" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net45/EntityFramework.dll" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net45/EntityFramework.xml" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework.PowerShell/$Configuration$/net45/EntityFramework.PowerShell.dll" target="tools/" />
+    <file src="../../../artifacts/bin/EntityFramework.PowerShell.Utility/$Configuration$/net45/EntityFramework.PowerShell.Utility.dll" target="tools/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.dll" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.xml" target="lib/net40/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net45/EntityFramework.SqlServer.dll" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net45/EntityFramework.SqlServer.xml" target="lib/net45/" />
+    <file src="../../../artifacts/bin/Migrate/$Configuration$/net45/migrate.exe" target="tools/" />
+    <file src="content\**\*" target="content/" />
+    <file src="tools\**\*" target="tools/" />
+  </files>
+</package>

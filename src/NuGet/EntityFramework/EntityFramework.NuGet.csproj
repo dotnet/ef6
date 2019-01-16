@@ -1,0 +1,33 @@
+﻿<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;net40</TargetFrameworks>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <IsPackable>True</IsPackable>
+    <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
+    <Description>Entity Framework is Microsoft's recommended data access technology for new applications.</Description>
+    <NuspecPackageId>EntityFramework</NuspecPackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NuspecProperty Include="Configuration=$(Configuration)" />
+    <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <ProjectReference Include="..\..\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
+    <ProjectReference Include="..\..\Migrate\Migrate.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <Target Name="Compile" />
+  <Target Name="CopyFilesToOutputDirectory" />
+</Project>
