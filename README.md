@@ -17,7 +17,7 @@ When right-clicking on an Entity Data Model .edmx  file, the following context m
 
 If you are looking for Reverse Engineeering tools, I recommend using the [EF Reverse POCO Generator Template](https://marketplace.visualstudio.com/items?itemName=SimonHughes.EntityFrameworkReversePOCOGenerator). You can also use the less advanced ["Code First from Database" feature](http://www.entityframeworktutorial.net/code-first/code-first-from-existing-database.aspx) that is included with the standard Visual Studio tooling for EF 6.
 
-A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-us/data/jj593170
+A MSDN article about the tool is [available here](https://msdn.microsoft.com/en-us/data/jj593170)
 
 # Downloads/builds
 
@@ -47,6 +47,13 @@ If you encounter a bug or have a feature request, please use the [Issue Tracker]
 ## Daily build
 
 **Bug fixes**
+
+## Release 0.9.65 (January, 2019)
+
+* About dialog added
+* VSPackage made Async (to support newer VS versions)
+* Support for Visual Studio 2019
+* Support for multiple projects with DbContext using same name - thanks for [PhilPJL](https://github.com/PhilPJL)
 
 ## Release 0.9.35 (July 19, 2017)
 
