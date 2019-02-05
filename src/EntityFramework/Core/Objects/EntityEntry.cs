@@ -2430,7 +2430,7 @@ namespace System.Data.Entity.Core.Objects
             EntityEntry relatedEntry,
             RelatedEnd relatedEndFrom)
         {
-            Debug.Assert(!relatedKey.IsTemporary, "the relatedKey was created by a method which returns only permaanent keys");
+            Debug.Assert(!relatedKey.IsTemporary, "the relatedKey was created by a method which returns only permanent keys");
             AddDetectedRelationship(relationships, relatedKey, relatedEndFrom);
 
             if (relatedEntry != null)
