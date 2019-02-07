@@ -5,7 +5,7 @@
   <PropertyGroup>
     <RuntimeVersionMajor>6</RuntimeVersionMajor>
     <RuntimeVersionMinor>2</RuntimeVersionMinor>
-    <ToolingVersionMajor>15</ToolingVersionMajor>
+    <ToolingVersionMajor>16</ToolingVersionMajor>
     <ToolingVersionMinor>0</ToolingVersionMinor>
     <VisualStudioVersion>$(ToolingVersionMajor).$(ToolingVersionMinor)</VisualStudioVersion>
     <VersionBuild>0</VersionBuild>
