@@ -1,0 +1,756 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="microsoft.visualstudio.data.tools.design.xmlcore.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ja-JP" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="ericbaud" DateTime="2007-10-25T18:00:47Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid.VirtualTreeControl.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:19:05Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-masaru.iwata" DateTime="2013-04-23T12:19:05Z" />
+      <Item ItemId=";BlankSubItemException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A blank item cannot have sub items.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[空のアイテムには、サブ アイテムを指定することはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";BrowseButtonAccessibleName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Browse]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[参照]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";CalcTextHeightLetter" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[J]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[J]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";CheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[オン]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ChildRowNumberAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0:d} child rows]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0:d} 子行]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ColumnAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[column {0:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[列 {0:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ColumnNumberAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0:d} columns]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0:d} 列]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ColumnOutOfRangeException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Row parameter must be >= 0 if column > 0.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[列 > 0 の場合、行パラメーターは > = 0 でなければなりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ComplexColumnCellStyleException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The cell style for the indicated column must be Complex or Mixed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[示されている列のセル スタイルは Complex または Mixed でなければなりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Complex"} {StrContains="Mixed"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ComplexColumnRootException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter complexColumnRoot should only be true for items in the top list of a complex subitem.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[パラメーター complexColumnRoot は、Complex サブ アイテムのトップ リストのアイテムにのみ true を指定することができます。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="complexColumnRoot"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DefActionCollapseAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Collapse]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[折りたたみ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";DefActionExpandAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Expand]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[展開]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";DropDownAccessibleShortcut" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alt+Down]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Alt + 下方向キー]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";DropDownButtonAccessibleName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Open]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[開く]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";DuplicateColumnException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Duplicate column in array.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[配列内の重複する列です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";GetSubItemCountExceptionDesc" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[absRow must be >= 0 if column > 0.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[列 > 0 の場合、absRow は > = 0 でなければなりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="absRow"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";HeaderArrayException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Length of headers array must match the current column count.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ヘッダー配列の長さは、現在の列数と一致しなければなりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";InactiveCheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[inactive checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[非アクティブがチェックされています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";InactivePartiallyCheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[inactive partially checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[非アクティブが部分的にチェックされています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";InactiveUncheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[inactive not checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[非アクティブがチェックされていません]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";InvalidColumnOrderArrayException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The order array lengths must match each other and the VisibleColumnCount property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[順序配列の長さは、相互におよび VisibleColumnCount プロパティと一致していなければなりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="VisibleColumnCount"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";OverlayIndicesRangeExceptionDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No more than 16 overlay indices are supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[16 を超えるオーバーレイ インデックスはサポートされません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ParentRowException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter parentRow does not indicate a row with children.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[パラメーター parentRow は子を伴う行を示しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";PartiallyCheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[partially checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[部分的にチェックされています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";PercentageBasedHeadersInvalidException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Percentage based columns must form an ascending sequence of positive numbers <=1.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[パーセンテージを基にした列は、1 以上の正数の昇順形式でなければなりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";PercentageBasedHeadersLastInvalidException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The last percentage in a set of percentage-based columns must be 1.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[パーセンテージを基にした列のセットの最後のパーセンテージの値は 1 でなければなりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";RowAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[row {0:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[行 {0:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";RowColumnAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[row {0:d} column {1:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[行 {0:d} 列 {1:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";RowOfTotalAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[row {0:d} of {1:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[行 {0:d} / {1:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";SelectionModeNoneException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[SelectionMode.None is not supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[SelectionMode.None はサポートされていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SelectionMode.None"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ShiftBranchLevelsExceptionDesc" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[insertLevels + removeLevels don't add up to 0.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[insertLevels + removeLevels は 0 になりません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="insertLevels"} {StrContains="removeLevels"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UncheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[not checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[オフ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI.ProgressDialog.resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="ayumu.hanba" DateTime="2010-10-06T06:28:23Z" />
+  </Item>
+  <Item ItemId=";Microsoft.VisualStudio.Data.Tools.Design.XmlCore.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="ayumu.hanba" DateTime="2010-10-06T06:28:23Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="ayumu.hanba" DateTime="2010-10-06T06:28:23Z" />
+      <Item ItemId=";Dialog_CancelRefactoring" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refactoring operation has been canceled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[リファクタリング操作が取り消されました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ErrorDialog_Title" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refactoring Error]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[リファクタリング エラー]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";Error_FailedApplyChangeToFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to apply changes to file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ファイル {0} に変更を適用できませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";Error_FailedInvokePreviewWindow" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to open the preview window.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[プレビュー ウィンドウを開けませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";Error_FailedOperation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The refactoring operation has failed.  {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[リファクタリング操作が失敗しました。{0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";Error_FailedToCheckOut" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to check out files.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ファイルをチェックアウトできませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";Exception_CannotGetTextBuffer" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot get the text buffer from file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ファイル '{0}' からテキスト バッファーを取得できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";Exception_DuplicateChanges" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[There are duplicate changes for file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ファイル {0} に対する変更が重複しています。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";Exception_FailedToSaveFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to save the changed file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[変更されたファイル {0} を保存できませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";FindReferences_Heading" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Looking for reference(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[参照を探します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ProgressDialogBackgroundJobCancellationMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User cancelled background process at iteration {0}/{1}. Most recent status message was:]D;]A;]D;]A;{2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[繰り返し {0}/{1} でユーザーがバックグラウンド プロセスを取り消しました。最新の状態メッセージ:]D;]A;]D;]A;{2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+      </Item>
+      <Item ItemId=";ProgressDialogBackgroundJobErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Background job failed at iteration {0}/{1}.]D;]A;Caught exception of type {2} with message {3} and stack trace {4}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[繰り返し {0}/{1} でバックグラウンド ジョブが失敗しました。]D;]A;キャッチした例外の型は {2}、メッセージは {3}、スタック トレースは {4} です]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+      </Item>
+      <Item ItemId=";ProgressDialogBackgroundJobInnerExceptionErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[With inner exception of type {0} with message {1} and stack trace {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[内部例外の型は {0}、メッセージは {1}、スタック トレースは {2} です]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+      </Item>
+      <Item ItemId=";ProgressDialogCloseInterruptButtonCloseText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Close]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[閉じる]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogCloseInterruptButtonInterruptText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Stop]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[停止]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogStatusLabelText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Status]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[状態]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2011-03-07T01:40:16Z" />
+      </Item>
+      <Item ItemId=";RefactorDialog_Title" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refactor]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[リファクター]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";RefactoringOperation_NoChanges" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No changes are required]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[変更は必要ありません]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ServiceProvider_InvalidServiceInstance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Service instances must inherit from or implement {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[サービス インスタンスは {0} から継承するか、またはそれを実装する必要があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";ServiceProvider_ServiceAlreadyExists" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Service {0} already exists in the service container.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[サービス {0} は既にサービス コンテナーに存在します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="v-masaru.iwata" DateTime="2013-04-23T13:09:20Z" />
+      </Item>
+      <Item ItemId=";TreeBuilder_UnknownNodeType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown Node Type encountered in XmlReader.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[不明なノードの種類が XmlReader で見つかりました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XmlReader"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TridDes_ComboAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This value can be edited through a drop-down list.  Press Alt+Down Arrow to open the list.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[この値はドロップダウン リストで編集できます。Alt キーを押しながら下方向キーを押してリストを開きます。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+      </Item>
+      <Item ItemId=";TridDes_LauncherAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This value can be edited through a dialog box.  Press Alt+Down Arrow to open the dialog box.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[この値はダイアログ ボックスで編集できます。Alt キーを押しながら下方向キーを押してダイアログ ボックスを開きます。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+      </Item>
+      <Item ItemId=";VanillaProvider_DtdNodesReadOnly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DTD nodes cannot be edited.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[DTD ノードは編集できません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";VanillaProvider_TxAlreadyCompleted" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Transaction already completed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[トランザクションは既に完了しています。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="naoto.matsuzaki" DateTime="2010-10-21T02:50:33Z" />
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="ericbaud" DateTime="2007-10-25T18:00:47Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+        <Prev Cat="Text">
+          <Val><![CDATA[1.0.0.0]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+        <Prev Cat="Text">
+          <Val><![CDATA[9.0.30307.0]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-masaru.iwata" DateTime="2013-08-22T03:27:25Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+        <Prev Cat="Text">
+          <Val><![CDATA[9.0.30307.0]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-Maki.Yahagi" DateTime="2014-01-21T07:06:35Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="ericbaud" DateTime="2007-10-25T18:00:47Z" />
+  </Item>
+</LCX>

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.props"/>
+  <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props" />
+  <!-- Import Project="$(RepositoryRootDirectory)\tools\EntityFramework.settings.targets" / -->
+  
+  <!-- Configuration/global properties -->
+  <PropertyGroup>
+    <CommonMSBuildProperties>
+      Configuration=$(Configuration);
+      ReleaseLabel=$(ReleaseLabel);
+      BuildNumber=$(BuildNumber);
+      BuildRTM=$(BuildRTM);
+    </CommonMSBuildProperties>
+    <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)</OutDir> <!-- needed for Localization plugin -->
+    <OutputPath>$(OutDir)</OutputPath>
+    <MsiRuntimeInputsPackagesDir>$(OutDir)\MsiRuntimeInputs\packages</MsiRuntimeInputsPackagesDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(SingletonMsiName)' == '' ">
+    <SingletonMsiName>EF6Tools</SingletonMsiName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.7</ProductVersion>
+    <ProjectGuid>09B112B7-5836-465B-9551-F923A0ABB3E7</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputType>Package</OutputType>
+    <OutputName>$(SingletonMsiName)</OutputName>
+    <WixTargetsPath Condition="'$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != ''">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath> 
+    <WixTargetsPath Condition="'$(WixTargetsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath> 
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <IncludeSearchPaths>..\include\</IncludeSearchPaths>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <IsPackage>true</IsPackage> <!-- prevents APIScan and BinScope running and erring on this project -->
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DefineConstants>Debug;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Folders.wxs" />
+    <Compile Include="EFToolsWillowMsi.wxs" />
+    <Compile Include="Licenses.wxs" />
+    <Compile Include="NuGetPackages.wxs" />
+    <Compile Include="ReferenceCounting.wxs" />
+  </ItemGroup>
+
+  <!-- Sign outputs using this certificate -->
+  <PropertyGroup> 
+    <SetupPackageCertificate>Microsoft400</SetupPackageCertificate> 
+    <SignOutput>true</SignOutput>
+  </PropertyGroup> 
+
+  <Target Name="Build">
+    <!-- Build target from WiX would have overwritten this target if wix had been installed -->
+    <Error Text="Wix Toolset not installed - directory $(WixTargetsPath) does not exist" />
+  </Target>
+  <Target Name="Clean">
+    <!-- Clean target from WiX would have overwritten this target if wix had been installed -->
+    <Error Text="Wix Toolset not installed - directory $(WixTargetsPath) does not exist" />
+  </Target>
+  <Import Project="$(WixTargetsPath)" />
+
+  <Target Name="DefineConstants" AfterTargets="PrepareForBuild">
+    <PropertyGroup>
+      <!-- WixID must not contain hyphens -->
+      <EF6NuGetPackageWixId>$(EF6NuGetPackageVersion.Replace('-', '_'))</EF6NuGetPackageWixId>
+      <!-- WIX authoring inputs. This target ensures dependency properties has been resolved.  -->
+      <DefineConstants>$(DefineConstants);VisualStudioVersion=$(VisualStudioVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);RuntimeVersionMajor=$(RuntimeVersionMajor);RuntimeVersionMinor=$(RuntimeVersionMinor)</DefineConstants>
+      <DefineConstants>$(DefineConstants);VersionReleasePrefix=$(VersionReleasePrefix);VersionReleaseName=$(VersionReleaseName)</DefineConstants>
+      <DefineConstants>$(DefineConstants);VersionBuild=$(VersionBuild);VersionRevision=$(VersionRevision)</DefineConstants>
+      <DefineConstants>$(DefineConstants);ToolingVersionMajor=$(ToolingVersionMajor);OutputName=$(OutputName);EmbedCab=$(EmbedCab)</DefineConstants>
+      <DefineConstants>$(DefineConstants);MsiRuntimeInputsPackagesDir=$(MsiRuntimeInputsPackagesDir);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);IncludeLocalizedArtifacts=true</DefineConstants>
+    </PropertyGroup>
+    
+    <Message Importance="High" Text="EFToolsWillowMsi DefineConstants=$(DefineConstants)" />
+  </Target>
+
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>EFToolsWillowMsi: This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(WixTargetsPath)')" Text="WixTargetsPath '$(WixTargetsPath)' does not exist." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.props'))" />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets'))" />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.DependencyExtension.3.10.1.2213\build\Microsoft.Wix3.DependencyExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.DependencyExtension.3.10.1.2213\build\Microsoft.Wix3.DependencyExtension.targets'))" />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets'))" />
+  </Target>
+
+  <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets" />
+  <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.DependencyExtension.3.10.1.2213\build\Microsoft.Wix3.DependencyExtension.targets" /> <!-- adds WixDependencyExtension.dll to Wix3 extensions -->
+  <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets" /> <!-- adds WixUIExtension.dll to Wix3 extensions -->
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.targets" />
+</Project>

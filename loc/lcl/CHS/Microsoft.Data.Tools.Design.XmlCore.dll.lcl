@@ -1,0 +1,2545 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="microsoft.data.tools.design.xmlcore.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="zh-CN" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.Design.XmlCore.g.resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.XmlDesignerBase.Common.CommonResource.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-yalang" DateTime="2013-04-16T01:53:49Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-yalang" DateTime="2013-04-16T01:53:49Z" />
+      <Item ItemId=";AbortDueToFatalError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A critical error has occurred. The computer is out of memory or system resources. The application must close.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[发生错误。计算机的内存或系统资源不足。应用程序必须关闭。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ArgumentParsing_ArgumentValueMissingError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The argument string is missing the value of one of the arguments.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[参数字符串中的一个参数缺少值。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ArgumentParsing_DoubleQuoteMissingError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The argument string is missing a closing double quote.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[参数字符串缺少一个右双引号。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";AssemblySource" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Assembly Source]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[程序集源]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ClusteredIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Clustered]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[聚集]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ConnectionStringParser_InvalidConnectionString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The connection string could not be parsed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法对连接字符串进行分析。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";CopyOfFormatString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Copy of ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[副本 ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";CopyOfFormatString2" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Copy ({0}) of ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[副本({0})]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";DatabaseEncryptionKeyName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DatabaseKey]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[DatabaseKey]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";DefaultCaption" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Visual Studio]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Microsoft Visual Studio]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";DefaultRelatedElementTypeDescription" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[object]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[对象]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Deserialize_Relationships" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deserializing relationships between database objects.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[正在反序列化数据库对象之间的关系。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";DisplayName_Sql100Dsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server 2008]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DisplayName_Sql110Dsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server 2012]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DisplayName_Sql90Dsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server 2005]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DisplayName_SqlAzureDsp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[SQL Server Azure]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EE_BatchError_Exception" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while the batch was being processed. The error message is: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[处理批处理时出错。错误消息为: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_BatchExecutionError_Halting" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while the batch was being executed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[执行批处理时出错。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_BatchExecutionError_Ignoring" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while the batch was being executed, but the error has been ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[执行批处理时出错，但已忽略该错误。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_BatchExecutionInfo_RowsAffected" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]D;]A;({0} row(s) affected)]D;]A;]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]D;]A;(影响了 {0} 行)]D;]A;]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionError_CommandNotSupported" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Command {0} is not supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不支持命令 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionError_InvalidPath" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following path could not be used because an error occurred:  {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[由于发生了错误，无法使用以下路径: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionError_ReadingFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following file could not be read because an error occurred: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[由于发生了错误，无法读取以下文件: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionError_VariableNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The variable {0} could not be found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[找不到变量 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionInfo_FinalizingLoop" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Execution completed {0} times...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[已执行完 {0} 次...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionInfo_InitilizingLoop" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Starting execution loop of {0} times...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[正在开始执行 {0} 次循环...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionInfo_QueryCancelledbyUser" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cancelled the query.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[您已取消查询。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ExecutionNotYetCompleteError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The previous execution is not yet complete.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[上一次执行尚未完成。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ScriptError_Error" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A scripting error occurred.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[出现脚本错误。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ScriptError_FatalError" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A fatal error occurred.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[出现错误。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ScriptError_ParsingSyntax" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Incorrect syntax was encountered while {0} was being parsed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[分析 {0} 时遇到语法错误。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";EE_ScriptError_Warning" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Scripting warning.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[脚本警告。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ErrorString_TooManyErrors" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The maximum number of {0} errors has been reached. {1} total errors, {2} total warnings, and {3} total messages were encountered.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[已达到最大错误数 {0}。共遇到 {1} 个错误、{2} 个警告和 {3} 条消息。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionArrayWithNullOrEmptyString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of '{0}' cannot contain any null or empty strings.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[“{0}”的值不能包含任何 null 或空字符串。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionEmptyCollection" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The collection '{0}' cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[集合“{0}”不能为空。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionEmptyString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of '{0}' cannot be empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[“{0}”的值不能为空。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionEnumerationNotDefined" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} is not a valid value for {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} 对于 {1} 来说是一个无效值。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionExpectedType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type is not valid. The type '{0}' was expected.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[该类型无效。应为类型“{0}”。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionIndexOutOfRange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of {0} must be between {1} and {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} 的值必须介于 {1} 和 {2} 之间。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionInvalidNullNameArgument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name for '{0}' cannot be null or an empty string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[“{0}”的名称不能为 Null 或空字符串。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionMaxLengthExceeded" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The following value for {1} is longer than {2} characters: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{1} 的以下值多于 {2} 个字符:“{0}”]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionNullOrWhiteSpaceString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value of '{0}' cannot be null, empty or contain only white space.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[“{0}”的值不能为 null、空或仅包含空白。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ExceptionUnexpected" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An unexpected error occurred.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[发生了意外错误。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";FullTextIndexName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Full-text Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[全文检索]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+      </Item>
+      <Item ItemId=";FulltextIndexDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} on {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} 在 {1} 上]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";FunctionBody" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function Body]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[函数体]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";FunctionImplementation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function Implementation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[函数实现]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Import_MergingChildren" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Merging children]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[正在合并子项]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";InlineConstraintOnDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[on {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[在 {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";IntegerRange_EndLessThanBegin" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The end value cannot be less than the begin value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[结束值不能小于开始值。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";MasterKeyName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Master Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[主密钥]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";NonClusteredIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Non-Clustered]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[非聚集]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";NonUniqueIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Non-Unique]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[非唯一]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Not_connected" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An internal error occurred while trying to connect to the design-time validation database.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[尝试连接到设计时验证数据库时发生内部错误。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PartitionValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Partition Value]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[分区值]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Permission" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Permission]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[权限]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PredeployScriptAlreadyDeployed" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment did not occur because the script has already been deployed to the target server.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未执行部署，因为脚本已经部署到目标服务器。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseCompat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database compatibility level of the build script %i does not match the compatibility level of the target database %i. Verify whether your database project settings are correct and whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[生成脚本的数据库兼容级别 %i 与目标数据库的兼容级别 %i 不匹配。请验证数据库项目设置是否正确以及生成脚本是否是最新的。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseExists" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot deploy this update script to target {0}. The database for which this script was built, {1}, does not exist on this server.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不能将此更新脚本部署到目标 {0}。此服务器上没有为此脚本生成的数据库 {1}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseExistsUnknownServer" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot deploy this update script to target server. The database for which this script was built, {0}, does not exist on this server.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不能将此更新脚本部署到目标服务器。此服务器上没有为此脚本生成的数据库 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database name in the build script %s does not match the name of the target database %s. Verify whether your database project settings are correct and  whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[生成脚本中的数据库名称 %s 与目标数据库的名称 %s 不匹配。请验证数据库项目设置是否正确以及生成脚本是否是最新的。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PredeployVerifyDatabaseState" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The state of the target database, %s, is not set to ONLINE. To deploy to this database, its state must be set to ONLINE.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[目标数据库 %s 的状态未设置为 ONLINE。要部署此数据库，数据库状态必须设置为 ONLINE。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ONLINE", "ONLINE"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";PredeployVerifyServerName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The server name in the build script %s does not match the name of the target server %s. Verify whether your database project settings are correct and whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[生成脚本中的服务器名称 %s 与目标服务器的名称 %s 不匹配。请验证数据库项目设置是否正确以及生成脚本是否是最新的。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PredeployVerifyServerVersion" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The version of SQL Server in the build script %i does not match the version on the target server, %i. Verify whether your database project settings are correct and whether your build script is up to date.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[生成脚本中的 SQL Server 版本 %i 与目标服务器上的版本 %i 不匹配。请验证数据库项目设置是否正确以及生成脚本是否是最新的。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PrimaryXML_LabelPart" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Primary XML]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[主 XML]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XML"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Registry_CannotAccessInstallDirKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The installation directory for Visual Studio could not be located.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法找到 Visual Studio 安装目录。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SchemaDependencyInfoMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{3} ({2}) depends on {1} ({0}). {1} must be updated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{3} ({2})依赖于 {1} ({0})。必须更新 {1}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SchemaDependencyInfoMessage2" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ {1} ({0}) depends on {3} ({2}). {1} must be updated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ {1} ({0})依赖于 {3} ({2})。必须更新 {1}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_CannotFoundConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An expected constraint was not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[找不到所需要的约束。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_CannotFoundTrigger" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A trigger was not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[找不到触发器。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_ChildWithoutName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name of the child constraint was not specified. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未指定子约束的名称。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_NoMultipleConstraintsInOneStatement" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot add multiple constraints in one statement. You must put only one object or child object in each file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不能在一条语句中添加多个约束。每个文件中必须仅放置一个对象或子对象。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_NoMultipleObjectsInOneFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You cannot put more than one object in the same script. You must put only one object or child object in each file.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不能在同一个脚本中放置多个对象。每个文件中必须仅放置一个对象或子对象。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_NoObjectIDFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The object identifier was not found in the script.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[在脚本中找不到对象标识符。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_ObjectIsAlreadyCreated" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The object {0} was already created.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[对象 {0} 已创建。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Schema_ObjectNotFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The object {0} was not found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[找不到对象 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SecondaryXML_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Secondary XML]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[辅助 XML]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Serialize_Relationships" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Serializing relationships between database objects]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[正在序列化数据库对象之间的关系]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SettingsRequireSysAdmin" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database settings for DB_CHAINING or TRUSTWORTHY could not be modified. You must be a SysAdmin to apply these settings.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法为 DB_CHAINING 或 TRUSTWORTHY 修改数据库设置。您必须是 SysAdmin 才能应用这些设置。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DB_CHAINING"} {StrContains="TRUSTWORTHY"} {StrContains="SysAdmin"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SignatureName_NoSignable" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Signature for unknown object]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未知对象的签名]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SignatureName_WithSignable" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Signature for '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[“{0}”的签名]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SolutionExplorer_SchemaObjects" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Schema Objects]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[架构对象]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_BuildAndDeploy" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[VSDB Build And Deploy]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[VSDB 生成和部署]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_Default" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_DesignDatabaseManager" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB DesignDBManager]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_ReverseEngineeringFeature" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB ReverseEngineer]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SqlConnectionApplicationName_SchemaCompare" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[VSDB Schema Compare]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";SystemDefinedSqlCmdVariableFound" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Predefined SQLCMD variable found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[找到了预定义的 SQLCMD 变量。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SQLCMD"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Threading_InvalidStateChange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The job state change {0} -> {1} is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[将作业状态由 {0} 改为 {1} 属于无效操作。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Threading_JobAlreadyManaged" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Job Manager is already managing this job.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[此作业已由作业管理器负责管理。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Threading_JobListChangedJobName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[JobListChangedJob]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[JobListChangedJob]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Threading_JobManagerNotInitialized" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Job Manager was not initialized.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[作业管理器未初始化。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Aggregate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Aggregate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[聚合]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ApplicationRole" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Application Role]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[应用程序角色]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Assembly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Assembly]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[程序集]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_AssemblyFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Assembly File]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[程序集文件]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_AsymmetricKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Asymmetric Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[非对称密钥]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_BrokerPriority" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Broker Priority]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Broker 优先级]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_BuiltInServerRole" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Built-in ServerRole]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[内置 ServerRole]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_BuiltInType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Built-in Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[内置类型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Certificate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Certificate]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[证书]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_CheckConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Check Constraint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[CHECK 约束]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Column" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Column]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[列]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ColumnStoreIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Column Store Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[列存储索引]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ComputedColumn" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Computed Column]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[计算列]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Contract" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Contract]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[协定]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Credential" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Credential]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[凭据]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_CryptographicProvider" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cryptographic Provider]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[加密提供程序]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_CustomErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Error Message]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[自定义错误消息]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_DataCompressionOption" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Data Compression Option]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[数据压缩选项]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_DatabaseAuditSpecification" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Database Audit Specifications]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[数据库审核规范]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_DatabaseEncryptionKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Database Encryption Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[数据库加密密钥]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_DatabaseOptions" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Database Options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[数据库选项]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Default" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Default]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[默认值]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_DefaultConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Default Constraint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[默认约束]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Endpoint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Endpoint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[终结点]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_EventNotification" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Event Notification]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[事件通知]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_EventSession" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Event Session]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[事件会话]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ExtendedProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Extended Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[扩展属性]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_File" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[File]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[文件]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_FileTable" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[FileTable]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[文件表]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ForeignKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Foreign Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[外键]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_FullTextCatalog" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Full-text Catalog]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[全文目录]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_FullTextIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Full-text Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[全文检索]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Index" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[索引]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_LinkedServer" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Linked Server]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[链接服务器]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_LinkedServerLogin" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Linked Server Login]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[链接服务器登录]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Login" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Login]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[登录]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_MasterKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Master Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[主密钥]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_MessageType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Message Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[消息类型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Parameter" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[参数]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_PartitionFunction" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Partition Function]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[分区函数]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_PartitionScheme" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Partition Scheme]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[分区方案]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Permission" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Permission]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[权限]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_PrimaryKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Primary Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[主键]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Procedure" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Procedure]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[过程]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Queue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Queue]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[队列]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_RemoteServiceBinding" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Remote Service Binding]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[远程服务绑定]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Role" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Role]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[角色]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_RoleMembership" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Role Membership]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[角色成员资格]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Route" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Route]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[路由]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Rule" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Rule]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[规则]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ScalarFunction" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[函数]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Schema" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Schema]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[架构]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_SearchPropertyList" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Search Property List]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[搜索属性列表]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Sequence" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Sequence]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[序列]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ServerAudit" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Audit]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服务器审核]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ServerAuditSpecification" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Audit Specification]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服务器审核规范]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ServerOptions" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Options]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服务器选项]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ServerRole" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Role]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服务器角色]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_ServerRoleMembership" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Server Role Membership]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服务器角色成员资格]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Service" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Service]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服务]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Signature" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Signature]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[签名]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_SpatialIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Spatial Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[空间索引]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_SqlType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Sql Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[SQL 类型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Statistic" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Statistic]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[统计信息]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_SymmetricKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Symmetric Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[对称密钥]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Synonym" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Synonym]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[同义词]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Table" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Table]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[表]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_TableFunction" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Function]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[函数]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_Trigger" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Trigger]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[触发器]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_UniqueConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unique Constraint]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[唯一约束]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_User" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[用户]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_UserDefinedDataType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User-Defined Data Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[用户定义的数据类型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_UserDefinedTableType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User-Defined Table Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[用户定义的表类型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_UserDefinedType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User-Defined Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[用户定义的类型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_View" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[View]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[视图]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_XmlIndex" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML Index]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[XML 索引]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";TypeDescription_XmlSchemaCollection" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML Schema Collection]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[XML 架构集合]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";UniqueIndex_LabelPart" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unique]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[唯一]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";Unnamed" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[<unnamed>]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[<未命名>]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlIndex_Path" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Path]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[路径]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlIndex_Property" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[属性]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlIndex_Value" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Value]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[值]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotDeserializeType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type {0} could not be deserialized.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法反序列化类型 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotGetValidType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type {0} could not be deserialized because no valid type was found.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法反序列化类型 {0}，因为没有找到有效类型。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotParseToEnum" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value {0} for enumeration {1} could not be parsed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法分析枚举 {1} 的值 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_CannotToAttribute" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} could not be serialized to an XML attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法将 {0} 序列化成 XML 属性。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_DuplicateAttribute" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple XmlElement or XmlAttribute attributes cannot be applied to the same field.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法将多个 XmlElement 或 XmlAttribute 属性应用到同一个字段。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_DuplicateKey" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The key {0} was duplicated in the dictionary.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[键 {0} 在字典中重复出现。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_DuplicateXmlInclude" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Duplicate declaration of XmlInclude type '{0}' on class '{1}' definition.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[类“{1}”定义中 XmlInclude 类型“{0}”的声明重复。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_EmptyContent" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The content is empty.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[内容为空。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_IncompatiableType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Type {0} is incompatible with type {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[类型 {0} 与类型 {1} 不兼容。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_InvalidEnumValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The enumeration value cannot be null.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[枚举值不能为 null。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_InvalidXmlReaderPosition" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XmlReader should be positioned at the start of an element, but it is at {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[XmlReader 应位于元素的起始处，但它位于 {0} 处。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_KeyIsNull" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The key is null.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[键为 null。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_NameReserved" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} is reserved. Use XmlAttributeAttribute to specify a different name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} 是保留的。请使用 XmlAttributeAttribute 指定其他名称。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";XmlSerialization_ReuseNames" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}.{1} and {2}.{3} use the same name, {4}. Use XmlElementAttribute or XmlAttributeAttribute to specify a different name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0}.{1} 和 {2}.{3} 使用了相同的名称 {4}。请使用 XmlElementAttribute 或 XmlAttributeAttribute 指定其他名称。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XmlElementAttribute"} {StrContains="XmlAttributeAttribute"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";XmlSerialization_WrongType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Expecting {1}; actual {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[应为 {1}；实际为 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.XmlDesignerBase.Core.Controls.ControlsResources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-yalang" DateTime="2013-04-16T01:53:49Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-yalang" DateTime="2013-04-16T01:53:49Z" />
+      <Item ItemId=";CancelButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cancel]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[取消]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";ContinueButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Continue]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[继续]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_False" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[False]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[False]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_True" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[True]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[True]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+      <Item ItemId=";SkipAllErrors" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skip all errors]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[跳过所有错误]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-04-23T06:11:41Z" />
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.XmlDesignerBase.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+      <Item ItemId=";BadInsertBadChildType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot insert a child of type '{0}' into a parent of type '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法将类型“{0}”的子级插入类型“{1}”的父级。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";BadInsertChildAlreadyExists" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot insert a child of type '{0}' into a parent of type '{1}' because the child already exists.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法将类型“{0}”的子级插入类型“{1}”的父级，因为该子级已存在。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";BadRemoveChildNotParent" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot remove the child '{0}' from the node '{1}' because the node is not the child's parent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法从节点“{1}”删除子级“{0}”，因为该节点不是此子级的父级。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ConversionExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value '{0}' is not valid for this converter]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[值“{0}”对于此转换器无效]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";ConverterIncorrectValueForAttribute" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value '{0}' is not valid for attribute '{1}'. Please enter a different value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[值“{0}”对于属性“{1}”无效。请输入其他值。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2011-03-04T10:26:02Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerViewCommandsText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Change Center]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[更改中心]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorResolvingItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error resolving item '{0}'. The exception message is: '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[解析项“{0}”时出错。异常消息为:“{1}”。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_Message_With_Error_Code_Prefix" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error {0}: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[错误 {0}: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExplorerSearchResults_IndividualFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[[{0}]5D; = {1} ({2})]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[[{0}]5D; = {1} ({2})]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExplorerSearchResults_OverallFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Number of Search Results = {0}]D;]A;Results = [{1}]5D;]D;]A;Index of Previous = {2}]D;]A;Index of Next = {3}]D;]A;Current Selection in Search Results = {4}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[搜索结果数 = {0}]D;]A;结果 = [{1}]5D;]D;]A;上一个匹配项索引 = {2}]D;]A;下一个匹配项索引 = {3}]D;]A;搜索结果中的当前选择 = {4}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";FileNotEditableErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Operation cancelled because the following files are not editable: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[操作已取消，因为下列文件无法编辑:“{0}”]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";INVALID_FORMAT" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Value '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[值“{0}”无效。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";INVALID_NC_NAME_CHAR" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名称“{0}”无效。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NAME_NOT_UNIQUE" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name {0} cannot be duplicated in this context. Please choose another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[在此上下文中不能重复名称 {0}。请选择其他名称。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ju.lei" DateTime="2013-07-12T01:39:29Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";NORMALIZE_DUPLICATE_SYMBOL_DEFINED" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The symbol '{0}' has already been defined.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[已定义符号“{0}”。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";NoneDisplayValueUsedForUX" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[(None)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[(无)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NumOfSearchResultsFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[({0} found)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[(找到 {0})]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Category_General" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[General]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[常规]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_DisplayName_Name" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[名称]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_False" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[False]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[False]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PropertyWindow_Value_True" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[True]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[True]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RenameTransactionNameFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Rename {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[重命名 {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SwitchConverterErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} is OneWay]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0} 是单向的]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TreeBuilder_UnknownNodeType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown Node Type encountered in XmlReader.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[在 XmlReader 中遇到未知的节点类型。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XmlReader"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_PropertyChangeUndoString" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[设置 {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";VanillaProvider_DtdNodesReadOnly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DTD nodes cannot be edited.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[无法编辑 DTD 节点。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";VanillaProvider_TxAlreadyCompleted" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Transaction already completed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[事务已完成。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="songfang.jiang" DateTime="2010-11-05T02:32:48Z" />
+        <Props>
+          <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+          <Str Name="Custom2" Val="New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2013-08-21T11:05:41Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2013-08-21T11:05:41Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2013-08-21T11:06:32Z" />
+      <Props>
+        <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+        <Str Name="Custom2" Val="New" />
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation。保留所有权利。]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2013-08-21T11:06:32Z" />
+      <Props>
+        <Str Name="Custom1" Val="SQL Studio_SW_HO2" />
+        <Str Name="Custom2" Val="New" />
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 2" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2013-08-21T11:05:41Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ju.lei" DateTime="2014-01-22T07:16:58Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-28T03:16:33Z" />
+  </Item>
+</LCX>

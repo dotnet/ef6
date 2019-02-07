@@ -1,0 +1,2581 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="d:\bt\4668889\bins\retail\i386\Microsoft.Data.Entity.Design.Package.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="fr-FR" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="DUIData" />
+    <Cmt Name="GoldMine" />
+    <Cmt Name="Goldmine8" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Loc" />
+    <Cmt Name="ManifestData" />
+    <Cmt Name="Mnemonic" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+    <Cmt Name="UIType" />
+    <Cmt Name="UTSData" />
+    <Cmt Name="UTSUI" />
+    <Cmt Name="zLocLevel" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Package.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";AccDesc_ThumbnailView" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Launches the thumbnail view]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Démarre la vue en miniature]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_Zoom100Button" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zooms the diagram to 100%]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Effectue un zoom du schéma à 100 %]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_ZoomInButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zooms in on the diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Effectue un zoom avant dans le schéma]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_ZoomOutButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zooms out on the diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Effectue un zoom arrière dans le schéma]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_ThumbnailView" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Thumbnail View]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Vue en miniature]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_Zoom100Button" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zoom 100]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Zoom 100 %]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_ZoomInButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zoom In]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Zoom avant]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_ZoomOutButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zoom Out]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Zoom arrière]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddComplexTypeCommand_DesignerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[&Complex Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Type &complexe]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddComplexTypeCommand_ExplorerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add New &Complex Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Ajouter un nouveau type &complexe…]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Add New &Complex Type]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEntityTypeCommand_DesignerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[&Entity...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[&Entité...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-29T08:37:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEntityTypeCommand_ExplorerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add New &Entity Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Ajouter un nouveau type d'&entité…]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Add New &Entity Type]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEnumTypeCommand_DesignerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[&Enum Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Type &Enum…]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEnumTypeCommand_ExplorerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add New &Enum Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Ajouter un nouveau type d'&enum…]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DeleteFromModelCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete from Model]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Supprimer]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[D&elete]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EditorCaptionFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ [{0}]5D;]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ [{0}]5D;]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-11-02T07:45:39Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorOccurredLoadingFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred reading the file {0}.  Error message is {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Une erreur s'est produite lors de la lecture du fichier {0}. Message d'erreur : {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:35:40Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorOccurredRunningCustomTool" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred running the custom tool on the file {0}.  Error message is {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Une erreur s'est produite lors de l'exécution de l'outil personnalisé sur le fichier {0}. Message d'erreur : {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EmptyDiagram" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create an image of diagram '{0}' because it is empty.]D;]A;Please add entities to this diagram.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossible de créer une image du diagramme "{0}", car celui-ci est vide.]D;]A;Veuillez y ajouter des entités.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Brevard" DateTime="2011-08-09T12:28:29Z" />
+      </Item>
+      <Item ItemId=";Extensibility_ErrorOccurredDuringCallToExtension" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred executing an ADO.Net Entity Framework Extension.  The extension's type name is {0}.  The exception message is {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Une erreur s'est produite lors de l'exécution d'une extension ADO.Net Entity Framework. Nom de type de l'extension : {0}. Message d'exception : {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T11:12:07Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Extensibility_ErrorOccurredInjectingCommand" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while attempting to inject the command '{0}'. There are too many existing commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Une erreur s'est produite lors de la tentative d'injection de la commande '{0}'. Trop de commandes existent.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T08:10:24Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExtensionError_SourceControlLock" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Document '{0}' is not editable. Ensure that the document is checked out from source control and then reload.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Le document '{0}' ne peut pas être modifié. Assurez-vous que le document est extrait du contrôle de code source puis rechargez.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="jmgouriou" DateTime="2011-05-30T15:37:19Z" />
+      </Item>
+      <Item ItemId=";MoveDiagramNodesWarning" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This will save and reload your model. Continue?]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Cela va enregistrer et recharger votre modèle. Voulez-vous continuer ?]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-29T13:12:50Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";PackageLoadFailureExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to load Entity Data Model Tools Package. The result is {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Échec du chargement d'Entity Data Model Tools Package. Le résultat est {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T11:20:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";RemoveDiagramCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete Diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Supprimer le diagramme]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_New_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RemoveFromDiagramCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Rem&ove from Diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Supprimer du sc&héma]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Carlos" DateTime="2011-06-21T10:03:23Z" />
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SelectAssociationEndCommnadText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Entité : {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";SelectAssociationPropertyCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Propriété : {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";StatusBarValidatingText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Validating Model…]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Validation du modèle…]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";StatusBarValidationCompletedText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Validation Completed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Validation terminée]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_CreateComplexType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create Complex Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Créer un type complexe]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-29T08:38:50Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_Delete" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Supprimer {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_DeleteItems" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Supprimer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:54:37Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_IncludeRelatedEntityTypeShape" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Include related Entity Type Shape(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Inclure les formes de type d'entité associées]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-29T08:40:07Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_MoveProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Move Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Déplacer la propriété]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-29T08:40:23Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_MoveToNewDiagram" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Move to a new diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Déplacer vers un nouveau diagramme]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-29T08:40:42Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_Paste" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Paste]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Coller]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Package.VSPackage.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";EntityDesigner.ctmenu" ItemType="0" PsrId="240" Leaf="false">
+      <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity Data Model Browser]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Explorateur EDM]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1024" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1024" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Entity...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Entité...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1025" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1025" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Association...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Association...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1026" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1026" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Inheritance...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Héritage...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1027" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1027" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Scalar Property]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Propriété &scalaire]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:07:05Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1028" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1028" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Function Import...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Importation de &fonction...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1029" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1029" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Complex Property]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Propriété &complexe]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:07:05Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1030" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1030" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Navigation Property]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Propriété de &navigation]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1040" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1040" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Rename]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Renommer]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1041" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1041" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Collapse]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Réd&uire]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="YOK" DateTime="2011-03-25T03:02:53Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1042" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1042" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Expand]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Développer]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1056" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="Brevard" DateTime="2011-08-08T14:22:22Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1056" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Rename...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[&Renommer…]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[&Refactor Rename]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+          <Props>
+            <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},12288" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},12288" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Layer Commands]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Commandes de &la couche]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="YOK" DateTime="2011-03-25T03:02:53Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1280" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1280" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Zoom &In]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Zoom &avant]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1281" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1281" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Zoom &Out]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Zoom a&rrière]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1282" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1282" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Zoom to &Fit]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Zoom pour ajust&er]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1283" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1283" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Custom...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Personnalisé...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1284" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1284" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[1&0%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[1&0 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1285" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1285" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[25%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[25 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1286" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1286" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[33%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[33 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1287" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1287" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[50%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[50 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1288" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1288" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&66%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&66 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1289" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1289" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&75%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&75 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1290" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1290" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&100%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&100 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1291" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1291" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[125%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[125 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1292" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1292" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[1&50%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[1&50 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1293" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1293" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&200%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&200 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1294" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1294" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&300%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&300 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1295" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1295" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&400%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&400 %]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1536" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1536" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Show &Grid]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Afficher la &grille]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1537" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1537" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Snap to Grid]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Aligner &sur la grille]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},16384" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="ablanco" DateTime="2013-04-17T09:19:59Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},16384" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Layer Refactoring Commands]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Commandes de refactorisation de &couche]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="cbarragan" DateTime="2013-07-11T09:56:39Z" />
+          <Props>
+            <Str Name="Custom5" Val="EF6.0_New_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1792" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1792" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Layout Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Mettre en forme le diagramme]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1793" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1793" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Export as Image...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Exporter en tant qu'image...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1795" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1795" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Collapse All]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Réduire tout]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1796" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1796" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Expand &All]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Développer tout]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},2" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},2" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity Data Model Mapping Details]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Détails de mappage EDM]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4096" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4096" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Display &Name]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Afficher le &nom]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4097" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4097" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Display Name and &Type]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Afficher le nom et le &type]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4352" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4352" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Mapping Details]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Détails de &mappage]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4353" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4353" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Model &Browser]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Explorateur de modèles]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4358" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4358" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Table &Mapping]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Mappage de table]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T13:23:35Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4359" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4359" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Show in Model &Browser]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Afficher dans l'expl&orateur de modèles]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="cbarragan" DateTime="2011-08-11T15:56:55Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4360" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4360" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Table &Mapping]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Mappage de table]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T13:23:35Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4361" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4361" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Stored &Procedure Mapping]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Mappage de procédure stoc&kée]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4362" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4362" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Show in &Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Afficher dans le &diagramme]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T08:42:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4368" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4368" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Validate]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Valider]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4384" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4384" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add &Code Generation Item...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[Ajouter u&n élément de génération de code...]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Add &Code Generation Item..]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="joelle" DateTime="2013-08-16T18:11:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="EF6.0_Autx_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4608" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4608" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Select &All]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Sélectionner &tout]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5120" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5120" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Entity &Key]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Clé d'entité]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5376" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5376" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Entité : ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:20:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5377" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5377" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Property: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Propriété : ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T13:19:58Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5378" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5378" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Entité : ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:20:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5632" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5632" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Update Model from Database...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Mettre à jour le modèle à partir de la &base de données...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5633" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5633" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Generate Database from Model...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Générer la base de &données à partir du modèle...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="cbarragan" DateTime="2011-08-11T15:56:55Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5888" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5888" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add &Function Import...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Ajouter une importation de &fonction...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5889" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5889" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Complex Type]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Type &complexe]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5890" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5890" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Go To Definition]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[A&ller à la définition]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="cbarragan" DateTime="2011-08-11T15:56:55Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5891" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5891" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Move to New &Complex Type]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[Déplacer vers un nouveau type comple&xe]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Refactor into New &Complex Type]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5892" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5892" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Complex Types...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Types &complexes...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5893" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5893" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Function Import Mapping]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Mappage d'importation de fonction]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5894" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5894" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add New &Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Ajouter un n&ouveau schéma]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:05:26Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5895" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5895" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Open]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Ouvrir]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:07:05Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5896" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5896" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Ad&d to Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Aj&outer au schéma]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:05:33Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5897" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5897" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Close]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Fermer]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:05:59Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5905" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5905" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Move to new Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Déplacer vers un nouveau dia&gramme]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="cbarragan" DateTime="2011-08-11T15:56:55Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5906" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5906" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Rem&ove from Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[Supprimer du sc&héma]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[D&elete]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5907" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5907" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Include Related]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[&Inclure les associés]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Include Relate&d]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5908" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5908" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Move Diagram&s to Separate File]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Déplacer le diagramme ver&s un fichier distinct]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="YOK" DateTime="2011-03-25T03:02:53Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5909" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5909" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Up]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[&Monter]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:20:21Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5910" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5910" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Down]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[&Descendre]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:10:28Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5911" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5911" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[U&p 5]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[5 vers le ha&ut]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:20:21Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5912" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5912" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Dow&n 5]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[5 vers le b&as]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:20:21Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5913" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5913" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[To &Top]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Vers le &haut]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:20:21Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5920" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5920" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[To &Bottom]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Vers le &bas]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:20:21Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5921" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="administrateur" DateTime="2011-05-26T07:39:19Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5921" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add &Enum Type...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[Ajouter &type d'enum…]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Add &Enum Type]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+          <Props>
+            <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5922" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="administrateur" DateTime="2011-05-26T07:39:19Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5922" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Convert to En&um]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Convertir en En&um]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="jmgouriou" DateTime="2011-05-30T15:37:19Z" />
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},6144" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},6144" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Edit]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Modifier]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65536" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65536" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item">
+            <Val><![CDATA[MicrosoftDataEntityDesign Context]]></Val>
+            <Tgt Cat="Menu Item" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Contexte MicrosoftDataEntityDesign]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T13:11:19Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65537" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65537" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item">
+            <Val><![CDATA[MicrosoftDataEntityDesign Context]]></Val>
+            <Tgt Cat="Menu Item" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Contexte MicrosoftDataEntityDesign]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T13:11:19Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65538" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65538" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[A&dd New]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[A&jouter nouveau]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="cbarragan" DateTime="2011-08-11T15:56:55Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65539" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65539" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Zoom]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Zoom]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65540" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65540" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Grid]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Grille]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65541" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65541" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[D&iagram]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[D&iagramme]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65542" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65542" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[Scalar Property &Format]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Format de propriété scalaire]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65543" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="ablanco" DateTime="2013-04-17T09:19:59Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65543" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[R&efactor]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[R&efactoriser]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+          <Props>
+            <Str Name="Custom5" Val="EF6.0_New_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65546" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65546" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Select]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Sé&lectionner]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Carlos" DateTime="2011-08-12T10:13:34Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65547" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65547" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[A&dd]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Ajouter]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65548" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65548" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Scalar Property]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Propriété &scalaire]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:07:05Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65549" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65549" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Complex Property]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Propriété &complexe]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:07:05Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65550" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65550" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Move Properties]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[&Déplacer des propriétés]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-29T09:24:38Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},7936" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},7936" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Add Scalar Property Base]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Ajouter une base de propriété scalaire]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},8192" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},8192" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Add Complex Property Base]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Ajouter une base de propriété complexe]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86019" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86019" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Property: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Propriété : ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T13:19:58Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86020" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86020" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Select Association]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[&Sélectionner une association]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86021" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86021" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Base Type]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Type de base]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T11:12:07Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86022" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86022" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Subtype]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Sous-type]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+          <Props>
+            <Str Name="Custom4" Val="SQL_Studio_HO2" />
+          </Props>
+        </Item>
+      </Item>
+    </Item>
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";101" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityFramework]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[EntityFramework]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityFramework"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";102" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Adds an ADO.NET Entity Data Model file to the project.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Ajoute un fichier ADO.NET Entity Data Model au projet.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";103" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T11:07:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";110" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Data Entity Design]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Microsoft Data Entity Design]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T13:11:19Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";112" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Visual Studio package for Microsoft Data Entity Design]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Package Visual Studio pour Microsoft Data Entity Design]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Visual Studio"} {StrContains="Microsoft"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";500" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ADO.NET Entity Data Model]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:39:14Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";501" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item for creating an ADO.NET Entity Data Model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Élément de projet pour créer un ADO.NET Entity Data Model.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:41:23Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";503" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET EntityObject Generator]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ADO.NET EntityObject Generator]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:41:23Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityObject"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";504" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed ObjectContext class and persistence-aware classes.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Élément de projet pour générer une classe ObjectContext fortement typée et des classes prenant en charge la persistance.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T15:41:23Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ObjectContext"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";505" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Self-Tracking Entity Generator]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Générateur d'entités d'auto-suivi ADO.NET]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-08-21T13:06:03Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";506" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed ObjectContext class and Self-Tracking Entity classes.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Élément de projet pour générer une classe ObjectContext fortement typée et des classes d'entité d'auto-suivi.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-08-21T13:06:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ObjectContext"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+      <Item ItemId=";507" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET EntityObject Generator V5.0]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[ADO.NET EntityObject Generator V5.0]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[ADO.NET EntityObject Generator V4.2]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-04-24T07:49:54Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityObject"} {StrContains="V5.0"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";508" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Self-Tracking Entity Generator V5.0]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Générateur d'entités d'auto-suivi ADO.NET V5.0]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[ADO.NET Self-Tracking Entity Generator V4.2]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="ablanco" DateTime="2013-08-21T13:06:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="V5.0"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom5" Val="EF6.0_Upd_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";510" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed ObjectContext class and entity classes with persistence ignorance.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Élément de projet pour générer une classe ObjectContext fortement typée et des classes d'entité ignorant la persistance.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Rachel" DateTime="2011-06-16T17:04:25Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ObjectContext"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";512" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed DbContext class and persistence ignorant entity classes.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Élément de projet pour générer une classe DbContext fortement typée et des classes d'entité ignorant la persistance.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Rachel" DateTime="2011-06-16T17:04:25Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbContext"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExplorerWindowTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Model Browser]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Explorateur de modèles]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Maryse" DateTime="2010-10-28T13:11:54Z" />
+        <Props>
+          <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:26Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:26Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+      <Str Cat="Text" UsrLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+      <Cmts>
+        <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+      </Cmts>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation.  Tous droits réservés.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:41Z" />
+      <Props>
+        <Str Name="Custom4" Val="SQL_Studio_HO2" />
+        <Str Name="Custom5" Val="EF6.0_Autx_HO1" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="ablanco" DateTime="2013-08-21T11:29:26Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="RachelM" DateTime="2014-01-20T14:29:22Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+</LCX>

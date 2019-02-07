@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <ComponentGroup Id="CG_Licenses">
+      <ComponentRef Id="C_eula.rtf"/>
+    </ComponentGroup>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="C_eula.rtf">
+        <File Source="eulas\enu\eula.rtf" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

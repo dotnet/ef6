@@ -1,0 +1,3524 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="d:\bt\4668889\bins\retail\i386\Microsoft.Data.Entity.Design.EntityDesigner.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ru-RU" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.Dialogs.CustomZoomDialog.resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.GeneratedCode.DomainModelResx.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";AmbiguousMoniker" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Ambiguous moniker '{0}' encountered. It is used for both '{1}' and '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Обнаружен неоднозначный моникер "{0}". Он используется для "{1}" и "{2}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AmbiguousSchema" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[More than one schema found for target namespace '{0}', use the first one at '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Найдено несколько схем для целевого пространства имен "{0}", используется первая в "{1}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AssociationConnectorSourceEndDisplayTextDefaultText" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[SourceEndDisplayText]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[SourceEndDisplayText]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SourceEndDisplayText"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AssociationConnectorTargetEndDisplayTextDefaultText" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[TargetEndDisplayText]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[TargetEndDisplayText]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TargetEndDisplayText"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AssociationToolToolboxItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Ассоциация]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AssociationToolToolboxTooltip" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create an Association between two Entities]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Создать ассоциацию между двумя сущностями]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";BindingErrorOccurred" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Extensions for this designer may not be found as a MEF binding error has occurred. The error that occurred was:]D;]A;{0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Не удается найти расширения для этого конструктора, так как произошла ошибка привязки MEF. Возникшая ошибка:]D;]A;{0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CannotCloseExistingDiagramDocument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Diagram file '{0}' cannot be closed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Не удается закрыть файл диаграммы "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CannotMonikerizeElement" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Instances of DomainClass '{0}' cannot be serialized as a moniker.]D;]A;A DomainClass can be serialized as a moniker only if ]D;]A;1) it has a defined/inherited DomainProperty marked as IsMonikerKey=true, or ]D;]A;2) it is marked/inherited with SerializeId=true.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Экземпляры класса DomainClass "{0}" не удалось сериализовать в качестве моникера.]D;]A;Класс DomainClass можно сериализовать в качестве моникера, только если: ]D;]A;1) он имеет определенное или унаследованное свойство DomainProperty, помеченное IsMonikerKey=true; ]D;]A;2) он отмечен или наследуется с идентификатором SerializeId=true.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DomainClass"} {StrContains="DomainProperty"} {StrContains="IsMonikerKey=true"} {StrContains="SerializeId=true"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CannotOpenDocument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error encountered, check Error List window for details.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Обнаружена ошибка, подробные сведения см. в окне "Список ошибок".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CannotSaveDocument" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error encountered, check Error List window for details.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Обнаружена ошибка, подробные сведения см. в окне "Список ошибок".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DanglingRelationship" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Relationship '{0}' instance is missing target role-player.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В экземпляре связи "{0}" отсутствует целевой исполнитель роли.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Entity FrameworkToolboxTab" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Framework]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Entity Framework]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityToolToolboxItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Сущность]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityToolToolboxTooltip" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create a new Entity]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Создать новую сущность]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityTypeShapeBaseTypeNameDefaultText" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[BaseTypeName]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[BaseTypeName]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="BaseTypeName"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityTypeShapeNameDefaultText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityTypeShapeNavigationTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Navigation Properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойства навигации]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityTypeShapePropertiesTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойства]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExpectingFullFormRelationship" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Element '{0}' is treated as the target role-player of a relationship '{1}' instance, which should be serialized in full-form.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Элемент "{0}" рассматривается как целевой исполнитель роли для экземпляра связи "{1}", который необходимо сериализовать в полной форме.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExpectingShortFormRelationship" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Instances of relationship '{0}' should be serialized in short-form.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Экземпляры связи "{0}" необходимо сериализовать в краткой форме.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";FormatList" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Data Entity Design (*.edmx)|*.edmx]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Microsoft Data Entity Design (*.edmx)|*.edmx]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{SubString="(*.edmx)|*.edmx"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";IgnoredPropertyValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid property value '{0}' for property '{1}' with type '{2}', ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Недопустимое значение "{0}" для свойства "{1}" типа "{2}" пропущено.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";InheritanceToolToolboxItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Inheritance]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Наследование]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";InheritanceToolToolboxTooltip" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create an Inheritance relationship between two Entities]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Создать связь наследования между двумя сущностями]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidPropertyValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid property value '{0}' for property '{1}' with type '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Недопустимое значение "{0}" для свойства "{1}" типа "{2}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidSaveDiagramType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' is not a valid diagram type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA["{0}" не является допустимым типом диаграммы.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T09:30:41Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidSaveRootElementType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' is not a valid root element type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA["{0}" не является допустимым типом корневого элемента.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.DisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Designer View Model Has Entity Types]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Модель представления конструктора Entity Designer имеет типы сущностей]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-07-11T10:47:17Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityDesignerViewModel.Descript" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";(...) ion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityDesignerViewModel]]></Val>
+            <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityDesignerViewModel]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" />
+          <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+          <Cmts>
+            <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityDesignerViewModel"}]]></Cmt>
+          </Cmts>
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityDesignerViewModel.DisplayN" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";(...) ame" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Entity Designer View Model]]></Val>
+            <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[Модель представления Entity Designer]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" />
+          <Modified By="iskenderova" DateTime="2013-07-11T10:49:28Z" />
+          <Cmts>
+            <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+          </Cmts>
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityDesignerViewModel.Property" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";(...) DisplayName" ItemType="0" PsrId="211" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Entity Types]]></Val>
+            <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Типы сущностей]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" />
+          <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityType.PropertyDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Designer View Model]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Модель представления конструктора Entity Designer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-07-11T10:47:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.MicrosoftDataEntityDesignDomainModel.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Framework Designer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ADO.NET Entity Framework Designer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-07-11T10:48:20Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Framework Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.MicrosoftDataEntityDesignDomainModel.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Data Entity Design]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Конструктор сущностей данных (Майкрософт)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.AssociationConnector.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.AssociationConnector.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association Connector]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Соединитель ассоциаций]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityDesignerDiagram.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityDesignerDiagram.DisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Designer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ADO.NET Entity Designer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-07-11T10:48:41Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityDesignerDiagram/Title.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.View.EntityDesignerDiagram.Title]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Описание элемента Microsoft.Data.Entity.Design.EntityDesigner.View.EntityDesignerDiagram.Title]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityDesignerDiagram/Title.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Title]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Заголовок]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityTypeShape.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityTypeShape.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type Shape]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Форма типа сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityTypeShape/FillColor.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.View.EntityTypeShape.Fill Color]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Описание элемента Microsoft.Data.Entity.Design.EntityDesigner.View.EntityTypeShape.FillColor]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityTypeShape/FillColor.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Fill Color]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Цвет заливки]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.InheritanceConnector.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.InheritanceConnector.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Inheritance Connector]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Соединитель наследования]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Ассоциация]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/Name.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/Name.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/SourceEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.SourceEntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.SourceEntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.SourceEntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/SourceEntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Source Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип исходной сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/SourceEntityType.PropertyDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association Targets]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Целевые объекты ассоциации]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/SourceMultiplicity.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Computed source display text]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Отображаемый текст вычисляемого источника]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/SourceMultiplicity.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Source Multiplicity]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Множественность источника]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/TargetEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.TargetEntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.TargetEntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.TargetEntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/TargetEntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Target Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип целевой сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/TargetEntityType.PropertyDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association Sources]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Источники ассоциаций]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/TargetMultiplicity.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Computed target display text]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Отображаемый текст вычисляемого целевого объекта]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/TargetMultiplicity.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Target Multiplicity]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Множественность назначения]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.ComplexProperty.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.ComplexProperty.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Complex Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Сложное свойство]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.DisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Designer View Model]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Модель представления Entity Designer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-07-11T10:49:04Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel/Namespace.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.Namespace]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.Namespace]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.Namespace"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel/Namespace.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Namespace]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Пространство имен]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityType.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityType/BaseTypeName.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Computed name of the base type. Empty if no base type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Вычисляемое имя базового типа. При отсутствии базового типа будет пустым]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityType/BaseTypeName.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Base Type Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя базового типа]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityType/HasBaseType.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Indicates if this has a base type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Указывает наличие базового типа]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityType/HasBaseType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Has Base Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имеет базовый тип]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type Has Navigation Properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип сущности имеет свойства навигации]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/EntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.EntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание для Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.EntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/EntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/EntityType.PropertyDisplay" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";(...) Name" ItemType="0" PsrId="211" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Navigation Properties]]></Val>
+            <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Свойства навигации]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" />
+          <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/NavigationProperty.Descrip" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";(...) tion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.NavigationProperty]]></Val>
+            <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.NavigationProperty]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" />
+          <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+          <Cmts>
+            <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.NavigationProperty"}]]></Cmt>
+          </Cmts>
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/NavigationProperty.Display" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";(...) Name" ItemType="0" PsrId="211" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Navigation Property]]></Val>
+            <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Свойство навигации]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" />
+          <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/NavigationProperty.Propert" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";(...) yDisplayName" ItemType="0" PsrId="211" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Entity Type]]></Val>
+            <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[Тип сущности]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" />
+          <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type Has Properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип сущности имеет свойства]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/EntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.EntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.EntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/EntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/EntityType.PropertyDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойства]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/Property.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.Property]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.Property"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/Property.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойство]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/Property.PropertyDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Inheritance]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Наследование]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/SourceEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.SourceEntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.SourceEntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.SourceEntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/SourceEntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Source Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип исходной сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/SourceEntityType.PropertyDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Derived Types]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Производные типы]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/TargetEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.TargetEntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.TargetEntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.TargetEntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/TargetEntityType.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Target Entity Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип целевой сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/TargetEntityType.PropertyDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Base Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Базовый тип]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Nameable Item]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Именуемый элемент]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem/Name.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem.Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Описание Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem.Name]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem.Name"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem/Name.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NavigationProperty.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NavigationProperty.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Navigation Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойство навигации]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Property.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Property.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойство]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Property/Type.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Specifies the EDM type of this property. The property window only displays facets specific to this type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Задает EDM-тип свойства. В окне свойств отображаются только аспекты, специфические для этого типа.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Property/Type.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Тип]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.PropertyBase.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.PropertyBase.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property Base]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Базовый элемент свойства]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.ScalarProperty.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.ScalarProperty.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойство]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.ScalarProperty/EntityKey.Description" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:25Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.ScalarProperty/EntityKey.DisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Key]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Ключ сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MinimumMultiplicityMissingLink" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} {1} has no {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} {1} не имеет {2}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MissingId" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Missing 'Id' attribute, a new Guid '{0}' is auto-generated.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Отсутствует атрибут "Id", новый идентификатор Guid "{0}" создан автоматически.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Id"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MissingMoniker" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Missing moniker. A moniker is expected in attribute '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Отсутствует моникер. В атрибуте "{0}" предполагается наличие моникера.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MissingTransaction" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This must be called within the context of an active transaction.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Необходим вызов в контексте активной транзакции.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ModelExplorerTitle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Data Entity Design Explorer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Обозреватель проектов сущностей данных Microsoft]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MonikerResolvedToDuplicateLink" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolving moniker '{0}' causes a duplicate link to be created, so the link and the moniker are ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Разрешение моникера "{0}" приводит к созданию повторяющейся ссылки, поэтому ссылка и моникер не учитываются.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";NoSchema" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot find a schema that defines target namespace '{0}', schema validation skipped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Не удалось найти схему, которая определяет целевое пространство имен "{0}", проверка схемы пропущена.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";SaveOperationCancelled" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Save operation cancelled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Операция сохранения отменена.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";SaveValidationFailed" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[There were validation errors, continue save?]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[При проверке возникли ошибки, продолжить сохранение?]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnexpectedXmlElement" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unexpected XML element '{0}', ignored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Непредвиденный XML-элемент "{0}" пропущен.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XML"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnloadableSaveValidationFailed" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[There were validation errors. Continuing to save may cause the file to become unloadable, do you want to continue?]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[При проверке обнаружены ошибки. Продолжение сохранения может сделать файл недоступным для загрузки. Продолжить?]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnrecognizedElementLinkType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ElementLinkType {0} is not recognized as a type of domain relationship which belongs to this domain model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ElementLinkType {0} не распознан в качестве типа доменной связи, принадлежащего к этой доменной модели.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ElementLinkType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnrecognizedElementType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ElementType {0} is not recognized as a type of domain class which belongs to this domain model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ElementType {0} не распознан в качестве типа доменного класса, принадлежащего к этой доменной модели.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ElementType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedMoniker" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot resolve moniker '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Не удается разрешить моникер "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedToolboxItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ToolboxItem {0} was not found]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ToolboxItem {0} не найден]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnsupportedToolboxFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unsupported toolbox format: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Неподдерживаемый формат панели элементов: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";VersionMismatch" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unsupported version '{0}', can only support '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Неподдерживаемая версия "{0}", поддерживается только "{1}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.Properties.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";AccDesc_Association" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: An association between EntityTypes {1} {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}: Ассоциация между EntityTypes {1} {2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_EntityDesignerViewModel" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: The Conceptual Model of an Entity Data Model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}: концептуальная модель для модели EDM.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_EntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: An EDM EntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}: EDM EntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_EntityTypeHeader" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The EntityType name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя EntityType.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_EntityTypeNavigationPropertyCompartment" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An EntityType's navigation properties.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойства навигации типа EntityType.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_EntityTypeScalarPropertyCompartment" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An EntityType's scalar properties.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Скалярные свойства типа EntityType.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_Inheritance" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: The inheritance hierarchy between EntityTypes {1} and {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}: иерархия наследования между типами EntityType {1} и {2}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_NavigationProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: An EntityType's navigation property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}: свойство навигации типа EntityType.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_ScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: An EntityType's scalar property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}: скалярное свойство типа EntityType.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_EntityTypeHeader" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_EntityTypeNavigationPropertyCompartment" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Navigation]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Навигация]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_EntityTypeScalarPropertyCompartment" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Properties]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойства]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Acc_Unnamed" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unnamed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Без имени]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CompClassName_Association" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Ассоциация]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CompClassName_EntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[EntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CompClassName_Inheritance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Inheritance]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Наследование]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CompClassName_NavigationProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Navigation Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Свойство навигации]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CompClassName_ScalarProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Scalar Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Скалярное свойство]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CustomDialog_CancelButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cancel]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Отмена]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CustomDialog_OKButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[OK]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ОК]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";CustomZoom_DialogTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Custom Zoom]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Произвольное увеличение]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";CustomZoom_ZoomLevel" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Percentage zoom:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Процентное увеличение:]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkModelBrowserLink" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Model Browser]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Браузер моделей]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkResolveErrorText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Data Model Designer is unable to display the file you requested.\n\nThe Database Project '{0}' could not be found or is in the process of loading.\n\nYou can edit the model using the {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Конструктору Entity Data Model Designer не удалось отобразить запрошенный файл.\n\nПроект базы данных "{0}" не найден либо находится на стадии загрузки.\n\nМожно изменить модель с помощью {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-21T11:07:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkSafeModeErrorText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Data Model Designer is unable to display the file you requested\n\nYou can edit the model using the {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Конструктору Entity Data Model Designer не удалось отобразить запрошенный файл.\n\nМожно изменить модель с помощью {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-21T11:08:12Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Data Model Designer lets you visualize and design your Entity Data Model.\n\n]D;]A;Create new entities in the model by dragging items from the {0}.\n]D;]A;Add existing entities and relationships to this diagram by dragging them from the {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Конструктор Entity Data Model Designer позволяет визуализировать и проектировать модели EDM.\n\n]D;]A;Создавайте новые сущности в модели, перетаскивая элементы из {0}.\n]D;]A;Добавляйте существующие сущности и связи в эту диаграмму, перетаскивая их из {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-21T11:08:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkToolboxLink" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Toolbox]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Панель элементов]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkUpgradeErrorText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Data Model Designer is unable to display the file you requested.\n\nThe file references an XML namespace that is inconsistent with the Entity Framework schema version of the model. You can {1} the XML namespace reference to match the Entity Framework schema version or edit the model in the {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Конструктору Entity Data Model Designer не удалось отобразить запрошенный файл.\n\nФайл ссылается на пространство имен XML, несогласованное с версией схемы платформы Entity Framework модели. Можно {1} ссылки на пространство имен XML в соответствии с версией схемы платформы Entity Framework проекта или изменить модель в {0}.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The Entity Data Model Designer is unable to display the file you requested.\n\nThe file references an XML namespace that is inconsistent with the target framework of the project. You can {1} the XML namespace reference to match the project's target framework or edit the model in the {0}.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-21T11:08:51Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkUpgradeLink" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[modify]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[изменить]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermarkXmlEditorLink" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML Editor]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[редактор XML]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XML"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DesignerWatermark_EDMNotSupported" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Entity Data Model Designer is unable to display the file you requested.\n\n]D;]A;The Entity Framework is not available in the target framework currently specified for the project. You can change the target framework of the project or edit the model in the {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Конструктору Entity Data Model Designer не удалось отобразить запрошенный файл.\n\n]D;]A;Платформа Entity Framework недоступна в требуемой версии .NET Framework, указанной для этого проекта. Можно изменить требуемую версию .NET Framework проекта или изменить модель с помощью {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-21T11:06:32Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntitySetNameSuffix" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}Set]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}Set]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationIsSelfJoin" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1021]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1020]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetMissingAssociation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1015]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetMissingEnd1EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1016]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetMissingEnd2EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1017]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1007]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_CircularEntityInheritanceFound" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1006]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityContainerMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1010]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityHasNoKeys" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1011]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityInMultipleEntitySets" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1012]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityInNoEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1013]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1005]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntitySetEntityMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1014]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntitySetNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1008]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelAliasEmpty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1004]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelAliasInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1003]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelNamespaceEmpty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1002]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelNamespaceInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1001]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_PropertyNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1009]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="kherz" DateTime="2010-10-14T15:33:18Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Error_AssociationIsSelfJoin" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association '{0}' is a self join from '{1}' to '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Ассоциация "{0}" является самосоединением "{1}" с "{2}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_AssociationNameDuplicate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association '{0}' already exists in the model. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В модели уже есть ассоциация "{0}". Задайте другое имя.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_AssociationNameInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Недопустимое имя ассоциации "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_AssociationSetNameDuplicate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet '{0}' already exists in the model. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[AssociationSet "{0}" уже существует в модели. Задайте другое имя.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_AssociationSetNameInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя AssociationSet "{0}" недопустимо.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_CircularEntityInheritanceFound" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' has a circular inheritance relationship: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA["{0}" имеет циклическую наследственную связь: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_CircularInheritanceAborted" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Setting base type for {0} to {1} would cause circular inheritance. Adding inheritance aborted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Смена базового типа {0} на {1} приведет к циклическому наследованию. Добавление наследования прервано.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_DiagramShouldBeReloaded" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An unknown error was encountered while trying to reload the document. You should close and reload the document. Error Text: '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[При попытке загрузить документ повторно возникла неизвестная ошибка. Необходимо закрыть документ и загрузить его заново. Текст сообщения об ошибке: "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EntityContainerMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The model does not have an EntityContainer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В модели нет EntityContainer.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EntityInNoEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' is not referenced by any EntitySet.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В EntitySet отсутствуют ссылки на "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EntityNameDuplicate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityType '{0}' already exists in the model or conflicts with the EntityContainer name, or there is an existing property named '{0}' in this entity's inheritance chain. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[EntityType "{0}" уже существует в модели или конфликтует с именем EntityContainer, либо в цепочке наследования этой сущности имеется свойство с именем "{0}". Задайте другое имя.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EntityNameInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityType name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Имя EntityType "{0}" недопустимо.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EntitySetNameDuplicate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntitySet '{0}' already exists in the model. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[EntitySet "{0}" уже существует в модели. Задайте другое имя.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EntitySetNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntitySet name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Недопустимое имя EntitySet "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_ModelAliasInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Model alias '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Недопустимый псевдоним модели "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_ModelNamespaceEmpty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The model does not have a namespace.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[У модели нет пространства имен.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_ModelNamespaceInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Model namespace '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Недопустимое пространство имен модели "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_NavigationPropertyNameDuplicate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Navigation property '{0}' already exists in the entity. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В сущности уже есть свойство навигации "{0}". Задайте другое имя.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_NavigationPropertyNameInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Navigation Name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Недопустимое имя навигации "{0}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_NoArtifactService" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Artifact Service has not yet been initialized.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Служба артефактов еще не инициализирована.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_NoConceptualModelRoot" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot find the root of the conceptual model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Не удалось найти корневой элемент концептуальной модели.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_PropertyFacetMaxLengthInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[MaxLength '{0}' is not allowed. Values should be between 0 and {1} or the reserved value 'Max'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Значение MaxLength "{0}" недопустимо. Допустимые значения: от 0 до {1} либо зарезервированное значение "Max".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_PropertyFacetPrecisionInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Precision '{0}' is not allowed. Values should be between {1} and {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Точность "{0}" не допускается. Значение должно лежать в диапазоне от {1} до {2}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_PropertyFacetScaleInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Scale '{0}' is not allowed. Values should be between {1} and {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Масштаб "{0}" не допускается. Значение должно лежать в диапазоне от {1} до {2}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_PropertyNameDuplicate" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property '{0}' already exists in the entity. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В сущности уже есть свойство "{0}". Задайте другое имя.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportAsImageTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Export Diagram As]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Экспортировать диаграмму как]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportImage_BrowseButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Browse...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Обзор...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportImage_DefaultFileName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityDesignerDiagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[EntityDesignerDiagram]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityDesignerDiagram"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportImage_DialogTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Export Diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Экспортировать диаграмму]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportImage_ExportButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Export]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Экспорт]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportImage_FormatLabel" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Image Format:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Формат изображения:]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportImage_LocationLabel" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Location:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Расположение:]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExportImage_OverwriteCheckbox" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Overwrite existing file]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Перезаписать существующий файл]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ImageFormatBmp" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Windows 24-bit bitmap (*.bmp)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[24-разрядное растровое изображение Windows (*.bmp)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ImageFormatGif" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Graphic Interchange Format (*.gif)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Формат GIF (*.gif)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ImageFormatJpeg" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[JPEG Interchange format (*.jpg)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Формат JPEG (*.jpg)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ImageFormatPng" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Portable Network Graphics (*.png)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Формат PNG (*.png)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ImageFormatTiff" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tagged Image File Format (*.tif)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Формат TIF (*.tif)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MsgBox_ConfirmFileOverwrite" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[File '{0}' exists.\nOverwrite?]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Файл "{0}" существует.\nПерезаписать?]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MsgBox_Title" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-21T11:09:44Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RetargetDocumentFromWatermarkTransactionName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retarget XML namespaces to be consistent with the Entity Framework schema version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Перенаправить пространства имен XML, чтобы обеспечить согласование с версией схемы платформы Entity Framework.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Retarget XML namespaces to be consistent with the project's target framework version.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="iskenderova" DateTime="2013-08-16T07:53:47Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tooltip_AssociationConnector" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Source: {0} ({1})\nTarget: {2} ({3})]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Источник: {0} ({1})\nНазначение: {2} ({3})]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_AddAssociation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add Association]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Добавить сопоставление]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_AddEntityType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add EntityType]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Добавить EntityType]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_AddInheritance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add Inheritance]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Добавить наследование]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_AddScalarProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add Scalar Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Добавить скалярное свойство]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_CreateDiagram" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create Diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Создание диаграммы]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_CreateFunctionImport" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add FunctionImport]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Добавить FunctionImport]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="FunctionImport"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_DropItems" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Drop Items]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Удалить элементы]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_LayoutDiagram" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Layout diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Диаграмма макета]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_PasteEntity" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Paste Entity]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Вставка сущности]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_PasteScalarProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Paste Scalar Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Вставка скалярного свойства]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_SetEntityTypeIsExpandedProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Expand or Collapse Shape(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Развернуть или свернуть узлы Shape]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_SetGridVisibility" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set Grid Visibility]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Установка видимости сетки]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_SetMemberFormatValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set Member Format Value]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Установка значения формата элемента]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_SetSnapToGrid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set Snap To Grid]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Установка прикрепления к сетке]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="dagna.kaminska" DateTime="2013-04-24T12:18:21Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_SetZoom" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set Zoom]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Установка масштаба]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UserCancel_ChangeInheritance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Inheritance relationship not changed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Наследственная связь не изменена.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UserCancel_NewInheritance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Inheritance relationship not created.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Наследственная связь не создана.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Warning_AssociationSetMissingAssociation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet '{0}' does not reference an association. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[AssociationSet "{0}" не ссылается на ассоциацию. ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Warning_AssociationSetMissingEnd1EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet '{0}' is missing an End1 EntitySet.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В AssociationSet "{0}" отсутствует End1 EntitySet.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"} {StrContains="End1 EntitySet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Warning_AssociationSetMissingEnd2EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet '{0}' is missing an End2 EntitySet.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[В AssociationSet "{0}" отсутствует End2 EntitySet.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="bentsa" DateTime="2010-11-02T08:55:09Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"} {StrContains="End2 EntitySet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Warning_EntityHasNoKeys" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityType '{0}' does not have any keys. Please specify a key or inherit from an entity that defines a key.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В EntityType "{0}" отсутствуют ключи. Задайте ключ или наследование из сущности, определяющей ключ.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Warning_EntityInMultipleEntitySets" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityType '{0}' found in multiple EntitySets: '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[EntityType "{0}" найден в нескольких наборах EntitySets: "{1}".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySets"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Warning_EntitySetEntityMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntitySet '{0}' does not reference an EntityType.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[В наборе сущностей EntitySet "{0}" отсутствуют ссылки на EntityType.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Warning_ModelAliasEmpty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No model alias specified.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Не указан псевдоним модели.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="tomasz.wyczolkowski" DateTime="2010-11-04T09:52:34Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-liwma" DateTime="2010-10-22T06:53:07Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.EntityDesigner.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.EntityDesigner.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:20:21Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Корпорация Майкрософт (Microsoft Corporation)]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:03:33Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.EntityDesigner]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.EntityDesigner]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:20:21Z" />
+      <Props>
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-liwma" DateTime="2010-10-22T06:53:07Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.EntityDesigner.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-liwma" DateTime="2010-10-22T06:53:07Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Корпорация Майкрософт (Microsoft Corporation). Все права защищены.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:03:33Z" />
+      <Props>
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 2" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.EntityDesigner.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-liwma" DateTime="2010-10-22T06:53:07Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="N/A" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="iskenderova" DateTime="2013-08-21T09:20:21Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="v-liwma" DateTime="2010-10-22T06:53:07Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+</LCX>

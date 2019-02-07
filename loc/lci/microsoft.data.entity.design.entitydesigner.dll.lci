@@ -1,0 +1,613 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="Microsoft.Data.Entity.Design.EntityDesigner.dll" PsrId="211" FileType="1" SrcCul="en-US" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <OwnedComments>
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Loc" />
+  </OwnedComments>
+  <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.GeneratedCode.DomainModelResx.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";AssociationConnectorSourceEndDisplayTextDefaultText" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[SourceEndDisplayText]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SourceEndDisplayText"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AssociationConnectorTargetEndDisplayTextDefaultText" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[TargetEndDisplayText]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TargetEndDisplayText"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CannotMonikerizeElement" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Instances of DomainClass '{0}' cannot be serialized as a moniker.]D;]A;A DomainClass can be serialized as a moniker only if ]D;]A;1) it has a defined/inherited DomainProperty marked as IsMonikerKey=true, or ]D;]A;2) it is marked/inherited with SerializeId=true.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DomainClass"} {StrContains="DomainProperty"} {StrContains="IsMonikerKey=true"} {StrContains="SerializeId=true"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";EntityTypeShapeBaseTypeNameDefaultText" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[BaseTypeName]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="BaseTypeName"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";FormatList" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Data Entity Design (*.edmx)|*.edmx]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{SubString="(*.edmx)|*.edmx"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.DisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Designer View Model Has Entity Types]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityDesignerViewModel.Descript" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Item ItemId=";(...) ion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityDesignerViewModel]]></Val>
+          </Str>
+          <Disp Icon="Str" />
+          <Cmts>
+            <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityDesignerViewModel"}]]></Cmt>
+          </Cmts>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityDesignerViewModel.DisplayN" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Item ItemId=";(...) ame" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Entity Designer View Model]]></Val>
+          </Str>
+          <Disp Icon="Str" />
+          <Cmts>
+            <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+          </Cmts>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes.EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.EntityDesignerViewModelHasEntityTypes/EntityType.PropertyDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Designer View Model]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.MicrosoftDataEntityDesignDomainModel.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Framework Designer]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Framework Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.View.EntityDesignerDiagram.DisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Designer]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/SourceEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.SourceEntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.SourceEntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association/TargetEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.TargetEntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Association.TargetEntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.DisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Designer View Model]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel/Namespace.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.Namespace]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityDesignerViewModel.Namespace"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/EntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.EntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties/NavigationProperty.Descrip" ItemType="0" PsrId="211" Leaf="false">
+        <Disp Icon="Dir" LocTbl="false" />
+        <Item ItemId=";(...) tion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+          <Str Cat="Text">
+            <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.NavigationProperty]]></Val>
+          </Str>
+          <Disp Icon="Str" />
+          <Cmts>
+            <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasNavigationProperties.NavigationProperty"}]]></Cmt>
+          </Cmts>
+        </Item>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/EntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.EntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties/Property.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.Property]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.EntityTypeHasProperties.Property"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/SourceEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.SourceEntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.SourceEntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance/TargetEntityType.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.TargetEntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.Inheritance.TargetEntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem/Name.Description" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Description for Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem.Name]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft.Data.Entity.Design.EntityDesigner.ViewModel.NameableItem.Name"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MissingId" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Missing 'Id' attribute, a new Guid '{0}' is auto-generated.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Id"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ModelExplorerTitle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Data Entity Design Explorer]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UnexpectedXmlElement" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unexpected XML element '{0}', ignored.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XML"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UnrecognizedElementLinkType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ElementLinkType {0} is not recognized as a type of domain relationship which belongs to this domain model.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ElementLinkType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";UnrecognizedElementType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ElementType {0} is not recognized as a type of domain class which belongs to this domain model.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ElementType"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.EntityDesigner.Properties.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";AccDesc_EntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: An EDM EntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AccDesc_Inheritance" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: The inheritance hierarchy between EntityTypes {1} and {2}.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AccDesc_NavigationProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: An EntityType's navigation property.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";AccDesc_ScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}: An EntityType's scalar property.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CompClassName_EntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";DesignerWatermarkXmlEditorLink" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[XML Editor]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XML"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationIsSelfJoin" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1021]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1020]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetMissingAssociation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1015]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetMissingEnd1EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1016]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetMissingEnd2EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1017]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_AssociationSetNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1007]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_CircularEntityInheritanceFound" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1006]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityContainerMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1010]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityHasNoKeys" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1011]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityInMultipleEntitySets" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1012]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityInNoEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1013]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntityNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1005]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntitySetEntityMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1014]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_EntitySetNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1008]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelAliasEmpty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[W1004]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelAliasInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1003]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelNamespaceEmpty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1002]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_ModelNamespaceInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1001]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCode_PropertyNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[E1009]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Error_EntityContainerMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The model does not have an EntityContainer.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Error_EntityInNoEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' is not referenced by any EntitySet.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Error_EntitySetNameInvalid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntitySet name '{0}' is not valid.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ExportImage_DefaultFileName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityDesignerDiagram]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityDesignerDiagram"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";MsgBox_Title" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Tx_CreateFunctionImport" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add FunctionImport]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="FunctionImport"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Warning_AssociationSetMissingAssociation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet '{0}' does not reference an association. ]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Warning_AssociationSetMissingEnd1EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet '{0}' is missing an End1 EntitySet.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"} {StrContains="End1 EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Warning_AssociationSetMissingEnd2EntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationSet '{0}' is missing an End2 EntitySet.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"} {StrContains="End2 EntitySet"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Warning_EntityInMultipleEntitySets" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityType '{0}' found in multiple EntitySets: '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains=!1055;"EntitySets"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";Warning_EntitySetEntityMissing" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntitySet '{0}' does not reference an EntityType.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+</LCX>

@@ -1,0 +1,2612 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="d:\bt\4668889\bins\retail\i386\Microsoft.Data.Entity.Design.Package.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="zh-TW" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Package.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";AccDesc_ThumbnailView" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Launches the thumbnail view]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[啟動縮圖檢視]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_Zoom100Button" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zooms the diagram to 100%]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[將圖表縮放為 100%]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_ZoomInButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zooms in on the diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[將圖表放大]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccDesc_ZoomOutButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zooms out on the diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[將圖表縮小]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_ThumbnailView" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Thumbnail View]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[縮圖檢視]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_Zoom100Button" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zoom 100]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[縮放 100]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_ZoomInButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zoom In]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[放大]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AccName_ZoomOutButton" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Zoom Out]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[縮小]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddComplexTypeCommand_DesignerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[&Complex Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[複雜類型(&C)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddComplexTypeCommand_ExplorerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add New &Complex Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[加入新的複雜類型(&C)...]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Add New &Complex Type]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEntityTypeCommand_DesignerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[&Entity...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[實體(&E)...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEntityTypeCommand_ExplorerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add New &Entity Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[加入新的實體類型(&E)...]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Add New &Entity Type]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEnumTypeCommand_DesignerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[&Enum Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[列舉型別(&E)...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";AddEnumTypeCommand_ExplorerText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add New &Enum Type...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[加入新的列舉型別(&E)...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DeleteFromModelCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete from Model]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[從模型中刪除]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[D&elete]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EditorCaptionFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ [{0}]5D;]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ [{0}]5D;]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorOccurredLoadingFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred reading the file {0}.  Error message is {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[讀取檔案 {0} 時發生錯誤。錯誤訊息為 {1}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorOccurredRunningCustomTool" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred running the custom tool on the file {0}.  Error message is {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[在檔案 {0} 上執行自訂工具時發生錯誤。錯誤訊息為 {1}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_EmptyDiagram" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to create an image of diagram '{0}' because it is empty.]D;]A;Please add entities to this diagram.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[因為圖表 '{0}' 空白，所以無法建立其影像。]D;]A;請在這個圖表中加入實體。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-08-11T12:03:39Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO8" />
+        </Props>
+      </Item>
+      <Item ItemId=";Extensibility_ErrorOccurredDuringCallToExtension" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred executing an ADO.Net Entity Framework Extension.  The extension's type name is {0}.  The exception message is {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[執行 ADO.Net Entity Framework Extension 時發生錯誤。擴充的型別名稱為 {0}。例外狀況訊息是 {1}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Extensibility_ErrorOccurredInjectingCommand" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while attempting to inject the command '{0}'. There are too many existing commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[嘗試插入命令 '{0}' 時發生錯誤。太多現有命令。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExtensionError_SourceControlLock" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Document '{0}' is not editable. Ensure that the document is checked out from source control and then reload.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[文件 '{0}' 不可編輯。請確定文件已從原始檔控制簽出並重新載入。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-05-30T14:03:00Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO6a_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";MoveDiagramNodesWarning" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This will save and reload your model. Continue?]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[這將會儲存並重新載入您的模型。要繼續嗎?]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";PackageLoadFailureExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to load Entity Data Model Tools Package. The result is {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[無法載入實體資料模型工具套件。結果為 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";RemoveDiagramCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete Diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[刪除圖表]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RemoveFromDiagramCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Rem&ove from Diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[從圖表移除(&O)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+        <Props>
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SelectAssociationEndCommnadText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[實體: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";SelectAssociationPropertyCommandText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[屬性: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";StatusBarValidatingText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Validating Model…]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[正在驗證模型...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";StatusBarValidationCompletedText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Validation Completed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[驗證完成]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_CreateComplexType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Create Complex Type]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[建立複雜類型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_Delete" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[刪除 {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_DeleteItems" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[刪除]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_IncludeRelatedEntityTypeShape" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Include related Entity Type Shape(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[包含相關的實體類型圖案]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_MoveProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Move Property]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[移動屬性]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_MoveToNewDiagram" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Move to a new diagram]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[移至新的圖表]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Tx_Paste" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Paste]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[貼上]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Package.VSPackage.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";EntityDesigner.ctmenu" ItemType="0" PsrId="240" Leaf="false">
+      <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity Data Model Browser]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[實體資料模型瀏覽器]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1024" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1024" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Entity...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[實體(&E)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1025" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1025" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Association...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[關聯(&A)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1026" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1026" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Inheritance...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[繼承(&I)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1027" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1027" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Scalar Property]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[純量屬性(&S)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1028" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1028" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Function Import...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[函式匯入(&F)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-05-30T14:03:00Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1029" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1029" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Complex Property]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[複雜屬性(&C)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1030" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1030" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Navigation Property]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[導覽屬性(&N)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1040" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1040" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Rename]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[重新命名(&N)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+          <Notes>
+            <Note Name="Loc" Order="0"><![CDATA[BUG#42458: the hotkey is changed from R to N to avoid duplicate hotkey.]]></Note>
+          </Notes>
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1041" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1041" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Collapse]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[摺疊(&C)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1042" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1042" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Expand]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[展開(&E)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1056" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="celia.hsueh" DateTime="2011-08-05T08:30:33Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1056" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Rename...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[重新命名(&R)...]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[&Refactor Rename]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},12288" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},12288" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Layer Commands]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[圖層命令(&L)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1280" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1280" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Zoom &In]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[放大(&I)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1281" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1281" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Zoom &Out]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[縮小(&O)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1282" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1282" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Zoom to &Fit]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[縮放至適當比例(&F)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1283" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1283" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Custom...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[自訂(&C)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1284" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1284" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[1&0%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[10%(&0)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1285" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1285" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[25%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[25%]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1286" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1286" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[33%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[33%]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1287" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1287" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[50%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[50%]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1288" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1288" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&66%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[66%(&6)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1289" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1289" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&75%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[75%(&7)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1290" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1290" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&100%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[100%(&1)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1291" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1291" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[125%]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[125%]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1292" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1292" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[1&50%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[150%(&5)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1293" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1293" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&200%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[200%(&2)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1294" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1294" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&300%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[300%(&3)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1295" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1295" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&400%]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[400%(&4)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1536" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1536" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Show &Grid]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[顯示格線(&G)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1537" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1537" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Snap to Grid]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[貼齊格線(&S)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},16384" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},16384" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Layer Refactoring Commands]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[圖層重構命令(&L)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-07-11T10:38:09Z" />
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1792" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1792" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Layout Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[配置圖表(&L)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1793" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1793" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Export as Image...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[匯出為影像(&E)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1795" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1795" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Collapse All]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[全部摺疊(&C)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1796" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},1796" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Expand &All]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[全部展開(&A)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},2" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},2" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity Data Model Mapping Details]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[實體資料模型對應詳細資訊]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4096" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4096" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Display &Name]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[顯示名稱(&N)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4097" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4097" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Display Name and &Type]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[顯示名稱和型別(&T)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4352" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4352" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Mapping Details]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[對應詳細資料(&M)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4353" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4353" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Model &Browser]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[模型瀏覽器(&B)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4358" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4358" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Table &Mapping]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[資料表對應(&M)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4359" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4359" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Show in Model &Browser]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[在模型瀏覽器中顯示(&B)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4360" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4360" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Table &Mapping]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[資料表對應(&M)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4361" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4361" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Stored &Procedure Mapping]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[預存程序對應(&O)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+          <Notes>
+            <Note Name="Loc" Order="0"><![CDATA[BUG#42458: the hotkey is changed from P to O to avoid duplicate hotkey.]]></Note>
+          </Notes>
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4362" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4362" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Show in &Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[在圖表中顯示(&D)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4368" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4368" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Validate]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[驗證(&V)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4384" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4384" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add &Code Generation Item...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[加入程式碼產生項目(&C)...]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Add &Code Generation Item..]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-08-19T03:52:23Z" />
+          <Notes>
+            <Note Name="Loc" Order="0"><![CDATA[BUG#42458: the hotkey is changed from C to F to avoid duplicate hotkey.]]></Note>
+          </Notes>
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO4" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4608" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},4608" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Select &All]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[全選(&A)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5120" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5120" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Entity &Key]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[實體索引鍵(&K)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5376" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5376" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[實體: ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5377" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5377" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Property: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[屬性: ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5378" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5378" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Entity: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[實體: ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5632" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5632" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Update Model from Database...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[從資料庫更新模型(&U)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5633" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5633" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Generate Database from Model...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[由模型產生資料庫(&E)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+          <Notes>
+            <Note Name="Loc" Order="0"><![CDATA[BUG#42456: the hotkey is changed from G to E to avoid duplicate hotkey.]]></Note>
+          </Notes>
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5888" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5888" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add &Function Import...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[加入函式匯入(&F)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-05-30T14:03:00Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5889" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5889" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Complex Type]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[複雜類型(&C)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5890" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5890" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Go To Definition]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[移至定義(&G)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5891" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5891" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Move to New &Complex Type]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[移至新的複雜類型(&C)]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Refactor into New &Complex Type]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5892" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5892" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Complex Types...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[複雜類型(&C)...]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5893" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5893" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Function Import Mapping]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[函式匯入對應]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-05-30T14:03:00Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5894" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5894" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add New &Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[加入新的圖表(&D)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5895" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5895" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Open]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[開啟(&O)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5896" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5896" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Ad&d to Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[加入至圖表(&D)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5897" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5897" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Close]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[關閉(&C)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5905" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5905" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Move to new Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[移至新的圖表(&E)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-02-10T04:56:28Z" />
+          <Notes>
+            <Note Name="Loc" Order="0"><![CDATA[BUG#42458: the hotkey is changed from M to E to avoid duplicate hotkey.]]></Note>
+          </Notes>
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5906" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5906" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Rem&ove from Diagram]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[從圖表移除(&O)]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[D&elete]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO1" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5907" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5907" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Include Related]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[包含相關的項目(&I)]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Include Relate&d]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+          <Notes>
+            <Note Name="Loc" Order="0"><![CDATA[BUG#42458: the hotkey is changed from D to A to avoid duplicate hotkey.]]></Note>
+          </Notes>
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO1" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5908" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5908" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Move Diagram&s to Separate File]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[將圖表移至個別檔案(&S)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5909" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5909" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Up]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[向上(&U)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5910" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5910" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Down]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[向下(&D)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5911" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5911" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[U&p 5]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[向上 5 個(&P)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5912" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5912" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Dow&n 5]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[向下 5 個(&N)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5913" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5913" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[To &Top]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[至上(&T)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5920" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5920" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[To &Bottom]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[至下(&B)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5921" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="celia.hsueh" DateTime="2011-05-23T10:34:14Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5921" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Add &Enum Type...]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New">
+              <Val><![CDATA[加入列舉型別(&E)...]]></Val>
+            </Tgt>
+            <Prev Cat="Button" IgnoreHK="true">
+              <Val><![CDATA[Add &Enum Type]]></Val>
+            </Prev>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5922" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="celia.hsueh" DateTime="2011-05-23T10:34:14Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},5922" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[Convert to En&um]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[轉換成列舉(&U)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2011-05-30T14:03:00Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO6a_New" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},6144" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},6144" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Edit]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[編輯(&E)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65536" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65536" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item">
+            <Val><![CDATA[MicrosoftDataEntityDesign Context]]></Val>
+            <Tgt Cat="Menu Item" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[MicrosoftDataEntityDesign 內容]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65537" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65537" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item">
+            <Val><![CDATA[MicrosoftDataEntityDesign Context]]></Val>
+            <Tgt Cat="Menu Item" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[MicrosoftDataEntityDesign 內容]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65538" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65538" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[A&dd New]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[加入新項目(&D)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65539" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65539" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Zoom]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[縮放(&Z)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65540" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65540" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Grid]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[格線(&G)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65541" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65541" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[D&iagram]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[圖表(&I)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65542" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65542" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[Scalar Property &Format]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[純量屬性格式(&F)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65543" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65543" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[R&efactor]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[重構(&E)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2013-07-11T10:39:36Z" />
+          <Props>
+            <Str Name="Custom4" Val="EntityFX_HO1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65546" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65546" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Select]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[選取(&S)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65547" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65547" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[A&dd]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[加入(&D)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65548" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65548" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Scalar Property]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[純量屬性(&S)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65549" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65549" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Complex Property]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[複雜屬性(&C)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65550" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},65550" ItemType=";Menu" PsrId="240" Leaf="true">
+          <Str Cat="Menu Item" IgnoreHK="true">
+            <Val><![CDATA[&Move Properties]]></Val>
+            <Tgt Cat="Menu Item" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+              <Val><![CDATA[移動屬性(&M)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="Studio11_HO2_New" />
+            <Str Name="Custom5" Val="MT bucket 1" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},7936" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},7936" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Add Scalar Property Base]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[加入純量屬性基底]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},8192" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},8192" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Add Complex Property Base]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[加入複雜屬性基底]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86019" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86019" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Property: ]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[屬性: ]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86020" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86020" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button" IgnoreHK="true">
+            <Val><![CDATA[&Select Association]]></Val>
+            <Tgt Cat="Button" IgnoreHK="true" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[選取關聯(&S)]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86021" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86021" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Base Type]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[基底類型]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+      <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86022" ItemType="0" PsrId="240" Leaf="false">
+        <Disp Icon="Menu" Expand="true" Disp="true" LocTbl="false" />
+        <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+        <Item ItemId=";{11ac0a76-365e-490d-abad-e44e52897c7d},86022" ItemType=";Button" PsrId="240" Leaf="true">
+          <Str Cat="Button">
+            <Val><![CDATA[Subtype]]></Val>
+            <Tgt Cat="Button" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+              <Val><![CDATA[子型別]]></Val>
+            </Tgt>
+          </Str>
+          <Disp Icon="Str" Expand="true" />
+          <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+          <Props>
+            <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          </Props>
+        </Item>
+      </Item>
+    </Item>
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";101" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[EntityFramework]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[EntityFramework]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityFramework"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";102" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Adds an ADO.NET Entity Data Model file to the project.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[將 ADO.NET 實體資料模型檔案加入專案。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";103" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ADO.NET Entity Data Model Designer]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-07-11T10:27:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";110" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Microsoft Data Entity Design]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Microsoft Data Entity Design]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Microsoft"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";112" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Visual Studio package for Microsoft Data Entity Design]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Microsoft Data Entity Design 的 Visual Studio 套件]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Visual Studio"} {StrContains="Microsoft"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";500" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Entity Data Model]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ADO.NET 實體資料模型]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";501" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item for creating an ADO.NET Entity Data Model.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[用於建立 ADO.NET 實體資料模型的專案項目。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ADO.NET"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";503" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET EntityObject Generator]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ADO.NET EntityObject 產生器]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-03-04T09:59:40Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityObject"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";504" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed ObjectContext class and persistence-aware classes.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[產生強型別 ObjectContext 類別和可感知永續性類別的專案項目。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ObjectContext"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";505" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Self-Tracking Entity Generator]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[ADO.NET ADO.NET 自我追蹤實體產生器]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-22T02:48:08Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";506" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed ObjectContext class and Self-Tracking Entity classes.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[產生強型別 ObjectContext 類別和自我追蹤實體類別的專案項目。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-22T02:48:08Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ObjectContext"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";507" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET EntityObject Generator V5.0]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[ADO.NET EntityObject 產生器 V5.0]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[ADO.NET EntityObject Generator V4.2]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityObject"} {StrContains="V5.0"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";508" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ADO.NET Self-Tracking Entity Generator V5.0]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[ADO.NET 自我追蹤實體產生器 V5.0]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[ADO.NET Self-Tracking Entity Generator V4.2]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-08-22T02:43:27Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="V5.0"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";510" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed ObjectContext class and entity classes with persistence ignorance.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[產生強型別 ObjectContext 類別和具有永續性無知之實體類別的專案項目。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-06-17T11:02:08Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ObjectContext"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO7" />
+        </Props>
+      </Item>
+      <Item ItemId=";512" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A project item to generate a strongly-typed DbContext class and persistence ignorant entity classes.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[產生強型別 DbContext 類別和永續性無知實體類別的專案項目。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-06-17T11:02:08Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbContext"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO7" />
+        </Props>
+      </Item>
+      <Item ItemId=";ExplorerWindowTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Model Browser]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[模型瀏覽器]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T13:00:45Z" />
+        <Props>
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+      <Str Cat="Text" UsrLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+      <Cmts>
+        <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+      </Cmts>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation. 著作權所有，並保留一切權利。]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2014-01-22T06:17:49Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+        <Str Name="Custom5" Val="MT bucket 2" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Package.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+</LCX>

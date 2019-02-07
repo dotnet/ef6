@@ -1,0 +1,928 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="microsoft.visualstudio.data.tools.design.xmlcore.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="zh-TW" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid.VirtualTreeControl.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="celia.hsueh" DateTime="2013-04-22T02:40:35Z" />
+      <Item ItemId=";BlankSubItemException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A blank item cannot have sub items.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[空白項目不能有子項目。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";BrowseButtonAccessibleName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Browse]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[瀏覽]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";CalcTextHeightLetter" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[J]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[J]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";CheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[已核取]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ChildRowNumberAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0:d} child rows]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0:d} 子資料列]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ColumnAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[column {0:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料行 {0:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ColumnNumberAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0:d} columns]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{0:d} 資料行]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ColumnOutOfRangeException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Row parameter must be >= 0 if column > 0.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[如果資料行大於 0，則資料列參數必須大於或等於 0。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ComplexColumnCellStyleException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The cell style for the indicated column must be Complex or Mixed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[指定的資料行儲存格樣式必須是 Complex 或 Mixed。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Complex"} {StrContains="Mixed"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ComplexColumnRootException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter complexColumnRoot should only be true for items in the top list of a complex subitem.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[複雜子項目最上層清單中的項目，其參數 complexColumnRoot 只能為 true。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="complexColumnRoot"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DefActionCollapseAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Collapse]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[摺疊]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DefActionExpandAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Expand]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[展開]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DropDownAccessibleShortcut" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alt+Down]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Alt+向下鍵]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DropDownButtonAccessibleName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Open]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[開啟]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DuplicateColumnException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Duplicate column in array.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[陣列包含重複的資料行。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";GetSubItemCountExceptionDesc" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[absRow must be >= 0 if column > 0.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[如果資料行大於 0，absRow 必須大於或等於 0。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="absRow"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";HeaderArrayException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Length of headers array must match the current column count.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[標題陣列的長度必須符合目前的資料行計數。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InactiveCheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[inactive checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[已核取為非現用]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InactivePartiallyCheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[inactive partially checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[部分核取為非現用]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InactiveUncheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[inactive not checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未核取為非現用]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidColumnOrderArrayException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The order array lengths must match each other and the VisibleColumnCount property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Order 陣列長度必須彼此相符，同時要符合 VisibleColumnCount 屬性。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="VisibleColumnCount"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";OverlayIndicesRangeExceptionDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No more than 16 overlay indices are supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[支援的覆疊索引不可超過 16 層。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ParentRowException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter parentRow does not indicate a row with children.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[參數 parentRow 沒有指定含有子系的資料列。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PartiallyCheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[partially checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[部分核取]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PercentageBasedHeadersInvalidException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Percentage based columns must form an ascending sequence of positive numbers <=1.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[百分比架構資料行必須是小於或等於 1 的正數依照遞增順序排列。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";PercentageBasedHeadersLastInvalidException" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The last percentage in a set of percentage-based columns must be 1.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[一組百分比架構資料行中的最後一個百分比必須是 1。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RowAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[row {0:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料列 {0:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RowColumnAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[row {0:d} column {1:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[資料列 {0:d} 資料行 {1:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RowOfTotalAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[row {0:d} of {1:d}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[{1:d} 的資料列 {0:d}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SelectionModeNoneException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[SelectionMode.None is not supported.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不支援 SelectionMode.None。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SelectionMode.None"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ShiftBranchLevelsExceptionDesc" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[insertLevels + removeLevels don't add up to 0.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[insertLevels + removeLevels 之和不可為 0。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="insertLevels"} {StrContains="removeLevels"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UncheckedAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[not checked]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[未核取]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Microsoft.Data.Tools.VSXmlDesignerBase.VisualStudio.UI.ProgressDialog.resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+  </Item>
+  <Item ItemId=";Microsoft.VisualStudio.Data.Tools.Design.XmlCore.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="YOK" DateTime="2010-10-06T05:51:10Z" />
+      <Item ItemId=";Dialog_CancelRefactoring" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refactoring operation has been canceled.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[重構作業已取消。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorDialog_Title" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refactoring Error]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[重構錯誤]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_FailedApplyChangeToFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to apply changes to file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法套用變更到檔案 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_FailedInvokePreviewWindow" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to open the preview window.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法開啟預覽視窗。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_FailedOperation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The refactoring operation has failed.  {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[重構作業失敗。{0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_FailedToCheckOut" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to check out files.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法簽出檔案。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Exception_CannotGetTextBuffer" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot get the text buffer from file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法從檔案 {0} 中取得文字緩衝區。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Exception_DuplicateChanges" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[There are duplicate changes for file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[檔案 {0} 具有重複的變更。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Exception_FailedToSaveFile" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to save the changed file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法儲存已變更的檔案 {0}。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";FindReferences_Heading" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Looking for reference(s)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[正在尋找參考]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogBackgroundJobCancellationMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[User cancelled background process at iteration {0}/{1}. Most recent status message was:]D;]A;]D;]A;{2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[使用者已在反覆運算 {0}/{1} 時取消背景處理序。最近的狀態訊息為:]D;]A;]D;]A;{2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogBackgroundJobErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Background job failed at iteration {0}/{1}.]D;]A;Caught exception of type {2} with message {3} and stack trace {4}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[反覆運算 {0}/{1} 時背景作業發生失敗。]D;]A;攔截到型別 {2} 的例外狀況，訊息為 {3}，堆疊追蹤為 {4}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogBackgroundJobInnerExceptionErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[With inner exception of type {0} with message {1} and stack trace {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[出現型別 {0} 的內部例外狀況，訊息為 {1}，堆疊追蹤為 {2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogCloseInterruptButtonCloseText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Close]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[關閉]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogCloseInterruptButtonInterruptText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Stop]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[停止]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ProgressDialogStatusLabelText" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Status]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[狀態]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2011-03-04T09:54:44Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO4a_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";RefactorDialog_Title" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Refactor]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[重構]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";RefactoringOperation_NoChanges" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No changes are required]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[不需要任何變更]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ServiceProvider_InvalidServiceInstance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Service instances must inherit from or implement {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服務執行個體必須繼承自 {0} 或實作它。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ServiceProvider_ServiceAlreadyExists" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Service {0} already exists in the service container.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[服務 {0} 已經存在服務容器中。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2013-04-23T11:22:26Z" />
+        <Props>
+          <Str Name="Custom4" Val="EntityFX_HO1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TreeBuilder_UnknownNodeType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown Node Type encountered in XmlReader.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[在 XmlReader 遇到未知的節點類型。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="XmlReader"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";TridDes_ComboAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This value can be edited through a drop-down list.  Press Alt+Down Arrow to open the list.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[這個值可以透過下拉式清單進行編輯。按下 Alt+向下鍵即可開啟清單。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";TridDes_LauncherAccDesc" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This value can be edited through a dialog box.  Press Alt+Down Arrow to open the dialog box.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[這個值可以透過對話方塊進行編輯。按下 Alt+向下鍵即可開啟對話方塊。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";VanillaProvider_DtdNodesReadOnly" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DTD nodes cannot be edited.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[無法編輯 DTD 節點。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";VanillaProvider_TxAlreadyCompleted" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Transaction already completed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[交易已經完成。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="summer.wu" DateTime="2010-11-02T12:55:31Z" />
+        <Props>
+          <Str Name="Custom4" Val="Studio11_HO2_New" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:42Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[© Microsoft Corporation. 著作權所有，並保留一切權利。]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2014-01-22T06:17:49Z" />
+      <Notes>
+        <Note Name="Loc" Order="0"><![CDATA[LIOX: New instruction:MS decided to use new translation for "All rights reserved.".]D;]A;Microsoft Corporation. 著作權所有，並保留一切權利。]D;]A;]]></Note>
+      </Notes>
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+        <Str Name="Custom5" Val="MT bucket 2" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-08-22T02:40:44Z" />
+      <Props>
+        <Str Name="Custom4" Val="EntityFX_HO5" />
+      </Props>
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="summer.wu" DateTime="2013-04-23T11:24:26Z" />
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+</LCX>

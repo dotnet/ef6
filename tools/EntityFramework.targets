@@ -48,9 +48,9 @@ Project global post-settings and targets.
        Microsoft.VisualStudio.Modeling.* DLLs -->
   <PropertyGroup Condition="'$(VisualStudioVersion)' == '15.0'" >
     <AssemblySearchPaths>
-      $(VS150COMNTOOLS)\..\..\Common7\IDE;
-      $(VS150COMNTOOLS)\..\..\Common7\IDE\Xml;
-      $(VS150COMNTOOLS)\..\..\Common7\IDE\PrivateAssemblies;
+      $(DevEnvDir);
+      $(DevEnvDir)\Xml;
+      $(DevEnvDir)\PrivateAssemblies;
       $(AssemblySearchPaths)
     </AssemblySearchPaths>
   </PropertyGroup>

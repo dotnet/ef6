@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.Extensibility</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ChangeEntityDesignerSelectionEventArgs">
+      <summary>Define un tipo EventArgs que permite a los extensores de Entity Designer realizar la selección de unidad mediante programación</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ChangeEntityDesignerSelectionEventArgs.#ctor(System.IServiceProvider,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Crea una instancia de ChangeEntityDesignerSelectionEventArgs.En este caso, "SelectionIdentifier" es una cadena delimitada que se corresponde con la jerarquía de la sección desde la raíz.Por ejemplo, para seleccionar una propiedad "SomeProperty" en el tipo de entidad "SomeEntity", SelectionIdentifier sería: SomeProperty.SomeEntity.</summary>
+      <param name="layerServiceProvider">Proveedor de servidos que proporciona la extensión por niveles</param>
+      <param name="selectionIdentifiers">Conjunto de identificadores de cadena para realizar la selección de unidad en Entity Designer</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope">
+      <summary>Crea una unidad de trabajo que se puede deshacer o rehacer con los botones Deshacer y Rehacer en Visual Studio.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Complete">
+      <summary>Confirma todas las operaciones dentro de un Ámbito del cambio.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Dispose">
+      <summary>Libera todos los recursos usados por la instancia actual de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Dispose(System.Boolean)">
+      <summary>No hace nada en esta clase base.Se debe reemplazar en las clases que heredan de esta clase y que tienen recursos para liberar.</summary>
+      <param name="disposing">Es true si se llama desde Dispose(), false si se llama desde el finalizador.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Finalize">
+      <summary>Finalizador de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /></summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute">
+      <summary>Especifica los objetos de Entity Data Model Designer o del Explorador de modelos que, cuando un usuario los selecciona, hacen que se llame al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> de la clase anotada.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.#ctor(Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection)">
+      <summary>Crea una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute" />.</summary>
+      <param name="entityDesignerSelection">Objeto de Entity Data Model Designer o del Explorador de modelos que, cuando un usuario lo selecciona, desencadena la llamada al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" />.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.EntityDesignerSelection">
+      <summary>Objeto de Entity Data Model Designer o del Explorador de modelos que, cuando un usuario lo selecciona, desencadena la llamada al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" />.</summary>
+      <returns>Objeto de Entity Data Model Designer que, cuando se selecciona, desencadena la llamada al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute">
+      <summary>Atributo que se usa para especificar que una extensión pertenece a un nivel determinado</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute.#ctor(System.String)">
+      <summary>Crea un EntityDesignerLayerAttribute según un nombre de nivel determinado</summary>
+      <param name="layerName">Nombre único que especifica el nivel (una colección lógica de extensiones)</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute.LayerName">
+      <summary>Nombre único que especifica el nivel (una colección lógica de extensiones)</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection">
+      <summary>Enumeración usada para especificar los tipos de objeto que, cuando se seleccionan en Entity Data Model Designer o en el Explorador de modelos, hacen que se llame al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> de la clase anotada.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociation">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una asociación de modelo conceptual en Entity Data Model Designer o en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociationSet">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un conjunto de asociaciones de modelo conceptual en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexProperty">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una propiedad compleja de modelo conceptual en Entity Data Model Designer o en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexType">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un tipo complejo de modelo conceptual en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityContainer">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un contenedor de entidades de modelo conceptual en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntitySet">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un conjunto de entidades de modelo conceptual en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityType">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un tipo de entidad de modelo conceptual en Entity Data Model Designer o en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImport">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una importación de función de modelo conceptual en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImportParameter">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un parámetro de importación de función de modelo conceptual en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelNavigationProperty">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una propiedad de navegación de modelo conceptual en Entity Data Model Designer o en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelProperty">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una propiedad de modelo conceptual en Entity Data Model Designer o en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.DesignerSurface">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione la superficie de Entity Data Model Designer en Entity Data Model Designer.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelAssociation">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una asociación de modelo de almacenamiento en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityContainer">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un contenedor de entidades de modelo de almacenamiento en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityType">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un tipo de entidad de modelo de almacenamiento en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunction">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una función de modelo de almacenamiento en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunctionParameter">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione un parámetro de función de modelo de almacenamiento en el Explorador de modelos.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelProperty">
+      <summary>Especifica que debe llamarse al método <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> cuando se seleccione una propiedad de modelo de almacenamiento en el Explorador de modelos.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext">
+      <summary>Clase base para las clases <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" />, <see cref="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" />, <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" /> y <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.EntityFrameworkVersion">
+      <summary>Versión de destino de Entity Framework.</summary>
+      <returns>Versión de destino de Entity Framework.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.Project">
+      <summary>El proyecto actual de Visual Studio.</summary>
+      <returns>El proyecto actual de Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError">
+      <summary>Encapsula la información de error personalizada para las extensiones de Visual Studio que extienden la funcionalidad de Entity Data Model Designer.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity)">
+      <summary>Crea una instancia nueva de <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" />.</summary>
+      <param name="message">Mensaje que describe el error.</param>
+      <param name="errorCode">Código de error asociado al error.</param>
+      <param name="severity">Gravedad del error.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity,System.Int32,System.Int32)">
+      <summary>Crea una instancia nueva de <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" />.</summary>
+      <param name="message">Mensaje que describe el error.</param>
+      <param name="errorCode">Código de error asociado al error.</param>
+      <param name="severity">Gravedad del error.</param>
+      <param name="line">Línea del documento de entrada o salida en la que se produjo el error.</param>
+      <param name="column">Columna del documento de entrada o salida en la que se produjo el error.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Column">
+      <summary>Columna del documento de entrada o salida en la que se produjo el error.</summary>
+      <returns>Columna del documento de entrada o salida en la que se produjo el error.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.ErrorCode">
+      <summary>Código de error asociado al error.</summary>
+      <returns>Código de error asociado al error.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Line">
+      <summary>Línea del documento de entrada o salida en la que se produjo el error.</summary>
+      <returns>Línea del documento de entrada o salida en la que se produjo el error.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Message">
+      <summary>Mensaje que describe el error.</summary>
+      <returns>Mensaje que describe el error.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Severity">
+      <summary>Gravedad del error.</summary>
+      <returns>Gravedad del error.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity">
+      <summary>Enumeración que describe la gravedad de <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" />.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Error">
+      <summary>Indica que la gravedad de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> es Error.Una clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> con esta gravedad aparecerá en la Lista de errores de Visual Studio como error.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Message">
+      <summary>Indica que la gravedad de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> es Message.Una clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> con esta gravedad aparecerá en la Lista de errores de Visual Studio como mensaje.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Warning">
+      <summary>Indica que la gravedad de <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> es Warning.Una clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> con esta gravedad aparecerá en la Lista de errores de Visual Studio como advertencia.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty">
+      <summary>Expone métodos para agregar propiedades a los objetos que ve un usuario en Entity Data Model Designer o en el Explorador de modelos.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)">
+      <summary>Crea una nueva propiedad para un objeto seleccionado en Entity Data Model Designer o en el Explorador de modelos.</summary>
+      <returns>Objeto cuyas propiedades públicas se muestran en la ventana Propiedades de Visual Studio.Para obtener más información, vea <see cref="T:System.Windows.Forms.PropertyGrid" />.</returns>
+      <param name="xElement">El elemento del archivo .edmx define el objeto seleccionado en Entity Data Model Designer o en el Explorador de modelos</param>
+      <param name="context">Proporciona información sobre el archivo y el proyecto.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer">
+      <summary>Esta clase acepta la noción de un "nivel" en Entity Designer.Los niveles se puede activar y desactivar; están compuestos de: (1) Metadatos simples sobre la característica (2) Comandos que se pueden ejecutar en la característica (3) Extensiones de propiedades principales (4) Receptores de eventos simples para operaciones que se producen en el diseñador (5) Controladores de mecanismos de selección básicos</summary>
+    </member>
+    <member name="E:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.ChangeEntityDesignerSelection">
+      <summary>Cambie la selección en Entity Designer.El identificador de selección, en este caso, se corresponde con "EntityName", "AssociationName" o "EntityName.PropertyName".</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.IsSealed">
+      <summary>Determina donde pueden suscribirse las extensiones de propiedad de terceros para en este nivel</summary>
+      <returns>Devuelve <see cref="T:System.Boolean" />.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.Name">
+      <summary>Nombre del nivel</summary>
+      <returns>Devuelve <see cref="T:System.String" />.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnAfterLayerLoaded(System.Xml.Linq.XObject)">
+      <summary>Se desencadena después de cargar el nivel.</summary>
+      <param name="xObject">Objeto seleccionado en el diseñador activo o en el modelo conceptual si no se selecciona nada.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnAfterTransactionCommitted(System.Collections.Generic.IEnumerable{System.Tuple{System.Xml.Linq.XObject,System.Xml.Linq.XObjectChange}})">
+      <summary>Se desencadena cuando se confirma una transacción.En este caso, una extensión por niveles puede adoptar acciones básicas como recargar una ventana de herramientas propietaria.</summary>
+      <param name="xmlChanges">Lista de cambios realizados durante la transacción.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnBeforeLayerUnloaded(System.Xml.Linq.XObject)">
+      <summary>Se desencadena antes de que se descargue el nivel.</summary>
+      <param name="conceptualModelXObject">Modelo conceptual.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnSelectionChanged(System.Xml.Linq.XObject)">
+      <summary>Se desencadena cuando se cambia la selección en la superficie del diseñador</summary>
+      <param name="selection">Objeto seleccionado en el diseñador activo o en el modelo conceptual.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.Properties">
+      <summary>Extensiones de propiedad centrales que se suscriben automáticamente a esta característica.</summary>
+      <returns>Devuelve <see cref="T:System.Collections.Generic.IList`1" />.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.ServiceProvider">
+      <summary>Un nivel que proporciona su propio proveedor de servicios para fines de selección.Actualmente la limitación es que un nivel solo puede ofrecer un proveedor de servicios hospedado.</summary>
+      <returns>Devuelve <see cref="T:System.IServiceProvider" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension">
+      <summary>Expone métodos para convertir un formato de archivo personalizado a y del formato de archivo .edmx que se puede leer en Entity Data Model Designer.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnAfterFileLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>Define funcionalidad personalizada para cargar un archivo con un formato personalizado y convertirlo a un formato .edmx.</summary>
+      <param name="context">Proporciona información sobre el archivo y el proyecto.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnBeforeFileSaved(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>Define funcionalidad personalizada para convertir un archivo .edmx en un archivo con un formato personalizado antes de guardarlo.</summary>
+      <param name="context">Proporciona información sobre el archivo y el proyecto.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension">
+      <summary>Expone métodos para personalizar la generación de archivos .edmx.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelGenerated(Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext)">
+      <summary>Define la funcionalidad personalizada que se ejecuta después de que el Asistente para Entity Data Model genera un archivo .edmx.</summary>
+      <param name="context">Proporciona información sobre el archivo y el proyecto.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelUpdated(Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext)">
+      <summary>Define la funcionalidad que se ejecuta después de que el Asistente para actualizar modelo actualiza un archivo .edmx.</summary>
+      <param name="context">Proporciona información sobre el archivo y el proyecto.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension">
+      <summary>Expone métodos para extender los procesos de carga y guardado de los archivos .edmx.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnAfterModelLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>Define la funcionalidad para extender el proceso por el cual Entity Data Model Designer carga un archivo .edmx.</summary>
+      <param name="context">Proporciona información sobre el archivo y el proyecto de Visual Studio.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnBeforeModelSaved(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>Define la funcionalidad para extender el proceso mediante el cual Entity Data Model Designer guarda un archivo .edmx.</summary>
+      <param name="context">Proporciona información sobre el archivo y el proyecto.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext">
+      <summary>Proporciona información sobre los archivos y el proyecto a las extensiones de Visual Studio que habilitan la carga y el guardado de formatos de archivo personalizados.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.CurrentDocument">
+      <summary>Devuelve el documento .edmx una vez convertido de un formato de archivo personalizado.</summary>
+      <returns>Documento .edmx una vez convertido de un formato de archivo personalizado.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.Errors">
+      <summary>Lista de errores que se pueden mostrar en la Lista de errores de Visual Studio al cargar un formato de archivo personalizado y convertirlo en un formato de archivo personalizado.</summary>
+      <returns>Lista de errores que se pueden mostrar en la Lista de errores de Visual Studio al cargar un formato de archivo personalizado y convertirlo en un formato de archivo personalizado.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.FileInfo">
+      <summary>Devuelve información sobre el archivo personalizado que se está procesando en Entity Data Model Designer.</summary>
+      <returns>Información sobre el archivo personalizado que se está procesando en Entity Data Model Designer.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.OriginalDocument">
+      <summary>Devuelve el documento original tal y como se abrió o guardó en Entity Designer.</summary>
+      <returns>El documento original tal y como se abrió o guardó en Entity Designer.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.ProjectItem">
+      <summary>Elemento del proyecto actual de Visual Studio.</summary>
+      <returns>Elemento del proyecto actual de Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute">
+      <summary>Especifica una extensión de archivo personalizado que Entity Data Model Designer puede cargar o guardar.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.#ctor(System.String)">
+      <summary>Crea una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute" />.</summary>
+      <param name="fileExtension">Extensión de los archivos personalizados que Entity Data Model Designer puede cargar y guardar.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.FileExtension">
+      <summary>Extensión de los archivos personalizados que Entity Data Model Designer puede cargar y guardar.</summary>
+      <returns>Extensión de los archivos personalizados que Entity Data Model Designer puede cargar y guardar.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext">
+      <summary>Proporciona información sobre los archivos y el proyecto a las extensiones de Visual Studio que extienden el proceso de generación del archivo .edmx del Asistente para Entity Data Model.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.CurrentDocument">
+      <summary>Representa el documento .edmx que se va a modificar.</summary>
+      <returns>Representa el documento .edmx que se va a modificar.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.GeneratedDocument">
+      <summary>Representa el archivo .edmx original generado por el Asistente para Entity Data Model.</summary>
+      <returns>Representa el archivo .edmx original generado por el Asistente para Entity Data Model.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.WizardKind">
+      <summary>El asistente que inició la generación del archivo .edmx o el proceso de actualización.</summary>
+      <returns>El asistente que inició la generación del archivo .edmx o el proceso de actualización.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext">
+      <summary>Proporciona información sobre los archivos y el proyecto a las extensiones de Visual Studio que extienden las operaciones de carga y almacenamiento de archivos .edmx por parte de Entity Data Model Designer.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.CurrentDocument">
+      <summary>Archivo .edmx actual sobre el que pueden operar las extensiones de Visual Studio.</summary>
+      <returns>Archivo .edmx actual sobre el que pueden operar las extensiones de Visual Studio.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.Errors">
+      <summary>Lista de errores que se pueden mostrar en la Lista de errores de Visual Studio cuando Entity Data Model Designer carga o guarda archivos .edmx.</summary>
+      <returns>Lista de errores que se pueden mostrar en la Lista de errores de Visual Studio cuando Entity Data Model Designer carga o guarda archivos .edmx.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.OriginalDocument">
+      <summary>Archivo .edmx original cargado en memoria.</summary>
+      <returns>Archivo .edmx original cargado en memoria.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.ProjectItem">
+      <summary>Elemento del proyecto actual de Visual Studio.</summary>
+      <returns>Elemento del proyecto actual de Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext">
+      <summary>Proporciona información sobre los archivos y el proyecto a las extensiones de Visual Studio que agregan propiedades personalizadas a objetos visibles en el Entity Data Model Designer o el Explorador de modelos.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.CreateChangeScope(System.String)">
+      <summary>Crea un objeto <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> y establece la cadena que aparecerá en las listas desplegables para los botones Deshacer y Rehacer en Visual Studio.</summary>
+      <returns>Instancia de un EntityDesignerChangeScope</returns>
+      <param name="undoRedoDescription">Cadena que aparecerá en las listas desplegables para los botones Deshacer y Rehacer en Visual Studio.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.ProjectItem">
+      <summary>Elemento del proyecto actual de Visual Studio.</summary>
+      <returns>Elemento del proyecto actual de Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext">
+      <summary>Proporciona información acerca de los archivos y del proyecto a las extensiones de Visual Studio que extienden el proceso de actualización del archivo .edmx del Asistente para actualizar modelo.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.#ctor">
+      <summary>Inicializa una nueva instancia de la clase <see cref="T:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.OriginalDocument">
+      <summary>Representa el archivo .edmx antes de que se haya ejecutado el Asistente para actualizar modelo.</summary>
+      <returns>Representa el archivo .edmx antes de que se haya ejecutado el Asistente para actualizar modelo.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.ProjectItem">
+      <summary>Elemento del proyecto actual de Visual Studio.</summary>
+      <returns>Elemento del proyecto actual de Visual Studio.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.UpdateModelDocument">
+      <summary>Representa el archivo .edmx después de que se haya ejecutado el Asistente para actualizar modelo.</summary>
+      <returns>Representa el archivo .edmx después de que se haya ejecutado el Asistente para actualizar modelo.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardKind">
+      <summary>Enumeración que proporciona información sobre el asistente que inició un proceso de generación o actualización del archivo .edmx.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.Generate">
+      <summary>Indica que el Asistente para Entity Data Model inició un proceso de generación del archivo .edmx.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.None">
+      <summary>Indica que ningún asistente inició el proceso de modificación del archivo .edmx.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.UpdateModel">
+      <summary>Indica que el Asistente para actualizar modelo inició un proceso de actualización del archivo .edmx.</summary>
+    </member>
+  </members>
+</doc>

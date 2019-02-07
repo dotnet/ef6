@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="d:\bt\4668889\bins\retail\i386\Microsoft.Data.Entity.Design.DataSourceWizardExtension.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="it-IT" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.DataSourceWizardExtension.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+      <Item ItemId=";EdmDesignerFileNameFormat" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Model{0}.edmx]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked} {NoLocRule}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";LaunchEntityDesignerWizardErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception of type "{0}" occurred while attempting to launch Entity Data Model Wizard. ]D;]A;The exception message is: ]D;]A;{1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Si è verificata un'eccezione di tipo "{0}" durante il tentativo di avviare la Procedura guidata Entity Data Model. ]D;]A;Messaggio dell'eccezione: ]D;]A;{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";LaunchingEntityDataModelWizardMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Launching Entity Data Model Wizard, please wait ...]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Avvio della Procedura guidata Entity Data Model in corso. Attendere...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";StatusLabelAccessibleName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[StatusLabel]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[StatusLabel]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";WizardEngineDescription" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";WizardEngineDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Data Model]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Entity Data Model]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";WizardLaunchPageTitle" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity Data Model Wizard]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Procedura guidata Entity Data Model]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:02Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[11.2.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DataSourceWizardExtension.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.DataSourceWizardExtension.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DataSourceWizardExtension]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.DataSourceWizardExtension]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_New" />
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[11.2.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DataSourceWizardExtension.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" Confidence="100">
+          <Val><![CDATA[© Microsoft Corporation. Tutti i diritti sono riservati.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 2" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.DataSourceWizardExtension.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[11.2.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+</LCX>

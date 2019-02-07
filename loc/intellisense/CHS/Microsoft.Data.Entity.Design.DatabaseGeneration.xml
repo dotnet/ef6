@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.DatabaseGeneration</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.csdlInputName">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ddlOutputName">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingMslInputName">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingSsdlInputName">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.mslOutputName">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ssdlOutputName">
+      <summary>此 API 支持实体框架基础结构，但不适合直接在代码中使用。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension">
+      <summary>为 Microsoft.Data.Entity.Design.DatabaseGeneration、Microsoft.Data.Entity.Design.DatabaseGeneration.Activities 和 Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators 命名空间中的类提供帮助器方法，用于生成和验证 ItemCollections。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateEdmItemCollection(System.String,System.Version)">
+      <summary>将概念架构定义语言 (CSDL) 的字符串表示形式转换为 <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmItemCollection" /> 并进行验证。</summary>
+      <returns>
+        <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmItemCollection" /> 形式的 CSDL。</returns>
+      <param name="csdl">字符串形式的概念模型元数据。</param>
+      <param name="targetFrameworkVersion">实体框架的目标版本。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateStoreItemCollection(System.String,System.Version,System.Data.Entity.Infrastructure.DependencyResolution.IDbDependencyResolver,System.Boolean)">
+      <summary>将存储架构定义语言 (SSDL) 的字符串表示形式转换为 <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> 并进行验证。</summary>
+      <returns>
+        <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> 形式的 SSDL。</returns>
+      <param name="ssdl">字符串形式的 SSDL。</param>
+      <param name="targetFrameworkVersion">实体框架的目标版本。</param>
+      <param name="resolver">用于加载所需依赖项的依赖项解析程序。</param>
+      <param name="catchThrowNamingConflicts">确定在生成的 <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> 中存在命名冲突时，是否应引发异常。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateStoreItemCollection(System.String,System.Version,System.Data.Entity.Infrastructure.DependencyResolution.IDbDependencyResolver,System.Collections.Generic.IList{System.Data.Entity.Core.Metadata.Edm.EdmSchemaError}@)">
+      <summary>将存储架构定义语言 (SSDL) 的字符串表示形式转换为 <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />。</summary>
+      <returns>
+        <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> 形式的 SSDL。</returns>
+      <param name="ssdl">字符串形式的 SSDL。</param>
+      <param name="targetFrameworkVersion">实体框架的目标版本。</param>
+      <param name="resolver">用于加载所需依赖项的依赖项解析程序。</param>
+      <param name="edmErrors">一个输出参数，包含生成 StoreItemCollection 期间发生的错误的列表。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.GetInvalidCharsException(System.String)">
+      <summary>如果存储架构定义语言 (SSDL) 中提供的名称包含对于目标数据库无效的字符，则数据库生成进程将返回本地化异常。</summary>
+      <returns>存储架构定义语言 (SSDL) 中提供的名称包含对于目标数据库无效的字符时，从数据库生成进程返回的本地化异常</returns>
+      <param name="userInput">包含无效字符的对象名称。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag">
+      <summary>提供在 EdmParameterBag.ParameterName 枚举中定义的参数的值。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.#ctor(System.Threading.SynchronizationContext,Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader,System.Version,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+      <summary>用于 EdmParameterBag 的构造函数</summary>
+      <param name="syncContext">表示 Visual Studio 中用户界面线程的状态的可选 SynchronizationContext。</param>
+      <param name="assemblyLoader">用于解析和加载给定名称的程序集的可选 IAssemblyLoader。</param>
+      <param name="targetVersion">实体框架的目标版本。</param>
+      <param name="providerInvariantName">提供程序的固定名称。</param>
+      <param name="providerManifestToken">提供程序的清单标记。</param>
+      <param name="providerConnectionString">可选提供程序连接字符串。</param>
+      <param name="databaseSchemaName">生成的数据库的架构名称。</param>
+      <param name="databaseName">生成的数据库的名称。</param>
+      <param name="ddlTemplatePath">用于生成数据定义语言 (DDL) 的文本模板的路径。</param>
+      <param name="edmxPath">从其中启动生成数据库向导的 .edmx 文件的可选路径。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.GetParameter``1(Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName)">
+      <summary>返回指定 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> 的参数的值。</summary>
+      <returns>指定 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> 的参数的值。</returns>
+      <param name="parameterName">参数名。</param>
+      <typeparam name="T">名为 parameterName 的参数的类型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName">
+      <summary>参数名称的枚举，这些参数名称由 Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators 命名空间中的类在从概念模型生成数据库时使用。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.AssemblyLoader">
+      <summary>IAssemblyLoader 参数对象的名称，该参数对象用于解析和加载给定名称的程序集。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseName">
+      <summary>生成的数据库的名称。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseSchemaName">
+      <summary>生成的数据库的架构名称。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DDLTemplatePath">
+      <summary>用于生成数据定义语言 (DDL) 的文本模板的路径。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.EdmxPath">
+      <summary>从其中启动生成数据库向导的 .edmx 文件的路径。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderConnectionString">
+      <summary>提供程序连接字符串。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderInvariantName">
+      <summary>提供程序的固定名称。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderManifestToken">
+      <summary>提供程序的清单标记。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.SynchronizationContext">
+      <summary>表示 Visual Studio 中用户界面线程的状态的 SynchronizationContext。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.TargetVersion">
+      <summary>实体框架的目标版本。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader">
+      <summary>解析工作流 OutputGenerators。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader.LoadAssembly(System.String)">
+      <summary>尝试加载程序集。</summary>
+      <returns>已解析的程序集引用。</returns>
+      <param name="assemblyName">要加载的程序集的名称。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions">
+      <summary>用于 MetadataWorkspace API 的扩展方法</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociations(System.Data.Entity.Core.Metadata.Edm.ItemCollection)">
+      <summary>检索此 ItemCollection 中所有 AssociationType 元素的可枚举集合</summary>
+      <returns>AssociationType 元素的列表。</returns>
+      <param name="itemCollection">ItemCollection。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociationSets(System.Data.Entity.Core.Metadata.Edm.ItemCollection)">
+      <summary>检索此 ItemCollection 中所有 AssociationSet 元素的可枚举集合</summary>
+      <returns>AssociationSet 元素的列表。</returns>
+      <param name="itemCollection">ItemCollection。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntitySets(System.Data.Entity.Core.Metadata.Edm.ItemCollection)">
+      <summary>检索此 ItemCollection 中所有 EntitySet 元素的可枚举集合</summary>
+      <returns>EntitySet 元素的列表。</returns>
+      <param name="itemCollection">ItemCollection。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntityTypes(System.Data.Entity.Core.Metadata.Edm.ItemCollection)">
+      <summary>检索此 ItemCollection 中所有 EntityType 元素的可枚举集合</summary>
+      <returns>EntityType 元素的列表。</returns>
+      <param name="itemCollection">ItemCollection。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllReferentialConstraints(System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+      <summary>检索此 SSDL/StoreItemCollection 中所有 ReferentialConstraints 的可枚举集合</summary>
+      <returns>ReferentialConstraints 的列表。</returns>
+      <param name="storeItemCollection">表示 SSDL 的 StoreItemCollection</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAssociation(System.Data.Entity.Core.Metadata.Edm.AssociationSet)">
+      <summary>返回 AssociationSet 中的关联</summary>
+      <returns>Association。</returns>
+      <param name="associationSet">AssociationSet。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetContainingTypes(System.Data.Entity.Core.Metadata.Edm.EntitySet,System.Data.Entity.Core.Metadata.Edm.ItemCollection)">
+      <summary>获取此 EntitySet 内的所有 EntityTypes</summary>
+      <returns>EntityTypes 的列表。</returns>
+      <param name="set">EntitySet</param>
+      <param name="itemCollection">包含 EntitySet 的 ItemCollection。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentEnd(System.Data.Entity.Core.Metadata.Edm.AssociationType)">
+      <summary>考虑到优先级顺序为 1 的以下规则，检索此关联的依赖端。如果存在针对关联定义的引用约束，将返回 DependentEnd。2.如果关联的多重性为 1:1 并且对第一个关联端定义了 OnDelete='Cascade'，则返回另一个关联端。如果没有对第一个关联端定义 OnDelete='Cascade'，则返回第一个关联端。3.在 1:* 或 0..1:* 关联中，这将返回以 * 多重性结尾的关联端。4.在 0..1:1 关联中，这将返回以 0..1 多重性结尾的关联端。</summary>
+      <returns>依赖端。</returns>
+      <param name="association">关联。</param>
+      <exception cref="T:System.InvalidOperationException">如果此关联为 *:*</exception>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentProperty(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint)">
+      <summary>如果这是参与引用约束的主体端的属性，则此方法将返回依赖端上的相应属性。</summary>
+      <returns>引用约束的依赖端上的属性，该属性与主体端上的属性对应</returns>
+      <param name="property">引用约束的主体端上的属性</param>
+      <param name="refConstraint">引用约束。</param>
+      <exception cref="T:System.ArgumentNullException">如果 ref 约束为 null</exception>
+      <exception cref="T:System.InvalidOperationException">如果在引用约束的主体端上的属性中找不到该属性</exception>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd1(System.Data.Entity.Core.Metadata.Edm.AssociationType)">
+      <summary>返回指定 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" /> 的 AssociationEndMembers 属性中的第一个 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />。</summary>
+      <returns>指定 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" /> 的 AssociationEndMembers 属性中的第一个 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />。</returns>
+      <param name="association">概念模型中的关联。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd2(System.Data.Entity.Core.Metadata.Edm.AssociationType)">
+      <summary>返回指定 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" /> 的 AssociationEndMembers 属性中的第二个 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />。</summary>
+      <returns>指定 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" /> 的 AssociationEndMembers 属性中的第二个 <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />。</returns>
+      <param name="association">概念模型中的关联。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityContainerName(System.Data.Entity.Core.Metadata.Edm.ItemCollection)">
+      <summary>检索此 ItemCollection 中 &amp;amp;lt;EntityContainer/&amp;amp;gt; 元素的“Name”特性。</summary>
+      <returns>实体容器的名称。</returns>
+      <param name="itemCollection">ItemCollection。</param>
+      <exception cref="T:System.IO.InvalidDataException">如果找不到 EntityContainer 元素</exception>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityType(System.Data.Entity.Core.Metadata.Edm.RelationshipEndMember)">
+      <summary>检索 AssociationEnd 上的 EntityType。</summary>
+      <returns>EntityType。</returns>
+      <param name="end">AssociationEnd。</param>
+      <exception cref="T:System.InvalidOperationException">如果在分析此端的 TypeUsage 时出现错误</exception>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Entity.Core.Metadata.Edm.AssociationEndMember)">
+      <summary>获取直接在 AssociationEnd 内的 EntityType 上声明的键属性</summary>
+      <returns>键属性列表。</returns>
+      <param name="end">AssociationEnd。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Entity.Core.Metadata.Edm.EntityType)">
+      <summary>获取直接在 EntityType 上声明的键属性</summary>
+      <returns>键属性列表。</returns>
+      <param name="entityType">EntityType。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetNamespace(System.Data.Entity.Core.Metadata.Edm.ItemCollection)">
+      <summary>通过检查首先找到的 StructuralType 检索此 ItemCollection 的命名空间</summary>
+      <returns>如果没有用于检索该命名空间的 StructuralTypes，则命名空间将作为字符串或 null</returns>
+      <param name="itemCollection">ItemCollection。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOnDelete(System.Data.Entity.Core.Metadata.Edm.AssociationEndMember)">
+      <summary>这将获取 AssociationEnd 1 上 OnDelete 元素的值。如果该端和其同级端将“Cascade”指定为 2，将返回“None”。如果该端的多重性为 Many (*)，将返回“None”</summary>
+      <returns>OnDelete 元素的值。</returns>
+      <param name="end">AssociationEnd。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOtherEnd(System.Data.Entity.Core.Metadata.Edm.AssociationType,System.Data.Entity.Core.Metadata.Edm.AssociationEndMember)">
+      <summary>假定此关联的 AssociationEndMember，则此方法将返回参与关联的其他端</summary>
+      <returns>另一端。</returns>
+      <param name="association">Association。</param>
+      <param name="end">AssociationEndMember。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetPrincipalEnd(System.Data.Entity.Core.Metadata.Edm.AssociationType)">
+      <summary>检索此关联的主体端</summary>
+      <returns>主体端。</returns>
+      <param name="association">关联。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetRootOrSelf(System.Data.Entity.Core.Metadata.Edm.EntityType)">
+      <summary>在没有基类型时返回此 EntityType。否则，返回最顶层的基类型。</summary>
+      <returns>最顶层的基类型。</returns>
+      <param name="entityType">EntityType。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetSchemaName(System.Data.Entity.Core.Metadata.Edm.EntitySet)">
+      <summary>为此 EntitySet 检索架构名称，存储在其 MetadataProperties 中</summary>
+      <returns>架构名称。</returns>
+      <param name="entitySet">EntitySet。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreGeneratedPatternValue(System.Data.Entity.Core.Metadata.Edm.EdmMember,System.Version,System.Data.Entity.Core.Metadata.Edm.DataSpace)">
+      <summary>在提供目标版本和 DataSpace 的情况下，获取 EdmProperty 的 StoreGeneratedPattern 值</summary>
+      <returns>StoreGeneratedPattern 值之一；如果特性或值不存在，则为 String.Empty</returns>
+      <param name="property">EdmProperty。</param>
+      <param name="targetVersion">用于正确查找 EdmProperty 中的 StoreGeneratedPattern 值</param>
+      <param name="dataSpace">EdmProperty 位于其中的 DataSpace（CSDL 或 SSDL）</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreType(System.Data.Entity.Core.Metadata.Edm.EdmMember,System.Data.Entity.Core.Common.DbProviderManifest)">
+      <summary>通过 DbProviderManifest 从 EdmMember 的 EdmType 获取 StoreType</summary>
+      <returns>StoreType。</returns>
+      <param name="edmMember">EdmMember。</param>
+      <param name="providerManifest">DbProviderManifest。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetTableName(System.Data.Entity.Core.Metadata.Edm.EntitySet)">
+      <summary>为此 EntitySet 检索表名称，存储在其 MetadataProperties 中</summary>
+      <returns>表名称。</returns>
+      <param name="entitySet">EntitySet。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.InferSsdlFacetsForCsdlProperty(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Core.Common.DbProviderManifest)">
+      <summary>从 CSDL 属性推断 SSDL 方面</summary>
+      <returns>方面的列表。</returns>
+      <param name="csdlProperty">CSDL 属性。</param>
+      <param name="providerManifest">要使用的 DbProviderManifest。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsComplexProperty(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>确定此属性是否为 ComplexProperty；也就是说，其类型是否为 ComplexType</summary>
+      <returns>如果属性为复杂属性，则为 true；否则为 false。</returns>
+      <param name="property">要测试的属性。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsDerivedType(System.Data.Entity.Core.Metadata.Edm.EntityType)">
+      <summary>确定指定实体类型是否为派生类型。</summary>
+      <returns>如果指定实体类型具有基类型，则为 True；否则为 false。</returns>
+      <param name="entityType">概念模型中的实体类型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsJoinTable(System.Data.Entity.Core.Metadata.Edm.EntityType,System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+      <summary>如果为 :1 时，我们可推断某个表是 SSDL 中的连接表。有两个源自该表的关联 2.表上的两个端是 * 3.关联上的其他端是 1 4.表中的属性数等于两个关联的其他端上所有键属性的总和 5.表中的所有属性都为键属性</summary>
+      <returns>如果指定 EntityType 为联接表，则为 true；否则为 false。</returns>
+      <param name="entityType">要测试的 EntityType。</param>
+      <param name="store">包含 EntityType 的 StoreItemCollection。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsManyToMany(System.Data.Entity.Core.Metadata.Edm.AssociationType)">
+      <summary>确定某个关联的多重性是否为 *:*</summary>
+      <returns>如果关联的多重性为 *:*，则为 true；否则为 false</returns>
+      <param name="association">关联。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsPKToPK(System.Data.Entity.Core.Metadata.Edm.AssociationType)">
+      <summary>确定某个关联是否只跨主键</summary>
+      <returns>如果关联的多重性为 1:1、1:0..1 或 0..1:0..1，则为 true；否则为 false</returns>
+      <param name="association">关联。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ToStoreType(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>将某一 EDM 类型转换为 SQL 类型，并且考虑方面。请注意，在从 DbProviderManifest (FixedLength, Unicode) 获取某些方面时已考虑这些方面</summary>
+      <returns>相应 SQL 类型。</returns>
+      <param name="property">从其确定 EDM 类型的属性。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity">
+      <summary>根据概念模型生成存储模型和映射信息的 Windows 工作流活动。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput">
+      <summary>用于指定概念架构定义语言 (CSDL) 的 Windows 工作流 <see cref="T:System.Activities.InArgument`1" />，存储架构定义语言 (SSDL) 和映射规范语言 (MSL) 是从该 CSDL 语言生成的。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutput">
+      <summary>Windows 工作流 <see cref="T:System.Activities.OutArgument`1" />，用于指定从 CsdlInput 属性中的概念架构定义语言 (CSDL) 生成的映射规范语言 (MSL)。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutputGeneratorType">
+      <summary>用于从 CsdlInput 属性中的概念架构定义语言 (CSDL) 生成映射规范语言 (MSL) 的类型的程序集限定名称。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.SsdlOutput">
+      <summary>Windows 工作流 <see cref="T:System.Activities.OutArgument`1" />，用于指定从 CsdlInput 属性中的概念架构定义语言 (CSDL) 生成的存储架构定义语言 (SSDL)。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl">
+      <summary>根据提供的概念架构定义语言 (CSDL) 生成映射规范语言 (MSL)。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>根据提供的概念架构定义语言 (CSDL) 生成映射规范语言 (MSL)。</summary>
+      <returns>基于提供的概念架构定义语言 (CSDL) 的类型为 T 的映射规范语言 (MSL)。</returns>
+      <param name="owningActivity">当前执行的活动。</param>
+      <param name="context">包含工作流状态的活动上下文。</param>
+      <param name="inputs">包含传入的 CSDL。</param>
+      <typeparam name="T">活动输出的类型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl">
+      <summary>根据提供的概念架构定义语言 (CSDL) 生成存储架构定义语言 (SSDL)。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>根据提供的概念架构定义语言 (CSDL) 生成存储架构定义语言 (SSDL)。</summary>
+      <returns>基于提供的概念架构定义语言 (CSDL) 的类型为 T 的存储架构定义语言 (SSDL)。</returns>
+      <param name="owningActivity">当前执行的活动。</param>
+      <param name="context">包含工作流状态的活动上下文。</param>
+      <param name="inputs">包含传入的 CSDL。</param>
+      <typeparam name="T">活动输出的类型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput">
+      <summary>由在代码中执行批量转换的 OutputGeneratorActivities 使用的接口</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>为指定 OutputGeneratorActivity 中的输入生成输出。</summary>
+      <returns>类型为 T 的输出，用于指定的 OutputGeneratorActivity 中的输入。</returns>
+      <param name="owningActivity">要调用此方法的活动。</param>
+      <param name="context">包含工作流状态的活动上下文。</param>
+      <param name="inputs">活动的键/值对形式的输入。</param>
+      <typeparam name="T">活动输出的类型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity">
+      <summary>允许通过代码将某个格式转换为另一种格式的抽象的基础 WorkflowElement</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>根据 NativeActivityContext 中指定的输入生成提供给指定 NativeActivityContext 的输出。</summary>
+      <param name="context">当前活动的状态。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorOutput">
+      <summary>指定输出生成器的程序集限定的类型名。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorType">
+      <summary>一个 <see cref="T:System.Activities.InArgument`1" />，用于指定输出生成器的程序集限定的类型名。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.ProcessOutputGenerator``1(System.String,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>使用指定的输出生成器类型名返回由输出生成器生成的输出。</summary>
+      <returns>输出生成器使用指定的输出生成器类型名生成的输出。</returns>
+      <param name="outputGeneratorTypeName">输出生成器的类型的名称。</param>
+      <param name="context">当前活动的状态。</param>
+      <param name="inputs">活动的键/值对形式的输入。</param>
+      <typeparam name="T">输出的类型。</typeparam>
+    </member>
+  </members>
+</doc>

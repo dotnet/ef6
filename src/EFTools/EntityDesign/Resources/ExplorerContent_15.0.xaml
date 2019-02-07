@@ -259,7 +259,7 @@
                         <MultiBinding Converter="{StaticResource ThemedImageSourceConverter}">
                           <Binding Path="Icon" Mode="OneWay" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type xdb:ExplorerTreeViewItem}}" />
                           <Binding Path="(vsShell11:ImageThemingUtilities.ImageBackgroundColor)" RelativeSource="{RelativeSource Self}" />
-                          <Binding Source="{x:Static vsShell11:Boxes.BooleanTrue}"/>
+                          <Binding Source="{StaticResource BooleanTrueValue}"/>
                         </MultiBinding>
                       </Image.Source>
                     </Image>
@@ -735,7 +735,7 @@
             <MultiBinding Converter="{StaticResource ThemedImageSourceConverter}">
               <Binding Source="{StaticResource SearchIcon}" />
               <Binding Path="(vsShell11:ImageThemingUtilities.ImageBackgroundColor)" RelativeSource="{RelativeSource Self}" />
-              <Binding Source="{x:Static vsShell11:Boxes.BooleanTrue}"/>
+              <Binding Source="{StaticResource BooleanTrueValue}"/>
             </MultiBinding>
           </Image.Source>
         </Image>

@@ -1,0 +1,401 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.Extensibility</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ChangeEntityDesignerSelectionEventArgs">
+      <summary>エンティティ デザイナーのエクステンダーがプログラムによって選択を支援できるようにする EventArgs 型を定義します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ChangeEntityDesignerSelectionEventArgs.#ctor(System.IServiceProvider,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>ChangeEntityDesignerSelectionEventArgs をインスタンス化します。この場合、「SelectionIdentifier」は、ルートからの選択の階層に対応する区切られた文字列です。たとえば、エンティティ型「SomeEntity」のプロパティ「SomeProperty」を選択するには、SelectionIdentifier は SomeProperty.SomeEntity となります。</summary>
+      <param name="layerServiceProvider">レイヤー拡張機能によって提供されるサービス プロバイダー。</param>
+      <param name="selectionIdentifiers">エンティティ デザイナーでの選択を支援する文字列識別子のセット。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope">
+      <summary>Visual Studio の [元に戻す] および [やり直し] ボタンで元に戻したりやり直したりすることができる作業単位を作成します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Complete">
+      <summary>変更スコープ内のすべての操作をコミットします。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Dispose">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> クラスの現在のインスタンスによって使用されているすべてのリソースを解放します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Dispose(System.Boolean)">
+      <summary>この基本クラスの処理は実行されません。このクラスから継承し、解放するリソースがあるクラスでオーバーライドされる必要があります。</summary>
+      <param name="disposing">Dispose() から呼び出す場合は true。ファイナライザーから呼び出す場合は false。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Finalize">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> クラスのファイナライザー。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute">
+      <summary>ユーザーが選択した場合に、注釈設定済みクラスの <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出す Entity Data Model デザイナーまたはモデル ブラウザーのオブジェクトを指定します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.#ctor(Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute" /> クラスの新しいインスタンスを生成します。</summary>
+      <param name="entityDesignerSelection">ユーザーが選択した場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" /> メソッドの呼び出しをトリガーする Entity Data Model デザイナーまたはモデル ブラウザーのオブジェクト。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.EntityDesignerSelection">
+      <summary>ユーザーが選択した場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" /> メソッドの呼び出しをトリガーする Entity Data Model デザイナーまたはモデル ブラウザーのオブジェクト。</summary>
+      <returns>選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" /> メソッドの呼び出しをトリガーする Entity Data Model デザイナーのオブジェクト。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute">
+      <summary>拡張機能が特定のレイヤーに属すことを指定するために使用される属性。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute.#ctor(System.String)">
+      <summary>特定のレイヤー名を指定して EntityDesignerLayerAttribute を作成します。</summary>
+      <param name="layerName">レイヤー (拡張機能の論理コレクション) を指定する一意の名前</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute.LayerName">
+      <summary>レイヤー (拡張機能の論理コレクション) を指定する一意の名前</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで選択された場合に、注釈設定済みクラスの <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すオブジェクト型を指定する際に使用される列挙型。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociation">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで概念モデルのアソシエーションが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociationSet">
+      <summary>モデル ブラウザーで概念モデルのアソシエーション セットが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexProperty">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで概念モデルの複合プロパティが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexType">
+      <summary>モデル ブラウザーで概念モデルの複合型が選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityContainer">
+      <summary>モデル ブラウザーで概念モデルのエンティティ コンテナーが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntitySet">
+      <summary>モデル ブラウザーで概念モデルのエンティティ セットが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityType">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで概念モデルのエンティティ型が選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImport">
+      <summary>モデル ブラウザーで概念モデルの関数インポートが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImportParameter">
+      <summary>モデル ブラウザーで概念モデルの関数インポート パラメーターが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelNavigationProperty">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで概念モデルのナビゲーション プロパティが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelProperty">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで概念モデルのプロパティが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.DesignerSurface">
+      <summary>Entity Data Model デザイナーで Entity Data Model デザイナー画面が選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelAssociation">
+      <summary>モデル ブラウザーでストレージ モデルのアソシエーションが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityContainer">
+      <summary>モデル ブラウザーでストレージ モデルのエンティティ コンテナーが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityType">
+      <summary>モデル ブラウザーでストレージ モデルのエンティティ型が選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunction">
+      <summary>モデル ブラウザーでストレージ モデルの関数が選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunctionParameter">
+      <summary>モデル ブラウザーでストレージ モデルの関数パラメーターが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelProperty">
+      <summary>モデル ブラウザーでストレージ モデルのプロパティが選択された場合に、<see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> メソッドを呼び出すように指定します。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" />、<see cref="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" />、<see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" />、および <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" /> クラスの基本クラスです。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.EntityFrameworkVersion">
+      <summary>対象とする Entity Framework のバージョン。</summary>
+      <returns>対象とする Entity Framework のバージョン。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.Project">
+      <summary>現在の Visual Studio プロジェクト。</summary>
+      <returns>現在の Visual Studio プロジェクト。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError">
+      <summary>Entity Data Model デザイナーの機能を拡張する Visual Studio の拡張機能のカスタム エラー情報をカプセル化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> の新しいインスタンスを生成します。</summary>
+      <param name="message">エラーを説明するメッセージ。</param>
+      <param name="errorCode">エラーに関連付けられているエラー コード。</param>
+      <param name="severity">エラーの重大度。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity,System.Int32,System.Int32)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> の新しいインスタンスを生成します。</summary>
+      <param name="message">エラーを説明するメッセージ。</param>
+      <param name="errorCode">エラーに関連付けられているエラー コード。</param>
+      <param name="severity">エラーの重大度。</param>
+      <param name="line">エラーが発生した入力または出力ドキュメントの行。</param>
+      <param name="column">エラーが発生した入力または出力ドキュメントの列。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Column">
+      <summary>エラーが発生した入力または出力ドキュメントの列。</summary>
+      <returns>エラーが発生した入力または出力ドキュメントの列。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.ErrorCode">
+      <summary>エラーに関連付けられているエラー コード。</summary>
+      <returns>エラーに関連付けられているエラー コード。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Line">
+      <summary>エラーが発生した入力または出力ドキュメントの行。</summary>
+      <returns>エラーが発生した入力または出力ドキュメントの行。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Message">
+      <summary>エラーを説明するメッセージ。</summary>
+      <returns>エラーを説明するメッセージ。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Severity">
+      <summary>エラーの重大度。</summary>
+      <returns>エラーの重大度。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> の重大度を示す列挙型。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Error">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> の重大度が Error であることを示します。この重大度を持つ <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> は、Visual Studio の [エラー一覧] にエラーとして表示されます。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Message">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> の重大度が Message であることを示します。この重大度を持つ <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> は、Visual Studio の [エラー一覧] にメッセージとして表示されます。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Warning">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> の重大度が Warning であることを示します。この重大度を持つ <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> は、Visual Studio の [エラー一覧] に警告として表示されます。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーでユーザーに表示できるオブジェクトにプロパティを追加するメソッドを公開します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで選択されたオブジェクトの新しいプロパティを作成します。</summary>
+      <returns>Visual Studio の [プロパティ] ウィンドウにパブリック プロパティが表示されるオブジェクトです。詳細については、「<see cref="T:System.Windows.Forms.PropertyGrid" />」を参照してください。</returns>
+      <param name="xElement">Entity Data Model デザイナーまたはモデル ブラウザーで選択されたオブジェクトを定義する .edmx ファイルの要素。</param>
+      <param name="context">ファイルおよびプロジェクトに関する情報を提供します。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer">
+      <summary>このクラスにより、エンティティ デザイナーにおける「レイヤー」という概念が実現されます。レイヤーは、無効にしたり有効にしたりできます。レイヤーは次のもので構成されています。(1) 機能に関する簡単なメタデータ、(2) 機能に対して実行できるコマンド、(3) コア プロパティ拡張、(4) デザイナーで実行される操作の簡単なイベント シンク、(5) 基本的な選択メカニズム ドライバー。</summary>
+    </member>
+    <member name="E:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.ChangeEntityDesignerSelection">
+      <summary>エンティティ デザイナーにおける選択を変更します。ここで、選択の識別子は「EntityName」、「AssociationName」、または「EntityName.PropertyName」に対応します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.IsSealed">
+      <summary>サードパーティのプロパティ拡張がこのレイヤーを受信登録できる場所を決定します。</summary>
+      <returns>
+        <see cref="T:System.Boolean" /> を返します。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.Name">
+      <summary>レイヤーの名前</summary>
+      <returns>
+        <see cref="T:System.String" /> を返します。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnAfterLayerLoaded(System.Xml.Linq.XObject)">
+      <summary>レイヤーが読み込まれた後に実行されます。</summary>
+      <param name="xObject">アクティブなデザイナーで選択されているオブジェクト、または何も選択されていない場合は概念モデル。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnAfterTransactionCommitted(System.Collections.Generic.IEnumerable{System.Tuple{System.Xml.Linq.XObject,System.Xml.Linq.XObjectChange}})">
+      <summary>トランザクションがコミットされると実行されます。この場合、レイヤー拡張は、所有しているツール ウィンドウの再読み込みなどの基本的な処理を実行できます。</summary>
+      <param name="xmlChanges">トランザクション中に行われる変更のリスト。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnBeforeLayerUnloaded(System.Xml.Linq.XObject)">
+      <summary>レイヤーがアンロードされる前に実行されます。</summary>
+      <param name="conceptualModelXObject">概念モデル。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnSelectionChanged(System.Xml.Linq.XObject)">
+      <summary>デザイナー画面での選択が変更されると実行されます。</summary>
+      <param name="selection">アクティブなデザイナーで選択されているオブジェクト、または概念モデル。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.Properties">
+      <summary>この機能を自動的に定期受信しているコア プロパティ拡張。</summary>
+      <returns>
+        <see cref="T:System.Collections.Generic.IList`1" /> を返します。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.ServiceProvider">
+      <summary>レイヤーは、選択のために独自のサービス プロバイダーを提供できます。現時点での制限は、レイヤーは 1 つの場所に配置されるサービス プロバイダーしか提供できないことです。</summary>
+      <returns>
+        <see cref="T:System.IServiceProvider" /> を返します。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension">
+      <summary>Entity Data Model デザイナーによって読み取り可能な .edmx ファイル形式とカスタム ファイル形式を相互に変換するメソッドを公開します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnAfterFileLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>カスタム形式のファイルの読み込みと .edmx 形式への変換を行うカスタム機能を定義します。</summary>
+      <param name="context">ファイルおよびプロジェクトに関する情報を提供します。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnBeforeFileSaved(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>ファイルを保存する前に .edmx ファイルをカスタム形式のファイルに変換するカスタム機能を定義します。</summary>
+      <param name="context">ファイルおよびプロジェクトに関する情報を提供します。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension">
+      <summary>.edmx ファイルの生成をカスタマイズするメソッドを公開します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelGenerated(Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext)">
+      <summary>.edmx ファイルが Entity Data Model ウィザードによって生成された後に実行されるカスタム機能を定義します。</summary>
+      <param name="context">ファイルおよびプロジェクトに関する情報を提供します。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelUpdated(Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext)">
+      <summary>.edmx ファイルがモデルの更新ウィザードによって更新された後に実行される機能を定義します。</summary>
+      <param name="context">ファイルおよびプロジェクトに関する情報を提供します。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension">
+      <summary>.edmx ファイルの読み込みおよび保存処理を拡張するメソッドを公開します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnAfterModelLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>.edmx ファイルが Entity Data Model デザイナーによって読み込まれる場合の処理を拡張する機能を定義します。</summary>
+      <param name="context">ファイルおよび Visual Studio プロジェクトに関する情報を提供します。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnBeforeModelSaved(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>.edmx ファイルが Entity Data Model デザイナーによって保存される場合の処理を拡張する機能を定義します。</summary>
+      <param name="context">ファイルおよびプロジェクトに関する情報を提供します。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext">
+      <summary>カスタム ファイル形式を読み込んで保存できるようにする Visual Studio の拡張機能に対して、ファイルおよびプロジェクト情報を提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.CurrentDocument">
+      <summary>カスタム ファイル形式から変換された後の .edmx ドキュメントを返します。</summary>
+      <returns>カスタム ファイル形式から変換された後の .edmx ドキュメント。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.Errors">
+      <summary>カスタム ファイル形式の読み込みおよびカスタム ファイル形式への変換を行う場合、Visual Studio の [エラー一覧] に表示できるエラーの一覧。</summary>
+      <returns>カスタム ファイル形式の読み込みおよびカスタム ファイル形式への変換を行う場合、Visual Studio の [エラー一覧] に表示できるエラーの一覧。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.FileInfo">
+      <summary>Entity Data Model デザイナーによって処理されるカスタム ファイルの情報を返します。</summary>
+      <returns>Entity Data Model デザイナーによって処理されるカスタム ファイルの情報。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.OriginalDocument">
+      <summary>エンティティ デザイナーによって開いたり保存された場合に、元のドキュメントを返します。</summary>
+      <returns>エンティティ デザイナーによって開いたり保存された場合の元のドキュメント。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.ProjectItem">
+      <summary>現在の Visual Studio プロジェクト項目。</summary>
+      <returns>現在の Visual Studio プロジェクト項目。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute">
+      <summary>Entity Data Model デザイナーによって読み込みまたは保存を実行できるカスタム ファイルの拡張子を指定します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.#ctor(System.String)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute" /> クラスの新しいインスタンスを作成します。</summary>
+      <param name="fileExtension">Entity Data Model デザイナーによって読み込みおよび保存を実行できるカスタム ファイルのファイル拡張子。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.FileExtension">
+      <summary>Entity Data Model デザイナーによって読み込みおよび保存を実行できるカスタム ファイルのファイル拡張子。</summary>
+      <returns>Entity Data Model デザイナーによって読み込みおよび保存を実行できるカスタム ファイルのファイル拡張子。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext">
+      <summary>Entity Data Model ウィザードの .edmx ファイル生成処理を拡張する Visual Studio 拡張機能に対して、ファイルおよびプロジェクト情報を提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.CurrentDocument">
+      <summary>変更される .edmx ドキュメントを表します。</summary>
+      <returns>変更される .edmx ドキュメントを表します。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.GeneratedDocument">
+      <summary>Entity Data Model ウィザードによって生成される元の .edmx ファイルを表します。</summary>
+      <returns>Entity Data Model ウィザードによって生成される元の .edmx ファイルを表します。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.WizardKind">
+      <summary>.edmx ファイルの生成処理または更新処理を開始するウィザード。</summary>
+      <returns>.edmx ファイルの生成処理または更新処理を開始するウィザード。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext">
+      <summary>Entity Data Model デザイナーによって .edmx ファイルの読み込みと保存を拡張する Visual Studio の拡張機能に対して、ファイルおよびプロジェクト情報を提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.CurrentDocument">
+      <summary>Visual Studio 拡張機能が操作できる現在の .edmx ファイル。</summary>
+      <returns>Visual Studio 拡張機能が操作できる現在の .edmx ファイル。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.Errors">
+      <summary>Entity Data Model デザイナーによって .edmx ファイルの読み込みまたは保存が行われた場合に Visual Studio の [エラー一覧] に表示できるエラーの一覧。</summary>
+      <returns>Entity Data Model デザイナーによって .edmx ファイルの読み込みまたは保存が行われた場合に Visual Studio の [エラー一覧] に表示できるエラーの一覧。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.OriginalDocument">
+      <summary>メモリに読み込まれた元の .edmx ファイル。</summary>
+      <returns>メモリに読み込まれた元の .edmx ファイル。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.ProjectItem">
+      <summary>現在の Visual Studio プロジェクト項目。</summary>
+      <returns>現在の Visual Studio プロジェクト項目。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext">
+      <summary>Entity Data Model デザイナーまたはモデル ブラウザーで表示可能なオブジェクトにカスタム プロパティを追加する Visual Studio 拡張機能に対して、ファイルおよびプロジェクト情報を提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.CreateChangeScope(System.String)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> オブジェクトを作成し、Visual Studio の [元に戻す] および [やり直し] ボタンのドロップダウン リストに表示する文字列を設定します。</summary>
+      <returns>EntityDesignerChangeScope のインスタンス</returns>
+      <param name="undoRedoDescription">Visual Studio の [元に戻す] および [やり直し] ボタンのドロップダウン リストに表示する文字列。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.ProjectItem">
+      <summary>現在の Visual Studio プロジェクト項目。</summary>
+      <returns>現在の Visual Studio プロジェクト項目。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext">
+      <summary>モデルの更新ウィザードの .edmx ファイル更新処理を拡張する Visual Studio 拡張機能に対して、ファイルおよびプロジェクト情報を提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext" /> クラスの新しいインスタンスを初期化します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.OriginalDocument">
+      <summary>モデルの更新ウィザードが実行される前の .edmx ファイルを表します。</summary>
+      <returns>モデルの更新ウィザードが実行される前の .edmx ファイルを表します。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.ProjectItem">
+      <summary>現在の Visual Studio プロジェクト項目。</summary>
+      <returns>現在の Visual Studio プロジェクト項目。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.UpdateModelDocument">
+      <summary>モデルの更新ウィザードが実行された後の .edmx ファイルを表します。</summary>
+      <returns>モデルの更新ウィザードが実行された後の .edmx ファイルを表します。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardKind">
+      <summary>.edmx ファイルの生成処理または更新処理を開始したウィザードの情報を提供する列挙型。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.Generate">
+      <summary>Entity Data Model ウィザードが .edmx ファイルの生成処理を開始したことを示します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.None">
+      <summary>.edmx ファイルの変更処理を開始したウィザードがないことを示します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.UpdateModel">
+      <summary>モデルの更新ウィザードが .edmx ファイルの更新処理を開始したことを示します。</summary>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,1951 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="microsoft.data.entity.design.model.dll" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="it-IT" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <Props>
+    <Str Name="CustomName1" Val="Custom 1" />
+    <Str Name="CustomName2" Val="Custom 2" />
+    <Str Name="CustomName3" Val="Custom 3" />
+    <Str Name="CustomName4" Val="Custom 4" />
+    <Str Name="CustomName5" Val="Custom 5" />
+    <Str Name="CustomName6" Val="IQA" />
+  </Props>
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Note" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@EntityFrameworkTooling@\default.lss" Type="Lss" />
+  <Item ItemId=";Managed Resources" ItemType="0" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+  <Item ItemId=";Microsoft.Data.Entity.Design.Model.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Modified By="ericbaud" DateTime="2010-10-06T03:51:51Z" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Modified By="ericbaud" DateTime="2010-10-06T03:51:51Z" />
+      <Item ItemId=";BAD_DIAGRAM_NAME" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A diagram name must contain at least one non-whitespace character.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Un nome di diagramma deve contenere almeno un carattere diverso da uno spazio.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";BadEnumTypeMemberValue" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' is not a valid enum member value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA['{0}' non è un valore di membro enum valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";BadFunctionParameterType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Parameter {0} type is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Tipo {0} del parametro non valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Lucia" DateTime="2011-08-11T05:29:37Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO8_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";Command_InvalidModelItem" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The item passed in is not a valid model item for this command.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[L'elemento passato non è un elemento di modello valido per questo comando.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ComplexPropertyUndefinedType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Undefined]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Non definito]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";CyclicInheritanceHierarchy" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Detected a circular inheritance hierarchy containing entity type '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[È stata rilevata una gerarchia di ereditarietà circolare contenente il tipo di entità '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";DataServicesNodeWarning" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This file contains DataServices element and cannot be opened in the Entity Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Questo file contiene l'elemento DataServices e non può essere aperto in Entity Designer.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DataServices"} {StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DatabaseColumnNameFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}::{1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}::{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";DatabaseObjectNameFormat" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}::{1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}::{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Default_Alias" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Self]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Utente corrente]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";DuplicatedElementMsg" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Duplicated {0} element encountered.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Rilevato elemento {0} duplicato.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EntityContainerNameConflictsWithNamespaceName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name '{0}' can not be used for both the entity container name and the namespace name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il nome '{0}' non può essere utilizzato sia per il nome del contenitore di entità che dello spazio dei nomi.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EnumPropertyHasNonEmptyStoreGeneratedPattern" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using the StoreGeneratedPattern facet on a property of enum type may cause a mismatch between the enum value of the property and the actual value inserted into the database.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[L'utilizzo del facet StoreGeneratedPattern su una proprietà di tipo Enum può causare una mancata corrispondenza tra il valore enum della proprietà e il valore effettivo inserito nel database.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-23T16:21:22Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="StoreGeneratedPattern"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_ConceptualModelMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the conceptual model to validate.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare il modello concettuale da convalidare.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidCSDLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the conceptual model's Schema element is not supported on this Entity Framework schema version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Lo spazio dei nomi XML per l'elemento Schema del modello concettuale non è supportato nella versione dello schema di Entity Framework.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The XML namespace for the conceptual model's Schema element is not supported on this project's target framework version.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="DANIELA" DateTime="2013-08-20T09:28:44Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Schema"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="EntityFX 6.0 SW HO4_Updated" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidMSLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the Mapping element is not supported on this Entity Framework schema version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Lo spazio dei nomi XML per l'elemento Mapping non è supportato nella versione dello schema di Entity Framework.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The XML namespace for the Mapping element is not supported on this project's target framework version.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="DANIELA" DateTime="2013-08-20T09:28:44Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Mapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="EntityFX 6.0 SW HO4_Updated" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_InvalidSSDLNamespaceForTargetFrameworkVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The XML namespace for the storage model's Schema element is not supported on this Entity Framework schema version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+            <Val><![CDATA[Lo spazio dei nomi XML per l'elemento Schema del modello di archiviazione non è supportato nella versione dello schema di Entity Framework.]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The XML namespace for the storage model's Schema element is not supported on this project's target framework version.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="DANIELA" DateTime="2013-08-20T09:28:44Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Schema"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="EntityFX 6.0 SW HO4_Updated" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_MappingModelMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the mapping model to validate.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare il modello di mapping da convalidare.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";ErrorValidatingArtifact_StorageModelMissing" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the storage model to validate.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile trovare il modello di archiviazione da convalidare.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_AssociationEndInAssocNotUnique" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The role name '{0}' is not valid because it is equal to the role name of the other association end within this association.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Il nome del ruolo '{0}' non è valido perché uguale al nome del ruolo dell'altra estremità di questa associazione.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_CircularComplexTypeDefinitionOnAdd" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot add a property of type {0} to this type – this would cause circular loop for this type definition.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile aggiungere una proprietà di tipo {0} a questo tipo – perché si verificherebbe un ciclo circolare per questa definizione di tipo.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_CircularComplexTypeDefinitionOnChange" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot change this property type to {0} – this would cause circular loop for the enclosing type definition.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile modificare questo tipo di proprietà in {0} – perché si verificherebbe un ciclo circolare per la definizione di tipo che lo contiene.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_ComplexTypePropertyNameNotUnique" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name '{0}' is not unique in the '{1}' ComplexType.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il nome '{0}' non è univoco nella proprietà ComplexType '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ComplexType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_MemberNameNotUnique" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name '{0}' is not unique in the '{1}' inheritance hierarchy.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il nome '{0}' non è univoco nella gerarchia di ereditarietà '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_MemberNameSameAsParent" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Name '{0}' cannot be used in type '{1}'. Member names cannot be the same as their enclosing type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile utilizzare il nome '{0}' nel tipo '{1}'. I nomi dei membri non possono essere identici al tipo che li contiene.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Error_PropertyNameInvalid" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property name '{0}' is not valid. Please specify another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Nome della proprietà '{0}' non valido. Specificare un altro nome.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_AssociationWithtouAssociationSet" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association '{0}' has no association set.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[L'associazione '{0}' non dispone di alcun set di associazioni.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_CiricularComplexTypeDefinition" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A circular complex type definition has been found for {0} complex type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[È stata rilevata una definizione di tipo complesso circolare per il tipo complesso {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_CiricularInheritance" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A circular inheritance chain has been found involving entity types {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[È stata rilevata una catena di ereditarietà circolare che interessa i tipi di entità {0}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_ComplexTypesNotSupported" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ComplexType elements are not supported in the Entity Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Gli elementi ComplexType non sono supportati in Entity Designer.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ComplexType"} {StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_EntityTypesWithoutEntitySets" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' has no entity set.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il tipo di entità '{0}' non dispone di alcun set di entità.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_IgnoreMappedFKAssociation" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Mapping Association '{0}' is redundant: Its referential integrity constraint provides sufficient information.  You can safely delete the mapping information for this association.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Association di mapping '{0}' ridondante: il relativo vincolo di integrità referenziale offre informazioni sufficienti. È possibile eliminare le informazioni di mapping relative a questa associazione in modo sicuro.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_MultipleEntitySetsPerType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' exists in multiple entity sets: {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il tipo di entità '{0}' esiste in più set di entità: {1}.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_UndefinedComplexPropertyType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type of property {0} is undefined. A type must be provided for this property.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Tipo di proprietà {0} non definito. È necessario fornire un tipo per questa proprietà.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Non è stato eseguito il mapping dell'associazione '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="katia.spiridione" DateTime="2011-03-03T15:18:48Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociationEnd" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association End '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Non è stato eseguito il mapping di Association End '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association End"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedAssociationEndKey" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association End key property '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Non è stato eseguito il mapping della proprietà chiave '{0}' di Association End.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Association End"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedEntityType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Non è stato eseguito il mapping del tipo di entità '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="katia.spiridione" DateTime="2011-03-03T15:19:44Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_UnmappedProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Property '{0}' is not mapped.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Non è stato eseguito il mapping della proprietà '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="katia.spiridione" DateTime="2011-03-03T15:19:55Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";EscherValidation_UsingNotSupported" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Using elements are not supported in the Entity Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Gli elementi Using non sono supportati in Entity Designer.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Entity Designer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";GenerateDatabaseScriptExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception of type '{0}' occurred while attempting to generate the database script from the model. The exception message is: '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Si è verificata un'eccezione di tipo '{0}' durante il tentativo di generazione dello script del database dal modello. Il messaggio dell'eccezione è: '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";INVALID_FORMAT" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Value '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il valore '{0}' non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";INVALID_NC_NAME_CHAR" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il nome '{0}' non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Incorrect_Enum_UnderlyingType" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Primitive type '{0}' is not a valid underlying type for an enum.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Il tipo primitivo '{0}' non è un tipo sottostante valido per un enum.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";InvalidNamespaceName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The namespace '{0}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Lo spazio dei nomi '{0}' non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_AliasDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0}:{1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0}:{1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_AssociationSetMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (AssociationSet)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (AssociationSet)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_ConditionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Condition on {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Condition in {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Condition"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_DeleteFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (DeleteFunction)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (DeleteFunction)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DeleteFunction"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_EndPropertyDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EndProperty)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (EndProperty)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EndProperty"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_EntityContainerMappingDisplayName" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} <==> {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} <==> {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_EntitySetMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EntitySet)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (EntitySet)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_EntityTypeMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (EntityType)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (EntityType)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_FunctionAssociationEndDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} {1}->{2} (AssociationEnd)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} {1}->{2} (AssociationEnd)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_InsertFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (InsertFunction)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (InsertFunction)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="InsertFunction"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_MappingFragmentDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (TableName)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (TableName)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TableName"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_ModificationFunctionMappingDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[ModificationFunctionMapping for {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[ModificationFunctionMapping per {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ModificationFunctionMapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";MappingModel_UpdateFunctionDisplayName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} (UpdateFunction)]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[{0} (UpdateFunction)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="UpdateFunction"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ModelParse_AliasElementMissingKeyAttribute" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alias elements require a Key attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Gli elementi alias richiedono un attributo Key.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Key"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ModelParse_AliasElementMissingValueAttribute" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Alias elements require a Value attribute.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Gli elementi alias richiedono un attributo Value.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Value"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";ModelParse_GhostNodeNotSupportedByDesigner" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The attribute '{0}' on element '{1}' is not supported by the EDM Designer.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[L'attributo '{0}' nell'elemento '{1}' non è supportato da EDM Designer.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ModelParse_MutuallyExclusiveAttributeAndChildElement" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The attribute '{0}' is only valid if the element does not have any '{1}' elements.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[L'attributo '{0}' è valido solo se l'elemento non dispone di alcun elemento '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";ModelParse_NonQualifiedElement" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The element '{0}' does not have the expected namespace value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[L'elemento '{0}' non ha il valore dello spazio dei nomi previsto.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";Model_DefaultComplexTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[ComplexType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Model_DefaultDiagramName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Diagram]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Model_DefaultEntitySetSuffix" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Set]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";Model_DefaultEntityTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Entity]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";Model_DefaultEnumTypeName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[EnumType]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+        </Props>
+      </Item>
+      <Item ItemId=";Model_IdPropertyName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[Id]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";NAME_NOT_UNIQUE" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name {0} cannot be duplicated in this context. Please choose another name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il nome {0} non può essere duplicato in questo contesto. Scegliere un altro nome.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";NavPropNameSameAsContainer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The suggested NavigationProperty name '{0}' cannot be the same as the name of the containing EntityType.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il nome di NavigationProperty '{0}' suggerito non può essere uguale a quello dell'elemento EntityType che lo contiene.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="NavigationProperty"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";NonValidDesignerProperty" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value '{0}' for the designer property '{1}' is not valid.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il valore '{0}' per la proprietà della finestra di progettazione '{1}' non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";OperationRequiresValidSchema" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This operation requires a consistent schema. Please validate schemas and fix all errors.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Questa operazione richiede uno schema coerente. Convalidare gli schemi e correggere tutti gli errori.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";RESOLVE_CONDITION_BOUND_TO_PROP_AND_COLUMN" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[A condition cannot be bound to a property and a column at the same time.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Una condizione non può essere associata a una proprietà e a una colonna contemporaneamente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";RESOLVE_UNRESOLVED_ALIAS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An alias element in the MSL references an unresolvable namespace '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Un elemento alias in MSL fa riferimento a uno spazio dei nomi '{0}' non risolvibile.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MSL"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";SeparatorCharacterForMultipleItemsInAnErrorMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[, ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[, ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";SetRowsAffectedParameterErrorMessage_CannotUse" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The parameter {0} cannot be used as a RowsAffectedParameter. The mode must be Out and the type must be convertible to integer - the parameter passed has mode {1} and type {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile utilizzare il parametro {0} come RowsAffectedParameter. La modalità deve essere Out e il tipo deve poter essere convertito in un Integer. Il parametro passato ha modalità {1} e tipo {2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="RowsAffectedParameter"} {StrContains="Out"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";TOO_MANY_DOCUMENTATION_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[More than one Documentation element was declared. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[È stato dichiarato più di un elemento Documentation. ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Documentation"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";TOO_MANY_ENTITY_CONTAINER_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple EntityContainer elements were detected in namespace '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Sono stati rilevati più elementi EntityContainer nello spazio dei nomi '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";TOO_MANY_KEY_ELEMENTS" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[More than one Key element was declared. ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[È stato dichiarato più di un elemento Key. ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Key"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";TOO_MANY_REFERENTIAL_CONSTRAINTS_IN_ASSOCIATION" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The ReferentialConstraint in the association named '{0}' is not valid. Multiple ReferentialConstraints are illegal for associations.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[L'elemento ReferentialConstraint nell'associazione denominata '{0}' non è valido. Più elementi ReferentialConstraints non sono validi per le associazioni.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ReferentialConstraint"} {StrContains="ReferentialConstraints"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnexpectedElementMsg" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unexpected {0} element encountered.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[È stato rilevato un elemento {0} imprevisto.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedAssociationSet_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Association type '{0}' has an undeclared association set or is malformed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il tipo di associazione '{0}' dispone di un set di associazioni non dichiarato o non è valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedBaseType_1" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Base type '{0}' of entity type '{1}' is unresolved.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Tipo di base '{0}' del tipo di entità '{1}' non risolto.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedEntitySet_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entity type '{0}' has an undeclared entity set.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Il tipo di entità '{0}' dispone di un set di entità non dichiarato.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedReference_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unresolved reference '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Riferimento '{0}' non risolto.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedReferentialConstraint_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unresolved referential constraint on association '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Vincolo referenziale non risolto nell'associazione '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UnresolvedTypeReferences_0" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unresolved type references {0} in EntityTypeMapping.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Riferimenti di tipi irrisolti {0} in EntityTypeMapping.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Stefania" DateTime="2010-11-05T14:12:05Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_Review" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 1" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationEndNoTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the target for AssociationEnd '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile risolvere la destinazione per AssociationEnd '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationNoMatchingNavProp" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to locate the navigation property for EntityType '{0}', AssociationEnd '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile individuare la proprietà di navigazione per EntityType '{0}', AssociationEnd '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"} {StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFind" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find database AssociationSetMapping for association '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile trovare l'elemento AssociationSetMapping del database per l'associazione '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindEntityTypeForProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot find the EntityType for property '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile trovare l'elemento EntityType per la proprietà '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+          <Str Name="Custom5" Val="MT bucket 2" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Within AssociationSetMapping, unable to clone scalar property '{0}'. Cannot find matching EntityType for database EntityType '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. All'interno di AssociationSetMapping è impossibile clonare la proprietà scalare '{0}'. Impossibile trovare l'elemento EntityType corrispondente per l'elemento EntityType '{1}' del database.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType", "EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Within AssociationSetMapping, unable to clone scalar property '{0}'. Cannot find matching property for database property '{1}' in EntityType '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. All'interno di AssociationSetMapping è impossibile clonare la proprietà scalare '{0}'. Impossibile trovare la proprietà corrispondente per la proprietà '{1}' del database in EntityType '{2}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingSSideEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find a matching storage EntitySet for the database EntitySet named '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile trovare un elemento EntitySet di archivio corrispondente per l'elemento EntitySet del database denominato '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet", "EntitySet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindMatchingSSideProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find a matching storage property for database storage property '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile clonare la proprietà scalare '{0}' durante l'elaborazione di un elemento AssociationSetMapping. Impossibile trovare una proprietà di archivio corrispondente per la proprietà di archivio del database '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindOrCreateMatchingProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find or create a matching property for the database property '{1}' in EntityType '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile clonare la proprietà scalare '{0}' durante l'elaborazione di un elemento AssociationSetMapping. Impossibile trovare o creare una proprietà corrispondente per la proprietà del database '{1}' in EntityType '{2}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindSSideForCSideProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone scalar property '{0}' while processing an AssociationSetMapping. Cannot find a mapped storage property for conceptual property '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile clonare la proprietà scalare '{0}' durante l'elaborazione di un elemento AssociationSetMapping. Impossibile trovare una proprietà di archivio con mapping per la proprietà concettuale '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingCannotFindTempSSideEntitySet" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to find database storage EntitySet for AssociationSetMapping '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile trovare l'elemento EntitySet di archivio del database per AssociationSetMapping '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySet"} {StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingWrongNumberAssociationSetEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. AssociationSet '{0}' has an incorrect number of ends, '{1}'. There should be 2 ends.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. L'elemento AssociationSet '{0}' ha un numero di estremità non corretto, '{1}'. Devono essere disponibili 2 estremità.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationSetMappingWrongNumberAssociationSetMappingEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The database AssociationSetMapping {0} has an incorrect number of ends, {1}. There should be 2 ends.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. L'elemento AssociationSetMapping {0} del database ha un numero di estremità non corretto, {1}. Devono essere disponibili 2 estremità.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseAssociationWrongNumberEnds" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The database association '{0}' has an incorrect number of ends, {1}. There should be 2 ends.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. L'associazione '{0}' del database ha un numero di estremità non corretto, {1}. Devono essere disponibili 2 estremità.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociation" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create a copy of database association '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile creare una copia dell'associazione '{0}' del database.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMapping" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping based on the existing AssociationSet '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile creare un elemento AssociationSetMapping in base all'elemento AssociationSet '{0}' esistente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping", "AssociationSet"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMappingEndProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping EndProperty based on the existing AssociationSetEnd '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile creare una proprietà EndProperty dell'elemento AssociationSetMapping basata sull'elemento AssociationSetEnd '{0}' esistente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"} {StrContains="EndProperty"} {StrContains="AssociationSetEnd"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateAssociationSetMappingScalarProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create an AssociationSetMapping based on the existing conceptual property '{0}' and the storage property '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile creare un elemento AssociationSetMapping basato sulla proprietà concettuale '{0}' esistente e sulla proprietà di archivio '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="AssociationSetMapping"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotCreateEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to create a copy of database EntityType '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile creare una copia dell'elemento EntityType '{0}' del database.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseCannotFindRootEntityTypeForProperty" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. The attempt to add {0} new properties for DatabaseObject '{1}' failed. Cannot locate any matching root EntityType.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Tentativo di aggiungere {0} nuove proprietà per DatabaseObject '{1}' non riuscito. Impossibile individuare qualsiasi elemento EntityType radice corrispondente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DatabaseObject"} {StrContains="EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseEntitySetMappingCannotFindEntityType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Unable to clone the EntitySetMapping. Cannot find matching a EntityType for the database EntityType '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile clonare EntitySetMapping. Impossibile trovare una corrispondenza di EntityType per l'elemento EntityType '{0}' del database.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntitySetMapping"} {StrContains="EntityType", "EntityType"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseExceptionMessage" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An exception of type '{0}' occurred while attempting to update from the database. The exception message is: '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[Si è verificata un'eccezione di tipo '{0}' durante il tentativo di aggiornamento dal database. Il messaggio dell'eccezione è: '{1}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseScalarPropertyNoColumnNameTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the ColumnName Target for ScalarProperty '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile risolvere Target di ColumnName per ScalarProperty '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ColumnName"} {StrContains="Target"} {StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseScalarPropertyNoNameTarget" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot update from the database. Cannot resolve the Name Target for ScalarProperty '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+            <Val><![CDATA[Impossibile effettuare l'aggiornamento dal database. Impossibile risolvere Name Target per ScalarProperty '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="Administrator" DateTime="2013-04-24T09:03:07Z" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Name Target"} {StrContains="ScalarProperty"}]]></Cmt>
+        </Cmts>
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+      <Item ItemId=";UpdateFromDatabaseUnableToBringRefConstraint" ItemType="0" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The association '{0}' between the types in the model '{1}' and '{2}' was excluded because it had a referential constraint which referenced properties {3} which could not be found in those types.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" AutoAppr="N/A" Confidence="100">
+            <Val><![CDATA[L'associazione '{0}' tra i tipi nel modello '{1}' e '{2}' è stata esclusa perché presentava un vincolo referenziale che faceva riferimento a proprietà {3} non presenti in questi tipi.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+        <Modified By="gpompei" DateTime="2011-06-14T14:02:03Z" />
+        <Props>
+          <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+          <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        </Props>
+      </Item>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Ver" Disp="true" LocTbl="false" Path=" \ ;Version \ 8 \ 0" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+    <Item ItemId=";AssemblyVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";Comments" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";CompanyName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Corporation]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Corporation]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";FileDescription" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New">
+          <Val><![CDATA[Microsoft.Data.Entity.Design.Model]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_New" />
+        <Str Name="Custom5" Val="MT bucket 1" />
+      </Props>
+    </Item>
+    <Item ItemId=";FileVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.30118.0]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";InternalName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";LegalCopyright" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[© Microsoft Corporation.  All rights reserved.]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="Auto" Confidence="100">
+          <Val><![CDATA[© Microsoft Corporation. Tutti i diritti sono riservati.]]></Val>
+        </Tgt>
+        <Prev Cat="Text">
+          <Val><![CDATA[ ]]></Val>
+        </Prev>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+        <Str Name="Custom4" Val="101012_LIOX_Gemino_new&amp;Upd&amp;AT" />
+        <Str Name="Custom5" Val="MT bucket 2" />
+      </Props>
+    </Item>
+    <Item ItemId=";OriginalFilename" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[Microsoft.Data.Entity.Design.Model.dll]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+    <Item ItemId=";ProductName" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text">
+        <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        <Tgt Cat="Text" Stat="Loc" Appr="PreApproved" Orig="New" AutoAppr="N/A">
+          <Val><![CDATA[Microsoft Entity Framework]]></Val>
+        </Tgt>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="Administrator" DateTime="2013-08-21T12:04:23Z" />
+    </Item>
+    <Item ItemId=";ProductVersion" ItemType="0" PsrId="211" Leaf="true">
+      <Str Cat="Text" DevLk="true">
+        <Val><![CDATA[12.0.0-alpha1-30118]]></Val>
+      </Str>
+      <Disp Icon="Str" />
+      <Modified By="pissi" DateTime="2014-01-21T11:40:39Z" />
+      <Props>
+        <Str Name="Custom3" Val="SQLStudio_HO7_New" />
+      </Props>
+    </Item>
+  </Item>
+  <Item ItemId=";Version" ItemType="8" PsrId="211" Leaf="true">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Modified By="v-liwma" DateTime="2010-09-20T06:04:42Z" />
+  </Item>
+</LCX>

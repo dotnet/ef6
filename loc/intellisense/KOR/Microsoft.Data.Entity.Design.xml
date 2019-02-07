@@ -1,0 +1,2240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Resources">
+      <summary>지역화된 문자열 등을 찾기 위한 강력한 형식의 리소스 클래스입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources._SentenceConcat">
+      <summary>"{0} {1}"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Application_Caption">
+      <summary>"ADO.NET Entity Data Model Designer"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionErrorMessage">
+      <summary>"매개 변수 '{0}'에 잘못된 값 '{1}'이(가) 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionMessageParameter">
+      <summary>"매개 변수는 'Type' 또는 'Guid' 형식의 인스턴스로 예상됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.AssociationSetsGhostNodeName">
+      <summary>"연결 집합"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BAD_FIRST_CHAR_IN_NC_NAME">
+      <summary>"이름 '{0}'의 첫 번째 문자가 올바르지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadChildForParentException">
+      <summary>"'{0}'형식의 모델 브라우저 개체는 '{1}' 형식의 자식 개체를 지원하지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadRemoveBadChildType">
+      <summary>"이름이 '{1}'인 '{2}' 형식의 부모에서 '{0}' 형식의 자식을 제거할 수 없습니다.'{2}' 형식의 요소에 '{0}' 형식의 자식을 사용할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CanNotCreateWindow">
+      <summary>"도구 창을 만들 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateDesignTimeConnectionString">
+      <summary>"디자인 타임 연결 문자열을 해당하는 런타임 형식으로 변환할 수 없습니다.{0} 연결 문자열: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateRuntimeConnectionString">
+      <summary>"런타임 연결 문자열을 해당하는 디자인 타임 형식으로 변환할 수 없습니다.{0} 연결 문자열: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ChangingModelOutsideTransaction">
+      <summary>"트랜잭션 외부에서 모델을 편집할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_LegacyObjectContext">
+      <summary>"레거시 ObjectContext"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_T4">
+      <summary>"T4"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.COLON_IN_NC_NAME">
+      <summary>"이름 '{0}'에 콜론이 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ComplexTypesGhostNodeName">
+      <summary>"복합 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualAssociationsGhostNodeName">
+      <summary>"연결"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualTypesGhostNodeName">
+      <summary>"엔터티 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_AddError">
+      <summary>"'{0}' 오류로 인해 새 연결 문자열을 추가할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다. '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_CorruptConfig">
+      <summary>"구성 파일의 형식이 잘못되었습니다.파일을 수동으로 편집한 후 저장해 보십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetConfigError">
+      <summary>"구성 파일을 찾을 수 없습니다.구성 파일이 올바른 프로젝트에 있는지 확인하거나 Visual Studio를 다시 시작하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetSiteError">
+      <summary>"이 구성의 서비스 공급자를 찾을 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_InitializeError">
+      <summary>"구성 파일을 구문 분석할 수 없습니다.오류 메시지: '{0}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{0}'.파일을 수동으로 편집한 후 저장해 보십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MarsError">
+      <summary>"서버 버전을 확인할 수 없어 MultipleActiveResultSets 특성을 연결 문자열에 추가할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MetadataMismatch">
+      <summary>"연결 문자열의 메타데이터가 구성 파일의 메타데이터와 일치하지 않습니다.이전 메타데이터: {0}.구성 파일에서 {1}' 엔터티 컨테이너 이름으로 연결 문자열을 수정하고 저장하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_NoConnectionString">
+      <summary>"구성 파일에서 연결 문자열을 찾을 수 없습니다.구성 파일에 '{0}' 이름의 연결 문자열이 포함되어 있는지 확인한 다음 파일을 저장하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_SaveXmlError">
+      <summary>"'{1}' 오류로 인해 '{0}' 구성 파일에 XML을 저장할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_UpdateError">
+      <summary>"구성 파일에서 {0}을(를) 업데이트할 수 없습니다.오류 메시지: '{0}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateNoConnection">
+      <summary>"연결 형식이 지정되지 않아 SQL Server 2005 연결을 가정하여 모델의 유효성을 검사합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateWithoutConnection">
+      <summary>"데이터 연결이 선택되지 않으면 모델의 유효성 검사에 문제가 있을 수 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Culture">
+      <summary>이 강력한 형식의 리소스 클래스를 사용하여 모든 리소스를 검색할 경우 현재 스레드의 CurrentUICulture 속성을 다시 정의합니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadError">
+      <summary>"사용자 지정 데이터베이스 생성 워크플로 파일은 소유 프로젝트에 존재하는 '{0}' 어셈블리를 참조하지만 '{1}' 예외로 인해 로드할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다. '{1}'.워크플로를 다시 실행하기 전에 참조가 올바른지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadErrorWithInner">
+      <summary>"사용자 지정 데이터베이스 생성 워크플로 파일은 소유 프로젝트에 존재하는 '{0}' 어셈블리를 참조하지만 '{1}' 예외로 인해 로드할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다. '{1}'.예외에는 다음 정보도 포함됩니다. '{2}'. 워크플로를 다시 실행하기 전에 참조가 올바른지 확인하십시오.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowCancelled">
+      <summary>"{0}' 사용자 지정 워크플로 파일은 실행할 수 없습니다.'이전'을 선택하여 '데이터 연결 선택' 페이지로 돌아가 워크플로를 다시 실행해 보십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowWarningTitle">
+      <summary>"사용자 지정 워크플로 보안 경고"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_DDLOverwriteWarningTitle">
+      <summary>"DDL 덮어쓰기 경고"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_EdmxOverwriteWarningTitle">
+      <summary>"SSDL/MSL 덮어쓰기 경고"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorInvalidTargetVersion">
+      <summary>"지정된 '{0}' TargetVersion 매개 변수가 올바르지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoEdmParameterBag">
+      <summary>"워크플로에서 EdmParameterBag을 찾을 수 없습니다.SymbolResolver에 워크플로 확장으로 추가되었는지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNonValidWorkflowUri">
+      <summary>"'{0}' 데이터베이스 생성 워크플로 경로에서 생성된 URI가 잘못되었습니다.프로젝트에 대한 절대 또는 상대 파일 경로로 경로가 지정되었는지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoParameterDefined">
+      <summary>"'{0}' 데이터베이스 생성 워크플로의 필수 매개 변수가 정의되지 않았습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateFileNotInProject">
+      <summary>"지정된 '{{0}}' 'TemplatePath' 입력 파일이 프로젝트에 포함되지 않아 '{0}' 템플릿 작업을 호출할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateOutputNotSet">
+      <summary>"데이터베이스 생성 워크플로에서 '{0}' 템플릿 작업에 대해 템플릿 출력이 설정되지 않았습니다.템플릿이 올바르게 작성되었는지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNonFile">
+      <summary>"이 워크플로의 '{0}' 템플릿 작업에 대해 '{{0}}' 'TemplatePath' 입력 파일이 잘못되었습니다. 파일이 아닌 경로 및 UNC 경로는 지원되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotSet">
+      <summary>"이 워크플로의 '{0}' 템플릿 작업에 대해 'TemplatePath' 특성이 설정되지 않았습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotValid">
+      <summary>"이 워크플로의 '{0}' 템플릿 작업에 대해 '{{0}}' 'TemplatePath' 특성 값이 올바르지 않거나 존재하지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTextTemplatingServiceNotFound">
+      <summary>"'{0}' 템플릿을 처리하기 위해 ITextTemplating 서비스를 찾을 수 없습니다.이 서비스는 Visual Studio에서만 사용할 수 있습니다.Visual Studio 내에서 이 워크플로가 실행되고 있는지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowFileNotInProject">
+      <summary>"데이터베이스 생성 마법사를 계속 실행하려면 '{0}' 사용자 지정 워크플로 파일이 프로젝트에 포함되어 있어야 합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowOutputNotFound">
+      <summary>"데이터베이스 생성 마법사에 필요한 '{0}' 출력 매개 변수가 워크플로에 의해 채워지지 않았습니다.워크플로가 채울 수 있도록 워크플로 파일에 이 매개 변수가 정의되어 있는지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowPathNotSet">
+      <summary>"EDMX 파일에 데이터베이스 생성 워크플로 경로가 설정되어 있지 않습니다.이 경로를 설정한 후 데이터베이스 생성 마법사를 실행하십시오.)와 유사한 지역화된 문자열입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdl">
+      <summary>"'{0}' 파일에 DDL을 쓰는 동안 예외가 발생했습니다.예외 메시지: '{0}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdlWithInner">
+      <summary>"'{0}' 파일에 DDL을 쓰는 동안 예외가 발생했습니다.예외 메시지: '{0}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{1}'.예외에는 다음 정보도 포함됩니다. '{2}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingTemplateFilePath">
+      <summary>"'{0}' 템플릿 작업에서 '{{0}}' 'TemplatePath'를 구문 분석하는 동안 예외가 발생했습니다.특정 메시지: '{1}'"(과)와 유사한 지역화된 문자열을 찾습니다. '{{1}}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingWorkflowFilePath">
+      <summary>"'{0}' 데이터베이스 생성 워크플로 파일 경로를 구문 분석하는 동안 예외가 발생했습니다.특정 메시지: '{1}'"(과)와 유사한 지역화된 문자열을 찾습니다. '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NoDDLTemplatePathSpecified">
+      <summary>"'{0}' 작업에 대해 TemplatePath 인수가 지정되지 않았습니다.워크플로 파일에서 이 작업에 대해 지정되거나 런타임에 EdmParameterBag의 'DDLTemplatePath' 매개 변수를 통해 전달되어야 합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NonFileWorkflow">
+      <summary>"파일이 아닌 경로 및 UNC 경로는 지원되지 않으므로 지정된 '{0}' 데이터베이스 생성 워크플로 파일이 호출되지 않았습니다.EDMX 파일의 'Options' 섹션에 지정된 데이터베이스 생성 워크플로 경로가 UNC 경로가 아니며, 로컬 파일에 해당하는지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_TemplateFileNotExists">
+      <summary>"지정된 '{{0}}' 'TemplatePath' 입력 파일이 존재하지 않아 '{0}' 템플릿 작업을 호출할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ValidationFailed">
+      <summary>"데이터베이스 스크립트를 생성하기 전에 이 모델에서 모든 유효성 검사 오류를 수정해야 합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningCustomWorkflow">
+      <summary>"데이터베이스 생성 마법사를 위해 사용자 지정 워크플로가 정의되었습니다. (EDMX 모델의 ‘Database Generation Workflow’ 속성을 참조하십시오).기본 워크플로 이외의 워크플로를 사용하여 마법사를 실행하면 컴퓨터가 손상될 수 있습니다.신뢰할 수 없는 원본에서 이 EDMX 파일을 받은 경우 이 마법사를 실행하지 마십시오.워크플로를 실행하려면 [확인]을 클릭하십시오.프로세스를 중단하려면 [취소]를 클릭하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteDdl">
+      <summary>"데이터베이스 생성 마법사가 '{0}' DDL 파일을 덮어씁니다.계속하시겠습니까?"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteMappings">
+      <summary>"데이터베이스 생성 마법사가 기존 저장소 스키마(SSDL) 및 기존 매핑(MSL)을 덮어씁니다.계속하시겠습니까?"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WorkflowFileNotExists">
+      <summary>"지정된 '{0}' 워크플로 파일이 존재하지 않아 모델에서 데이터베이스 스크립트를 생성하는 동안 예외가 발생했습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibileListConverter_UserDir">
+      <summary>"(사용자)"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibleListConverter_VSDir">
+      <summary>"(VS)"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DDEXNotInstalled">
+      <summary>"Visual Studio에서 디자인 용도(DDEX 공급자)로 데이터베이스와 통신할 수 있도록 하는 데 필요한 라이브러리가 '{0}' 공급자에 대해 설치되어 있지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Default">
+      <summary>"기본값"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DiagramTypesGhostNodeName">
+      <summary>"다이어그램"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DisabledFeatureTooltip">
+      <summary>"대상으로 지정할 Entity Framework 버전에는 이 기능을 사용할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DuplicateEntityContainerName">
+      <summary>"'{0}' EntityContainer 이름은 프로젝트의 다른 엔터티 데이터 모델에서 이미 사용하고 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption">
+      <summary>"[디자인]"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption_ReadOnly">
+      <summary>"[읽기 전용]"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EDMOutputWindowPaneTitle">
+      <summary>"엔터티 데이터 모델"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EdmUtils_NotValidTargetFramework">
+      <summary>"프로젝트의 대상 프레임워크에 Entity Framework 런타임 어셈블리가 포함되어 있지 않습니다.프로젝트의 속성 페이지에서 대상 프레임워크 정보를 검토하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityContainerNodeName">
+      <summary>"EntityContainer: {0}"과(와) 유사한 지역화된 문자열을 찾습니다. {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_CreateNewProperty">
+      <summary>"새 속성을 만드십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_DeleteProperty">
+      <summary>"속성을 삭제하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersion6_x">
+      <summary>6.x와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersionName">
+      <summary>"Entity Framework {0}"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntitySetsGhostNodeName">
+      <summary>"엔터티 집합"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AccEnumTypeMembers">
+      <summary>"열거형 형식 멤버"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AutomationName">
+      <summary>"열거형 대화 상자"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_CancelButtonLabel">
+      <summary>"취소"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EditEnumWindowTitle">
+      <summary>"열거형 형식 편집"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnsureEnumTypeUnique">
+      <summary>"열거형 형식 이름이 고유한지 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberNameLabel">
+      <summary>"멤버 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberValueLabel">
+      <summary>"값(선택적 요소)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnterValueForExternalTypeName">
+      <summary>"참조된 외부 형식의 이름이 필요합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberBadname">
+      <summary>"'{0}'은(는) 열거형 멤버의 올바른 이름이 아닙니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberDuplicateName">
+      <summary>"'{0}' 열거형 멤버가 이미 존재합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumTypeBadname">
+      <summary>"'{0}'은(는) 열거형 형식의 올바른 이름이 아닙니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeHint">
+      <summary>"네임스페이스 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeLabel">
+      <summary>"외부 형식 참조"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabel">
+      <summary>"플래그 특성 설정"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabelDescription">
+      <summary>"열거형 형식의 인스턴스에서 비트 연산자를 사용하여 정의된 값의 모든 조합을 저장하도록 허용합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NameLabel">
+      <summary>"열거형 형식 이름:"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NewEnumWindowTitle">
+      <summary>"열거형 형식 추가"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_OkButtonLabel">
+      <summary>"확인"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_UnderlyingTypeLabel">
+      <summary>"내부 형식:"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumTypesGhostNodeName">
+      <summary>"열거형 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CannotEditRefConstraint">
+      <summary>"이 연결에 대한 기존 참조 제약 조건을 디자이너에서 편집할 수 없습니다. XML 편집기를 사용하여 수동으로 편집해야 합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CircularInheritanceAborted">
+      <summary>"{0}'의 기본 형식을 '{1}'(으)로 설정하면 순환 상속이 발생할 수 있습니다.상속 추가가 중단됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FailedApplyChangeToFile">
+      <summary>"{0} 파일에 변경 내용을 적용하는 데 실패했습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FileNotFound">
+      <summary>"파일을 찾을 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlCeUpgrade">
+      <summary>"EDMX 파일과 구성 파일에서 SQLCE 참조를 업그레이드하는 동안 예외가 발생했습니다.오류 발생 시 처리 중인 파일: {0}.전체 오류 메시지: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlDatabaseFileUpgrade">
+      <summary>"구성 파일에서 SQL 데이터베이스 파일을 업그레이드하는 동안 예외가 발생했습니다.오류 발생 시 처리 중인 파일: {0}.전체 오류 메시지: {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorNonValidFileName">
+      <summary>'{0}' 파일 이름에는 \ / : * ? " 문자를 사용할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다. \ / : * ? "&amp;amp;lt; &amp;amp;gt; | 문자를 포함할 수 없으며, 'CON', 'AUX', 'PRN', 'COM1', 'LPT2'와 같은 시스템 예약 이름을 사용할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorReadingWritingUserSetting">
+      <summary>"레지스트리에서 '{0}' 사용자 설정을 읽거나 쓰는 동안 오류가 발생했습니다.특정 오류: '{1}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{1}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorSynchingEdmxNamespaces">
+      <summary>"XML 네임스페이스를 업데이트하는 동안 예외가 throw되었습니다.\n파일 이름: {0}.\n전체 오류 메시지:\n {1}."과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExceptionMessageNullFactoryType">
+      <summary>"팩터리 형식은 null일 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExistingConfigurationFileWarning">
+      <summary>"프로젝트에 '{0}' 파일이 포함되어 있습니다.이 파일은 프로젝트의 루트 디렉터리에 있는 '{1}' 파일에 마법사가 작성한 구성 정보를 재정의할 수 있습니다.프로젝트에서 응용 프로그램 구성 파일을 확인하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_ClearSearch">
+      <summary>"검색 지우기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_CollapseSearchResults">
+      <summary>"축소된 검색 결과를 보려면 여기를 클릭하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_PromptSearch">
+      <summary>"검색하려면 여기에 입력하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_Search">
+      <summary>"검색"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavNext">
+      <summary>"다음 검색 결과로 이동"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavPrev">
+      <summary>"이전 검색 결과로 이동"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowCaption">
+      <summary>"탐색기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowTitle">
+      <summary>"모델 브라우저"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditModel">
+      <summary>"모델 생성 확장이 현재 모델과 다른 모델을 변경하려고 하며, 이는 지원되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditOriginalOnSave">
+      <summary>"serialization 확장이 저장 과정에서 원래 모델을 편집하려고 하며, 이는 지원되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_AlreadyComplete">
+      <summary>"속성 확장이 변경 범위에 대해 Complete()를 호출한 후 편집할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_EditingWrongNamespace">
+      <summary>"속성 확장은 Entity Framework 네임스페이스의 항목을 편집할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_Missing">
+      <summary>"속성 확장이 모델을 편집하기 전에 변경 범위를 시작해야 합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ErrorOccurredDuringCallToExtension">
+      <summary>"ADO.Net Entity Framework 확장을 실행하는 과정에서 오류가 발생했습니다.확장의 유형 이름: {0}.예외 메시지: {1}."과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel">
+      <summary>"모델 생성 확장이 유효하지 않은 데이터베이스에서 생성된 모델을 변경했습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel_Update">
+      <summary>"모델 생성 확장이 잘못 업데이트된 모델을 변경했습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_NoConverterForExtension">
+      <summary>"EDMX가 아닌 파일에서 Entity Designer를 열었으며, 이 확장에 대해 IModelConversionExtension이 등록되지 않았습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_StartChangeScopeFailed">
+      <summary>"변경 범위가 이미 존재합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_TooManyConverters">
+      <summary>"{0} 파일 확장에 대해 둘 이상의 IModelConversionExtension이 등록되어 있지만 {0}.하나만 등록할 수 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImport_CannotCreateFromComposableFunction">
+      <summary>"{0} 이하 버전의 EDMX 파일에서 구성 가능 함수에 대해 함수 가져오기를 만들 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImportsGhostNodeName">
+      <summary>"함수 가져오기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_DisableLayer">
+      <summary>"{0} 지원 사용 안 함"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_EnableLayer">
+      <summary>"{0} 지원 사용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LEADING_OR_TRAILING_SPACES_IN_NCNAME">
+      <summary>"'{0}' 이름에 선행 또는 후행 공백이 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadDataPackageError">
+      <summary>"Visual Studio 데이터 패키지를 로드하는 동안 오류가 발생했습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadOurPackageError">
+      <summary>"엔터티 데이터 모델 도구 패키지를 로드하는 동안 오류가 발생했습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LocalDatabaseFileAlreadyExists">
+      <summary>"프로젝트에 '{0}'이(가) 이미 존재합니다.덮어쓰시겠습니까?기존 파일을 사용하려면 아니요를 클릭하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocMappingNoTable">
+      <summary>"(먼저 테이블을 매핑해야 합니다.)"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd1">
+      <summary>"1"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd2">
+      <summary>"2"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEndDisplay">
+      <summary>"End{0}: ({1}/{2})"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_AssociationHeader">
+      <summary>"연결"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnMappingsName">
+      <summary>"열 매핑"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnName">
+      <summary>"열"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionCreatorNode">
+      <summary>"&amp;amp;lt;조건 추가&amp;amp;gt;"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine1">
+      <summary>"{0}"일 경우와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine2">
+      <summary>"및 {0}"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_CreatorNode">
+      <summary>"&amp;amp;lt;Delete 함수 선택&amp;amp;gt;"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_Display">
+      <summary>"{0}을(를) 사용하여 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrComplexTypePropertiesNotSupported">
+      <summary>"복합 형식 속성은 함수 가져오기 매핑에서 지원되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNames">
+      <summary>"'{0}' EntityType의 상속 계층 구조에 '{1}' 이름의 속성이 중복되어 있습니다."와 유사한 지역화된 문자열을 찾습니다. '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNamesSeparator">
+      <summary>","와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDuplicatePropertyNameForAssociationEndEntity">
+      <summary>"이 연결에 대한 매핑이 참조하는 '{0}' 엔터티 형식에 '{1}' 이름의 속성이 중복되어 있습니다."와 유사한 지역화된 문자열을 찾습니다. '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrKeyInDerivedType">
+      <summary>"키가 파생된 EntityType에 정의되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMappingNotSupported">
+      <summary>"현재 프로젝트의 대상 프레임워크 버전에서 이 기능을 사용할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslAssociationSetMappingHasQueryView">
+      <summary>"이 연결에 대한 매핑에 디자이너에서 렌더링할 수 없는 QueryView가 포함되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslBadEntitySetMapping">
+      <summary>"EntityType의 EntitySet과 관련 EntitySetMapping 중 하나 사이에 끊어진 관계가 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindAssociationSet">
+      <summary>"선택된 연결의 AssociationSet을 찾을 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindEntitySet">
+      <summary>"선택된 EntityType의 EntitySet을 찾을 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindFunctionImportMapping">
+      <summary>"선택된 FunctionImport의 FunctionImportMapping을 찾을 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindMappedFunction">
+      <summary>"선택된 FunctionImport에 매핑된 함수를 찾을 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEntitySetMappingHasQueryView">
+      <summary>"이 EntityType에 대한 매핑에 디자이너에서 렌더링할 수 없는 QueryView가 포함되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEtmRefsMultipleTypes">
+      <summary>"한 EntityTypeMapping이 여러 EntityType에 지정되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslFunctionMappingsShouldBeSeparate">
+      <summary>"한 EntityTypeMapping에 함수 매핑과 MappingFragment를 둘 다 포함할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslGeneral">
+      <summary>"매핑이 디자이너 외부에서 편집되었을 수 있습니다."와 유사한 지역화된 문자열을 찾습니다.{0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyAssociationSetMappings">
+      <summary>"한 연결에 AssociationSetMapping을 여러 개 지정할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyDefaultEtms">
+      <summary>"이 EntityType에 둘 이상의 형식에 대해 EntityTypeMapping이 지정되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyEntitySetMappings">
+      <summary>"한 EntityType에 EntitySetMapping을 여러 개 지정할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFragments">
+      <summary>"한 EntityTypeMapping에 MappingFragment를 여러 개 지정할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFunctionETMs">
+      <summary>"이 EntityType에 함수 매핑을 사용하여 둘 이상의 EntityTypeMapping이 지정되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyIsTypeOfETMs">
+      <summary>"이 EntityType에 둘 이상의 IsTypeOf EntityTypeMapping이 지정되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnresolvedItems">
+      <summary>"선택된 개체의 매핑에 확인할 수 없는 참조가 포함되어 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnsupportedCondition">
+      <summary>"EntityType에 대한 조건 속성은 지원되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUsesGhostNodes">
+      <summary>"이 EntityType의 매핑은 디자이너에서 지원하지 않는 간단한 표기법을 사용합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_FunctionsHeader">
+      <summary>"함수"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_CreatorNode">
+      <summary>"&amp;amp;lt;Insert 함수 선택&amp;amp;gt;"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_Display">
+      <summary>"{0}을(를) 사용하여 삽입"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovDelete">
+      <summary>"&amp;amp;lt;삭제&amp;amp;gt;"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovEmpty">
+      <summary>"(비어 있음)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_NoDependentEndOnReferentialConstraint">
+      <summary>"참조 제약 조건에 종속 끝이 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Operator">
+      <summary>"연산자"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorEquals">
+      <summary>"="과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorIs">
+      <summary>"Is"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ParameterName">
+      <summary>"매개 변수/열"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Parameters">
+      <summary>"매개 변수"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Property">
+      <summary>"속성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM">
+      <summary>"노출된 외래 키에 대한 연결에 매핑할 수 없습니다.{0} 또는 {1}."과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Delete">
+      <summary>"매핑 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Display">
+      <summary>"편집할 매핑 표시"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_NoASM">
+      <summary>"노출된 외래 키에 대한 연결에 매핑할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM">
+      <summary>"이러한 매핑은 이 연결에 정의된 참조 무결성 제약 조건에 의해 재정의되고 무시됩니다.{0} 또는 {1}해도 됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Delete">
+      <summary>"이러한 매핑 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Display">
+      <summary>"편집할 이러한 매핑 표시"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM">
+      <summary>"매핑은 이 연결에 정의된 참조 무결성 제약 조건에 의해 재정의되고 무시됩니다.{0}..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM_Display">
+      <summary>"매핑 편집기 표시"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintWithNonKeyProperties">
+      <summary>"키가 아닌 속성에 관련된 참조 무결성 제약 조건 관련 연결에 대해서는 매핑이 허용되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindingCreatorNode">
+      <summary>"&amp;amp;lt;Result Binding 추가&amp;amp;gt;"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindings">
+      <summary>"결과 열 바인딩"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_RowsAffectedParameterColumn">
+      <summary>"매개 변수에 영향을 주는 행"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText">
+      <summary>"함수에 엔터티 매핑"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText_NotSupported">
+      <summary>"함수에 엔터티 매핑(이 기능은 CTP2 버전에서 지원되지 않음)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TableCreatorNode">
+      <summary>"&amp;amp;lt;테이블 또는 뷰 추가&amp;amp;gt;"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesButtonText">
+      <summary>"테이블/뷰에 엔터티 매핑"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesHeader">
+      <summary>"테이블"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Toolbar_AccessibleName">
+      <summary>"매핑 정보 도구 모음"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnName">
+      <summary>"??"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnType">
+      <summary>"??"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndMultiplicity">
+      <summary>"??"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndType">
+      <summary>"??"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyName">
+      <summary>"??"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyType">
+      <summary>"??"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_CreatorNode">
+      <summary>"&amp;amp;lt;Update 함수 선택&amp;amp;gt;"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_Display">
+      <summary>"{0}을(를) 사용하여 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UseOriginalValueColumn">
+      <summary>"Original Value 사용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Value">
+      <summary>"값/속성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueEmptyString">
+      <summary>"&amp;amp;lt;빈 문자열&amp;amp;gt;"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNotNull">
+      <summary>"Null 아님"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNull">
+      <summary>"Null"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Watermark">
+      <summary>"Entity Designer 또는 {0}에서 엔터티 또는 연결을 선택하여 매핑을 편집합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WatermarkLabelText">
+      <summary>"엔터티 또는 연결을 선택하여 매핑을 편집합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WindowTitle">
+      <summary>"매핑 정보"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsArrowsImageList">
+      <summary>System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsCommandStrip">
+      <summary>System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsIconsImageList">
+      <summary>System.Drawing.Bitmap 형식의 지역화된 리소스를 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsViewModel_StorageEntityTypeName">
+      <summary>"{0}에 매핑"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_CantBeRelative">
+      <summary>"여러 장치의 파일에 대해서는 상대 경로를 사용할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileAlreadyExists">
+      <summary>"'{0}' 파일을 덮어쓰는 모델 파일 이름을 선택했습니다.다른 모델 파일 이름을 선택하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileIsLinkedFile">
+      <summary>"'{0}' 이름의 모델을 추가할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.이름이 같은 파일이 이미 이 폴더에 연결되어 있습니다..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_NonValidXmlAttributeValue">
+      <summary>"ADO.NET 엔터티 데이터 모델 항목 및 파일 이름은 유효한 XML 특성만 포함해야 합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_UnexpectedExceptionHasOccurred">
+      <summary>"예기치 않은 예외가 발생했습니다.예외 메시지: '{0}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MsgBox_InheritanceWillRemoveKeys">
+      <summary>"'{1}'에서 '{0}'을(를) 상속하면 '{0}' 및 해당 하위 형식에 정의된 모든 엔터티 키가 삭제됩니다.\n계속 하시겠습니까?"와 유사한 지역화된 문자열을찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_CollectionText">
+      <summary>"{0}의 컬렉션"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_InstanceText">
+      <summary>"{0}의 인스턴스"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NoDefaultConnectionString">
+      <summary>"App.config 파일에 기본 연결 문자열이 정의되어 있지 않습니다.SqlClient는 기본 공급자로 사용됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.None">
+      <summary>"없음"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisRelease">
+      <summary>"이 버전에서 지원되지 않는 기능입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisReleaseInWebsite">
+      <summary>"이 기능은 이 버전의 웹 사이트에서 지원되지 않습니다.웹 응용 프로그램을 사용하십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PackageLoadFailureExceptionMessage">
+      <summary>"엔터티 데이터 모델 도구 패키지를 로드하는 데 실패했습니다.결과는 {0}입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_CodeGeneration">
+      <summary>"코드 생성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Connection">
+      <summary>"연결"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Constraint">
+      <summary>"제약 조건"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_DatabaseScriptGeneration">
+      <summary>"데이터베이스 스크립트 생성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Diagram">
+      <summary>"다이어그램"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Ends">
+      <summary>"End"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Facets">
+      <summary>"패싯"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_General">
+      <summary>"일반"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Navigation">
+      <summary>"탐색"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Schema">
+      <summary>"스키마"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Abstract">
+      <summary>"엔터티 형식이 추상인지 여부를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Access">
+      <summary>"형식의 액세스 수준을 지정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Association">
+      <summary>"연결 속성의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_CodeGenerationStrategy">
+      <summary>"이 모델의 코드 생성 전략을 설정하는 데 사용됩니다.이 모델에 연결되어 솔루션 탐색기의 이 항목 속성에서 액세스 가능한 '사용자 지정 도구'가 이 속성을 읽어 코드 생성 방법을 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ComplexTypeName">
+      <summary>"이 ComplexType의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Composable">
+      <summary>"데이터베이스의 테이블 반환 함수를 호출할 수 있는 프로그래밍 방식을 나타낼 경우 함수 가져오기를 구성할 수 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ConnectionString">
+      <summary>"데이터베이스 연결 및 메타데이터 파일을 설명하는 연결 문자열은구성 파일에 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseGenerationWorkflow">
+      <summary>"모델에서 데이터베이스 생성 마법사에서 사용하는 Windows Workflow Foundation 파일의 경로입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseName">
+      <summary>"데이터베이스 기본 개체의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchema">
+      <summary>"기본 데이터베이스 개체의 스키마 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchemaName">
+      <summary>"결과 DDL에서 참조하는 데이터베이스 스키마의 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DDLGenerationTemplate">
+      <summary>"데이터베이스 생성 마법사에서 SSDL을 DDL로 변환하는 데 사용되는 T4 텍스트 템플릿입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DefaultValue">
+      <summary>"속성의 기본값입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DiagramName">
+      <summary>"이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityBaseType">
+      <summary>"엔터티의 기본 형식입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityContainerAccess">
+      <summary>"엔터티 데이터 모델에 대한 모든 엔터티 인스턴스가 포함된 엔터티 컨테이너의 액세스 한정자입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityKey">
+      <summary>"포함하는 엔터티용 엔터티 키인지 여부를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityName">
+      <summary>"엔터티의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntitySetName">
+      <summary>"엔터티 인스턴스를 포함하는 EntitySet의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityShapeColor">
+      <summary>"엔터티 형식 모양의 색상입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumExternalTypeAttribute">
+      <summary>"외부 형식을 참조하면 이 열거형 형식용 코드 생성을 사용할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumTypeName">
+      <summary>"열거형 형식의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumUnderlyingType">
+      <summary>"열거형의 데이터 타입"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_FromRole">
+      <summary>"이 연결 역할은 탐색의 원본입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_GenerateUpdateViews">
+      <summary>"Entity Framework의 Update 문 생성 여부를 제어합니다.이 기능을 비활성화하면 추가 매핑 기능이 활성화되고 데이터 수정은 저장 프로시저를 통해서만 가능합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Getter">
+      <summary>"Getter 속성에 대한 액세스를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceBaseType">
+      <summary>"상속 관계의 기본 형식입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceDerivedType">
+      <summary>"상속 관계의 파생 형식입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LazyLoadingEnabled">
+      <summary>"생성된 ObjectContext에 대한 기본 지연 로드 동작을 설정하는 데 사용됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LongDescription">
+      <summary>"설명서"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_MetadataArtifactProcessing">
+      <summary>"빌드 시 매핑 및 모델 파일의 처리 방식을 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavigationPropertyName">
+      <summary>"탐색 속성의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropMultiplicity">
+      <summary>"대상 연결 끝의 복합성입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropType">
+      <summary>"이 탐색 속성의 반환 형식입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Nullable">
+      <summary>"속성의 Null 허용 여부를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Parameter">
+      <summary>"저장 프로시저 매개 변수의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PluralizeNewObjects">
+      <summary>"시스템에서 자동으로 새 개체의 이름을 복수화할 것인지 여부를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ProcessDependentTemplatesOnSave">
+      <summary>"EDMX 파일을 저장할 때 시스템이 EDMX에 대한 T4 파일 의존을 처리할 것인지 여부를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PropertyName">
+      <summary>"속성의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Setter">
+      <summary>"Setter 속성에 대한 액세스를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_StoreGeneratedPattern">
+      <summary>"삽입 및 업데이트 작업 중 데이터베이스에 있는 해당 열을 자동으로 생성할 것인지 여부를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Summary">
+      <summary>"설명서 요약"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_SynchronizePropertyFacets">
+      <summary>"모델을 업데이트하면 Null 허용 여부, 전체 자릿수 등이 매핑된 데이터베이스 열의 값과 일치하도록 엔터티 속성 패싯이 업데이트됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ToRole">
+      <summary>"이 연결 역할은 탐색의 대상입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Type">
+      <summary>"스칼라 속성의 형식입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseLegacyProvider">
+      <summary>"레거시 공급자를 사용하여 디자인 타임에 데이터베이스에 연결합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseStrongSpatialTypes">
+      <summary>"코드 생성 시 모든 공간 형식을 지원하는 강력한 형식의 사용 여부를 설정합니다.false로 설정하면 생성된 코드에 DbGeography 및 DbGeometry 기본 클래스가 사용됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ValidateOnBuild">
+      <summary>"빌드 시 시스템이 모델의 유효성을 검사할 것인지 여부를 결정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationName">
+      <summary>"연결의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationSetName">
+      <summary>"연결이 포함된 연결 집합의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndNavigationProperty">
+      <summary>"이 쪽 끝의 값을 반환하는 엔터티 속성의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndOnDelete">
+      <summary>"이 쪽 끝의 엔터티가 삭제될 때 수행할 작업을 지정합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EntityContainerName">
+      <summary>"엔터티 데이터 모델에 대한 모든 엔터티 인스턴스가 포함된 엔터티 컨테이너의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Multiplicity">
+      <summary>"연결의 이 쪽 끝에 허용된 엔터티의 수입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Namespace">
+      <summary>"엔터티 데이터 모델용 네임스페이스입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Role">
+      <summary>"이 쪽 끝의 이름입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Abstract">
+      <summary>"추상"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Access">
+      <summary>"액세스"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Aggregate">
+      <summary>"집계"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Alias">
+      <summary>"별칭"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Association">
+      <summary>"연결"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_AssociationSetName">
+      <summary>"연결 집합 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BaseType">
+      <summary>"기본 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BuiltIn">
+      <summary>"기본 제공"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CodeGenerationStrategy">
+      <summary>"코드 생성 전략"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Collation">
+      <summary>"데이터 정렬"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CommandText">
+      <summary>"명령 텍스트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Composable">
+      <summary>"구성 가능"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConcurrencyMode">
+      <summary>"동시성 모드"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConnectionString">
+      <summary>"연결 문자열"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseGenerationWorkflow">
+      <summary>"데이터베이스 생성 워크플로"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseName">
+      <summary>"데이터베이스 개체 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchema">
+      <summary>"데이터베이스 스키마"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchemaName">
+      <summary>"데이터베이스 스키마 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DDLGenerationTemplate">
+      <summary>"DDL 생성 템플릿"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DefaultValue">
+      <summary>"기본값"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DerivedType">
+      <summary>"파생 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Documentation">
+      <summary>"설명서"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End">
+      <summary>"End"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Multiplicity">
+      <summary>"End1 복합성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1NavigationProperty">
+      <summary>"End1 탐색 속성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1OnDelete">
+      <summary>"End1 OnDelete"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Role">
+      <summary>"End1 역할 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Multiplicity">
+      <summary>"End2 복합성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2NavigationProperty">
+      <summary>"End2 탐색 속성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2OnDelete">
+      <summary>"End2 OnDelete"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Role">
+      <summary>"End2 역할 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerAccess">
+      <summary>"엔터티 컨테이너 액세스"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerName">
+      <summary>"엔터티 컨테이너 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityKey">
+      <summary>"엔터티 키"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntitySetName">
+      <summary>"엔터티 집합 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityShapeColor">
+      <summary>"채우기 색"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityType">
+      <summary>"형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumExternalTypeAttribute">
+      <summary>"외부 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumFlagAttribute">
+      <summary>"플래그"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumUnderlyingType">
+      <summary>"내부 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FixedLength">
+      <summary>"고정 길이"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FromRole">
+      <summary>"원본 역할"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_GenerateUpdateViews">
+      <summary>"업데이트 뷰 생성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Getter">
+      <summary>"Getter"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LazyLoadingEnabled">
+      <summary>"지연 로드 사용됨"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LongDescription">
+      <summary>"자세한 설명"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_CopyToOutputDirectory">
+      <summary>"출력 디렉터리로 복사"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_EmbedInOutputAssembly">
+      <summary>"출력 어셈블리에 포함"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MaxLength">
+      <summary>"최대 길이"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MetadataArtifactProcessing">
+      <summary>"메타데이터 아티팩트 처리"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Mode">
+      <summary>"모드"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Namespace">
+      <summary>"네임스페이스"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropMultiplicity">
+      <summary>"복합성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropType">
+      <summary>"반환 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Niladic">
+      <summary>"Niladic"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Nullable">
+      <summary>"Null 허용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Parameter">
+      <summary>"매개 변수"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ParameterTypeSemantics">
+      <summary>"매개 변수 형식 의미 체계"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_PluralizeNewObjects">
+      <summary>"새 개체 복수화"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Precision">
+      <summary>"전체 자릿수"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ProcessDependentTemplatesOnSave">
+      <summary>"저장 시 관련 텍스트 템플릿 변환"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_RefConstraint">
+      <summary>"참조 제약 조건"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ReturnType">
+      <summary>"반환 형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Scale">
+      <summary>"배율"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Setter">
+      <summary>"Setter"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoredProcedureName">
+      <summary>"저장 프로시저 이름"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreFunctionName">
+      <summary>(저장소 함수 이름)과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreGeneratedPattern">
+      <summary>"StoreGeneratedPattern"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Summary">
+      <summary>(요약)과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_SynchronizePropertyFacets">
+      <summary>"속성 패싯 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ToRole">
+      <summary>"대상 역할"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Type">
+      <summary>"형식"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Unicode">
+      <summary>"유니코드"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseLegacyProvider">
+      <summary>"레거시 공급자 사용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseStrongSpatialTypes">
+      <summary>"강력한 공간 형식 사용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ValidateOnBuild">
+      <summary>"빌드 시 유효성 검사"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_MessageBox_SetAbstract">
+      <summary>"엔터티 형식을 추상으로 정의하면 해당 엔터티 형식에 대한 기존 함수 매핑이 모두 제거됩니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityMany">
+      <summary>"*(다)"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityManyOf">
+      <summary>"*({0}의 컬렉션)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOne">
+      <summary>"1(일)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOneOf">
+      <summary>"1({0}의 일)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOne">
+      <summary>"0..1(영 또는 일)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOneOf">
+      <summary>"0..1({0}의 영 또는 일)"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorPreviewGroupName">
+      <summary>"코드 개체"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_InvalidName">
+      <summary>"지정된 이름의 식별자가 잘못되었습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_UndoDescription">
+      <summary>"{0}에서 {1}(으)로 이름 바꾸기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Cancel">
+      <summary>"취소"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_LocationLabel">
+      <summary>"위치:"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_NewNameLabel">
+      <summary>"새 이름:"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_OK">
+      <summary>"확인"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_PreviewReferenceChangesLabel">
+      <summary>"참조 변경 내용 미리 보기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Title">
+      <summary>"이름 바꾸기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_ConfirmButtonText">
+      <summary>"&amp;amp;amp;적용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Description">
+      <summary>"이름 바꾸기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_TextViewDescription">
+      <summary>"변경 내용 미리 보기:"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Title">
+      <summary>"변경 내용 미리 보기 - 이름 바꾸기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCDependentProperty">
+      <summary>"{0}(오류: 찾을 수 없음)"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCPrincipalProperty">
+      <summary>"{0}(오류: 찾을 수 없음, 참조 삭제됨)"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RenameModelMessageBox_Text">
+      <summary>"파일의 이름을 바꾸거나 이동할 수 없습니다.이름을 변경하거나 이동하기 전에 Entity Designer에서 파일을 닫으십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ResourceManager">
+      <summary>이 클래스에 사용된 캐시된 ResourceManager 인스턴스를 반환합니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeErrorMessage">
+      <summary>"형식 정보를 반환하는 저장 프로시저 또는 함수를 검색하는 데 실패했습니다.오류 메시지: {0}.)과(와) 유사한 지역화된 문자열입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeInfoMessage">
+      <summary>"저장 프로시저 또는 함수 {0}/{1} - '{2}.{3}'의 반환 형식 정보 검색"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogDescription">
+      <summary>"저장 프로시저 또는 함수 반환 형식 정보 검색"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogInitialStatus">
+      <summary>"데이터베이스 연결 대기 중"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogTitle">
+      <summary>"잠시 기다려 주십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_FailureToLoadStoreItemCollection">
+      <summary>"StoreItemCollection을 만드는 과정에서 '{0}' 예외 발생"과 유사한 지역화된 문자열을 찾습니다. '{0}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_StoreItemCollectionMayRequireDatabaseConnection">
+      <summary>"공급자 팩터리에서 StoreItemCollection을 로드할 수 없습니다.StoreItemCollection을 로드하려면 데이터베이스 연결을 열어야 합니다.예외 메시지: '{0}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultItemsMatching">
+      <summary>"일치 항목 {0}"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultSearchCriteria">
+      <summary>"'{0}'"과(와) 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageAssociationsGhostNodeName">
+      <summary>"제약 조건"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageFunctionsGhostNodeName">
+      <summary>"저장 프로시저/함수"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageTypesGhostNodeName">
+      <summary>"테이블/뷰"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.T4_ItemTemplate_CSharp_Comment">
+      <summary>(T4 항목 템플릿 CSharp 주석)과 유사한 지역화된 문자열을 가져옵니다.</summary>
+      <returns>(T4 항목 템플릿 CSharp 주석)과 유사한 지역화된 문자열입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateError">
+      <summary>"줄 {0}, 열 {1}: '{2}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{2}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateErrorsEncountered">
+      <summary>"'{0}' 템플릿 처리 과정에서 {1} 오류 발생"과 유사한 지역화된 문자열을 찾습니다. {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ToolWindowTitle">
+      <summary>"모델 브라우저"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TransactionAlreadyCompleted">
+      <summary>"트랜잭션이 이미 완료되었습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_AddComplexType">
+      <summary>"복합 형식 추가"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionColumn">
+      <summary>"조건 열 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionValue">
+      <summary>"조건 값 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpMapping">
+      <summary>"함수 가져오기 매핑 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpRetType">
+      <summary>"FunctionImport 반환 형식 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeMetadataArtifactProcessing">
+      <summary>"메타데이터 아티팩트 처리 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeResultBinding">
+      <summary>"ResultBinding 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeScalarProperty">
+      <summary>"ScalarProperty 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateAssociationSetMapping">
+      <summary>"AssociationSetMapping 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateCondition">
+      <summary>"조건 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateDiagram">
+      <summary>"다이어그램 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateEnumType">
+      <summary>"열거형 형식 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionImport">
+      <summary>"FunctionImport 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionMapping">
+      <summary>"FunctionMapping 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateMappingFragment">
+      <summary>"MappingFragment 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateResultBinding">
+      <summary>"ResultBinding 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateScalarProperty">
+      <summary>"ScalarProperty 만들기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteAssociationSetMapping">
+      <summary>"AssociationSetMapping 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteCondition">
+      <summary>"조건 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteFunctionMapping">
+      <summary>"FunctionMapping 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteMappingFragment">
+      <summary>"MappingFragment 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteResultBinding">
+      <summary>"ResultBinding 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteScalarProperty">
+      <summary>"ScalarProperty 삭제"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_GenerateDatabaseScriptFromModel">
+      <summary>"모델에서 데이터베이스 생성"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerDisable">
+      <summary>"'{0}' 계층 사용 안 함"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerEnable">
+      <summary>"'{0}' 계층 사용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_RefactorRenameCommand">
+      <summary>"이름 바꾸기"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ReferentialContraint">
+      <summary>"참조 제약 조건 변경"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_SetCodeGenerationStrategy">
+      <summary>"CodeGeneration 전략 설정"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateAssociationSetMapping">
+      <summary>"AssociationSetMapping 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateEnumType">
+      <summary>"열거형 형식 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionImport">
+      <summary>"FunctionImport 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionMapping">
+      <summary>"FunctionMapping 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateMappingFragment">
+      <summary>"MappingFragment 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateModelFromDatabase">
+      <summary>"데이터베이스에서 모델 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdatePropertyType">
+      <summary>"속성 형식 업데이트"와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UnsupportedProjectLanguage">
+      <summary>"지원되지 않는 프로젝트 언어입니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UpdateEdmxNamespacesSuccessful">
+      <summary>"{0} 프로젝트에서 .edmx 파일의 저장소, 개념 및 매핑 섹션의 네임스페이스가 프로젝트의 대상 .NET Framework에 맞게 업데이트되었습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UsingDefaultConnectionString_1">
+      <summary>"'{1}' 파일에서 가져온 데이터 공급자 및 데이터베이스 연결 '{0}' 사용"과 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VsUtils_ErrorResolvingMacro">
+      <summary>"'{0}' 매크로를 확인할 수 없습니다."와 유사한 지역화된 문자열을 찾습니다. '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionConvertingProject">
+      <summary>"계층 구조를 프로젝트로 변환하는 과정에서 예외가 발생했습니다.계층 구조가 프로젝트가 아닙니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionParsingXml">
+      <summary>"'{0}' 파일을 구문 분석하는 과정에서 '{1}' 예외가 발생했습니다."와 유사한 지역화된 문자열을 찾습니다. '{1}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_InnerExceptionErrorFormat">
+      <summary>"'{0}' 형식의 내부 예외가 발생했습니다. 오류 메시지: '{1}'"과(와) 유사한 지역화된 문자열을 찾습니다. '{1}'..</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration">
+      <summary>연결의 하위 삭제 옵션을 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.DeleteBehavior">
+      <summary>하위 삭제 옵션을 가져오거나 설정합니다.</summary>
+      <returns>계단식 삭제 옵션입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper">
+      <summary>코드를 생성하기 위한 도우미 메서드를 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>지정된 속성의 익명 형식 람다를 지정합니다.</summary>
+      <returns>람다입니다.</returns>
+      <param name="properties">속성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration)">
+      <summary>지정된 구성을 적용하는 데 사용되는 데이터 주석 특성을 반환합니다.</summary>
+      <returns>지정된 구성을 적용하는 데 사용되는 데이터 주석 특성입니다.</returns>
+      <param name="configuration">구성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(System.String)">
+      <summary>지정된 본문이 포함된 특성을 반환합니다.</summary>
+      <returns>특성입니다.</returns>
+      <param name="attributeBody">특성의 본문입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.CodeProvider">
+      <summary>생성된 코드의 언어에 대한 공급자를 가져옵니다.</summary>
+      <returns>생성된 코드의 언어에 대한 공급자입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.MethodChain(Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration)">
+      <summary>지정된 구성을 적용하는 데 사용되는 Code First Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="configuration">구성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EdmMember)">
+      <summary>지정된 멤버의 속성 식별자를 지정합니다.</summary>
+      <returns>식별자입니다.</returns>
+      <param name="member">멤버입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EntitySetBase)">
+      <summary>지정된 엔터티 집합의 속성 식별자를 지정합니다.</summary>
+      <returns>식별자입니다.</returns>
+      <param name="entitySet">엔터티 집합입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>지정된 값의 문자열 배열 리터럴을 가져옵니다.</summary>
+      <returns>리터럴입니다.</returns>
+      <param name="values">값입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>지정된 속성의 형식을 지정합니다.</summary>
+      <returns>형식입니다.</returns>
+      <param name="property">속성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmType)">
+      <summary>지정된 형식의 형식 식별자를 지정합니다.</summary>
+      <returns>식별자입니다.</returns>
+      <param name="edmType">형식입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EntityContainer)">
+      <summary>지정된 컨테이너의 형식 식별자를 지정합니다.</summary>
+      <returns>식별자입니다.</returns>
+      <param name="container">컨테이너입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.NavigationProperty)">
+      <summary>지정된 탐색 속성의 형식을 지정합니다.</summary>
+      <returns>형식입니다.</returns>
+      <param name="navigationProperty">탐색 속성입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration">
+      <summary>속성에 대한 열 이름, 형식 및 순서를 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>특성 본문을 가져옵니다.</summary>
+      <returns>특성 본문입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Name">
+      <summary>열의 이름을 가져오거나 설정합니다.</summary>
+      <returns>열 이름입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Order">
+      <summary>이 열이 데이터베이스 테이블에 나타나는 순서를 가져오거나 설정합니다.</summary>
+      <returns>이 열이 데이터베이스 테이블에 나타나는 순서입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.TypeName">
+      <summary>데이터베이스 공급자별 데이터 형식의 이름을 가져오거나 설정합니다.</summary>
+      <returns>데이터베이스 공급자별 데이터 형식의 이름입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper">
+      <summary>C# 코드를 생성하기 위한 도우미 메서드를 제공합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>지정된 속성의 익명 형식 람다를 가져옵니다.</summary>
+      <returns>람다입니다.</returns>
+      <param name="properties">속성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.Attribute(System.String)">
+      <summary>지정된 본문이 포함된 특성을 가져옵니다.</summary>
+      <returns>특성입니다.</returns>
+      <param name="attributeBody">특성의 본문입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.CodeProvider">
+      <summary>C# 코드를 생성 및 컴파일하는 데 사용하는 코드 공급자를 가져옵니다.</summary>
+      <returns>C# 코드를 생성 및 컴파일하는 데 사용하는 코드 공급자입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>지정된 값의 문자열 배열 리터럴을 가져옵니다.</summary>
+      <returns>리터럴입니다.</returns>
+      <param name="values">값입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration">
+      <summary>속성의 데이터베이스 생성 옵션을 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성과 연결된 특성 본문을 가져옵니다.</summary>
+      <returns>구성과 연결된 특성 본문입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.StoreGeneratedPattern">
+      <summary>데이터베이스에서 속성의 값을 생성하는 데 사용되는 패턴을 가져오거나 설정합니다.</summary>
+      <returns>데이터베이스에서 속성 값을 생성하는 데 사용되는 패턴입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper">
+      <summary>모델을 분석하기 위한 도우미 메서드를 제공합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.#ctor(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>지정된 속성에 적용할 모델 구성을 가져옵니다.</summary>
+      <returns>구성입니다.</returns>
+      <param name="property">속성입니다.</param>
+      <param name="model">모델입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EntitySet,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>지정된 엔터티 형식에 적용할 모델 구성을 가져옵니다.</summary>
+      <returns>구성입니다.</returns>
+      <param name="entitySet">엔터티 형식의 집합입니다.</param>
+      <param name="model">모델입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>지정된 탐색 속성에 적용할 모델 구성을 가져옵니다.</summary>
+      <returns>구성입니다.</returns>
+      <param name="navigationProperty">탐색 속성입니다.</param>
+      <param name="model">모델입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetMultiplicityConfiguration(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Boolean@)">
+      <summary>지정된 탐색 속성에 적용할 복합성 모델 구성을 가져옵니다.</summary>
+      <returns>구성입니다.</returns>
+      <param name="navigationProperty">탐색 속성입니다.</param>
+      <param name="isDefault">구성이 기본적으로 적용될지 여부를 나타내는 값입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration">
+      <summary>문자열 또는 이진 속성을 고정 길이로 표시할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration">
+      <summary>연결의 외래 키 속성을 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.Properties">
+      <summary>연결의 외래 키에 사용되는 속성을 가져옵니다.</summary>
+      <returns>연결의 외래 키에 사용되는 속성입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration">
+      <summary>데이터 주석을 사용하여 적용할 수 있는 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 데이터 주석 특성의 본문을 가져옵니다.</summary>
+      <returns>특성의 본문입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IConfiguration">
+      <summary>모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration">
+      <summary>Code First Fluent API를 사용하여 적용할 수 있는 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration">
+      <summary>다대다 연결의 조인 테이블 및 열 이름을 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.LeftKeys">
+      <summary>왼쪽에 있는 엔터티의 테이블에 대한 외래 키의 열 이름을 가져옵니다.</summary>
+      <returns>왼쪽에 있는 엔터티의 테이블에 대한 외래 키의 열 이름입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.RightKeys">
+      <summary>오른쪽에 있는 엔터티의 테이블에 대한 외래 키의 열 이름을 가져옵니다.</summary>
+      <returns>오른쪽에 있는 엔터티의 테이블에 대한 외래 키의 열 이름입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Schema">
+      <summary>테이블의 스키마를 가져오거나 설정합니다.</summary>
+      <returns>테이블의 스키마입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Table">
+      <summary>테이블의 이름을 가져오거나 설정합니다.</summary>
+      <returns>테이블의 이름입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration">
+      <summary>엔터티의 키를 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성에 대한 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.KeyProperties">
+      <summary>엔터티의 키에 사용되는 속성을 가져옵니다.</summary>
+      <returns>엔터티의 키에 사용되는 속성입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration">
+      <summary>엔터티 키의 일부로 속성을 포함할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>특성 본문을 가져옵니다.</summary>
+      <returns>특성 본문입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration">
+      <summary>문자열 또는 이진 속성의 최대 길이를 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>길이 구성과 연결된 특성 본문을 반환합니다.</summary>
+      <returns>길이 구성과 연결된 특성 본문입니다.</returns>
+      <param name="code">구성에 대한 코드 도우미입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>길이 구성과 연결된 메서드 체인을 반환합니다.</summary>
+      <returns>길이 구성과 연결된 메서드 체인입니다.</returns>
+      <param name="code">구성에 대한 코드 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.MaxLength">
+      <summary>속성의 최대 길이를 가져오거나 설정합니다.</summary>
+      <returns>속성의 최대 길이입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration">
+      <summary>문자열 속성의 최대 길이를 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성과 연결된 특성 본문을 가져옵니다.</summary>
+      <returns>구성과 연결된 특성 본문입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration">
+      <summary>연결의 복합성을 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftEntityType">
+      <summary>연결의 왼쪽 끝에 있는 엔터티 형식을 가져오거나 설정합니다.</summary>
+      <returns>연결의 왼쪽 끝에 있는 엔터티의 형식입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftNavigationProperty">
+      <summary>연결의 왼쪽 끝에 있는 탐색 속성을 가져오거나 설정합니다.</summary>
+      <returns>연결의 왼쪽 끝에 있는 탐색 속성입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.RightNavigationProperty">
+      <summary>연결의 오른쪽 끝에 있는 탐색 속성을 가져오거나 설정합니다.</summary>
+      <returns>연결의 오른쪽 끝에 있는 탐색 속성입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration">
+      <summary>문자열 속성을 유니코드가 아닌 문자열로 표시할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration">
+      <summary>임시 속성의 전체 자릿수를 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.Precision">
+      <summary>속성의 전체 자릿수를 가져오거나 설정합니다.</summary>
+      <returns>속성의 전체 자릿수입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration">
+      <summary>10진수 속성의 전체 자릿수 및 소수 자릿수를 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Precision">
+      <summary>속성의 전체 자릿수를 가져오거나 설정합니다.</summary>
+      <returns>속성의 전체 자릿수입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Scale">
+      <summary>속성의 소수 자릿수를 가져오거나 설정합니다.</summary>
+      <returns>속성의 소수 자릿수입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration">
+      <summary>필요에 따라 속성을 표시할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>특성 본문을 가져옵니다.</summary>
+      <returns>특성 본문입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration">
+      <summary>엔터티의 테이블을 설정할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성과 연결된 특성 본문을 가져옵니다.</summary>
+      <returns>구성과 연결된 특성 본문입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성을 적용할 Fluent API 메서드 체인을 가져옵니다.</summary>
+      <returns>메서드 체인입니다.</returns>
+      <param name="code">코드를 생성하는 데 사용되는 도우미입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Schema">
+      <summary>테이블의 데이터베이스 스키마를 가져오거나 설정합니다.</summary>
+      <returns>테이블의 데이터베이스 스키마입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Table">
+      <summary>테이블의 이름을 가져오거나 설정합니다.</summary>
+      <returns>테이블의 이름입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration">
+      <summary>이진 열을 타임스탬프로 표시할 모델 구성을 나타냅니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성과 연결된 특성 본문을 가져옵니다.</summary>
+      <returns>구성과 연결된 특성 본문입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>구성과 연결된 메서드 체인을 가져옵니다.</summary>
+      <returns>구성과 연결된 메서드 체인입니다.</returns>
+      <param name="code">코드 도우미입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper">
+      <summary>Visual Basic 코드를 생성하기 위한 도우미 메서드를 제공합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>지정된 속성의 익명 형식 람다를 가져옵니다.</summary>
+      <returns>람다입니다.</returns>
+      <param name="properties">속성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.Attribute(System.String)">
+      <summary>지정된 본문이 포함된 특성을 가져옵니다.</summary>
+      <returns>특성입니다.</returns>
+      <param name="attributeBody">특성의 본문입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.CodeProvider">
+      <summary>Visual Basic 코드를 생성 및 컴파일하는 데 사용하는 코드 공급자를 가져옵니다.</summary>
+      <returns>Visual Basic 코드를 생성 및 컴파일하는 데 사용하는 코드 공급자입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>지정된 값의 문자열 배열 리터럴을 가져옵니다.</summary>
+      <returns>리터럴입니다.</returns>
+      <param name="values">값입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>TemplateActivity를 사용하여 SSDL에서 DDL로의 변환을 허용하는 SsdlToDdlActivity입니다.이 클래스는 Microsoft.Data.Entity.Design.CreateDatabase를 제외한 Microsoft.Data.Entity.Design.* 네임스페이스의 모든 인스턴스 형식(특히 Entity Designer에서 인스턴스화한 형식)에 대한 종속성을 피해야 합니다.VS 종속성으로 인해 이 클래스는 이 프로젝트에 있습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> 및 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> 속성의 SSDL(저장소 스키마 정의 언어)에서 생성된 DDL(데이터 정의 언어)을 지정하는 Windows Workflow <see cref="T:System.Activities.OutArgument`1" />입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>기존 데이터베이스 개체의 삭제를 위한 DDL(데이터 정의 언어)이 생성되는 기존 SSDL(저장소 스키마 정의 언어)을 지정하는 Windows Workflow <see cref="T:System.Activities.InArgument`1" />입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>새 데이터베이스 개체 만들기를 위한 DDL(데이터 정의 언어)이 생성되는 SSDL(저장소 스키마 정의 언어)을 지정하는 Windows Workflow <see cref="T:System.Activities.InArgument`1" />입니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData">
+      <summary>서로 다른 레이어를 구분하기 위해 LayerManager에서 사용되는 상위 인터페이스입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData.LayerName">
+      <summary>이 확장성 레이어의 이름입니다.</summary>
+      <returns>
+        <see cref="T:System.String" />를 반환합니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <returns>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection" />를 반환합니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardStage">
+      <summary>WizardStage는 마법사 확장 페이지가 모델 생성 전 또는 후에 마법사에 표시되는지를 나타냅니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PostModelGeneration">
+      <summary>마법사 확장 페이지가 모델 생성 후에 표시됩니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PreModelGeneration">
+      <summary>마법사 확장 페이지가 모델 생성 전에 표시됩니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Templates.TemplateResources">
+      <summary>지역화된 문자열 등을 찾기 위한 강력한 형식의 리소스 클래스입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Culture">
+      <summary>이 강력한 형식의 리소스 클래스를 사용하여 모든 리소스를 검색할 경우 현재 스레드의 CurrentUICulture 속성을 다시 정의합니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.ResourceManager">
+      <summary>이 클래스에 사용된 캐시된 ResourceManager 인스턴스를 반환합니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveEntitySetConflict">
+      <summary>"EntitySet '{0}.{1}'은(는) 기존 EntitySet와 대/소문자만 다르므로 현재 언어 옵션과 호환되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveMemberConflict">
+      <summary>"Member '{0}.{1}'은(는) 기존 Member와 대/소문자만 다르므로 현재 언어 옵션과 호환되지 않습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveTypeConflict">
+      <summary>"'{0}' 형식이 고유하지 않습니다.이는 현재 언어 옵션과 호환되지 않는 대/소문자만 다른 형식으로 인해 발생합니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine1">
+      <summary>"이 코드는 템플릿에서 생성되었습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine2">
+      <summary>"이 파일을 수동으로 변경하면 응용 프로그램에 예기치 않은 동작이 발생할 수 있습니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine3">
+      <summary>"코드가 다시 생성되면 이 파일에 대한 수동 변경 사항을 덮어씁니다."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_ReplaceVsItemTemplateToken">
+      <summary>"생성하는 데 사용할 실제 .edmx 파일의 이름으로 대체 토큰 '$edmxInputFile$'을 덮어쓰십시오."와 유사한 지역화된 문자열을 찾습니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>지역화를 위해 위성 리소스 DLL에서 액세스할 수 있어야 하므로 public이어야 합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>이벤트와 이름을 컴파일된 콘텐츠에 연결합니다.</summary>
+      <param name="connectionId">호출을 구분할 식별자 토큰입니다.</param>
+      <param name="target">이벤트 및 이름을 연결할 대상입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>컴파일된 콘텐츠의 이벤트 setter 및 템플릿에서 이벤트를 연결합니다.</summary>
+      <param name="connectionId">이벤트 연결용 고유 연결 ID입니다.</param>
+      <param name="target">이벤트 연결 대상입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="projectItem">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="project">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="projectItem">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="automationObject">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+      <param name="replacementsDictionary">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+      <param name="runKind">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+      <param name="customParams">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <returns>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</returns>
+      <param name="filePath">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>Visual Studio에서 "ADO.NET 엔터티 데이터 모델" 형식의 새 항목을 기존 프로젝트에 추가하면 이 마법사가 호출됩니다.이 마법사는 .vstemplate 파일 항목 템플릿에 등록됩니다.이 항목 템플릿을 통해 추가되는 파일: +- modelName.edmx | +- modelName.edmx.diagram | +- modelName.Designer.cs [또는 vb] =&amp;amp;gt; 코드 생성기 출력(EF5 및 레거시 ObjectContext 생성기의 경우) 또는 +- ModelName.cs [또는 vb] - CodeFirst의 경우</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>이 메서드는 OpenInEditor 특성이 있는 항목을 열기 전에 호출됩니다. 이렇게 하면 템플릿에서 항목을 열기 전에 사용자 지정 마법사 논리를 실행할 수 있습니다.</summary>
+      <param name="projectItem">열릴 프로젝트 항목입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>이 메서드는 프로젝트가 만들어진 후에 호출됩니다. 이렇게 하면 프로젝트 생성이 완료되었을 때 사용자 지정 마법사 논리를 실행할 수 있습니다.</summary>
+      <param name="project">프로젝트입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>이 메서드는 프로젝트 템플릿이 아닌 항목 템플릿에 대해서만 호출됩니다.</summary>
+      <param name="projectItem">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>이 메서드는 템플릿 마법사의 끝에서 호출됩니다. 이렇게 하면 마법사가 모든 작업을 완료했을 때 사용자 지정 마법사 논리를 실행할 수 있습니다. .vstemplate을 통해 추가된 파일에 대한 프로젝트 항목 종속성을 여기에서 설정합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>이 메서드는 템플릿 마법사의 끝에서 호출됩니다. 이렇게 하면 마법사가 모든 작업을 완료했을 때 사용자 지정 마법사 논리를 실행할 수 있습니다. .vstemplate을 통해 추가된 파일에 대한 프로젝트 항목 종속성을 여기에서 설정합니다.</summary>
+      <param name="automationObject">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+      <param name="replacementsDictionary">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+      <param name="runKind">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+      <param name="customParams">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>지정된 프로젝트 항목을 프로젝트에 추가해야 하는지 여부를 나타냅니다.</summary>
+      <returns>항목을 추가해야 하면 true이고, 그렇지 않으면 false입니다.</returns>
+      <param name="filePath">프로젝트 항목의 경로입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.#ctor">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="projectItem">프로젝트 항목입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="project">프로젝트입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="projectItem">프로젝트 항목입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunFinished">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="automationObject">자동화 개체입니다.</param>
+      <param name="replacementsDictionary">대체 사전입니다.</param>
+      <param name="runKind">실행 유형입니다.</param>
+      <param name="customParams">사용자 지정 매개 변수입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ShouldAddProjectItem(System.String)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <returns>프로젝트 항목을 추가해야 하면 true이고, 그렇지 않으면 false입니다.</returns>
+      <param name="filePath">파일 경로입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>VS의 IVsSingleFileGenerator 개념에 대한 관리되는 래퍼입니다. IVsSingleFileGenerator는 빌드 중에 호출되는 사용자 지정 도구로, 모든 파일을 입력으로 사용하여 컴파일 가능한 코드 파일을 출력으로 제공할 수 있습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>IVsSingleFileGenerator.DefaultExtension 메서드를 구현합니다.생성된 파일의 확장명을 반환합니다.</summary>
+      <returns>성공하면 S_OK이고, 그렇지 않으면 E_FAIL입니다.</returns>
+      <param name="pbstrDefaultExtension">Out 매개 변수는 출력 파일 이름으로 지정되는 확장명을 보유합니다.반환된 확장명 앞에는 마침표가 있어야 합니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>이 생성기의 기본 확장명을 가져옵니다.</summary>
+      <returns>이 생성기의 기본 확장명이 포함된 문자열입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>관리되지 않는 리소스의 확보, 해제 또는 다시 설정과 관련된 응용 프로그램 정의 작업을 수행합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>관리되지 않는 리소스 및 선택적으로 관리되는 리소스를 해제합니다.</summary>
+      <param name="disposing">관리되는 리소스와 관리되지 않는 리소스를 모두 해제하려면 true로 설정하고, 관리되지 않는 리소스만 해제하려면 false로 설정합니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" /> 클래스의 인스턴스를 종료합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>생성을 수행하도록 VS 셸에서 호출하는 main 메서드입니다.</summary>
+      <returns>상태 코드입니다.</returns>
+      <param name="wszInputFilePath">입력 파일의 경로입니다.</param>
+      <param name="bstrInputFileContents">문자열로 표시되는 입력 파일의 내용입니다. 셸은 UTF-8에서 유니코드까지와 해당 형식의 변환을 처리합니다.</param>
+      <param name="wszDefaultNamespace">생성된 코드 파일의 기본 네임스페이스입니다.</param>
+      <param name="rgbOutputFileContents">출력 파일 내용의 바이트 배열입니다.</param>
+      <param name="pcbOutput">출력 바이트 배열의 바이트 수입니다.</param>
+      <param name="pGenerateProgress">진행률 업데이트를 셸에 보내는 인터페이스입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>입력 파일이 지정된 경우 코드를 생성하는 실제 작업을 수행하는 메서드입니다.</summary>
+      <returns>바이트 배열로 표시되는 생성된 코드 파일입니다.</returns>
+      <param name="inputFileName">입력 파일 이름입니다.</param>
+      <param name="inputFileContent">문자열로 표시되는 파일 내용입니다.</param>
+      <param name="defaultNamespace">기본 네임스페이스입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>셸 콜백 메커니즘을 통해 오류를 전달하는 메서드입니다.</summary>
+      <param name="warning">이것이 경고이면 true입니다.</param>
+      <param name="level">수준 또는 심각도입니다.</param>
+      <param name="message">사용자에게 표시되는 텍스트입니다.</param>
+      <param name="line">오류/경고가 발생한 줄 번호입니다.</param>
+      <param name="column">오류/경고가 발생한 열 번호입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>이 클래스는 전처리기 빌드 단계에서 공동으로 만들어집니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>생성기가 호출된 프로젝트 항목을 포함하는 프로젝트의 언어에 대한 CodeDomProvider 개체를 반환합니다.</summary>
+      <returns>CodeDomProvider 개체입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>관리되지 않는 리소스 및 선택적으로 관리되는 리소스를 해제합니다.</summary>
+      <param name="disposing">관리되는 리소스와 관리되지 않는 리소스를 모두 해제하려면 true로 설정하고, 관리되지 않는 리소스만 해제하려면 false로 설정합니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>VS ErrorList 개체를 가져옵니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>Type별로 서비스를 가져오는 메서드입니다.</summary>
+      <returns>요청된 서비스를 구현하는 개체입니다.</returns>
+      <param name="serviceType">검색할 서비스의 형식입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>IOleObjectWithSite의 GetSite 메서드입니다.</summary>
+      <param name="riid">가져올 인터페이스입니다.</param>
+      <param name="ppvSite">반환 값을 채울 배열입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>코드 생성기가 호출된 프로젝트 항목을 포함하는 프로젝트의 EnvDTE.Project 개체를 반환합니다.</summary>
+      <returns>코드 생성기가 호출된 프로젝트 항목을 포함하는 프로젝트의 EnvDTE.Project 개체입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>코드 생성기가 호출된 프로젝트 항목에 해당하는 EnvDTE.ProjectItem 개체를 반환합니다.</summary>
+      <returns>코드 생성기가 호출된 프로젝트 항목의 EnvDTE.ProjectItem입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>IOleObjectWithSite의 SetSite 메서드입니다.</summary>
+      <param name="pUnkSite">이 개체를 사용하기 위한 사이트입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>IOleServiceProvider가 지정된 경우 요청 시 ServiceProvider를 만듭니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>SFG 기반 코드 생성기는 1을 통해 작동합니다. 1.EDMX 파일 2에서 CodeGenerationStrategy 옵션을 읽는 중입니다.CodeGenerationStrategy가 '기본값'으로 설정되어 있으면 codegen: 3을 진행합니다. 3.System.Data.Entity.Design CodeGen API 호출</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+      <param name="itemId">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+      <param name="oldInputName">이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>이 API는 Entity Framework 인프라를 지원하며 코드에서 직접 사용할 수 없습니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>CodeDomProvider에서 출력 파일의 기본 확장명을 가져옵니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>CodeGen API를 호출하여 CSDL 파일에서 코드 파일을 생성합니다.</summary>
+      <returns>null은 오류를 의미하고, 그렇지 않으면 파일의 내용입니다.</returns>
+      <param name="inputFileName">CSDL 파일의 전체 경로입니다. 이 경로는 ProjectItem에서 제공됩니다.</param>
+      <param name="inputFileContent">CSDL 파일의 내용입니다. 이 내용은 메모리 내 문서를 생성할 수 있도록 항상 사용되어야 합니다.</param>
+      <param name="defaultNamespace">기본 네임스페이스입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>WF 워크플로 내에서 T4 템플릿의 변환을 허용하는 TemplateActivity입니다.이 클래스는 Microsoft.Data.Entity.Design.CreateDatabase를 제외한 Microsoft.Data.Entity.Design.* 네임스페이스의 모든 인스턴스 형식(특히 Entity Designer에서 인스턴스화한 형식)에 대한 종속성을 피해야 합니다.VS 종속성으로 인해 이 클래스는 이 프로젝트에 있습니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Visual Studio STextTemplatingService를 호출하여 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 속성으로 지정된 텍스트 템플릿을 변환합니다.</summary>
+      <param name="context">현재 활동의 상태입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>텍스트 템플릿에 입력을 제공하는 데 사용되는 <see cref="T:System.Collections.IDictionary" />를 채웁니다.사용자 지정 입력을 제공하기 위해 파생 클래스에서 이 메서드를 재정의할 수 있습니다.이러한 입력은 텍스트 템플릿에서 사용할 수 있도록 <see cref="T:System.Runtime.Remoting.Messaging.CallContext" />에 배치됩니다.</summary>
+      <param name="context">현재 활동의 상태입니다.</param>
+      <param name="inputs">텍스트 템플릿에 사용할 수 있도록 입력 이름을 입력 값과 연결하는 사전입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>매크로를 포함할 수 있는 경로, 즉 "$(DevEnvDir)\..."가 지정된 경우 Visual Studio의 텍스트 템플릿 서비스를 사용하여T4 템플릿을 처리합니다.참고: 파일이 아니거나 UNC 경로인 템플릿 경로는 허용되지 않습니다.</summary>
+      <returns>템플릿 처리 출력입니다.</returns>
+      <param name="templatePath">템플릿의 파일 경로는 프로젝트 기반 매크로를 포함할 수 있습니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 속성으로 지정된 템플릿의 출력입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>처리되는 텍스트 템플릿의 경로입니다.</summary>
+    </member>
+    <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+      <summary>GeneratedInternalTypeHelper</summary>
+    </member>
+    <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.#ctor">
+      <summary>
+        <see cref="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper" /> 클래스의 새 인스턴스를 초기화합니다.</summary>
+    </member>
+  </members>
+</doc>

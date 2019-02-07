@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.Extensibility</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ChangeEntityDesignerSelectionEventArgs">
+      <summary>定义允许实体设计器的扩展程序以编程的方式推动选择的 EventArgs 类型</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ChangeEntityDesignerSelectionEventArgs.#ctor(System.IServiceProvider,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>初始化 ChangeEntityDesignerSelectionEventArgs。此示例中的“SelectionIdentifier”是与根目录中选择的层次结构对应的分隔字符串。例如，若要选择实体类型“SomeEntity”中的属性“SomeProperty”，则 SelectionIdentifier 将为：SomeProperty.SomeEntity。</summary>
+      <param name="layerServiceProvider">层扩展提供的服务提供程序</param>
+      <param name="selectionIdentifiers">用于在实体设计器中推动选择的一组字符串标识符</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope">
+      <summary>创建可以通过 Visual Studio 中的“撤消”和“重做”按钮进行撤消或重做的工作单元。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Complete">
+      <summary>提交更改范围中的所有操作。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Dispose">
+      <summary>释放 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> 类的当前实例所使用的所有资源。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Dispose(System.Boolean)">
+      <summary>在此基类中不执行任何操作。应在从此类继承并具有要释放的资源的类中重写。</summary>
+      <param name="disposing">如果从 Dispose() 调用，则为 true，如果从终结器调用，则为 false</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Finalize">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> 类的终结器</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute">
+      <summary>指定实体数据模型设计器或模型浏览器中的对象，当用户选择这些对象时将导致调用批注类的 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.#ctor(Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection)">
+      <summary>实例化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute" /> 类的新实例。</summary>
+      <param name="entityDesignerSelection">实体数据模型设计器或模型浏览器中的对象，当用户选择该对象时将触发 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" /> 方法调用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.EntityDesignerSelection">
+      <summary>实体数据模型设计器或模型浏览器中的对象，当用户选择该对象时将触发 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" /> 方法调用。</summary>
+      <returns>实体数据模型设计器中的对象，当用户选择该对象时将触发 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" /> 方法调用。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute">
+      <summary>用于指定扩展属于特定层的属性</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute.#ctor(System.String)">
+      <summary>使用给定特定层名称创建 EntityDesignerLayerAttribute</summary>
+      <param name="layerName">指定层（扩展的逻辑集合）的唯一名称</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerLayerAttribute.LayerName">
+      <summary>指定层（扩展的逻辑集合）的唯一名称</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection">
+      <summary>一个枚举，用于指定当在实体数据模型设计器或模型浏览器中选择哪些对象类型时，会导致调用批注类的 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociation">
+      <summary>指定当在实体数据模型设计器或模型浏览器中选择概念模型关联时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociationSet">
+      <summary>指定当在模型浏览器中选择概念模型关联集时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexProperty">
+      <summary>指定当在实体数据模型设计器或模型浏览器中选择概念模型复杂属性时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexType">
+      <summary>指定当在模型浏览器中选择概念模型复杂类型时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityContainer">
+      <summary>指定当在模型浏览器中选择概念模型实体容器时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntitySet">
+      <summary>指定当在模型浏览器中选择概念模型实体集时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityType">
+      <summary>指定当在实体数据模型设计器或模型浏览器中选择概念模型实体类型时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImport">
+      <summary>指定当在模型浏览器中选择概念模型函数导入时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImportParameter">
+      <summary>指定当在模型浏览器中选择概念模型函数导入参数时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelNavigationProperty">
+      <summary>指定当在实体数据模型设计器或模型浏览器中选择概念模型导航属性时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelProperty">
+      <summary>指定当在实体数据模型设计器或模型浏览器中选择概念模型属性时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.DesignerSurface">
+      <summary>指定当在实体数据模型设计器中选择实体数据模型设计器图面时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelAssociation">
+      <summary>指定当在模型浏览器中选择存储模型关联时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityContainer">
+      <summary>指定当在模型浏览器中选择存储模型实体容器时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityType">
+      <summary>指定当在模型浏览器中选择存储模型实体类型时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunction">
+      <summary>指定当在模型浏览器中选择存储模型函数时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunctionParameter">
+      <summary>指定当在模型浏览器中选择存储模型函数参数时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelProperty">
+      <summary>指定当在模型浏览器中选择存储模型属性时，应调用 <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> 方法。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" />、<see cref="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" />、<see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" /> 和 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" /> 类的基类。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.EntityFrameworkVersion">
+      <summary>实体框架的目标版本。</summary>
+      <returns>实体框架的目标版本。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.Project">
+      <summary>当前 Visual Studio 项目。</summary>
+      <returns>当前 Visual Studio 项目。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError">
+      <summary>为扩展实体数据模型设计器功能的 Visual Studio 扩展封装自定义错误信息。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity)">
+      <summary>实例化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 的新实例。</summary>
+      <param name="message">描述错误的消息。</param>
+      <param name="errorCode">与错误关联的错误代码。</param>
+      <param name="severity">错误的严重级别。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity,System.Int32,System.Int32)">
+      <summary>实例化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 的新实例。</summary>
+      <param name="message">描述错误的消息。</param>
+      <param name="errorCode">与错误关联的错误代码。</param>
+      <param name="severity">错误的严重级别。</param>
+      <param name="line">发生错误的输入或输出文档行。</param>
+      <param name="column">发生错误的输入或输出文档列。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Column">
+      <summary>发生错误的输入或输出文档列。</summary>
+      <returns>发生错误的输入或输出文档列。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.ErrorCode">
+      <summary>与错误关联的错误代码。</summary>
+      <returns>与错误关联的错误代码。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Line">
+      <summary>发生错误的输入或输出文档行。</summary>
+      <returns>发生错误的输入或输出文档行。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Message">
+      <summary>描述错误的消息。</summary>
+      <returns>描述错误的消息。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Severity">
+      <summary>错误的严重级别。</summary>
+      <returns>错误的严重级别。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity">
+      <summary>描述 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 的严重级别的枚举。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Error">
+      <summary>指示 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 的严重级别为 Error。具有此严重级别的 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 会作为错误出现在 Visual Studio“错误列表”中。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Message">
+      <summary>指示 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 的严重级别为 Message。具有此严重级别的 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 会作为消息出现在 Visual Studio“错误列表”中。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Warning">
+      <summary>指示 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 的严重级别为 Warning。具有此严重级别的 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> 会作为警告出现在 Visual Studio“错误列表”中。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty">
+      <summary>公开一些方法，用于向实体数据模型设计器或模型浏览器中对用户可见的对象添加属性。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)">
+      <summary>为在实体数据模型设计器或模型浏览器中选择的对象创建新属性。</summary>
+      <returns>一个对象，其公共属性显示在 Visual Studio“属性”窗口中。有关更多信息，请参见 <see cref="T:System.Windows.Forms.PropertyGrid" />。</returns>
+      <param name="xElement">.edmx 文件中的元素，用于定义在实体数据模型设计器或模型浏览器中选择的对象。</param>
+      <param name="context">提供文件和项目信息。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer">
+      <summary>此类允许实体设计器中“层”的概念。层可打开和关闭；它们由以下内容组成：(1) 有关功能的简单元数据 (2) 可对功能执行的命令 (3) 核心属性扩展 (4) 设计器中出现的操作的简单事件接收器 (5) 基本选择机制驱动程序</summary>
+    </member>
+    <member name="E:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.ChangeEntityDesignerSelection">
+      <summary>更改实体设计器上的选择。此处的选择标识符与“EntityName”、“AssociationName”或“EntityName.PropertyName”对应。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.IsSealed">
+      <summary>确定第三方属性扩展可订阅此层的位置</summary>
+      <returns>返回 <see cref="T:System.Boolean" />。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.Name">
+      <summary>层的名称</summary>
+      <returns>返回 <see cref="T:System.String" />。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnAfterLayerLoaded(System.Xml.Linq.XObject)">
+      <summary>在加载层后触发。</summary>
+      <param name="xObject">未选中任何内容时活动设计器或概念模型中的所选对象。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnAfterTransactionCommitted(System.Collections.Generic.IEnumerable{System.Tuple{System.Xml.Linq.XObject,System.Xml.Linq.XObjectChange}})">
+      <summary>提交事务时触发。层扩展在类似重新加载拥有的工具窗口的情况下可执行基本操作。</summary>
+      <param name="xmlChanges">事务过程中进行的更改的列表。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnBeforeLayerUnloaded(System.Xml.Linq.XObject)">
+      <summary>在卸载层前触发。</summary>
+      <param name="conceptualModelXObject">概念模型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.OnSelectionChanged(System.Xml.Linq.XObject)">
+      <summary>在设计器图面上更改选择时触发</summary>
+      <param name="selection">活动设计器或概念模型中的所选对象。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.Properties">
+      <summary>自动订阅此功能的核心属性扩展。</summary>
+      <returns>返回 <see cref="T:System.Collections.Generic.IList`1" />。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayer.ServiceProvider">
+      <summary>层可提供其自己的服务提供程序供选择。当前限制为一层只能提供一个就位的服务提供程序。</summary>
+      <returns>返回 <see cref="T:System.IServiceProvider" />。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension">
+      <summary>公开一些方法，这些方法用于在自定义文件格式与实体数据模型设计器可读的 .edmx 文件格式之间进行双向转换。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnAfterFileLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>定义自定义功能，用于加载具有自定义格式的文件并将其转换为 .edmx 格式。</summary>
+      <param name="context">提供文件和项目信息。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnBeforeFileSaved(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>定义自定义功能，用于在保存 .edmx 文件之前将其转换为具有自定义格式的文件。</summary>
+      <param name="context">提供文件和项目信息。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension">
+      <summary>公开用于自定义 .edmx 文件生成的方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelGenerated(Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext)">
+      <summary>定义在实体数据模型向导生成 .edmx 文件之后执行的自定义功能。</summary>
+      <param name="context">提供文件和项目信息。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelUpdated(Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext)">
+      <summary>定义在模型更新向导更新 .edmx 文件之后执行的功能。</summary>
+      <param name="context">提供文件和项目信息。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension">
+      <summary>公开用于扩展 .edmx 文件的加载和保存过程的方法。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnAfterModelLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>定义用于扩展实体数据模型设计器加载 .edmx 文件时所用过程的功能。</summary>
+      <param name="context">提供文件和 Visual Studio 项目信息。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnBeforeModelSaved(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>定义用于扩展实体数据模型设计器保存 .edmx 文件时所用过程的功能。</summary>
+      <param name="context">提供文件和项目信息。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext">
+      <summary>向 Visual Studio 扩展提供文件和项目信息，这些扩展实现自定义文件格式的加载和保存。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.CurrentDocument">
+      <summary>返回从自定义文件格式转换而来的 .edmx 文档。</summary>
+      <returns>从自定义文件格式转换而来的 .edmx 文档。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.Errors">
+      <summary>一个错误列表，其中的错误可在加载自定义文件格式和将文件转换为自定义文件格式时显示于 Visual Studio“错误列表”中。</summary>
+      <returns>一个错误列表，其中的错误可在加载自定义文件格式和将文件转换为自定义文件格式时显示于 Visual Studio“错误列表”中。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.FileInfo">
+      <summary>返回有关实体数据模型设计器正在处理的自定义文件的信息。</summary>
+      <returns>有关实体数据模型设计器正在处理的自定义文件的信息。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.OriginalDocument">
+      <summary>返回实体设计器打开或保存的原始文档。</summary>
+      <returns>实体设计器打开或保存的原始文档。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.ProjectItem">
+      <summary>当前 Visual Studio 项目项。</summary>
+      <returns>当前 Visual Studio 项目项。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute">
+      <summary>指定实体数据模型设计器可以加载或保存的自定义文件扩展名。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.#ctor(System.String)">
+      <summary>创建 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute" /> 类的新实例。</summary>
+      <param name="fileExtension">实体数据模型设计器可以加载和保存的自定义文件的文件扩展名。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.FileExtension">
+      <summary>实体数据模型设计器可以加载和保存的自定义文件的文件扩展名。</summary>
+      <returns>实体数据模型设计器可以加载和保存的自定义文件的文件扩展名。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext">
+      <summary>向 Visual Studio 扩展提供文件和项目信息，这些扩展将对实体数据模型向导的 .edmx 文件生成过程进行扩展。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.CurrentDocument">
+      <summary>表示要修改的 .edmx 文档。</summary>
+      <returns>表示要修改的 .edmx 文档。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.GeneratedDocument">
+      <summary>表示实体数据模型向导生成的原始 .edmx 文件。</summary>
+      <returns>表示实体数据模型向导生成的原始 .edmx 文件。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.WizardKind">
+      <summary>启动 .edmx 文件生成或更新过程的向导。</summary>
+      <returns>启动 .edmx 文件生成或更新过程的向导。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext">
+      <summary>向 Visual Studio 扩展提供文件和项目信息，这些扩展通过实体数据模型设计器扩展 .edmx 文件的加载和保存。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.CurrentDocument">
+      <summary>Visual Studio 扩展可以操作的当前 .edmx 文件。</summary>
+      <returns>Visual Studio 扩展可以操作的当前 .edmx 文件。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.Errors">
+      <summary>一个错误列表，其中的错误可在实体数据模型设计器加载或保存 .edmx 文件时显示于 Visual Studio“错误列表”中。</summary>
+      <returns>一个错误列表，其中的错误可在实体数据模型设计器加载或保存 .edmx 文件时显示于 Visual Studio“错误列表”中。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.OriginalDocument">
+      <summary>加载到内存中的原始 .edmx 文件。</summary>
+      <returns>加载到内存中的原始 .edmx 文件。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.ProjectItem">
+      <summary>当前 Visual Studio 项目项。</summary>
+      <returns>当前 Visual Studio 项目项。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext">
+      <summary>向 Visual Studio 扩展提供文件和项目信息，这些扩展向实体数据模型设计器或模型浏览器中可见的对象添加自定义属性。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" /> 类的新实例。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.CreateChangeScope(System.String)">
+      <summary>创建 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> 对象，并设置在 Visual Studio 中的“撤消”和“重做”按钮的下拉列表中显示的字符串。</summary>
+      <returns>EntityDesignerChangeScope 的实例</returns>
+      <param name="undoRedoDescription">将在 Visual Studio 中的“撤消”和“重做”按钮的下拉列表中显示的字符串。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.ProjectItem">
+      <summary>当前 Visual Studio 项目项。</summary>
+      <returns>当前 Visual Studio 项目项。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext">
+      <summary>向扩展模型更新向导所用 .edmx 文件更新过程的 Visual Studio 扩展提供文件和项目信息。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.#ctor">
+      <summary>初始化 <see cref="T:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext" /> 类的新实例。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.OriginalDocument">
+      <summary>表示模型更新向导运行之前的 .edmx 文件。</summary>
+      <returns>表示模型更新向导运行之前的 .edmx 文件。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.ProjectItem">
+      <summary>当前 Visual Studio 项目项。</summary>
+      <returns>当前 Visual Studio 项目项。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.UpdateModelDocument">
+      <summary>表示模型更新向导运行之后的 .edmx 文件。</summary>
+      <returns>表示模型更新向导运行之后的 .edmx 文件。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardKind">
+      <summary>一个枚举，提供有关启动 .edmx 文件生成或更新过程的向导的信息。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.Generate">
+      <summary>指示实体数据模型向导启动了 .edmx 文件生成过程。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.None">
+      <summary>指示无向导启动 .edmx 文件修改过程。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.UpdateModel">
+      <summary>指示模型更新向导启动了 .edmx 文件更新过程。</summary>
+    </member>
+  </members>
+</doc>

@@ -1,0 +1,181 @@
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd_HHmmss)_$(Rev:rr)
+
+##LAJresources:
+##LAJ  repo: self
+##LAJ  clean: true
+queue:
+  name: VSEng-MicroBuildVS2017
+  timeoutInMinutes: 60
+  demands: 
+  - Cmd
+  - msbuild
+
+
+#Your build pipeline references an undefined variable named ‘comspec’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘comspec’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references an undefined variable named ‘comspec’. Create or edit the build pipeline for this YAML file, define the 
+
+##LAJvariables:
+##LAJ  SingletonMsiName: 'EF6Tools'
+steps:
+- powershell: |
+   Get-Date -UFormat "%y%m%d_%H%M%S"
+    
+  displayName: Create JobStartDateTime Variable
+  enabled: false
+
+- task: BatchScript@1
+  displayName: Run EFBuild
+  inputs:
+    filename: '$(comspec)'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\EFTools.msbuild /v:d /p:RunCodeAnalysis=false /p:Configuration=$(BuildConfiguration) /t:EnableSkipStrongNames;Clean;BuildDesigner"'
+
+- task: ms-vseng.MicroBuildTasks.a0262b21-fb8f-46f8-bb9a-60ed560d4a87.MicroBuildLocalizationPlugin@1
+  displayName: Install Localization Plugin
+
+- task: MSBuild@1
+  displayName: Localize Assemblies
+  inputs:
+    solution: 'build\loc.proj'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:AfterBuild'
+
+- task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@1
+  displayName: Install Signing Plugin
+  inputs:
+    signType: '$(SigningType)'
+
+- task: MSBuild@1
+  displayName: Sign Unlocalized and Localized Assemblies
+  inputs:
+    solution: 'build\sign.proj'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:AfterBuild'
+
+- task: BatchScript@1
+  displayName: Generate Setup Inputs
+  inputs:
+    filename: '$(comspec)'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\src\EFTools\setup\GenerateMsiInputs\GenerateMsiInputs.msbuild /p:Configuration=$(BuildConfiguration) /t:GenerateMSIInputs"'
+
+- task: ms-vseng.MicroBuildTasks.32f78468-e895-4f47-962c-58a699361df8.MicroBuildSwixPlugin@1
+  displayName: Install Swix Plugin
+
+- task: MSBuild@1
+  displayName: Build VSIX
+  inputs:
+    solution: 'setup\swix\vs_eftools.swixproj'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:Build'
+
+- task: NuGetCommand@2
+  displayName: NuGet Restore WixProj Using CredentialManager
+  inputs:
+    command: custom
+    feedsToUse: config
+    nugetConfigPath: '.nuget\NuGet.config'
+    externalFeedCredentials: 'OSSCG Feed - Microsoft approved OSS packages'
+    arguments: 'restore $(Build.Repository.LocalPath)\setup\wix\packages.config -SolutionDirectory $(Build.Repository.LocalPath)\setup\wix -Verbosity Detailed -NonInteractive -ConfigFile $(Build.Repository.LocalPath)\.nuget\NuGet.config'
+
+- task: BatchScript@1
+  displayName: Build Singleton MSI Batch
+  inputs:
+    filename: '$(comspec)'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\setup\wix\EFToolsWillowMsi.wixproj /p:Configuration=$(BuildConfiguration) /p:EmbedCab=$(EmbedCab) /p:SingletonMsiName=$(SingletonMsiName) /t:Build"'
+  enabled: false
+
+- task: MSBuild@1
+  displayName: Build Singleton MSI
+  inputs:
+    solution: '$(Build.Repository.LocalPath)\setup\wix\EFToolsWillowMsi.wixproj'
+    msbuildArchitecture: x64
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:Build /v:d'
+  timeoutInMinutes: 10
+
+- task: CopyFiles@2
+  displayName: Copy VSIX, MSI and CAB
+  inputs:
+    SourceFolder: 'bin\$(BuildConfiguration)'
+    Contents: |
+     vs_eftools.vsix
+     vs_eftools.json
+     $(SingletonMsiName).msi
+     $(SingletonMsiName).cab
+     $(SingletonMsiName).wixpdb
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\SetupResults'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish VSIX, MSI and CAB to VSTS
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\SetupResults'
+    ArtifactName: SetupResultsToVSTS
+  enabled: false
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish VSIX, MSI and CAB to Drop
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\SetupResults'
+    ArtifactName: SetupResults
+    publishLocation: FilePath
+    TargetPath: '$(DropFileShare)\$(Build.SourceBranchName)\$(Build.BuildId)\VS2017'
+
+- task: CopyFiles@2
+  displayName: Copy PDB and XML Files
+  inputs:
+    SourceFolder: 'bin\$(BuildConfiguration)'
+    Contents: |
+     Microsoft.Data.*.pdb
+     Microsoft.VisualStudio.Data.*.pdb
+     Microsoft.Data.*.xml
+     Microsoft.VisualStudio.Data.*.xml
+     
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\PdbsAndXmls'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish PDB and XML Files To VSTS
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\PdbsAndXmls'
+    ArtifactName: PdbsAndXmlsToVSTS
+  enabled: false
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish PDB and XML Files To Drop
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\PdbsAndXmls'
+    ArtifactName: PdbsAndXmls
+    publishLocation: FilePath
+    TargetPath: '$(DropFileShare)\$(Build.SourceBranchName)\$(Build.BuildId)\VS2017'
+
+- task: CopyFiles@2
+  displayName: On Error Copy BinDirContents
+  inputs:
+    Contents: 'bin\**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\BinDirContents'
+  condition: failed()
+
+- task: PublishBuildArtifacts@1
+  displayName: On Error Publish BinDirContents
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\BinDirContents'
+    ArtifactName: BinDirContents
+  condition: failed()
+
+- task: CopyFiles@2
+  displayName: Copy Files to PackagesContents
+  inputs:
+    SourceFolder: '$(Build.Repository.LocalPath)\setup\wix'
+    Contents: 'packages\**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\PackagesContents'
+  enabled: false
+  condition: succeededOrFailed()
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Packages Contents
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\PackagesContents'
+    ArtifactName: PackagesContents
+  enabled: false
+  condition: succeededOrFailed()
+
+

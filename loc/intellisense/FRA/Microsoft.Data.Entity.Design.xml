@@ -1,0 +1,2206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Resources">
+      <summary>Classe de ressource fortement typée pour rechercher des chaînes localisées, etc.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources._SentenceConcat">
+      <summary>Recherche une chaîne localisée semblable à {0} {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Application_Caption">
+      <summary>Recherche une chaîne localisée semblable à ADO.NET Entity Data Model Designer.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionErrorMessage">
+      <summary>Recherche une chaîne localisée semblable à Le paramètre « {0} » a une valeur incorrecte, « {1} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ArgumentExceptionMessageParameter">
+      <summary>Recherche une chaîne localisée semblable à Le paramètre doit être une instance de type « Type » ou « GUID ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.AssociationSetsGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Ensembles d'association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BAD_FIRST_CHAR_IN_NC_NAME">
+      <summary>Recherche une chaîne localisée semblable à Le premier caractère du nom « {0} » n'est pas valide.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadChildForParentException">
+      <summary>Recherche une chaîne localisée semblable à Les objets de l'explorateur de modèles de type « {0} » ne prennent pas en charge les enfants de type « {1} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.BadRemoveBadChildType">
+      <summary>Recherche une chaîne localisée semblable à Impossible de supprimer un enfant de type « {0} » du parent nommé « {1} » de type « {2} ».Les éléments de type « {2} » n'autorisent pas les enfants de type « {0} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CanNotCreateWindow">
+      <summary>Recherche une chaîne localisée semblable à Impossible de créer la fenêtre d'outils.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateDesignTimeConnectionString">
+      <summary>Recherche une chaîne localisée semblable à Impossible de convertir une chaîne de connexion au moment du design en son équivalent runtime.Chaîne de connexion {0} : {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CannotTranslateRuntimeConnectionString">
+      <summary>Recherche une chaîne localisée semblable à Impossible de convertir une chaîne de connexion runtime en son équivalent au moment du design.Chaîne de connexion {0} : {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ChangingModelOutsideTransaction">
+      <summary>Recherche une chaîne localisée semblable à Impossible de modifier le modèle hors d'une transaction.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_LegacyObjectContext">
+      <summary>Recherche une chaîne localisée semblable à ObjectContext hérité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.CodeGenerationStrategy_T4">
+      <summary>Recherche une chaîne localisée semblable à T4.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.COLON_IN_NC_NAME">
+      <summary>Recherche une chaîne localisée semblable à Deux points présents dans le nom « {0} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ComplexTypesGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Types complexes.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualAssociationsGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Associations.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConceptualTypesGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Types d'entité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_AddError">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'ajouter une chaîne de connexion en raison de l'erreur suivante : '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_CorruptConfig">
+      <summary>Recherche une chaîne localisée semblable à Le format du fichier de configuration est incorrect.Essayez de modifier le fichier manuellement, puis enregistrez-le.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetConfigError">
+      <summary>Recherche une chaîne localisée semblable à Fichier de configuration introuvable.Vérifiez qu'il se trouve dans le projet approprié ou redémarrez Visual Studio.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_GetSiteError">
+      <summary>Recherche une chaîne localisée semblable à Fournisseur de services introuvable pour cette configuration.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_InitializeError">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'analyser le fichier de configuration.Message d'erreur : '{0}'.Essayez de modifier le fichier manuellement, puis enregistrez-le.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MarsError">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'ajouter l'attribut MultipleActiveResultSets à la chaîne de connexion, car la version du serveur ne peut pas être déterminée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_MetadataMismatch">
+      <summary>Recherche une chaîne localisée semblable à Les métadonnées de la chaîne de connexion ne correspondent pas aux métadonnées dans le fichier de configuration.Anciennes métadonnées : {0}.Corrigez la chaîne de connexion avec le nom de conteneur d'entités « {1} » dans le fichier de configuration et enregistrez-la.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_NoConnectionString">
+      <summary>Recherche une chaîne localisée semblable à Chaîne de connexion introuvable dans le fichier de configuration.Vérifiez que le fichier de configuration contient une chaîne de connexion nommée « {0} », puis enregistrez le fichier.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_SaveXmlError">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'enregistrer le XML dans le fichier de configuration « {0} » en raison de l'erreur « {1} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_UpdateError">
+      <summary>Recherche une chaîne localisée semblable à Impossible de mettre à jour « {0} » dans le fichier de configuration.Message d'erreur : '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateNoConnection">
+      <summary>Recherche une chaîne localisée semblable à Le type de connexion n'étant pas spécifié, le modèle sera validé en supposant une connexion SQL Server 2005.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ConnectionManager_ValidateWithoutConnection">
+      <summary>Recherche une chaîne localisée semblable à Il se peut que le modèle ne soit pas validé correctement si aucune connexion de données n'est sélectionnée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Culture">
+      <summary>Remplace la propriété CurrentUICulture du thread actuel pour toutes les recherches de ressources à l'aide de cette classe de ressource fortement typée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadError">
+      <summary>Recherche une chaîne localisée semblable à Le fichier de flux de génération de la base de données personnalisé référence l'assembly « {0} » qui existe dans le projet propriétaire, mais qui n'a pas pu être chargé en raison de l'exception suivante : '{1}'.Vérifiez que la référence est valide avant de réexécuter le flux de travail.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_AssemblyLoadErrorWithInner">
+      <summary>Recherche une chaîne localisée semblable à Le fichier de flux de génération de la base de données personnalisé référence l'assembly « {0} » qui existe dans le projet propriétaire, mais qui n'a pas pu être chargé en raison de l'exception suivante : '{1}'.L'exception contient également les détails suivants : « {2} » Vérifiez que la référence est valide avant de réexécuter le flux de travail.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowCancelled">
+      <summary>Recherche une chaîne localisée semblable à Le fichier de flux de travail personnalisé « {0} » n'a pas été autorisé à s'exécuter.Sélectionnez « Précédent » pour revenir à la page « Choisir votre connexion de données » et essayez de réexécuter le flux de travail.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_CustomWorkflowWarningTitle">
+      <summary>Recherche une chaîne localisée semblable à Avertissement de sécurité de flux de travail personnalisé.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_DDLOverwriteWarningTitle">
+      <summary>Recherche une chaîne localisée semblable à Avertissement de remplacement DDL.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_EdmxOverwriteWarningTitle">
+      <summary>Recherche une chaîne localisée semblable à Avertissement de remplacement SSDL/MSL.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorInvalidTargetVersion">
+      <summary>Recherche une chaîne localisée semblable à Le paramètre TargetVersion spécifié « {0} » n'est pas valide.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoEdmParameterBag">
+      <summary>Recherche une chaîne localisée semblable à EdmParameterBag introuvable dans le flux de travail.Vérifiez qu'il est inclus dans le SymbolResolver, qui a été ajouté comme extension au flux de travail.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNonValidWorkflowUri">
+      <summary>Recherche une chaîne localisée semblable à L'URI créé à partir du chemin d'accès Flux de travail de génération de la base de données « {0} » n'est pas valide.Vérifiez que le chemin d'accès spécifié est un chemin d'accès absolu ou relatif, en fonction du projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorNoParameterDefined">
+      <summary>Recherche une chaîne localisée semblable à Le paramètre requis Flux de travail de génération de la base de données « {0} » n'est pas défini.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateFileNotInProject">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'appeler l'activité de modèle « {0} », car le fichier d'entrée « TemplatePath » « {{0}} » donné n'est pas inclus dans le projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplateOutputNotSet">
+      <summary>Recherche une chaîne localisée semblable à La sortie du modèle n'a pas été définie pour l'activité de modèle « {0} » dans le paramètre Flux de travail de génération de la base de données.Vérifiez que le modèle est écrit correctement.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNonFile">
+      <summary>Recherche une chaîne localisée semblable à Le fichier d'entrée « TemplatePath », « {{0}} », pour l'activité de modèle « {0} » dans ce flux de travail n'est pas valide, car les chemins d'accès UNC ou non basés sur des fichiers ne sont pas pris en charge.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotSet">
+      <summary>Recherche une chaîne localisée semblable à L'attribut « TemplatePath » n'est pas défini pour l'activité de modèle « {0} » dans ce flux de travail.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTemplatePathNotValid">
+      <summary>Recherche une chaîne localisée semblable à La valeur de l'attribut « TemplatePath », « {{0}} », pour l'activité de modèle « {0} » dans ce flux de travail n'est pas valide ou n'existe pas.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorTextTemplatingServiceNotFound">
+      <summary>Recherche une chaîne localisée semblable à Le service ITextTemplating est introuvable pour traiter le modèle « {0} ».Ce service est uniquement disponible dans Visual Studio.Vérifiez que ce flux de travail s'exécute dans Visual Studio.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowFileNotInProject">
+      <summary>Recherche une chaîne localisée semblable à Le fichier de flux de travail personnalisé « {0} » doit être inclus dans le projet avant de poursuivre l'exécution de l'Assistant Génération de la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowOutputNotFound">
+      <summary>Recherche une chaîne localisée semblable à Le paramètre de sortie « {0} » requis par l'Assistant Génération de la base de données n'a pas été renseigné par le flux de travail.Vérifiez que le fichier de flux de travail définit ce paramètre et que le flux de travail le renseigne.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWorkflowPathNotSet">
+      <summary>Recherche une chaîne localisée semblable à Le chemin d'accès Flux de travail de génération de la base de données n'est pas défini dans le fichier EDMX.Vérifiez qu'il est défini avant d'exécuter l'Assistant Génération de la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdl">
+      <summary>Recherche une chaîne localisée semblable à Une exception s'est produite lors de l'écriture du DDL dans le fichier « {0} ».Message d'exception : '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ErrorWritingDdlWithInner">
+      <summary>Recherche une chaîne localisée semblable à Une exception s'est produite lors de l'écriture du DDL dans le fichier « {0} ».Message d'exception : '{1}'.L'exception contient également les détails suivants : '{2}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingTemplateFilePath">
+      <summary>Recherche d'une chaîne localisée semblable à Une exception s'est produite lors de la tentative d'analyse de « TemplatePath » « {{0}} » dans l'activité de modèle « {0} ».Message spécifique : '{{1}}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ExceptionParsingWorkflowFilePath">
+      <summary>Recherche d'une chaîne localisée semblable à Une exception s'est produite lors de la tentative d'analyse du chemin d'accès Flux de travail de génération de la base de données « {0} ».Message spécifique : '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NoDDLTemplatePathSpecified">
+      <summary>Recherche une chaîne localisée semblable à L'argument TemplatePath n'a pas été spécifié pour l'activité « {0} ».Il doit être spécifié sur cette activité dans le fichier de flux de travail ou passé au moment de l'exécution à l'aide du paramètre « DDLTemplatePath » dans EdmParameterBag.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_NonFileWorkflow">
+      <summary>Recherche une chaîne localisée semblable à Le fichier Flux de travail de génération de la base de données « {0} » spécifié n'a pas été appelé, car les chemins d'accès UNC et non basés sur des fichiers ne sont pas pris en charge.Vérifiez que le chemin d'accès Flux de travail de génération de la base de données spécifié dans la section « Options » du fichier EDMX n'est pas un chemin d'accès UNC et ne correspond pas à un fichier existant localement.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_TemplateFileNotExists">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'appeler l'activité de modèle « {0} », car le fichier d'entrée « TemplatePath » « {{0}} » donné n'existe pas.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_ValidationFailed">
+      <summary>Recherche une chaîne localisée semblable à Toutes les erreurs de validation dans ce modèle doivent être corriger avant de générer un script de base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningCustomWorkflow">
+      <summary>Recherche une chaîne localisée semblable à Un flux de travail personnalisé est défini pour l'Assistant Génération de base de données (reportez-vous à la propriété Database Generation Workflow pour ce modèle EDMX).L'exécution de l'Assistant avec un flux de travail autre que celui par défaut risque d'endommager votre ordinateur.N'exécutez pas l'Assistant si vous avez reçu ce fichier EDMX d'une source non fiable.Cliquez sur OK pour exécuter le flux de travail.Cliquez sur Annuler pour arrêter le processus.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteDdl">
+      <summary>Recherche une chaîne localisée semblable à L'Assistant Génération de la base de données va remplacer le fichier DDL « {0} ».Voulez-vous continuer ?</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WarningOverwriteMappings">
+      <summary>Recherche une chaîne localisée semblable à L'Assistant Génération de la base de données va remplacer le schéma de magasin existant (SSDL) et les mappages existants (MSL).Voulez-vous continuer ?</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DatabaseCreation_WorkflowFileNotExists">
+      <summary>Recherche une chaîne localisée semblable à Une exception s'est produite lors de la tentative de génération du script de base de données à partir du modèle, car le fichier de flux de travail spécifié « {0} » n'existe pas.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibileListConverter_UserDir">
+      <summary>Recherche une chaîne localisée semblable à (Utilisateur).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DbGenExtensibleListConverter_VSDir">
+      <summary>Recherche une chaîne localisée semblable à (VS).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DDEXNotInstalled">
+      <summary>Recherche une chaîne localisée semblable à Les bibliothèques requises pour permettre à Visual Studio de communiquer avec la base de données à des fins de conception (fournisseur DDEX) ne sont pas installées pour le fournisseur « {0} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Default">
+      <summary>Recherche une chaîne localisée semblable à Par défaut.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DiagramTypesGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Diagrammes.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DisabledFeatureTooltip">
+      <summary>Recherche une chaîne localisée semblable à Cette fonctionnalité n'est pas disponible dans la version de l'Entity Framework ciblée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.DuplicateEntityContainerName">
+      <summary>Recherche une chaîne localisée semblable à Le nom du EntityContainer « {0} » est déjà utilisé par un autre Entity Data Model dans le projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption">
+      <summary>Recherche une chaîne localisée semblable à [Design].</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EditorCaption_ReadOnly">
+      <summary>Recherche une chaîne localisée semblable à [Lecture seule].</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EDMOutputWindowPaneTitle">
+      <summary>Recherche une chaîne localisée semblable à Entity Data Model.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EdmUtils_NotValidTargetFramework">
+      <summary>Recherche une chaîne localisée semblable à La version cible du .Net Framework du projet ne contient pas d'assembly du runtime Entity Framework.Passez en revue les informations relatives à la version cible de. Net Framework dans la page de propriétés du projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityContainerNodeName">
+      <summary>Recherche une chaîne localisée semblable à EntityContainer. {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_CreateNewProperty">
+      <summary>Recherche une chaîne localisée semblable à Créer une propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityDesigner_DeleteProperty">
+      <summary>Recherche une chaîne localisée semblable à Supprimer une propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersion6_x">
+      <summary>Recherche une chaîne localisée semblable à 6.x.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntityFrameworkVersionName">
+      <summary>Recherche une chaîne localisée semblable à Entity Framework {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EntitySetsGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Jeux d'entités.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AccEnumTypeMembers">
+      <summary>Recherche une chaîne localisée semblable à Membres du type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_AutomationName">
+      <summary>Recherche une chaîne localisée semblable à Boîte de dialogue Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_CancelButtonLabel">
+      <summary>Recherche une chaîne localisée semblable à Annuler.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EditEnumWindowTitle">
+      <summary>Recherche une chaîne localisée semblable à Modifier le type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnsureEnumTypeUnique">
+      <summary>Recherche une chaîne localisée semblable à Vérifier que le nom du type enum est unique.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberNameLabel">
+      <summary>Recherche une chaîne localisée semblable à Nom du membre.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_EnumTypeMemberValueLabel">
+      <summary>Recherche une chaîne localisée semblable à Valeur (facultative).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnterValueForExternalTypeName">
+      <summary>Recherche une chaîne localisée semblable à Le nom du type externe référencé est requis.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberBadname">
+      <summary>Recherche une chaîne localisée semblable à « {0} » n'est pas un nom valide pour un membre enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumMemberDuplicateName">
+      <summary>Recherche une chaîne localisée semblable à Le membre Enum « {0} » existe déjà.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ErrorEnumTypeBadname">
+      <summary>Recherche une chaîne localisée semblable à « {0} » n'est pas un nom valide pour un type enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeHint">
+      <summary>Recherche une chaîne localisée semblable à Namespace.Type.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_ExternalTypeLabel">
+      <summary>Recherche une chaîne localisée semblable à Type externe de référence.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabel">
+      <summary>Recherche une chaîne localisée semblable à Définir l'attribut Flags.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_IsFlagLabelDescription">
+      <summary>Recherche une chaîne localisée semblable à Permet à une instance de type Enum de stocker toute combinaison de valeurs définies à l'aide d'opérateurs de bits.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NameLabel">
+      <summary>Recherche une chaîne localisée semblable à Nom de type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_NewEnumWindowTitle">
+      <summary>Recherche une chaîne localisée semblable à Ajouter un type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_OkButtonLabel">
+      <summary>Recherche une chaîne localisée semblable à OK.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumDialog_UnderlyingTypeLabel">
+      <summary>Recherche une chaîne localisée semblable à Type sous-jacent.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.EnumTypesGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Types Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CannotEditRefConstraint">
+      <summary>Recherche une chaîne localisée semblable à La contrainte référentielle existante sur cette association ne peut pas être modifiée par le concepteur, vous devrez la modifier manuellement à l'aide de l'Éditeur XML.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_CircularInheritanceAborted">
+      <summary>Recherche une chaîne localisée semblable à L'affectation de la valeur « {1} » au type de base pour « {0} » va engendrer un héritage circulaire.Ajout de l'héritage abandonné.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FailedApplyChangeToFile">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'appliquer les modifications au fichier {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Error_FileNotFound">
+      <summary>Recherche une chaîne localisée semblable à Fichier introuvable.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlCeUpgrade">
+      <summary>Recherche une chaîne localisée semblable à Une exception a été levée lors de la mise à niveau des références SQLCE dans les fichiers EDMX et dans le fichier de configuration.Fichier en cours de traitement lors de l'erreur : {0}.Message d'erreur complet : {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorDuringSqlDatabaseFileUpgrade">
+      <summary>Recherche une chaîne localisée semblable à Une exception a été levée lors de la mise à niveau des références de fichier de base de données SQL dans le fichier de configuration.Fichier en cours de traitement lors de l'erreur : {0}.Message d'erreur complet : {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorNonValidFileName">
+      <summary>Recherche une chaîne localisée semblable à Le nom de fichier « {0} » ne peut pas : - contenir les caractères suivants : \ / : * ? "&amp;amp;lt; &amp;amp;gt; | - être un nom réservé au système, notamment « CON », « AUX », « PRN », « COM1 » ou « LPT2 ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorReadingWritingUserSetting">
+      <summary>Recherche une chaîne localisée semblable à Une erreur s'est produite lors de la lecture ou de l'écriture du paramètre utilisateur « {0} » dans le Registre.Erreur spécifique : '{1}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ErrorSynchingEdmxNamespaces">
+      <summary>Recherche une chaîne localisée semblable à Une exception est levée lors de la mise à jour des espaces de noms XML.\nNom du fichier : {0}.\nMessage d'erreur complet :\n {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExceptionMessageNullFactoryType">
+      <summary>Recherche une chaîne localisée semblable à Un type de fabrique ne peut pas être Null.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExistingConfigurationFileWarning">
+      <summary>Recherche une chaîne localisée semblable à Le projet contient le fichier « {0} ».Ce fichier peut remplacer les informations de configuration que l'Assistant génère dans le fichier « {1} », situé dans le répertoire racine du projet.Vérifiez que les fichiers de configuration de l'application sont dans le projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_ClearSearch">
+      <summary>Recherche une chaîne localisée semblable à Effacer la recherche.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_CollapseSearchResults">
+      <summary>Recherche une chaîne localisée semblable à Cliquez ici pour afficher les résultats de recherche réduits.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_PromptSearch">
+      <summary>Recherche une chaîne localisée semblable à Tapez ici pour effectuer une recherche.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_Search">
+      <summary>Recherche une chaîne localisée semblable à Rechercher.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavNext">
+      <summary>Recherche une chaîne localisée semblable à Atteindre le résultat de recherche suivant.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerContent_SearchNavPrev">
+      <summary>Recherche une chaîne localisée semblable à Atteindre le résultat de recherche précédent.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowCaption">
+      <summary>Recherche une chaîne localisée semblable à Explorateur.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ExplorerWindowTitle">
+      <summary>Recherche une chaîne localisée semblable à Explorateur de modèles.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditModel">
+      <summary>Recherche une chaîne localisée semblable à Une extension de génération de modèle a tenté de modifier un modèle autre que le modèle actif et cette opération n'est pas prise en charge.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_CantEditOriginalOnSave">
+      <summary>Recherche une chaîne localisée semblable à Une extension de sérialisation a tenté de modifier le modèle d'origine pendant la sauvegarde. Cette opération n'est pas prise en charge.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_AlreadyComplete">
+      <summary>Recherche une chaîne localisée semblable à Une extension de propriété ne peut pas apporter de modifications après avoir appelé Complete() sur une modification d'étendue.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_EditingWrongNamespace">
+      <summary>Recherche une chaîne localisée similaire à Une extension de propriété ne peut pas modifier un élément dans un espace de noms Entity Framework.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ChangeScope_Missing">
+      <summary>Recherche une chaîne localisée semblable à Une extension de propriété doit démarrer une modification d'étendue avant de modifier un modèle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ErrorOccurredDuringCallToExtension">
+      <summary>Recherche une chaîne localisée semblable à Une erreur s'est produite lors de l'exécution d'une extension ADO.Net Entity Framework.Le nom du type d'extension est {0}.Le message d'exception : {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel">
+      <summary>Recherche une chaîne localisée semblable à Une extension de génération de modèle a apporté des modifications non valides au modèle généré à partir de la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_ExtensionMadeBadModel_Update">
+      <summary>Recherche une chaîne localisée semblable à Une extension de génération de modèle a apporté des modifications non valides au modèle mis à jour.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_NoConverterForExtension">
+      <summary>Recherche une chaîne localisée semblable à Le Entity Designer est ouvert sur un fichier non EDMX et aucun IModelConversionExtension n'est inscrit pour cette extension.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_StartChangeScopeFailed">
+      <summary>Recherche une chaîne localisée semblable à Une modification d'étendue existe déjà.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Extensibility_TooManyConverters">
+      <summary>Recherche une chaîne localisée semblable à Plusieurs IModelConversionExtension sont inscrits pour cette extension de fichier : {0}.Un seul est autorisé.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImport_CannotCreateFromComposableFunction">
+      <summary>Recherche une chaîne localisée semblable à Impossible de créer des importations de fonction pour les fonctions composables à partir de fichiers EDMX de version inférieure ou égale à {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.FunctionImportsGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Importations de fonction.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_DisableLayer">
+      <summary>Recherche une chaîne localisée semblable à Désactiver la prise en charge de {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Layer_EnableLayer">
+      <summary>Recherche une chaîne localisée semblable à Activer la prise en charge de {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LEADING_OR_TRAILING_SPACES_IN_NCNAME">
+      <summary>Recherche une chaîne localisée semblable à Le nom « {0} » contient des espaces de début ou de fin.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadDataPackageError">
+      <summary>Recherche une chaîne localisée semblable à Une erreur s'est produite lors du chargement du package de données Visual Studio.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LoadOurPackageError">
+      <summary>Recherche une chaîne localisée semblable à Une erreur s'est produite lors du chargement d'Entity Data Model Tools Package.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.LocalDatabaseFileAlreadyExists">
+      <summary>Recherche une chaîne localisée semblable à « {0} » existe déjà dans le projet.Voulez-vous le remplacer ?Cliquez sur Non pour utiliser le fichier existant.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocMappingNoTable">
+      <summary>Recherche une chaîne localisée semblable à (Une table doit être mappée en premier lieu).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd1">
+      <summary>Recherche une chaîne localisée semblable à 1.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEnd2">
+      <summary>Recherche une chaîne localisée semblable à 2.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Mapping_AssocSetEndDisplay">
+      <summary>Recherche une chaîne localisée semblable à Terminaison {0} : ({1} de {2}).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_AssociationHeader">
+      <summary>Recherche une chaîne localisée semblable à Association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnMappingsName">
+      <summary>Recherche une chaîne localisée semblable à Mappages de colonnes.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ColumnName">
+      <summary>Recherche une chaîne localisée semblable à Colonne.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionCreatorNode">
+      <summary>Recherche une chaîne localisée semblable à  &amp;amp;lt;Ajouter une condition&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine1">
+      <summary>Recherche une chaîne localisée semblable à Lorsque {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ConditionLine2">
+      <summary>Recherche une chaîne localisée semblable à Et {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_CreatorNode">
+      <summary>Recherche une chaîne localisée semblable à  &amp;amp;lt;Sélectionner un Delete Function&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_DeleteFunction_Display">
+      <summary>Recherche une chaîne localisée semblable à Supprimer à l'aide de {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrComplexTypePropertiesNotSupported">
+      <summary>Recherche une chaîne localisée semblable à [Les propriétés de type complexe ne sont pas prises en charge dans un mappage d'importation de fonction].</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNames">
+      <summary>Recherche une chaîne localisée semblable à La hiérarchie d'héritage du EntityType « {0} » contient des propriétés dupliquées avec le(s) nom(s) : '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDupePropertyNamesSeparator">
+      <summary>Recherche une chaîne localisée semblable à ,.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrDuplicatePropertyNameForAssociationEndEntity">
+      <summary>Recherche une chaîne localisée semblable à Le mappage de cette association a une référence au type d'entité « {0} » qui contient des propriétés dupliquées avec le(s) nom(s) : '{1}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrKeyInDerivedType">
+      <summary>Recherche une chaîne localisée semblable à Des clés ont été définies sur un EntityType dérivé.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMappingNotSupported">
+      <summary>Recherche une chaîne localisée semblable à Cette fonctionnalité n'est pas disponible dans la version du .Net Framework ciblée par le projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslAssociationSetMappingHasQueryView">
+      <summary>Recherche une chaîne localisée semblable à Le mappage de cette association inclut un QueryView, qui ne peut pas être restitué dans le concepteur.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslBadEntitySetMapping">
+      <summary>Recherche une chaîne localisée semblable à Une relation est rompue entre le EntitySet de ce EntityType et un de ses EntitySetMappings associés.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindAssociationSet">
+      <summary>Recherche une chaîne localisée semblable à Impossible de trouver un AssociationSet pour l'association sélectionnée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindEntitySet">
+      <summary>Recherche une chaîne localisée semblable à Impossible de trouver un EntitySet pour le EntityType sélectionné.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindFunctionImportMapping">
+      <summary>Recherche une chaîne localisée semblable à Impossible de trouver un FunctionImportMapping pour le FunctionImport sélectionné.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslCantFindMappedFunction">
+      <summary>Recherche une chaîne localisée semblable à Impossible de trouver une fonction mappée au FunctionImport sélectionné.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEntitySetMappingHasQueryView">
+      <summary>Recherche une chaîne localisée semblable à Le mappage de ce EntityType inclut un QueryView, qui ne peut pas être restitué dans le concepteur.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslEtmRefsMultipleTypes">
+      <summary>Recherche une chaîne localisée semblable à Un EntityTypeMapping est affecté à plusieurs EntityTypes.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslFunctionMappingsShouldBeSeparate">
+      <summary>Recherche une chaîne localisée semblable à Un EntityTypeMapping qui contient des mappages de fonction ne peut pas contenir de MappingFragments.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslGeneral">
+      <summary>Recherche une chaîne localisée semblable à Les mappages ont probablement été modifiés en dehors du concepteur.{0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyAssociationSetMappings">
+      <summary>Recherche une chaîne localisée semblable à Vous ne pouvez pas disposer de plusieurs AssociationSetMappings pour une Association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyDefaultEtms">
+      <summary>Recherche une chaîne localisée semblable à Ce EntityType contient plus d'un EntityTypeMapping spécifique au type.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyEntitySetMappings">
+      <summary>Recherche une chaîne localisée semblable à Vous ne pouvez pas disposer de plusieurs EntitySetMappings pour un EntityType.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFragments">
+      <summary>Recherche une chaîne localisée semblable à Vous ne pouvez pas disposer de plusieurs MappingFragments pour un EntityTypeMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyFunctionETMs">
+      <summary>Recherche une chaîne localisée semblable à Ce EntityType contient plus d'un EntityTypeMapping avec des mappages de fonction.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslTooManyIsTypeOfETMs">
+      <summary>Recherche une chaîne localisée semblable à Ce EntityType contient plus d'un IsTypeOf EntityTypeMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnresolvedItems">
+      <summary>Recherche une chaîne localisée semblable à Les mappages pour l'objet sélectionné contiennent des références qui ne peuvent pas être résolues.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUnsupportedCondition">
+      <summary>Recherche une chaîne localisée semblable à Les conditions ne sont pas prises en charge sur les propriétés EntityType.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ErrMslUsesGhostNodes">
+      <summary>Recherche une chaîne localisée semblable à Les mappages de ce EntityType utilisent une notation abrégée que le concepteur ne prend pas en charge.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_FunctionsHeader">
+      <summary>Recherche une chaîne localisée semblable à Fonctions.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_CreatorNode">
+      <summary>Recherche une chaîne localisée semblable à &amp;amp;lt;Sélectionner un Insert Function&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_InsertFunction_Display">
+      <summary>Recherche une chaîne localisée semblable à Insérer à l'aide de {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovDelete">
+      <summary>Recherche une chaîne localisée semblable à &amp;amp;lt;Supprimer&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_LovEmpty">
+      <summary>Recherche une chaîne localisée semblable à [Vide].</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_NoDependentEndOnReferentialConstraint">
+      <summary>Recherche une chaîne localisée semblable à Il n'existe aucune terminaison dépendante sur la contrainte référentielle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Operator">
+      <summary>Recherche une chaîne localisée semblable à l'opérateur.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorEquals">
+      <summary>Recherche une chaîne localisée semblable à =.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_OperatorIs">
+      <summary>Recherche une chaîne localisée semblable à Est.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ParameterName">
+      <summary>Recherche une chaîne localisée semblable à Paramètre/Colonne.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Parameters">
+      <summary>Recherche une chaîne localisée semblable à Parameters.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Property">
+      <summary>Recherche une chaîne localisée semblable à la propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM">
+      <summary>Recherche une chaîne localisée semblable à Les mappages d'associations à des clés étrangères exposées ne sont pas autorisés.{0} ou {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Delete">
+      <summary>Recherche une chaîne localisée semblable à Supprimer les mappages.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_ASM_Display">
+      <summary>Recherche une chaîne localisée semblable à Afficher les mappages à modifier.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToFK_NoASM">
+      <summary>Recherche une chaîne localisée semblable à Les mappages d'associations à des clés étrangères exposées ne sont pas autorisés.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM">
+      <summary>Recherche une chaîne localisée semblable à Ces mappages sont remplacés par la contrainte d'intégrité référentielle définie sur cette association et seront ignorés.Vous pouvez {0} ou {1} en toute sécurité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Delete">
+      <summary>Recherche une chaîne localisée semblable à Supprimer ces mappages.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_ASM_Display">
+      <summary>Recherche une chaîne localisée semblable à Afficher ces mappages pour modification.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM">
+      <summary>Recherche une chaîne localisée semblable à Les mappages sont remplacés par la contrainte d'intégrité référentielle définie sur cette association et seront ignorés.{0}..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintOnAssociation_PKToPK_NoASM_Display">
+      <summary>Recherche une chaîne localisée semblable à Afficher l'éditeur de mappage.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ReferentialConstraintWithNonKeyProperties">
+      <summary>Recherche une chaîne localisée semblable à Les mappages ne sont pas autorisés pour les associations qui impliquent une contrainte d'intégrité référentielle utilisant des propriétés non-clés.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindingCreatorNode">
+      <summary>Recherche une chaîne localisée semblable à  &amp;amp;lt;Ajouter un Result Binding&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ResultBindings">
+      <summary>Recherche une chaîne localisée semblable à Result Column Bindings.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_RowsAffectedParameterColumn">
+      <summary>Recherche une chaîne localisée semblable à Paramètre de lignes affectées.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText">
+      <summary>Recherche une chaîne localisée semblable à Mapper un Entity à des Functions.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_SProcsButtonText_NotSupported">
+      <summary>Recherche une chaîne localisée semblable à Mapper un Entity à des Functions (Cette fonctionnalité n'est pas prise en charge dans la version CTP2).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TableCreatorNode">
+      <summary>Recherche une chaîne localisée semblable à  &amp;amp;lt;Ajouter une table ou une vue&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesButtonText">
+      <summary>Recherche une chaîne localisée semblable à Mapper un Entity à des tables/vues.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_TablesHeader">
+      <summary>Recherche une chaîne localisée semblable à Tables.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Toolbar_AccessibleName">
+      <summary>Recherche une chaîne localisée semblable à Barre d'outils Détails de mappage.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnName">
+      <summary>Recherche une chaîne localisée semblable à ??.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownColumnType">
+      <summary>Recherche une chaîne localisée semblable à ??.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndMultiplicity">
+      <summary>Recherche une chaîne localisée semblable à ??.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownEndType">
+      <summary>Recherche une chaîne localisée semblable à ??.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyName">
+      <summary>Recherche une chaîne localisée semblable à ??.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UnknownPropertyType">
+      <summary>Recherche une chaîne localisée semblable à ??.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_CreatorNode">
+      <summary>Recherche une chaîne localisée semblable à  &amp;amp;lt;Sélectionner un Update Function&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UpdateFunction_Display">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour à l'aide de {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_UseOriginalValueColumn">
+      <summary>Recherche une chaîne localisée semblable à Utiliser la valeur d'origine.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Value">
+      <summary>Recherche une chaîne localisée semblable à Valeur/Propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueEmptyString">
+      <summary>Recherche une chaîne localisée semblable à &amp;amp;lt;Chaîne vide&amp;amp;gt;.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNotNull">
+      <summary>Recherche une chaîne localisée semblable à Non Null.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_ValueNull">
+      <summary>Recherche une chaîne localisée semblable à Null.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_Watermark">
+      <summary>Recherche une chaîne localisée semblable à Sélectionner une entité ou une association dans le Entity Designer ou {0} pour modifier ses mappages.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WatermarkLabelText">
+      <summary>Recherche une chaîne localisée semblable à Sélectionner une entité ou une association pour modifier ses mappages.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetails_WindowTitle">
+      <summary>Recherche une chaîne localisée semblable à Détails de mappage.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsArrowsImageList">
+      <summary>Recherche une ressource localisée de type System.Drawing.Bitmap.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsCommandStrip">
+      <summary>Recherche une ressource localisée de type System.Drawing.Bitmap.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsIconsImageList">
+      <summary>Recherche une ressource localisée de type System.Drawing.Bitmap.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MappingDetailsViewModel_StorageEntityTypeName">
+      <summary>Recherche une chaîne localisée semblable à Est mappé à {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_CantBeRelative">
+      <summary>Recherche une chaîne localisée semblable à Un chemin d'accès relatif n'est pas possible pour des fichiers se trouvant sur différents périphériques.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileAlreadyExists">
+      <summary>Recherche une chaîne localisée semblable à Vous avez choisi un nom de fichier de modèle qui remplacera le fichier « {0} ».Choisissez un autre nom de fichier de modèle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_FileIsLinkedFile">
+      <summary>Recherche une chaîne localisée semblable à Impossible d'ajouter un modèle nommé « {0} ».Il existe déjà dans ce dossier un fichier lié portant le même nom..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_NonValidXmlAttributeValue">
+      <summary>Recherche une chaîne localisée semblable à Les éléments et noms de fichiers ADO.NET Entity Data Model ne doivent contenir que des attributs XML valides.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ModelObjectItemWizard_UnexpectedExceptionHasOccurred">
+      <summary>Recherche une chaîne localisée semblable à Une exception inattendue s'est produite.Message d'exception : '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.MsgBox_InheritanceWillRemoveKeys">
+      <summary>Recherche une chaîne localisée semblable à L'héritage de « {0} » à partir de « {1} » supprimera toutes les clés d'entité définies dans « {0} » et ses sous-types.\nVoulez-vous continuer ?</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_CollectionText">
+      <summary>Recherche une chaîne localisée similaire à Collection de {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NavPropType_InstanceText">
+      <summary>Recherche une chaîne localisée semblable à Instance de {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NoDefaultConnectionString">
+      <summary>Recherche une chaîne localisée semblable à Aucune chaîne de connexion par défaut n'est définie dans le fichier App.config.SqlClient est utilisé en tant que fournisseur par défaut.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.None">
+      <summary>Recherche une chaîne localisée semblable à Aucun.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisRelease">
+      <summary>Recherche une chaîne localisée semblable à Cette fonctionnalité n'est pas prise en charge dans cette version.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.NotSupportedThisReleaseInWebsite">
+      <summary>Recherche une chaîne localisée semblable à Cette fonctionnalité n'est pas prise en charge pour les sites Web dans cette version.Utilisez une application Web.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PackageLoadFailureExceptionMessage">
+      <summary>Recherche une chaîne localisée semblable à Échec du chargement d'Entity Data Model Tools Package.Le résultat est 0.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_CodeGeneration">
+      <summary>Recherche une chaîne localisée semblable à Génération de code.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Connection">
+      <summary>Recherche une chaîne localisée semblable à Connexion.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Constraint">
+      <summary>Recherche une chaîne localisée semblable à Contraintes.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_DatabaseScriptGeneration">
+      <summary>Recherche une chaîne localisée semblable à Génération de script de base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Diagram">
+      <summary>Recherche une chaîne localisée semblable à Diagramme.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Ends">
+      <summary>Recherche une chaîne localisée semblable à Terminaisons.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Facets">
+      <summary>Recherche une chaîne localisée semblable à Facettes.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_General">
+      <summary>Recherche une chaîne localisée semblable à Général.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Navigation">
+      <summary>Recherche une chaîne localisée semblable à Navigation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Category_Schema">
+      <summary>Recherche une chaîne localisée semblable à Schéma.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Abstract">
+      <summary>Recherche une chaîne localisée semblable à Détermine si un type d'entité est abstrait.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Access">
+      <summary>Recherche une chaîne localisée semblable à spécifie le niveau d'accès du type.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Association">
+      <summary>Recherche une chaîne localisée semblable à Nom de la propriété d'association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_CodeGenerationStrategy">
+      <summary>Recherche une chaîne localisée semblable à Utilisé pour définir la stratégie de génération de ce modèle.L'outil personnalisé associé à ce modèle, accessible à partir des propriétés de l'élément dans l'explorateur de solutions, lira cette propriété afin de déterminer la façon dont le code doit être généré.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ComplexTypeName">
+      <summary>Recherche une chaîne localisée semblable à Nom de ce ComplexType.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Composable">
+      <summary>Recherche une chaîne localisée semblable à Une importation de fonction est composable si elle représente une méthode par programmation pour appeler une fonction table dans la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ConnectionString">
+      <summary>Recherche une chaîne localisée semblable à Chaîne de connexion qui décrit votre connexion de base de données et vos fichiers de métadonnées.Ces informations se trouvent dans le fichier de configuration.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseGenerationWorkflow">
+      <summary>Recherche une chaîne localisée semblable à Chemin d'accès du fichier Windows Workflow Foundation utilisé par l'Assistant génération de la base de données à partir du modèle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseName">
+      <summary>Recherche une chaîne localisée semblable à Nom de l'objet sous-jacent dans la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchema">
+      <summary>Recherche une chaîne localisée semblable à Nom du schéma de l'objet de base de données sous-jacent.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DatabaseSchemaName">
+      <summary>Recherche une chaîne localisée semblable à Nom du schéma de base de données qui est référencé dans le DDL résultant.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DDLGenerationTemplate">
+      <summary>Recherche une chaîne localisée semblable à Modèle de texte T4 utilisé pour transformer le SSDL en DDL dans l'Assistant Génération de la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DefaultValue">
+      <summary>Recherche une chaîne localisée semblable à Valeur par défaut de la propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_DiagramName">
+      <summary>Recherche une chaîne localisée semblable à Nom.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityBaseType">
+      <summary>Recherche une chaîne localisée semblable à Type de base de l'entité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityContainerAccess">
+      <summary>Recherche une chaîne localisée semblable à Modificateur d'accès du conteneur d'entités, qui contient toutes les instances de l'Entity Data Model.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityKey">
+      <summary>Recherche une chaîne localisée semblable à Détermine si la propriété est la clé d'entité de l'entité conteneur.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityName">
+      <summary>Recherche une chaîne localisée semblable à Nom de l'entité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntitySetName">
+      <summary>Recherche une chaîne localisée semblable à Nom du EntitySet qui contient les instances de l'entité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EntityShapeColor">
+      <summary>Recherche une chaîne localisée semblable à Couleur de la forme du type d'entité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumExternalTypeAttribute">
+      <summary>Recherche une chaîne localisée semblable à Le référencement d'un type externe désactive la génération du code de ce type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumTypeName">
+      <summary>Recherche une chaîne localisée semblable à Nom du type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_EnumUnderlyingType">
+      <summary>Recherche une chaîne localisée semblable à Type de données Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_FromRole">
+      <summary>Recherche une chaîne localisée semblable à Ce rôle d'association est la source de la navigation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_GenerateUpdateViews">
+      <summary>Recherche une chaîne localisée semblable à Contrôle si Entity Framework crée des instructions de mise à jour pour modifier les données.La désactivation de cette fonctionnalité augmente les capacités de mappage et empêche la modification des données sauf par la biais de procédures stockées.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Getter">
+      <summary>Recherche une chaîne localisée semblable à Détermine l'accès pour la propriété Getter.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceBaseType">
+      <summary>Recherche une chaîne localisée semblable à Type de base de la relation d'héritage.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_InheritanceDerivedType">
+      <summary>Recherche une chaîne localisée semblable à Type dérivé de la relation d'héritage.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LazyLoadingEnabled">
+      <summary>Recherche une chaîne localisée semblable à Sert à définir le comportement du chargement différé pour l'ObjectContext généré.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_LongDescription">
+      <summary>Recherche une chaîne localisée semblable à Documentation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_MetadataArtifactProcessing">
+      <summary>Recherche une chaîne localisée semblable à Détermine le mode de traitement des fichiers de mappage et de modèle au moment de la génération.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavigationPropertyName">
+      <summary>Recherche une chaîne localisée semblable à Nom de la propriété de navigation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropMultiplicity">
+      <summary>Recherche une chaîne localisée semblable à Multiplicité de la terminaison de l'association cible.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_NavPropType">
+      <summary>Recherche une chaîne localisée semblable à Type de retour de cette propriété de navigation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Nullable">
+      <summary>Recherche une chaîne localisée semblable à Détermine si la propriété est Nullable.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Parameter">
+      <summary>Recherche une chaîne localisée semblable à Nom du paramètre de procédure stockée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PluralizeNewObjects">
+      <summary>Recherche une chaîne localisée semblable à Détermine si le système pluralise automatiquement le nom des nouveaux objets.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ProcessDependentTemplatesOnSave">
+      <summary>Recherche une chaîne localisée semblable à Détermine si le système traite les fichiers T4 dépendants du fichier EDMX lorsque le fichier EDMX est enregistré.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_PropertyName">
+      <summary>Recherche une chaîne localisée semblable à Nom de la propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Setter">
+      <summary>Recherche une chaîne localisée semblable à Détermine l'accès pour la propriété Setter.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_StoreGeneratedPattern">
+      <summary>Recherche une chaîne localisée semblable à Détermine si la colonne correspondante dans la base de données est générée automatiquement lors des opérations d'insertion et de mise à jour.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Summary">
+      <summary>Recherche une chaîne localisée semblable à Synthèse de documentation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_SynchronizePropertyFacets">
+      <summary>Recherche une chaîne localisée semblable à La mise à jour du modèle entraîne celle des facettes de propriété de l'entité, comme la possibilité de valeur Null et la précision, pour qu'elles correspondent aux valeurs des colonnes de base de données mappées.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ToRole">
+      <summary>Recherche une chaîne localisée semblable à Ce rôle d'association est la cible de la navigation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_Type">
+      <summary>Recherche une chaîne localisée semblable à Type de la propriété scalaire.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseLegacyProvider">
+      <summary>Recherche une chaîne localisée semblable à Utilise un fournisseur hérité pour établir une connexion à la base de données au moment du design.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_UseStrongSpatialTypes">
+      <summary>Recherche une chaîne localisée semblable à Définit la génération de code de façon à utiliser la prise en charge des types forts pour tous les types spatiaux.Si la valeur est false, les classes de base DbGeography et DbGeometry sont utilisées dans le code généré.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Description_ValidateOnBuild">
+      <summary>Recherche une chaîne localisée semblable à Détermine si le système valide le modèle au moment de la génération.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationName">
+      <summary>Recherche une chaîne localisée semblable à Nom de l'association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_AssociationSetName">
+      <summary>Recherche une chaîne localisée semblable à Nom de l'ensemble d'associations qui contient l'association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndNavigationProperty">
+      <summary>Recherche une chaîne localisée semblable à Nom de la propriété d'entité qui retourne la valeur à cette terminaison.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EndOnDelete">
+      <summary>Recherche une chaîne localisée semblable à Spécifie l'action à entreprendre lors de la suppression d'une entité au niveau de cette terminaison.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_EntityContainerName">
+      <summary>Recherche une chaîne localisée semblable à Nom du conteneur d'entités, qui contient toutes les instances de l'Entity Data Model.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Multiplicity">
+      <summary>Recherche une chaîne localisée semblable à Nombre d'entités autorisé au niveau de cette terminaison de l'association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Namespace">
+      <summary>Recherche une chaîne localisée semblable à Espace de noms du Entity Data Model.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Descritpion_Role">
+      <summary>Recherche une chaîne localisée semblable à Nom de cette terminaison.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Abstract">
+      <summary>Recherche une chaîne localisée semblable à Abstrait.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Access">
+      <summary>Recherche une chaîne localisée semblable à Accès.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Aggregate">
+      <summary>Recherche une chaîne localisée semblable à Agrégat.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Alias">
+      <summary>Recherche une chaîne localisée semblable à Alias.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Association">
+      <summary>Recherche une chaîne localisée semblable à Association.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_AssociationSetName">
+      <summary>Recherche une chaîne localisée semblable à Nom de l'ensemble d'associations.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BaseType">
+      <summary>Recherche une chaîne localisée semblable à Type de base.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_BuiltIn">
+      <summary>Recherche une chaîne localisée semblable à Intégré.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CodeGenerationStrategy">
+      <summary>Recherche une chaîne localisée semblable à Stratégie de génération de code.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Collation">
+      <summary>Recherche une chaîne localisée semblable à Classement.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_CommandText">
+      <summary>Recherche une chaîne localisée semblable à Texte de commande.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Composable">
+      <summary>Recherche une chaîne localisée semblable à Composable.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConcurrencyMode">
+      <summary>Recherche une chaîne localisée semblable à Mode de concurrence.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ConnectionString">
+      <summary>Recherche une chaîne localisée semblable à Chaîne de connexion.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseGenerationWorkflow">
+      <summary>Recherche une chaîne localisée semblable à Flux de travail de génération de la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseName">
+      <summary>Recherche une chaîne localisée semblable à Nom de l'objet de base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchema">
+      <summary>Recherche une chaîne localisée semblable à Schéma de base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DatabaseSchemaName">
+      <summary>Recherche une chaîne localisée semblable à Nom du schéma de base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DDLGenerationTemplate">
+      <summary>Recherche une chaîne localisée semblable à Modèle de génération du DDL.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DefaultValue">
+      <summary>Recherche une chaîne localisée semblable à Valeur par défaut.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_DerivedType">
+      <summary>Recherche une chaîne localisée semblable à Type dérivé.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Documentation">
+      <summary>Recherche une chaîne localisée semblable à Documentation.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End">
+      <summary>Recherche une chaîne localisée semblable à Terminaison.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Multiplicity">
+      <summary>Recherche une chaîne localisée semblable à Multiplicité de End1.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1NavigationProperty">
+      <summary>Recherche une chaîne localisée semblable à Propriété de navigation de End1.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1OnDelete">
+      <summary>Recherche une chaîne localisée semblable à OnDelete End1.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End1Role">
+      <summary>Recherche une chaîne localisée semblable à Nom du rôle de End1.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Multiplicity">
+      <summary>Recherche une chaîne localisée semblable à Multiplicité de End2.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2NavigationProperty">
+      <summary>Recherche une chaîne localisée semblable à Propriété de navigation de End2.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2OnDelete">
+      <summary>Recherche une chaîne localisée semblable à OnDelete End2.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_End2Role">
+      <summary>Recherche une chaîne localisée semblable à Nom du rôle de End2.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerAccess">
+      <summary>Recherche une chaîne localisée semblable à Accès au conteneur d'entités.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityContainerName">
+      <summary>Recherche une chaîne localisée semblable à Nom du conteneur d'entités.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityKey">
+      <summary>Recherche une chaîne localisée semblable à Clé d'entité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntitySetName">
+      <summary>Recherche une chaîne localisée semblable à Nom du jeu d'entités.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityShapeColor">
+      <summary>Recherche une chaîne localisée semblable à Couleur de remplissage.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EntityType">
+      <summary>Recherche une chaîne localisée semblable à Type.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumExternalTypeAttribute">
+      <summary>Recherche une chaîne localisée semblable à Type externe.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumFlagAttribute">
+      <summary>Recherche une chaîne localisée semblable à Indicateurs.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_EnumUnderlyingType">
+      <summary>Recherche une chaîne localisée semblable à Type sous-jacent.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FixedLength">
+      <summary>Recherche une chaîne localisée semblable à Longueur fixe.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_FromRole">
+      <summary>Recherche une chaîne localisée semblable à Rôle source.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_GenerateUpdateViews">
+      <summary>Recherche une chaîne localisée semblable à Générer des affichages des mises à jour.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Getter">
+      <summary>Recherche une chaîne localisée semblable à Accesseur Get.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LazyLoadingEnabled">
+      <summary>Recherche une chaîne localisée similaire à Chargement différé activé.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_LongDescription">
+      <summary>Recherche une chaîne localisée semblable à Description longue.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_CopyToOutputDirectory">
+      <summary>Recherche une chaîne localisée semblable à Copier dans le répertoire de sortie.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MAP_EmbedInOutputAssembly">
+      <summary>Recherche une chaîne localisée semblable à Incorporer à l'assembly de sortie.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MaxLength">
+      <summary>Recherche une chaîne localisée semblable à Longueur maximale.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_MetadataArtifactProcessing">
+      <summary>Recherche une chaîne localisée semblable à Traitement d'artefact des métadonnées.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Mode">
+      <summary>Recherche une chaîne localisée semblable à Mode.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Namespace">
+      <summary>Recherche une chaîne localisée semblable à Espace de noms.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropMultiplicity">
+      <summary>Recherche une chaîne localisée semblable à Multiplicité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_NavPropType">
+      <summary>Recherche une chaîne localisée semblable à Type de retour.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Niladic">
+      <summary>Recherche une chaîne localisée semblable à Niladique.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Nullable">
+      <summary>Recherche une chaîne localisée semblable à Nullable.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Parameter">
+      <summary>Recherche une chaîne localisée semblable à Paramètre.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ParameterTypeSemantics">
+      <summary>Recherche une chaîne localisée semblable à Sémantique du type de paramètre.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_PluralizeNewObjects">
+      <summary>Recherche une chaîne localisée semblable à Pluraliser les nouveaux objets.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Precision">
+      <summary>Recherche une chaîne localisée semblable à la précision.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ProcessDependentTemplatesOnSave">
+      <summary>Recherche une chaîne localisée semblable à Transformer les modèles de texte associés lors de l'enregistrement.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_RefConstraint">
+      <summary>Recherche une chaîne localisée semblable à la contrainte référentielle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ReturnType">
+      <summary>Recherche une chaîne localisée semblable à Type de retour.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Scale">
+      <summary>Recherche une chaîne localisée semblable à l'échelle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Setter">
+      <summary>Recherche une chaîne localisée semblable à l'accesseur Set.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoredProcedureName">
+      <summary>Recherche une chaîne localisée semblable au nom de la procédure stockée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreFunctionName">
+      <summary>Recherche une chaîne localisée semblable au nom de la fonction de stockage.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_StoreGeneratedPattern">
+      <summary>Recherche une chaîne localisée semblable à StoreGeneratedPattern.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Summary">
+      <summary>Recherche une chaîne localisée semblable à la synthèse.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_SynchronizePropertyFacets">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour les facettes de la propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ToRole">
+      <summary>Recherche une chaîne localisée semblable à Rôle cible.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Type">
+      <summary>Recherche une chaîne localisée semblable à Type.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_Unicode">
+      <summary>Recherche une chaîne localisée semblable à Unicode.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseLegacyProvider">
+      <summary>Recherche une chaîne localisée semblable à Utiliser un fournisseur hérité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_UseStrongSpatialTypes">
+      <summary>Recherche une chaîne localisée semblable à Utiliser des types spatiaux forts.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_DisplayName_ValidateOnBuild">
+      <summary>Recherche une chaîne localisée semblable à Valider lors de la génération.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_MessageBox_SetAbstract">
+      <summary>Recherche une chaîne localisée semblable à La définition d'un type d'entité comme abstrait supprimera tous les mappages de fonction existants de ce type d'entité.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityMany">
+      <summary>Recherche une chaîne localisée semblable à * (plusieurs).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityManyOf">
+      <summary>Recherche une chaîne localisée similaire à * (Collection de {0}).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOne">
+      <summary>Recherche une chaîne localisée semblable à 1 (Un).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityOneOf">
+      <summary>Recherche une chaîne localisée semblable à 1 (Un de {0}).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOne">
+      <summary>Recherche une chaîne localisée semblable à 0..1 (Zéro ou un).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.PropertyWindow_Value_MultiplicityZeroOrOneOf">
+      <summary>Recherche une chaîne localisée semblable à 0..1 (Zéro ou un de {0}).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorPreviewGroupName">
+      <summary>Recherche une chaîne localisée semblable à Objets de code.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_InvalidName">
+      <summary>Recherche une chaîne localisée semblable à Le nom spécifié n'est pas un identificateur valide.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRename_UndoDescription">
+      <summary>Recherche une chaîne localisée semblable à Renommer {0} en {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Cancel">
+      <summary>Recherche une chaîne localisée semblable à Annuler.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_LocationLabel">
+      <summary>Recherche une chaîne localisée semblable à Emplacement.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_NewNameLabel">
+      <summary>Recherche une chaîne localisée semblable à Nouveau nom.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_OK">
+      <summary>Recherche une chaîne localisée semblable à OK.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_PreviewReferenceChangesLabel">
+      <summary>Recherche une chaîne localisée semblable à Afficher un aperçu des modifications de la référence.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameDialog_Title">
+      <summary>Recherche une chaîne localisée semblable à Renommer.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_ConfirmButtonText">
+      <summary>Recherche une chaîne localisée semblable à &amp;amp;amp;Appliquer.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Description">
+      <summary>Recherche une chaîne localisée semblable à Renommer.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_TextViewDescription">
+      <summary>Recherche une chaîne localisée semblable à Afficher les modifications.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefactorRenameOperation_Title">
+      <summary>Recherche une chaîne localisée semblable à Afficher les modifications - Renommer.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCDependentProperty">
+      <summary>Recherche une chaîne localisée semblable à {0} (Erreur : introuvable).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RefConstraintDialog_ErrorInRCPrincipalProperty">
+      <summary>Recherche une chaîne localisée semblable à {0} (Erreur : introuvable, la référence sera supprimée).</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RenameModelMessageBox_Text">
+      <summary>Recherche une chaîne localisée semblable à Impossible de renommer ou déplacer le fichier.Fermez-le dans le Entity Designer avant de le renommer ou le déplacer.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ResourceManager">
+      <summary>Renvoie l'instance ResourceManager mise en cache utilisée par cette classe.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeErrorMessage">
+      <summary>Recherche une chaîne localisée semblable à Échec lors de la récupération des informations de type de retour de procédure stockée ou fonction.Message d'erreur {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeInfoMessage">
+      <summary>Recherche une chaîne localisée semblable à Récupération des informations de type de retour de procédure stockée ou fonction {0}/{1} - « {2}.{3} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogDescription">
+      <summary>Recherche une chaîne localisée semblable à Récupération des informations de type de retour de procédure stockée ou fonction.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogInitialStatus">
+      <summary>Recherche une chaîne localisée semblable à En attente de la connexion à la base de données…</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RetrievingSprocReturnTypeProgressDialogTitle">
+      <summary>Recherche une chaîne localisée semblable à Veuillez patienter…</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_FailureToLoadStoreItemCollection">
+      <summary>Recherche une chaîne localisée semblable à L'exception suivante s'est produite lors de la tentative de création du StoreItemCollection : '{0}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.RuntimeValidationException_StoreItemCollectionMayRequireDatabaseConnection">
+      <summary>Recherche une chaîne localisée semblable à Impossible de charger le StoreItemCollection à partir de la fabrique de fournisseurs.Cela peut nécessiter l'ouverture d'une connexion de base de données pour charger le StoreItemCollection.Message d'exception : '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultItemsMatching">
+      <summary>Recherche une chaîne localisée semblable à Éléments correspondants {0}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.SearchResultSearchCriteria">
+      <summary>Recherche une chaîne localisée semblable à « {0} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageAssociationsGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Contraintes.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageFunctionsGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Procédures stockées/fonctions.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.StorageTypesGhostNodeName">
+      <summary>Recherche une chaîne localisée semblable à Tables/Vues.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.T4_ItemTemplate_CSharp_Comment">
+      <summary>Obtient une chaîne localisée semblable à Commentaire de CSharp du modèle d'élément T4.</summary>
+      <returns>Chaîne localisée semblable à Commentaire de CSharp du modèle d'élément T4.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateError">
+      <summary>Recherche une chaîne localisée semblable à Ligne {0}, Colonne {1} : '{2}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TemplateErrorsEncountered">
+      <summary>Recherche une chaîne localisée semblable à Les erreurs suivantes ont été détectées lors du traitement du modèle « {0} » : {1}.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.ToolWindowTitle">
+      <summary>Recherche une chaîne localisée semblable à Explorateur de modèles.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.TransactionAlreadyCompleted">
+      <summary>Recherche une chaîne localisée semblable à La transaction est déjà terminée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_AddComplexType">
+      <summary>Recherche une chaîne localisée semblable à Ajouter un type complexe.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionColumn">
+      <summary>Recherche une chaîne localisée semblable à Modifier la colonne de condition.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeConditionValue">
+      <summary>Recherche une chaîne localisée semblable à Modifier la valeur de condition.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpMapping">
+      <summary>Recherche une chaîne localisée semblable à Modifier le mappage d'importation de fonction.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeFuncImpRetType">
+      <summary>Recherche une chaîne localisée semblable à Modifier le type de retour FunctionImport.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeMetadataArtifactProcessing">
+      <summary>Recherche une chaîne localisée semblable à Modifier le traitement d'artefact des métadonnées.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeResultBinding">
+      <summary>Recherche une chaîne localisée semblable à Modifier ResultBinding.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ChangeScalarProperty">
+      <summary>Recherche une chaîne localisée semblable à Modifier ScalarProperty.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateAssociationSetMapping">
+      <summary>Recherche une chaîne localisée semblable à Créer AssociationSetMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateCondition">
+      <summary>Recherche une chaîne localisée semblable à Créer Condition.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateDiagram">
+      <summary>Recherche une chaîne localisée semblable à Créer un diagramme.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateEnumType">
+      <summary>Recherche une chaîne localisée semblable à Créer le type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionImport">
+      <summary>Recherche une chaîne localisée semblable à Créer FunctionImport.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateFunctionMapping">
+      <summary>Recherche une chaîne localisée semblable à Créer FunctionMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateMappingFragment">
+      <summary>Recherche une chaîne localisée semblable à Créer MappingFragment.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateResultBinding">
+      <summary>Recherche une chaîne localisée semblable à Créer ResultBinding.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_CreateScalarProperty">
+      <summary>Recherche une chaîne localisée semblable à Créer ScalarProperty.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteAssociationSetMapping">
+      <summary>Recherche une chaîne localisée semblable à Supprimer AssociationSetMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteCondition">
+      <summary>Recherche une chaîne localisée semblable à Supprimer Condition.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteFunctionMapping">
+      <summary>Recherche une chaîne localisée semblable à Supprimer FunctionMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteMappingFragment">
+      <summary>Recherche une chaîne localisée semblable à Supprimer MappingFragment.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteResultBinding">
+      <summary>Recherche une chaîne localisée semblable à Supprimer ResultBinding.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_DeleteScalarProperty">
+      <summary>Recherche une chaîne localisée semblable à Supprimer ScalarProperty.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_GenerateDatabaseScriptFromModel">
+      <summary>Recherche une chaîne localisée semblable à Générer la base de données à partir du modèle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerDisable">
+      <summary>Recherche une chaîne localisée semblable à Désactiver la couche « {0} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_LayerEnable">
+      <summary>Recherche une chaîne localisée semblable à Activer la couche « {0} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_RefactorRenameCommand">
+      <summary>Recherche une chaîne localisée semblable à Renommer.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_ReferentialContraint">
+      <summary>Recherche une chaîne localisée semblable à Modifier la contrainte référentielle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_SetCodeGenerationStrategy">
+      <summary>Recherche une chaîne localisée semblable à Définir la stratégie CodeGeneration.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateAssociationSetMapping">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour AssociationSetMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateEnumType">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour le type Enum.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionImport">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour FunctionImport.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateFunctionMapping">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour FunctionMapping.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateMappingFragment">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour MappingFragment.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdateModelFromDatabase">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour le modèle à partir de la base de données.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.Tx_UpdatePropertyType">
+      <summary>Recherche une chaîne localisée semblable à Mettre à jour le type de propriété.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UnsupportedProjectLanguage">
+      <summary>Recherche une chaîne localisée semblable à Langage de projet non pris en charge.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UpdateEdmxNamespacesSuccessful">
+      <summary>Recherche une chaîne localisée semblable à Les espaces de noms dans les sections de stockage, conceptuelles et de mappage des fichiers .edmx dans le projet {0} ont été correctement mis à jour pour correspondre au .NET Framework ciblé du projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.UsingDefaultConnectionString_1">
+      <summary>Recherche une chaîne localisée semblable à Utilisation du fournisseur de données et de la connexion de base de données « {0} » obtenue à partir du fichier « {1} ».</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VsUtils_ErrorResolvingMacro">
+      <summary>Recherche une chaîne localisée semblable à Impossible de résoudre la macro : '{0}'..</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionConvertingProject">
+      <summary>Recherche une chaîne localisée semblable à Une exception s'est produite lors de la conversion d'une hiérarchie en projet.La hiérarchie n'est pas un projet.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_ExceptionParsingXml">
+      <summary>Recherche une chaîne localisée semblable à L'exception suivante s'est produite lors de l'analyse du fichier « {0} » : '{1}'.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Resources.VSUtils_InnerExceptionErrorFormat">
+      <summary>Recherche une chaîne localisée semblable à L'exception interne interceptée était de type « {0} », avec ce message d'erreur : '{1}'..</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration">
+      <summary>Représente une configuration de modèle pour définir l'option de suppression en cascade d'une association.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.DeleteBehavior">
+      <summary>Obtient ou définit l'option de suppression en cascade.</summary>
+      <returns>Option de suppression en cascade.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CascadeDeleteConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper">
+      <summary>Représente les méthodes d'assistance pour générer du code.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Spécifie le type anonyme lambda des propriétés spécifiées.</summary>
+      <returns>Type lambda.</returns>
+      <param name="properties">Propriétés.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration)">
+      <summary>Retourne l'attribut d'annotations de données utilisé pour appliquer la configuration spécifiée.</summary>
+      <returns>Attribut d'annotations de données utilisé pour appliquer la configuration spécifiée.</returns>
+      <param name="configuration">Configuration.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Attribute(System.String)">
+      <summary>Retourne un attribut avec le corps spécifié.</summary>
+      <returns>L'attribut.</returns>
+      <param name="attributeBody">Corps de l'attribut.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.CodeProvider">
+      <summary>Obtient le fournisseur pour le langage du code généré.</summary>
+      <returns>Fournisseur pour le langage du code généré.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.MethodChain(Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration)">
+      <summary>Obtient la chaîne de la méthode API Fluent Code First utilisée pour appliquer la configuration spécifiée.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="configuration">Configuration.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EdmMember)">
+      <summary>Spécifie l'identificateur de propriété du membre spécifié.</summary>
+      <returns>Identificateur.</returns>
+      <param name="member">Membre.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Property(System.Data.Entity.Core.Metadata.Edm.EntitySetBase)">
+      <summary>Spécifie l'identificateur de propriété du jeu d'entités spécifié.</summary>
+      <returns>Identificateur.</returns>
+      <param name="entitySet">Jeu d'entités.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Obtient le littéral de tableau de chaînes pour les valeurs spécifiées.</summary>
+      <returns>Littéral.</returns>
+      <param name="values">Valeurs.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmProperty)">
+      <summary>Spécifie le type de la propriété spécifiée.</summary>
+      <returns>Type.</returns>
+      <param name="property">Propriété.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EdmType)">
+      <summary>Spécifie l'identificateur du type spécifié.</summary>
+      <returns>Identificateur.</returns>
+      <param name="edmType">Type.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.EntityContainer)">
+      <summary>Spécifie l'identificateur de type du conteneur spécifié.</summary>
+      <returns>Identificateur.</returns>
+      <param name="container">Conteneur.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper.Type(System.Data.Entity.Core.Metadata.Edm.NavigationProperty)">
+      <summary>Spécifie le type de la propriété de navigation spécifiée.</summary>
+      <returns>Type.</returns>
+      <param name="navigationProperty">Propriété de navigation.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration">
+      <summary>Représente une configuration de modèle pour définir le nom de colonne, le type et l'ordre d'une propriété.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut.</summary>
+      <returns>Corps de l'attribut.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Name">
+      <summary>Obtient ou définit le nom de la colonne.</summary>
+      <returns>Nom de la colonne.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.Order">
+      <summary>Obtient ou définit l'ordre dans lequel cette colonne doit apparaître dans la table de base de données.</summary>
+      <returns>Ordre dans lequel cette colonne doit apparaître dans la table de base de données.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ColumnConfiguration.TypeName">
+      <summary>Obtient ou définit le nom du type de données spécifique du fournisseur de base de données.</summary>
+      <returns>Nom du type de données spécifique du fournisseur de base de données.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper">
+      <summary>Fournit des méthodes d'assistance pour la génération de code C#.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Obtient le type anonyme lambda des propriétés spécifiées.</summary>
+      <returns>Type lambda.</returns>
+      <param name="properties">Propriétés.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.Attribute(System.String)">
+      <summary>Obtient un attribut avec le corps spécifié.</summary>
+      <returns>L'attribut.</returns>
+      <param name="attributeBody">Corps de l'attribut.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.CodeProvider">
+      <summary>Obtient le fournisseur de code utilisé pour générer et compiler du code C#.</summary>
+      <returns>Fournisseur de code utilisé pour générer et compiler du code C#.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.CSharpCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Obtient le littéral de tableau de chaînes pour les valeurs spécifiées.</summary>
+      <returns>Littéral.</returns>
+      <param name="values">Valeurs.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration">
+      <summary>Représente une configuration de modèle pour définir l'option générée par la base de données d'une propriété.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut associé à la configuration.</summary>
+      <returns>Corps de l'attribut associé à la configuration.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode API Fluent pour appliquer la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.DatabaseGeneratedConfiguration.StoreGeneratedPattern">
+      <summary>Obtient ou définit le modèle utilisé pour générer des valeurs pour la propriété dans la base de données.</summary>
+      <returns>Modèle utilisé pour générer des valeurs pour la propriété dans la base de données.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper">
+      <summary>Fournit des méthodes d'assistance pour analyser un modèle.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.#ctor(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper" />.</summary>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EdmProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>Obtient les configurations de modèle à appliquer à la propriété spécifiée.</summary>
+      <returns>Configurations.</returns>
+      <param name="property">Propriété.</param>
+      <param name="model">Modèle.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.EntitySet,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>Obtient les configurations de modèle à appliquer au type d'entité spécifié.</summary>
+      <returns>Configurations.</returns>
+      <param name="entitySet">Jeu du type d'entité.</param>
+      <param name="model">Modèle.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetConfigurations(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Data.Entity.Infrastructure.DbModel)">
+      <summary>Obtient les configurations de modèle à appliquer à la propriété de navigation spécifiée.</summary>
+      <returns>Configurations.</returns>
+      <param name="navigationProperty">Propriété de navigation.</param>
+      <param name="model">Modèle.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.EdmHelper.GetMultiplicityConfiguration(System.Data.Entity.Core.Metadata.Edm.NavigationProperty,System.Boolean@)">
+      <summary>Obtient la configuration du modèle de multiplicité à appliquer à la propriété de navigation spécifiée.</summary>
+      <returns>Configuration.</returns>
+      <param name="navigationProperty">Propriété de navigation.</param>
+      <param name="isDefault">Valeur indiquant si la configuration sera appliquée par défaut.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration">
+      <summary>Représente une configuration de modèle pour marquer une propriété binaire ou de chaîne en tant que longueur fixe.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.FixedLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode API Fluent pour appliquer la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration">
+      <summary>Représente une configuration de modèle pour définir les propriétés de clé étrangère d'une association.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.ForeignKeyConfiguration.Properties">
+      <summary>Obtient les propriétés utilisées pour la clé étrangère de l'association.</summary>
+      <returns>Propriétés utilisées pour la clé étrangère de l'association.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration">
+      <summary>Représente une configuration de modèle qui peut être appliquée à l'aide d'annotations de données.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IAttributeConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut d'annotation de données pour appliquer la configuration.</summary>
+      <returns>Corps de l'attribut.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IConfiguration">
+      <summary>Représente une configuration de modèle.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration">
+      <summary>Représente une configuration de modèle qui peut être appliquée à l'aide de l'API Fluent Code First.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.IFluentConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode API Fluent pour appliquer la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration">
+      <summary>Représente une configuration de modèle pour définir la table de jointure et les noms de colonnes d'une association plusieurs-à-plusieurs.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.LeftKeys">
+      <summary>Obtient les noms des colonnes pour la clé étrangère à la table de l'entité à gauche.</summary>
+      <returns>Noms des colonnes pour la clé étrangère à la table de l'entité à gauche.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.RightKeys">
+      <summary>Obtient les noms des colonnes pour la clé étrangère à la table de l'entité à droite.</summary>
+      <returns>Noms des colonnes pour la clé étrangère à la table de l'entité à droite.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Schema">
+      <summary>Obtient ou définit le schéma de la table.</summary>
+      <returns>Schéma de la table.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.JoinTableConfiguration.Table">
+      <summary>Obtient ou définit le nom de la table.</summary>
+      <returns>Nom de la table.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration">
+      <summary>Représente une configuration de modèle pour définir la clé d'une entité.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode pour la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.KeyConfiguration.KeyProperties">
+      <summary>Obtient les propriétés utilisées pour la clé de l'entité.</summary>
+      <returns>Propriétés utilisées pour la clé de l'entité.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration">
+      <summary>Représente une configuration de modèle pour inclure une propriété dans le cadre de la clé de l'entité.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.KeyPropertyConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut.</summary>
+      <returns>Corps de l'attribut.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration">
+      <summary>Représente une configuration de modèle pour définir la longueur maximale d'une propriété binaire ou de chaîne.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Retourne le corps de l'attribut associé à la configuration de la longueur.</summary>
+      <returns>Corps de l'attribut associé à la configuration de la longueur.</returns>
+      <param name="code">Code d'aide pour la configuration.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Retourne la chaîne de la méthode associée à la configuration de la longueur.</summary>
+      <returns>Chaîne de la méthode associée à la configuration de la longueur.</returns>
+      <param name="code">Code d'aide pour la configuration.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthConfiguration.MaxLength">
+      <summary>Obtient ou définit la longueur maximale de la propriété.</summary>
+      <returns>Longueur maximale pour la propriété.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration">
+      <summary>Représente une configuration de modèle pour définir la longueur maximale d'une propriété de chaîne.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MaxLengthStringConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut associé à la configuration.</summary>
+      <returns>Corps de l'attribut associé à la configuration.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration">
+      <summary>Représente une configuration de modèle pour définir la multiplicité d'une association.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode API Fluent pour appliquer la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftEntityType">
+      <summary>Obtient ou définit le type d'entité de la terminaison gauche de l'association.</summary>
+      <returns>Type d'entité de la terminaison gauche de l'association.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.LeftNavigationProperty">
+      <summary>Obtient ou définit la propriété de navigation de la terminaison gauche de l'association.</summary>
+      <returns>Propriété de navigation de la terminaison gauche de l'association.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.MultiplicityConfiguration.RightNavigationProperty">
+      <summary>Obtient ou définit la propriété de navigation de la terminaison droite de l'association.</summary>
+      <returns>Propriété de navigation de la terminaison droite de l'association.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration">
+      <summary>Représente une configuration de modèle pour marquer une propriété de chaîne comme non-Unicode.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.NonUnicodeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode API Fluent pour appliquer la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration">
+      <summary>Représente une configuration de modèle pour définir la précision d'une propriété temporelle.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode API Fluent pour appliquer la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDateTimeConfiguration.Precision">
+      <summary>Obtient ou définit la précision de la propriété.</summary>
+      <returns>Précision de la propriété.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration">
+      <summary>Représente une configuration de modèle pour définir la précision et l'échelle d'une propriété décimale.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Precision">
+      <summary>Obtient ou définit la précision de la propriété.</summary>
+      <returns>Précision de la propriété.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.PrecisionDecimalConfiguration.Scale">
+      <summary>Obtient ou définit l'échelle de la propriété.</summary>
+      <returns>Échelle de la propriété.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration">
+      <summary>Représente une configuration de modèle pour marquer une propriété comme requise.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut.</summary>
+      <returns>Corps de l'attribut.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.RequiredConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration">
+      <summary>Représente une configuration de modèle pour définir la table d'une entité.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut associé à la configuration.</summary>
+      <returns>Corps de l'attribut associé à la configuration.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode API Fluent pour appliquer la configuration.</summary>
+      <returns>Chaîne de la méthode.</returns>
+      <param name="code">Assistance utilisée pour générer le code.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Schema">
+      <summary>Obtient ou définit le schéma de base de données de la table.</summary>
+      <returns>Schéma de base de données de la table.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.TableConfiguration.Table">
+      <summary>Obtient ou définit le nom de la table.</summary>
+      <returns>Nom de la table.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration">
+      <summary>Représente une configuration de modèle pour marquer une colonne binaire en tant qu'horodatage.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetAttributeBody(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient le corps de l'attribut associé à la configuration.</summary>
+      <returns>Corps de l'attribut associé à la configuration.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.TimestampConfiguration.GetMethodChain(Microsoft.Data.Entity.Design.CodeGeneration.CodeHelper)">
+      <summary>Obtient la chaîne de la méthode associée à la configuration.</summary>
+      <returns>Chaîne de la méthode associée à la configuration.</returns>
+      <param name="code">Code d'aide.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper">
+      <summary>Fournit des méthodes d'assistance pour générer du code Visual Basic.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.AnonymousType(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Obtient le type anonyme lambda des propriétés spécifiées.</summary>
+      <returns>Type lambda.</returns>
+      <param name="properties">Propriétés.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.Attribute(System.String)">
+      <summary>Obtient un attribut avec le corps spécifié.</summary>
+      <returns>L'attribut.</returns>
+      <param name="attributeBody">Corps de l'attribut.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.CodeProvider">
+      <summary>Obtient le fournisseur de code utilisé pour générer et compiler du code Visual Basic.</summary>
+      <returns>Fournisseur de code utilisé pour générer et compiler du code Visual Basic.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.CodeGeneration.VBCodeHelper.StringArray(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Obtient le littéral de tableau de chaînes pour les valeurs spécifiées.</summary>
+      <returns>Littéral.</returns>
+      <param name="values">Valeurs.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>SsdlToDdlActivity qui permet la transformation d'un SSDL en DDL à l'aide d'un TemplateActivity.REMARQUE : cette classe doit éviter toute dépendance sur tous types d'instance (particulièrement les types instanciés par l'Entity Designer) dans l'espace de noms Microsoft.Data.Entity.Design.*, excepté pour Microsoft.Data.Entity.Design.CreateDatabase.Cette classe existe dans ce projet en raison des dépendances VS.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>Workflow Windows <see cref="T:System.Activities.OutArgument`1" /> qui spécifie le langage de définition de données (DDL) généré à partir du langage SSDL (Store Schema Definition Language) dans les propriétés <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> et <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>Workflow Windows <see cref="T:System.Activities.InArgument`1" /> qui spécifie le langage SSDL (Store Schema Definition Language) existant à partir duquel le langage de définition de données (DDL) de suppression des objets de base de données existants est généré.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>Workflow Windows <see cref="T:System.Activities.InArgument`1" /> qui spécifie le langage SSDL (Store Schema Definition Language) à partir duquel le langage de définition de données (DDL) de création d'objets de base de données est généré.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData">
+      <summary>Interface parent utilisée par le LayerManager afin de distinguer les différentes couches.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerLayerData.LayerName">
+      <summary>Nom de cette couche d'extensibilité.</summary>
+      <returns>Retourne <see cref="T:System.String" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <returns>Retourne <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardStage">
+      <summary>WizardStage indique si la page d'extension de l'Assistant apparaît avant ou après la génération du modèle.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PostModelGeneration">
+      <summary>La page d'extension de l'Assistant apparaît après la génération du modèle.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardStage.PreModelGeneration">
+      <summary>La page d'extension de l'Assistant apparaît avant la génération du modèle.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Templates.TemplateResources">
+      <summary>Classe de ressource fortement typée pour rechercher des chaînes localisées, etc.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Culture">
+      <summary>Remplace la propriété CurrentUICulture du thread actuel pour toutes les recherches de ressources à l'aide de cette classe de ressource fortement typée.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.ResourceManager">
+      <summary>Renvoie l'instance ResourceManager mise en cache utilisée par cette classe.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveEntitySetConflict">
+      <summary>Recherche une chaîne localisée semblable à L'EntitySet « {0}.{1} » diffère d'un EntitySet existant uniquement par la casse et n'est pas compatible avec l'option de langage actuelle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveMemberConflict">
+      <summary>Recherche une chaîne localisée semblable à Le membre « {0}.{1} » diffère d'un Member existant uniquement par la casse et n'est pas compatible avec l'option de langage actuelle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_CaseInsensitiveTypeConflict">
+      <summary>Recherche une chaîne localisée semblable à Le Type « {0} » n'est pas unique.Cela peut être dû au fait que les types ne diffèrent que par la casse, ce qui n'est pas compatible avec l'option de langage actuelle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine1">
+      <summary>Recherche une chaîne localisée semblable à Ce code a été généré à partir d'un modèle.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine2">
+      <summary>Recherche une chaîne localisée semblable à Des modifications manuelles apportées à ce fichier peuvent conduire à un comportement inattendu de votre application.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_GeneratedCodeCommentLine3">
+      <summary>Recherche une chaîne localisée semblable à Les modifications manuelles apportées à ce fichier sont remplacées si le code est régénéré.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Templates.TemplateResources.Template_ReplaceVsItemTemplateToken">
+      <summary>Recherche une chaîne localisée semblable à Remplacez le jeton de remplacement « $edmxInputFile$ » par le nom réel du fichier .edmx à partir duquel vous voulez effectuer la génération.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>Il doit être public, car il doit être accessible à partir d'une DLL de ressource satellite pour la localisation</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>InitializeComponent</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>Joint des événements et des noms au contenu compilé.</summary>
+      <param name="connectionId">Jeton d'identificateur pour distinguer des appels.</param>
+      <param name="target">Cible à laquelle connecter des événements et des noms.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>Joint des événements sur les méthodes setter d'événement et les modèles dans le contenu compilé.</summary>
+      <param name="connectionId">ID de connexion unique pour la transmission des événements.</param>
+      <param name="target">Cible pour la transmission des événements.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="projectItem">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="project">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="projectItem">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="automationObject">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+      <param name="replacementsDictionary">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+      <param name="runKind">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+      <param name="customParams">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <returns>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</returns>
+      <param name="filePath">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>Visual Studio appelle cet Assistant lorsqu'un nouvel élément de type « ADO.NET Entity Data Model » est ajouté à un projet existant.Cet assistant est inscrit dans le modèle d'élément de fichier .vstemplate.Ce modèle d'élément ajoute les fichiers suivants : +- modelName.edmx | +- modelName.edmx.diagram | +- modelName.Designer.cs [ou vb] =&amp;amp;gt; sortie de générateur de code (pour EF5 et le générateur de code ObjectContext hérité) ou +- ModelName.cs [ou vb] - pour CodeFirst</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Cette méthode est appelée avant d'ouvrir un élément ayant l'attribut OpenInEditor. Cela permet d'exécuter une logique d'assistant personnalisée avant d'ouvrir un élément dans le modèle</summary>
+      <param name="projectItem">Élément de projet qui sera ouvert</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Cette méthode est appelée une fois le projet créé. Cela permet d'exécuter une logique d'assistant personnalisée à la fin de la génération d'un projet</summary>
+      <param name="project">Le projet.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Cette méthode est appelée uniquement pour les modèles d'élément, pas pour les modèles de projet</summary>
+      <param name="projectItem">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>Cette méthode est appelée à la fin de l'exécution de l'assistant de modèle. Cela permet d'exécuter une logique d'assistant personnalisée lorsque l'assistant a terminé toutes les tâches. Nous pouvons configurer ici des dépendances d'élément de projet pour les fichiers ajoutés par le .vstemplate.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Cette méthode est appelée au début de l'exécution de l'assistant de modèle. Cela permet d'exécuter une logique d'assistant personnalisée avant toute création, et c'est un bon emplacement pour collecter, par exemple, une entrée utilisateur qui modifiera l'exécution d'une quelconque façon</summary>
+      <param name="automationObject">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+      <param name="replacementsDictionary">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+      <param name="runKind">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+      <param name="customParams">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>Indique si l'élément de projet spécifié doit être ajouté au projet.</summary>
+      <returns>true si l'élément doit être ajouté ; sinon, false.</returns>
+      <param name="filePath">Chemin d'accès à l'élément de projet.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.#ctor">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="projectItem">Élément de projet.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="project">Le projet.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="projectItem">Élément de projet.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunFinished">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="automationObject">Objet automation.</param>
+      <param name="replacementsDictionary">Dictionnaire des remplacements.</param>
+      <param name="runKind">Type d'exécution.</param>
+      <param name="customParams">Paramètres personnalisés.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.OneEFWizard.ShouldAddProjectItem(System.String)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <returns>true si l'élément de projet doit être ajouté ; sinon, false.</returns>
+      <param name="filePath">Chemin d'accès au fichier.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>Wrapper managé destiné au concept de VS d'un IVsSingleFileGenerator. Il s'agit d'un outil personnalisé appelé pendant la génération et ayant pour effet de prendre un fichier en guise d'entrée et de fournir un fichier de code compilable en guise de sortie.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>Implémente la méthode IVsSingleFileGenerator.DefaultExtension.Retourne l'extension du fichier généré</summary>
+      <returns>S_OK, en cas de réussite ; sinon E_FAIL</returns>
+      <param name="pbstrDefaultExtension">Paramètre de sortie qui conserve l'extension qui doit être attribuée au nom du fichier de sortie.L'extension retournée doit inclure un point initial</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>Obtient l'extension par défaut de ce générateur</summary>
+      <returns>Chaîne avec l'extension par défaut pour ce générateur</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>Exécute les tâches définies par l'application associées à la libération ou à la redéfinition des ressources non managées.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>Libère des ressources non managées et, le cas échéant, managées.</summary>
+      <param name="disposing">true pour libérer les ressources managées et non managées ; false pour ne libérer que les ressources non managées.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>Finalise une instance de la classe <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>Méthode principale que le shell VS appelle pour effectuer la génération</summary>
+      <returns>Code d'état.</returns>
+      <param name="wszInputFilePath">Chemin d'accès au fichier d'entrée</param>
+      <param name="bstrInputFileContents">Contient le fichier d'entrée sous la forme d'une chaîne (le shell prend en charge les types de conversion UTF-8 en Unicode)</param>
+      <param name="wszDefaultNamespace">Espace de noms par défaut pour le fichier de code généré</param>
+      <param name="rgbOutputFileContents">Tableau d'octets du contenu du fichier de sortie</param>
+      <param name="pcbOutput">Nombre d'octets dans le tableau d'octets de sortie</param>
+      <param name="pGenerateProgress">Interface pour envoyer la progression des mises à jour au shell</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Méthode qui effectue le travail de génération du code en fonction du fichier d'entrée.</summary>
+      <returns>Fichier de code généré sous forme d'un tableau d'octets</returns>
+      <param name="inputFileName">Nom du fichier d'entrée</param>
+      <param name="inputFileContent">Contenu du fichier sous forme de chaîne</param>
+      <param name="defaultNamespace">Espace de noms par défaut.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>Méthode qui communique une erreur via le mécanisme de rappel du shell.</summary>
+      <param name="warning">True si c'est un avertissement</param>
+      <param name="level">Niveau ou gravité</param>
+      <param name="message">Texte affiché à l'utilisateur</param>
+      <param name="line">Numéro de ligne de l'erreur/avertissement</param>
+      <param name="column">Numéro de colonne de l'erreur/avertissement.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>Classe à co-créer lors d'une étape de génération de préprocesseur.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>Retourne un objet CodeDomProvider pour le langage du projet contenant l'élément de projet sur lequel le générateur a été appelé</summary>
+      <returns>Objet CodeDomProvider</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>Libère des ressources non managées et, le cas échéant, managées.</summary>
+      <param name="disposing">true pour libérer les ressources managées et non managées ; false pour ne libérer que les ressources non managées.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>Obtient l'objet Vs ErrorList</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>Méthode pour obtenir un service par son type</summary>
+      <returns>Objet qui implémente le service demandé</returns>
+      <param name="serviceType">Type de service à récupérer</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>Méthode GetSite de IOleObjectWithSite</summary>
+      <param name="riid">Interface à obtenir</param>
+      <param name="ppvSite">Tableau dans lequel stocker la valeur de retour</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>Retourne un objet EnvDTE.Project du projet contenant l'élément de projet sur lequel le générateur a été appelé</summary>
+      <returns>Objet EnvDTE.Project du projet contenant l'élément de projet sur lequel le générateur a été appelé</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>Retourne un objet EnvDTE.ProjectItem qui correspond à l'élément de projet sur lequel le générateur a été appelé</summary>
+      <returns>EnvDTE.ProjectItem de l'élément de projet sur lequel le générateur a été appelé</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>Méthode SetSite de IOleObjectWithSite</summary>
+      <param name="pUnkSite">Site à utiliser pour cet objet</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>Crée une demande pour un ServiceProvider en fonction d'un IOleServiceProvider</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>Notre générateur de code basé sur SFG fonctionne par : 1.Lecture de l'option CodeGenerationStrategy dans le fichier EDMX 2.Si CodeGenerationStrategy est défini sur la valeur par défaut, nous poursuivons avec la génération de code : 3.Appeler des API de génération de code System.Data.Entity.Design</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+      <param name="itemId">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+      <param name="oldInputName">Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>Cette API prend en charge l'infrastructure Entity Framework et n'est pas destinée à être utilisée directement à partir de votre code.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>Obtient l'extension par défaut du fichier de sortie de CodeDomProvider</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Appelle l'API CodeGen pour générer le fichier de code depuis le fichier CSDL</summary>
+      <returns>Null implique une erreur ; toute autre valeur correspond au contenu du fichier</returns>
+      <param name="inputFileName">Chemin d'accès complet du fichier CSDL ; obtenu depuis ProjectItem</param>
+      <param name="inputFileContent">Contenu du fichier CSDL ; doit toujours être utilisé pour permettre la désactivation de la génération dans les documents en mémoire</param>
+      <param name="defaultNamespace">Espace de noms par défaut.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>TemplateActivity qui permet la transformation d'un modèle T4 dans un flux de travail WF.REMARQUE : cette classe doit éviter toute dépendance sur tous types d'instance (particulièrement les types instanciés par l'Entity Designer) dans l'espace de noms Microsoft.Data.Entity.Design.*, excepté pour Microsoft.Data.Entity.Design.CreateDatabase.Cette classe existe dans ce projet en raison des dépendances VS.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Transforme un modèle de texte spécifié dans la propriété <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> en appelant le STextTemplatingService de Visual Studio.</summary>
+      <param name="context">État de l'activité en cours.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Remplit un objet <see cref="T:System.Collections.IDictionary" /> utilisé pour fournir des entrées à un modèle de texte.Cette méthode peut être substituée dans les classes dérivées pour fournir des entrées personnalisées.Ces entrées sont placées dans <see cref="T:System.Runtime.Remoting.Messaging.CallContext" /> pour être utilisées par le modèle de texte.</summary>
+      <param name="context">État de l'activité en cours.</param>
+      <param name="inputs">Dictionnaire qui lie les noms d'entrées aux valeurs d'entrée pour permettre leur utilisation par un modèle de texte.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>Traite un modèle T4 en utilisant le service de création de modèles de texte de Visual Studio, en fonction d'un chemin d'accès pouvant contenir des macros (par exemple, « $(DevEnvDir)\... »).REMARQUE : les chemins d'accès de modèle qui ne sont pas des fichiers ou qui sont des chemins d'accès UNC ne sont pas autorisés.</summary>
+      <returns>Sortie du traitement du modèle.</returns>
+      <param name="templatePath">Chemin d'accès du fichier de modèle pouvant contenir des macros basées sur le projet</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>Sortie du modèle spécifié par la propriété <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>Chemin d'accès du modèle de texte traité.</summary>
+    </member>
+    <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+      <summary>GeneratedInternalTypeHelper</summary>
+    </member>
+    <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.#ctor">
+      <summary>Initialise une nouvelle instance de la classe <see cref="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper" />.</summary>
+    </member>
+  </members>
+</doc>

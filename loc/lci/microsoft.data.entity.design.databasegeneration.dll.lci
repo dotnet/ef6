@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="Microsoft.Data.Entity.Design.DatabaseGeneration.dll" PsrId="211" FileType="1" SrcCul="en-US" Desc="Commenting file created by LCXAdmin. For more information, please visit http://localizability/longhorn/LcxAdmin.asp" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <OwnedComments>
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Loc" />
+  </OwnedComments>
+  <Item ItemId=";Microsoft.Data.Entity.Design.DatabaseGeneration.Properties.Resources.resources" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Str" Expand="true" Disp="true" LocTbl="false" Path=" \ ;Managed Resources \ 0 \ 0" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" LocTbl="false" />
+      <Item ItemId=";CodeViewFKConstraintDerivedType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[FK_{0}_inherits_{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked} {NoLocRule}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";CodeViewManyToManyAssocName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text" UsrLk="true">
+          <Val><![CDATA[FK_{0}_{1}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{Locked} {NoLocRule}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorComplexTypeCycle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL contains a circular reference among complex types. The complex type '{1}' contains complex property '{0}', which is of complex type '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCouldNotCreateCSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An EdmItemCollection could not be created from the supplied CSDL.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EdmItemCollection"} {StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindCSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The CSDL input could not be found. Make sure that a previous activity has supplied this CSDL and that the current activity has declared that it will receive the CSDL as input.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindProviderManifest" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not load the DbProviderManifest from the provider invariant name '{0}' and provider manifest token '{1}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCouldNotFindSSDL" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The SSDL input could not be found. Make sure that a previous activity has supplied this SSDL and that the current activity has declared that it will receive the SSDL as input.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorCsdlNotValid" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL is not valid because of the following errors: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorFindingEntityTypeForEnd" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the EntityType for the AssociationEnd.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityType"} {StrContains="AssociationEnd"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorGetDependentEndOnManyToMany" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot call GetDependentEnd on a many-to-many association. Verify that the Association is many-to-many before calling this method.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="GetDependentEnd"} {StrContains="Association"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorIncompatibleTypeForProvider" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The type '{0}' of the Property '{1}' is not supported by the specified database. Choose a different type or a different target database.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Property"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorInvalidCharsException" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[DDL generation failed because the name '{0}' was found to contain one of the following illegal strings:;, --, /*, */ or starts with 'xp_'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNameCollision" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The database generation process encountered a naming conflict while attempting to generate the SSDL. Usually this is because a generated SSDL name conflicts with an existing name in the CSDL. Try again after performing the appropriate renames in the CSDL. Naming conflicts can occur when:]D;]A;- Generating table names from derived types]D;]A;- Generating scalar property names from properties within complex types]D;]A;- Generating the names of properties corresponding to foreign keys]D;]A;]D;]A;The specific error message is: {0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNoCodeViewType" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The OutputGeneratorType '{0}' defined in the workflow could not be found and loaded. Please make sure the OutputGeneratorType attribute on the activity is valid.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="OutputGeneratorType"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNoEdmItemCollection" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the CSDL generated by the activity called 'CsdlToSsdlAndMslActivity'. Try re-running the workflow.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"} {StrContains="CsdlToSsdlAndMslActivity"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNoEdmParameterBag" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The EdmParameterBag was not found in the Workflow. Verify that it was added to the SymbolResolver, which is added as an Extension to the Workflow.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EdmParameterBag"} {StrContains="SymbolResolver"} {StrContains="Extension"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNoEntityContainer" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No EntityContainer was found in the supplied ItemCollection.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="EntityContainer"} {StrContains="ItemCollection"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNoParameterDefined" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The necessary Workflow parameter '{0}' is not defined]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="Workflow"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNoPropertyInRefConstraint" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the property '{0}' among the principal keys in the ReferentialConstraint between role '{1}' and role '{2}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="ReferentialConstraint"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNonSpecificComplexTypeCycle" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The supplied CSDL contains a circular reference among complex types. The complex property '{0}' is of a complex type which contains this same complex property.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="CSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNonValidAssociationEnds" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AssociationEnds are not properly defined in the Association '{0}'. Verify that there are exactly two AssociationEnds in the Association.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains=!1029;"AssociationEnds","Association"}]]></Cmt>
+        </Cmts>
+        <Notes>
+          <Note Name="Loc" Order="0"><![CDATA[FP Locver: plural form has to be reduced to singular as the category of number is expressed using Czech auxiliary words]]></Note>
+        </Notes>
+      </Item>
+      <Item ItemId=";ErrorNonValidDataSpace" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to retrieve the StoreGeneratedPattern attribute from the non-valid DataSpace '{0}'.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="StoreGeneratedPattern"} {StrContains="DataSpace"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNonValidSsdl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The SSDL generated by the activity called 'CsdlToSsdlAndMslActivity' is not valid and has the following errors: ]D;]A;{0}]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CsdlToSsdlAndMslActivity"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorNonValidTargetVersion" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified TargetVersion parameter '{0}' is not valid.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="TargetVersion"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorProviderManifestEx_ProviderInvariantName" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider invariant name '{0}' is not valid.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorProviderManifestEx_ProviderManifestToken" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider manifest token '{0}' is not valid.]]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="DbProviderManifest"} {StrContains="SSDL"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorSerializing_CsdlToMsl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not generate the MSL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="MSL"} {StrContains="CSDL"} {StrContains="XML"}]]></Cmt>
+        </Cmts>
+      </Item>
+      <Item ItemId=";ErrorSerializing_CsdlToSsdl" ItemType="0" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not generate the SSDL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}']]></Val>
+        </Str>
+        <Disp Icon="Str" />
+        <Cmts>
+          <Cmt Name="LcxAdmin"><![CDATA[{StrContains="SSDL"} {StrContains="CSDL"} {StrContains="XML"}]]></Cmt>
+        </Cmts>
+      </Item>
+    </Item>
+  </Item>
+</LCX>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0">
+  <!-- Common -->
+  <PropertyGroup>
+    <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
+    <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
+    <SolutionPackagesFolder>$(RepositoryRootDirectory)packages\</SolutionPackagesFolder>
+    <LocalizationRootDirectory>$(RepositoryRootDirectory)loc</LocalizationRootDirectory>
+    <LocLanguages>CHS,CHT,DEU,ESN,FRA,ITA,JPN,KOR,PTB,RUS</LocLanguages>
+    <LciRootDirectory>$(LocalizationRootDirectory)\lci</LciRootDirectory>
+    <LclRootDirectory>$(LocalizationRootDirectory)\lcl</LclRootDirectory>
+    <IntellisenseLocRootDirectory>$(LocalizationRootDirectory)\intellisense</IntellisenseLocRootDirectory>
+    <LocalizationFilesDirectory>$(RepositoryRootDirectory)LocalizedFiles</LocalizationFilesDirectory>
+    <MicroBuildDirectory>$(SolutionPackagesFolder)MicroBuild.Core.0.2.0\build\</MicroBuildDirectory>
+  </PropertyGroup>
+</Project>

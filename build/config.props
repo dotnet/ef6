@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0">
+
+  <!-- Version -->
+  <PropertyGroup>
+    <RuntimeVersionMajor>6</RuntimeVersionMajor>
+    <RuntimeVersionMinor>2</RuntimeVersionMinor>
+    <ToolingVersionMajor>15</ToolingVersionMajor>
+    <ToolingVersionMinor>0</ToolingVersionMinor>
+    <VisualStudioVersion>$(ToolingVersionMajor).$(ToolingVersionMinor)</VisualStudioVersion>
+    <VersionBuild>0</VersionBuild>
+    <VersionRevision>0</VersionRevision>
+    <VersionReleasePrefix>0</VersionReleasePrefix>
+    <VersionRelease>$(VersionReleasePrefix)</VersionRelease>
+    <VersionReleaseName></VersionReleaseName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectUrlFwLinkID Condition="'$(ProjectUrlFwLinkID)' == ''">389132</ProjectUrlFwLinkID>
+    <LicenseUrlFwLinkID Condition="'$(LicenseUrlFwLinkID)' == ''">389134</LicenseUrlFwLinkID>
+    <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
+    <EF6NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionBuild)</EF6NuGetPackageVersion>
+  </PropertyGroup>
+
+</Project>

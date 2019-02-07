@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="AfterBuild" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.props"/>
+
+  <!-- Configuration/global properties -->
+  <PropertyGroup>
+    <CommonMSBuildProperties>
+      Configuration=$(Configuration);
+      ReleaseLabel=$(ReleaseLabel);
+      BuildNumber=$(BuildNumber);
+      BuildRTM=$(BuildRTM);
+    </CommonMSBuildProperties>
+    <IntermediateOutputPath>$(RepositoryRootDirectory)bin\$(Configuration)</IntermediateOutputPath>
+    <OutDir>$(RepositoryRootDirectory)bin\$(Configuration)\signed</OutDir>
+    <LocOutDir>$(RepositoryRootDirectory)bin\$(Configuration)\localize</LocOutDir>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <Target Name="BatchSign">
+    <ItemGroup>
+      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.Data.Entity.*.dll" />
+      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.Data.Tools.Design.XmlCore.dll" />
+      <LocalizedEFToolsDLLs Include="$(RepositoryRootDirectory)bin\$(Configuration)\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.dll" />
+      <LocalizedEFToolsDLLs Include="$(LocOutDir)\**\*.resources.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <FilesToSign Include="@(LocalizedEFToolsDLLs)">
+        <Authenticode>Microsoft</Authenticode>
+        <StrongName>67</StrongName>
+      </FilesToSign>
+    </ItemGroup>
+
+    <Message Text="BuildConfiguration : $(BuildConfiguration)" Importance="High"/>
+    <Message Text="Configuration : $(Configuration)" Importance="High"/>
+    <Message Text="ReleaseLabel : $(ReleaseLabel)" Importance="High"/>
+    <Message Text="BuildNumber : $(BuildNumber)" Importance="High"/>
+    <Message Text="BuildRTM : $(BuildRTM)" Importance="High"/>
+    <Message Text="SigningType: $(SigningType)" Importance="High"/>
+    <Message Text="Files to sign: @(FilesToSign, '%0a')" Importance="High"/>
+  </Target>
+
+  <Target Name="AfterBuild" DependsOnTargets="BatchSign"/>
+  <Import Project="$(MicroBuildDirectory)MicroBuild.Core.targets" />
+</Project>
