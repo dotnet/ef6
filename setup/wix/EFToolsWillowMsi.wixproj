@@ -66,7 +66,9 @@
     <!-- Clean target from WiX would have overwritten this target if wix had been installed -->
     <Error Text="Wix Toolset not installed - directory $(WixTargetsPath) does not exist" />
   </Target>
-  <Import Project="$(WixTargetsPath)" />
+
+  <!-- One line below commented out for workaround -->
+  <!-- Import Project="$(WixTargetsPath)" / -->
 
   <Target Name="DefineConstants" AfterTargets="PrepareForBuild">
     <PropertyGroup>
