@@ -97,6 +97,13 @@
     <Error Condition="!Exists('$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets'))" />
   </Target>
 
+
+  <!-- 02-11-19 WORKAROUND to fix MSBuildToolsVersion=Current which is not understood by wix.targets -->
+  <PropertyGroup>
+    <WixTargetsImported>true</WixTargetsImported>
+  </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\tools\wix2010.targets" />
+
   <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.Tools.3.10.1.2213\build\Microsoft.Wix3.Tools.targets" />
   <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.DependencyExtension.3.10.1.2213\build\Microsoft.Wix3.DependencyExtension.targets" /> <!-- adds WixDependencyExtension.dll to Wix3 extensions -->
   <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Wix3.UIExtension.3.10.1.2213\build\Microsoft.Wix3.UIExtension.targets" /> <!-- adds WixUIExtension.dll to Wix3 extensions -->
