@@ -3,4 +3,7 @@
   <?if $(var.VisualStudioVersion) = 15.0?>
     <?define UpgradeCode = {8D2CC6D5-E830-45A0-B699-5B604EA710A8}?>
   <?endif?>
+  <?if $(var.VisualStudioVersion) = 16.0?>
+    <?define UpgradeCode = {71C6C150-2394-42C4-A1A4-D062D9C2F314}?>
+  <?endif?>
 </Include>
