@@ -190,7 +190,7 @@ steps:
 
     configuration: '$(BuildConfiguration)'
 
-    msbuildArguments: '/t:Build /v:d'
+    msbuildArguments: '/t:Build /v:d /bl:$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildSingletonMSI.binlog'
 
   timeoutInMinutes: 10
 
@@ -210,7 +210,8 @@ steps:
      $(SingletonMsiName).msi
      $(SingletonMsiName).cab
      $(SingletonMsiName).wixpdb
-
+     BuildSingletonMSI.binlog
+     
     TargetFolder: '$(Build.ArtifactStagingDirectory)\SetupResults'
 
 
@@ -272,7 +273,7 @@ steps:
 
   inputs:
 
-    Contents: '$(Build.SourcesDirectory)\setup\**'
+    Contents: 'bin\**'
 
     TargetFolder: '$(Build.ArtifactStagingDirectory)\BinDirContents'
 
