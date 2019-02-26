@@ -90,7 +90,7 @@ steps:
     solution: '$(Build.Repository.LocalPath)\setup\wix\EFToolsWillowMsi.wixproj'
     msbuildArchitecture: x64
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/t:Build /v:d'
+    msbuildArguments: '/t:Build /v:d /bl:$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildSingletonMSI2017.binlog'
   timeoutInMinutes: 10
 
 - task: CopyFiles@2
@@ -103,6 +103,7 @@ steps:
      $(SingletonMsiName).msi
      $(SingletonMsiName).cab
      $(SingletonMsiName).wixpdb
+     BuildSingletonMSI2017.binlog
     TargetFolder: '$(Build.ArtifactStagingDirectory)\SetupResults'
 
 - task: PublishBuildArtifacts@1
