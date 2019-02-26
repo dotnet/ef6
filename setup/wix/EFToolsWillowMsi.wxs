@@ -2,7 +2,7 @@
 <?include Defines.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="*"
-           Name="Entity Framework $(var.RuntimeVersionMajor).$(var.RuntimeVersionMinor).$(var.VersionReleasePrefix) Tools $(var.VersionReleaseName) for Visual Studio 2017"
+           Name="Entity Framework $(var.RuntimeVersionMajor).$(var.RuntimeVersionMinor).$(var.VersionReleasePrefix) Tools $(var.VersionReleaseName) for Visual Studio 2019"
            Language="1033"
            Version="$(var.RuntimeVersionMajor).$(var.RuntimeVersionMinor).$(var.VersionBuild).$(var.VersionRevision)"
            Manufacturer="Microsoft Corporation"

@@ -297,6 +297,33 @@ steps:
 
 - task: CopyFiles@2
 
+  displayName: 'Copy Obj Files'
+
+  inputs:
+
+    Contents: '$(Build.SourcesDirectory)\**\obj\**'
+
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\ObjDirsContents'
+
+  condition: succeededOrFailed()
+
+
+
+- task: PublishBuildArtifacts@1
+
+  displayName: 'Publish ObjDirsContents'
+
+  inputs:
+
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\ObjDirsContents'
+
+    ArtifactName: ObjDirsContents
+
+  condition: succeededOrFailed()
+
+
+- task: CopyFiles@2
+
   displayName: 'Copy Files to PackagesContents'
 
   inputs:
