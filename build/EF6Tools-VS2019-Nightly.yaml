@@ -305,6 +305,8 @@ steps:
 
     TargetFolder: '$(Build.ArtifactStagingDirectory)\ObjDirsContents'
 
+  enabled: false
+
   condition: succeededOrFailed()
 
 
@@ -318,6 +320,8 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\ObjDirsContents'
 
     ArtifactName: ObjDirsContents
+
+  enabled: false
 
   condition: succeededOrFailed()
 
