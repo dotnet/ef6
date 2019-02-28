@@ -9,12 +9,9 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    ////using System.IO;
-    ////using System.Linq;
     using System.Runtime.InteropServices;
     using System.Threading;
     using System.Threading.Tasks;
-    //// using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
     internal static class Constants
@@ -30,16 +27,12 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
     // will load the EDM package.
     // From Dev15 onwards auto load when a .edmx file is selected and not at solution load.
     // Note: the pkgdef files in PkgDefData _must_ be kept in sync with the
-    // ProvideAutoLoad and ProvideUIContextRule attributes.
+    // PackageRegistration, ProvideAutoLoad and ProvideUIContextRule attributes.
     //
     [VSShell.DefaultRegistryRoot("Software\\Microsoft\\VisualStudio\\11.0")]
-    [VSShell.PackageRegistration(RegisterUsing = VSShell.RegistrationMethod.Assembly, UseManagedResourcesOnly = true)]
+    [VSShell.PackageRegistration(RegisterUsing = VSShell.RegistrationMethod.Assembly, UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ComVisible(true)]
     [Guid(Constants.MicrosoftDataEntityDesignBootstrapPackageId)]
-#if (VS11 || VS12 || VS14)
-    [VSShell.ProvideAutoLoadAttribute("93694fa0-0397-11d1-9f4e-00a0c911004f")] // VSConstants.UICONTEXT_SolutionHasMultipleProjects
-    [VSShell.ProvideAutoLoadAttribute("adfc4e66-0397-11d1-9f4e-00a0c911004f")] // VSConstants.UICONTEXT_SolutionHasSingleProject
-#else
     // Perf optimization for VS15 onwards - only load this package if an .edmx file
     // is the current selection in the active hierarchy (instead of at solution load)
     [VSShell.ProvideAutoLoad(Constants.UICONTEXT_AddNewEntityDataModel)]
@@ -52,262 +45,36 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
         termNames: new[] { "DotEdmx" },
         termValues: new[] { "HierSingleSelectionName:.edmx$" })]
 #pragma warning restore 3016
-#endif
     [SuppressMessage("Microsoft.Performance", "CA1812: AvoidUninstantiatedInternalClasses")]
-    internal sealed class BootstrapPackage : VSShell.AsyncPackage //, IVsSolutionEvents
+    internal sealed class BootstrapPackage : VSShell.AsyncPackage
     {
-        //// private uint _trackSolEventsCookie;
-        private const string ExtensionEdmx = ".edmx";
-
         private const string guidEscherPkgString = "8889e051-b7f9-4781-bb33-2a36a9bdb3a5";
         private static readonly Guid guidEscherPkg = new Guid(guidEscherPkgString);
 
-        ////[SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsSolution.AdviseSolutionEvents(Microsoft.VisualStudio.Shell.Interop.IVsSolutionEvents,System.UInt32@)")]
-        ////protected override void Initialize()
-        ////{
-        ////    base.Initialize();
-
-        ////    var solution = GetService(typeof(SVsSolution)) as IVsSolution;
-        ////    Debug.Assert(solution != null, "Unexpected null value for IVsSolution");
-        ////    if (solution != null)
-        ////    {
-        ////        solution.AdviseSolutionEvents(this, out _trackSolEventsCookie);
-        ////    }
-
-        ////    // OnAfterOpenProject has already been fired to event sinks at this point, so
-        ////    // we need to perform a manual check
-        ////    if (solution != null)
-        ////    {
-        ////        CheckAndLoadEDMPackage(solution);
-        ////    }
-        ////}
-
-        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<VSShell.ServiceProgressData> progress)
+        [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsSolution.AdviseSolutionEvents(Microsoft.VisualStudio.Shell.Interop.IVsSolutionEvents,System.UInt32@)")]
+        protected override Task InitializeAsync(
+            CancellationToken cancellationToken, IProgress<VSShell.ServiceProgressData> progress)
         {
-            await base.InitializeAsync(cancellationToken, progress);
+            CheckAndLoadEDMPackage();
 
-            if (await GetServiceAsync(typeof(SVsSolution)) is IVsSolution solution)
-            {
-                await CheckAndLoadEDMPackage(solution);
-            }
+            return Task.FromResult<object>(null);
         }
 
-        ////[SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsSolution.UnadviseSolutionEvents(System.UInt32)")]
-        ////protected override void Dispose(bool disposing)
-        ////{
-        ////    try
-        ////    {
-        ////        var solution = GetService(typeof(SVsSolution)) as IVsSolution;
-        ////        Debug.Assert(solution != null, "Unexpected null value for IVsSolution");
-        ////        if (solution != null)
-        ////        {
-        ////            if (_trackSolEventsCookie != 0)
-        ////            {
-        ////                solution.UnadviseSolutionEvents(_trackSolEventsCookie);
-        ////                _trackSolEventsCookie = 0;
-        ////            }
-        ////        }
-        ////    }
-        ////    finally
-        ////    {
-        ////        base.Dispose(disposing);
-        ////    }
-        ////}
-
-        ////[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        ////private void CheckAndLoadEDMPackage(IVsHierarchy project)
-        ////{
-        ////    if (!IsEDMPackageLoaded())
-        ////    {
-        ////        try
-        ////        {
-        ////            var shouldLoadEDMPackage = ShouldLoadEDMPackage(project);
-        ////            if (shouldLoadEDMPackage)
-        ////            {
-        ////                LoadEDMPackage();
-        ////            }
-        ////        }
-        ////        catch (Exception loadPackageException)
-        ////        {
-        ////            Debug.Assert(false, "Caught exception while trying to load EDM package: " + loadPackageException.Message);
-        ////        }
-        ////    }
-        ////}
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private async Task CheckAndLoadEDMPackage(IVsSolution solution)
+        private void CheckAndLoadEDMPackage()
         {
-            var vsShell = await GetServiceAsync(typeof(SVsShell)) as IVsShell;
-            Debug.Assert(vsShell != null, "unexpected null value for vsShell");
-            if (vsShell != null)
-            {
-                if (!IsEDMPackageLoaded(vsShell))
-                {
-                    // if there is at least one EDMX file in the solution, load the EDM package
-                    Debug.Assert(solution != null, "Unexpected null value of project");
-                    if (solution != null)
-                    {
-                        ////foreach (var project in BootstrapUtils.GetProjectsInSolution(solution))
-                        ////{
-                        ////    var shouldLoadEDMPackage = ShouldLoadEDMPackage(project);
-                        ////    if (shouldLoadEDMPackage)
-                        ////    {
-                        try
-                        {
-                            LoadEDMPackage(vsShell);
-                            ////return;
-                        }
-                        catch (Exception loadPackageException)
-                        {
-                            Debug.Assert(false, "Caught exception while trying to load EDM package: " + loadPackageException.Message);
-                        }
-                        ////    }
-                        ////}
-                    }
-                }
-            }
-        }
-
-        ////private static bool ShouldLoadEDMPackage(IVsHierarchy project)
-        ////{
-        ////    var shouldLoadEDMPackage = false;
-        ////    try
-        ////    {
-        ////        if (BootstrapUtils.IsEDMSupportedInProject(project))
-        ////        {
-        ////            // Check if project is a website project. If yes, search for edmx files under the app_code folder.
-        ////            // Note that website project doesn't have project file and to exclude files from project you append ".exclude" in file name.
-        ////            var dteProject = BootstrapUtils.GetProject(project);
-        ////            if (dteProject != null
-        ////                && BootstrapUtils.IsWebProject(dteProject))
-        ////            {
-        ////                var projectFullPathProperty = dteProject.Properties.Item("FullPath");
-        ////                var projectFullPath = projectFullPathProperty.Value as string;
-
-        ////                Debug.Assert(String.IsNullOrWhiteSpace(projectFullPath) == false, "Unable to get project full path");
-        ////                if (String.IsNullOrWhiteSpace(projectFullPath) == false)
-        ////                {
-        ////                    // App_Code is a special folder that will not be localized should always be under root folder.
-        ////                    var appCodePath = Path.Combine(projectFullPath, "App_Code");
-
-        ////                    if (Directory.Exists(appCodePath))
-        ////                    {
-        ////                        // Directory.GetFiles could potentially be an expensive operation. 
-        ////                        // If the performance is not acceptable, we should look into calling Win32 API to search for files.
-        ////                        shouldLoadEDMPackage =
-        ////                            Directory.GetFiles(appCodePath, "*" + ExtensionEdmx, SearchOption.AllDirectories).Any();
-        ////                    }
-        ////                }
-        ////            }
-        ////            else
-        ////            {
-        ////                var fileFinder = new VSFileFinder(ExtensionEdmx);
-        ////                shouldLoadEDMPackage = fileFinder.ExistInProject(project);
-        ////            }
-        ////        }
-        ////    }
-        ////    catch (Exception ex)
-        ////    {
-        ////        Debug.Fail("Caught exception in BootstrapPackage's ShouldLoadEDMPackage method. Message: " + ex.Message);
-        ////        // We want to continue loading the package if the exception is not critical.
-        ////        // Do not do Debug.Assert here because it could cause a lot of DDBasic failures in CHK build. 
-        ////        if (VSErrorHandler.IsCriticalException(ex))
-        ////        {
-        ////            throw;
-        ////        }
-        ////    }
-        ////    return shouldLoadEDMPackage;
-        ////}
-
-        private static bool IsEDMPackageLoaded(IVsShell vsShell)
-        {
+            var vsShell = (IVsShell)GetServiceAsync(typeof(SVsShell));
             Debug.Assert(vsShell != null, "unexpected null value for vsShell");
             var packageGuid = guidEscherPkg;
-            IVsPackage package = null;
-            var hr = vsShell.IsPackageLoaded(ref packageGuid, out package);
-            if (VSErrorHandler.Succeeded(hr) && package != null)
+            var hrAlreadyLoaded = vsShell.IsPackageLoaded(ref packageGuid, out IVsPackage package);
+            if (!VSErrorHandler.Succeeded(hrAlreadyLoaded) || package == null)
             {
-                return true;
-            }
-
-            return false;
-        }
-
-        [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsShell.IsPackageLoaded(System.Guid@,Microsoft.VisualStudio.Shell.Interop.IVsPackage@)")]
-        private static void LoadEDMPackage(IVsShell vsShell)
-        {
-            Debug.Assert(vsShell != null, "unexpected null value for vsShell");
-            IVsPackage package = null;
-            var packageGuid = guidEscherPkg;
-            vsShell.IsPackageLoaded(ref packageGuid, out package);
-            if (package == null)
-            {
-                var hr = vsShell.LoadPackage(ref packageGuid, out package);
-                if (VSErrorHandler.Failed(hr))
+                var hrLoad = vsShell.LoadPackage(ref packageGuid, out package);
+                if (VSErrorHandler.Failed(hrLoad))
                 {
-                    var msg = string.Format(CultureInfo.CurrentCulture, Resources.PackageLoadFailureExceptionMessage, hr);
+                    var msg = string.Format(CultureInfo.CurrentCulture, Resources.PackageLoadFailureExceptionMessage, hrLoad);
                     throw new InvalidOperationException(msg);
                 }
             }
         }
-
-        ////#region IVsSolutionEvents Members
-
-        ////int IVsSolutionEvents.OnAfterCloseSolution(object pUnkReserved)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnAfterLoadProject(IVsHierarchy pStubHierarchy, IVsHierarchy pRealHierarchy)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////// if solutions are opened, this will get called for each project
-        ////int IVsSolutionEvents.OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
-        ////{
-        ////    if (pHierarchy != null)
-        ////    {
-        ////        CheckAndLoadEDMPackage(pHierarchy);
-        ////    }
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnBeforeCloseSolution(object pUnkReserved)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnBeforeUnloadProject(IVsHierarchy pRealHierarchy, IVsHierarchy pStubHierarchy)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnQueryCloseSolution(object pUnkReserved, ref int pfCancel)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////int IVsSolutionEvents.OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel)
-        ////{
-        ////    return VSConstants.S_OK;
-        ////}
-
-        ////#endregion
     }
 }

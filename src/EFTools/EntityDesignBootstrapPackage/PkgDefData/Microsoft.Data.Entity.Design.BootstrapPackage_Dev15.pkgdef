@@ -4,6 +4,7 @@
 "Assembly"="Microsoft.Data.Entity.Design.BootstrapPackage, version=EFDESIGNERVERSIONTOKEN, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 "Class"="Microsoft.Data.Entity.Design.BootstrapPackage.BootstrapPackage"
 "InprocServer32"="%SystemRoot%\\system32\\mscoree.dll"
+"AllowsBackgroundLoad"=dword:00000001
 
 // Auto load the bootstrap package dependent on the UIContextRules
 [$RootKey$\AutoLoadPackages\{e000c7e5-dba5-4682-abe0-7f6ce57b236d}]
