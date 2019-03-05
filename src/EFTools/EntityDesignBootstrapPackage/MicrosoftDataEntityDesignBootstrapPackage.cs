@@ -35,7 +35,7 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
     [Guid(Constants.MicrosoftDataEntityDesignBootstrapPackageId)]
     // Perf optimization for VS15 onwards - only load this package if an .edmx file
     // is the current selection in the active hierarchy (instead of at solution load)
-    [VSShell.ProvideAutoLoad(Constants.UICONTEXT_AddNewEntityDataModel)]
+    [VSShell.ProvideAutoLoad(Constants.UICONTEXT_AddNewEntityDataModel, VSShell.PackageAutoLoadFlags.BackgroundLoad)]
     // VSShell.ProvideUIContextRule will cause a CS3016 warning. It should not because the class is internal
     // but due to DevDiv bug 94391 it does anyway. Work around this by ignoring that warning.
 #pragma warning disable 3016
