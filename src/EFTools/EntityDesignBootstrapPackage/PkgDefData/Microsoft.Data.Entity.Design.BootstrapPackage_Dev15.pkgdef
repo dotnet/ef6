@@ -8,7 +8,8 @@
 
 // Auto load the bootstrap package dependent on the UIContextRules
 [$RootKey$\AutoLoadPackages\{e000c7e5-dba5-4682-abe0-7f6ce57b236d}]
-"{7a4e8d96-5d5b-4415-9fab-d6dcc56f47fb}"=dword:00000000
+"{7a4e8d96-5d5b-4415-9fab-d6dcc56f47fb}"=dword:00000002
+
 
 [$RootKey$\UIContextRules\{e000c7e5-dba5-4682-abe0-7f6ce57b236d}]
 @="Auto load Entity Data Model Package"

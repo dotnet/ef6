@@ -52,17 +52,13 @@ namespace Microsoft.Data.Entity.Design.BootstrapPackage
         private static readonly Guid guidEscherPkg = new Guid(guidEscherPkgString);
 
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsSolution.AdviseSolutionEvents(Microsoft.VisualStudio.Shell.Interop.IVsSolutionEvents,System.UInt32@)")]
-        protected override Task InitializeAsync(
+        protected override async Task InitializeAsync(
             CancellationToken cancellationToken, IProgress<VSShell.ServiceProgressData> progress)
         {
-            CheckAndLoadEDMPackage();
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            return Task.FromResult<object>(null);
-        }
+            var vsShell = (IVsShell)await GetServiceAsync(typeof(SVsShell));
 
-        private void CheckAndLoadEDMPackage()
-        {
-            var vsShell = (IVsShell)GetServiceAsync(typeof(SVsShell));
             Debug.Assert(vsShell != null, "unexpected null value for vsShell");
             var packageGuid = guidEscherPkg;
             var hrAlreadyLoaded = vsShell.IsPackageLoaded(ref packageGuid, out IVsPackage package);
