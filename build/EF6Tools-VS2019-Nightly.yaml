@@ -190,7 +190,7 @@ steps:
 
     configuration: '$(BuildConfiguration)'
 
-    msbuildArguments: '/t:Build /v:d # commment binlog out for now /bl:$(Build.SourcesDirectory)\bin\$(BuildConfiguration)\BuildSingletonMSI.binlog'
+    msbuildArguments: '/t:Build /v:d'
 
   timeoutInMinutes: 10
 
