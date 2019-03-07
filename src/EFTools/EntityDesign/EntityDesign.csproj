@@ -54,6 +54,7 @@
   </PropertyGroup>
   <Import Project="$(RepositoryRoot)tools\EFToolsVsReferences.settings.targets" />
   <ItemGroup>
+    <Reference Condition="'$(VisualStudioVersion)' == '16.0'" Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.$(VisualStudioVersion15)" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.11.0" />
@@ -105,6 +106,7 @@
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
+    <Reference Condition="'$(VisualStudioVersion)' == '16.0'" Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime" />
     <Reference Include="Microsoft.VisualStudio.Shell.Design" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0" />
@@ -280,6 +282,7 @@
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
     <Compile Include="VisualStudio\CodeIdentifierUtils.cs" />
     <Compile Include="VisualStudio\IErrorListHelper.cs" />
+    <Compile Include="VisualStudio\ImageManifestUtils.cs" />
     <Compile Include="VisualStudio\IVsUtils.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseEngineBase.cs" />
@@ -783,6 +786,9 @@
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS_ASPNET.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB_ASPNET.vstemplate" />
+    <Content Include="Microsoft.Data.Entity.Design.imagemanifest">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Views\Dialogs\DeleteStorageEntitySetsDialog.resx">
@@ -1067,20 +1073,15 @@
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemCS_ASPNET.vstemplate;@(CommonTemplateFile)" OutputFileName="$(CSASPZip)" OverwriteExistingFile="true" />
     <Zip InputFileNames="$(VersionedItemTemplateDir)ModelObjectItemVB_ASPNET.vstemplate;@(CommonTemplateFile)" OutputFileName="$(VBASPZip)" OverwriteExistingFile="true" />
     <Copy SourceFiles="@(IntellisenseFiles)" DestinationFiles="@(IntellisenseFiles->'$(TargetIntellisenseDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-
     <ItemGroup Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'">
       <ADONETCS Include="$(VersionedItemTemplateDir)ModelObjectItemCS.vstemplate;@(CommonTemplateFile)" />
       <ADONETVB Include="$(VersionedItemTemplateDir)ModelObjectItemVB.vstemplate;@(CommonTemplateFile)" />
       <ADONETCS_ASPNET Include="$(VersionedItemTemplateDir)ModelObjectItemCS_ASPNET.vstemplate;@(CommonTemplateFile)" />
       <ADONETVB_ASPNET Include="$(VersionedItemTemplateDir)ModelObjectItemVB_ASPNET.vstemplate;@(CommonTemplateFile)" />
     </ItemGroup>
-    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
-          SourceFiles="@(ADONETCS)" DestinationFiles="@(ADONETCS->'$(CSDir)\%(Filename)%(Extension)')" />
-    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
-          SourceFiles="@(ADONETVB)" DestinationFiles="@(ADONETVB->'$(VBDir)\%(Filename)%(Extension)')" />
-    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
-          SourceFiles="@(ADONETCS_ASPNET)" DestinationFiles="@(ADONETCS_ASPNET->'$(CSASPDir)\%(Filename)%(Extension)')" />
-    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'"
-          SourceFiles="@(ADONETVB_ASPNET)" DestinationFiles="@(ADONETVB_ASPNET->'$(VBASPDir)\%(Filename)%(Extension)')" />
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'" SourceFiles="@(ADONETCS)" DestinationFiles="@(ADONETCS->'$(CSDir)\%(Filename)%(Extension)')" />
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'" SourceFiles="@(ADONETVB)" DestinationFiles="@(ADONETVB->'$(VBDir)\%(Filename)%(Extension)')" />
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'" SourceFiles="@(ADONETCS_ASPNET)" DestinationFiles="@(ADONETCS_ASPNET->'$(CSASPDir)\%(Filename)%(Extension)')" />
+    <Copy Condition="'$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0' AND '$(VisualStudioVersion)' != '14.0'" SourceFiles="@(ADONETVB_ASPNET)" DestinationFiles="@(ADONETVB_ASPNET->'$(VBASPDir)\%(Filename)%(Extension)')" />
   </Target>
 </Project>

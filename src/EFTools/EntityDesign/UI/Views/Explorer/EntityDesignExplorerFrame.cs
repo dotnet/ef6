@@ -51,11 +51,6 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
             DefineCmd(WorkspaceCommands.PutInRenameMode, ExecutePutInRenameMode, CanExecutePutInRenameMode);
             _putSelectedExplorerItemInRenameModeRequest = new DeferredRequest(PutSelectedItemInRenameMode);
             Loaded += ExplorerFrameLoaded;
-
-#if VS12ORNEWER
-    // set bitmap scaling mode to most appropriate value based on text scaling
-            RenderOptions.SetBitmapScalingMode(this, DpiHelper.BitmapScalingMode);
-#endif
         }
 
         private void ExplorerFrameLoaded(object sender, RoutedEventArgs e)
@@ -284,7 +279,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
 
         protected override ExplorerContent InitializeExplorerContent()
         {
-#if VS15
+#if VS16
+            var content = FileResourceManager.GetElement("Resources/ExplorerContent_15.0.xaml") as ExplorerContent; // TODO still using 15.0 version for now
+#elif VS15
             var content = FileResourceManager.GetElement("Resources/ExplorerContent_15.0.xaml") as ExplorerContent;
 #elif VS14
             var content = FileResourceManager.GetElement("Resources/ExplorerContent_14.0.xaml") as ExplorerContent;

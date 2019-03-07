@@ -21,11 +21,11 @@ using System.Runtime.InteropServices;
 #elif VS14
 [assembly: AssemblyVersion("14.0.0.0")]
 [assembly: AssemblyFileVersion("14.0.0.0")]
-#elif VS16
-[assembly: AssemblyVersion("16.0.0.0")]
-[assembly: AssemblyFileVersion("16.0.0.0")]
 #elif VS15
 [assembly: AssemblyVersion("15.0.0.0")]
 [assembly: AssemblyFileVersion("15.0.0.0")]
+#elif VS16
+[assembly: AssemblyVersion("16.0.0.0")]
+[assembly: AssemblyFileVersion("16.0.0.0")]
 #endif
 #endif

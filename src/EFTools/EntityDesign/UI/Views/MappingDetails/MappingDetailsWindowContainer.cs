@@ -22,6 +22,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
     using Microsoft.Data.Tools.VSXmlDesignerBase.Common;
     using Microsoft.VisualStudio.PlatformUI;
     using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Utilities;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal partial class MappingDetailsWindowContainer : UserControl, ITreeGridDesignerToolWindowContainer
@@ -58,12 +59,12 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
             // adjust control sizes
             var colorHintStripWidth = 3;
 #if VS12ORNEWER
-            toolbar.ImageScalingSize = toolbar.ImageScalingSize.LogicalToDeviceUnits();
+            toolbar.ImageScalingSize = DpiAwareness.LogicalToDeviceSize(toolbar, toolbar.ImageScalingSize);
             foreach (var button in toolbar.Items.OfType<ToolStripButton>())
             {
-                button.Size = button.Size.LogicalToDeviceUnits();
+                button.Size = DpiAwareness.LogicalToDeviceSize(toolbar, button.Size);
             }
-            colorHintStripWidth = DpiHelper.LogicalToDeviceUnitsX(colorHintStripWidth);
+            colorHintStripWidth = DpiAwareness.LogicalToDeviceUnits(contentsPanel, colorHintStripWidth);
 #endif
 
             contentsPanel.Padding = new Padding(colorHintStripWidth, 0, 0, 0);

@@ -30,10 +30,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                     ImageSize = new Size(16, 16)
                 };
             imageList.Images.AddStrip(themedBitmap);
-#if VS12ORNEWER
-            // scales images as appropriate for screen resolution
-            DpiHelper.LogicalToDeviceUnits(ref imageList);
-#endif
+
+            //LAJLAJ Look into replacing below
+////#if VS12ORNEWER
+////            // scales images as appropriate for screen resolution
+////            DpiHelper.LogicalToDeviceUnits(ref imageList);
+////#endif
             return imageList;
         }
 
@@ -47,10 +49,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             Debug.Assert(bitmap != null, "bitmap != null");
             bitmap.MakeTransparent(TransparentColor);
             var themedBitmap = ThemeBitmap(bitmap, backgroundColor);
-#if VS12ORNEWER
-            // scales images as appropriate for screen resolution
-            DpiHelper.LogicalToDeviceUnits(ref themedBitmap);
-#endif
+            //LAJLAJ Look into replacing below
+////#if VS12ORNEWER
+////            // scales images as appropriate for screen resolution
+////            DpiHelper.LogicalToDeviceUnits(ref themedBitmap);
+////#endif
             return themedBitmap;
         }
 

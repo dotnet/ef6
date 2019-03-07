@@ -14,8 +14,8 @@ Project global post-settings and targets.
     <DefineConstants Condition="'$(VisualStudioVersion)' == '11.0'">$(DefineConstants);VS11</DefineConstants>
     <DefineConstants Condition="'$(VisualStudioVersion)' == '12.0'">$(DefineConstants);VS12</DefineConstants>
     <DefineConstants Condition="'$(VisualStudioVersion)' == '14.0'">$(DefineConstants);VS14</DefineConstants>
-    <DefineConstants Condition="'$(VisualStudioVersion)' == '15.0' OR '$(VisualStudioVersion)' == '16.0'">$(DefineConstants);VS15</DefineConstants>
-    <!-- DefineConstants Condition="'$(VisualStudioVersion)' == '16.0'">$(DefineConstants);VS16</DefineConstants -->
+    <DefineConstants Condition="'$(VisualStudioVersion)' == '15.0'">$(DefineConstants);VS15</DefineConstants>
+    <DefineConstants Condition="'$(VisualStudioVersion)' == '16.0'">$(DefineConstants);VS16</DefineConstants>
     <DefineConstants
      Condition="'$(VisualStudioVersion)' == '12.0'
              OR '$(VisualStudioVersion)' == '14.0'

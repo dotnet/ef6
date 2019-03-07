@@ -58,22 +58,46 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     TransparentColor = Color.Magenta
                 };
 
-            imageList.Images.Add("DbTables.bmp", Resources.DbTables);
-            imageList.Images.Add("Table.bmp", Resources.Table);
-            imageList.Images.Add("DbViews.bmp", Resources.DbViews);
-            imageList.Images.Add("View.bmp", Resources.View);
-            imageList.Images.Add("DBStoredProcs.bmp", Resources.DBStoredProcs);
-            imageList.Images.Add("StoredProc.bmp", Resources.StoredProc);
-            imageList.Images.Add("DbDeletedItems.bmp", Resources.DbDeletedItems);
-            imageList.Images.Add("DeletedItem.bmp", Resources.DeletedItem);
-            imageList.Images.Add("DbAddedItems.bmp", Resources.DbAddedItems);
-            imageList.Images.Add("DbUpdatedItems.bmp", Resources.DbUpdatedItems);
-            imageList.Images.Add("database_schema.bmp", Resources.database_schema);
+            imageList.Images.Add("DbTables.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbTablesImageMoniker));
+            imageList.Images.Add("Table.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.TableImageMoniker));
+            imageList.Images.Add("DbViews.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbViewsImageMoniker));
+            imageList.Images.Add("View.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.ViewImageMoniker));
+            imageList.Images.Add("DBStoredProcs.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DBStoredProcsImageMoniker));
+            imageList.Images.Add("StoredProc.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.StoredProcImageMoniker));
+            imageList.Images.Add("DbDeletedItems.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbDeletedItemsImageMoniker));
+            imageList.Images.Add("DeletedItem.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DeletedItemImageMoniker));
+            imageList.Images.Add("DbAddedItems.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbAddedItemsImageMoniker));
+            imageList.Images.Add("DbUpdatedItems.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbUpdatedItemsImageMoniker));
+            imageList.Images.Add("database_schema.bmp",
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DatabaseSchemaImageMoniker));
 
-#if VS12ORNEWER
-    // scale images as appropriate for screen resolution
-            DpiHelper.LogicalToDeviceUnits(ref imageList);
-#endif
+            //LAJLAJ Remove below
+            ////imageList.Images.Add("DbTables.bmp", Resources.DbTables);
+            ////imageList.Images.Add("Table.bmp", Resources.Table);
+            ////imageList.Images.Add("DbViews.bmp", Resources.DbViews);
+            ////imageList.Images.Add("View.bmp", Resources.View);
+            ////imageList.Images.Add("DBStoredProcs.bmp", Resources.DBStoredProcs);
+            ////imageList.Images.Add("StoredProc.bmp", Resources.StoredProc);
+            ////imageList.Images.Add("DbDeletedItems.bmp", Resources.DbDeletedItems);
+            ////imageList.Images.Add("DeletedItem.bmp", Resources.DeletedItem);
+            ////imageList.Images.Add("DbAddedItems.bmp", Resources.DbAddedItems);
+            ////imageList.Images.Add("DbUpdatedItems.bmp", Resources.DbUpdatedItems);
+            ////imageList.Images.Add("database_schema.bmp", Resources.database_schema);
+
+////#if VS12ORNEWER
+////            // scale images as appropriate for screen resolution
+////            DpiHelper.LogicalToDeviceUnits(ref imageList);
+////#endif
             treeView.ImageList = imageList;
 
             VsShellUtilities.ApplyTreeViewThemeStyles(treeView);
