@@ -69,19 +69,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 TransparentColor = Color.Magenta
             };
 
-            //LAJLAJ Remove commented out portion
-            //imageList.Images.Add("database.png", Resources.Database);
-            //imageList.Images.Add("EmptyModel.png", Resources.EmptyModel);
-            //imageList.Images.Add("EmptyModelCodeFirst.png", Resources.EmptyModelCodeFirst);
-            //imageList.Images.Add("CodeFirstFromDatabase.png", Resources.CodeFirstFromDatabase);
-            imageList.Images.Add("database.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DatabaseImageMoniker));
-            imageList.Images.Add("EmptyModel.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelImageMoniker));
-            imageList.Images.Add("EmptyModelCodeFirst.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelCodeFirstImageMoniker));
-            imageList.Images.Add("CodeFirstFromDatabase.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.CodeFirstFromDatabaseImageMoniker));
+            //LAJLAJ TODO replace below with ImageManifestUtils
+            imageList.Images.Add("database.png", Resources.Database);
+            imageList.Images.Add("EmptyModel.png", Resources.EmptyModel);
+            imageList.Images.Add("EmptyModelCodeFirst.png", Resources.EmptyModelCodeFirst);
+            imageList.Images.Add("CodeFirstFromDatabase.png", Resources.CodeFirstFromDatabase);
+            ////imageList.Images.Add("database.png",
+            ////    ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DatabaseImageMoniker));
+            ////imageList.Images.Add("EmptyModel.png",
+            ////    ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelImageMoniker));
+            ////imageList.Images.Add("EmptyModelCodeFirst.png",
+            ////    ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelCodeFirstImageMoniker));
+            ////imageList.Images.Add("CodeFirstFromDatabase.png",
+            ////    ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.CodeFirstFromDatabaseImageMoniker));
 
 ////#if VS12ORNEWER
 ////            // scale images as appropriate for screen resolution
