@@ -3,7 +3,7 @@
 <!-- Version: 14.0.0.185 -->
 <ImageManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/VisualStudio/ImageManifestSchema/2014">
   <Symbols>
-    <String Name="Resources" Value="/C:\git\aspnet\EntityFramework6\bin\Debug\Microsoft.Data.Entity.Design;Component/VisualStudio/ModelWizard/bitmaps/CopyAsPng" />
+    <String Name="ModelWizardResources" Value="/Microsoft.Data.Entity.Design;Component/Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources" />
     <Guid Name="AssetsGuid" Value="{5f262f83-4628-4ac5-8e74-69e9b42794cc}" />
     <ID Name="CodeFirstFromDatabase" Value="0" />
     <ID Name="database" Value="1" />
@@ -26,92 +26,92 @@
   </Symbols>
   <Images>
     <Image Guid="$(AssetsGuid)" ID="$(CodeFirstFromDatabase)">
-      <Source Uri="$(Resources)/CodeFirstFromDatabase.png">
+      <Source Uri="$(ModelWizardResources)/CodeFirstFromDatabase.png">
         <Size Value="32" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(database)">
-      <Source Uri="$(Resources)/database.png">
+      <Source Uri="$(ModelWizardResources)/database.png">
         <Size Value="32" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(EmptyModel)">
-      <Source Uri="$(Resources)/EmptyModel.png">
+      <Source Uri="$(ModelWizardResources)/EmptyModel.png">
         <Size Value="32" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(EmptyModelCodeFirst)">
-      <Source Uri="$(Resources)/EmptyModelCodeFirst.png">
+      <Source Uri="$(ModelWizardResources)/EmptyModelCodeFirst.png">
         <Size Value="32" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(database_schema)">
-      <Source Uri="$(Resources)/database_schema.bmp">
+      <Source Uri="$(ModelWizardResources)/database_schema.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbAddedItems)">
-      <Source Uri="$(Resources)/DbAddedItems.bmp">
+      <Source Uri="$(ModelWizardResources)/DbAddedItems.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbDeletedItems)">
-      <Source Uri="$(Resources)/DbDeletedItems.bmp">
+      <Source Uri="$(ModelWizardResources)/DbDeletedItems.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DBStoredProcs)">
-      <Source Uri="$(Resources)/DBStoredProcs.bmp">
+      <Source Uri="$(ModelWizardResources)/DBStoredProcs.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbTables)">
-      <Source Uri="$(Resources)/DbTables.bmp">
+      <Source Uri="$(ModelWizardResources)/DbTables.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbUpdatedItems)">
-      <Source Uri="$(Resources)/DbUpdatedItems.bmp">
+      <Source Uri="$(ModelWizardResources)/DbUpdatedItems.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbViews)">
-      <Source Uri="$(Resources)/DbViews.bmp">
+      <Source Uri="$(ModelWizardResources)/DbViews.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DeletedItem)">
-      <Source Uri="$(Resources)/DeletedItem.bmp">
+      <Source Uri="$(ModelWizardResources)/DeletedItem.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(Error)">
-      <Source Uri="$(Resources)/Error.bmp">
+      <Source Uri="$(ModelWizardResources)/Error.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(Information)">
-      <Source Uri="$(Resources)/Information.bmp">
+      <Source Uri="$(ModelWizardResources)/Information.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(PageIcon)">
-      <Source Uri="$(Resources)/PageIcon.bmp">
+      <Source Uri="$(ModelWizardResources)/PageIcon.bmp">
         <Dimensions Width="65" Height="64" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(StoredProc)">
-      <Source Uri="$(Resources)/StoredProc.bmp">
+      <Source Uri="$(ModelWizardResources)/StoredProc.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(Table)">
-      <Source Uri="$(Resources)/Table.bmp">
+      <Source Uri="$(ModelWizardResources)/Table.bmp">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(View)">
-      <Source Uri="$(Resources)/View.bmp">
+      <Source Uri="$(ModelWizardResources)/View.bmp">
         <Size Value="16" />
       </Source>
     </Image>

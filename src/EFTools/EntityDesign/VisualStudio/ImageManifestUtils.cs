@@ -3,6 +3,7 @@
 namespace Microsoft.Data.Entity.Design.VisualStudio
 {
     using System;
+    using System.Diagnostics;
     using System.Drawing;
     using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Imaging.Interop;
@@ -73,6 +74,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         public Bitmap GetBitmap(ImageMoniker moniker)
         {
             var uiObj = _imageService.GetImage(moniker, _bitmapImageAttributes);
+            Debug.Assert(uiObj != null, typeof(ImageManifestUtils).Name
+                + " could not find image with moniker " + moniker);
+
             return (Bitmap)GelUtils.GetObjectData(uiObj);
         }
     }
