@@ -48,10 +48,6 @@
   <PropertyGroup>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  <PropertyGroup>
-    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='15.0'">%24(VSInstallationPath)\Common7\Tools</VsCommonToolsEnvVarName>
-    <VsCommonToolsEnvVarName Condition="$(VisualStudioVersion)=='16.0'">%24(VSInstallationPath)\Common7\Tools</VsCommonToolsEnvVarName>
-  </PropertyGroup>
   <Import Project="$(RepositoryRoot)tools\EFToolsVsReferences.settings.targets" />
   <ItemGroup>
     <Reference Condition="'$(VisualStudioVersion)' == '16.0'" Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0">
@@ -802,7 +798,9 @@
     <None Include="TextTemplates\Includes\GenerateTSQL.Utility.ttinclude">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TextTemplates\SsdlToSql10.tt" />
+    <None Include="TextTemplates\SsdlToSql10.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Resource Include="Resources\Images\Search.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -947,8 +945,12 @@
     <None Include="TextTemplates\Includes\EF.Utility.VB.ttinclude">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TextTemplates\Includes\EF6.Utility.CS.ttinclude" />
-    <None Include="TextTemplates\Includes\EF6.Utility.VB.ttinclude" />
+    <None Include="TextTemplates\Includes\EF6.Utility.CS.ttinclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TextTemplates\Includes\EF6.Utility.VB.ttinclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <!-- End T4 Templates region -->
   <ItemGroup>
@@ -1048,14 +1050,6 @@
     </ItemGroup>
     <RegexReplaceInFile InputFileName="%(Template.Identity)" OutputFileName="$(VersionedItemTemplateDir)$([System.IO.Path]::GetFileName(%(Template.Identity)))" Patterns="EFDESIGNERVERSIONTOKEN" Replacements="$(AssemblyVersion)" />
   </Target>
-  <Target Name="UpdateTTIncludeVSEnvVarVersion">
-    <ItemGroup>
-      <VersionedTTInclude Include="TextTemplates\Includes\EF6.Utility.CS.ttinclude" />
-      <VersionedTTInclude Include="TextTemplates\Includes\EF6.Utility.VB.ttinclude" />
-      <VersionedTTInclude Include="TextTemplates\SsdlToSql10.tt" />
-    </ItemGroup>
-    <RegexReplaceInFile InputFileName="%(VersionedTTInclude.Identity)" OutputFileName="$(OutputPath)%(VersionedTTInclude.Identity)" Patterns="VERSIONED_VSCOMNTOOLS_ENV_VAR" Replacements="$(VsCommonToolsEnvVarName)" />
-  </Target>
   <Target Name="PrepareTemplatesForSetup" DependsOnTargets="PrepareForPackaging">
     <!-- Updates the NuGet registry key name and copies templates to the bin dir to prepare for setup -->
     <ItemGroup>
@@ -1067,7 +1061,7 @@
     <RegexReplaceInFile Condition="'%(Extension)' == '.vstemplate'" InputFileName="%(InTheBoxItemTemplateFiles.Identity)" OutputFileName="@(InTheBoxItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" Patterns="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN;EFPACKAGEVERSION;EFDESIGNERVERSIONTOKEN" Replacements="EntityFrameworkVisualStudio$(VisualStudioVersion.Substring(0,2))Tools;$(EF6NuGetPackageVersion);$(AssemblyVersion)" />
     <Copy Condition="'%(Extension)' != '.vstemplate'" SourceFiles="@(InTheBoxItemTemplateFiles)" DestinationFiles="@(InTheBoxItemTemplateFiles->'$(TargetItemTemplateFilesDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
-  <Target Name="CreateTemplatesAndPackages" DependsOnTargets="UpdateTTIncludeVSEnvVarVersion;UpdateTemplateVersion;PrepareTemplatesForSetup">
+  <Target Name="CreateTemplatesAndPackages" DependsOnTargets="UpdateTemplateVersion;PrepareTemplatesForSetup">
     <ItemGroup>
       <CommonTemplateFile Include="$(ItemTemplateDir)ProjectItem.edmx" />
       <CommonTemplateFile Include="$(ItemTemplateDir)ProjectItem.edmx.diagram" />
