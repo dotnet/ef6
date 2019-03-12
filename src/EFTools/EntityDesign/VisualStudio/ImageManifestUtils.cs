@@ -75,7 +75,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         {
             var uiObj = _imageService.GetImage(moniker, _bitmapImageAttributes);
             Debug.Assert(uiObj != null, typeof(ImageManifestUtils).Name
-                + " could not find image with moniker " + moniker);
+                + " could not find image with moniker {" + moniker.Guid + "," + moniker.Id + "}");
 
             return (Bitmap)GelUtils.GetObjectData(uiObj);
         }
