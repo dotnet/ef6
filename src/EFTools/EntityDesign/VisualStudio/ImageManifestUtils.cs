@@ -59,8 +59,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 Format = (uint)_UIDataFormat.DF_WinForms,
                 LogicalWidth = 16,
                 LogicalHeight = 16,
-                Background = (uint)Color.Magenta.ToArgb(), // Desired RGBA color, if you don't use this, don't set IAF_Background
-                Flags = unchecked((uint)(_ImageAttributesFlags.IAF_RequiredFlags | _ImageAttributesFlags.IAF_Background))
+                // Background = (uint)Color.Magenta.ToArgb(), // Desired RGBA color, if you don't use this, don't set IAF_Background
+                Flags = (uint)_ImageAttributesFlags.IAF_RequiredFlags // | _ImageAttributesFlags.IAF_Background
             };
 
         private ImageManifestUtils()
