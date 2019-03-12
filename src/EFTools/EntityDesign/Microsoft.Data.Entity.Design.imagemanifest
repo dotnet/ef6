@@ -46,72 +46,72 @@
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(database_schema)">
-      <Source Uri="$(ModelWizardResources)/database_schema.bmp">
+      <Source Uri="$(ModelWizardResources)/database_schema.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbAddedItems)">
-      <Source Uri="$(ModelWizardResources)/DbAddedItems.bmp">
+      <Source Uri="$(ModelWizardResources)/DbAddedItems.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbDeletedItems)">
-      <Source Uri="$(ModelWizardResources)/DbDeletedItems.bmp">
+      <Source Uri="$(ModelWizardResources)/DbDeletedItems.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DBStoredProcs)">
-      <Source Uri="$(ModelWizardResources)/DBStoredProcs.bmp">
+      <Source Uri="$(ModelWizardResources)/DBStoredProcs.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbTables)">
-      <Source Uri="$(ModelWizardResources)/DbTables.bmp">
+      <Source Uri="$(ModelWizardResources)/DbTables.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbUpdatedItems)">
-      <Source Uri="$(ModelWizardResources)/DbUpdatedItems.bmp">
+      <Source Uri="$(ModelWizardResources)/DbUpdatedItems.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DbViews)">
-      <Source Uri="$(ModelWizardResources)/DbViews.bmp">
+      <Source Uri="$(ModelWizardResources)/DbViews.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(DeletedItem)">
-      <Source Uri="$(ModelWizardResources)/DeletedItem.bmp">
+      <Source Uri="$(ModelWizardResources)/DeletedItem.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(Error)">
-      <Source Uri="$(ModelWizardResources)/Error.bmp">
+      <Source Uri="$(ModelWizardResources)/Error.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(Information)">
-      <Source Uri="$(ModelWizardResources)/Information.bmp">
+      <Source Uri="$(ModelWizardResources)/Information.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(PageIcon)">
-      <Source Uri="$(ModelWizardResources)/PageIcon.bmp">
+      <Source Uri="$(ModelWizardResources)/PageIcon.png">
         <Dimensions Width="65" Height="64" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(StoredProc)">
-      <Source Uri="$(ModelWizardResources)/StoredProc.bmp">
+      <Source Uri="$(ModelWizardResources)/StoredProc.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(Table)">
-      <Source Uri="$(ModelWizardResources)/Table.bmp">
+      <Source Uri="$(ModelWizardResources)/Table.png">
         <Size Value="16" />
       </Source>
     </Image>
     <Image Guid="$(AssetsGuid)" ID="$(View)">
-      <Source Uri="$(ModelWizardResources)/View.bmp">
+      <Source Uri="$(ModelWizardResources)/View.png">
         <Size Value="16" />
       </Source>
     </Image>
