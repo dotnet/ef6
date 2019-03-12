@@ -52,15 +52,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             new ImageMoniker { Guid = ImageManifestAssetsGuid, Id = 17 };
 
         private readonly IVsImageService2 _imageService;
-        private readonly ImageAttributes _bitmapImageAttributes = new ImageAttributes
+        private readonly ImageAttributes _defaultImageAttributes = new ImageAttributes
             {
                 StructSize = Marshal.SizeOf(typeof(ImageAttributes)),
                 ImageType = (uint) _UIImageType.IT_Bitmap,
                 Format = (uint)_UIDataFormat.DF_WinForms,
                 LogicalWidth = 16,
                 LogicalHeight = 16,
-                // Background = 0xFFFFFFFF, // Desired RGBA color, if you don't use this, don't set IAF_Background
-                Flags = unchecked((uint)(_ImageAttributesFlags.IAF_RequiredFlags | _ImageAttributesFlags.IAF_Background)),
+                Background = (uint)Color.Magenta.ToArgb(), // Desired RGBA color, if you don't use this, don't set IAF_Background
+                Flags = unchecked((uint)(_ImageAttributesFlags.IAF_RequiredFlags | _ImageAttributesFlags.IAF_Background))
             };
 
         private ImageManifestUtils()
@@ -71,9 +71,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
         public static ImageManifestUtils Instance { get; } = new ImageManifestUtils();
 
-        public Bitmap GetBitmap(ImageMoniker moniker)
+        public Bitmap GetBitmap(ImageMoniker moniker, int dpi, int? size = null)
         {
-            var uiObj = _imageService.GetImage(moniker, _bitmapImageAttributes);
+            var imageAttributes = _defaultImageAttributes;
+            imageAttributes.Dpi = dpi;
+            if (size.HasValue)
+            {
+                imageAttributes.LogicalHeight = imageAttributes.LogicalWidth = size.Value;
+            }
+
+            var uiObj = _imageService.GetImage(moniker, imageAttributes);
             Debug.Assert(uiObj != null, typeof(ImageManifestUtils).Name
                 + " could not find image with moniker {" + moniker.Guid + "," + moniker.Id + "}");
 

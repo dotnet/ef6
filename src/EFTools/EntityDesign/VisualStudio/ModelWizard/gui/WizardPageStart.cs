@@ -6,6 +6,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
+    using Microsoft.VisualStudio.Utilities;
     using Microsoft.WizardFramework;
     using System;
     using System.Collections.Generic;
@@ -69,24 +70,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 TransparentColor = Color.Magenta
             };
 
-            //LAJLAJ TODO replace below with ImageManifestUtils
-            //imageList.Images.Add("database.png", Resources.Database);
-            //imageList.Images.Add("EmptyModel.png", Resources.EmptyModel);
-            //imageList.Images.Add("EmptyModelCodeFirst.png", Resources.EmptyModelCodeFirst);
-            //imageList.Images.Add("CodeFirstFromDatabase.png", Resources.CodeFirstFromDatabase);
+            var dpi = (int)DpiAwareness.GetDpi(listViewModelContents);
             imageList.Images.Add("database.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DatabaseImageMoniker));
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DatabaseImageMoniker, dpi, 32));
             imageList.Images.Add("EmptyModel.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelImageMoniker));
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelImageMoniker, dpi, 32));
             imageList.Images.Add("EmptyModelCodeFirst.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelCodeFirstImageMoniker));
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelCodeFirstImageMoniker, dpi, 32));
             imageList.Images.Add("CodeFirstFromDatabase.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.CodeFirstFromDatabaseImageMoniker));
-
-            ////#if VS12ORNEWER
-            ////            // scale images as appropriate for screen resolution
-            ////            DpiHelper.LogicalToDeviceUnits(ref imageList);
-            ////#endif
+                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.CodeFirstFromDatabaseImageMoniker, dpi, 32));
 
             // Re-create ListView and add the list items so we are sure to use our string resources)
             listViewModelContents.Clear();
