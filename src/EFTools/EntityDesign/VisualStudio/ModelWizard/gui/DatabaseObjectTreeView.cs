@@ -59,29 +59,22 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                     TransparentColor = Color.Magenta
                 };
 
-            var dpi = (int)DpiAwareness.GetDpi(this);
-            imageList.Images.Add("DbTables.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbTablesImageMoniker, dpi));
-            imageList.Images.Add("Table.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.TableImageMoniker, dpi));
-            imageList.Images.Add("DbViews.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbViewsImageMoniker, dpi));
-            imageList.Images.Add("View.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.ViewImageMoniker, dpi));
-            imageList.Images.Add("DBStoredProcs.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DBStoredProcsImageMoniker, dpi));
-            imageList.Images.Add("StoredProc.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.StoredProcImageMoniker, dpi));
-            imageList.Images.Add("DbDeletedItems.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbDeletedItemsImageMoniker, dpi));
-            imageList.Images.Add("DeletedItem.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DeletedItemImageMoniker, dpi));
-            imageList.Images.Add("DbAddedItems.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbAddedItemsImageMoniker, dpi));
-            imageList.Images.Add("DbUpdatedItems.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DbUpdatedItemsImageMoniker, dpi));
-            imageList.Images.Add("database_schema.bmp",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DatabaseSchemaImageMoniker, dpi));
+            imageList.Images.Add("DbTables.bmp", Resources.DbTables);
+            imageList.Images.Add("Table.bmp", Resources.Table);
+            imageList.Images.Add("DbViews.bmp", Resources.DbViews);
+            imageList.Images.Add("View.bmp", Resources.View);
+            imageList.Images.Add("DBStoredProcs.bmp", Resources.DBStoredProcs);
+            imageList.Images.Add("StoredProc.bmp", Resources.StoredProc);
+            imageList.Images.Add("DbDeletedItems.bmp", Resources.DbDeletedItems);
+            imageList.Images.Add("DeletedItem.bmp", Resources.DeletedItem);
+            imageList.Images.Add("DbAddedItems.bmp", Resources.DbAddedItems);
+            imageList.Images.Add("DbUpdatedItems.bmp", Resources.DbUpdatedItems);
+            imageList.Images.Add("database_schema.bmp", Resources.database_schema);
+
+#pragma warning disable 0618 // DpiHelper is obsolete, need to move to DpiAwareness (and ImageManifest)
+            // scale images as appropriate for screen resolution
+            DpiHelper.LogicalToDeviceUnits(ref imageList);
+#pragma warning restore 0618
 
             treeView.ImageList = imageList;
 

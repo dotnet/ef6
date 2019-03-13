@@ -18,9 +18,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
-////#if VS12ORNEWER
-////    using Microsoft.VisualStudio.PlatformUI;
-////#endif
+    using Microsoft.VisualStudio.PlatformUI;
 
     // <summary>
     //     This is the first page in the ModelBuilder VS wizard and lets the user select whether to:
@@ -70,15 +68,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 TransparentColor = Color.Magenta
             };
 
-            var dpi = (int)DpiAwareness.GetDpi(listViewModelContents);
-            imageList.Images.Add("database.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.DatabaseImageMoniker, dpi, 32));
-            imageList.Images.Add("EmptyModel.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelImageMoniker, dpi, 32));
-            imageList.Images.Add("EmptyModelCodeFirst.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.EmptyModelCodeFirstImageMoniker, dpi, 32));
-            imageList.Images.Add("CodeFirstFromDatabase.png",
-                ImageManifestUtils.Instance.GetBitmap(ImageManifestUtils.CodeFirstFromDatabaseImageMoniker, dpi, 32));
+            imageList.Images.Add("database.png", Resources.Database);
+            imageList.Images.Add("EmptyModel.png", Resources.EmptyModel);
+            imageList.Images.Add("EmptyModelCodeFirst.png", Resources.EmptyModelCodeFirst);
+            imageList.Images.Add("CodeFirstFromDatabase.png", Resources.CodeFirstFromDatabase);
+
+#pragma warning disable 0618 // DpiHelper is obsolete, need to move to DpiAwareness (and ImageManifest)
+            // scale images as appropriate for screen resolution
+            DpiHelper.LogicalToDeviceUnits(ref imageList);
+#pragma warning restore
 
             // Re-create ListView and add the list items so we are sure to use our string resources)
             listViewModelContents.Clear();

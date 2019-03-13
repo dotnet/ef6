@@ -282,7 +282,6 @@
     <Compile Include="VisualStudio\ExecutorWrapper.cs" />
     <Compile Include="VisualStudio\CodeIdentifierUtils.cs" />
     <Compile Include="VisualStudio\IErrorListHelper.cs" />
-    <Compile Include="VisualStudio\ImageManifestUtils.cs" />
     <Compile Include="VisualStudio\IVsUtils.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\CodeFirstModelBuilderEngine.cs" />
     <Compile Include="VisualStudio\ModelWizard\Engine\DatabaseEngineBase.cs" />
@@ -786,9 +785,6 @@
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemCS_ASPNET.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB.vstemplate" />
     <Content Include="VisualStudio\ItemTemplate\ModelObjectItemVB_ASPNET.vstemplate" />
-    <Content Include="Microsoft.Data.Entity.Design.imagemanifest">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Views\Dialogs\DeleteStorageEntitySetsDialog.resx">
