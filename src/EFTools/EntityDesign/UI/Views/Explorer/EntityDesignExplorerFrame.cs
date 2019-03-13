@@ -51,6 +51,11 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
             DefineCmd(WorkspaceCommands.PutInRenameMode, ExecutePutInRenameMode, CanExecutePutInRenameMode);
             _putSelectedExplorerItemInRenameModeRequest = new DeferredRequest(PutSelectedItemInRenameMode);
             Loaded += ExplorerFrameLoaded;
+
+#pragma warning disable 0618 // DpiHelper is obsolete, need to move to DpiAwareness (and ImageManifest)
+            // set bitmap scaling mode to most appropriate value based on text scaling
+            RenderOptions.SetBitmapScalingMode(this, DpiHelper.BitmapScalingMode);
+#pragma warning restore 0618
         }
 
         private void ExplorerFrameLoaded(object sender, RoutedEventArgs e)

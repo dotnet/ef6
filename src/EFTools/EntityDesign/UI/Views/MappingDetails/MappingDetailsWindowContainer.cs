@@ -58,14 +58,12 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
 
             // adjust control sizes
             var colorHintStripWidth = 3;
-#if VS12ORNEWER
             toolbar.ImageScalingSize = DpiAwareness.LogicalToDeviceSize(toolbar, toolbar.ImageScalingSize);
             foreach (var button in toolbar.Items.OfType<ToolStripButton>())
             {
                 button.Size = DpiAwareness.LogicalToDeviceSize(toolbar, button.Size);
             }
             colorHintStripWidth = DpiAwareness.LogicalToDeviceUnits(contentsPanel, colorHintStripWidth);
-#endif
 
             contentsPanel.Padding = new Padding(colorHintStripWidth, 0, 0, 0);
 
