@@ -68,11 +68,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 throw new ArgumentNullException("root");
             }
 
-            if (!IsSearchable(root, VSConstants.VSITEMID_ROOT))
-            {
-                return;
-            }
-
             object pvar;
             Url baseUri = null;
             var hr = root.GetProperty(VSConstants.VSITEMID_ROOT, (int)__VSHPROPID.VSHPROPID_ProjectDir, out pvar);
@@ -82,7 +77,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             {
                 baseUri = new Url(projectDir + Path.DirectorySeparatorChar);
             }
-            VisitHierarchyItems(root, VSConstants.VSITEMID_ROOT, baseUri, _handler);
+            VisitHierarchyItems(root, VSConstants.VSITEMID_ROOT, baseUri, _handler, true);
         }
 
         internal static bool IsSearchable(IVsHierarchy hierarchy, uint itemid)
@@ -107,9 +102,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return true;
         }
 
-        private void VisitHierarchyItems(IVsHierarchy hierarchy, uint id, Url baseUrl, HierarchyHandler handler)
+        private void VisitHierarchyItems(IVsHierarchy hierarchy, uint id, Url baseUrl, HierarchyHandler handler, bool isRootItem)
         {
-            if (!IsSearchable(hierarchy, id))
+            // Note: some root items (e.g. for a C# .NET Fwk project as of VS2019) say they are not searchable but they are
+            if (!isRootItem && !IsSearchable(hierarchy, id))
             {
                 return;
             }
@@ -130,7 +126,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 var childId = GetItemId(pvar);
                 while (childId != VSConstants.VSITEMID_NIL)
                 {
-                    VisitHierarchyItems(hierarchy, childId, baseUrl, handler);
+                    VisitHierarchyItems(hierarchy, childId, baseUrl, handler, false);
                     hr = hierarchy.GetProperty(childId, (int)__VSHPROPID.VSHPROPID_NextSibling, out pvar);
                     if (VSErrorHandler.Succeeded(hr))
                     {
