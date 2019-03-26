@@ -234,7 +234,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 // check for Microsoft.VisualBasic.CompilerServices.Operators.CompareString method
                 if (m.Method.Name == "CompareString"
-                    && m.Method.DeclaringType.FullName == "Microsoft.VisualBasic.CompilerServices.Operators")
+                    && (m.Method.DeclaringType.FullName == "Microsoft.VisualBasic.CompilerServices.Operators"
+                        || m.Method.DeclaringType.FullName == "Microsoft.VisualBasic.CompilerServices.EmbeddedOperators"))
                 {
                     // CODE(VB): x = y; where x and y are strings, a part of the expression looks like:
                     // ORIGINAL: MethodCallExpression(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False)
