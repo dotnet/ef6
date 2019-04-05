@@ -6,18 +6,31 @@
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework=".NETFramework4.0" />
     </frameworkAssemblies>
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="Microsoft.CSharp" version="$MicrosoftCSharpVersion$" />
+        <dependency id="System.CodeDom" version="$SystemCodeDomVersion$" />
+        <dependency id="System.ComponentModel.Annotations" version="$SystemComponentModelAnnotationsVersion$" />
+        <dependency id="System.Configuration.ConfigurationManager" version="$SystemConfigurationConfigurationManagerVersion$" />
+        <dependency id="System.Data.SqlClient" version="$SystemDataSqlClientVersion$" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.dll" target="lib/net40/" />
     <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net40/EntityFramework.xml" target="lib/net40/" />
     <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net45/EntityFramework.dll" target="lib/net45/" />
     <file src="../../../artifacts/bin/EntityFramework/$Configuration$/net45/EntityFramework.xml" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/netstandard2.1/EntityFramework.dll" target="lib/netstandard2.1/" />
+    <file src="../../../artifacts/bin/EntityFramework/$Configuration$/netstandard2.1/EntityFramework.xml" target="lib/netstandard2.1/" />
     <file src="../../../artifacts/bin/EntityFramework.PowerShell/$Configuration$/net45/EntityFramework.PowerShell.dll" target="tools/" />
     <file src="../../../artifacts/bin/EntityFramework.PowerShell.Utility/$Configuration$/net45/EntityFramework.PowerShell.Utility.dll" target="tools/" />
     <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.dll" target="lib/net40/" />
     <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net40/EntityFramework.SqlServer.xml" target="lib/net40/" />
     <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net45/EntityFramework.SqlServer.dll" target="lib/net45/" />
     <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/net45/EntityFramework.SqlServer.xml" target="lib/net45/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/netstandard2.1/EntityFramework.SqlServer.dll" target="lib/netstandard2.1/" />
+    <file src="../../../artifacts/bin/EntityFramework.SqlServer/$Configuration$/netstandard2.1/EntityFramework.SqlServer.xml" target="lib/netstandard2.1/" />
     <file src="../../../artifacts/bin/Migrate/$Configuration$/net45/migrate.exe" target="tools/" />
     <file src="content\**\*" target="content/" />
     <file src="tools\**\*" target="tools/" />

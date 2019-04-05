@@ -2252,7 +2252,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             int start;
             int paramCount;
             if (method.IsStatic
-                && typeof(Closure) == methodParams[0].ParameterType)
+                && "System.Runtime.CompilerServices.Closure" == methodParams[0].ParameterType.FullName)
             {
                 // Static lambda method has additional first closure parameter
                 start = 1;

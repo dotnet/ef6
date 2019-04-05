@@ -2,7 +2,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net40</TargetFrameworks>
+    <TargetFrameworks>net45;net40;netstandard2.1</TargetFrameworks>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IncludeSymbols>false</IncludeSymbols>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
@@ -15,9 +15,14 @@
   <ItemGroup>
     <NuspecProperty Include="Configuration=$(Configuration)" />
     <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
+    <NuspecProperty Include="MicrosoftCSharpVersion=$(MicrosoftCSharpVersion)" />
+    <NuspecProperty Include="SystemCodeDomVersion=$(SystemCodeDomVersion)" />
+    <NuspecProperty Include="SystemComponentModelAnnotationsVersion=$(SystemComponentModelAnnotationsVersion)" />
+    <NuspecProperty Include="SystemConfigurationConfigurationManagerVersion=$(SystemConfigurationConfigurationManagerVersion)" />
+    <NuspecProperty Include="SystemDataSqlClientVersion=$(SystemDataSqlClientVersion)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <ProjectReference Include="..\..\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
     <ProjectReference Include="..\..\Migrate\Migrate.csproj" />
   </ItemGroup>

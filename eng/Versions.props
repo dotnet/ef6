@@ -8,7 +8,7 @@
     <UsingToolNetFrameworkReferenceAssemblies>True</UsingToolNetFrameworkReferenceAssemblies>
     <UsingToolXliff>False</UsingToolXliff>
   </PropertyGroup>
-  <PropertyGroup>
+  <PropertyGroup Label="Dependencies from nuget.org">
     <EnvDTEVersion>8.0.2</EnvDTEVersion>
     <MicrosoftPowerShell2ReferenceAssembliesVersion>1.0.0</MicrosoftPowerShell2ReferenceAssembliesVersion>
     <MicrosoftSqlServerCompactVersion>4.0.8876.1</MicrosoftSqlServerCompactVersion>
@@ -18,5 +18,12 @@
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
     <VSLangProjVersion>7.0.3301</VSLangProjVersion>
     <XunitExtensionsVersion>1.9.2</XunitExtensionsVersion>
+  </PropertyGroup>
+  <PropertyGroup Label="Dependencies from dotnet/corefx">
+    <MicrosoftCSharpVersion>4.6.0-preview4.19164.7</MicrosoftCSharpVersion>
+    <SystemCodeDomVersion>4.6.0-preview4.19164.7</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-preview4.19164.7</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview4.19164.7</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-preview4.19164.7</SystemDataSqlClientVersion>
   </PropertyGroup>
 </Project>

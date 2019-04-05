@@ -3,13 +3,13 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity.SqlServer</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <TargetFrameworks>net45;net40</TargetFrameworks>
+    <TargetFrameworks>net45;net40;netstandard2.1</TargetFrameworks>
     <Description>EntityFramework.SqlServer.dll</Description>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <DefineConstants>$(DefineConstants);SQLSERVER</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 

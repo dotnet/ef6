@@ -16,6 +16,7 @@ namespace System.Data.Entity.Infrastructure.Design
         {
             DebugCheck.NotNull(handler);
 
+#if NET45 || NET40
             var handlerBase = handler as HandlerBase
                 ?? new ForwardingProxy<HandlerBase>(handler).GetTransparentProxy();
 
@@ -23,6 +24,9 @@ namespace System.Data.Entity.Infrastructure.Design
                 ?? (handlerBase.ImplementsContract(typeof(IResultHandler).FullName)
                     ? new ForwardingProxy<IResultHandler>(handler).GetTransparentProxy()
                     : null);
+#else
+            _resultHandler = handler as IResultHandler;
+#endif
         }
 
         public void SetResult(object value)

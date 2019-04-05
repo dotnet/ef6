@@ -107,6 +107,7 @@ namespace System.Data.Entity.Core.EntityClient
             return new EntityParameter();
         }
 
+#if NET45 || NET40
         /// <summary>
         /// Throws a <see cref="T:System.NotSupportedException" />. This method is currently not supported.
         /// </summary>
@@ -116,6 +117,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             throw new NotSupportedException();
         }
+#endif
 
         /// <summary>
         /// Returns the requested <see cref="T:System.IServiceProvider" /> class.
