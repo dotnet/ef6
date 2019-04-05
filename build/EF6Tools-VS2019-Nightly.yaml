@@ -276,7 +276,7 @@ steps:
 
   inputs:
 
-    SymbolsFolder: '$(DropFileShare)\$(Build.SourceBranchName)\$(Build.BuildId)\VS2019\PdbsAndXmls'
+    SymbolsFolder: '$(Build.ArtifactStagingDirectory)\PdbsAndXmls'
 
     SearchPattern: '*.pdb'
 
