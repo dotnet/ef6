@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.UnitTests</AssemblyName>
-    <TargetFrameworks>$(StandardTestTfms)</TargetFrameworks>
+    <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -90,7 +90,7 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <ProjectReference Include="..\..\..\src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"/>
     <ProjectReference Include="..\..\..\src\Migrate\Migrate.csproj">
       <Aliases>migrate</Aliases>

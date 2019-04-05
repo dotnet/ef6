@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests</AssemblyName>
-    <TargetFrameworks>$(StandardTestTfms)</TargetFrameworks>
+    <TargetFramework>net452</TargetFramework>
     <DefineConstants>$(DefineConstants);EF_FUNCTIONALS</DefineConstants>
     <NoWarn>$(NoWarn);CS0169</NoWarn>
   </PropertyGroup>

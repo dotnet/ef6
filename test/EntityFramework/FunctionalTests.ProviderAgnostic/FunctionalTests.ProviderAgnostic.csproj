@@ -3,12 +3,12 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests.ProviderAgnostic</AssemblyName>
-    <TargetFrameworks>$(StandardTestTfms)</TargetFrameworks>
+    <TargetFramework>net452</TargetFramework>
     <DefineConstants>$(DefineConstants);EF_FUNCTIONALS</DefineConstants>
     <NoWarn>$(NoWarn);CS8002</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <PackageReference Include="MySql.Data.Entity" Version="$(MySqlDataEntityVersion)" />
   </ItemGroup>
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests.Transitional</AssemblyName>
-    <TargetFrameworks>$(StandardTestTfms)</TargetFrameworks>
+    <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <RootNamespace />
     <AssemblyName>EntityFramework.VBTests</AssemblyName>
-    <TargetFrameworks>$(StandardTestTfms)</TargetFrameworks>
+    <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
   
   <ItemGroup>

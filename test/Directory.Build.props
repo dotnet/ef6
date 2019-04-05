@@ -8,8 +8,6 @@
 
   <PropertyGroup>
     <StrongNameKeyId>Microsoft</StrongNameKeyId>
-    <StandardTestTfms>net45</StandardTestTfms>
-    <StandardTestTfms Condition="'$(DeveloperBuild)' != 'True'">net40;$(StandardTestTfms)</StandardTestTfms>
   </PropertyGroup>
 
   <ItemGroup>
