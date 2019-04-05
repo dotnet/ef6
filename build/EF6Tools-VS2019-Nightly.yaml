@@ -34,6 +34,8 @@ pool:
 
 #Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
 
+#Your build pipeline references the ‘BuildConfiguration’ variable, which you’ve selected to be settable at queue time. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it settable at queue time. See https://go.microsoft.com/fwlink/?linkid=865971
+
 variables:
 
   SingletonMsiName: 'EF6Tools'
@@ -212,6 +214,7 @@ steps:
      $(SingletonMsiName).wixpdb
      BuildSingletonMSI.binlog
      
+
     TargetFolder: '$(Build.ArtifactStagingDirectory)\SetupResults'
 
 
@@ -267,13 +270,29 @@ steps:
 
 
 
+- task: PublishSymbols@2
+
+  displayName: 'Enable Source Server'
+
+  inputs:
+
+    SymbolsFolder: '$(DropFileShare)\$(Build.SourceBranchName)\$(Build.BuildId)\VS2019\PdbsAndXmls'
+
+    SearchPattern: '*.pdb'
+
+    SymbolServerType: TeamServices
+
+    SymbolsProduct: 'Entity_Framework_Tools'
+
+
+
 - task: CopyFiles@2
 
   displayName: 'On Error Copy BinDirContents'
 
   inputs:
 
-    Contents: 'bin\**'
+    Contents: '$(Build.SourcesDirectory)\bin\**'
 
     TargetFolder: '$(Build.ArtifactStagingDirectory)\BinDirContents'
 
@@ -324,6 +343,7 @@ steps:
   enabled: false
 
   condition: succeededOrFailed()
+
 
 
 - task: CopyFiles@2
