@@ -1,4 +1,3 @@
-
 <Project>
   <PropertyGroup>
     <VersionPrefix>6.3.0</VersionPrefix>
@@ -20,10 +19,10 @@
     <XunitExtensionsVersion>1.9.2</XunitExtensionsVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-preview4.19164.7</MicrosoftCSharpVersion>
-    <SystemCodeDomVersion>4.6.0-preview4.19164.7</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-preview4.19164.7</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview4.19164.7</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-preview4.19164.7</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>4.6.0-preview5.19205.9</MicrosoftCSharpVersion>
+    <SystemCodeDomVersion>4.6.0-preview5.19205.9</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-preview5.19205.9</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview5.19205.9</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-preview5.19205.9</SystemDataSqlClientVersion>
   </PropertyGroup>
 </Project>
