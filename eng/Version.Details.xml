@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.CSharp" Version="4.6.0-preview5.19205.9">
+    <Dependency Name="Microsoft.CSharp" Version="4.6.0-preview5.19206.5">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>35249a0072b41a89ce1542deacb2611c2393dec0</Sha>
+      <Sha>81fe62442228cb26bd0d95ceec3e0a3b74bde0a2</Sha>
     </Dependency>
-    <Dependency Name="System.CodeDom" Version="4.6.0-preview5.19205.9">
+    <Dependency Name="System.CodeDom" Version="4.6.0-preview5.19206.5">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>35249a0072b41a89ce1542deacb2611c2393dec0</Sha>
+      <Sha>81fe62442228cb26bd0d95ceec3e0a3b74bde0a2</Sha>
     </Dependency>
-    <Dependency Name="System.ComponentModel.Annotations" Version="4.6.0-preview5.19205.9">
+    <Dependency Name="System.ComponentModel.Annotations" Version="4.6.0-preview5.19206.5">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>35249a0072b41a89ce1542deacb2611c2393dec0</Sha>
+      <Sha>81fe62442228cb26bd0d95ceec3e0a3b74bde0a2</Sha>
     </Dependency>
-    <Dependency Name="System.Configuration.ConfigurationManager" Version="4.6.0-preview5.19205.9">
+    <Dependency Name="System.Configuration.ConfigurationManager" Version="4.6.0-preview5.19206.5">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>35249a0072b41a89ce1542deacb2611c2393dec0</Sha>
+      <Sha>81fe62442228cb26bd0d95ceec3e0a3b74bde0a2</Sha>
     </Dependency>
-    <Dependency Name="System.Data.SqlClient" Version="4.7.0-preview5.19205.9">
+    <Dependency Name="System.Data.SqlClient" Version="4.7.0-preview5.19206.5">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>35249a0072b41a89ce1542deacb2611c2393dec0</Sha>
+      <Sha>81fe62442228cb26bd0d95ceec3e0a3b74bde0a2</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
