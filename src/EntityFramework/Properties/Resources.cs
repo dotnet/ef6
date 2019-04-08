@@ -7119,7 +7119,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "FieldName:{0}, {1}"
+        // A string like "The column with the name '{0}' conversion failed, {1}"
         // </summary>
         internal static string Materializer_InvalidColumnCastMessage(object p0, object p1)
         {
