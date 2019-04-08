@@ -7119,6 +7119,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "FieldName:{0}, {1}"
+        // </summary>
+        internal static string Materializer_InvalidColumnCastMessage(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.Materializer_InvalidColumnCastMessage, p0, p1);
+        }
+
+        // <summary>
         // A string like "The specified cast from a materialized '{0}' type to a nullable '{1}' type is not valid."
         // </summary>
         internal static string Materializer_InvalidCastNullable(object p0, object p1)
@@ -16621,6 +16629,7 @@ namespace System.Data.Entity.Resources
         internal const string Materializer_PropertyIsNotNullable = "Materializer_PropertyIsNotNullable";
         internal const string Materializer_PropertyIsNotNullableWithName = "Materializer_PropertyIsNotNullableWithName";
         internal const string Materializer_SetInvalidValue = "Materializer_SetInvalidValue";
+        internal const string Materializer_InvalidColumnCastMessage = "Materializer_InvalidColumnCastMessage";
         internal const string Materializer_InvalidCastReference = "Materializer_InvalidCastReference";
         internal const string Materializer_InvalidCastNullable = "Materializer_InvalidCastNullable";
         internal const string Materializer_NullReferenceCast = "Materializer_NullReferenceCast";

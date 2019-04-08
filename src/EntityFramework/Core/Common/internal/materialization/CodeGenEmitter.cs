@@ -291,6 +291,41 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         // <summary>
+        // Create expression that guarantees the input expression is of the specified
+        // type; no Convert is added if the expression is already of the same type.
+        // Add columnName for more information.
+        // Internal because it is called from the TranslatorResult.
+        // </summary>
+        internal static Expression Emit_EnsureType(Expression input, Type type, string columnName)
+        {
+            var result = input;
+            if (input.Type != type
+                && !typeof(IEntityWrapper).IsAssignableFrom(input.Type))
+            {
+                if (type.IsAssignableFrom(input.Type))
+                {
+                    // simple convert, just to make sure static type checks succeed
+                    result = Expression.Convert(input, type);
+                }
+                else
+                {
+                    // user is asking for the 'wrong' type... add exception handling
+                    // in case of failure
+                    try
+                    {
+                        var checkedConvertMethod = CodeGenEmitter_CheckedConvert.MakeGenericMethod(input.Type, type);
+                        result = Expression.Call(checkedConvertMethod, input);
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        throw new InvalidOperationException(Strings.Materializer_InvalidColumnCastMessage(columnName, e.Message));
+                    }
+                }
+            }
+            return result;
+        }
+
+        // <summary>
         // Uses Emit_EnsureType and then wraps the result in an IEntityWrapper instance.
         // </summary>
         // <param name="input"> The expression that creates the entity to be wrapped </param>
