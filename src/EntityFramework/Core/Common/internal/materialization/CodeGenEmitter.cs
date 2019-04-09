@@ -293,7 +293,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // <summary>
         // Create expression that guarantees the input expression is of the specified
         // type; no Convert is added if the expression is already of the same type.
-        // Add columnName for more information.
+        // Add columnName for more cast failed information.
         // Internal because it is called from the TranslatorResult.
         // </summary>
         internal static Expression Emit_EnsureType(Expression input, Type type, string columnName)
