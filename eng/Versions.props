@@ -19,10 +19,10 @@
     <XunitExtensionsVersion>1.9.2</XunitExtensionsVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-preview5.19208.1</MicrosoftCSharpVersion>
-    <SystemCodeDomVersion>4.6.0-preview5.19208.1</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-preview5.19208.1</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview5.19208.1</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-preview5.19208.1</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>4.6.0-preview5.19215.16</MicrosoftCSharpVersion>
+    <SystemCodeDomVersion>4.6.0-preview5.19215.16</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-preview5.19215.16</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview5.19215.16</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-preview5.19215.16</SystemDataSqlClientVersion>
   </PropertyGroup>
 </Project>
