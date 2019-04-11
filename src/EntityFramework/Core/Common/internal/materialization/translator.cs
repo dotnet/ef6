@@ -1277,7 +1277,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     }
 
                     // (type)shaper.Reader.Get???(ordinal)
-                    // add column name for more information.
                     result = CodeGenEmitter.Emit_EnsureType(result, type, columnMap.Name);
 
                     if (needsNullableCheck)
