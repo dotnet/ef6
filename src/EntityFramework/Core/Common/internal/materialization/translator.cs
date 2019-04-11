@@ -503,7 +503,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     result = CodeGenEmitter.Emit_EnsureType(
                         BuildExpressionToGetRecordState(columnMap, null, null, Expression.Constant(true)),
-                        arg.RequestedType, columnMap.Name);
+                        arg.RequestedType);
                 }
                 else
                 {
@@ -585,7 +585,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 foreach (var typeChoice in columnMap.TypeChoices)
                 {
                     var typeReader = CodeGenEmitter.Emit_EnsureType(
-                        AcceptWithMappedType(this, typeChoice.Value).UnwrappedExpression, typeof(TElement), columnMap.Name);
+                        AcceptWithMappedType(this, typeChoice.Value).UnwrappedExpression, typeof(TElement));
                     var typeReaderDelegate = CreateInlineDelegate(typeReader);
                     Expression typeDelegatePair = Expression.New(
                         typeDelegatePairConstructor,
@@ -796,7 +796,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                     // ((object)columnReader) ?? DBNull.Value
                     columnReaders[i] = Expression.Coalesce(
-                        CodeGenEmitter.Emit_EnsureType(columnReader, typeof(object), columnMap.Name), CodeGenEmitter.DBNull_Value);
+                        CodeGenEmitter.Emit_EnsureType(columnReader, typeof(object)), CodeGenEmitter.DBNull_Value);
                 }
                 // new object[] {columnReader0..columnReaderN}
                 Expression columnReaderArray = Expression.NewArrayInit(typeof(object), columnReaders);
@@ -815,7 +815,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 var result = CodeGenEmitter.Emit_EnsureType(
                     Expression.New(
                         CodeGenEmitter.MaterializedDataRecord_ctor, CodeGenEmitter.Shaper_Workspace, typeUsage, columnReaderArray),
-                    arg.RequestedType, columnMap.Name);
+                    arg.RequestedType);
                 return result;
             }
 
@@ -991,7 +991,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     result = Expression.Call(expressionToGetCoordinator, getElementsExpression);
 
                     // Perform the type check that was previously deferred so we could process POCO collections.
-                    coordinatorScratchpad.Element = CodeGenEmitter.Emit_EnsureType(coordinatorScratchpad.Element, elementType, columnMap.Name);
+                    coordinatorScratchpad.Element = CodeGenEmitter.Emit_EnsureType(coordinatorScratchpad.Element, elementType);
 
                     // When materializing specifically requested collection types, we need
                     // to transfer the results from the Enumerable to the requested collection.
@@ -1013,9 +1013,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         {
                             coordinatorScratchpad.InitializeCollection = CodeGenEmitter.Emit_EnsureType(
                                 DelegateFactory.GetNewExpressionForCollectionType(typeToInstantiate),
-                                typeof(ICollection<>).MakeGenericType(innerElementType), columnMap.Name);
+                                typeof(ICollection<>).MakeGenericType(innerElementType));
                         }
-                        result = CodeGenEmitter.Emit_EnsureType(result, arg.RequestedType, columnMap.Name);
+                        result = CodeGenEmitter.Emit_EnsureType(result, arg.RequestedType);
                     }
                     else
                     {
@@ -1027,7 +1027,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                             // new CompensatingCollection<TElement>(_collectionReader)
                             var compensatingCollectionType = typeof(CompensatingCollection<>).MakeGenericType(elementType);
                             var constructorInfo = compensatingCollectionType.GetConstructors()[0];
-                            result = CodeGenEmitter.Emit_EnsureType(Expression.New(constructorInfo, result), compensatingCollectionType, columnMap.Name);
+                            result = CodeGenEmitter.Emit_EnsureType(Expression.New(constructorInfo, result), compensatingCollectionType);
                         }
                     }
                 }
@@ -1214,8 +1214,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     result =
                         CodeGenEmitter.Emit_Conditional_NotDBNull(
                             Helper.IsGeographicType((PrimitiveType)columnType.EdmType)
-                                ? CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetGeographyColumnValue(ordinal), type, columnMap.Name)
-                                : CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetGeometryColumnValue(ordinal), type, columnMap.Name),
+                                ? CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetGeographyColumnValue(ordinal), type)
+                                : CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetGeometryColumnValue(ordinal), type),
                             ordinal, type);
 
                     if (!_streaming && !NullableColumns.Contains(ordinal))
@@ -1227,7 +1227,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     result =
                         CodeGenEmitter.Emit_Conditional_NotDBNull(
-                            CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetHierarchyIdColumnValue(ordinal), type, columnMap.Name), ordinal,
+                            CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetHierarchyIdColumnValue(ordinal), type), ordinal,
                             type);
                 }
                 else
