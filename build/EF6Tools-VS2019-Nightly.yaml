@@ -194,7 +194,7 @@ steps:
 
     msbuildArguments: '/t:Build /v:d'
 
-  timeoutInMinutes: 10
+  timeoutInMinutes: 30
 
 
 
