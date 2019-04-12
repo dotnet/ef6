@@ -19,10 +19,17 @@
   <!-- Import EntityFramework.targets to define EF6NuGetPackageVersion -->
   <Import Project="$(RepositoryRoot)\tools\EntityFramework.targets" />
 
-  <Target Name="GenerateMsiInputs" DependsOnTargets="Clean;RestorePackages" />
+  <Target Name="GenerateMsiInputs" DependsOnTargets="Clean;RestorePackages;ExtractNuspecs" />
 
   <Target Name="Clean">
     <RemoveDir Directories="$(MsiRuntimeInputsPath)" />
+  </Target>
+
+  <Target Name="ExtractNuspecs">
+    <ItemGroup>
+      <ExtractNuspecPackages Include="$(MsiRuntimeInputsPath)\**\EntityFramework*.nupkg" />
+    </ItemGroup>
+    <ExtractNuspecFromPackage NuGetPackageFilePath="%(ExtractNuspecPackages.Identity)" />
   </Target>
 
 </Project>
