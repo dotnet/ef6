@@ -105,10 +105,9 @@
               <?endif?>
             </Directory>
           </Directory>
-          <!-- TODO LAJ LAJ investigate whether nuspec files are necessary -->
-          <!-- Component Id="EntityFramework.$(var.packageVersionId).nuspec">
+          <Component Id="EntityFramework.$(var.packageVersionId).nuspec">
             <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\EntityFramework.$(var.PackageVersion).nuspec"/>
-          </Component -->
+          </Component>
         </Directory>
         <Component>
           <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.PackageVersion)\EntityFramework.$(var.PackageVersion).nupkg"/>
@@ -157,10 +156,9 @@
                   </Directory>
                 </Directory>
               </Directory>
-              <!-- TODO LAJ LAJ investigate whether nuspec files are necessary -->
-              <!-- Component Id="entityframework$(var.safeLang)$(var.packageVersionId)nuspec">
+              <Component Id="entityframework$(var.safeLang)$(var.packageVersionId)nuspec">
                 <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion).nuspec"/>
-              </Component -->
+              </Component>
             </Directory>
             <Component Id="entityframework$(var.safeLang)$(var.packageVersionId)nupkg">
               <File Source="$(var.MsiRuntimeInputsPackagesDir)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion)\EntityFramework.$(var.NuGetLang).$(var.PackageVersion).nupkg"/>
@@ -197,8 +195,7 @@
         <ComponentRef Id="entityframeworkdll_2_$(var.packageVersionId)"/>
         <ComponentRef Id="entityframeworkxml_1_$(var.packageVersionId)"/>
         <ComponentRef Id="EntityFramework.$(var.packageVersionId).nupkg"/>
-        <!-- TODO LAJ LAJ investigate whether nuspec files are necessary -->
-        <!-- ComponentRef Id="EntityFramework.$(var.packageVersionId).nuspec"/ -->
+        <ComponentRef Id="EntityFramework.$(var.packageVersionId).nuspec"/>
 
         <?if $(var.PackageVersion) = $(var.EF5NuGetPackageVersion)?>
           <ComponentRef Id="EntityFramework.PS3.psd1_$(var.packageVersionId)"/>
@@ -227,8 +224,7 @@
             <ComponentRef Id="entityframeworkresourcesdll_$(var.safeLang)_$(var.packageVersionId)_1"/>
             <ComponentRef Id="entityframeworkxml_$(var.safeLang)_$(var.packageVersionId)_1"/>
             <ComponentRef Id="entityframework$(var.safeLang)$(var.packageVersionId)nupkg"/>
-            <!-- TODO LAJ LAJ investigate whether nuspec files are necessary -->
-            <!-- ComponentRef Id="entityframework$(var.safeLang)$(var.packageVersionId)nuspec"/ -->
+            <ComponentRef Id="entityframework$(var.safeLang)$(var.packageVersionId)nuspec"/>
 
             <?undef safeLang?>
           <?endforeach NuGetLang in $(var.NuGetLangs)?>
