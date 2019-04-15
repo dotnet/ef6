@@ -96,6 +96,9 @@ namespace System.Data.Entity.Migrations
                     {
                         var createDatabaseSql = "CREATE DATABASE [" + _name + "]";
                         ExecuteNonQuery(createDatabaseSql, ModelHelpers.SimpleConnectionString("master"));
+
+                        // Previously invalid connections may now be valid
+                        SqlConnection.ClearPool(new SqlConnection(ConnectionString));
                     }
 
                     ResetDatabase();
