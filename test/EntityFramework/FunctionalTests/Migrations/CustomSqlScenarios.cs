@@ -9,6 +9,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class CustomSqlScenarios : DbTestCase
     {
+        public CustomSqlScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class CustomSqlMigration : DbMigration
         {
             public override void Up()

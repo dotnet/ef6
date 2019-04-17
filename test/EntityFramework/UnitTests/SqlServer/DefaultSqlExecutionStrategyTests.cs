@@ -95,17 +95,17 @@ namespace System.Data.Entity.SqlServer
 #if !NET40
 
         [Fact]
-        public void ExecuteAsync_throws_on_null_parameter()
+        public async Task ExecuteAsync_throws_on_null_parameter()
         {
             var executionStrategy = new DefaultSqlExecutionStrategy();
 
             Assert.Equal(
                 "operation",
-                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
+                (await Assert.ThrowsAsync<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None))).ParamName);
 
             Assert.Equal(
                 "operation",
-                Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
+                (await Assert.ThrowsAsync<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None))).ParamName);
         }
         [Fact]
         public void ExecuteAsync_Action_doesnt_retry_on_transient_exceptions()

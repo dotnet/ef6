@@ -26,6 +26,9 @@ namespace System.Data.Entity
     {
         static TestBase()
         {
+            SqlServerTypes.Utilities.LoadNativeAssemblies(
+                Path.GetDirectoryName(typeof(FunctionalTestBase).Assembly.Location));
+
             DbConfiguration.SetConfiguration(new FunctionalTestsConfiguration());
 
             // Uncomment below to log all test generated SQL to the console.

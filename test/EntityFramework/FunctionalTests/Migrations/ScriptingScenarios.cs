@@ -11,6 +11,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class ScriptingScenarios : DbTestCase
     {
+        public ScriptingScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private string CreateMetadataStatement
         {
             get

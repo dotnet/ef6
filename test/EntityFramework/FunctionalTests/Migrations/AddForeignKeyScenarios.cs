@@ -11,6 +11,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class AddForeignKeyScenarios : DbTestCase
     {
+        public AddForeignKeyScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class AddSimpleForeignKeyMigration : DbMigration
         {
             public override void Up()

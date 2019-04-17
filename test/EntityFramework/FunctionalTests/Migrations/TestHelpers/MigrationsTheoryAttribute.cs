@@ -3,30 +3,47 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Functionals.Utilities;
     using System.Linq;
     using System.Reflection;
+    using Xunit.Abstractions;
     using Xunit.Sdk;
 
+    [XunitTestCaseDiscoverer("System.Data.Entity.Migrations.MigrationsTheoryDiscoverer", "EntityFramework.FunctionalTests")]
     public class MigrationsTheoryAttribute : ExtendedFactAttribute
     {
-        protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
+    }
+
+    public class MigrationsTheoryDiscoverer : ExtendedFactDiscoverer
+    {
+        public MigrationsTheoryDiscoverer(IMessageSink diagnosticMessageSink)
+            : base(diagnosticMessageSink)
         {
-            return ShouldRun(SlowGroup)
-                       ? from providerLanguageCombination in GetCombinations(method.MethodInfo)
-                         where ShouldRun(providerLanguageCombination.Slow ? TestGroup.MigrationsTests : TestGroup.Default)
-                         select new MigrationsTheoryCommand(
-                             method,
-                             providerLanguageCombination.DatabaseProvider,
-                             providerLanguageCombination.ProgrammingLanguage)
-                       : Enumerable.Empty<ITestCommand>();
         }
 
-        private static IEnumerable<VariantAttribute> GetCombinations(MethodInfo method)
+        public override IEnumerable<IXunitTestCase> Discover(
+            ITestFrameworkDiscoveryOptions discoveryOptions,
+            ITestMethod testMethod,
+            IAttributeInfo factAttribute)
+        {
+            return ShouldRun(factAttribute, factAttribute.GetNamedArgument<TestGroup>(nameof(ExtendedFactAttribute.SlowGroup)))
+                       ? from providerLanguageCombination in GetCombinations(testMethod.Method)
+                         where ShouldRun(factAttribute, providerLanguageCombination.Slow ? TestGroup.MigrationsTests : TestGroup.Default)
+                         select new MigrationsTestCase(
+                             DiagnosticMessageSink,
+                             discoveryOptions.MethodDisplayOrDefault(),
+                             discoveryOptions.MethodDisplayOptionsOrDefault(),
+                             testMethod,
+                             providerLanguageCombination.DatabaseProvider,
+                             providerLanguageCombination.ProgrammingLanguage)
+                       : Enumerable.Empty<IXunitTestCase>();
+        }
+
+        private static IEnumerable<VariantAttribute> GetCombinations(IMethodInfo method)
         {
             var methodVariants
                 = method
-                    .GetCustomAttributes<VariantAttribute>(inherit: true)
+                    .GetCustomAttributes(typeof(VariantAttribute))
+                    .Select(a => new VariantAttribute((DatabaseProvider)a.GetConstructorArguments().First(), (ProgrammingLanguage)a.GetConstructorArguments().Skip(1).First()) { Slow = a.GetNamedArgument<bool>(nameof(VariantAttribute.Slow)) })
                     .ToList();
 
             if (methodVariants.Any())
@@ -35,8 +52,9 @@ namespace System.Data.Entity.Migrations
             }
 
             var typeVariants
-                = method.DeclaringType
-                    .GetCustomAttributes<VariantAttribute>(inherit: true)
+                = method.Type
+                    .GetCustomAttributes(typeof(VariantAttribute))
+                    .Select(a => new VariantAttribute((DatabaseProvider)a.GetConstructorArguments().First(), (ProgrammingLanguage)a.GetConstructorArguments().Skip(1).First()) { Slow = a.GetNamedArgument<bool>(nameof(VariantAttribute.Slow)) })
                     .ToList();
 
             if (typeVariants.Any())

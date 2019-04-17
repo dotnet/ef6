@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Xml;
     using Xunit;
 
-    public partial class DbExpressionBuilderTests : IUseFixture<DbExpressionBuilderFixture>
+    public partial class DbExpressionBuilderTests : IClassFixture<DbExpressionBuilderFixture>
     {
         private MetadataWorkspace workspace;
         private TypeUsage stringTypeUsage;
@@ -377,7 +377,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public void IsNull_RowType_does_not_throw()
         {
             var argument = new Row(((DbExpression)"columnValue").As("C1"));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.IsNull(argument));
+            DbExpressionBuilder.IsNull(argument);
         }
 
         private void VerifyIsNull(DbIsNullExpression expression, DbExpression argument)
@@ -570,7 +570,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         [Fact]
         public void Constant_clr_enum_with_additional_value_does_not_throw()
         {
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Constant(this.enumTypeUsage, Enums.AdditionalMember.CardSuite.Diamonds));
+            DbExpressionBuilder.Constant(this.enumTypeUsage, Enums.AdditionalMember.CardSuite.Diamonds);
         }
 
         [Fact]
@@ -1125,13 +1125,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             const string Cf = "\u200f"; // Right to left mark
 
             // Start character
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lu));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Ll));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lt));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lm));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lo));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Nl));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "_"));
+            DbExpressionBuilder.Parameter(stringTypeUsage, Lu);
+            DbExpressionBuilder.Parameter(stringTypeUsage, Ll);
+            DbExpressionBuilder.Parameter(stringTypeUsage, Lt);
+            DbExpressionBuilder.Parameter(stringTypeUsage, Lm);
+            DbExpressionBuilder.Parameter(stringTypeUsage, Lo);
+            DbExpressionBuilder.Parameter(stringTypeUsage, Nl);
+            DbExpressionBuilder.Parameter(stringTypeUsage, "_");
             
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Nd));
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Mn));
@@ -1140,12 +1140,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Cf));
 
             // Following characters
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Nd));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Mn));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Mc));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Pc));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Cf));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P_"));
+            DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Nd);
+            DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Mn);
+            DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Mc);
+            DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Pc);
+            DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Cf);
+            DbExpressionBuilder.Parameter(stringTypeUsage, "P_");
         }
 
         #endregion
@@ -2531,7 +2531,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         #endregion
 
-        public void SetFixture(DbExpressionBuilderFixture data)
+        public DbExpressionBuilderTests(DbExpressionBuilderFixture data)
         {
             this.workspace = data.Workspace;
             this.stringTypeUsage = data.StringTypeUsage;

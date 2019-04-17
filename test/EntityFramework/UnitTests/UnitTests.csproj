@@ -34,17 +34,17 @@
     <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSDLSchema_1.xsd" />
     <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSMSL_1.xsd" />
     <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_1.xsd" />
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\Microsoft.Data.Entity.Design.Edmx_2.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.AnnotationSchema.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CodeGenerationSchema.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSDLSchema_2.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSMSL_2.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.EntityStoreSchemaGenerator.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_2.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\Microsoft.Data.Entity.Design.Edmx_3.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSDLSchema_3.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSMSL_3.xsd"/>
-    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_3.xsd"/>
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\Microsoft.Data.Entity.Design.Edmx_2.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.AnnotationSchema.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CodeGenerationSchema.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSDLSchema_2.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSMSL_2.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.EntityStoreSchemaGenerator.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_2.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\Microsoft.Data.Entity.Design.Edmx_3.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSDLSchema_3.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSMSL_3.xsd" />
+    <None Remove="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_3.xsd" />
   </ItemGroup>
 
   <ItemGroup>
@@ -91,14 +91,14 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
-    <ProjectReference Include="..\..\..\src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"/>
+    <ProjectReference Include="..\..\..\src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
     <ProjectReference Include="..\..\..\src\Migrate\Migrate.csproj">
       <Aliases>migrate</Aliases>
     </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj"/>
+    <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -113,6 +113,12 @@
     <EmbeddedResource Include="TestDataFiles\SqlOperation_Batch.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="TestHelpers\Fake\FakeSqlConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 
   <PropertyGroup>

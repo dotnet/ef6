@@ -14,6 +14,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class BasicMigrationScenarios : DbTestCase
     {
+        public BasicMigrationScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class ErrorContext : DbContext
         {
             public DbSet<ErrorEntity> Entities { get; set; }

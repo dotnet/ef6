@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit.core" Version="$(XUnitVersion)" />
-    <PackageReference Include="xunit.assert" Version="$(XUnitVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
   </ItemGroup>
 

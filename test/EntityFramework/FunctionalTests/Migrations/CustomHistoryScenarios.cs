@@ -109,6 +109,11 @@ namespace System.Data.Entity.Migrations
         private readonly Func<DbConnection, string, HistoryContext> _testHistoryContextFactoryB =
             (existingConnection, defaultSchema) => new TestHistoryContextB(existingConnection, defaultSchema);
 
+        public CustomHistoryScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void Can_auto_update_after_explicit_update_when_custom_history_factory()
         {

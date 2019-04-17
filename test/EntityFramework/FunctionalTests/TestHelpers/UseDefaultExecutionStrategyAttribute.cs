@@ -3,7 +3,7 @@
 namespace System.Data.Entity.TestHelpers
 {
     using System.Reflection;
-    using Xunit;
+    using Xunit.Sdk;
 
     public class UseDefaultExecutionStrategyAttribute : BeforeAfterTestAttribute
     {

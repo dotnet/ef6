@@ -10,6 +10,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class DropForeignKeyScenarios : DbTestCase
     {
+        public DropForeignKeyScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class DropSimpleForeignKeyMigration : DbMigration
         {
             public override void Up()

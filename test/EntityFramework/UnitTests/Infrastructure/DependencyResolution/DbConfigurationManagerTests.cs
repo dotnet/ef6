@@ -882,7 +882,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         private static void AssertIsNotLocked(InternalConfiguration internalConfiguration)
         {
-            Assert.DoesNotThrow(() => internalConfiguration.CheckNotLocked("Foo"));
+            internalConfiguration.CheckNotLocked("Foo");
         }
     }
 }

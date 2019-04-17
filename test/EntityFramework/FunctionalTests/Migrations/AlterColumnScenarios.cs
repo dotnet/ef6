@@ -17,6 +17,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class AlterColumnScenarios : DbTestCase
     {
+        public AlterColumnScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class AlterColumnWithDefault : DbMigration
         {
             public override void Up()

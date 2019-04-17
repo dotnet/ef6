@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
@@ -19,12 +19,40 @@
   <ItemGroup>
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="$(MicrosoftSqlServerCompactVersion)" />
-    <PackageReference Include="xunit.extensions" Version="$(XunitExtensionsVersion)" />
+    <PackageReference Include="Microsoft.SqlServer.Types" Version="$(MicrosoftSqlServerTypesVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\SqlServerTypes\Loader.cs">
+      <Link>SqlServerTypes\Loader.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\readme.htm">
+      <Link>SqlServerTypes\readme.htm</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x64\msvcr120.dll</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x64\SqlServerSpatial140.dll</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x86\msvcr120.dll</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x86\SqlServerSpatial140.dll</Link>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +65,12 @@
     <EmbeddedResource Include="MetadataMapping\Enum.csdl" />
     <EmbeddedResource Include="MetadataMapping\Enum.msl" />
     <EmbeddedResource Include="MetadataMapping\Enum.ssdl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="TestHelpers\GenericConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 
   <PropertyGroup>

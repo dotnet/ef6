@@ -24,7 +24,7 @@ namespace System.Data.Entity.Utilities
             var providerManifest = new SqlProviderManifest("2008");
             const string typeName = "nvarchat";
 
-            Assert.ThrowsDelegate test =
+            Action test =
                 () => providerManifest.GetStoreTypeFromName(typeName);
 
             Assert.Equal(

@@ -2,7 +2,9 @@
   <Import Project="..\Directory.Build.targets" />
 
   <ItemGroup>
-    <!-- TODO: Remove when updating to xUnit.net 2 -->
+    <!-- Remove xunit.analyzers due to noise -->
     <PackageReference Remove="xunit" />
+    <PackageReference Include="xunit.core" Version="$(XUnitVersion)" />
+    <PackageReference Include="xunit.assert" Version="$(XUnitVersion)" />
   </ItemGroup>
 </Project>

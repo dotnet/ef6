@@ -669,57 +669,6 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             Assert.Equal(_net40EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
-        [Fact(Skip = "Fails when delay signed")]
-        public void AddOrUpdateConfigSection_on_add_yields_result_that_can_load_in_partial_trust()
-        {
-            AddOrUpdateConfigSection_result_can_load_in_partial_trust(
-                new XDocument(
-                    new XElement(ConfigFileManipulator.ConfigurationElementName)));
-        }
-
-        [Fact(Skip = "Fails when delay signed")]
-        public void AddOrUpdateConfigSection_on_update_yields_result_that_can_load_in_partial_trust()
-        {
-            AddOrUpdateConfigSection_result_can_load_in_partial_trust(
-                CreateConfigSectionDoc(_net40EntityFrameworkSectionName));
-        }
-
-        private void AddOrUpdateConfigSection_result_can_load_in_partial_trust(XDocument config)
-        {
-            new ConfigFileManipulator().AddOrUpdateConfigSection(
-                config, _net45EntityFrameworkVersion);
-
-            config.Element(ConfigFileManipulator.ConfigurationElementName).Add(
-                new XElement(
-                    ConfigFileManipulator.EntityFrameworkElementName,
-                    new XAttribute("codeConfigurationType", typeof(FunctionalTestsConfiguration).AssemblyQualifiedName)));
-
-            var configurationFile = Path.Combine(Environment.CurrentDirectory, "Temp.config");
-            config.Save(configurationFile);
-
-            try
-            {
-                using (var sandbox = new PartialTrustSandbox(configurationFile: configurationFile))
-                {
-                    sandbox.CreateInstance<ConnectionFactoryConfigTests>()
-                           .LoadConfiguration();
-                }
-            }
-            finally
-            {
-                File.Delete(configurationFile);
-            }
-        }
-
-        private void LoadConfiguration()
-        {
-            new PartialTrustContext();
-        }
-
-        private class PartialTrustContext : DbContext
-        {
-        }
-
         private XDocument CreateConfigSectionDoc(string assemblyName, bool addRequirePermission = false)
         {
             var dummyElement = new XElement(
@@ -871,7 +820,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                                 => config.Element("fake").Add(new XElement("modified")))
                             .Returns(shouldSave);
 
-                        Assert.ThrowsDelegate test =
+                        Action test =
                             () => new ConfigFileProcessor()
                                       .ProcessConfigFile(
                                           mockedItem.Object,
