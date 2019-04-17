@@ -2940,6 +2940,9 @@
   <data name="Materializer_InvalidCastReference" xml:space="preserve">
     <value>The specified cast from a materialized '{0}' type to the '{1}' type is not valid.</value>
   </data>
+  <data name="Materializer_InvalidColumnCastMessage" xml:space="preserve">
+    <value>The column with the name '{0}' conversion failed, {1}</value>
+  </data>
   <data name="Materializer_InvalidCastNullable" xml:space="preserve">
     <value>The specified cast from a materialized '{0}' type to a nullable '{1}' type is not valid.</value>
   </data>
