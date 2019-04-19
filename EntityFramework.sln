@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.Transitiona
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.ProviderAgnostic", "test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj", "{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.netcoreapp3.0", "test\EntityFramework\FunctionalTests.netcoreapp3.0\FunctionalTests.netcoreapp3.0.csproj", "{64CCAE09-6683-4FF5-91B0-C713864AA6E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CCAE09-6683-4FF5-91B0-C713864AA6E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CCAE09-6683-4FF5-91B0-C713864AA6E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CCAE09-6683-4FF5-91B0-C713864AA6E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CCAE09-6683-4FF5-91B0-C713864AA6E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{CF1C27F8-D603-4960-BE99-BCF348545368} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 		{3D65611F-E8FB-4A33-9196-7836969D6378} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
+		{64CCAE09-6683-4FF5-91B0-C713864AA6E4} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7045317-2675-4853-926A-4D4354176EEE}

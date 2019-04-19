@@ -1,3 +1,8 @@
 <Project>
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+
+  <PropertyGroup>
+    <!-- HACK: Work around dotnet/sdk#2976 in dependencies -->
+    <BundledNETCorePlatformsPackageVersion>$(MicrosoftNETCorePlatformsPackageVersion)</BundledNETCorePlatformsPackageVersion>
+  </PropertyGroup>
 </Project>

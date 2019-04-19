@@ -87,10 +87,14 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
-            var attachDb = string.IsNullOrEmpty(AppDomain.CurrentDomain.GetData("DataDirectory") as string)
-                               ? " "
-                               : string.Format(
-                                   CultureInfo.InvariantCulture, @" AttachDbFilename=|DataDirectory|{0}.mdf; ", nameOrConnectionString);
+            var attachDb = " ";
+#if !NETSTANDARD2_1
+            if (!string.IsNullOrEmpty(AppDomain.CurrentDomain.GetData("DataDirectory") as string))
+            {
+                attachDb = string.Format(
+                    CultureInfo.InvariantCulture, @" AttachDbFilename=|DataDirectory|{0}.mdf; ", nameOrConnectionString);
+            }
+#endif
 
             return new SqlConnectionFactory(
                 string.Format(
