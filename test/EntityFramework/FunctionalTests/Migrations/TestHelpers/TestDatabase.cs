@@ -73,7 +73,7 @@ namespace System.Data.Entity.Migrations
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("'" + name + "' can not be null or empty.");
+                throw new ArgumentException("'" + nameof(name) + "' can not be null or empty.");
             }
 
             _name = name;
