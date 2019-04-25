@@ -122,7 +122,7 @@ steps:
 
     filename: '$(comspec)'
 
-    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\src\EFTools\setup\GenerateMsiInputs\GenerateMsiInputs.msbuild /p:Configuration=$(BuildConfiguration) /t:GenerateMSIInputs"'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\src\EFTools\setup\GenerateMsiInputs\GenerateMsiInputs.msbuild /p:Configuration=$(BuildConfiguration) /t:GenerateMSIInputs"'
 
 
 
@@ -172,7 +172,7 @@ steps:
 
     filename: '$(comspec)'
 
-    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\setup\wix\EFToolsWillowMsi.wixproj /t:Build /v:d /p:MSBuildToolsVersion=16.0"'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\setup\wix\EFToolsWillowMsi.wixproj /t:Build /v:d /p:MSBuildToolsVersion=16.0"'
 
   enabled: false
 
@@ -188,7 +188,7 @@ steps:
 
     msbuildLocationMethod: location
 
-    msbuildLocation: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\MSBuild\Current\Bin'
+    msbuildLocation: 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin'
 
     configuration: '$(BuildConfiguration)'
 
