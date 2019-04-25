@@ -741,9 +741,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 var dialog = new EntityDataConnectionDialog(Wizard.Project);
                 dialog.ShowDialog();
 
-                Debug.Assert(
-                    dialog.SelectedConnection != null && dialog.SelectedExplorerConnection != null,
-                    "Either the selected connection or selected explorer connection is null");
+                // the below values may be null if e.g. the user hit Cancel on the dialog
+                // without selecting a connection
                 if (dialog.SelectedConnection != null
                     && dialog.SelectedExplorerConnection != null)
                 {
