@@ -144,6 +144,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return false;
             }
 
+            // check to see that this predicate doesn't reference user-defined functions 
+            if (trc.IncludeCustomFunctionOp(predicateNode, varMap))
+            {
+                return false;
+            }
+
             //
             // Try to remap the predicate in terms of the definitions of the Vars
             //

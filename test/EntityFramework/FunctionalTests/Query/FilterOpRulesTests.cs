@@ -2,6 +2,9 @@
 
 namespace System.Data.Entity.Query
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Linq;
     using Xunit;
 
@@ -29,6 +32,47 @@ namespace System.Data.Entity.Query
             static BlogContext()
             {
                 Database.SetInitializer<BlogContext>(null);
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+                modelBuilder.Conventions.Add(new CustomFunction());
+            }
+        }
+
+        public static class CustomFunctions
+        {
+            [DbFunction("SqlServer", "MyCustomFunc")]
+            public static int MyCustomFunc(string value)
+            {
+                throw new NotSupportedException("Direct calls are not supported.");
+            }
+        }
+
+        public class CustomFunction : IConvention, IStoreModelConvention<EntityContainer>
+        {
+            public void Apply(EntityContainer item, DbModel model)
+            {
+                var customFuncStore = EdmFunction.Create("MyCustomFunc", "SqlServer", DataSpace.SSpace, new EdmFunctionPayload
+                {
+                    ParameterTypeSemantics = ParameterTypeSemantics.AllowImplicitConversion,
+                    IsComposable = true,
+                    IsAggregate = false,
+                    StoreFunctionName = "MyCustomFunc",
+                    IsBuiltIn = false,
+                    ReturnParameters = new[]
+                    {
+                        FunctionParameter.Create("ReturnType", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), ParameterMode.ReturnValue)
+                    },
+                    Parameters = new[]
+                    {
+                        FunctionParameter.Create("input",  PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), ParameterMode.In),
+                    }
+                }, null);
+
+
+                model.StoreModel.AddItem(customFuncStore);
             }
         }
 
@@ -120,9 +164,9 @@ namespace System.Data.Entity.Query
                 context.Configuration.UseDatabaseNullSemantics = false;
 
                 var query = from b in context.Blogs
-                    from e in context.BlogEntries.Where(e => e.Name == b.Name).Take(1).DefaultIfEmpty()
-                    where b.Name == e.Name
-                    select b;
+                            from e in context.BlogEntries.Where(e => e.Name == b.Name).Take(1).DefaultIfEmpty()
+                            where b.Name == e.Name
+                            select b;
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
@@ -175,6 +219,50 @@ namespace System.Data.Entity.Query
                             from e in context.BlogEntries.Where(e => e.Name == b.Name).Take(1).DefaultIfEmpty()
                             where b.Name == e.Name
                             select b;
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
+        [Fact]
+        public void Rule_FilterOverProject_promotes_to_single_Select_if_builtint_function()
+        {
+            var expectedSql =
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    CAST(LEN([Extent1].[Name]) AS int) AS [C1]
+    FROM  [dbo].[Blogs] AS [Extent1]
+    WHERE (CAST(LEN([Extent1].[Name]) AS int)) > 10";
+
+            using (var context = new BlogContext())
+            {
+                context.Configuration.UseDatabaseNullSemantics = true;
+
+                var query = context.Blogs.Select(b => new { b.Id, Len = b.Name.Length }).Where(b => b.Len > 10);
+
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
+        [Fact]
+        public void Rule_FilterOverProject_does_not_promote_to_single_Select_if_custom_function()
+        {
+            var expectedSql =
+@"SELECT 
+    [Project1].[Id] AS [Id], 
+    [Project1].[C1] AS [C1]
+    FROM ( SELECT 
+        [Extent1].[Id] AS [Id], 
+        [SqlServer].[MyCustomFunc]([Extent1].[Name]) AS [C1]
+        FROM [dbo].[Blogs] AS [Extent1]
+    )  AS [Project1]
+    WHERE [Project1].[C1] > 10";
+
+            using (var context = new BlogContext())
+            {
+                context.Configuration.UseDatabaseNullSemantics = true;
+
+                var query = context.Blogs.Select(b => new { b.Id, Len = CustomFunctions.MyCustomFunc(b.Name) }).Where(b => b.Len > 10);
 
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
