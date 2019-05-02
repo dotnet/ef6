@@ -2,10 +2,8 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLDIR" Name="Entity Framework Tools">
-          <Directory Id="EFT_NUGET_PKG_DIR" Name="NuGet Packages" />
-        </Directory>
+      <Directory Id="INSTALLDIR" Name="Entity Framework Tools">
+        <Directory Id="EFT_NUGET_PKG_DIR" Name="NuGet Packages" />
       </Directory>
     </Directory>
   </Fragment>
