@@ -39,6 +39,9 @@ namespace System.Data.Entity.Core.Common
 
         private readonly ResolverChain _resolvers = new ResolverChain();
 
+
+        private static bool _disableFilterSimplificationForCustomFunctions = false;
+
         /// <summary>
         /// Constructs an EF provider that will use the <see cref="IDbDependencyResolver" /> obtained from
         /// the app domain <see cref="DbConfiguration" /> Singleton for resolving EF dependencies such
@@ -862,6 +865,17 @@ namespace System.Data.Entity.Core.Common
         public virtual IEnumerable<object> GetServices(Type type, object key)
         {
             return _resolvers.GetServices(type, key);
+        }
+
+        /// <summary>
+        /// By default expression like .Select(x => NewProperty = func(x.Property)).Where(x => x.NewProperty == ...) are simplified to avoid nested SELECT
+        /// In some cases, simplifing query with UDFs could caused to suboptimal plans due to calling UDF twice. Also some SQL functions aren't allow in WHERE clause.
+        /// Disabling that behavior
+        /// </summary>
+        public static bool DisableFilterSimplificationForCustomFunctions
+        {
+            get { return _disableFilterSimplificationForCustomFunctions; }
+            set { _disableFilterSimplificationForCustomFunctions = value; }
         }
     }
 }
