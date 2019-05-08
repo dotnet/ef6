@@ -149,7 +149,7 @@ namespace System.Data.Entity.SqlServer
                     .Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                     .Returns(dbDataReaderMock.Object);
 
-                var connectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                var connectionMock = new Mock<DbConnection>();
                 connectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(dbCommandMock.Object);
                 connectionMock.Setup(m => m.ConnectionString).Returns(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=master;");
                 var state = ConnectionState.Closed;
@@ -447,7 +447,7 @@ namespace System.Data.Entity.SqlServer
                     .Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                     .Returns(dbDataReaderMock.Object);
 
-                var connectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                var connectionMock = new Mock<DbConnection>();
                 connectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(dbCommandMock.Object);
                 connectionMock.Setup(m => m.ConnectionString).Returns(@"Data Source=.\SQLEXPRESS; Integrated Security=True; Database=master;");
                 var state = ConnectionState.Closed;

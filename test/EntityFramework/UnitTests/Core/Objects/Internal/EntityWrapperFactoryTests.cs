@@ -17,13 +17,17 @@ namespace System.Data.Entity.Core.Objects.Internal
         [Fact]
         public void Factory_sets_override_flag_appropriately_for_IPOCO_EntityObject_entities()
         {
-            var wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new Mock<EntityObject>().Object, new EntityKey());
+            var wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new EntityObjectWithoutEquals(), new EntityKey());
             Assert.Same(typeof(LightweightEntityWrapper<>), wrappedEntity.GetType().GetGenericTypeDefinition());
             Assert.False(wrappedEntity.OverridesEqualsOrGetHashCode);
 
-            wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new Mock<EntityObjectWithEquals>().Object, new EntityKey());
+            wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new EntityObjectWithEquals(), new EntityKey());
             Assert.Same(typeof(LightweightEntityWrapper<>), wrappedEntity.GetType().GetGenericTypeDefinition());
             Assert.True(wrappedEntity.OverridesEqualsOrGetHashCode);
+        }
+
+        public class EntityObjectWithoutEquals : EntityObject
+        {
         }
 
         public class EntityObjectWithEquals : EntityObject
@@ -42,15 +46,23 @@ namespace System.Data.Entity.Core.Objects.Internal
         [Fact]
         public void Factory_sets_override_flag_appropriately_for_entities_with_relationships()
         {
-            var mockWithRelationships = new Mock<IEntityWithRelationships>();
-            mockWithRelationships.Setup(m => m.RelationshipManager).Returns(RelationshipManager.Create(mockWithRelationships.Object));
-            var wrappedEntity = EntityWrapperFactory.CreateNewWrapper(mockWithRelationships.Object, new EntityKey());
+            var wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new EntityWithRelationshipsButWithoutEquals(), new EntityKey());
             Assert.Same(typeof(EntityWrapperWithRelationships<>), wrappedEntity.GetType().GetGenericTypeDefinition());
             Assert.False(wrappedEntity.OverridesEqualsOrGetHashCode);
 
-            wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new Mock<EntityWithRelationshipsAndEquals>().Object, new EntityKey());
+            wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new EntityWithRelationshipsAndEquals(), new EntityKey());
             Assert.Same(typeof(EntityWrapperWithRelationships<>), wrappedEntity.GetType().GetGenericTypeDefinition());
             Assert.True(wrappedEntity.OverridesEqualsOrGetHashCode);
+        }
+
+        public class EntityWithRelationshipsButWithoutEquals : IEntityWithRelationships
+        {
+            public EntityWithRelationshipsButWithoutEquals()
+            {
+                RelationshipManager = RelationshipManager.Create(this);
+            }
+
+            public RelationshipManager RelationshipManager { get; }
         }
 
         public class EntityWithRelationshipsAndEquals : IEntityWithRelationships

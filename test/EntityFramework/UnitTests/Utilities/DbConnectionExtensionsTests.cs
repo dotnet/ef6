@@ -25,7 +25,7 @@ namespace System.Data.Entity.Utilities
 #if NET40
                 Strings.ProviderNotFound("I Be A Bad Bad Connection Is What I Be."),
 #else
-                Strings.ProviderNameNotFound("Castle.Proxies.DbProviderFactoryProxy"),
+                Strings.ProviderNameNotFound(InvalidConnection.MockProviderFactory),
 #endif
                 Assert.Throws<NotSupportedException>(() => new InvalidConnection().GetProviderInvariantName()).Message);
         }
@@ -48,9 +48,11 @@ namespace System.Data.Entity.Utilities
 
         public class InvalidConnection : DbConnection
         {
+            public static readonly DbProviderFactory MockProviderFactory = new Mock<DbProviderFactory>().Object;
+
             protected override DbProviderFactory DbProviderFactory
             {
-                get { return new Mock<DbProviderFactory>().Object; }
+                get { return MockProviderFactory; }
             }
 
             public override string ToString()
