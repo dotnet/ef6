@@ -6,7 +6,6 @@ namespace System.Data.Entity.Migrations
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
-    using System.Data.SqlServerCe;
 
     public class MigrationsCustomerBase
     {
@@ -199,7 +198,7 @@ namespace System.Data.Entity.Migrations
             modelBuilder.Entity<Order>().Property(o => o.Type).IsUnicode(false);
             modelBuilder.Entity<MigrationsProduct>();
             
-            if (!(Database.Connection is SqlCeConnection))
+            if (!this.IsSqlCe())
             {
                 // NotSupported in CE
                 modelBuilder.Entity<MigrationsCustomer>().MapToStoredProcedures();
@@ -242,7 +241,7 @@ namespace System.Data.Entity.Migrations
         {
             modelBuilder.Entity<MigrationsCustomer>().ToTable("tbl_customers", "crm");
 
-            if (!(Database.Connection is SqlCeConnection))
+            if (!this.IsSqlCe())
             {
                 // NotSupported in CE
                 modelBuilder.Entity<MigrationsCustomer>().Property(c => c.Name).HasColumnName("new_name");

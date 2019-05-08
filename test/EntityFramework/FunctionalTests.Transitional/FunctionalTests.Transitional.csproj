@@ -3,10 +3,10 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests.Transitional</AssemblyName>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFrameworks>net452;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -18,22 +18,28 @@
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="$(MicrosoftSqlServerCompactVersion)" />
     <PackageReference Include="Microsoft.SqlServer.Types" Version="$(MicrosoftSqlServerTypesVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
+    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Compile Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\SqlServerTypes\Loader.cs">
       <Link>SqlServerTypes\Loader.cs</Link>
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\readme.htm">
       <Link>SqlServerTypes\readme.htm</Link>
     </Content>
@@ -74,7 +80,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT'">
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' And '$(TargetFramework)' == 'net452'">
       if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
       xcopy /s /y "$(NuGetPackageRoot)Microsoft.SqlServer.Compact\$(MicrosoftSqlServerCompactVersion)\NativeBinaries\x86\*.*" "$(TargetDir)x86"
       if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"

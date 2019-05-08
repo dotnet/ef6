@@ -3,5 +3,5 @@
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
-[assembly: TestCaseOrderer("System.Data.Entity.TestHelpers.SimpleTestCaseOrderer", "EntityFramework.FunctionalTests.netcoreapp3.0")]
-[assembly: TestCollectionOrderer("System.Data.Entity.TestHelpers.SimpleTestCollectionOrderer", "EntityFramework.FunctionalTests.netcoreapp3.0")]
+[assembly: TestCaseOrderer("System.Data.Entity.TestHelpers.SimpleTestCaseOrderer", "EntityFramework.FunctionalTests.Transitional")]
+[assembly: TestCollectionOrderer("System.Data.Entity.TestHelpers.SimpleTestCollectionOrderer", "EntityFramework.FunctionalTests.Transitional")]
