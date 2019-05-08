@@ -22,6 +22,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class UpgradeScenarios : DbTestCase
     {
+        public UpgradeScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class IndexUpgradeContext_v1 : DbContext
         {
             public DbSet<Parent> Parents { get; set; }

@@ -400,7 +400,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.DoesNotThrow(() => entityConnection.Open());
+                entityConnection.Open();
             }
 
             [Fact]
@@ -1030,7 +1030,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.DoesNotThrow(() => entityConnection.OpenAsync().Wait());
+                entityConnection.OpenAsync().Wait();
             }
 
             [Fact]

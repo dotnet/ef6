@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Mapping
             var mappingItem = new AMappingItem();
 
             Assert.False(mappingItem.IsReadOnly);
-            Assert.DoesNotThrow(mappingItem.Modify);
+            mappingItem.Modify();
 
             mappingItem.SetReadOnly();
 

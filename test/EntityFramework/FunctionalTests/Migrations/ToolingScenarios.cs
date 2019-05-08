@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    public class ToolingScenarios : DbTestCase, IUseFixture<ToolingFixture>
+    public class ToolingScenarios : DbTestCase, IClassFixture<ToolingFixture>
     {
         private string _projectDir;
         private string _contextDir;
@@ -332,7 +332,8 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        public void SetFixture(ToolingFixture data)
+        public ToolingScenarios(DatabaseProviderFixture databaseProviderFixture, ToolingFixture data)
+            : base(databaseProviderFixture)
         {
             _projectDir = data.ProjectDir;
             _contextDir = data.ContextDir;

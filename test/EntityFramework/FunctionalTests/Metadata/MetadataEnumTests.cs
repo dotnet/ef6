@@ -16,7 +16,7 @@ namespace System.Data.Entity.Metadata
     using Xunit;
     using Xunit.Sdk;
 
-    public class MetadataEnumTests : FunctionalTestBase, IUseFixture<MetadataEnumFixture>
+    public class MetadataEnumTests : FunctionalTestBase, IClassFixture<MetadataEnumFixture>
     {
         private const string enumCsdl =
 @"<Schema xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"" Namespace=""EnumTestModel"">
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Metadata
 
         private XmlSchemaSet csdlSchemaSet;
 
-        public void SetFixture(MetadataEnumFixture data)
+        public MetadataEnumTests(MetadataEnumFixture data)
         {
             csdlSchemaSet = data.CsdlSchemaSet;
         }
@@ -410,7 +410,7 @@ namespace System.Data.Entity.Metadata
                 {
                     new EdmItemCollection(new XmlReader[] { enumCSDL.CreateReader() });
 
-                    throw new AssertException("Expecting exception to be thrown during EdmItemCollection construction.");
+                    throw new XunitException("Expecting exception to be thrown during EdmItemCollection construction.");
                 }
                 catch (MetadataException ex)
                 {

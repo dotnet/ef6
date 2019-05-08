@@ -10,6 +10,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SeedingScenarios : DbTestCase
     {
+        public SeedingScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class SeedingMigrationsConfiguration : DbMigrationsConfiguration<ShopContext_v1>
         {
             public SeedingMigrationsConfiguration()

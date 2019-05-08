@@ -1019,18 +1019,18 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
 
             [Fact]
-            public void Dispatch_method_checks_for_nulls()
+            public async Task Dispatch_method_checks_for_nulls()
             {
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().NonQueryAsync(null, new DbCommandInterceptionContext(), CancellationToken.None))
+                    (await Assert.ThrowsAsync<ArgumentNullException>(
+                        () => new DbCommandDispatcher().NonQueryAsync(null, new DbCommandInterceptionContext(), CancellationToken.None)))
                           .ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().NonQueryAsync(new Mock<DbCommand>().Object, null, CancellationToken.None)).ParamName);
+                    (await Assert.ThrowsAsync<ArgumentNullException>(
+                        () => new DbCommandDispatcher().NonQueryAsync(new Mock<DbCommand>().Object, null, CancellationToken.None))).ParamName);
             }
 
             [Fact] // CodePlex 1140
@@ -1308,18 +1308,18 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
 
             [Fact]
-            public void Dispatch_method_checks_for_nulls()
+            public async Task Dispatch_method_checks_for_nulls()
             {
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().ScalarAsync(null, new DbCommandInterceptionContext(), CancellationToken.None))
+                    (await Assert.ThrowsAsync<ArgumentNullException>(
+                        () => new DbCommandDispatcher().ScalarAsync(null, new DbCommandInterceptionContext(), CancellationToken.None)))
                           .ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().ScalarAsync(new Mock<DbCommand>().Object, null, CancellationToken.None)).ParamName);
+                    (await Assert.ThrowsAsync<ArgumentNullException>(
+                        () => new DbCommandDispatcher().ScalarAsync(new Mock<DbCommand>().Object, null, CancellationToken.None))).ParamName);
             }
 
             [Fact] // CodePlex 1140
@@ -1645,21 +1645,21 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
 
             [Fact]
-            public void Dispatch_method_checks_for_nulls()
+            public async Task Dispatch_method_checks_for_nulls()
             {
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(
+                    (await Assert.ThrowsAsync<ArgumentNullException>(
                         () =>
                         new DbCommandDispatcher().ReaderAsync(
-                            null, new DbCommandInterceptionContext(), CancellationToken.None)).ParamName);
+                            null, new DbCommandInterceptionContext(), CancellationToken.None))).ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(
+                    (await Assert.ThrowsAsync<ArgumentNullException>(
                         () =>
                         new DbCommandDispatcher().ReaderAsync(
-                            new Mock<DbCommand>().Object, null, CancellationToken.None)).ParamName);
+                            new Mock<DbCommand>().Object, null, CancellationToken.None))).ParamName);
             }
 
             [Fact] // CodePlex 1140

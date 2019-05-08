@@ -11,6 +11,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class DefaultValueScenarios : DbTestCase
     {
+        public DefaultValueScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class ColumnClashMigration : DbMigration
         {
             public override void Up()

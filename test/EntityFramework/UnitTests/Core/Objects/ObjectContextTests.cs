@@ -3103,7 +3103,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
-            public void Throws_on_streaming_with_retrying_strategy()
+            public async Task Throws_on_streaming_with_retrying_strategy()
             {
                 var objectContext = CreateObjectContext(new Mock<DbCommand>().Object);
 
@@ -3115,11 +3115,11 @@ namespace System.Data.Entity.Core.Objects
                 {
                     Assert.Equal(
                         Strings.ExecutionStrategy_StreamingNotSupported(executionStrategyMock.Object.GetType().Name),
-                        Assert.Throws<InvalidOperationException>(
+                        (await Assert.ThrowsAsync<InvalidOperationException>(
                             () =>
                             objectContext.ExecuteStoreQueryAsync<object>(
                                 "{0} Foo",
-                                new ExecutionOptions(MergeOption.AppendOnly, streaming: true))).Message);
+                                new ExecutionOptions(MergeOption.AppendOnly, streaming: true)))).Message);
                 }
                 finally
                 {

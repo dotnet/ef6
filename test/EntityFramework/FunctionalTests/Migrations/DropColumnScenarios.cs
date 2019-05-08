@@ -9,6 +9,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class DropColumnScenarios : DbTestCase
     {
+        public DropColumnScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class DropColumnMigration : DbMigration
         {
             public override void Up()

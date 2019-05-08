@@ -369,7 +369,7 @@ order by o.Id desc skip @pInt16 LIMIT 5";
             }
         }
 
-        public class SkipLimit : FunctionalTestBase, IUseFixture<SkipLimitFixture>
+        public class SkipLimit : FunctionalTestBase, IClassFixture<SkipLimitFixture>
         {
             private string _basic_skip_limit_expectedSql;
             private string _skip_limit_group_by_expectedSql;
@@ -852,7 +852,7 @@ ORDER BY i SKIP 2 LIMIT 4";
                 }
             }
 
-            public void SetFixture(SkipLimitFixture data)
+            public SkipLimit(SkipLimitFixture data)
             {
                 _basic_skip_limit_expectedSql = data.Basic_skip_limit_expectedSql;
                 _skip_limit_group_by_expectedSql = data.Skip_limit_group_by_expectedSql;

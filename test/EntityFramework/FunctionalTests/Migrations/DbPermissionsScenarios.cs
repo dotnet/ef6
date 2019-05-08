@@ -10,6 +10,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class DbPermissionsScenarios : DbTestCase
     {
+        public DbPermissionsScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void GetDatabaseMigrations_when_not_permissioned()
         {

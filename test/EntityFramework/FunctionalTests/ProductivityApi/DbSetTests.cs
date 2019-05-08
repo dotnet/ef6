@@ -18,7 +18,6 @@ namespace ProductivityApiTests
     using ConcurrencyModel;
     using SimpleModel;
     using Xunit;
-    using Xunit.Extensions;
     using Building = AdvancedPatternsModel.Building;
     using FantasyModel = System.Data.Entity.TestModels.FantasyModel;
 
@@ -3639,7 +3638,7 @@ namespace ProductivityApiTests
 
                                 context.Provinces.RemoveRange(provinces);
 
-                                Assert.DoesNotThrow(() => context.SaveChanges());
+                                context.SaveChanges();
 
                                 Assert.Equal(provinceCount, context.Provinces.Count());
                                 Assert.Equal(cityCount, context.Cities.Count());

@@ -16,6 +16,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class CreateTableScenarios : DbTestCase
     {
+        public CreateTableScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class CreateOobTableFkMigration : DbMigration
         {
             public override void Up()

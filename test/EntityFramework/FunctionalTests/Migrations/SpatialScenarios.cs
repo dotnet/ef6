@@ -13,6 +13,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SpatialScenarios : DbTestCase
     {
+        public SpatialScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class AlterSpatialColumnWithDefaultMigration : DbMigration
         {
             public override void Up()

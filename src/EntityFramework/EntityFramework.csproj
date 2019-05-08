@@ -54,6 +54,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Core\EntityClient\EntityCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Core\EntityClient\EntityConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Internal\InterceptableDbCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
