@@ -12,6 +12,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SchemaScenarios : DbTestCase
     {
+        public SchemaScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class CustomSchemaContext_v1 : ShopContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)

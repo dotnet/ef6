@@ -16,7 +16,6 @@
     <MoqVersion>4.0.10827</MoqVersion>
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
     <VSLangProjVersion>7.0.3301</VSLangProjVersion>
-    <XunitExtensionsVersion>1.9.2</XunitExtensionsVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
     <MicrosoftCSharpVersion>4.6.0-preview6.19256.1</MicrosoftCSharpVersion>

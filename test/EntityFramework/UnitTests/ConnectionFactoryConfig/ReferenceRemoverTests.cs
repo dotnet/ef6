@@ -43,7 +43,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             var mockProject = new Mock<Project>();
             mockProject.Setup(m => m.Object).Returns(mockNonVsProject.Object);
 
-            Assert.DoesNotThrow(() => new ReferenceRemover(mockProject.Object).TryRemoveReference("Unicorns.Rule", "PK1"));
+            new ReferenceRemover(mockProject.Object).TryRemoveReference("Unicorns.Rule", "PK1");
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                     new Random()
                 };
 
-            Assert.DoesNotThrow(() => new ReferenceRemover(CreateMockProject(references).Object).TryRemoveReference("Unicorns.Rule", "PK1"));
+            new ReferenceRemover(CreateMockProject(references).Object).TryRemoveReference("Unicorns.Rule", "PK1");
         }
 
         [Fact]

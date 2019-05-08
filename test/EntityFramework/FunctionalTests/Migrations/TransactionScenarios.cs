@@ -11,6 +11,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class TransactionScenarios : DbTestCase
     {
+        public TransactionScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class MigrationWithError : DbMigration
         {
             public override void Up()
@@ -48,6 +53,11 @@ namespace System.Data.Entity.Migrations
 
     public class SqlClientTransactionScenarios : DbTestCase
     {
+        public SqlClientTransactionScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class MigrationWithNonTransactionalSql : DbMigration
         {
             public override void Up()

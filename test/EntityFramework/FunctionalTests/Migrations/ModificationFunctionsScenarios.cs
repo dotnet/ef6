@@ -9,6 +9,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class ModificationFunctionsScenarios : DbTestCase
     {
+        public ModificationFunctionsScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void Auto_migration_when_functions_and_model_not_current_should_throw()
         {

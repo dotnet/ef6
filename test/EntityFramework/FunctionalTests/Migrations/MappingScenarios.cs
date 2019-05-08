@@ -7,6 +7,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class MappingScenarios : DbTestCase
     {
+        public MappingScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class WeirdNamesContext : DbContext
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)

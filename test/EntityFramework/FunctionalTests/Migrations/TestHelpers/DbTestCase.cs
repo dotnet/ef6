@@ -41,7 +41,7 @@ namespace System.Data.Entity.Migrations
     {
     }
 
-    public abstract class DbTestCase : TestBase, IUseFixture<DatabaseProviderFixture>
+    public abstract class DbTestCase : TestBase, IClassFixture<DatabaseProviderFixture>
     {
         private DatabaseProviderFixture _databaseProviderFixture;
 
@@ -325,7 +325,7 @@ namespace System.Data.Entity.Migrations
             get { return TestDatabase.Info; }
         }
 
-        public void SetFixture(DatabaseProviderFixture databaseProviderFixture)
+        public DbTestCase(DatabaseProviderFixture databaseProviderFixture)
         {
             _databaseProviderFixture = databaseProviderFixture;
         }

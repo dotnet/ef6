@@ -9,6 +9,11 @@ namespace System.Data.Entity.Migrations
 
     public class CrossDatabaseScenarios : DbTestCase
     {
+        public CrossDatabaseScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class CrossProviderContext_v1 : DbContext
         {
             public DbSet<MigrationsCustomer> Customers { get; set; }

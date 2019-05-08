@@ -17,6 +17,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class AddColumnScenarios : DbTestCase
     {
+        public AddColumnScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class AddColumnMigration : DbMigration
         {
             public override void Up()

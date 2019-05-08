@@ -15,6 +15,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class AlterTableAnnotationsScenarios : DbTestCase
     {
+        public AlterTableAnnotationsScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class CreateTableWithAllAnnotationMigration : DbMigration
         {
             public override void Up()

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
@@ -19,16 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SqlServer.Types" Version="$(MicrosoftSqlServerTypesVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\SqlServerTypes\Loader.cs">
-      <Link>SqlServerTypes\Loader.cs</Link>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -330,6 +320,12 @@
     </Compile>
     <Compile Update="TestModels\TemplateModels\CsMonsterModel\SuspiciousActivityMm.cs">
       <DependentUpon>CsMonsterModel.tt</DependentUpon>
+    </Compile>
+    <Compile Update="WrappingProvider\WrappingCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="WrappingProvider\WrappingConnection.cs">
+      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
 

@@ -902,7 +902,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             }
 
             [Fact]
-            public void Async_Dispatch_is_aborted_if_Executing_interceptor_throws_exception()
+            public async Task Async_Dispatch_is_aborted_if_Executing_interceptor_throws_exception()
             {
                 var interceptionContext = new DbCommandInterceptionContext<string>().AsAsync();
                 var mockInterceptors = CreateMockInterceptors(
@@ -916,14 +916,14 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 Assert.Equal(
                     "Ba-da-bing!",
-                    Assert.Throws<Exception>(
+                    (await Assert.ThrowsAsync<Exception>(
                         () => dispatcher.DispatchAsync(
                             new object(),
                             (t, c, tc) => operation,
                             interceptionContext,
                             (i, t, c) => i.CallMeFirst(c),
                             (i, t, c) => i.CallMe(c),
-                            CancellationToken.None)).Message);
+                            CancellationToken.None))).Message);
 
                 mockInterceptors.First().Verify(m => m.CallMeFirst(interceptionContext), Times.Once());
                 mockInterceptors.Skip(1).Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Never()));

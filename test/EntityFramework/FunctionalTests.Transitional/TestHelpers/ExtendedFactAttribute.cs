@@ -7,8 +7,10 @@ namespace System.Data.Entity
     using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
+    using Xunit.Abstractions;
     using Xunit.Sdk;
 
+    [XunitTestCaseDiscoverer("System.Data.Entity.ExtendedFactDiscoverer", "EntityFramework.FunctionalTests.Transitional")]
     public class ExtendedFactAttribute : FactAttribute
     {
         public TestGroup SlowGroup { get; set; }
@@ -18,15 +20,26 @@ namespace System.Data.Entity
         public bool SkipForLocalDb { get; set; }
 
         public string Justification { get; set; }
+    }
 
-        protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
+    public class ExtendedFactDiscoverer : FactDiscoverer
+    {
+        public ExtendedFactDiscoverer(IMessageSink diagnosticMessageSink)
+            : base(diagnosticMessageSink)
         {
-            return ShouldRun(SlowGroup)
-                ? base.EnumerateTestCommands(method)
-                : Enumerable.Empty<ITestCommand>();
         }
 
-        protected bool ShouldRun(TestGroup testGroup)
+        public override IEnumerable<IXunitTestCase> Discover(
+            ITestFrameworkDiscoveryOptions discoveryOptions,
+            ITestMethod testMethod,
+            IAttributeInfo factAttribute)
+        {
+            return ShouldRun(factAttribute, factAttribute.GetNamedArgument<TestGroup>(nameof(ExtendedFactAttribute.SlowGroup)))
+                ? base.Discover(discoveryOptions, testMethod, factAttribute)
+                : Enumerable.Empty<IXunitTestCase>();
+        }
+
+        protected bool ShouldRun(IAttributeInfo factAttribute, TestGroup testGroup)
         {
 #if SkipMigrationsTests
             if (testGroup == TestGroup.MigrationsTests)
@@ -42,7 +55,7 @@ namespace System.Data.Entity
             }
 #endif
 
-            if (SkipForSqlAzure)
+            if (factAttribute.GetNamedArgument<bool>(nameof(ExtendedFactAttribute.SkipForSqlAzure)))
             {
                 var connectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
                 if (DatabaseTestHelpers.IsSqlAzure(connectionString))
@@ -51,7 +64,7 @@ namespace System.Data.Entity
                 }
             }
 
-            if (SkipForLocalDb)
+            if (factAttribute.GetNamedArgument<bool>(nameof(ExtendedFactAttribute.SkipForLocalDb)))
             {
                 var connectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
                 if (DatabaseTestHelpers.IsLocalDb(connectionString))

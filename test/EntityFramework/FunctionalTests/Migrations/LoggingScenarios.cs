@@ -8,6 +8,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class LoggingScenarios : DbTestCase
     {
+        public LoggingScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class WarningMigration : DbMigration
         {
             public override void Up()

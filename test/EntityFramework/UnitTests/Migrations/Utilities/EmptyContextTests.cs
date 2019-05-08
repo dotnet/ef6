@@ -14,6 +14,11 @@ namespace System.Data.Entity.Migrations.Utilities
         private static readonly XNamespace _csdlNamespace
             = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm");
 
+        public EmptyContextTests(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void Can_get_empty_model()
         {

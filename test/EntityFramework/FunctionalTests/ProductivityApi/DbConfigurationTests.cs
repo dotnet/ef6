@@ -32,7 +32,7 @@ namespace ProductivityApiTests
 
             Assert.Equal(
                 new[] { "Hook1()", "Hook1(2013, 'December 31')", "Hook2()", "Hook2('January 1', 2014)", "Hook2()", "Hook1(4102, '1 yraunaJ')", "Hook1()" },
-                TestLoadedInterceptor.HooksRun.ToArray().Reverse());
+                TestLoadedInterceptor.HooksRun.Reverse().ToArray());
         }
 
         public class TestLoadedInterceptor2 : IDbConfigurationInterceptor

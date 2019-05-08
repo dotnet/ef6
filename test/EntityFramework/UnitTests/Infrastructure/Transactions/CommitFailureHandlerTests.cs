@@ -403,7 +403,7 @@ namespace System.Data.Entity.Infrastructure
 
                 var interceptionContext = new BeginTransactionInterceptionContext().WithObjectContext(context);
 
-                Assert.DoesNotThrow(() => handler.BeganTransaction(new Mock<DbConnection>().Object, interceptionContext));
+                handler.BeganTransaction(new Mock<DbConnection>().Object, interceptionContext);
             }
         }
 

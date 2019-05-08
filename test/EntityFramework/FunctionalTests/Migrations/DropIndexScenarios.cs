@@ -7,6 +7,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class DropIndexScenarios : DbTestCase
     {
+        public DropIndexScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class DropSimpleIndexMigration : DbMigration
         {
             public override void Up()

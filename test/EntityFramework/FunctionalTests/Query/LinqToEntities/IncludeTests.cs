@@ -271,8 +271,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 {
                     using (var context = new Context(new ObjectContext(connection), true))
                     {
-                        Assert.DoesNotThrow(
-                            () => context.Dependents.Include(d => d.Principal).ToString());
+                        context.Dependents.Include(d => d.Principal).ToString();
                     }
                 }
             }

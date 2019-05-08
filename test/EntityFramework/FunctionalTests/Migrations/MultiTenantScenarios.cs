@@ -12,6 +12,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class MultiTenantScenarios : DbTestCase
     {
+        public MultiTenantScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class TenantA
         {
             public int Id { get; set; }

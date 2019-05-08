@@ -6,6 +6,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class CreateStoredProcedureScenarios : DbTestCase
     {
+        public CreateStoredProcedureScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class NonEdmElementsProcedureMigration : DbMigration
         {
             public override void Up()

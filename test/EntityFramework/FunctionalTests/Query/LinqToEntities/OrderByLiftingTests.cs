@@ -8,7 +8,7 @@ namespace System.Data.Entity.Query.LinqToEntities
     using Xunit;
     using System.Data.Entity.TestHelpers;
 
-    public class OrderByLiftingTests : FunctionalTestBase, IUseFixture<OrderByLiftingFixture>
+    public class OrderByLiftingTests : FunctionalTestBase, IClassFixture<OrderByLiftingFixture>
     {
         private string _orderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics_expectedSql;
         private string _orderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics_expectedSql;
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        public void SetFixture(OrderByLiftingFixture data)
+        public OrderByLiftingTests(OrderByLiftingFixture data)
         {
             _orderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics_expectedSql = data.OrderBy_ThenBy_Skip_lifted_above_filter_with_clr_null_semantics_expectedSql;
             _orderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics_expectedSql = data.OrderBy_ThenBy_Skip_lifted_above_filter_without_clr_null_semantics_expectedSql;

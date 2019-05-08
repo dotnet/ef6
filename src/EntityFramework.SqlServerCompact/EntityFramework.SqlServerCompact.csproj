@@ -60,6 +60,9 @@
       <SubType>Code</SubType>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="SqlCeMultiCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

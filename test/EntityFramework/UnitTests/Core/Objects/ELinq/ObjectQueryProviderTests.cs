@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
+    using System.Threading.Tasks;
     using Moq;
     using Xunit;
 
@@ -72,16 +73,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
 #if !NET40
 
         [Fact]
-        public void ExecuteAsync_nongeneric_throws_for_null_argument()
+        public Task ExecuteAsync_nongeneric_throws_for_null_argument()
         {
-            Assert.Throws<ArgumentNullException>(
+            return Assert.ThrowsAsync<ArgumentNullException>(
                 () => ((IDbAsyncQueryProvider)CreateObjectQueryProviderMock().Object).ExecuteAsync(null, CancellationToken.None));
         }
 
         [Fact]
-        public void ExecuteAsync_generic_throws_for_null_argument()
+        public Task ExecuteAsync_generic_throws_for_null_argument()
         {
-            Assert.Throws<ArgumentNullException>(
+            return Assert.ThrowsAsync<ArgumentNullException>(
                 () => ((IDbAsyncQueryProvider)CreateObjectQueryProviderMock().Object).ExecuteAsync<object>(null, CancellationToken.None));
         }
 

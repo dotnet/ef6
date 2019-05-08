@@ -9,6 +9,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class CreateIndexScenarios : DbTestCase
     {
+        public CreateIndexScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class CreateSimpleIndexMigration : DbMigration
         {
             public override void Up()

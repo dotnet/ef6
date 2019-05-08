@@ -25,6 +25,11 @@ namespace System.Data.Entity.Migrations.History
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class HistoryRepositoryTests : DbTestCase
     {
+        public HistoryRepositoryTests(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [Fact]
         public void Members_are_found_by_Reflection()
         {

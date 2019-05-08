@@ -10,6 +10,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class AddPrimaryKeyScenarios : DbTestCase
     {
+        public AddPrimaryKeyScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class AddPrimaryKeyMigration : DbMigration
         {
             public override void Up()

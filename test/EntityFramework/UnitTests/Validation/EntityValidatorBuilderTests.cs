@@ -355,7 +355,7 @@ namespace System.Data.Entity.Validation
             builder.Protected()
                 .Setup<PropertyValidator>(
                     "BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmProperty>(), ItExpr.IsAny<bool>())
-                .Throws<AssertException>();
+                .Throws<XunitException>();
 
             object entity = new EntityWithComplexType();
             using (var ctx = new SelfPopulatingContext(entity))
@@ -375,7 +375,7 @@ namespace System.Data.Entity.Validation
             var builder = MockHelper.CreateMockEntityValidatorBuilder();
             builder.Protected()
                 .Setup<PropertyValidator>("BuildPropertyValidator", ItExpr.IsAny<PropertyInfo>())
-                .Throws<AssertException>();
+                .Throws<XunitException>();
 
             builder.Protected()
                 .Setup<PropertyValidator>(
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Validation
             builder.Protected()
                 .Setup<IEnumerable<IValidator>>(
                     "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Throws<AssertException>();
+                .Throws<XunitException>();
 
             Assert.Null(builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetDeclaredProperty("ID")));
         }
@@ -632,7 +632,7 @@ namespace System.Data.Entity.Validation
             builder.Protected()
                 .Setup<IEnumerable<IValidator>>(
                     "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
-                .Throws<AssertException>();
+                .Throws<XunitException>();
 
             var validator = builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetDeclaredProperty("ID"));
 

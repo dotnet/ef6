@@ -20,6 +20,11 @@ namespace System.Data.Entity.Migrations
         private SqlInterceptor _downVerifier;
         private ScaffoldedMigration _generatedMigration_v1;
 
+        public AutoAndGenerateTestCase(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         protected bool UpDataLoss { get; set; }
         protected bool IsDownDataLoss { get; set; }
         protected bool IsDownNotSupported { get; set; }

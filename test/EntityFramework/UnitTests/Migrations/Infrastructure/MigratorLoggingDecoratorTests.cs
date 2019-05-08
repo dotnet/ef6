@@ -13,6 +13,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class MigratorLoggingDecoratorTests : DbTestCase
     {
+        public MigratorLoggingDecoratorTests(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
