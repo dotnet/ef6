@@ -5,6 +5,10 @@ variables:
     value: AspNetCore
   - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
     value: true
+  - name: _PublishUsingPipelines
+    value: true
+  - name: _DotNetArtifactsCategory
+    value: ASPNETENTITYFRAMEWORK6
 
 trigger:
   - master
@@ -19,6 +23,7 @@ jobs:
       enablePublishBuildArtifacts: true
       enablePublishBuildAssets: true
       enablePublishTestResults: true
+      enablePublishUsingPipelines: $(_PublishUsingPipelines)
       enableTelemetry: true
       helixRepo: aspnet/EntityFramework6
       jobs:
@@ -38,7 +43,14 @@ jobs:
               - _SignType: real
               - _PublishBlobFeedUrl: https://dotnetfeed.blob.core.windows.net/aspnet-entityframework6/index.json
               - _DotNetPublishToBlobFeed: true
-              - _InternalBuildArgs: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName) /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1) /p:DotNetPublishBlobFeedUrl=$(_PublishBlobFeedUrl) /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed) /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+              - _InternalBuildArgs: /p:DotNetSignType=$(_SignType)
+                                    /p:TeamName=$(_TeamName)
+                                    /p:DotNetPublishBlobFeedKey=$(dotnetfeed-storage-access-key-1)
+                                    /p:DotNetPublishBlobFeedUrl=$(_PublishBlobFeedUrl)
+                                    /p:DotNetPublishToBlobFeed=$(_DotNetPublishToBlobFeed)
+                                    /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+                                    /p:DotNetPublishUsingPipelines=$(_PublishUsingPipelines)
+                                    /p:DotNetArtifactsCategory=$(_DotNetArtifactsCategory)
           steps:
             - powershell: |
                 SqlLocalDB stop MSSQLLocalDB -i
