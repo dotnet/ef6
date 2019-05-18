@@ -18,11 +18,11 @@
     <VSLangProjVersion>7.0.3301</VSLangProjVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-preview6.19265.6</MicrosoftCSharpVersion>
-    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview6.19265.6</MicrosoftNETCorePlatformsPackageVersion>
-    <SystemCodeDomVersion>4.6.0-preview6.19265.6</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-preview6.19265.6</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview6.19265.6</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-preview6.19265.6</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>4.6.0-preview6.19266.12</MicrosoftCSharpVersion>
+    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview6.19266.12</MicrosoftNETCorePlatformsPackageVersion>
+    <SystemCodeDomVersion>4.6.0-preview6.19266.12</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-preview6.19266.12</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview6.19266.12</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-preview6.19266.12</SystemDataSqlClientVersion>
   </PropertyGroup>
 </Project>
