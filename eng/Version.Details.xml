@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.CSharp" Version="4.6.0-preview6.19266.12">
+    <Dependency Name="Microsoft.CSharp" Version="4.6.0-preview6.19267.12">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>6f9570e012054bf407778c0b07632e7733ecbb13</Sha>
+      <Sha>c671ce2be16ae3c6086a061d9d94b81005217735</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.0-preview6.19266.12">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.0-preview6.19267.12">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>6f9570e012054bf407778c0b07632e7733ecbb13</Sha>
+      <Sha>c671ce2be16ae3c6086a061d9d94b81005217735</Sha>
     </Dependency>
-    <Dependency Name="System.CodeDom" Version="4.6.0-preview6.19266.12">
+    <Dependency Name="System.CodeDom" Version="4.6.0-preview6.19267.12">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>6f9570e012054bf407778c0b07632e7733ecbb13</Sha>
+      <Sha>c671ce2be16ae3c6086a061d9d94b81005217735</Sha>
     </Dependency>
-    <Dependency Name="System.ComponentModel.Annotations" Version="4.6.0-preview6.19266.12">
+    <Dependency Name="System.ComponentModel.Annotations" Version="4.6.0-preview6.19267.12">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>6f9570e012054bf407778c0b07632e7733ecbb13</Sha>
+      <Sha>c671ce2be16ae3c6086a061d9d94b81005217735</Sha>
     </Dependency>
-    <Dependency Name="System.Configuration.ConfigurationManager" Version="4.6.0-preview6.19266.12">
+    <Dependency Name="System.Configuration.ConfigurationManager" Version="4.6.0-preview6.19267.12">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>6f9570e012054bf407778c0b07632e7733ecbb13</Sha>
+      <Sha>c671ce2be16ae3c6086a061d9d94b81005217735</Sha>
     </Dependency>
-    <Dependency Name="System.Data.SqlClient" Version="4.7.0-preview6.19266.12">
+    <Dependency Name="System.Data.SqlClient" Version="4.7.0-preview6.19267.12">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>6f9570e012054bf407778c0b07632e7733ecbb13</Sha>
+      <Sha>c671ce2be16ae3c6086a061d9d94b81005217735</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
