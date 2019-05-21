@@ -48,7 +48,11 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "dotnet/corefx#37849"
+#endif
+            )]
         public void Can_materialize_collection()
         {
             using (var context = new ProviderAgnosticContext())
@@ -62,7 +66,11 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "dotnet/corefx#37849"
+#endif
+            )]
         public void Can_materialize_collection_inside_anonymous_type()
         {
             using (var context = new ProviderAgnosticContext())
@@ -92,7 +100,11 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "dotnet/corefx#37849"
+#endif
+            )]
 	    public void Can_materialize_properties_into_non_mapped_type_with_nested_list()
 	    {
             using (var context = new ProviderAgnosticContext())
@@ -182,7 +194,11 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact] // CodePlex 1566
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "dotnet/corefx#37849"
+#endif
+            )] // CodePlex 1566
         public void Collection_instances_are_created_when_eager_loading_related_collections()
         {
             using (var context = new CollectionsContext())
