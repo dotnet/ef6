@@ -261,13 +261,13 @@ namespace System.Data.Entity.Query
         [SqlServer].[MyCustomFunc]([Extent1].[Name]) AS [C1]
         FROM [dbo].[Blogs] AS [Extent1]
     )  AS [Project1]
-    WHERE [Project1].[C1] > 10";
+    WHERE ([Project1].[Id] > 10) AND ([Project1].[C1] > 10)";
 
                 using (var context = new BlogContext())
                 {
                     context.Configuration.UseDatabaseNullSemantics = true;
 
-                    var query = context.Blogs.Select(b => new { b.Id, Len = CustomFunctions.MyCustomFunc(b.Name) }).Where(b => b.Len > 10);
+                    var query = context.Blogs.Select(b => new { b.Id, Len = CustomFunctions.MyCustomFunc(b.Name) }).Where(b => b.Id > 10 && b.Len > 10);
                     QueryableExtensions.TryGetObjectQuery(query).EnablePlanCaching = false;
                     QueryTestHelpers.VerifyDbQuery(query, expectedSql);
                 }

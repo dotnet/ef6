@@ -278,12 +278,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 var varRefOp = (VarRefOp)node.Op;
                 if (varMap.TryGetValue(varRefOp.Var, out var newNode))
                 {
-                    if (IncludeCustomFunctionOp(newNode, varMap))
-                    {
-                        return true;
-                    }
+                    return IncludeCustomFunctionOp(newNode, varMap);
                 }
             }
+
             if (node.Op.OpType == OpType.Function)
             {
                 var functionOp = node.Op as FunctionOp;
