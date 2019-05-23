@@ -248,8 +248,8 @@ namespace System.Data.Entity.Query
         [Fact]
         public void Rule_FilterOverProject_does_not_promote_to_single_Select_if_custom_function_and_does_opt_in()
         {
-            var oldValue = DbProviderServices.DisableFilterSimplificationForCustomFunctions;
-            DbProviderServices.DisableFilterSimplificationForCustomFunctions = true;
+            var oldValue = DbProviderServices.DisableFilterOverProjectionSimplificationForCustomFunctions;
+            DbProviderServices.DisableFilterOverProjectionSimplificationForCustomFunctions = true;
             try
             {
                 var expectedSql =
@@ -274,7 +274,7 @@ namespace System.Data.Entity.Query
             }
             finally
             {
-                DbProviderServices.DisableFilterSimplificationForCustomFunctions = oldValue;
+                DbProviderServices.DisableFilterOverProjectionSimplificationForCustomFunctions = oldValue;
             }
         }
 

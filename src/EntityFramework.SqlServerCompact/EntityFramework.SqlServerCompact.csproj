@@ -57,7 +57,6 @@
   <ItemGroup>
     <Compile Update="Properties\Resources.SqlServerCompact.cs">
       <DependentUpon>Resources.SqlServerCompact.tt</DependentUpon>
-      <SubType>Code</SubType>
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Update="SqlCeMultiCommand.cs">

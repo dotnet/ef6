@@ -868,11 +868,14 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        /// By default expression like .Select(x => NewProperty = func(x.Property)).Where(x => x.NewProperty == ...) are simplified to avoid nested SELECT
-        /// In some cases, simplifing query with UDFs could caused to suboptimal plans due to calling UDF twice. Also some SQL functions aren't allow in WHERE clause.
+        /// By default expression like 
+        /// .Select(x => NewProperty = func(x.Property)).Where(x => x.NewProperty == ...)
+        /// are simplified to avoid nested SELECT
+        /// In some cases, simplifing query with UDFs could caused to suboptimal plans due to calling UDF twice.
+        /// Also some SQL functions aren't allow in WHERE clause.
         /// Disabling that behavior
         /// </summary>
-        public static bool DisableFilterSimplificationForCustomFunctions
+        public static bool DisableFilterOverProjectionSimplificationForCustomFunctions
         {
             get { return _disableFilterSimplificationForCustomFunctions; }
             set { _disableFilterSimplificationForCustomFunctions = value; }

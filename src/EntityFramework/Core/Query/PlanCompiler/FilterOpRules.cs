@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             // check to see that this predicate doesn't reference user-defined functions 
-            if (DbProviderServices.DisableFilterSimplificationForCustomFunctions && trc.IncludeCustomFunctionOp(predicateNode, varMap))
+            if (DbProviderServices.DisableFilterOverProjectionSimplificationForCustomFunctions && trc.IncludeCustomFunctionOp(predicateNode, varMap))
             {
                 return false;
             }
