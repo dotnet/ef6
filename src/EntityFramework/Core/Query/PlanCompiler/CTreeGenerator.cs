@@ -370,7 +370,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // Create the query command tree using database null semantics because this class is only
             // used during the CodeGen phase which occurs after the NullSemantics phase of plan compiler.
             _queryTree = DbQueryCommandTree.FromValidExpression(
-                itree.MetadataWorkspace, DataSpace.SSpace, queryExpression, useDatabaseNullSemantics: true);
+                itree.MetadataWorkspace, DataSpace.SSpace, queryExpression, useDatabaseNullSemantics: true, disableFilterOverProjectionSimplificationForCustomFunctions: false);
         }
 
         #endregion

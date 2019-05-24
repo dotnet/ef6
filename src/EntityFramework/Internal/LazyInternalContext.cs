@@ -463,6 +463,7 @@ namespace System.Data.Entity.Internal
                     _objectContext.ContextOptions.LazyLoadingEnabled = _initialLazyLoadingFlag;
                     _objectContext.ContextOptions.ProxyCreationEnabled = _initialProxyCreationFlag;
                     _objectContext.ContextOptions.UseCSharpNullComparisonBehavior = !_useDatabaseNullSemanticsFlag;
+                    _objectContext.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions = _disableFilterOverProjectionSimplificationForCustomFunctions;
                     _objectContext.CommandTimeout = _commandTimeout;
 
                     _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = true;
@@ -800,6 +801,31 @@ namespace System.Data.Entity.Internal
                 else
                 {
                     _useDatabaseNullSemanticsFlag = value;
+                }
+            }
+        }
+
+        private bool _disableFilterOverProjectionSimplificationForCustomFunctions;
+
+        public override bool DisableFilterOverProjectionSimplificationForCustomFunctions
+        {
+            get
+            {
+                var objectContext = ObjectContextInUse;
+                return objectContext != null
+                           ? !objectContext.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions
+                           : _disableFilterOverProjectionSimplificationForCustomFunctions;
+            }
+            set
+            {
+                var objectContext = ObjectContextInUse;
+                if (objectContext != null)
+                {
+                    objectContext.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions = !value;
+                }
+                else
+                {
+                    _disableFilterOverProjectionSimplificationForCustomFunctions = value;
                 }
             }
         }

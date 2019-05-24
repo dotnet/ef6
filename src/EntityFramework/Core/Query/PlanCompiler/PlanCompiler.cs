@@ -181,6 +181,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
+        internal bool DisableFilterOverProjectionSimplificationForCustomFunctions
+        {
+            get { return m_ctree.DisableFilterOverProjectionSimplificationForCustomFunctions; }
+        }
+
 #if DEBUG
         /// <summary>
         /// Get the current plan compiler phase

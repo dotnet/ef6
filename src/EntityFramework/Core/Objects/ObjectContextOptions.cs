@@ -62,5 +62,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <returns>true if the C# NullComparison behavior should be used; otherwise, false.</returns>
         public bool UseCSharpNullComparisonBehavior { get; set; }
+
+        public bool DisableFilterOverProjectionSimplificationForCustomFunctions { get; set; }
     }
 }

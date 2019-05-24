@@ -271,6 +271,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns></returns>
         internal bool IncludeCustomFunctionOp(Node node, Dictionary<Var, Node> varMap)
         {
+            if (!m_compilerState.DisableFilterOverProjectionSimplificationForCustomFunctions)
+            {
+                return false;
+            }
+
             PlanCompiler.Assert(varMap != null, "Null varRef map");
 
             if (node.Op.OpType == OpType.VarRef)

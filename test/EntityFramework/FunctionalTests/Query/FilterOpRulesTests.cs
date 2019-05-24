@@ -248,12 +248,8 @@ namespace System.Data.Entity.Query
         [Fact]
         public void Rule_FilterOverProject_does_not_promote_to_single_Select_if_custom_function_and_does_opt_in()
         {
-            var oldValue = DbProviderServices.DisableFilterOverProjectionSimplificationForCustomFunctions;
-            DbProviderServices.DisableFilterOverProjectionSimplificationForCustomFunctions = true;
-            try
-            {
-                var expectedSql =
-    @"SELECT 
+            var expectedSql =
+@"SELECT 
     [Project1].[Id] AS [Id], 
     [Project1].[C1] AS [C1]
     FROM ( SELECT 
@@ -263,18 +259,13 @@ namespace System.Data.Entity.Query
     )  AS [Project1]
     WHERE ([Project1].[Id] > 10) AND ([Project1].[C1] > 10)";
 
-                using (var context = new BlogContext())
-                {
-                    context.Configuration.UseDatabaseNullSemantics = true;
-
-                    var query = context.Blogs.Select(b => new { b.Id, Len = CustomFunctions.MyCustomFunc(b.Name) }).Where(b => b.Id > 10 && b.Len > 10);
-                    QueryableExtensions.TryGetObjectQuery(query).EnablePlanCaching = false;
-                    QueryTestHelpers.VerifyDbQuery(query, expectedSql);
-                }
-            }
-            finally
+            using (var context = new BlogContext())
             {
-                DbProviderServices.DisableFilterOverProjectionSimplificationForCustomFunctions = oldValue;
+                context.Configuration.UseDatabaseNullSemantics = true;
+                context.Configuration.DisableFilterOverProjectionSimplificationForCustomFunctions = true;
+
+                var query = context.Blogs.Select(b => new { b.Id, Len = CustomFunctions.MyCustomFunc(b.Name) }).Where(b => b.Id > 10 && b.Len > 10);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
 
@@ -292,9 +283,9 @@ namespace System.Data.Entity.Query
             using (var context = new BlogContext())
             {
                 context.Configuration.UseDatabaseNullSemantics = true;
+                context.Configuration.DisableFilterOverProjectionSimplificationForCustomFunctions = false; // false is default, but using explicit valueto make it obvious
 
                 var query = context.Blogs.Select(b => new { b.Id, Len = CustomFunctions.MyCustomFunc(b.Name) }).Where(b => b.Len > 10);
-                QueryableExtensions.TryGetObjectQuery(query).EnablePlanCaching = false;
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
