@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Core.Metadata.Edm;
@@ -109,3 +111,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

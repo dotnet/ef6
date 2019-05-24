@@ -9,11 +9,7 @@ namespace System.Data.Entity.Query.LinqToEntities
 
     public class IncludeTests
     {
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_on_one_to_many_relationship()
         {
             using (var context = new ProviderAgnosticContext())
@@ -33,11 +29,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_on_many_to_many_relationship()
         {
             using (var context = new ProviderAgnosticContext())
@@ -69,11 +61,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Multiple_includes()
         {
             using (var context = new ProviderAgnosticContext())
@@ -97,11 +85,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_with_string_overload()
         {
             using (var context = new ProviderAgnosticContext())
@@ -144,11 +128,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_propagation_over_type_filter()
         {
             using (var context = new ProviderAgnosticContext())
@@ -160,11 +140,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_propagation_over_first()
         {
             using (var context = new ProviderAgnosticContext())
@@ -176,11 +152,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_propagation_over_first_with_predicate()
         {
             using (var context = new ProviderAgnosticContext())
@@ -192,11 +164,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_propagation_over_first_or_default()
         {
             using (var context = new ProviderAgnosticContext())
@@ -208,11 +176,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_propagation_over_first_or_default_with_predicate()
         {
             using (var context = new ProviderAgnosticContext())
@@ -224,11 +188,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_from_concat_combined()
         {
             using (var context = new ProviderAgnosticContext())
@@ -241,11 +201,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Include_from_union_combined()
         {
             using (var context = new ProviderAgnosticContext())

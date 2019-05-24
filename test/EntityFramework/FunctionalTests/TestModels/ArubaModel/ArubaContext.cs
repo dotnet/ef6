@@ -79,6 +79,15 @@ namespace System.Data.Entity.TestModels.ArubaModel
                 });
 
             modelBuilder.Entity<ArubaOwner>().Property(o => o.FirstName).HasMaxLength(30);
+
+#if NETCOREAPP3_0
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c31_geography);
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c32_geometry);
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c36_geometry_linestring);
+            modelBuilder.Entity<ArubaAllTypes>().Ignore(x => x.c37_geometry_polygon);
+            modelBuilder.Entity<ArubaMachineConfig>().Ignore(x => x.Location);
+            modelBuilder.Entity<ArubaRun>().Ignore(x => x.Geometry);
+#endif
         }
     }
 }

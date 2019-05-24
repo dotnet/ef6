@@ -3,27 +3,20 @@
 namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
     /// <summary>
     /// Property constraint exception class. Note that this class has state - so if you change even
     /// its internals, it can be a breaking change
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "SerializeObjectState used instead")]
     [Serializable]
     public sealed class PropertyConstraintException : ConstraintException
     {
-        [NonSerialized]
-        private PropertyConstraintExceptionState _state;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with default message.
         /// </summary>
         public PropertyConstraintException() // required ctor
         {
-            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -33,7 +26,6 @@ namespace System.Data.Entity.Core
         public PropertyConstraintException(string message) // required ctor
             : base(message)
         {
-            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -44,7 +36,6 @@ namespace System.Data.Entity.Core
         public PropertyConstraintException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {
-            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -56,9 +47,7 @@ namespace System.Data.Entity.Core
             : base(message)
         {
             Check.NotEmpty(propertyName, "propertyName");
-            _state.PropertyName = propertyName;
-
-            SubscribeToSerializeObjectState();
+            PropertyName = propertyName;
         }
 
         /// <summary>
@@ -71,35 +60,29 @@ namespace System.Data.Entity.Core
             : base(message, innerException)
         {
             Check.NotEmpty(propertyName, "propertyName");
-            _state.PropertyName = propertyName;
+            PropertyName = propertyName;
+        }
 
-            SubscribeToSerializeObjectState();
+        private PropertyConstraintException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            PropertyName = info.GetString("PropertyName");
         }
 
         /// <summary>Gets the name of the property that violated the constraint.</summary>
         /// <returns>The name of the property that violated the constraint.</returns>
-        public string PropertyName
-        {
-            get { return _state.PropertyName; }
-        }
+        public string PropertyName { get; }
 
-        private void SubscribeToSerializeObjectState()
+        /// <summary>
+        /// Sets the <see cref="SerializationInfo" /> with information about the exception.
+        /// </summary>
+        /// <param name="info"> The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown. </param>
+        /// <param name="context"> The <see cref="StreamingContext" /> that contains contextual information about the source or destination. </param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            SerializeObjectState += (_, a) => a.AddSerializedState(_state);
-        }
+            base.GetObjectData(info, context);
 
-        [Serializable]
-        private struct PropertyConstraintExceptionState : ISafeSerializationData
-        {
-            public string PropertyName { get; set; }
-
-            public void CompleteDeserialization(object deserialized)
-            {
-                var propertyConstraintException = (PropertyConstraintException)deserialized;
-                
-                propertyConstraintException._state = this;
-                propertyConstraintException.SubscribeToSerializeObjectState();
-            }
+            info.AddValue("PropertyName", PropertyName);
         }
     }
 }

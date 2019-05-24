@@ -8,7 +8,9 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+#if NET452
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+#endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SchemaScenarios : DbTestCase
     {
@@ -47,6 +49,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+#if NET452
         [MigrationsTheory]
         public void Can_generate_and_update_when_custom_default_schemas()
         {
@@ -221,6 +224,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
             Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
+#endif
 
         [MigrationsTheory]
         public void Auto_update_when_custom_default_schema_should_throw()

@@ -919,6 +919,7 @@ namespace System.Data.Entity.Interception
             }
         }
 
+#if NET452
         [Fact]
         public void TransactionHandler_is_disposed_even_if_the_context_is_not()
         {
@@ -943,6 +944,7 @@ namespace System.Data.Entity.Interception
 
             Assert.False(weakTransactionHandler.IsAlive);
         }
+#endif
 
         public class TransactionContextNoInit : TransactionContext
         {

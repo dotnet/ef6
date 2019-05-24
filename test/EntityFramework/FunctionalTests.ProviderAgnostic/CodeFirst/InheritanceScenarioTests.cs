@@ -11,11 +11,7 @@ namespace System.Data.Entity.CodeFirst
 
     public class InheritanceScenarioTests
     {
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )] // CodePlex 583
+        [Fact] // CodePlex 583
         public void Subclasses_with_different_properties_to_same_column_using_TPH_can_round_trip()
         {
             using (var context = new FunctionalTests.InheritanceScenarioTests.TphPersonContext())

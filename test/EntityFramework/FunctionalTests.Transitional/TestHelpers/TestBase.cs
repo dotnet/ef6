@@ -159,6 +159,13 @@ namespace System.Data.Entity
             get { return typeof(SqlProviderServices).Assembly(); }
         }
 
+        public const string SystemComponentModelDataAnnotationsResourceTable
+#if NET452
+            = "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources";
+#else
+            = "FxResources.System.ComponentModel.Annotations.SR";
+#endif
+
         /// <summary>
         /// Gets an embedded resource string from the specified assembly
         /// </summary>

@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Assert.Equal("a" + projection.Entity.BoolProp + "b", projection.BoolProp);
                     Assert.Equal("a" + projection.Entity.GuidProp + "b", projection.GuidProp);
                     Assert.Equal("a" + projection.Entity.FloatProp.ToString(NumberFormatInfo.InvariantInfo) + "b", projection.FloatProp);
-                    Assert.Equal("a" + projection.Entity.DoubleProp.ToString(NumberFormatInfo.InvariantInfo) + "b", projection.DoubleProp);
+                    Assert.Equal("a" + projection.Entity.DoubleProp.ToString("G15", NumberFormatInfo.InvariantInfo) + "b", projection.DoubleProp);
                     Assert.Equal("a" + projection.Entity.DecimalProp.ToString(NumberFormatInfo.InvariantInfo) + "b", projection.DecimalProp);
                     Assert.Equal("a" + projection.Entity.EnumProp + "b", projection.EnumProp);
                     //DateTime.ToString() uses DB localization settings, unknown expected
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Assert.Equal("a" + projection.Entity.BoolProp + "b", projection.BoolProp);
                     Assert.Equal("a" + projection.Entity.GuidProp + "b", projection.GuidProp);
                     Assert.Equal("a" + projection.Entity.FloatProp.ToString(NumberFormatInfo.InvariantInfo) + "b", projection.FloatProp);
-                    Assert.Equal("a" + projection.Entity.DoubleProp.ToString(NumberFormatInfo.InvariantInfo) + "b", projection.DoubleProp);
+                    Assert.Equal("a" + projection.Entity.DoubleProp.ToString("G15", NumberFormatInfo.InvariantInfo) + "b", projection.DoubleProp);
                     Assert.Equal("a" + projection.Entity.DecimalProp.ToString(NumberFormatInfo.InvariantInfo) + "b", projection.DecimalProp);
                     Assert.Equal("a" + projection.Entity.EnumProp + "b", projection.EnumProp);
                     //DateTime.ToString() uses DB localization settings, unknown expected
@@ -397,7 +397,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Assert.Equal(
                         "a"
                         + (projection.Entity.NullableDoubleProp.HasValue
-                            ? projection.Entity.NullableDoubleProp.Value.ToString(NumberFormatInfo.InvariantInfo)
+                            ? projection.Entity.NullableDoubleProp.Value.ToString("G15", NumberFormatInfo.InvariantInfo)
                             : null) + "b", projection.DoubleProp);
                     Assert.Equal(
                         "a"
@@ -448,7 +448,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Assert.Equal(
                         "a"
                         + (projection.Entity.NullableDoubleProp.HasValue
-                            ? projection.Entity.NullableDoubleProp.Value.ToString(NumberFormatInfo.InvariantInfo)
+                            ? projection.Entity.NullableDoubleProp.Value.ToString("G15", NumberFormatInfo.InvariantInfo)
                             : null) + "b", projection.DoubleProp);
                     Assert.Equal(
                         "a"
@@ -500,7 +500,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Assert.Equal(
                         (string)null
                         + (projection.Entity.NullableDoubleProp.HasValue
-                            ? projection.Entity.NullableDoubleProp.Value.ToString(NumberFormatInfo.InvariantInfo)
+                            ? projection.Entity.NullableDoubleProp.Value.ToString("G15", NumberFormatInfo.InvariantInfo)
                             : null) + "b", projection.DoubleProp);
                     Assert.Equal(
                         (string)null
@@ -551,7 +551,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Assert.Equal(
                         (string)null
                         + (projection.Entity.NullableDoubleProp.HasValue
-                            ? projection.Entity.NullableDoubleProp.Value.ToString(NumberFormatInfo.InvariantInfo)
+                            ? projection.Entity.NullableDoubleProp.Value.ToString("G15", NumberFormatInfo.InvariantInfo)
                             : null) + "b", projection.DoubleProp);
                     Assert.Equal(
                         (string)null

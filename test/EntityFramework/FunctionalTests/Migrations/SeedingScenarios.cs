@@ -6,7 +6,9 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+#if NET452
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+#endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SeedingScenarios : DbTestCase
     {

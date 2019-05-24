@@ -60,6 +60,7 @@ namespace PlanCompilerTests
         private string _limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql;
         private string _limit_ComplexModel_OrderBy_Skip_Take_expectedSql;
 
+#if NET452
         [Fact]
         public void Limit_SimpleModel_First()
         {
@@ -692,6 +693,7 @@ namespace PlanCompilerTests
 
             }
         }
+#endif
 
         #endregion
 

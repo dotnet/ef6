@@ -127,6 +127,7 @@ namespace ProductivityApiTests
             }
         }
 
+#if NET452
         [Fact]
         public void Set_throws_only_when_used_if_type_derives_from_valid_type()
         {
@@ -168,6 +169,7 @@ namespace ProductivityApiTests
                 }
             }
         }
+#endif
 
         [Fact]
         public void Set_throws_only_when_used_if_type_is_a_complex_type_Dev10_885806()

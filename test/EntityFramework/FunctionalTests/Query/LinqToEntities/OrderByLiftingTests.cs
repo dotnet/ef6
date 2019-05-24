@@ -48,6 +48,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
         
+#if NET452
         [Fact]
         public void OrderBy_ThenBy_Skip_lifted_above_type_filter()
         {
@@ -89,6 +90,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 QueryTestHelpers.VerifyQueryResult(expected, results, (o, i) => o.Id == i.Id);
             }
         }
+#endif
 
         public OrderByLiftingTests(OrderByLiftingFixture data)
         {

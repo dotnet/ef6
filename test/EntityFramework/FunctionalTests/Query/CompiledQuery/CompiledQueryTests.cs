@@ -64,7 +64,11 @@
             return ctx;
         }
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "#860"
+#endif
+            )]
         public void CompiledQuery_with_contains_does_not_hold_reference_to_context()
         {
             WeakReference wr;

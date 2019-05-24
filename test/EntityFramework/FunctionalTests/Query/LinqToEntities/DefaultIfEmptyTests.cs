@@ -37,6 +37,7 @@ LEFT OUTER JOIN [dbo].[ArubaTasks] AS [Extent2] ON [Extent1].[Id] = [Extent2].[A
             }
         }
 
+#if NET452
         [Fact]
         public void DefaultIfEmpty_with_null_default()
         {
@@ -74,6 +75,7 @@ LEFT OUTER JOIN [dbo].[ArubaTasks] AS [Extent2] ON ([Extent1].[Id] = [Extent2].[
                 }
             }
         }
+#endif
 
         [Fact]
         public void DefaultIfEmpty_with_non_null_default()
@@ -108,6 +110,7 @@ LEFT OUTER JOIN  (SELECT [Extent2].[Id] AS [Id1], [Extent2].[ArubaOwner_Id] AS [
             }
         }
 
+#if NET452
         [Fact]
         public void DefaultIfEmpty_with_explicit_default()
         {
@@ -175,6 +178,7 @@ LEFT OUTER JOIN [dbo].[ArubaTasks] AS [Extent2] ON ([Extent1].[Id] = [Extent2].[
                 }
             }
         }
+#endif
 
         [Fact]
         public void SelectMany_of_two_entity_sets_withDefaultIfEmpty_translated_to_left_outer_join()

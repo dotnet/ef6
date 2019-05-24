@@ -9,11 +9,7 @@ namespace System.Data.Entity.Query.LinqToEntities
 
     public class EnumTests
     {
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Cast_property_to_enum()
         {
             using (var context = new ProviderAgnosticContext())
@@ -29,11 +25,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Cast_constant_to_enum()
         {
             using (var context = new ProviderAgnosticContext())
@@ -82,11 +74,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Enum_in_GroupBy_clause()
         {
             using (var context = new ProviderAgnosticContext())
@@ -109,11 +97,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Enum_in_Join_clause()
         {
             using (var context = new ProviderAgnosticContext())
@@ -142,11 +126,7 @@ namespace System.Data.Entity.Query.LinqToEntities
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#37849"
-#endif
-            )]
+        [Fact]
         public void Enum_with_coalesce_operator()
         {
             using (var context = new ProviderAgnosticContext())

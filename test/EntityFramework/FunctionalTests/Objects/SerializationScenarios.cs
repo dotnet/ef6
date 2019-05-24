@@ -138,7 +138,7 @@ namespace System.Data.Entity.Objects
                 proxy.MeComplexTypeS.Number = 88;
 
                 var serializer = new DataContractSerializer(
-                    typeof(MeTrackChangesS), null, int.MaxValue, false, true, null, new ProxyDataContractResolver());
+                    typeof(MeTrackChangesS), new DataContractSerializerSettings { PreserveObjectReferences = true, DataContractResolver = new ProxyDataContractResolver() });
                 var deserialized = DeserializeWithDatacontractSerializer(proxy, serializer); 
 
                 // Resolver returns non-proxy type
@@ -160,7 +160,7 @@ namespace System.Data.Entity.Objects
                 proxy.MeComplexTypeS.Number = 88;
 
                 var serializer = new DataContractSerializer(
-                    typeof(MeLazyLoadS), null, int.MaxValue, false, true, null, new ProxyDataContractResolver());
+                    typeof(MeLazyLoadS), new DataContractSerializerSettings { PreserveObjectReferences = true, DataContractResolver = new ProxyDataContractResolver() });
                 var deserialized = DeserializeWithDatacontractSerializer(proxy, serializer);
 
                 // Resolver returns non-proxy type
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Objects
                 proxy.MeComplexTypeS.Number = 88;
                 
                 var serializer = new DataContractSerializer(
-                    proxy.GetType(), new[] { proxy.GetType(), otherProxy.GetType() }, int.MaxValue, false, true, null);
+                    proxy.GetType(), new DataContractSerializerSettings { KnownTypes = new[] { proxy.GetType(), otherProxy.GetType() }, PreserveObjectReferences = true });
                 var deserialized = DeserializeWithDatacontractSerializer(proxy, serializer);
 
                 Assert.Same(proxy.GetType(), deserialized.GetType());
@@ -203,7 +203,9 @@ namespace System.Data.Entity.Objects
                 proxy.Id = 77;
                 proxy.Name = "Entity";
                 proxy.MeComplexTypeS.Number = 88;
+#if NET452
                 proxy.Geometry = DbGeometry.FromText("POINT (30 10)");
+#endif
                 proxy.Enum = MeSimpleEntitiesS.EnumType.ZERO;
 
                 var deserialized = DeserializeFromBinaryFormatter(proxy);
@@ -212,7 +214,9 @@ namespace System.Data.Entity.Objects
                 Assert.Equal(77, deserialized.Id);
                 Assert.Equal("Entity", deserialized.Name);
                 Assert.Equal(88, deserialized.MeComplexTypeS.Number);
+#if NET452
                 Assert.Equal(DbGeometry.FromText("POINT (30 10)").AsText(), deserialized.Geometry.AsText());
+#endif
                 Assert.Equal(MeSimpleEntitiesS.EnumType.ZERO, deserialized.Enum);
             }
         }
@@ -247,11 +251,13 @@ namespace System.Data.Entity.Objects
                 proxy.Id = 77;
                 proxy.Name = "Entity";
                 proxy.MeComplexTypeS.Number = 88;
+#if NET452
                 proxy.Geometry = DbGeometry.FromText("POINT (30 10)");
+#endif
                 proxy.Enum = MeSimpleEntitiesS.EnumType.ZERO;
 
                 var serializer = new DataContractSerializer(
-                    typeof(MeSimpleEntitiesS), null, int.MaxValue, false, true, null, new ProxyDataContractResolver());
+                    typeof(MeSimpleEntitiesS), new DataContractSerializerSettings { PreserveObjectReferences = true, DataContractResolver = new ProxyDataContractResolver() });
                 var deserialized = DeserializeWithDatacontractSerializer(proxy, serializer);
 
                 // Resolver returns non-proxy type
@@ -259,7 +265,9 @@ namespace System.Data.Entity.Objects
                 Assert.Equal(77, deserialized.Id);
                 Assert.Equal("Entity", deserialized.Name);
                 Assert.Equal(88, deserialized.MeComplexTypeS.Number);
+#if NET452
                 Assert.Equal(DbGeometry.FromText("POINT (30 10)").AsText(), deserialized.Geometry.AsText());
+#endif
                 Assert.Equal(MeSimpleEntitiesS.EnumType.ZERO, deserialized.Enum);
             }
         }
@@ -302,7 +310,7 @@ namespace System.Data.Entity.Objects
         public void Stored_change_tracking_proxy_can_be_data_contract_deserialized_with_resolver_when_running_under_full_trust()
         {
             var serializer = new DataContractSerializer(
-                typeof(MeTrackChangesS), null, int.MaxValue, false, true, null, new ProxyDataContractResolver());
+                typeof(MeTrackChangesS), new DataContractSerializerSettings { PreserveObjectReferences = true, DataContractResolver = new ProxyDataContractResolver() });
             var base64String = "PFNlcmlhbGl6YXRpb25TY2VuYXJpb3MuTWVUcmFja0NoYW5nZXNTIHo6SWQ9IjEiIGk6dHlwZT0iU2VyaWFsaXphdGlvblNjZW5hcmlvcy5NZVRyYWNrQ2hhbmdlc1MiIHhtbG5zPSJodHRwOi8vc2NoZW1hcy5kYXRhY29udHJhY3Qub3JnLzIwMDQvMDcvU3lzdGVtLkRhdGEuRW50aXR5Lk9iamVjdHMiIHhtbG5zOmk9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4bWxuczp6PSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tLzIwMDMvMTAvU2VyaWFsaXphdGlvbi8iPjxfeDAwM0NfQ2hpbGRyZW5feDAwM0Vfa19fQmFja2luZ0ZpZWxkIHo6SWQ9IjIiIHo6U2l6ZT0iMCIvPjxfeDAwM0NfSWRfeDAwM0Vfa19fQmFja2luZ0ZpZWxkPjc3PC9feDAwM0NfSWRfeDAwM0Vfa19fQmFja2luZ0ZpZWxkPjxfeDAwM0NfTWVDb21wbGV4VHlwZVNfeDAwM0Vfa19fQmFja2luZ0ZpZWxkIHo6SWQ9IjMiPjxfeDAwM0NfTnVtYmVyX3gwMDNFX2tfX0JhY2tpbmdGaWVsZD44ODwvX3gwMDNDX051bWJlcl94MDAzRV9rX19CYWNraW5nRmllbGQ+PF94MDAzQ19Xb3JkX3gwMDNFX2tfX0JhY2tpbmdGaWVsZCBpOm5pbD0idHJ1ZSIvPjwvX3gwMDNDX01lQ29tcGxleFR5cGVTX3gwMDNFX2tfX0JhY2tpbmdGaWVsZD48X3gwMDNDX01lTGF6eUxvYWRfeDAwM0Vfa19fQmFja2luZ0ZpZWxkIHo6SWQ9IjQiIHo6U2l6ZT0iMCIvPjxfeDAwM0NfUGFyZW50X3gwMDNFX2tfX0JhY2tpbmdGaWVsZCBpOm5pbD0idHJ1ZSIvPjxfcmVsYXRpb25zaGlwTWFuYWdlciB6OklkPSI1IiB4bWxucz0iaHR0cDovL3NjaGVtYXMuZGF0YWNvbnRyYWN0Lm9yZy8yMDA0LzA3L1N5c3RlbS5EYXRhLkVudGl0eS5EeW5hbWljUHJveGllcyIgeG1sbnM6YT0iaHR0cDovL3NjaGVtYXMuZGF0YWNvbnRyYWN0Lm9yZy8yMDA0LzA3L1N5c3RlbS5EYXRhLkVudGl0eS5Db3JlLk9iamVjdHMuRGF0YUNsYXNzZXMiPjxhOl9vd25lciB6OlJlZj0iMSIgaTpuaWw9InRydWUiLz48YTpfcmVsYXRpb25zaGlwcyB6OklkPSI2IiB6OlNpemU9IjIiPjxhOlJlbGF0ZWRFbmQgejpSZWY9IjQiIGk6bmlsPSJ0cnVlIi8+PGE6UmVsYXRlZEVuZCB6OlJlZj0iMiIgaTpuaWw9InRydWUiLz48L2E6X3JlbGF0aW9uc2hpcHM+PC9fcmVsYXRpb25zaGlwTWFuYWdlcj48L1NlcmlhbGl6YXRpb25TY2VuYXJpb3MuTWVUcmFja0NoYW5nZXNTPg==";
             var deserialized = DeserializeStringWithDatacontractSerializer<MeTrackChangesS>(base64String, serializer);            
 
@@ -316,7 +324,7 @@ namespace System.Data.Entity.Objects
         public void Stored_lazy_loading_proxy_can_be_data_contract_deserialized_with_resolver_when_running_under_full_trust()
         {
             var serializer = new DataContractSerializer(
-                typeof(MeLazyLoadS), null, int.MaxValue, false, true, null, new ProxyDataContractResolver());
+                typeof(MeLazyLoadS), new DataContractSerializerSettings { PreserveObjectReferences = true, DataContractResolver = new ProxyDataContractResolver() });
             var base64String = "PFNlcmlhbGl6YXRpb25TY2VuYXJpb3MuTWVMYXp5TG9hZFMgejpJZD0iMSIgaTp0eXBlPSJTZXJpYWxpemF0aW9uU2NlbmFyaW9zLk1lTGF6eUxvYWRTIiB4bWxucz0iaHR0cDovL3NjaGVtYXMuZGF0YWNvbnRyYWN0Lm9yZy8yMDA0LzA3L1N5c3RlbS5EYXRhLkVudGl0eS5PYmplY3RzIiB4bWxuczppPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeG1sbnM6ej0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS8yMDAzLzEwL1NlcmlhbGl6YXRpb24vIj48X3gwMDNDX0lkX3gwMDNFX2tfX0JhY2tpbmdGaWVsZD43NzwvX3gwMDNDX0lkX3gwMDNFX2tfX0JhY2tpbmdGaWVsZD48X3gwMDNDX01lQ29tcGxleFR5cGVTX3gwMDNFX2tfX0JhY2tpbmdGaWVsZCB6OklkPSIyIj48X3gwMDNDX051bWJlcl94MDAzRV9rX19CYWNraW5nRmllbGQ+ODg8L194MDAzQ19OdW1iZXJfeDAwM0Vfa19fQmFja2luZ0ZpZWxkPjxfeDAwM0NfV29yZF94MDAzRV9rX19CYWNraW5nRmllbGQgaTpuaWw9InRydWUiLz48L194MDAzQ19NZUNvbXBsZXhUeXBlU194MDAzRV9rX19CYWNraW5nRmllbGQ+PF94MDAzQ19NZVRyYWNrQ2hhbmdlc194MDAzRV9rX19CYWNraW5nRmllbGQgaTpuaWw9InRydWUiLz48L1NlcmlhbGl6YXRpb25TY2VuYXJpb3MuTWVMYXp5TG9hZFM+";
             var deserialized = DeserializeStringWithDatacontractSerializer<MeLazyLoadS>(base64String, serializer);
 
@@ -333,7 +341,7 @@ namespace System.Data.Entity.Objects
             {
                 var proxy = context.MeLazyLoads.Create();
                 var otherProxy = context.MeTrackChanges.Create();
-                var serializer = new DataContractSerializer(proxy.GetType(), new[] { proxy.GetType(), otherProxy.GetType() }, int.MaxValue, false, true, null);
+                var serializer = new DataContractSerializer(proxy.GetType(), new DataContractSerializerSettings { KnownTypes = new[] { proxy.GetType(), otherProxy.GetType() }, PreserveObjectReferences = true });
                 var base64String = "PE1lTGF6eUxvYWRTX0UwNjM1MjMzMUNBMTk4MTg0NkEzNDkwQkUwODg2NTU3QjFFNjUzQzhDM0JEQjJFOEM0N0Y2MzA0OEM1OUQ3OUMgejpJZD0iMSIgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLmRhdGFjb250cmFjdC5vcmcvMjAwNC8wNy9TeXN0ZW0uRGF0YS5FbnRpdHkuRHluYW1pY1Byb3hpZXMiIHhtbG5zOmk9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiB4bWxuczp6PSJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tLzIwMDMvMTAvU2VyaWFsaXphdGlvbi8iPjxfeDAwM0NfSWRfeDAwM0Vfa19fQmFja2luZ0ZpZWxkIHhtbG5zPSJodHRwOi8vc2NoZW1hcy5kYXRhY29udHJhY3Qub3JnLzIwMDQvMDcvU3lzdGVtLkRhdGEuRW50aXR5Lk9iamVjdHMiPjc3PC9feDAwM0NfSWRfeDAwM0Vfa19fQmFja2luZ0ZpZWxkPjxfeDAwM0NfTWVDb21wbGV4VHlwZVNfeDAwM0Vfa19fQmFja2luZ0ZpZWxkIHo6SWQ9IjIiIHhtbG5zPSJodHRwOi8vc2NoZW1hcy5kYXRhY29udHJhY3Qub3JnLzIwMDQvMDcvU3lzdGVtLkRhdGEuRW50aXR5Lk9iamVjdHMiPjxfeDAwM0NfTnVtYmVyX3gwMDNFX2tfX0JhY2tpbmdGaWVsZD44ODwvX3gwMDNDX051bWJlcl94MDAzRV9rX19CYWNraW5nRmllbGQ+PF94MDAzQ19Xb3JkX3gwMDNFX2tfX0JhY2tpbmdGaWVsZCBpOm5pbD0idHJ1ZSIvPjwvX3gwMDNDX01lQ29tcGxleFR5cGVTX3gwMDNFX2tfX0JhY2tpbmdGaWVsZD48X3gwMDNDX01lVHJhY2tDaGFuZ2VzX3gwMDNFX2tfX0JhY2tpbmdGaWVsZCBpOm5pbD0idHJ1ZSIgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLmRhdGFjb250cmFjdC5vcmcvMjAwNC8wNy9TeXN0ZW0uRGF0YS5FbnRpdHkuT2JqZWN0cyIvPjwvTWVMYXp5TG9hZFNfRTA2MzUyMzMxQ0ExOTgxODQ2QTM0OTBCRTA4ODY1NTdCMUU2NTNDOEMzQkRCMkU4QzQ3RjYzMDQ4QzU5RDc5Qz4=";
                 var deserialized = DeserializeStringWithDatacontractSerializer<MeLazyLoadS>(base64String, serializer);
 
@@ -356,7 +364,7 @@ namespace System.Data.Entity.Objects
                 proxy.MeTrackChanges = otherProxy;
                 
                 var serializer = new DataContractSerializer(
-                    typeof(MeLazyLoadS), null, int.MaxValue, false, true, null, new ProxyDataContractResolver());
+                    typeof(MeLazyLoadS), new DataContractSerializerSettings { PreserveObjectReferences = true, DataContractResolver = new ProxyDataContractResolver() });
                 var deserialized = DeserializeWithDatacontractSerializer(proxy, serializer);
 
                 // Resolver returns non-proxy type
