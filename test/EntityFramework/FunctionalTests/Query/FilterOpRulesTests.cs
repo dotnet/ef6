@@ -269,6 +269,31 @@ namespace System.Data.Entity.Query
             }
         }
 
+        [Fact]
+        public void Rule_FilterOverProject_does_not_promote_to_single_Select_with_limit_if_custom_function_and_does_opt_in()
+        {
+            var expectedSql =
+@"SELECT TOP (10) 
+    [Project1].[Id] AS [Id], 
+    [Project1].[C1] AS [C1]
+    FROM ( SELECT 
+        [Extent1].[Id] AS [Id], 
+        [SqlServer].[MyCustomFunc]([Extent1].[Name]) AS [C1]
+        FROM [dbo].[Blogs] AS [Extent1]
+    )  AS [Project1]
+    WHERE ([Project1].[Id] > 10) AND ([Project1].[C1] > 10)
+    ORDER BY [Project1].[Id] ASC";
+
+            using (var context = new BlogContext())
+            {
+                context.Configuration.UseDatabaseNullSemantics = true;
+                context.Configuration.DisableFilterOverProjectionSimplificationForCustomFunctions = true;
+
+                var query = context.Blogs.Select(b => new { b.Id, Len = CustomFunctions.MyCustomFunc(b.Name) }).Where(b => b.Id > 10 && b.Len > 10).OrderBy(b => b.Id).Take(10);
+                QueryTestHelpers.VerifyDbQuery(query, expectedSql);
+            }
+        }
+
 
         [Fact]
         public void Rule_FilterOverProject_does_promote_to_single_Select_if_custom_function_and_doesnt_opt_in()
@@ -289,5 +314,8 @@ namespace System.Data.Entity.Query
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
             }
         }
+
+
+
     }
 }
