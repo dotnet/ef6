@@ -3,14 +3,14 @@
   <PropertyGroup>
     <RootNamespace />
     <AssemblyName>EntityFramework.VBTests</AssemblyName>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFrameworks>net452;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Reference Include="System.Transactions" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\readme.htm">
       <Link>SqlServerTypes\readme.htm</Link>
     </Content>
