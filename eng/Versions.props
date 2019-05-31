@@ -13,16 +13,19 @@
     <MicrosoftSqlServerCompactVersion>4.0.8876.1</MicrosoftSqlServerCompactVersion>
     <MicrosoftSqlServerTypesVersion>14.0.1016.290</MicrosoftSqlServerTypesVersion>
     <MicrosoftVisualStudioShellInterop80Version>8.0.50728</MicrosoftVisualStudioShellInterop80Version>
-    <MoqVersion>4.0.10827</MoqVersion>
+    <MoqVersion>4.7.145</MoqVersion>
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
     <VSLangProjVersion>7.0.3301</VSLangProjVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-preview6.19256.13</MicrosoftCSharpVersion>
-    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview6.19256.13</MicrosoftNETCorePlatformsPackageVersion>
-    <SystemCodeDomVersion>4.6.0-preview6.19256.13</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-preview6.19256.13</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview6.19256.13</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-preview6.19256.13</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>4.6.0-preview6.19279.8</MicrosoftCSharpVersion>
+    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview6.19279.8</MicrosoftNETCorePlatformsPackageVersion>
+    <SystemCodeDomVersion>4.6.0-preview6.19279.8</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-preview6.19279.8</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview6.19279.8</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-preview6.19279.8</SystemDataSqlClientVersion>
+  </PropertyGroup>
+  <PropertyGroup Label="Dependencies from dotnet/core-setup">
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview6-27730-01</MicrosoftNETCoreAppPackageVersion>
   </PropertyGroup>
 </Project>

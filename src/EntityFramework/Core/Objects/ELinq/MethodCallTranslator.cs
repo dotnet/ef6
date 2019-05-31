@@ -1587,7 +1587,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // Supported only if the argument is an empty array.
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
-                    if (!IsEmptyArray(call.Arguments[0]))
+                    if (call.Arguments.Count != 0 && !IsEmptyArray(call.Arguments[0]))
                     {
                         throw new NotSupportedException(Strings.ELinq_UnsupportedTrimStartTrimEndCase(call.Method));
                     }
@@ -1597,7 +1597,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 internal static bool IsEmptyArray(LinqExpression expression)
                 {
-                    var newArray = (NewArrayExpression)expression;
+                    var newArray = expression as NewArrayExpression;
                     if (expression.NodeType
                         == ExpressionType.NewArrayInit)
                     {
@@ -1630,6 +1630,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
+#if NETSTANDARD2_1
+                    yield return
+                        typeof(String).GetDeclaredMethod("Trim", typeof(Char));
+#endif
                     yield return
                         typeof(String).GetDeclaredMethod("Trim", typeof(Char[]));
                 }
@@ -1644,6 +1648,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
+#if NETSTANDARD2_1
+                    yield return
+                        typeof(String).GetDeclaredMethod("TrimStart");
+                    yield return
+                        typeof(String).GetDeclaredMethod("TrimStart", typeof(Char));
+#endif
                     yield return
                         typeof(String).GetDeclaredMethod("TrimStart", typeof(Char[]));
                 }
@@ -1658,6 +1668,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
+#if NETSTANDARD2_1
+                    yield return
+                        typeof(String).GetDeclaredMethod("TrimEnd");
+                    yield return
+                        typeof(String).GetDeclaredMethod("TrimEnd", typeof(Char));
+#endif
                     yield return
                         typeof(String).GetDeclaredMethod("TrimEnd", typeof(Char[]));
                 }

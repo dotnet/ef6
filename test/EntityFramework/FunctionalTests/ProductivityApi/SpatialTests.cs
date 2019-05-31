@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace ProductivityApiTests
 {
     using System;
@@ -38,8 +40,6 @@ namespace ProductivityApiTests
             _connectionString = String.Format(
                 CultureInfo.InvariantCulture, baseConnectionString,
                 SimpleConnectionString<SpatialNorthwindContext>());
-
-            SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
 
         #endregion
@@ -434,3 +434,5 @@ namespace ProductivityApiTests
         #endregion
     }
 }
+
+#endif

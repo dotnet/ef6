@@ -649,6 +649,7 @@ namespace ProductivityApiTests
             }
         }
 
+#if NET452
         [Fact]
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_without_metadata_but_with_model_table_in_nondefault_schema_ce()
         {
@@ -681,6 +682,7 @@ namespace ProductivityApiTests
                 MutableResolver.ClearResolvers();
             }
         }
+#endif
 
         #endregion
 

@@ -104,7 +104,7 @@ namespace System.Data.Entity
         public Assembly Compile(AssemblyName assemblyName)
         {
             var assemblyBuilder =
-                AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+                AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 
             foreach (var attribute in Attributes)
             {
@@ -336,7 +336,7 @@ namespace System.Data.Entity
                     Convert.ChangeType(enumMember.Value, enumTypeInfo.UnderlyingType));
             }
 
-            return enumBuilder.CreateType();
+            return enumBuilder.CreateTypeInfo().AsType();
         }
 
         private static TypeAttributes GetTypeAccess(MemberAccess typeAccess)

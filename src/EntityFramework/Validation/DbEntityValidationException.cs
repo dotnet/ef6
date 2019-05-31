@@ -5,20 +5,19 @@ namespace System.Data.Entity.Validation
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
 
     /// <summary>
     /// Exception thrown from <see cref="DbContext.SaveChanges()" /> when validating entities fails.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "SerializeObjectState used instead")]
     [Serializable]
     public class DbEntityValidationException : DataException
     {
-        [NonSerialized]
-        private DbEntityValidationExceptionState _state = new DbEntityValidationExceptionState();
+        // <summary>
+        // Validation results.
+        // </summary>
+        private IList<DbEntityValidationResult> _entityValidationResults;
 
         /// <summary>
         /// Initializes a new instance of DbEntityValidationException.
@@ -49,8 +48,7 @@ namespace System.Data.Entity.Validation
             // Users should be able to set the errors to null but we should not
             Check.NotNull(entityValidationResults, "entityValidationResults");
 
-            _state.InititializeValidationResults(entityValidationResults);
-            SubscribeToSerializeObjectState();
+            InititializeValidationResults(entityValidationResults);
         }
 
         /// <summary>
@@ -73,11 +71,21 @@ namespace System.Data.Entity.Validation
             string message, IEnumerable<DbEntityValidationResult> entityValidationResults, Exception innerException)
             : base(message, innerException)
         {
-            // Users should be able to set the errors to null but we should not. 
+            // Users should be able to set the errors to null but we should not.
             Check.NotNull(entityValidationResults, "entityValidationResults");
 
-            _state.InititializeValidationResults(entityValidationResults);
-            SubscribeToSerializeObjectState();
+            InititializeValidationResults(entityValidationResults);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the DbEntityValidationException class with the specified serialization information and context.
+        /// </summary>
+        /// <param name="info"> The data necessary to serialize or deserialize an object. </param>
+        /// <param name="context"> Description of the source and destination of the specified serialized stream. </param>
+        protected DbEntityValidationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            _entityValidationResults = (List<DbEntityValidationResult>)info.GetValue("EntityValidationErrors", typeof(List<DbEntityValidationResult>));
         }
 
         /// <summary>
@@ -85,54 +93,26 @@ namespace System.Data.Entity.Validation
         /// </summary>
         public IEnumerable<DbEntityValidationResult> EntityValidationErrors
         {
-            get { return _state.EntityValidationErrors; }
+            get { return _entityValidationResults; }
         }
 
-        // <summary>
-        // Subscribes the SerializeObjectState event.
-        // </summary>
-        private void SubscribeToSerializeObjectState()
+        /// <summary>
+        /// Sets the <see cref="SerializationInfo" /> with information about the exception.
+        /// </summary>
+        /// <param name="info"> The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown. </param>
+        /// <param name="context"> The <see cref="StreamingContext" /> that contains contextual information about the source or destination. </param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            SerializeObjectState += (exception, eventArgs) => eventArgs.AddSerializedState(_state);
+            base.GetObjectData(info, context);
+
+            info.AddValue("EntityValidationErrors", _entityValidationResults);
         }
 
-        // <summary>
-        // Holds exception state that will be serialized when the exception is serialized.
-        // </summary>
-        [Serializable]
-        private class DbEntityValidationExceptionState : ISafeSerializationData
+        private void InititializeValidationResults(IEnumerable<DbEntityValidationResult> entityValidationResults)
         {
-            // <summary>
-            // Validation results.
-            // </summary>
-            private IList<DbEntityValidationResult> _entityValidationResults;
-
-            internal void InititializeValidationResults(IEnumerable<DbEntityValidationResult> entityValidationResults)
-            {
-                _entityValidationResults = entityValidationResults == null
-                                               ? new List<DbEntityValidationResult>()
-                                               : entityValidationResults.ToList();
-            }
-
-            // <summary>
-            // Validation results.
-            // </summary>
-            public IEnumerable<DbEntityValidationResult> EntityValidationErrors
-            {
-                get { return _entityValidationResults; }
-            }
-
-            // <summary>
-            // Completes the deserialization.
-            // </summary>
-            // <param name="deserialized"> The deserialized object. </param>
-            public void CompleteDeserialization(object deserialized)
-            {
-                var validationException = (DbEntityValidationException)deserialized;
-                
-                validationException._state = this;
-                validationException.SubscribeToSerializeObjectState();
-            }
+            _entityValidationResults = entityValidationResults == null
+                                           ? new List<DbEntityValidationResult>()
+                                           : entityValidationResults.ToList();
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿namespace System.Data.Entity.SqlServerCompact
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
+#if NET452
+
+namespace System.Data.Entity.SqlServerCompact
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
@@ -135,3 +139,5 @@
         }
     }
 }
+
+#endif

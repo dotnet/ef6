@@ -321,15 +321,18 @@ namespace System.Data.Entity.TestModels.FantasyModel
                 {
                     Id = 1,
                     Name = "Province1",
-                    Shape = DbGeometry.FromText("POINT(1 1)", DbGeometry.DefaultCoordinateSystemId),
                 };
 
             var province2 = new Province
                 {
                     Id = 2,
                     Name = "Province2",
-                    Shape = DbGeometry.FromText("POINT(2 2)", DbGeometry.DefaultCoordinateSystemId),
                 };
+
+#if NET452
+            province1.Shape = DbGeometry.FromText("POINT(1 1)", DbGeometry.DefaultCoordinateSystemId);
+            province2.Shape = DbGeometry.FromText("POINT(2 2)", DbGeometry.DefaultCoordinateSystemId);
+#endif
 
             return new[] { province1, province2 };
         }

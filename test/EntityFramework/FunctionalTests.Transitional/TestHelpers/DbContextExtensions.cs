@@ -3,7 +3,10 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Migrations;
+
+#if NET452
     using System.Data.SqlServerCe;
+#endif
 
     public static class DbContextExtensions
     {
@@ -15,7 +18,7 @@ namespace System.Data.Entity
 
         public static void IgnoreSpatialTypesOnSqlCe(this DbContext context, DbModelBuilder modelBuilder)
         {
-            if (context.Database.Connection is SqlCeConnection)
+            if (context.IsSqlCe())
             {
                 modelBuilder.Entity<MigrationsStore>().Ignore(e => e.Location);
                 modelBuilder.Entity<MigrationsStore>().Ignore(e => e.FloorPlan);
@@ -24,7 +27,11 @@ namespace System.Data.Entity
 
         public static bool IsSqlCe(this DbContext context)
         {
+#if NET452
             return context.Database.Connection is SqlCeConnection;
+#else
+            return false;
+#endif
         }
     }
 }

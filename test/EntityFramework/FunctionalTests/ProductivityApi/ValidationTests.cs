@@ -1534,7 +1534,11 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 
         #region Custom validation attributes, IValidatableObject
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "dotnet/corefx#38078"
+#endif
+            )]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_custom_attributes_defined_on_properties()
         {
             try
@@ -1603,7 +1607,11 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             }
         }
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "dotnet/corefx#38078"
+#endif
+            )]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_custom_attributes_defined_on_entity_type()
         {
             try
@@ -1842,7 +1850,11 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             }
         }
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "dotnet/corefx#38078"
+#endif
+            )]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_custom_type_level_attributes_defined_on_complex_properties()
         {
             var entity = new EntityWithComplexTypeLevelCustomValidationAttributes
@@ -2070,31 +2082,31 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         private readonly string RangeAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "RangeAttribute_ValidationError");
 
         private readonly string RegexAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "RegexAttribute_ValidationError");
 
         private readonly string RequiredAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "RequiredAttribute_ValidationError");
 
         private readonly string StringLengthAttribute_ValidationError = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "StringLengthAttribute_ValidationError");
 
         private readonly string StringLengthAttribute_ValidationErrorIncludingMinimum = LookupString
             (
                 SystemComponentModelDataAnnotationsAssembly,
-                "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+                SystemComponentModelDataAnnotationsResourceTable,
                 "StringLengthAttribute_ValidationErrorIncludingMinimum");
 
         #endregion

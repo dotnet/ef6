@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Query.StoredProcedures
 {
     using System.Collections.Generic;
@@ -402,3 +404,5 @@ SELECT * FROM dbo.Creatures", connection).ExecuteNonQuery();
         }
     }
 }
+
+#endif

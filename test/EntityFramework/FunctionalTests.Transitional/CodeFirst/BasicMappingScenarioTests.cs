@@ -14,9 +14,12 @@ namespace FunctionalTests
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Linq;
-    using System.Windows.Media;
     using FunctionalTests.Model;
     using Xunit;
+
+#if NET452
+    using System.Windows.Media;
+#endif
 
     public class BasicMappingScenarioTests : TestBase
     {
@@ -333,6 +336,7 @@ namespace FunctionalTests
             Assert.Equal("Foo1", databaseMapping.Model.Containers.Single().EntitySets.Last().Name);
         }
 
+#if NET452
         [Fact]
         public void Build_model_for_type_with_framework_type()
         {
@@ -350,6 +354,7 @@ namespace FunctionalTests
             public int Id { get; set; }
             public Brush Background { get; set; }
         }
+#endif
 
         [Fact]
         public void Build_model_for_type_with_internal_member_to_configure_type()

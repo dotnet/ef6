@@ -3,12 +3,12 @@
   <PropertyGroup>
     <RootNamespace>System.Data.Entity</RootNamespace>
     <AssemblyName>EntityFramework.FunctionalTests</AssemblyName>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFrameworks>net452;netcoreapp3.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EF_FUNCTIONALS</DefineConstants>
     <NoWarn>$(NoWarn);CS0169</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -16,12 +16,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" />
-    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\readme.htm">
       <Link>SqlServerTypes\readme.htm</Link>
     </Content>
@@ -329,13 +332,19 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+    <None Update="xunit.console.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
 
   <PropertyGroup>
-    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT'">
+    <PostBuildEvent Condition="'$(OS)' == 'Windows_NT' And '$(TargetFramework)' == 'net452'">
       if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
       xcopy /s /y "$(NuGetPackageRoot)Microsoft.SqlServer.Compact\$(MicrosoftSqlServerCompactVersion)\NativeBinaries\x86\*.*" "$(TargetDir)x86"
       if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"

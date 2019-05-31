@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Runtime.Serialization;
     using System.Text;
@@ -18,15 +17,13 @@ namespace System.Data.Entity.Core
     /// not accurate or not present, type validation errors, scoping rule violations, user of undefined variables, etc.
     /// For more information, see eSQL Language Spec.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "SerializeObjectState used instead")]
     [Serializable]
     public sealed class EntitySqlException : EntityException
     {
         private const int HResultInvalidQuery = -2146232006;
 
-        [NonSerialized]
-        private EntitySqlExceptionState _state;
+        private readonly string _errorDescription;
+        private readonly string _errorContext;
 
         /// <summary>
         /// Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntitySqlException" />.
@@ -44,8 +41,6 @@ namespace System.Data.Entity.Core
             : base(message)
         {
             HResult = HResultInvalidQuery;
-
-            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -57,8 +52,15 @@ namespace System.Data.Entity.Core
             : base(message, innerException)
         {
             HResult = HResultInvalidQuery;
+        }
 
-            SubscribeToSerializeObjectState();
+        private EntitySqlException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            _errorDescription = info.GetString("ErrorDescription");
+            _errorContext = info.GetString("ErrorContext");
+            Line = info.GetInt32("Line");
+            Column = info.GetInt32("Column");
         }
 
         // <summary>
@@ -99,43 +101,35 @@ namespace System.Data.Entity.Core
             string message, string errorDescription, string errorContext, int line, int column, Exception innerException)
             : base(message, innerException)
         {
-            _state.ErrorDescription = errorDescription;
-            _state.ErrorContext = errorContext;
-            _state.Line = line;
-            _state.Column = column;
+            _errorDescription = errorDescription;
+            _errorContext = errorContext;
+            Line = line;
+            Column = column;
 
             HResult = HResultInvalidQuery;
-
-            SubscribeToSerializeObjectState();
         }
 
         /// <summary>Gets a description of the error.</summary>
         /// <returns>A string that describes the error.</returns>
         public string ErrorDescription
         {
-            get { return _state.ErrorDescription ?? String.Empty; }
+            get { return _errorDescription ?? String.Empty; }
         }
 
         /// <summary>Gets the approximate context where the error occurred, if available.</summary>
         /// <returns>A string that describes the approximate context where the error occurred, if available.</returns>
         public string ErrorContext
         {
-            get { return _state.ErrorContext ?? String.Empty; }
+            get { return _errorContext ?? String.Empty; }
         }
 
         /// <summary>Gets the approximate line number where the error occurred.</summary>
         /// <returns>An integer that describes the line number where the error occurred.</returns>
-        public int Line
-        {
-            get { return _state.Line; }
-        }
+        public int Line { get; }
 
         /// <summary>Gets the approximate column number where the error occurred.</summary>
         /// <returns>An integer that describes the column number where the error occurred.</returns>
-        public int Column
-        {
-            get { return _state.Column; }
-        }
+        public int Column { get; }
 
         internal static string GetGenericErrorMessage(string commandText, int position)
         {
@@ -239,26 +233,19 @@ namespace System.Data.Entity.Core
             return sb.Append(".").ToString();
         }
 
-        private void SubscribeToSerializeObjectState()
+        /// <summary>
+        /// Sets the <see cref="SerializationInfo" /> with information about the exception.
+        /// </summary>
+        /// <param name="info"> The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown. </param>
+        /// <param name="context"> The <see cref="StreamingContext" /> that contains contextual information about the source or destination. </param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            SerializeObjectState += (_, a) => a.AddSerializedState(_state);
-        }
+            base.GetObjectData(info, context);
 
-        [Serializable]
-        private struct EntitySqlExceptionState : ISafeSerializationData
-        {
-            public string ErrorDescription { get; set; }
-            public string ErrorContext { get; set; }
-            public int Line { get; set; }
-            public int Column { get; set; }
-
-            public void CompleteDeserialization(object deserialized)
-            {
-                var entitySqlException = (EntitySqlException)deserialized;
-                
-                entitySqlException._state = this;
-                entitySqlException.SubscribeToSerializeObjectState();
-            }
+            info.AddValue("ErrorDescription", _errorDescription);
+            info.AddValue("ErrorContext", _errorContext);
+            info.AddValue("Line", Line);
+            info.AddValue("Column", Column);
         }
     }
 }

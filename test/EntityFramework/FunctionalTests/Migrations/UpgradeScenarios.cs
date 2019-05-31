@@ -18,7 +18,9 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+#if NET452
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+#endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class UpgradeScenarios : DbTestCase
     {
@@ -261,6 +263,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+#if NET452
         [MigrationsTheory]
         public void Scripting_upgrade_from_earlier_version_should_maintain_variable_uniqueness()
         {
@@ -333,6 +336,7 @@ namespace System.Data.Entity.Migrations
                 Assert.Equal(3, GetColumnIndex(HistoryContext.DefaultTableName, "ProductVersion"));
             }
         }
+#endif
 
         [MigrationsTheory]
         public void Upgrade_from_earlier_version_should_upgrade_history_table_when_updating_automatic()
@@ -436,6 +440,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
+#if NET452
         [MigrationsTheory]
         public void Can_upgrade_from_5_and_existing_code_auto_migrations_still_work()
         {
@@ -479,6 +484,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("crm.tbl_customers"));
             Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
+#endif
 
         private IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()
         {

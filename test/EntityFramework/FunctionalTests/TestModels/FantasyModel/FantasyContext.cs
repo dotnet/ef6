@@ -67,6 +67,10 @@ namespace System.Data.Entity.TestModels.FantasyModel
             modelBuilder.Entity<Landmark>().HasRequired(l => l.MatchingTower).WithRequiredPrincipal(s => s.MatchingLandnmark);
             modelBuilder.Entity<Landmark>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Tower>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+#if NETCOREAPP3_0
+            modelBuilder.Entity<Province>().Ignore(x => x.Shape);
+#endif
         }
     }
 }

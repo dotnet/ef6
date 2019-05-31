@@ -7,7 +7,6 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -16,8 +15,6 @@ namespace System.Data.Entity.Infrastructure
     /// Note that state entries referenced by this exception are not serialized due to security and accesses to the
     /// state entries after serialization will return null.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "SerializeObjectState used instead")]
     [Serializable]
     public class DbUpdateException : DataException
     {
@@ -26,8 +23,7 @@ namespace System.Data.Entity.Infrastructure
         [NonSerialized]
         private readonly InternalContext _internalContext;
 
-        [NonSerialized]
-        private DbUpdateExceptionState _state;
+        private readonly bool _involvesIndependentAssociations;
 
         // <summary>
         // Initializes a new instance of the <see cref="DbUpdateException" /> class.
@@ -43,9 +39,7 @@ namespace System.Data.Entity.Infrastructure
                 innerException)
         {
             _internalContext = internalContext;
-            _state.InvolvesIndependentAssociations = involvesIndependentAssociations;
-
-            SubscribeToSerializeObjectState();
+            _involvesIndependentAssociations = involvesIndependentAssociations;
         }
 
         #endregion
@@ -64,7 +58,7 @@ namespace System.Data.Entity.Infrastructure
                 // We do all of this checking because of all the FxCop-required constructors
                 // that allow the exception object to be in virtually any state.
                 var innerAsUpdateException = InnerException as UpdateException;
-                if (_state.InvolvesIndependentAssociations
+                if (_involvesIndependentAssociations
                     || _internalContext == null
                     || innerAsUpdateException == null
                     || innerAsUpdateException.StateEntries == null)
@@ -90,7 +84,6 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         public DbUpdateException()
         {
-            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -100,7 +93,6 @@ namespace System.Data.Entity.Infrastructure
         public DbUpdateException(string message)
             : base(message)
         {
-            SubscribeToSerializeObjectState();
         }
 
         /// <summary>
@@ -111,39 +103,29 @@ namespace System.Data.Entity.Infrastructure
         public DbUpdateException(string message, Exception innerException)
             : base(message, innerException)
         {
-            SubscribeToSerializeObjectState();
         }
 
-        // <summary>
-        // Subscribes the SerializeObjectState event.
-        // </summary>
-        private void SubscribeToSerializeObjectState()
+        /// <summary>
+        /// Initializes a new instance of the DbUpdateException class with the specified serialization information and context.
+        /// </summary>
+        /// <param name="info"> The data necessary to serialize or deserialize an object. </param>
+        /// <param name="context"> Description of the source and destination of the specified serialized stream. </param>
+        protected DbUpdateException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
-            SerializeObjectState += (exception, eventArgs) => eventArgs.AddSerializedState(_state);
+            _involvesIndependentAssociations = info.GetBoolean("InvolvesIndependentAssociations");
         }
 
-        // <summary>
-        // Holds exception state that will be serialized when the exception is serialized.
-        // </summary>
-        [Serializable]
-        private struct DbUpdateExceptionState : ISafeSerializationData
+        /// <summary>
+        /// Sets the <see cref="SerializationInfo" /> with information about the exception.
+        /// </summary>
+        /// <param name="info"> The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown. </param>
+        /// <param name="context"> The <see cref="StreamingContext" /> that contains contextual information about the source or destination. </param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            // <summary>
-            // Gets or sets a value indicating whether the exception involved independent associations.
-            // </summary>
-            public bool InvolvesIndependentAssociations { get; set; }
+            base.GetObjectData(info, context);
 
-            // <summary>
-            // Completes the deserialization.
-            // </summary>
-            // <param name="deserialized"> The deserialized object. </param>
-            public void CompleteDeserialization(object deserialized)
-            {
-                var updateException = (DbUpdateException)deserialized;
-
-                updateException._state = this;
-                updateException.SubscribeToSerializeObjectState();
-            }
+            info.AddValue("InvolvesIndependentAssociations", _involvesIndependentAssociations);
         }
 
         #endregion
