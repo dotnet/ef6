@@ -9,6 +9,8 @@
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from nuget.org">
     <EnvDTEVersion>8.0.2</EnvDTEVersion>
+    <MicrosoftBuildFrameworkVersion>16.0.461</MicrosoftBuildFrameworkVersion>
+    <MicrosoftBuildUtilitiesCoreVersion>16.0.461</MicrosoftBuildUtilitiesCoreVersion>
     <MicrosoftPowerShell2ReferenceAssembliesVersion>1.0.0</MicrosoftPowerShell2ReferenceAssembliesVersion>
     <MicrosoftSqlServerCompactVersion>4.0.8876.1</MicrosoftSqlServerCompactVersion>
     <MicrosoftSqlServerTypesVersion>14.0.1016.290</MicrosoftSqlServerTypesVersion>
