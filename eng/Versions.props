@@ -26,6 +26,6 @@
     <SystemDataSqlClientVersion>4.7.0-preview6.19303.8</SystemDataSqlClientVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview6-27803-13</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview6-27804-01</MicrosoftNETCoreAppPackageVersion>
   </PropertyGroup>
 </Project>
