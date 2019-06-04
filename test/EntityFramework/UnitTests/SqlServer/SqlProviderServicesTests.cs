@@ -292,9 +292,9 @@ namespace System.Data.Entity.SqlServer
             }
 
             [Fact]
-            public void GetService_resolves_the_default_SQL_Express_connection_factory()
+            public void GetService_resolves_the_default_LocalDB_connection_factory()
             {
-                Assert.IsType<SqlConnectionFactory>(SqlProviderServices.Instance.GetService<IDbConnectionFactory>());
+                Assert.IsType<LocalDbConnectionFactory>(SqlProviderServices.Instance.GetService<IDbConnectionFactory>());
             }
 
             [Fact]

@@ -111,7 +111,7 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         // <summary>
-        // A string like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
+        // A string like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default LocalDbConnectionFactory configured for '(localdb)\MSSQLLocalDB' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
         // </summary>
         internal static string SaveConnectionFactoryInConfigFailed(object p0)
         {

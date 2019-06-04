@@ -33,7 +33,7 @@ namespace System.Data.Entity.SqlServer
     /// or through code-based registration in <see cref="DbConfiguration" />.
     /// The services resolved are:
     /// Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
-    /// <see cref="System.Data.Entity.Infrastructure.SqlConnectionFactory" /> to create connections to SQL Express by default.
+    /// <see cref="System.Data.Entity.Infrastructure.LocalDbConnectionFactory" /> to create connections to LocalDB by default.
     /// Requests for <see cref="Func{IDbExecutionStrategy}" /> for the invariant name "System.Data.SqlClient"
     /// for any server name are resolved to a delegate that returns a <see cref="DefaultSqlExecutionStrategy" />
     /// to provide a non-retrying policy for SQL Server.
@@ -62,7 +62,7 @@ namespace System.Data.Entity.SqlServer
         // </summary>
         private SqlProviderServices()
         {
-            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
+            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new LocalDbConnectionFactory()));
 
             AddDependencyResolver(
                 new ExecutionStrategyResolver<DefaultSqlExecutionStrategy>(
