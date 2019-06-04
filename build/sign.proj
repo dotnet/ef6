@@ -26,7 +26,7 @@
     </ItemGroup>
     <ItemGroup>
       <FilesToSign Include="@(LocalizedEFToolsDLLs)">
-        <Authenticode>Microsoft</Authenticode>
+        <Authenticode>Microsoft400</Authenticode>
         <StrongName>67</StrongName>
       </FilesToSign>
     </ItemGroup>
