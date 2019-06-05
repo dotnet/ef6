@@ -17,7 +17,6 @@
     <MicrosoftVisualStudioShellInterop80Version>8.0.50728</MicrosoftVisualStudioShellInterop80Version>
     <MoqVersion>4.7.145</MoqVersion>
     <MySqlDataEntityVersion>6.7.2-beta-ef6</MySqlDataEntityVersion>
-    <VSLangProjVersion>7.0.3301</VSLangProjVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
     <MicrosoftCSharpVersion>4.6.0-preview7.19319.4</MicrosoftCSharpVersion>

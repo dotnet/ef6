@@ -37,10 +37,6 @@ LONG DESCRIPTION
                                         default connection factory in the
                                         project config file.
 
-        Initialize-EFConfiguration      Initializes the Entity Framework
-                                        section in the project config file and
-                                        sets defaults.
-
 SEE ALSO
     Enable-Migrations
     Add-Migration

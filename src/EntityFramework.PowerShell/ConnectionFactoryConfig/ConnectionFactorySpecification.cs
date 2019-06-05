@@ -11,11 +11,6 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     // </summary>
     internal class ConnectionFactorySpecification
     {
-        public const string SqlConnectionFactoryName = "System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework";
-        public const string SqlCeConnectionFactoryName = "System.Data.Entity.Infrastructure.SqlCeConnectionFactory, EntityFramework";
-        public const string LocalDbConnectionFactoryName = "System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework";
-        public const string SqlCompactProviderName = "System.Data.SqlServerCe.4.0";
-
         private readonly string _connectionFactoryName;
         private readonly IEnumerable<string> _constructorArguments;
 

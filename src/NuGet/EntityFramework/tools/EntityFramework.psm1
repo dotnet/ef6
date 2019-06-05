@@ -167,69 +167,6 @@ function Add-EFDefaultConnectionFactory
 
 <#
 .SYNOPSIS
-    Initializes the Entity Framework section in the project config file
-    and sets defaults.
-
-.DESCRIPTION
-    Creates the 'entityFramework' section of the project config file and sets
-    the default connection factory to use SQL Express if it is running on the
-    machine, or LocalDb otherwise. Note that installing a different provider
-    may change the default connection factory.  The config file is
-    automatically saved if and only if a change was made.
-
-    In addition, any reference to 'System.Data.Entity.dll' in the project is
-    removed.
-    
-    This command is typically used only by Entity Framework provider NuGet
-    packages and is run from the 'install.ps1' script.
-
-.PARAMETER Project
-    The Visual Studio project to update. When running in the NuGet install.ps1
-    script the '$project' variable provided as part of that script should be
-    used.
-#>
-function Initialize-EFConfiguration
-{
-    param (
-        [parameter(Position = 0,
-            Mandatory = $true)]
-        $Project
-    )
-
-	if (!(Check-Project $project))
-	{
-	    return
-	}
-
-    $runner = New-EFConfigRunner $Project
-
-    try
-    {
-        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.InitializeEntityFrameworkCommand
-        $error = Get-RunnerError $runner
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
-    }
-    finally
-    {				
-        Remove-Runner $runner
-    }
-}
-
-<#
-.SYNOPSIS
     Enables Code First Migrations in a project.
 
 .DESCRIPTION
@@ -1026,4 +963,4 @@ function Hint-Downgrade ($name) {
     }
 }
 
-Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory', 'Initialize-EFConfiguration') -Variable InitialDatabase
+Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory') -Variable InitialDatabase
