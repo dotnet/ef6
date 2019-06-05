@@ -11,8 +11,7 @@ namespace System.Data.Entity.Tools.Commands
         {
             command.Description = MyResources.DatabaseDescription;
 
-            // TODO
-            //command.Command("update", new DatabaseUpdateCommand().Configure);
+            command.Command("update", new DatabaseUpdateCommand().Configure);
 
             base.Configure(command);
         }

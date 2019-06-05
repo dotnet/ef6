@@ -3,14 +3,6 @@
 $ErrorActionPreference = 'Stop'
 $InitialDatabase = '0'
 
-$knownExceptions = @(
-    'System.Data.Entity.Migrations.Infrastructure.MigrationsException',
-    'System.Data.Entity.Migrations.Infrastructure.AutomaticMigrationsDisabledException',
-    'System.Data.Entity.Migrations.Infrastructure.AutomaticDataLossException',
-    'System.Data.Entity.Migrations.Infrastructure.MigrationsPendingException',
-    'System.Data.Entity.Migrations.ProjectTypeNotSupportedException'
-)
-
 <#
 .SYNOPSIS
     Adds or updates an Entity Framework provider entry in the project config
@@ -282,16 +274,7 @@ function Enable-Migrations
         $params += '--migrations-dir', $MigrationsDirectory
     }
 
-    if ($ConnectionStringName)
-    {
-        $params += '--connection-string-name', $ConnectionStringName
-    }
-
-    if ($ConnectionString)
-    {
-        $params += '--connection-string', $ConnectionString,
-            '--connection-provider', $ConnectionProviderName
-    }
+    $params += GetParams $ConnectionStringName $ConnectionString $ConnectionProviderName
 
     if ($Force)
     {
@@ -380,10 +363,9 @@ function Enable-Migrations
 #>
 function Add-Migration
 {
-    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName')]
-    param (
-        [parameter(Position = 0,
-            Mandatory = $true)]
+    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName', PositionalBinding = $false)]
+    param(
+        [parameter(Position = 0, Mandatory = $true)]
         [string] $Name,
         [switch] $Force,
         [string] $ProjectName,
@@ -391,42 +373,44 @@ function Add-Migration
         [string] $ConfigurationTypeName,
         [parameter(ParameterSetName = 'ConnectionStringName')]
         [string] $ConnectionStringName,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionString,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionProviderName,
         [switch] $IgnoreChanges,
         [string] $AppDomainBaseDirectory)
 
-    Hint-Downgrade $MyInvocation.MyCommand
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
+    WarnIfOtherEFs 'Add-Migration'
 
-    try
+    $project = GetProject $ProjectName
+    $startupProject = GetStartupProject $StartUpProjectName $project
+
+    $params = 'migrations', 'add', $Name, '--json'
+
+    if ($Force)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.AddMigrationCommand @( $Name, $Force.IsPresent, $IgnoreChanges.IsPresent )
-        $error = Get-RunnerError $runner
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
-        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()
+        $params += '--force'
     }
-    finally
+
+    if ($ConfigurationTypeName)
     {
-        Remove-Runner $runner
+        $params += '--migrations-config', $ConfigurationTypeName
     }
+
+    if ($IgnoreChanges)
+    {
+        $params += '--ignore-changes'
+    }
+
+    $params += GetParams $ConnectionStringName $ConnectionString $ConnectionProviderName
+
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $result = (EF6 $project $startupProject $AppDomainBaseDirectory $params) -join "`n" | ConvertFrom-Json
+
+    $project.ProjectItems.AddFromFile($result.migration) | Out-Null
+    $DTE.ItemOperations.OpenFile($result.migration) | Out-Null
+    $project.ProjectItems.AddFromFile($result.migrationResources) | Out-Null
+    $project.ProjectItems.AddFromFile($result.migrationDesigner) | Out-Null
 }
 
 <#
@@ -518,8 +502,8 @@ function Add-Migration
 #>
 function Update-Database
 {
-    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName')]
-    param (
+    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName', PositionalBinding = $false)]
+    param(
         [string] $SourceMigration,
         [string] $TargetMigration,
         [switch] $Script,
@@ -529,40 +513,69 @@ function Update-Database
         [string] $ConfigurationTypeName,
         [parameter(ParameterSetName = 'ConnectionStringName')]
         [string] $ConnectionStringName,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionString,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionProviderName,
         [string] $AppDomainBaseDirectory)
 
-    Hint-Downgrade $MyInvocation.MyCommand
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
+    WarnIfOtherEFs 'Update-Database'
 
-    try
+    $project = GetProject $ProjectName
+    $startupProject = GetStartupProject $StartUpProjectName $project
+
+    $params = 'database', 'update'
+
+    if ($SourceMigration)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.UpdateDatabaseCommand @( $SourceMigration, $TargetMigration, $Script.IsPresent, $Force.IsPresent, $Verbose.IsPresent )
-        $error = Get-RunnerError $runner
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
-        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()
+        $params += '--source', $SourceMigration
     }
-    finally
+
+    if ($TargetMigration)
     {
-        Remove-Runner $runner
+        $params += '--target', $TargetMigration
+    }
+
+    if ($Script)
+    {
+        $params += '--script'
+    }
+
+    if ($Force)
+    {
+        $params += '--force'
+    }
+
+    $params += GetParams $ConnectionStringName $ConnectionString $ConnectionProviderName
+
+    $result = EF6 $project $startupProject $AppDomainBaseDirectory $params
+    if ($result)
+    {
+        try
+        {
+            $window = $DTE.ItemOperations.NewFile('General\Sql File')
+            $textDocument = $window.Document.Object('TextDocument')
+            $editPoint = $textDocument.StartPoint.CreateEditPoint()
+            $editPoint.Insert($result)
+        }
+        catch
+        {
+            $intermediatePath = GetIntermediatePath $project
+            if (![IO.Path]::IsPathRooted($intermediatePath))
+            {
+                $projectDir = GetProperty $project.Properties 'FullPath'
+                $intermediatePath = Join-Path $projectDir $intermediatePath -Resolve | Convert-Path
+            }
+
+            $fileName = [IO.Path]::ChangeExtension([IO.Path]::GetRandomFileName(), '.sql')
+            $sqlFile = Join-Path $intermediatePath $fileName
+
+            [IO.File]::WriteAllText($sqlFile, $result)
+
+            $DTE.ItemOperations.OpenFile($sqlFile) | Out-Null
+        }
+
+        ShowConsole
     }
 }
 
@@ -608,342 +621,34 @@ function Update-Database
 #>
 function Get-Migrations
 {
-    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName')]
-    param (
+    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName', PositionalBinding = $false)]
+    param(
         [string] $ProjectName,
         [string] $StartUpProjectName,
         [string] $ConfigurationTypeName,
         [parameter(ParameterSetName = 'ConnectionStringName')]
         [string] $ConnectionStringName,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionString,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionProviderName,
         [string] $AppDomainBaseDirectory)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
+    WarnIfOtherEFs 'Get-Migrations'
 
-    try
+    $project = GetProject $ProjectName
+    $startupProject = GetStartupProject $StartUpProjectName $project
+
+    $params = 'migrations', 'list'
+
+    if ($ConfigurationTypeName)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.GetMigrationsCommand
-        $error = Get-RunnerError $runner
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
-    }
-    finally
-    {
-        Remove-Runner $runner
-    }
-}
-
-function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProjectName, $ConfigurationTypeName, $ConnectionStringName, $ConnectionString, $ConnectionProviderName, $ContextAssemblyName, $AppDomainBaseDirectory)
-{
-    $startUpProject = Get-MigrationsStartUpProject $StartUpProjectName $ProjectName
-    Build-Project $startUpProject
-
-    $project = Get-MigrationsProject $ProjectName
-    Build-Project $project
-
-    $contextProject = $project
-    if ($ContextProjectName)
-    {
-        $contextProject = Get-SingleProject $ContextProjectName
-        Build-Project $contextProject
+        $params += '--migrations-config', $ConfigurationTypeName
     }
 
-    $installPath = Get-EntityFrameworkInstallPath $project
-    $toolsPath = Join-Path $installPath tools
+    $params += GetParams $ConnectionStringName $ConnectionString $ConnectionProviderName
 
-    $info = New-AppDomainSetup $project $installPath
-
-    $domain = [AppDomain]::CreateDomain('Migrations', $null, $info)
-    $domain.SetData('project', $project)
-    $domain.SetData('contextProject', $contextProject)
-    $domain.SetData('startUpProject', $startUpProject)
-    $domain.SetData('configurationTypeName', $ConfigurationTypeName)
-    $domain.SetData('connectionStringName', $ConnectionStringName)
-    $domain.SetData('connectionString', $ConnectionString)
-    $domain.SetData('connectionProviderName', $ConnectionProviderName)
-    $domain.SetData('contextAssemblyName', $ContextAssemblyName)
-    $domain.SetData('appDomainBaseDirectory', $AppDomainBaseDirectory)
-
-    $dispatcher = New-DomainDispatcher $toolsPath
-    $domain.SetData('efDispatcher', $dispatcher)
-
-    return @{
-        Domain = $domain;
-        ToolsPath = $toolsPath
-    }
-}
-
-function New-AppDomainSetup($Project, $InstallPath)
-{
-    $info = New-Object System.AppDomainSetup -Property @{
-            ShadowCopyFiles = 'true';
-            ApplicationBase = $InstallPath;
-            PrivateBinPath = 'tools';
-            ConfigurationFile = ([AppDomain]::CurrentDomain.SetupInformation.ConfigurationFile)
-        }
-
-    $targetFrameworkVersion = (New-Object System.Runtime.Versioning.FrameworkName ($Project.Properties.Item('TargetFrameworkMoniker').Value)).Version
-
-    if ($targetFrameworkVersion -lt (New-Object Version @( 4, 5 )))
-    {
-        $info.PrivateBinPath += ';lib\net40'
-    }
-    else
-    {
-        $info.PrivateBinPath += ';lib\net45'
-    }
-
-    return $info
-}
-
-function New-DomainDispatcher($ToolsPath)
-{
-    $utilityAssembly = [System.Reflection.Assembly]::LoadFrom((Join-Path $ToolsPath EntityFramework.PowerShell.Utility.dll))
-    $dispatcher = $utilityAssembly.CreateInstance(
-        'System.Data.Entity.Migrations.Utilities.DomainDispatcher',
-        $false,
-        [System.Reflection.BindingFlags]::Instance -bor [System.Reflection.BindingFlags]::Public,
-        $null,
-        $PSCmdlet,
-        $null,
-        $null)
-
-    return $dispatcher
-}
-
-function Remove-Runner($runner)
-{
-    [AppDomain]::Unload($runner.Domain)
-}
-
-function Invoke-RunnerCommand($runner, $command, $parameters, $anonymousArguments)
-{
-    $domain = $runner.Domain
-
-    if ($anonymousArguments)
-    {
-        $anonymousArguments.GetEnumerator() | %{
-            $domain.SetData($_.Name, $_.Value)
-        }
-    }
-
-    $domain.CreateInstanceFrom(
-        (Join-Path $runner.ToolsPath EntityFramework.PowerShell.dll),
-        $command,
-        $false,
-        0,
-        $null,
-        $parameters,
-        $null,
-        $null) | Out-Null
-}
-
-function Get-RunnerError($runner)
-{
-    $domain = $runner.Domain
-
-    if (!$domain.GetData('wasError'))
-    {
-        return $null
-    }
-
-    return @{
-            Message = $domain.GetData('error.Message');
-            TypeName = $domain.GetData('error.TypeName');
-            StackTrace = $domain.GetData('error.StackTrace')
-    }
-}
-
-function Get-MigrationsProject($name, $hideMessage)
-{
-    if ($name)
-    {
-        return Get-SingleProject $name
-    }
-
-    $project = Get-Project
-    $projectName = $project.Name
-
-    if (!$hideMessage)
-    {
-        Write-Verbose "Using NuGet project '$projectName'."
-    }
-
-    return $project
-}
-
-function Get-MigrationsStartUpProject($name, $fallbackName)
-{
-    $startUpProject = $null
-
-    if ($name)
-    {
-        $startUpProject = Get-SingleProject $name
-    }
-    else
-    {
-        $startupProjectPaths = $DTE.Solution.SolutionBuild.StartupProjects
-
-        if ($startupProjectPaths)
-        {
-            if ($startupProjectPaths.Length -eq 1)
-            {
-                $startupProjectPath = $startupProjectPaths[0]
-
-                if (!(Split-Path -IsAbsolute $startupProjectPath))
-                {
-                    $solutionPath = Split-Path $DTE.Solution.Properties.Item('Path').Value
-                    $startupProjectPath = Join-Path $solutionPath $startupProjectPath -Resolve
-                }
-
-                $startupProject = Get-SolutionProjects | ?{
-                    try
-                    {
-                        $fullName = $_.FullName
-                    }
-                    catch [NotImplementedException]
-                    {
-                        return $false
-                    }
-
-                    if ($fullName -and $fullName.EndsWith('\'))
-                    {
-                        $fullName = $fullName.Substring(0, $fullName.Length - 1)
-                    }
-
-                    return $fullName -eq $startupProjectPath
-                }
-            }
-            else
-            {
-                Write-Verbose 'More than one start-up project found.'
-            }
-        }
-        else
-        {
-            Write-Verbose 'No start-up project found.'
-        }
-    }
-
-    if (!($startUpProject -and (Test-StartUpProject $startUpProject)))
-    {
-        $startUpProject = Get-MigrationsProject $fallbackName $true
-        $startUpProjectName = $startUpProject.Name
-
-        Write-Warning "Cannot determine a valid start-up project. Using project '$startUpProjectName' instead. Your configuration file and working directory may not be set as expected. Use the -StartUpProjectName parameter to set one explicitly. Use the -Verbose switch for more information."
-    }
-    else
-    {
-        $startUpProjectName = $startUpProject.Name
-
-        Write-Verbose "Using StartUp project '$startUpProjectName'."
-    }
-
-    return $startUpProject
-}
-
-function Get-SolutionProjects()
-{
-    $projects = New-Object System.Collections.Stack
-
-    $DTE.Solution.Projects | %{
-        $projects.Push($_)
-    }
-
-    while ($projects.Count -ne 0)
-    {
-        $project = $projects.Pop();
-
-        # NOTE: This line is similar to doing a "yield return" in C#
-        $project
-
-        if ($project.ProjectItems)
-        {
-            $project.ProjectItems | ?{ $_.SubProject } | %{
-                $projects.Push($_.SubProject)
-            }
-        }
-    }
-}
-
-function Get-SingleProject($name)
-{
-    $project = Get-Project $name
-
-    if ($project -is [array])
-    {
-        throw "More than one project '$name' was found. Specify the full name of the one to use."
-    }
-
-    return $project
-}
-
-function Test-StartUpProject($project)
-{
-    if ($project.Kind -eq '{cc5fd16d-436d-48ad-a40c-5a424c6e3e79}')
-    {
-        $projectName = $project.Name
-        Write-Verbose "Cannot use start-up project '$projectName'. The Windows Azure Project type isn't supported."
-
-        return $false
-    }
-
-    return $true
-}
-
-function Build-Project($project)
-{
-    $configuration = $DTE.Solution.SolutionBuild.ActiveConfiguration.Name
-
-    $DTE.Solution.SolutionBuild.BuildProject($configuration, $project.UniqueName, $true)
-
-    if ($DTE.Solution.SolutionBuild.LastBuildInfo)
-    {
-        $projectName = $project.Name
-
-        throw "The project '$projectName' failed to build."
-    }
-}
-
-function Get-EntityFrameworkInstallPath($project)
-{
-    $package = Get-Package -ProjectName $project.FullName | ?{ $_.Id -eq 'EntityFramework' }
-
-    if (!$package)
-    {
-        $projectName = $project.Name
-
-        throw "The EntityFramework package is not installed on project '$projectName'."
-    }
-
-    return Get-PackageInstallPath $package
-}
-
-function Get-PackageInstallPath($package)
-{
-    $componentModel = Get-VsComponentModel
-    $packageInstallerServices = $componentModel.GetService([NuGet.VisualStudio.IVsPackageInstallerServices])
-
-    $vsPackage = $packageInstallerServices.GetInstalledPackages() | ?{ $_.Id -eq $package.Id -and $_.Version -eq $package.Version }
-
-    return $vsPackage.InstallPath
+    return EF6 $project $startupProject $AppDomainBaseDirectory $params
 }
 
 function WarnIfOtherEFs($cmdlet)
@@ -1048,6 +753,24 @@ function GetSolutionProjects()
                 %{ $projects.Push($_.SubProject) }
         }
     }
+}
+
+function GetParams($connectionStringName, $connectionString, $connectionProviderName)
+{
+    $params = @()
+
+    if ($connectionStringName)
+    {
+        $params += '--connection-string-name', $connectionStringName
+    }
+
+    if ($connectionString)
+    {
+        $params += '--connection-string', $connectionString,
+            '--connection-provider', $connectionProviderName
+    }
+
+    return $params
 }
 
 function ShowConsole
@@ -1298,6 +1021,17 @@ function IsWeb($project)
     return $false;
 }
 
+function GetIntermediatePath($project)
+{
+    $intermediatePath = GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'IntermediatePath'
+    if ($intermediatePath)
+    {
+        return $intermediatePath
+    }
+
+    return GetMSBuildProperty $project 'IntermediateOutputPath'
+}
+
 function GetPlatformTarget($project)
 {
     if (IsCpsProject $project)
@@ -1310,7 +1044,7 @@ function GetPlatformTarget($project)
 
         return GetCpsProperty $project 'Platform'
     }
-    
+
     $platformTarget = GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'PlatformTarget'
     if ($platformTarget)
     {

@@ -6,15 +6,13 @@ using MyResources = System.Data.Entity.Tools.Properties.Resources;
 
 namespace System.Data.Entity.Tools.Commands
 {
-    internal class MigrationsCommand : HelpCommandBase
+    internal abstract class MigrationsCommandBase : ProjectCommandBase
     {
+        protected CommandOption MigrationsConfig { get; private set; }
+
         public override void Configure(CommandLineApplication command)
         {
-            command.Description = MyResources.MigrationsDescription;
-
-            command.Command("add", new MigrationsAddCommand().Configure);
-            command.Command("enable", new MigrationsEnableCommand().Configure);
-            command.Command("list", new MigrationsListCommand().Configure);
+            MigrationsConfig = command.Option("--migrations-config <TYPE>", MyResources.MigrationsConfigDescription);
 
             base.Configure(command);
         }

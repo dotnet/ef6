@@ -10,6 +10,7 @@ namespace System.Data.Entity.Infrastructure.Design
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -170,28 +171,16 @@ namespace System.Data.Entity.Infrastructure.Design
             }
         }
 
-        internal virtual IDictionary ScaffoldInitialCreateInternal(
+        private void OverrideConfiguration(
+            DbMigrationsConfiguration configuration,
             DbConnectionInfo connectionInfo,
-            string contextTypeName,
-            string contextAssemblyName,
-            string migrationsNamespace,
-            bool auto,
-            string migrationsDir)
+            bool force = false)
         {
-            var contextAssembly = LoadAssembly(contextAssemblyName) ?? _assembly;
-            var configuration = new DbMigrationsConfiguration
-            {
-                ContextType = contextAssembly.GetType(contextTypeName, throwOnError: true),
-                MigrationsAssembly = _assembly,
-                MigrationsNamespace = migrationsNamespace,
-                AutomaticMigrationsEnabled = auto,
-                MigrationsDirectory = migrationsDir
-            };
-
             if (connectionInfo != null)
             {
                 configuration.TargetDatabase = connectionInfo;
             }
+
             if (string.Equals(_language, "VB", StringComparison.OrdinalIgnoreCase)
                 && configuration.CodeGenerator is CSharpMigrationCodeGenerator)
             {
@@ -199,6 +188,14 @@ namespace System.Data.Entity.Infrastructure.Design
                 configuration.CodeGenerator = new VisualBasicMigrationCodeGenerator();
             }
 
+            if (force)
+            {
+                configuration.AutomaticMigrationDataLossAllowed = true;
+            }
+        }
+
+        private MigrationScaffolder CreateMigrationScaffolder(DbMigrationsConfiguration configuration)
+        {
             var scaffolder = new MigrationScaffolder(configuration);
 
             var @namespace = configuration.MigrationsNamespace;
@@ -225,9 +222,11 @@ namespace System.Data.Entity.Infrastructure.Design
 
             scaffolder.Namespace = @namespace;
 
-            var result = scaffolder.ScaffoldInitialCreate();
+            return scaffolder;
+        }
 
-            return result == null
+        private static IDictionary ToHashtable(ScaffoldedMigration result)
+            => result == null
                 ? null
                 : new Hashtable
                 {
@@ -239,6 +238,31 @@ namespace System.Data.Entity.Infrastructure.Design
                     ["Resources"] = result.Resources,
                     ["IsRescaffold"] = result.IsRescaffold
                 };
+
+        internal virtual IDictionary ScaffoldInitialCreateInternal(
+            DbConnectionInfo connectionInfo,
+            string contextTypeName,
+            string contextAssemblyName,
+            string migrationsNamespace,
+            bool auto,
+            string migrationsDir)
+        {
+            var contextAssembly = LoadAssembly(contextAssemblyName) ?? _assembly;
+            var configuration = new DbMigrationsConfiguration
+            {
+                ContextType = contextAssembly.GetType(contextTypeName, throwOnError: true),
+                MigrationsAssembly = _assembly,
+                MigrationsNamespace = migrationsNamespace,
+                AutomaticMigrationsEnabled = auto,
+                MigrationsDirectory = migrationsDir
+            };
+            OverrideConfiguration(configuration, connectionInfo);
+
+            var scaffolder = CreateMigrationScaffolder(configuration);
+
+            var result = scaffolder.ScaffoldInitialCreate();
+
+            return ToHashtable(result);
         }
 
         public class ScaffoldInitialCreate : OperationBase
@@ -269,6 +293,169 @@ namespace System.Data.Entity.Infrastructure.Design
                         migrationsDir));
             }
         }
+
+        private DbMigrationsConfiguration GetMigrationsConfiguration(string migrationsConfigurationName)
+            => new MigrationsConfigurationFinder(new TypeFinder(_assembly))
+                .FindMigrationsConfiguration(
+                    contextType: null,
+                    migrationsConfigurationName,
+                    Error.AssemblyMigrator_NoConfiguration,
+                    (assembly, types) => Error.AssemblyMigrator_MultipleConfigurations(assembly),
+                    Error.AssemblyMigrator_NoConfigurationWithName,
+                    Error.AssemblyMigrator_MultipleConfigurationsWithName);
+
+        internal virtual IDictionary ScaffoldInternal(
+            string name,
+            DbConnectionInfo connectionInfo,
+            string migrationsConfigurationName,
+            bool ignoreChanges)
+        {
+            var configuration = GetMigrationsConfiguration(migrationsConfigurationName);
+            OverrideConfiguration(configuration, connectionInfo);
+
+            var scaffolder = CreateMigrationScaffolder(configuration);
+
+            var result = scaffolder.Scaffold(name, ignoreChanges);
+
+            return ToHashtable(result);
+        }
+
+        public class Scaffold : OperationBase
+        {
+            public Scaffold(Executor executor, object resultHandler, IDictionary args)
+                : base(resultHandler)
+            {
+                Check.NotNull(executor, nameof(executor));
+                Check.NotNull(resultHandler, nameof(resultHandler));
+                Check.NotNull(args, nameof(args));
+
+                var name = (string)args["name"];
+                var connectionStringName = (string)args["connectionStringName"];
+                var connectionString = (string)args["connectionString"];
+                var connectionProviderName = (string)args["connectionProviderName"];
+                var migrationsConfigurationName = (string)args["migrationsConfigurationName"];
+                var ignoreChanges = (bool)args["ignoreChanges"];
+
+                Execute(
+                    () => executor.ScaffoldInternal(
+                        name,
+                        CreateConnectionInfo(connectionStringName, connectionString, connectionProviderName),
+                        migrationsConfigurationName,
+                        ignoreChanges));
+            }
+        }
+
+        internal IEnumerable<string> GetDatabaseMigrationsInternal(
+            DbConnectionInfo connectionInfo,
+            string migrationsConfigurationName)
+        {
+            var configuration = GetMigrationsConfiguration(migrationsConfigurationName);
+            OverrideConfiguration(configuration, connectionInfo);
+
+            return CreateMigrator(configuration).GetDatabaseMigrations();
+        }
+
+        public class GetDatabaseMigrations : OperationBase
+        {
+            public GetDatabaseMigrations(Executor executor, object resultHandler, IDictionary args)
+                : base(resultHandler)
+            {
+                Check.NotNull(executor, nameof(executor));
+                Check.NotNull(resultHandler, nameof(resultHandler));
+                Check.NotNull(args, nameof(args));
+
+                var connectionStringName = (string)args["connectionStringName"];
+                var connectionString = (string)args["connectionString"];
+                var connectionProviderName = (string)args["connectionProviderName"];
+                var migrationsConfigurationName = (string)args["migrationsConfigurationName"];
+
+                Execute(
+                    () => executor.GetDatabaseMigrationsInternal(
+                        CreateConnectionInfo(connectionStringName, connectionString, connectionProviderName),
+                        migrationsConfigurationName));
+            }
+        }
+
+        internal string ScriptUpdateInternal(
+                string sourceMigration,
+                string targetMigration,
+                bool force,
+                DbConnectionInfo connectionInfo,
+                string migrationsConfigurationName)
+        {
+            var configuration = GetMigrationsConfiguration(migrationsConfigurationName);
+            OverrideConfiguration(configuration, connectionInfo, force);
+
+            return new MigratorScriptingDecorator(CreateMigrator(configuration))
+                .ScriptUpdate(sourceMigration, targetMigration);
+        }
+
+        public class ScriptUpdate : OperationBase
+        {
+            public ScriptUpdate(Executor executor, object resultHandler, IDictionary args)
+                : base(resultHandler)
+            {
+                Check.NotNull(executor, nameof(executor));
+                Check.NotNull(resultHandler, nameof(resultHandler));
+                Check.NotNull(args, nameof(args));
+
+                var sourceMigration = (string)args["sourceMigration"];
+                var targetMigration = (string)args["targetMigration"];
+                var force = (bool)args["force"];
+                var connectionStringName = (string)args["connectionStringName"];
+                var connectionString = (string)args["connectionString"];
+                var connectionProviderName = (string)args["connectionProviderName"];
+                var migrationsConfigurationName = (string)args["migrationsConfigurationName"];
+
+                Execute(
+                    () => executor.ScriptUpdateInternal(
+                        sourceMigration,
+                        targetMigration,
+                        force,
+                        CreateConnectionInfo(connectionStringName, connectionString, connectionProviderName),
+                        migrationsConfigurationName));
+            }
+        }
+
+        internal void UpdateInternal(
+                string targetMigration,
+                bool force,
+                DbConnectionInfo connectionInfo,
+                string migrationsConfigurationName)
+        {
+            var configuration = GetMigrationsConfiguration(migrationsConfigurationName);
+            OverrideConfiguration(configuration, connectionInfo, force);
+
+            CreateMigrator(configuration).Update(targetMigration);
+        }
+
+        public class Update : OperationBase
+        {
+            public Update(Executor executor, object resultHandler, IDictionary args)
+                : base(resultHandler)
+            {
+                Check.NotNull(executor, nameof(executor));
+                Check.NotNull(resultHandler, nameof(resultHandler));
+                Check.NotNull(args, nameof(args));
+
+                var targetMigration = (string)args["targetMigration"];
+                var force = (bool)args["force"];
+                var connectionStringName = (string)args["connectionStringName"];
+                var connectionString = (string)args["connectionString"];
+                var connectionProviderName = (string)args["connectionProviderName"];
+                var migrationsConfigurationName = (string)args["migrationsConfigurationName"];
+
+                Execute(
+                    () => executor.UpdateInternal(
+                        targetMigration,
+                        force,
+                        CreateConnectionInfo(connectionStringName, connectionString, connectionProviderName),
+                        migrationsConfigurationName));
+            }
+        }
+
+        private MigratorBase CreateMigrator(DbMigrationsConfiguration configuration)
+            => new MigratorLoggingDecorator(new DbMigrator(configuration), new ToolLogger(_reporter));
 
         /// <summary>
         ///     Represents an operation.
@@ -349,6 +536,25 @@ namespace System.Data.Entity.Infrastructure.Design
 
                 Execute(() => _handler.SetResult(action().ToArray()));
             }
+        }
+
+        private class ToolLogger : MigrationsLogger
+        {
+            private readonly Reporter _reporter;
+
+            public ToolLogger(Reporter reporter)
+            {
+                _reporter = reporter;
+            }
+
+            public override void Info(string message)
+                => _reporter.WriteInformation(message);
+
+            public override void Warning(string message)
+                => _reporter.WriteWarning(message);
+
+            public override void Verbose(string sql)
+                => _reporter.WriteVerbose(sql);
         }
     }
 }

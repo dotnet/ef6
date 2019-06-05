@@ -120,6 +120,9 @@
   <data name="AssemblyDescription" xml:space="preserve">
     <value>The assembly to use.</value>
   </data>
+  <data name="AutomaticMigrationDisabledInfo" xml:space="preserve">
+    <value>You can use the Add-Migration command to write the pending model changes to a code-based migration.</value>
+  </data>
   <data name="ConfigDescription" xml:space="preserve">
     <value>Specifies the configuration file to use for named connection strings.</value>
   </data>
@@ -141,8 +144,26 @@
   <data name="DatabaseDescription" xml:space="preserve">
     <value>Commands to manage the database.</value>
   </data>
+  <data name="DatabaseUpdateDescription" xml:space="preserve">
+    <value>Applies any pending migrations to the database.</value>
+  </data>
+  <data name="DatabaseUpdateForceDescription" xml:space="preserve">
+    <value>Specifies that data loss is acceptable during automatic migration of the database.</value>
+  </data>
+  <data name="DatabaseUpdateScriptDescription" xml:space="preserve">
+    <value>Generate a SQL script rather than executing the pending changes directly.</value>
+  </data>
+  <data name="DatabaseUpdateSourceDescription" xml:space="preserve">
+    <value>Only valid with --script. Specifies the name of a particular migration to use as the update's starting point. If omitted, the last applied migration in the database will be used.</value>
+  </data>
+  <data name="DatabaseUpdateTargetDescription" xml:space="preserve">
+    <value>Specifies the name of a particular migration to update the database to. If omitted, the current model will be used.</value>
+  </data>
   <data name="DataDirDescription" xml:space="preserve">
     <value>The data directory.</value>
+  </data>
+  <data name="DidYouMeanToRescaffold" xml:space="preserve">
+    <value>A previous migration called '{0}' was already applied to the target database. If you meant to re-scaffold '{0}', revert it by running 'Update-Database -TargetMigration {1}', then delete '{2}' and run 'Add-Migration {0}' again.</value>
   </data>
   <data name="EF6FullName" xml:space="preserve">
     <value>Entity Framework Command-line Tools</value>
@@ -159,14 +180,35 @@
   <data name="EntityFrameworkNotFound" xml:space="preserve">
     <value>Your target project '{0}' doesn't reference EntityFramework. This package is required for the Entity Framework Core Tools to work. Ensure your target project is correct, install the package, and try again.</value>
   </data>
+  <data name="GetMigrationsCommand_Intro" xml:space="preserve">
+    <value>Retrieving migrations that have been applied to the target database.</value>
+  </data>
+  <data name="GetMigrationsCommand_NoHistory" xml:space="preserve">
+    <value>No migrations have been applied to the target database.</value>
+  </data>
+  <data name="IgnoreChangesDescription" xml:space="preserve">
+    <value>Scaffolds an empty migration ignoring any pending changes detected in the current model. This can be used to create an initial, empty migration to enable Migrations for an existing database. N.B. Doing this assumes that the target database schema is compatible with the current model.</value>
+  </data>
   <data name="JsonDescription" xml:space="preserve">
     <value>Show JSON output.</value>
   </data>
   <data name="LanguageDescription" xml:space="preserve">
     <value>The language. Defaults to 'C#'.</value>
   </data>
+  <data name="MigrationNameDescription" xml:space="preserve">
+    <value>Specifies the name of the custom script.</value>
+  </data>
+  <data name="MigrationsAddDescription" xml:space="preserve">
+    <value>Scaffolds a migration script for any pending model changes.</value>
+  </data>
+  <data name="MigrationsAddForceDescription" xml:space="preserve">
+    <value>Specifies that the migration user code be overwritten when re-scaffolding an existing migration.</value>
+  </data>
   <data name="MigrationsAlreadyEnabled" xml:space="preserve">
     <value>Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter.</value>
+  </data>
+  <data name="MigrationsConfigDescription" xml:space="preserve">
+    <value>Specifies the migrations configuration to use. If omitted, migrations will attempt to locate a single migrations configuration type in the target project.</value>
   </data>
   <data name="MigrationsDescription" xml:space="preserve">
     <value>Commands to manage migrations.</value>
@@ -186,6 +228,12 @@
   <data name="MigrationsEnableForceDescription" xml:space="preserve">
     <value>Specifies that the migrations configuration be overwritten when running more than once for a given project.</value>
   </data>
+  <data name="MigrationsListDescription" xml:space="preserve">
+    <value>Displays the migrations that have been applied to the target database.</value>
+  </data>
+  <data name="MissingArgument" xml:space="preserve">
+    <value>Missing required argument '{0}'.</value>
+  </data>
   <data name="MissingOption" xml:space="preserve">
     <value>Missing required option '--{0}'.</value>
   </data>
@@ -201,8 +249,23 @@
   <data name="ProjectDirDescription" xml:space="preserve">
     <value>The project directory. Defaults to the current directory.</value>
   </data>
+  <data name="RescaffoldingMigration" xml:space="preserve">
+    <value>Re-scaffolding migration '{0}'.</value>
+  </data>
+  <data name="RescaffoldNoForce" xml:space="preserve">
+    <value>Only the Designer Code for migration '{0}' was re-scaffolded. To re-scaffold the entire migration, use the -Force parameter.</value>
+  </data>
   <data name="RootNamespaceDescription" xml:space="preserve">
     <value>The root namespace. Defaults to the target assembly name.</value>
+  </data>
+  <data name="ScaffoldingMigration" xml:space="preserve">
+    <value>Scaffolding migration '{0}'.</value>
+  </data>
+  <data name="SnapshotBehindWarning" xml:space="preserve">
+    <value>The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration {0}' again.</value>
+  </data>
+  <data name="UpdateDatabaseCommand_VerboseInstructions" xml:space="preserve">
+    <value>Specify the '-Verbose' flag to view the SQL statements being applied to the target database.</value>
   </data>
   <data name="VerboseDescription" xml:space="preserve">
     <value>Show verbose output.</value>

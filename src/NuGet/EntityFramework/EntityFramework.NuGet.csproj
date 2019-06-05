@@ -22,11 +22,6 @@
     <NuspecProperty Include="SystemDataSqlClientVersion=$(SystemDataSqlClientVersion)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <ProjectReference Include="..\..\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
-    <ProjectReference Include="..\..\Migrate\Migrate.csproj" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
     <ProjectReference Include="..\..\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj" />
   </ItemGroup>

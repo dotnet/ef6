@@ -90,13 +90,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
-    <ProjectReference Include="..\..\..\src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
-    <ProjectReference Include="..\..\..\src\Migrate\Migrate.csproj">
-      <Aliases>migrate</Aliases>
-    </ProjectReference>
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj" />
   </ItemGroup>

@@ -11,6 +11,7 @@ namespace System.Data.Entity.Migrations.Design
     ///     Represents an exception that occurred while running an operation in another AppDomain in the
     ///     <see cref="ToolingFacade" />.
     /// </summary>
+    [Obsolete("Use System.Data.Entity.Infrastructure.Design.IErrorHandler instead.")]
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
     [Serializable]

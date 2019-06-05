@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations.Utilities
+namespace System
 {
-    using System.Data.Entity.Utilities;
+    using System.Data.Entity.Tools.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text.RegularExpressions;
@@ -11,6 +11,7 @@ namespace System.Data.Entity.Migrations.Utilities
         Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     internal static class StringExtensions
     {
+        private const string InitialDatabase = "0";
         private static readonly Regex _migrationIdPattern = new Regex(@"\d{15}_.+");
 
         public static bool EqualsIgnoreCase(this string s1, string s2)
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Migrations.Utilities
             DebugCheck.NotEmpty(migrationId);
 
             return _migrationIdPattern.IsMatch(migrationId)
-                   || migrationId == DbMigrator.InitialDatabase;
+                   || migrationId == InitialDatabase;
         }
     }
 }

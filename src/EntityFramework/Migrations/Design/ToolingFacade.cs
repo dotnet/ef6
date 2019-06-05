@@ -27,7 +27,7 @@ namespace System.Data.Entity.Migrations.Design
     /// The App/Web.config file from the startup project is also copied
     /// to ensure that any configuration is applied.
     /// </summary>
-    // TODO: Move this functionality to System.Data.Entity.Infrastructure.Design.Executor
+    [Obsolete("Use System.Data.Entity.Infrastructure.Design.Executor instead.")]
     public class ToolingFacade : IDisposable
     {
         private readonly string _migrationsAssemblyName;

@@ -36,24 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Properties\Resources.Migrate.cs" />
-    <Compile Remove="Properties\Resources.PowerShell.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Properties\Resources.Migrate.cs">
-      <DependentUpon>Resources.Migrate.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </None>
-    <None Include="Properties\Resources.PowerShell.cs">
-      <DependentUpon>Resources.PowerShell.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Core\EntityClient\EntityCommand.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -71,30 +53,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\Resources.Migrate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Resources.Migrate.cs</LastGenOutput>
-      <CustomToolNamespace>System.Data.Entity.Migrations.Console</CustomToolNamespace>
-    </None>
-    <None Update="Properties\Resources.PowerShell.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Resources.PowerShell.cs</LastGenOutput>
-      <CustomToolNamespace>System.Data.Entity.Migrations</CustomToolNamespace>
-    </None>
     <None Update="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>
       <CustomToolNamespace>System.Data.Entity</CustomToolNamespace>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.Migrate.resx">
-      <CustomToolNamespace>System.Data.Entity.Migrations.Console.Properties</CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\Resources.PowerShell.resx">
-      <CustomToolNamespace>System.Data.Entity.Migrations.Properties</CustomToolNamespace>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

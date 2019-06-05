@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Data.Entity.Tools.Migrations.Design;
 
 namespace System.Data.Entity.Tools
@@ -41,6 +42,12 @@ namespace System.Data.Entity.Tools
                     ["auto"] = auto,
                     ["migrationsDir"] = migrationsDir
                 });
+
+            return ToScaffoldedMigration(result);
+        }
+
+        private static ScaffoldedMigration ToScaffoldedMigration(IDictionary result)
+        {
             if (result == null)
             {
                 return null;
@@ -63,6 +70,84 @@ namespace System.Data.Entity.Tools
 
             return scaffoldedMigration;
         }
+
+        public ScaffoldedMigration Scaffold(
+                string name,
+                string connectionStringName,
+                string connectionString,
+                string connectionProviderName,
+                string migrationsConfigurationName,
+                bool ignoreChanges)
+        {
+            var result = Invoke<IDictionary>(
+                "Scaffold",
+                new Hashtable
+                {
+                    ["name"] = name,
+                    ["connectionStringName"] = connectionStringName,
+                    ["connectionString"] = connectionString,
+                    ["connectionProviderName"] = connectionProviderName,
+                    ["migrationsConfigurationName"] = migrationsConfigurationName,
+                    ["ignoreChanges"] = ignoreChanges
+                });
+
+            return ToScaffoldedMigration(result);
+        }
+
+        public IEnumerable<string> GetDatabaseMigrations(
+                string connectionStringName,
+                string connectionString,
+                string connectionProviderName,
+                string migrationsConfigurationName)
+            => Invoke<IEnumerable<string>>(
+                "GetDatabaseMigrations",
+                new Hashtable
+                {
+                    ["connectionStringName"] = connectionStringName,
+                    ["connectionString"] = connectionString,
+                    ["connectionProviderName"] = connectionProviderName,
+                    ["migrationsConfigurationName"] = migrationsConfigurationName
+                });
+
+        public string ScriptUpdate(
+                string sourceMigration,
+                string targetMigration,
+                bool force,
+                string connectionStringName,
+                string connectionString,
+                string connectionProviderName,
+                string migrationsConfigurationName)
+            => Invoke<string>(
+                "ScriptUpdate",
+                new Hashtable
+                {
+                    ["sourceMigration"] = sourceMigration,
+                    ["targetMigration"] = targetMigration,
+                    ["force"] = force,
+                    ["connectionStringName"] = connectionStringName,
+                    ["connectionString"] = connectionString,
+                    ["connectionProviderName"] = connectionProviderName,
+                    ["migrationsConfigurationName"] = migrationsConfigurationName
+                });
+
+        public void Update(
+                string targetMigration,
+                bool force,
+                string connectionStringName,
+                string connectionString,
+                string connectionProviderName,
+                string migrationsConfigurationName)
+            => Invoke<object>(
+                "Update",
+                new Hashtable
+                {
+                    ["targetMigration"] = targetMigration,
+                    ["force"] = force,
+                    ["connectionStringName"] = connectionStringName,
+                    ["connectionString"] = connectionString,
+                    ["connectionProviderName"] = connectionProviderName,
+                    ["migrationsConfigurationName"] = migrationsConfigurationName
+                });
 
         protected abstract dynamic CreateResultHandler();
         protected abstract void Execute(string operation, object resultHandler, IDictionary args);
