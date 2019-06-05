@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.ProviderAgn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.Entity.Build.Tasks", "src\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj", "{B8DB9CC0-822A-423C-A5BE-28C19F94899B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ef6", "src\ef6\ef6.csproj", "{7F79B619-FA4D-46D7-876E-FD06C22465DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{B8DB9CC0-822A-423C-A5BE-28C19F94899B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8DB9CC0-822A-423C-A5BE-28C19F94899B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8DB9CC0-822A-423C-A5BE-28C19F94899B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F79B619-FA4D-46D7-876E-FD06C22465DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F79B619-FA4D-46D7-876E-FD06C22465DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F79B619-FA4D-46D7-876E-FD06C22465DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F79B619-FA4D-46D7-876E-FD06C22465DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

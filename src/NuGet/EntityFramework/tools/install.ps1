@@ -27,4 +27,4 @@ $project.Object.References |
     %{ $_.Remove() }
 
 Write-Host
-Write-Host "Type 'get-help EntityFramework' to see all available Entity Framework commands."
+Write-Host "Type 'get-help EntityFramework6' to see all available Entity Framework commands."

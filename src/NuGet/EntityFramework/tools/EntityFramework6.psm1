@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft Corporation.  All rights reserved.
 
+$ErrorActionPreference = 'Stop'
 $InitialDatabase = '0'
 
 $knownExceptions = @(
@@ -23,7 +24,7 @@ $knownExceptions = @(
     matches, in which case no action is taken. The 'entityFramework'
     section is added if it does not exist. The config file is automatically
     saved if and only if a change was made.
-    
+
     This command is typically used only by Entity Framework provider NuGet
     packages and is run from the 'install.ps1' script.
 
@@ -40,22 +41,19 @@ $knownExceptions = @(
 .PARAMETER TypeName
     The assembly-qualified type name of the provider-specific type that
     inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. For
-    example, for the Microsoft SQL Server provider, this type is 
+    example, for the Microsoft SQL Server provider, this type is
     'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'.
 #>
 function Add-EFProvider
 {
-    param (
-        [parameter(Position = 0,
-            Mandatory = $true)]
+    [CmdletBinding(PositionalBinding = $false)]
+    param(
+        [parameter(Position = 0, Mandatory = $true)]
         $Project,
-        [parameter(Position = 1,
-            Mandatory = $true)]
+        [parameter(Position = 1, Mandatory = $true)]
         [string] $InvariantName,
-        [parameter(Position = 2,
-            Mandatory = $true)]
-        [string] $TypeName
-    )
+        [parameter(Position = 2, Mandatory = $true)]
+        [string] $TypeName)
 
     $configPath = GetConfigPath($Project)
     if (!$configPath)
@@ -68,7 +66,7 @@ function Add-EFProvider
     $providers = $configXml.configuration.entityFramework.providers
 
     $providers.provider |
-        ?{ $_.invariantName -eq $InvariantName } |
+        where invariantName -eq $InvariantName |
         %{ $providers.RemoveChild($_) | Out-Null }
 
     $provider = $providers.AppendChild($configXml.CreateElement('provider'))
@@ -90,7 +88,7 @@ function Add-EFProvider
     overridden if it does not match. The 'entityFramework' section is added if
     it does not exist. The config file is automatically saved if and only if
     a change was made.
-    
+
     This command is typically used only by Entity Framework provider NuGet
     packages and is run from the 'install.ps1' script.
 
@@ -112,15 +110,13 @@ function Add-EFProvider
 #>
 function Add-EFDefaultConnectionFactory
 {
-    param (
-        [parameter(Position = 0,
-            Mandatory = $true)]
+    [CmdletBinding(PositionalBinding = $false)]
+    param(
+        [parameter(Position = 0, Mandatory = $true)]
         $Project,
-        [parameter(Position = 1,
-            Mandatory = $true)]
+        [parameter(Position = 1, Mandatory = $true)]
         [string] $TypeName,
-        [string[]] $ConstructorArguments
-    )
+        [string[]] $ConstructorArguments)
 
     $configPath = GetConfigPath($Project)
     if (!$configPath)
@@ -173,7 +169,7 @@ function Add-EFDefaultConnectionFactory
 
 .PARAMETER MigrationsDirectory
     Specifies the name of the directory that will contain migrations code files.
-    If omitted, the directory will be named "Migrations". 
+    If omitted, the directory will be named "Migrations".
 
 .PARAMETER ProjectName
     Specifies the project that the scaffolded migrations configuration class will
@@ -202,7 +198,7 @@ function Add-EFDefaultConnectionFactory
 .PARAMETER Force
     Specifies that the migrations configuration be overwritten when running more
     than once for a given project.
-	
+
 .PARAMETER ContextAssemblyName
     Specifies the name of the assembly which contains the DbContext class to use. Use this
     parameter instead of ContextProjectName when the context is contained in a referenced
@@ -211,31 +207,31 @@ function Add-EFDefaultConnectionFactory
 .PARAMETER AppDomainBaseDirectory
     Specifies the directory to use for the app-domain that is used for running Migrations
     code such that the app-domain is able to find all required assemblies. This is an
-    advanced option that should only be needed if the solution contains	several projects 
+    advanced option that should only be needed if the solution contains	several projects
     such that the assemblies needed for the context and configuration are not all
     referenced from either the project containing the context or the project containing
     the migrations.
 
-.EXAMPLE 
-	Enable-Migrations
-	# Scaffold a migrations configuration in a project with only one context
-	
-.EXAMPLE 
-	Enable-Migrations -Auto
-	# Scaffold a migrations configuration with automatic migrations enabled for a project
-	# with only one context
-	
-.EXAMPLE 
-	Enable-Migrations -ContextTypeName MyContext -MigrationsDirectory DirectoryName
-	# Scaffold a migrations configuration for a project with multiple contexts
-	# This scaffolds a migrations configuration for MyContext and will put the configuration
-	# and subsequent configurations in a new directory called "DirectoryName"
+.EXAMPLE
+    Enable-Migrations
+    # Scaffold a migrations configuration in a project with only one context
+
+.EXAMPLE
+    Enable-Migrations -Auto
+    # Scaffold a migrations configuration with automatic migrations enabled for a project
+    # with only one context
+
+.EXAMPLE
+    Enable-Migrations -ContextTypeName MyContext -MigrationsDirectory DirectoryName
+    # Scaffold a migrations configuration for a project with multiple contexts
+    # This scaffolds a migrations configuration for MyContext and will put the configuration
+    # and subsequent configurations in a new directory called "DirectoryName"
 
 #>
 function Enable-Migrations
 {
-    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName')] 
-    param (
+    [CmdletBinding(DefaultParameterSetName = 'ConnectionStringName', PositionalBinding = $false)]
+    param(
         [string] $ContextTypeName,
         [alias('Auto')]
         [switch] $EnableAutomaticMigrations,
@@ -245,43 +241,75 @@ function Enable-Migrations
         [string] $ContextProjectName,
         [parameter(ParameterSetName = 'ConnectionStringName')]
         [string] $ConnectionStringName,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionString,
-        [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
-            Mandatory = $true)]
+        [parameter(ParameterSetName = 'ConnectionStringAndProviderName', Mandatory = $true)]
         [string] $ConnectionProviderName,
         [switch] $Force,
         [string] $ContextAssemblyName,
-		[string] $AppDomainBaseDirectory
-    )
+        [string] $AppDomainBaseDirectory)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $ContextProjectName $null $ConnectionStringName $ConnectionString $ConnectionProviderName $ContextAssemblyName $AppDomainBaseDirectory
+    WarnIfOtherEFs 'Enable-Migrations'
 
-    try
+    $project = GetProject $ProjectName
+    $startupProject = GetStartupProject $StartUpProjectName $project
+
+    if (!$ContextAssemblyName -and $ContextProjectName)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent ) @{ 'ContextTypeName' = $ContextTypeName; 'MigrationsDirectory' = $MigrationsDirectory }        		
-        $error = Get-RunnerError $runner					
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
-
-        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
+        $contextProject = Get-Project $ContextProjectName
+        $ContextAssemblyName = GetProperty $contextProject.Properties 'AssemblyName'
     }
-    finally
-    {				
-        Remove-Runner $runner		
+
+    $params = 'migrations', 'enable', '--json'
+
+    if ($ContextTypeName)
+    {
+        $params += '--context', $ContextTypeName
+    }
+
+    if ($ContextAssemblyName)
+    {
+        $params += '--context-assembly', $ContextAssemblyName
+    }
+
+    if ($EnableAutomaticMigrations)
+    {
+        $params += '--auto'
+    }
+
+    if ($MigrationsDirectory)
+    {
+        $params += '--migrations-dir', $MigrationsDirectory
+    }
+
+    if ($ConnectionStringName)
+    {
+        $params += '--connection-string-name', $ConnectionStringName
+    }
+
+    if ($ConnectionString)
+    {
+        $params += '--connection-string', $ConnectionString,
+            '--connection-provider', $ConnectionProviderName
+    }
+
+    if ($Force)
+    {
+        $params += '--force'
+    }
+
+    # NB: -join is here to support ConvertFrom-Json on PowerShell 3.0
+    $result = (EF6 $project $startupProject $AppDomainBaseDirectory $params) -join "`n" | ConvertFrom-Json
+
+    $project.ProjectItems.AddFromFile($result.migrationsConfiguration) | Out-Null
+    $DTE.ItemOperations.OpenFile($result.migrationsConfiguration) | Out-Null
+    ShowConsole
+
+    if ($result.migration)
+    {
+        $project.ProjectItems.AddFromFile($result.migration) | Out-Null
+        $project.ProjectItems.AddFromFile($result.migrationResources) | Out-Null
+        $project.ProjectItems.AddFromFile($result.migrationDesigner) | Out-Null
     }
 }
 
@@ -333,21 +361,21 @@ function Enable-Migrations
 .PARAMETER AppDomainBaseDirectory
     Specifies the directory to use for the app-domain that is used for running Migrations
     code such that the app-domain is able to find all required assemblies. This is an
-    advanced option that should only be needed if the solution contains	several projects 
+    advanced option that should only be needed if the solution contains	several projects
     such that the assemblies needed for the context and configuration are not all
     referenced from either the project containing the context or the project containing
     the migrations.
-	
+
 .EXAMPLE
-	Add-Migration First
-	# Scaffold a new migration named "First"
-	
+    Add-Migration First
+    # Scaffold a new migration named "First"
+
 .EXAMPLE
-	Add-Migration First -IgnoreChanges
-	# Scaffold an empty migration ignoring any pending changes detected in the current model.
-	# This can be used to create an initial, empty migration to enable Migrations for an existing
-	# database. N.B. Doing this assumes that the target database schema is compatible with the
-	# current model.
+    Add-Migration First -IgnoreChanges
+    # Scaffold an empty migration ignoring any pending changes detected in the current model.
+    # This can be used to create an initial, empty migration to enable Migrations for an existing
+    # database. N.B. Doing this assumes that the target database schema is compatible with the
+    # current model.
 
 #>
 function Add-Migration
@@ -370,7 +398,7 @@ function Add-Migration
             Mandatory = $true)]
         [string] $ConnectionProviderName,
         [switch] $IgnoreChanges,
-		[string] $AppDomainBaseDirectory)
+        [string] $AppDomainBaseDirectory)
 
     Hint-Downgrade $MyInvocation.MyCommand
     $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
@@ -378,7 +406,7 @@ function Add-Migration
     try
     {
         Invoke-RunnerCommand $runner System.Data.Entity.Migrations.AddMigrationCommand @( $Name, $Force.IsPresent, $IgnoreChanges.IsPresent )
-        $error = Get-RunnerError $runner       		
+        $error = Get-RunnerError $runner
 
         if ($error)
         {
@@ -392,13 +420,13 @@ function Add-Migration
             }
 
             throw $error.Message
-        }		
-        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
+        }
+        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()
     }
     finally
-    {			
-        Remove-Runner $runner		
-    }	
+    {
+        Remove-Runner $runner
+    }
 }
 
 <#
@@ -448,45 +476,45 @@ function Add-Migration
 
 .PARAMETER ConnectionProviderName
     Specifies the provider invariant name of the connection string.
-	
+
 .PARAMETER AppDomainBaseDirectory
     Specifies the directory to use for the app-domain that is used for running Migrations
     code such that the app-domain is able to find all required assemblies. This is an
-    advanced option that should only be needed if the solution contains	several projects 
+    advanced option that should only be needed if the solution contains	several projects
     such that the assemblies needed for the context and configuration are not all
     referenced from either the project containing the context or the project containing
     the migrations.
 
 .EXAMPLE
-	Update-Database
-	# Update the database to the latest migration
-	
+    Update-Database
+    # Update the database to the latest migration
+
 .EXAMPLE
-	Update-Database -TargetMigration Second
-	# Update database to a migration named "Second"
-	# This will apply migrations if the target hasn't been applied or roll back migrations
-	# if it has
-	
+    Update-Database -TargetMigration Second
+    # Update database to a migration named "Second"
+    # This will apply migrations if the target hasn't been applied or roll back migrations
+    # if it has
+
 .EXAMPLE
-	Update-Database -Script
-	# Generate a script to update the database from its current state to the latest migration
-	
+    Update-Database -Script
+    # Generate a script to update the database from its current state to the latest migration
+
 .EXAMPLE
-	Update-Database -Script -SourceMigration Second -TargetMigration First
-	# Generate a script to migrate the database from a specified start migration
-	# named "Second" to a specified target migration named "First"	
-	
+    Update-Database -Script -SourceMigration Second -TargetMigration First
+    # Generate a script to migrate the database from a specified start migration
+    # named "Second" to a specified target migration named "First"
+
 .EXAMPLE
-	Update-Database -Script -SourceMigration $InitialDatabase
-	# Generate a script that can upgrade a database currently at any version to the latest version. 
-	# The generated script includes logic to check the __MigrationsHistory table and only apply changes 
-	# that haven't been previously applied.	
-	
-.EXAMPLE 
-	Update-Database -TargetMigration $InitialDatabase
-	# Runs the Down method to roll-back any migrations that have been applied to the database
-	
-	
+    Update-Database -Script -SourceMigration $InitialDatabase
+    # Generate a script that can upgrade a database currently at any version to the latest version.
+    # The generated script includes logic to check the __MigrationsHistory table and only apply changes
+    # that haven't been previously applied.
+
+.EXAMPLE
+    Update-Database -TargetMigration $InitialDatabase
+    # Runs the Down method to roll-back any migrations that have been applied to the database
+
+
 #>
 function Update-Database
 {
@@ -507,7 +535,7 @@ function Update-Database
         [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
             Mandatory = $true)]
         [string] $ConnectionProviderName,
-		[string] $AppDomainBaseDirectory)
+        [string] $AppDomainBaseDirectory)
 
     Hint-Downgrade $MyInvocation.MyCommand
     $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
@@ -516,7 +544,7 @@ function Update-Database
     {
         Invoke-RunnerCommand $runner System.Data.Entity.Migrations.UpdateDatabaseCommand @( $SourceMigration, $TargetMigration, $Script.IsPresent, $Force.IsPresent, $Verbose.IsPresent )
         $error = Get-RunnerError $runner
-        
+
         if ($error)
         {
             if ($knownExceptions -notcontains $error.TypeName)
@@ -529,11 +557,11 @@ function Update-Database
             }
 
             throw $error.Message
-        }		
-        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
+        }
+        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()
     }
     finally
-    {		     
+    {
         Remove-Runner $runner
     }
 }
@@ -573,7 +601,7 @@ function Update-Database
 .PARAMETER AppDomainBaseDirectory
     Specifies the directory to use for the app-domain that is used for running Migrations
     code such that the app-domain is able to find all required assemblies. This is an
-    advanced option that should only be needed if the solution contains	several projects 
+    advanced option that should only be needed if the solution contains	several projects
     such that the assemblies needed for the context and configuration are not all
     referenced from either the project containing the context or the project containing
     the migrations.
@@ -593,7 +621,7 @@ function Get-Migrations
         [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
             Mandatory = $true)]
         [string] $ConnectionProviderName,
-		[string] $AppDomainBaseDirectory)
+        [string] $AppDomainBaseDirectory)
 
     $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName $null $AppDomainBaseDirectory
 
@@ -601,7 +629,7 @@ function Get-Migrations
     {
         Invoke-RunnerCommand $runner System.Data.Entity.Migrations.GetMigrationsCommand
         $error = Get-RunnerError $runner
-        
+
         if ($error)
         {
             if ($knownExceptions -notcontains $error.TypeName)
@@ -652,25 +680,7 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProject
     $domain.SetData('connectionProviderName', $ConnectionProviderName)
     $domain.SetData('contextAssemblyName', $ContextAssemblyName)
     $domain.SetData('appDomainBaseDirectory', $AppDomainBaseDirectory)
-    
-    $dispatcher = New-DomainDispatcher $toolsPath
-    $domain.SetData('efDispatcher', $dispatcher)
 
-    return @{
-        Domain = $domain;
-        ToolsPath = $toolsPath
-    }
-}
-
-function New-EFConfigRunner($Project)
-{
-    $installPath = Get-EntityFrameworkInstallPath $Project
-    $toolsPath = Join-Path $installPath tools
-    $info = New-AppDomainSetup $Project $installPath
-
-    $domain = [AppDomain]::CreateDomain('EFConfig', $null, $info)
-    $domain.SetData('project', $Project)
-    
     $dispatcher = New-DomainDispatcher $toolsPath
     $domain.SetData('efDispatcher', $dispatcher)
 
@@ -688,7 +698,7 @@ function New-AppDomainSetup($Project, $InstallPath)
             PrivateBinPath = 'tools';
             ConfigurationFile = ([AppDomain]::CurrentDomain.SetupInformation.ConfigurationFile)
         }
-    
+
     $targetFrameworkVersion = (New-Object System.Runtime.Versioning.FrameworkName ($Project.Properties.Item('TargetFrameworkMoniker').Value)).Version
 
     if ($targetFrameworkVersion -lt (New-Object Version @( 4, 5 )))
@@ -780,7 +790,7 @@ function Get-MigrationsProject($name, $hideMessage)
 }
 
 function Get-MigrationsStartUpProject($name, $fallbackName)
-{    
+{
     $startUpProject = $null
 
     if ($name)
@@ -852,15 +862,15 @@ function Get-MigrationsStartUpProject($name, $fallbackName)
 function Get-SolutionProjects()
 {
     $projects = New-Object System.Collections.Stack
-    
+
     $DTE.Solution.Projects | %{
         $projects.Push($_)
     }
-    
+
     while ($projects.Count -ne 0)
     {
         $project = $projects.Pop();
-        
+
         # NOTE: This line is similar to doing a "yield return" in C#
         $project
 
@@ -886,15 +896,15 @@ function Get-SingleProject($name)
 }
 
 function Test-StartUpProject($project)
-{    
+{
     if ($project.Kind -eq '{cc5fd16d-436d-48ad-a40c-5a424c6e3e79}')
     {
         $projectName = $project.Name
         Write-Verbose "Cannot use start-up project '$projectName'. The Windows Azure Project type isn't supported."
-        
+
         return $false
     }
-    
+
     return $true
 }
 
@@ -922,43 +932,346 @@ function Get-EntityFrameworkInstallPath($project)
 
         throw "The EntityFramework package is not installed on project '$projectName'."
     }
-    
+
     return Get-PackageInstallPath $package
 }
-    
+
 function Get-PackageInstallPath($package)
 {
     $componentModel = Get-VsComponentModel
     $packageInstallerServices = $componentModel.GetService([NuGet.VisualStudio.IVsPackageInstallerServices])
 
     $vsPackage = $packageInstallerServices.GetInstalledPackages() | ?{ $_.Id -eq $package.Id -and $_.Version -eq $package.Version }
-    
+
     return $vsPackage.InstallPath
 }
 
-function Check-Project($project)
+function WarnIfOtherEFs($cmdlet)
 {
-    if (!$project.FullName)
+    if (Get-Module 'EntityFrameworkCore')
     {
-        throw "The Project argument must refer to a Visual Studio project. Use the '`$project' variable provided by NuGet when running in install.ps1."
+        Write-Warning "Both Entity Framework 6 and Entity Framework Core are installed. The Entity Framework 6 tools are running. Use 'EntityFrameworkCore\$cmdlet' for Entity Framework Core."
     }
 
-	return $project.CodeModel
-}
-
-function Hint-Downgrade ($name) {
-    if (Get-Module | Where { $_.Name -eq 'EntityFrameworkCore' }) {
-        Write-Warning "Both Entity Framework 6.x and Entity Framework Core commands are installed. The Entity Framework 6 version is executing. You can fully qualify the command to select which one to execute, 'EntityFramework\$name' for EF6.x and 'EntityFrameworkCore\$name' for EF Core."
+    if (Get-Module 'EntityFramework')
+    {
+        Write-Warning "A version of Entity Framework older than 6.3 is also installed. The newer tools are running. Use 'EntityFramework\$cmdlet' for the older version."
     }
 }
 
-function GetConfigPath($project)
+function GetProject($projectName)
 {
-    $solution = Get-VSService 'Microsoft.VisualStudio.Shell.Interop.SVsSolution' 'Microsoft.VisualStudio.Shell.Interop.IVsSolution'
+    if (!$projectName)
+    {
+        return Get-Project
+    }
 
-    $hierarchy = $null
-    $hr = $solution.GetProjectOfUniqueName($project.UniqueName, [ref] $hierarchy)
-    [Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)    
+    return Get-Project $projectName
+}
+
+function GetStartupProject($name, $fallbackProject)
+{
+    if ($name)
+    {
+        return Get-Project $name
+    }
+
+    $startupProjectPaths = $DTE.Solution.SolutionBuild.StartupProjects
+    if ($startupProjectPaths)
+    {
+        if ($startupProjectPaths.Length -eq 1)
+        {
+            $startupProjectPath = $startupProjectPaths[0]
+            if (![IO.Path]::IsPathRooted($startupProjectPath))
+            {
+                $solutionPath = Split-Path (GetProperty $DTE.Solution.Properties 'Path')
+                $startupProjectPath = Join-Path $solutionPath $startupProjectPath -Resolve | Convert-Path
+            }
+
+            $startupProject = GetSolutionProjects |
+                ?{
+                    try
+                    {
+                        $fullName = $_.FullName
+                    }
+                    catch [NotImplementedException]
+                    {
+                        return $false
+                    }
+
+                    if ($fullName -and $fullName.EndsWith('\'))
+                    {
+                        $fullName = $fullName.Substring(0, $fullName.Length - 1)
+                    }
+
+                    return $fullName -eq $startupProjectPath
+                }
+            if ($startupProject)
+            {
+                return $startupProject
+            }
+
+            Write-Warning "Unable to resolve startup project '$startupProjectPath'."
+        }
+        else
+        {
+            Write-Warning 'Multiple startup projects set.'
+        }
+    }
+    else
+    {
+        Write-Warning 'No startup project set.'
+    }
+
+    Write-Warning "Using project '$($fallbackProject.ProjectName)' as the startup project."
+
+    return $fallbackProject
+}
+
+function GetSolutionProjects()
+{
+    $projects = New-Object 'System.Collections.Stack'
+
+    $DTE.Solution.Projects |
+        %{ $projects.Push($_) }
+
+    while ($projects.Count)
+    {
+        $project = $projects.Pop();
+
+        <# yield return #> $project
+
+        if ($project.ProjectItems)
+        {
+            $project.ProjectItems |
+                ?{ $_.SubProject } |
+                %{ $projects.Push($_.SubProject) }
+        }
+    }
+}
+
+function ShowConsole
+{
+    $componentModel = Get-VSComponentModel
+    $powerConsoleWindow = $componentModel.GetService([NuGetConsole.IPowerConsoleWindow])
+    $powerConsoleWindow.Show()
+}
+
+function WriteErrorLine($message)
+{
+    try
+    {
+        # Call the internal API NuGet uses to display errors
+        $componentModel = Get-VSComponentModel
+        $powerConsoleWindow = $componentModel.GetService([NuGetConsole.IPowerConsoleWindow])
+        $bindingFlags = [Reflection.BindingFlags]::Instance -bor [Reflection.BindingFlags]::NonPublic
+        $activeHostInfo = $powerConsoleWindow.GetType().GetProperty('ActiveHostInfo', $bindingFlags).GetValue($powerConsoleWindow)
+        $internalHost = $activeHostInfo.WpfConsole.Host
+        $reportErrorMethod = $internalHost.GetType().GetMethod('ReportError', $bindingFlags, $null, [Exception], $null)
+        $exception = New-Object Exception $message
+        $reportErrorMethod.Invoke($internalHost, $exception)
+    }
+    catch
+    {
+        Write-Host $message -ForegroundColor DarkRed
+    }
+}
+
+function EF6($project, $startupProject, $workingDir, $params)
+{
+    $solutionBuild = $DTE.Solution.SolutionBuild
+    $solutionBuild.BuildProject(
+        $solutionBuild.ActiveConfiguration.Name,
+        $project.UniqueName,
+        <# WaitForBuildToFinish #> $true)
+    if ($solutionBuild.LastBuildInfo)
+    {
+        throw "The project '$($project.ProjectName)' failed to build."
+    }
+
+    $projectDir = GetProperty $project.Properties 'FullPath'
+    $outputPath = GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'OutputPath'
+    $targetDir = [IO.Path]::GetFullPath([IO.Path]::Combine($projectDir, $outputPath))
+    $targetFrameworkMoniker = GetProperty $project.Properties 'TargetFrameworkMoniker'
+    $frameworkName = New-Object 'System.Runtime.Versioning.FrameworkName' $targetFrameworkMoniker
+    $targetFrameworkIdentifier = $frameworkName.Identifier
+    $targetFrameworkVersion = $frameworkName.Version
+
+    if ($targetFrameworkIdentifier -in '.NETFramework')
+    {
+        if ($targetFrameworkVersion -lt '4.5')
+        {
+            $frameworkDir = 'net40'
+        }
+        else
+        {
+            $frameworkDir = 'net45'
+        }
+
+        $platformTarget = GetPlatformTarget $project
+        if ($platformTarget -eq 'x86')
+        {
+            $runtimeDir = 'win-x86'
+        }
+        elseif ($platformTarget -in 'AnyCPU', 'x64')
+        {
+            $runtimeDir = 'any'
+        }
+        else
+        {
+            throw "Project '$($project.ProjectName)' has an active platform of '$platformTarget'. Select a different " +
+                'platform and try again.'
+        }
+
+        $exePath = Join-Path $PSScriptRoot "$frameworkDir\$runtimeDir\ef6.exe"
+    }
+    elseif ($targetFrameworkIdentifier -eq '.NETCoreApp')
+    {
+        $exePath = (Get-Command 'dotnet').Path
+
+        $targetName = GetProperty $project.Properties 'AssemblyName'
+        $depsFile = Join-Path $targetDir ($targetName + '.deps.json')
+        $projectAssetsFile = GetCpsProperty $project 'ProjectAssetsFile'
+        $runtimeConfig = Join-Path $targetDir ($targetName + '.runtimeconfig.json')
+        $runtimeFrameworkVersion = GetCpsProperty $project 'RuntimeFrameworkVersion'
+        $efPath = Join-Path $PSScriptRoot 'netcoreapp3.0\any\ef6.dll'
+
+        $dotnetParams = 'exec', '--depsfile', $depsFile
+
+        if ($projectAssetsFile)
+        {
+            # NB: Don't use Get-Content. It doesn't handle UTF-8 without a signature
+            # NB: Don't use ReadAllLines. ConvertFrom-Json won't work on PowerShell 3.0
+            $projectAssets = [IO.File]::ReadAllText($projectAssetsFile) | ConvertFrom-Json
+            $projectAssets.packageFolders.psobject.Properties.Name |
+                %{ $dotnetParams += '--additionalprobingpath', $_.TrimEnd('\') }
+        }
+
+        if (Test-Path $runtimeConfig)
+        {
+            $dotnetParams += '--runtimeconfig', $runtimeConfig
+        }
+        elseif ($runtimeFrameworkVersion)
+        {
+            $dotnetParams += '--fx-version', $runtimeFrameworkVersion
+        }
+
+        $dotnetParams += $efPath
+
+        $params = $dotnetParams + $params
+    }
+    else
+    {
+        throw "Project '$($startupProject.ProjectName)' targets framework '$targetFrameworkIdentifier'. The Entity Framework " +
+            'Package Manager Console Tools don''t support this framework.'
+    }
+
+    $targetFileName = GetProperty $project.Properties 'OutputFileName'
+    $targetPath = Join-Path $targetDir $targetFileName
+    $rootNamespace = GetProperty $project.Properties 'RootNamespace'
+    $language = GetLanguage $project
+
+    $params += '--verbose',
+        '--no-color',
+        '--prefix-output',
+        '--assembly', $targetPath,
+        '--project-dir', $projectDir,
+        '--language', $language
+
+    if (IsWeb $startupProject)
+    {
+        $params += '--data-dir', (Join-Path $startupProjectDir 'App_Data')
+    }
+
+    if ($rootNamespace)
+    {
+        $params += '--root-namespace', $rootNamespace
+    }
+
+    $configFile = GetConfigPath $startupProject
+    if ($configFile)
+    {
+        $params += '--config', $configFile
+    }
+
+    if (!$workingDir)
+    {
+        $workingDir = $targetDir
+    }
+
+    $arguments = ToArguments $params
+    $startInfo = New-Object 'System.Diagnostics.ProcessStartInfo' -Property @{
+        FileName = $exePath;
+        Arguments = $arguments;
+        UseShellExecute = $false;
+        CreateNoWindow = $true;
+        RedirectStandardOutput = $true;
+        StandardOutputEncoding = [Text.Encoding]::UTF8;
+        RedirectStandardError = $true;
+        WorkingDirectory = $workingDir;
+    }
+
+    Write-Verbose "$exePath $arguments"
+
+    $process = [Diagnostics.Process]::Start($startInfo)
+
+    while (($line = $process.StandardOutput.ReadLine()) -ne $null)
+    {
+        $level = $null
+        $text = $null
+
+        $parts = $line.Split(':', 2)
+        if ($parts.Length -eq 2)
+        {
+            $level = $parts[0]
+
+            $i = 0
+            $count = 8 - $level.Length
+            while ($i -lt $count -and $parts[1][$i] -eq ' ')
+            {
+                $i++
+            }
+
+            $text = $parts[1].Substring($i)
+        }
+
+        switch ($level)
+        {
+            'error' { WriteErrorLine $text }
+            'warn' { Write-Warning $text }
+            'info' { Write-Host $text }
+            'data' { Write-Output $text }
+            'verbose' { Write-Verbose $text }
+            default { Write-Host $line }
+        }
+    }
+
+    $process.WaitForExit()
+
+    if ($process.ExitCode)
+    {
+        while (($line = $process.StandardError.ReadLine()) -ne $null)
+        {
+            WriteErrorLine $line
+        }
+
+        exit
+    }
+}
+
+function IsCpsProject($project)
+{
+    $hierarchy = GetVsHierarchy $project
+    $isCapabilityMatch = [Microsoft.VisualStudio.Shell.PackageUtilities].GetMethod(
+        'IsCapabilityMatch',
+        [type[]]([Microsoft.VisualStudio.Shell.Interop.IVsHierarchy], [string]))
+
+    return $isCapabilityMatch.Invoke($null, ($hierarchy, 'CPS'))
+}
+
+function IsWeb($project)
+{
+    $hierarchy = GetVsHierarchy $project
 
     $aggregatableProject = Get-Interface $hierarchy 'Microsoft.VisualStudio.Shell.Interop.IVsAggregatableProject'
     if (!$aggregatableProject)
@@ -974,25 +1287,177 @@ function GetConfigPath($project)
         $projectTypes = $projectTypeGuids.Split(';')
     }
 
-    $configFileName = 'app.config'
     foreach ($projectType in $projectTypes)
     {
-        if ('{349C5851-65DF-11DA-9384-00065B846F21}', '{E24C65DC-7377-472B-9ABA-BC803B73C61A}' -contains $projectType)
+        if ($projectType -in '{349C5851-65DF-11DA-9384-00065B846F21}', '{E24C65DC-7377-472B-9ABA-BC803B73C61A}')
         {
-            $configFileName = 'web.config'
-            break
+            return $true
         }
     }
 
+    return $false;
+}
+
+function GetPlatformTarget($project)
+{
+    if (IsCpsProject $project)
+    {
+        $platformTarget = GetCpsProperty $project 'PlatformTarget'
+        if ($platformTarget)
+        {
+            return $platformTarget
+        }
+
+        return GetCpsProperty $project 'Platform'
+    }
+    
+    $platformTarget = GetProperty $project.ConfigurationManager.ActiveConfiguration.Properties 'PlatformTarget'
+    if ($platformTarget)
+    {
+        return $platformTarget
+    }
+
+    # NB: For classic F# projects
+    $platformTarget = GetMSBuildProperty $project 'PlatformTarget'
+    if ($platformTarget)
+    {
+        return $platformTarget
+    }
+
+    return 'AnyCPU'
+}
+
+function GetLanguage($project)
+{
+    if (IsCpsProject $project)
+    {
+        return GetCpsProperty $project 'Language'
+    }
+
+    return GetMSBuildProperty $project 'Language'
+}
+
+function GetVsHierarchy($project)
+{
+    $solution = Get-VSService 'Microsoft.VisualStudio.Shell.Interop.SVsSolution' 'Microsoft.VisualStudio.Shell.Interop.IVsSolution'
+    $hierarchy = $null
+    $hr = $solution.GetProjectOfUniqueName($project.UniqueName, [ref] $hierarchy)
+    [Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)
+
+    return $hierarchy
+}
+
+function GetProperty($properties, $propertyName)
+{
     try
     {
-        $configPath = $project.ProjectItems.Item($configFileName).Properties.Item('FullPath').Value
+        return $properties.Item($propertyName).Value
     }
     catch
     {
+        return $null
     }
-
-    return $configPath
 }
 
-Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory') -Variable InitialDatabase
+function GetCpsProperty($project, $propertyName)
+{
+    $browseObjectContext = Get-Interface $project 'Microsoft.VisualStudio.ProjectSystem.Properties.IVsBrowseObjectContext'
+    $unconfiguredProject = $browseObjectContext.UnconfiguredProject
+    $configuredProject = $unconfiguredProject.GetSuggestedConfiguredProjectAsync().Result
+    $properties = $configuredProject.Services.ProjectPropertiesProvider.GetCommonProperties()
+
+    return $properties.GetEvaluatedPropertyValueAsync($propertyName).Result
+}
+
+function GetMSBuildProperty($project, $propertyName)
+{
+    $msbuildProject = [Microsoft.Build.Evaluation.ProjectCollection]::GlobalProjectCollection.LoadedProjects |
+        where FullPath -eq $project.FullName
+
+    return $msbuildProject.GetProperty($propertyName).EvaluatedValue
+}
+
+function ToArguments($params)
+{
+    $arguments = ''
+    for ($i = 0; $i -lt $params.Length; $i++)
+    {
+        if ($i)
+        {
+            $arguments += ' '
+        }
+
+        if (!$params[$i].Contains(' '))
+        {
+            $arguments += $params[$i]
+
+            continue
+        }
+
+        $arguments += '"'
+
+        $pendingBackslashs = 0
+        for ($j = 0; $j -lt $params[$i].Length; $j++)
+        {
+            switch ($params[$i][$j])
+            {
+                '"'
+                {
+                    if ($pendingBackslashs)
+                    {
+                        $arguments += '\' * $pendingBackslashs * 2
+                        $pendingBackslashs = 0
+                    }
+                    $arguments += '\"'
+                }
+
+                '\'
+                {
+                    $pendingBackslashs++
+                }
+
+                default
+                {
+                    if ($pendingBackslashs)
+                    {
+                        if ($pendingBackslashs -eq 1)
+                        {
+                            $arguments += '\'
+                        }
+                        else
+                        {
+                            $arguments += '\' * $pendingBackslashs * 2
+                        }
+
+                        $pendingBackslashs = 0
+                    }
+
+                    $arguments += $params[$i][$j]
+                }
+            }
+        }
+
+        if ($pendingBackslashs)
+        {
+            $arguments += '\' * $pendingBackslashs * 2
+        }
+
+        $arguments += '"'
+    }
+
+    return $arguments
+}
+
+function GetConfigPath($project)
+{
+    if (IsWeb $project)
+    {
+        $configFileName = 'web.config'
+    }
+    else
+    {
+        $configFileName = 'app.config'
+    }
+
+    return GetProperty $project.ProjectItems.Item($configFileName).Properties 'FullPath'
+}

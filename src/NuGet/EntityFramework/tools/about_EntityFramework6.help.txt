@@ -1,5 +1,13 @@
+
+                     ___
+                    / __|
+         ___  ___  | |__
+        | __|| __| |  _ \
+        | _| | _|  | |_| |
+        |___||_|    \___/
+
 TOPIC
-    about_EntityFramework
+    about_EntityFramework6
 
 SHORT DESCRIPTION
     Provides information about Entity Framework commands.

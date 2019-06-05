@@ -5,7 +5,7 @@ Imports System.Linq
 
 Namespace $namespace$
 
-    Friend NotInheritable Class Configuration $contextTypeComment$
+    Friend NotInheritable Class Configuration
         Inherits DbMigrationsConfiguration(Of $contextType$)
 
         Public Sub New()
@@ -15,7 +15,7 @@ Namespace $namespace$
         Protected Overrides Sub Seed(context As $contextType$)
             '  This method will be called after migrating to the latest version.
 
-            '  You can use the DbSet(Of T).AddOrUpdate() helper extension method 
+            '  You can use the DbSet(Of T).AddOrUpdate() helper extension method
             '  to avoid creating duplicate seed data.
         End Sub
 

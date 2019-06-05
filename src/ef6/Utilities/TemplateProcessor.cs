@@ -1,9 +1,8 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations.Utilities
+namespace System.Data.Entity.Tools.Utilities
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Utilities;
     using System.Text.RegularExpressions;
 
     // <summary>
@@ -27,14 +26,14 @@ namespace System.Data.Entity.Migrations.Utilities
             return _tokenRegex.Replace(
                 input,
                 match =>
-                    {
-                        var tokenName = match.Groups["tokenName"].Value;
-                        var value = string.Empty;
+                {
+                    var tokenName = match.Groups["tokenName"].Value;
+                    var value = string.Empty;
 
-                        tokens.TryGetValue(tokenName, out value);
+                    tokens.TryGetValue(tokenName, out value);
 
-                        return value;
-                    });
+                    return value;
+                });
         }
     }
 }

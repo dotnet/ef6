@@ -191,16 +191,6 @@ namespace System.Data.Entity.Migrations.Extensions
             }
         }
 
-        public static bool TryBuild(this Project project)
-        {
-            var dte = project.DTE;
-            var configuration = dte.Solution.SolutionBuild.ActiveConfiguration.Name;
-
-            dte.Solution.SolutionBuild.BuildProject(configuration, project.UniqueName, true);
-
-            return dte.Solution.SolutionBuild.LastBuildInfo == 0;
-        }
-
         public static void OpenFile(this Project project, string path)
         {
             DebugCheck.NotNull(project);

@@ -29,19 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Templates\Configuration.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Templates\Configuration.vb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Templates\Configuration.cs" />
-    <EmbeddedResource Include="Templates\Configuration.vb" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EntityFramework\EntityFramework.csproj" />
     <ProjectReference Include="..\EntityFramework.PowerShell.Utility\EntityFramework.PowerShell.Utility.csproj" />
   </ItemGroup>
