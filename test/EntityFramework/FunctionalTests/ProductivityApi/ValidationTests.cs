@@ -1534,11 +1534,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
 
         #region Custom validation attributes, IValidatableObject
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#38078"
-#endif
-            )]
+        [Fact]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_custom_attributes_defined_on_properties()
         {
             try
@@ -1607,11 +1603,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#38078"
-#endif
-            )]
+        [Fact]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_custom_attributes_defined_on_entity_type()
         {
             try
@@ -1850,11 +1842,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             }
         }
 
-        [Fact(
-#if NETCOREAPP3_0
-            Skip = "dotnet/corefx#38078"
-#endif
-            )]
+        [Fact]
         public void ValidateEntity_returns_errors_for_invalid_entities_with_custom_type_level_attributes_defined_on_complex_properties()
         {
             var entity = new EntityWithComplexTypeLevelCustomValidationAttributes
