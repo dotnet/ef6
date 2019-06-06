@@ -95,9 +95,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void The_root_resolver_returns_the_SQL_Server_connection_factory()
+            public void The_root_resolver_returns_the_LocalDB_connection_factory()
             {
-                Assert.IsType<SqlConnectionFactory>(
+                Assert.IsType<LocalDbConnectionFactory>(
                     new RootDependencyResolver().GetService<IDbConnectionFactory>());
             }
 

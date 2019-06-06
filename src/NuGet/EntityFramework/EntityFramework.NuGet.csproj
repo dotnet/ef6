@@ -10,6 +10,7 @@
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
     <Description>Entity Framework 6 (EF6) is a tried and tested object-relational mapper for .NET with many years of feature development and stabilization.</Description>
     <NuspecPackageId>EntityFramework</NuspecPackageId>
+    <NoPackageAnalysis>True</NoPackageAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,10 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <ProjectReference Include="..\..\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
     <ProjectReference Include="..\..\Migrate\Migrate.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <ProjectReference Include="..\..\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <VersionPrefix>6.3.0</VersionPrefix>
-    <PreReleaseVersionLabel>preview6</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel>preview7</PreReleaseVersionLabel>
     <SemanticVersioningV1>True</SemanticVersioningV1>
     <IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
     <UsingToolNetFrameworkReferenceAssemblies>True</UsingToolNetFrameworkReferenceAssemblies>
@@ -9,6 +9,8 @@
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from nuget.org">
     <EnvDTEVersion>8.0.2</EnvDTEVersion>
+    <MicrosoftBuildFrameworkVersion>16.0.461</MicrosoftBuildFrameworkVersion>
+    <MicrosoftBuildUtilitiesCoreVersion>16.0.461</MicrosoftBuildUtilitiesCoreVersion>
     <MicrosoftPowerShell2ReferenceAssembliesVersion>1.0.0</MicrosoftPowerShell2ReferenceAssembliesVersion>
     <MicrosoftSqlServerCompactVersion>4.0.8876.1</MicrosoftSqlServerCompactVersion>
     <MicrosoftSqlServerTypesVersion>14.0.1016.290</MicrosoftSqlServerTypesVersion>
@@ -18,14 +20,14 @@
     <VSLangProjVersion>7.0.3301</VSLangProjVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-preview6.19279.8</MicrosoftCSharpVersion>
-    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview6.19279.8</MicrosoftNETCorePlatformsPackageVersion>
-    <SystemCodeDomVersion>4.6.0-preview6.19279.8</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-preview6.19279.8</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview6.19279.8</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-preview6.19279.8</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>4.6.0-preview7.19305.9</MicrosoftCSharpVersion>
+    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview7.19305.9</MicrosoftNETCorePlatformsPackageVersion>
+    <SystemCodeDomVersion>4.6.0-preview7.19305.9</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-preview7.19305.9</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview7.19305.9</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-preview7.19305.9</SystemDataSqlClientVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview6-27730-01</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview7-27805-02</MicrosoftNETCoreAppPackageVersion>
   </PropertyGroup>
 </Project>

@@ -51,7 +51,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
             _resolvers.Add(new CachingDependencyResolver(new DefaultProviderFactoryResolver()));
             _resolvers.Add(new CachingDependencyResolver(new DefaultInvariantNameResolver()));
-            _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
+            _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new LocalDbConnectionFactory()));
             _resolvers.Add(new SingletonDependencyResolver<Func<DbContext, IDbModelCacheKey>>(new DefaultModelCacheKeyFactory().Create));
             _resolvers.Add(new SingletonDependencyResolver<IManifestTokenResolver>(new DefaultManifestTokenResolver()));
             _resolvers.Add(new SingletonDependencyResolver<Func<DbConnection, string, HistoryContext>>(HistoryContext.DefaultFactory));

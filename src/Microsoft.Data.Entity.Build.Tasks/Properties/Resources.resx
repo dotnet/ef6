@@ -117,53 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="UpdateDatabaseCommand_VerboseInstructions" xml:space="preserve">
-    <value>Specify the '-Verbose' flag to view the SQL statements being applied to the target database.</value>
+  <data name="CouldNotFindConceptualSchema" xml:space="preserve">
+    <value>Could not find the Conceptual Schema node to embed as a resource for input file '{0}'.</value>
   </data>
-  <data name="GetMigrationsCommand_NoHistory" xml:space="preserve">
-    <value>No migrations have been applied to the target database.</value>
+  <data name="CouldNotFindMapping" xml:space="preserve">
+    <value>Could not find the Mapping node to embed as a resource for input file '{0}'.</value>
   </data>
-  <data name="ScaffoldingMigration" xml:space="preserve">
-    <value>Scaffolding migration '{0}'.</value>
+  <data name="CouldNotFindStorageSchema" xml:space="preserve">
+    <value>Could not find the Storage Schema node to embed as a resource for input file '{0}'.</value>
   </data>
-  <data name="RescaffoldNoForce" xml:space="preserve">
-    <value>Only the Designer Code for migration '{0}' was re-scaffolded. To re-scaffold the entire migration, use the -Force parameter.</value>
+  <data name="ErrorCleaningFile" xml:space="preserve">
+    <value>Encountered error cleaning file '{0}'.</value>
   </data>
-  <data name="SnapshotBehindWarning" xml:space="preserve">
-    <value>The Designer Code for this migration file includes a snapshot of your current Code First model. This snapshot is used to calculate the changes to your model when you scaffold the next migration. If you make additional changes to your model that you want to include in this migration, then you can re-scaffold it by running 'Add-Migration {0}' again.</value>
+  <data name="ErrorNotAnEdmxFile" xml:space="preserve">
+    <value>Cannot process '{0}' because it is not an EDMX file.</value>
   </data>
-  <data name="AutomaticMigrationDisabledInfo" xml:space="preserve">
-    <value>You can use the Add-Migration command to write the pending model changes to a code-based migration.</value>
+  <data name="ErrorProcessingInputFile" xml:space="preserve">
+    <value>Error attempting to process input file '{0}'.</value>
   </data>
-  <data name="EnableMigrations_Success" xml:space="preserve">
-    <value>Code First Migrations enabled for project {0}.</value>
+  <data name="ErrorWritingFile" xml:space="preserve">
+    <value>Encountered error writing file '{0}'.</value>
   </data>
-  <data name="EnableMigrations_BeginInitialScaffold" xml:space="preserve">
-    <value>Checking if the context targets an existing database...</value>
+  <data name="FinishedCleaningAllFiles" xml:space="preserve">
+    <value>Successfully cleaned the output for {0} EDMX files.</value>
+    <comment>The placeholder is a number.</comment>
   </data>
-  <data name="EnableMigrations_InitialScaffold" xml:space="preserve">
-    <value>Detected database created with a database initializer. Scaffolded migration '{0}' corresponding to existing database. To use an automatic migration instead, delete the Migrations folder and re-run Enable-Migrations specifying the -EnableAutomaticMigrations parameter.</value>
+  <data name="FinishedCleaningEdmxFile" xml:space="preserve">
+    <value>Successfully cleaned the output for EDMX file '{0}'.</value>
   </data>
-  <data name="GetMigrationsCommand_Intro" xml:space="preserve">
-    <value>Retrieving migrations that have been applied to the target database.</value>
+  <data name="FinishedCleaningFile" xml:space="preserve">
+    <value>Successfully cleaned file '{0}'.</value>
   </data>
-  <data name="MigrationsAlreadyEnabled" xml:space="preserve">
-    <value>Migrations have already been enabled in project '{0}'. To overwrite the existing migrations configuration, use the -Force parameter.</value>
-    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  <data name="FinishedProcessingEdmxFiles" xml:space="preserve">
+    <value>Finished processing {0} EDMX files.</value>
+    <comment>The placeholder is a number.</comment>
   </data>
-  <data name="MigrationsDirectoryParamIsRooted" xml:space="preserve">
-    <value>The 'MigrationsDirectory' parameter was set to the absolute path '{0}'. The migrations directory must be set to a relative path for a sub-directory under the Visual Studio project root.</value>
+  <data name="FinishedProcessingFile" xml:space="preserve">
+    <value>Finished processing input file '{0}'.</value>
   </data>
-  <data name="SaveConnectionFactoryInConfigFailed" xml:space="preserve">
-    <value>Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default LocalDbConnectionFactory configured for '(localdb)\MSSQLLocalDB' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details.</value>
+  <data name="OverwritingFile" xml:space="preserve">
+    <value>Overwriting file '{0}'.</value>
   </data>
-  <data name="RescaffoldingMigration" xml:space="preserve">
-    <value>Re-scaffolding migration '{0}'.</value>
+  <data name="ProcessingEdmxFiles" xml:space="preserve">
+    <value>Processing {0} EDMX files.</value>
+    <comment>The placeholder is a number.</comment>
   </data>
-  <data name="DidYouMeanToRescaffold" xml:space="preserve">
-    <value>A previous migration called '{0}' was already applied to the target database. If you meant to re-scaffold '{0}', revert it by running 'Update-Database -TargetMigration {1}', then delete '{2}' and run 'Add-Migration {0}' again.</value>
+  <data name="SetLogicalNamesIncorrectPath" xml:space="preserve">
+    <value>Unable to set the logical name of item with identity {0}. This identity should start with the resource path '{1}'.</value>
   </data>
-  <data name="ArgumentIsNullOrWhitespace" xml:space="preserve">
-    <value>The argument '{0}' cannot be null, empty or contain only white space.</value>
+  <data name="SettingLogicalName" xml:space="preserve">
+    <value>Setting logical name for item with identity {0} to {1}</value>
+  </data>
+  <data name="StartingProcessingFile" xml:space="preserve">
+    <value>Starting to process input file '{0}'.</value>
+  </data>
+  <data name="Usage" xml:space="preserve">
+    <value>Usage: The task {0} requires the parameter {1} to not be empty</value>
   </data>
 </root>
