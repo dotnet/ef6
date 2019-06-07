@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.CSharp" Version="4.6.0-preview6.19273.4" CoherentParentDependency="Microsoft.NETCore.App">
+    <Dependency Name="Microsoft.CSharp" Version="4.6.0-preview7.19306.6" CoherentParentDependency="Microsoft.NETCore.App">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>2fc59abd09c990121526360d90810e19723cb6cb</Sha>
+      <Sha>bdbdfaa286b94c44fadb2abd64e858b2e533a2cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App" Version="3.0.0-preview6-27723-07">
+    <Dependency Name="Microsoft.NETCore.App" Version="3.0.0-preview7-27806-03">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>b2fecda7b5203f03fb6cd462204cd55d818c3421</Sha>
+      <Sha>451922936e2ae806ec03275051806145d630cc80</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.0-preview6.19273.4" CoherentParentDependency="Microsoft.NETCore.App">
+    <Dependency Name="Microsoft.NETCore.Platforms" Version="3.0.0-preview7.19306.6" CoherentParentDependency="Microsoft.NETCore.App">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>2fc59abd09c990121526360d90810e19723cb6cb</Sha>
+      <Sha>bdbdfaa286b94c44fadb2abd64e858b2e533a2cf</Sha>
     </Dependency>
-    <Dependency Name="System.CodeDom" Version="4.6.0-preview6.19273.4" CoherentParentDependency="Microsoft.NETCore.App">
+    <Dependency Name="System.CodeDom" Version="4.6.0-preview7.19306.6" CoherentParentDependency="Microsoft.NETCore.App">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>2fc59abd09c990121526360d90810e19723cb6cb</Sha>
+      <Sha>bdbdfaa286b94c44fadb2abd64e858b2e533a2cf</Sha>
     </Dependency>
-    <Dependency Name="System.ComponentModel.Annotations" Version="4.6.0-preview6.19273.4" CoherentParentDependency="Microsoft.NETCore.App">
+    <Dependency Name="System.ComponentModel.Annotations" Version="4.6.0-preview7.19306.6" CoherentParentDependency="Microsoft.NETCore.App">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>2fc59abd09c990121526360d90810e19723cb6cb</Sha>
+      <Sha>bdbdfaa286b94c44fadb2abd64e858b2e533a2cf</Sha>
     </Dependency>
-    <Dependency Name="System.Configuration.ConfigurationManager" Version="4.6.0-preview6.19273.4" CoherentParentDependency="Microsoft.NETCore.App">
+    <Dependency Name="System.Configuration.ConfigurationManager" Version="4.6.0-preview7.19306.6" CoherentParentDependency="Microsoft.NETCore.App">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>2fc59abd09c990121526360d90810e19723cb6cb</Sha>
+      <Sha>bdbdfaa286b94c44fadb2abd64e858b2e533a2cf</Sha>
     </Dependency>
-    <Dependency Name="System.Data.SqlClient" Version="4.7.0-preview6.19273.4" CoherentParentDependency="Microsoft.NETCore.App">
+    <Dependency Name="System.Data.SqlClient" Version="4.7.0-preview7.19306.6" CoherentParentDependency="Microsoft.NETCore.App">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>2fc59abd09c990121526360d90810e19723cb6cb</Sha>
+      <Sha>bdbdfaa286b94c44fadb2abd64e858b2e533a2cf</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
