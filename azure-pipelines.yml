@@ -28,7 +28,7 @@ jobs:
       helixRepo: aspnet/EntityFramework6
       jobs:
         - job: Windows
-          timeoutInMinutes: 150
+          timeoutInMinutes: 180
           pool:
             ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
               name: NetCorePublic-Pool
