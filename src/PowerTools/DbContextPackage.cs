@@ -100,7 +100,40 @@ namespace Microsoft.DbContextPackage
                 var menuItem5 = new OleMenuCommand(OnItemContextMenuInvokeHandler, null, OnItemMenuBeforeQueryStatus, menuCommandID5);
 
                 oleMenuCommandService.AddCommand(menuItem5);
+
+                var menuCommandID6 = new CommandID(GuidList.guidDbContextPackageCmdSet, (int)PkgCmdIDList.cmdidCustomizeReverseEngineerTemplates);
+                var menuItem6 = new OleMenuCommand(OnProjectContextMenuInvokeHandler, null, OnProjectMenuBeforeQueryStatus, menuCommandID6);
+
+                oleMenuCommandService.AddCommand(menuItem6);
             }
+        }
+
+        private void OnProjectMenuBeforeQueryStatus(object sender, EventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var menuCommand = sender as MenuCommand;
+
+            if (menuCommand == null)
+            {
+                return;
+            }
+
+            if (_dte2.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var project = _dte2.SelectedItems.Item(1).Project;
+
+            if (project == null)
+            {
+                return;
+            }
+
+            menuCommand.Visible =
+                project.Kind == "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"; // csproj
+            //TODO add vbproj!    
         }
 
         private void OnItemMenuBeforeQueryStatus(object sender, EventArgs e)
@@ -159,6 +192,28 @@ namespace Microsoft.DbContextPackage
             }
 
             return (string)extension.Value;
+        }
+
+        private void OnProjectContextMenuInvokeHandler(object sender, EventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var menuCommand = sender as MenuCommand;
+            if (menuCommand == null || _dte2.SelectedItems.Count != 1)
+            {
+                return;
+            }
+
+            var project = _dte2.SelectedItems.Item(1).Project;
+            if (project == null)
+            {
+                return;
+            }
+            else if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidCustomizeReverseEngineerTemplates)
+            {
+                //TODO implement handler!
+                //_addCustomTemplatesHandler.AddCustomTemplates(project);
+            }
         }
 
         private void OnItemContextMenuInvokeHandler(object sender, EventArgs e)

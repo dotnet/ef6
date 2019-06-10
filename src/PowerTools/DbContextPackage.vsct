@@ -57,6 +57,14 @@
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmMenu" />
       </Group>
 
+      <Group guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenuGroup" priority="0x0100">
+        <Parent guid="guidDbContextPackageCmdSet" id="IDM_VS_CTXT_PROJNODE" />
+      </Group>
+
+      <Group guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenuItemsGroup" priority="0x0100">
+        <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenu" />
+      </Group>
+
     </Groups>
 
     <Menus>
@@ -64,8 +72,16 @@
       <Menu guid="guidDbContextPackageCmdSet" id="cmdidEdmMenu" priority="0x0100" type="Menu">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmMenuGroup" />
         <Strings>
-          <CommandName>Entity Framework</CommandName>
-          <ButtonText>Entity Framework</ButtonText>
+          <CommandName>Entity Framework 6</CommandName>
+          <ButtonText>Entity Framework 6</ButtonText>
+        </Strings>
+      </Menu>
+
+      <Menu guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenu" priority="0x0100" type="Menu">
+        <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenuGroup" />
+        <Strings>
+          <CommandName>Entity Framework 6</CommandName>
+          <ButtonText>Entity Framework 6</ButtonText>
         </Strings>
       </Menu>
 
@@ -123,6 +139,15 @@
         </Strings>
       </Button>
 
+      <Button guid="guidDbContextPackageCmdSet" id="cmdidAddCustomTemplates" priority="0x0100" type="Button">
+        <Parent guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenuItemsGroup" />        
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <CommandName>cmdidAddCustomTemplates</CommandName>
+          <ButtonText>Customize Reverse Engineer Templates</ButtonText>
+        </Strings>
+      </Button>
+
       <Button guid="guidDbContextPackageCmdSet" id="cmdidAbout" priority="0x0100" type="Button">
         <Parent guid="guidDbContextPackageCmdSet" id="cmdidAboutMenuItemsGroup" />
         <Icon guid="guidImage5" id="bmpPic5" />
@@ -157,6 +182,10 @@
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
     </CommandPlacement>
 
+    <CommandPlacement guid="guidDbContextPackageCmdSet" id="cmdidEdmProjectMenuGroup" priority="0x100">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
+    </CommandPlacement>    
+
   </CommandPlacements>
 
   <Symbols>
@@ -177,6 +206,13 @@
       <IDSymbol name="cmdidEdmMenuItemsGroup" value="0x0700" />
       <IDSymbol name="cmdidEdmViewMenuItemsGroup" value="0x0800" />
       <IDSymbol name="cmdidAboutMenuItemsGroup" value="0x0900" />
+
+      <!-- Project Menu Entries -->
+      <IDSymbol name="cmdidEdmProjectMenuItemsGroup" value="0x0002" />
+      <IDSymbol name="cmdidEdmProjectMenu" value="0x0003" />
+      <IDSymbol name="cmdidEdmProjectMenuGroup" value="0x0004" />
+      <IDSymbol name="cmdidAddCustomTemplates" value="0x0005" />
+
     </GuidSymbol>
 
     <GuidSymbol name="guidImage1" value="{92a8e017-4f3b-4613-b78c-179f86113adb}">
