@@ -20,14 +20,14 @@
     <VSLangProjVersion>7.0.3301</VSLangProjVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/corefx">
-    <MicrosoftCSharpVersion>4.6.0-preview7.19310.3</MicrosoftCSharpVersion>
-    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview7.19310.3</MicrosoftNETCorePlatformsPackageVersion>
-    <SystemCodeDomVersion>4.6.0-preview7.19310.3</SystemCodeDomVersion>
-    <SystemComponentModelAnnotationsVersion>4.6.0-preview7.19310.3</SystemComponentModelAnnotationsVersion>
-    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview7.19310.3</SystemConfigurationConfigurationManagerVersion>
-    <SystemDataSqlClientVersion>4.7.0-preview7.19310.3</SystemDataSqlClientVersion>
+    <MicrosoftCSharpVersion>4.6.0-preview7.19310.8</MicrosoftCSharpVersion>
+    <MicrosoftNETCorePlatformsPackageVersion>3.0.0-preview7.19310.8</MicrosoftNETCorePlatformsPackageVersion>
+    <SystemCodeDomVersion>4.6.0-preview7.19310.8</SystemCodeDomVersion>
+    <SystemComponentModelAnnotationsVersion>4.6.0-preview7.19310.8</SystemComponentModelAnnotationsVersion>
+    <SystemConfigurationConfigurationManagerVersion>4.6.0-preview7.19310.8</SystemConfigurationConfigurationManagerVersion>
+    <SystemDataSqlClientVersion>4.7.0-preview7.19310.8</SystemDataSqlClientVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview7-27810-07</MicrosoftNETCoreAppPackageVersion>
+    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview7-27811-01</MicrosoftNETCoreAppPackageVersion>
   </PropertyGroup>
 </Project>
