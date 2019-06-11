@@ -52,12 +52,16 @@
     <Compile Include="ReferenceCounting.wxs" />
   </ItemGroup>
 
-  <!-- Sign outputs using this certificate -->
+  <!-- Sign outputs using this certificate and override CAB files to also use this cert -->
   <PropertyGroup> 
     <SetupPackageCertificate>Microsoft400</SetupPackageCertificate> 
     <SignOutput>true</SignOutput>
   </PropertyGroup> 
-
+  <ItemDefinitionGroup>
+    <SignCabs>
+      <Authenticode>Microsoft400</Authenticode>
+    </SignCabs>
+  </ItemDefinitionGroup>
   <Target Name="Build">
     <!-- Build target from WiX would have overwritten this target if wix had been installed -->
     <Error Text="Wix Toolset not installed - directory $(WixTargetsPath) does not exist" />
