@@ -10,7 +10,9 @@ When right-clicking on a file containing a derived DbContext class, the followin
 2) View Entity Data Model XML
 3) View Entity Data Model DDL SQL
 4) Generate Views
-5) Customize Reverse Engineer Templates
+
+When right-clicking on a project, the following context menu functions are supported:
+1) Customize Reverse Engineer Templates
 
 When right-clicking on an Entity Data Model (*.edmx) file, the following context menu function is supported:
 1) Generate Views</Description>
