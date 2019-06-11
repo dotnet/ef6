@@ -46,6 +46,7 @@ If you encounter a bug or have a feature request, please use the [Issue Tracker]
 
 ## Daily build
 
+* Added "Customize Reverse Enngineering Templates" project menu item
 **Bug fixes**
 
 ## Release 0.9.65 (January, 2019)
