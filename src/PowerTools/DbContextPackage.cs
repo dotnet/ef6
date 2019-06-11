@@ -38,6 +38,7 @@ namespace Microsoft.DbContextPackage
         private readonly ViewContextHandler _viewContextHandler;
         private readonly ViewDdlHandler _viewDdlHandler;
         private readonly AboutHandler _aboutHandler;
+        private readonly AddCustomTemplatesHandler _addCustomTemplatesHandler;
         private HashSet<string> _tempFileNames;
 
         private DTE2 _dte2;
@@ -47,6 +48,7 @@ namespace Microsoft.DbContextPackage
             _optimizeContextHandler = new OptimizeContextHandler(this);
             _viewContextHandler = new ViewContextHandler(this);
             _viewDdlHandler = new ViewDdlHandler(this);
+            _addCustomTemplatesHandler = new AddCustomTemplatesHandler(this);
             _aboutHandler = new AboutHandler(this);
             _tempFileNames = new HashSet<string>();
         }
@@ -131,9 +133,7 @@ namespace Microsoft.DbContextPackage
                 return;
             }
 
-            menuCommand.Visible =
-                project.Kind == "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"; // csproj
-            //TODO add vbproj!    
+            menuCommand.Visible = project.IsCSharpProject() || project.IsVBProject();
         }
 
         private void OnItemMenuBeforeQueryStatus(object sender, EventArgs e)
@@ -211,8 +211,7 @@ namespace Microsoft.DbContextPackage
             }
             else if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidCustomizeReverseEngineerTemplates)
             {
-                //TODO implement handler!
-                //_addCustomTemplatesHandler.AddCustomTemplates(project);
+                _addCustomTemplatesHandler.AddCustomTemplates(project);
             }
         }
 

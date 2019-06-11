@@ -83,6 +83,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\XContainerExtensions.cs" />
     <Compile Include="Handlers\AboutHandler.cs" />
+    <Compile Include="Handlers\AddCustomTemplatesHandler.cs" />
     <Compile Include="Handlers\OptimizeContextHandler.cs" />
     <Compile Include="Handlers\ViewContextHandler.cs" />
     <Compile Include="Handlers\ViewDdlHandler.cs" />
@@ -94,6 +95,7 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Check.cs" />
+    <Compile Include="Utilities\Templates.cs" />
     <Compile Include="Utilities\VBViewGenerator.cs">
       <DependentUpon>VBViewGenerator.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -146,6 +148,18 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="CodeTemplates\EFModelFromDatabase\Context.cs.t4">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="CodeTemplates\EFModelFromDatabase\EntityType.cs.t4">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="CodeTemplates\EFModelFromDatabase\Context.vb.t4">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="CodeTemplates\EFModelFromDatabase\EntityType.vb.t4">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="Properties\Resources.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Resources.cs</LastGenOutput>
@@ -193,6 +207,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

@@ -76,6 +76,24 @@ namespace Microsoft.DbContextPackage.Extensions
                 .Invoke(packageInstaller, new object[] { source, project, packageId, null, false });
         }
 
+        public static bool IsVBProject(this Project project)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            DebugCheck.NotNull(project);
+
+            return project.Kind == "{F184B08F-C81C-45F6-A57F-5ABD9991F28F}";
+        }
+
+        public static bool IsCSharpProject(this Project project)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            DebugCheck.NotNull(project);
+
+            return project.Kind == "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
+        }
+
         public static bool IsWebProject(this Project project)
         {
             DebugCheck.NotNull(project);

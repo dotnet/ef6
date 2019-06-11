@@ -1,0 +1,120 @@
+﻿<#@ template visibility="internal" linePragmas="false" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.Data.Entity.Design" #>
+<#@ assembly name="EntityFramework" #>
+<#@ import namespace="System.Data.Entity.Core.Metadata.Edm" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.CodeGeneration" #>
+<#@ parameter type="System.Data.Entity.Core.Metadata.Edm.EntitySet" name="EntitySet" #>
+<#@ parameter type="System.Data.Entity.Infrastructure.DbModel" name="Model" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#
+    var code = new CSharpCodeHelper();
+    var edm = new EdmHelper(code);
+
+    if (EntitySet == null)
+    {
+        throw new ArgumentNullException("EntitySet");
+    }
+
+    if (Model == null)
+    {
+        throw new ArgumentNullException("Model");
+    }
+
+    var entityType = EntitySet.ElementType;
+#>
+namespace <#= Namespace #>
+{
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+<#
+    var typeConfigurations = edm.GetConfigurations(EntitySet, Model).OfType<IAttributeConfiguration>();
+
+    foreach (var typeConfiguration in typeConfigurations)
+    {
+#>
+    <#= code.Attribute(typeConfiguration) #>
+<#
+    }
+#>
+    public partial class <#= code.Type(entityType) #>
+    {
+<#
+    var collectionProperties = from p in entityType.NavigationProperties
+                               where p.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many
+                               select p;
+
+    if (collectionProperties.Any())
+    {
+#>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public <#= code.Type(entityType) #>()
+        {
+<#
+    foreach (var collectionProperty in collectionProperties)
+    {
+#>
+            <#= code.Property(collectionProperty) #> = new HashSet<<#= code.Type(collectionProperty.ToEndMember.GetEntityType()) #>>();
+<#
+    }
+#>
+        }
+
+<#
+    }
+
+    var first = true;
+
+    foreach (var property in entityType.Properties)
+    {
+        if (!first)
+        {
+            WriteLine(string.Empty);
+        }
+        else
+        {
+            first = false;
+        }
+
+        var propertyConfigurations = edm.GetConfigurations(property, Model).OfType<IAttributeConfiguration>();
+
+        foreach (var propertyConfiguration in propertyConfigurations)
+        {
+#>
+        <#= code.Attribute(propertyConfiguration) #>
+<#
+        }
+#>
+        public <#= code.Type(property) #> <#= code.Property(property) #> { get; set; }
+<#
+    }
+
+    foreach (var navigationProperty in entityType.NavigationProperties)
+    {
+        if (!first)
+        {
+            WriteLine(string.Empty);
+        }
+        else
+        {
+            first = false;
+        }
+
+            if (navigationProperty.ToEndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+            {
+#>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+<#
+            }
+#>
+        public virtual <#= code.Type(navigationProperty) #> <#= code.Property(navigationProperty) #> { get; set; }
+<#
+    }
+#>
+    }
+}

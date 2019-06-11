@@ -1,0 +1,217 @@
+﻿<#@ template visibility="internal" linePragmas="false" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.Data.Entity.Design" #>
+<#@ assembly name="EntityFramework" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.CodeGeneration" #>
+<#@ parameter type="System.Data.Entity.Infrastructure.DbModel" name="Model" #>
+<#@ parameter type="System.String" name="Namespace" #>
+<#@ parameter type="System.String" name="ContextClassName" #>
+<#@ parameter type="System.String" name="ConnectionStringName" #>
+<#
+    var code = new CSharpCodeHelper();
+    var edm = new EdmHelper(code);
+
+    if (Model == null)
+    {
+        throw new ArgumentNullException("Model");
+    }
+
+    if (Namespace == null)
+    {
+        throw new ArgumentNullException("Namespace");
+    }
+
+    if (ContextClassName == null)
+    {
+        throw new ArgumentNullException("ContextClassName");
+    }
+
+    if (ConnectionStringName == null)
+    {
+        throw new ArgumentNullException("ConnectionStringName");
+    }
+#>
+namespace <#= Namespace #>
+{
+    using System;
+    using System.Data.Entity;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
+
+    public partial class <#= ContextClassName #> : DbContext
+    {
+        public <#= ContextClassName #>()
+            : base("name=<#= ConnectionStringName #>")
+        {
+        }
+
+<#
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
+    {
+#>
+        public virtual DbSet<<#= code.Type(entitySet.ElementType) #>> <#= code.Property(entitySet) #> { get; set; }
+<#
+    }
+#>
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+<#
+    var anyConfiguration = false;
+
+    foreach (var entitySet in Model.ConceptualModel.Container.EntitySets)
+    {
+        var typeConfigurations = edm.GetConfigurations(entitySet, Model).OfType<IFluentConfiguration>()
+            .Where(c => !(c is IAttributeConfiguration || c is KeyConfiguration));
+
+        var firstTypeConfiguration = true;
+        foreach (var typeConfiguration in typeConfigurations)
+        {
+            if (firstTypeConfiguration)
+            {
+                firstTypeConfiguration = false;
+
+                if (anyConfiguration)
+                {
+                    WriteLine(string.Empty);
+                }
+                else
+                {
+                    anyConfiguration = true;
+                }
+
+#>
+            modelBuilder.Entity<<#= code.Type(entitySet.ElementType) #>>()
+<#
+            }
+            else
+            {
+                WriteLine(string.Empty);
+            }
+
+            Write("                " + code.MethodChain(typeConfiguration));
+        }
+
+        if (!firstTypeConfiguration)
+        {
+            WriteLine(";");
+        }
+
+        foreach (var property in entitySet.ElementType.Properties)
+        {
+            var propertyConfigurations = edm.GetConfigurations(property, Model).OfType<IFluentConfiguration>()
+                .Where(c => !(c is IAttributeConfiguration));
+
+            var firstPropertyConfiguration = true;
+            foreach (var propertyConfiguration in propertyConfigurations)
+            {
+                var columnConfiguration = propertyConfiguration as ColumnConfiguration;
+                if (columnConfiguration != null)
+                {
+                    // Unset this since it is implied in the key configuration calls themselves
+                    columnConfiguration.Order = null;
+
+                    if (columnConfiguration.Name == null && columnConfiguration.TypeName == null)
+                    {
+                        // Nothing left to configure
+                        continue;
+                    }
+                }
+
+                if (firstPropertyConfiguration)
+                {
+                    firstPropertyConfiguration = false;
+                    
+                    if (anyConfiguration)
+                    {
+                        WriteLine(string.Empty);
+                    }
+                    else
+                    {
+                        anyConfiguration = true;
+                    }
+
+#>
+            modelBuilder.Entity<<#= code.Type(entitySet.ElementType) #>>()
+                .Property(e => e.<#= code.Property(property) #>)
+<#
+                }
+                else
+                {
+                    WriteLine(string.Empty);
+                }
+
+                Write("                " + code.MethodChain(propertyConfiguration));
+            }
+
+            if (!firstPropertyConfiguration)
+            {
+                WriteLine(";");
+            }
+        }
+
+        foreach (var navigationProperty in entitySet.ElementType.NavigationProperties)
+        {
+            // Only configure relationships from one end
+            if (navigationProperty.RelationshipType.RelationshipEndMembers.First() != navigationProperty.FromEndMember)
+            {
+                continue;
+            }
+
+            bool isDefaultMultiplicity;
+            var navigationPropertyMultiplicityConfiguration = edm.GetMultiplicityConfiguration(navigationProperty, out isDefaultMultiplicity);
+            var navigationPropertyConfigurations = edm.GetConfigurations(navigationProperty, Model);
+
+            var firstNavigationPropertyConfiguration = true;
+            foreach (var navigationPropertyConfiguration in navigationPropertyConfigurations)
+            {
+                if (firstNavigationPropertyConfiguration)
+                {
+                    firstNavigationPropertyConfiguration = false;
+                    
+                    if (anyConfiguration)
+                    {
+                        WriteLine(string.Empty);
+                    }
+                    else
+                    {
+                        anyConfiguration = true;
+                    }
+
+#>
+            modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration)#>
+<#
+                }
+                else
+                {
+                    WriteLine(string.Empty);
+                }
+
+                Write("                " + code.MethodChain(navigationPropertyConfiguration));
+            }
+
+            if (!firstNavigationPropertyConfiguration)
+            {
+                WriteLine(";");
+            }
+            else if (!isDefaultMultiplicity)
+            {            
+                if (anyConfiguration)
+                {
+                    WriteLine(string.Empty);
+                }
+                else
+                {
+                    anyConfiguration = true;
+                }
+#>
+            modelBuilder<#= code.MethodChain(navigationPropertyMultiplicityConfiguration) #>;
+<#
+            }
+        }
+    }
+#>
+        }
+    }
+}
