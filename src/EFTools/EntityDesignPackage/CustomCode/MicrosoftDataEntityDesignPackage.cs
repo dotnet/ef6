@@ -22,6 +22,7 @@ namespace Microsoft.Data.Entity.Design.Package
     using Microsoft.VisualStudio.DataDesign.Interfaces;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio.Utilities;
     using ModelChangeEventArgs = Microsoft.Data.Entity.Design.VisualStudio.Package.ModelChangeEventArgs;
 
     [ProvideToolWindow(typeof(EntityDesignExplorerWindow),
@@ -478,7 +479,10 @@ namespace Microsoft.Data.Entity.Design.Package
             {
                 if (_explorerWindow == null)
                 {
-                    _explorerWindow = FindToolWindow(typeof(EntityDesignExplorerWindow), 0, true) as ExplorerWindow;
+                    using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
+                    {
+                        _explorerWindow = FindToolWindow(typeof(EntityDesignExplorerWindow), 0, true) as ExplorerWindow;
+                    }
                 }
                 return _explorerWindow;
             }
@@ -490,7 +494,10 @@ namespace Microsoft.Data.Entity.Design.Package
             {
                 if (_mappingDetailsWindow == null)
                 {
-                    _mappingDetailsWindow = GetToolWindow(typeof(MappingDetailsWindow), true) as MappingDetailsWindow;
+                    using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
+                    {
+                        _mappingDetailsWindow = GetToolWindow(typeof(MappingDetailsWindow), true) as MappingDetailsWindow;
+                    }
                 }
                 return _mappingDetailsWindow;
             }

@@ -4,6 +4,7 @@
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -109,6 +110,7 @@
             return new TextTemplatingSession();
         }
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public string ProcessTemplate(string inputFile, string content, ITextTemplatingCallback callback = null)
         {
             Debug.Assert(!string.IsNullOrEmpty(inputFile), "inputFile is null or empty.");
