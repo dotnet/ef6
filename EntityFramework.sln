@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.Transitiona
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests.ProviderAgnostic", "test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj", "{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.Entity.Build.Tasks", "src\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj", "{B8DB9CC0-822A-423C-A5BE-28C19F94899B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8DB9CC0-822A-423C-A5BE-28C19F94899B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8DB9CC0-822A-423C-A5BE-28C19F94899B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8DB9CC0-822A-423C-A5BE-28C19F94899B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8DB9CC0-822A-423C-A5BE-28C19F94899B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

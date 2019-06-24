@@ -26,6 +26,14 @@ namespace System.Data.Entity.Infrastructure
         private readonly string _localDbVersion;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="LocalDbConnectionFactory"/> class.
+        /// </summary>
+        public LocalDbConnectionFactory()
+            : this("mssqllocaldb")
+        {
+        }
+
+        /// <summary>
         /// Creates a new instance of the connection factory for the given version of LocalDb.
         /// For SQL Server 2012 LocalDb use "v11.0".
         /// For SQL Server 2014 and later LocalDb use "mssqllocaldb".
