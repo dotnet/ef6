@@ -262,6 +262,52 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return IsScalarOpTree(node, varRefMap, ref nodeCount);
         }
 
+        /// <summary>
+        /// Is this tree uses user-defined functions
+        /// Simplifing query with UDFs could caused to suboptimal plans
+        /// </summary>
+        /// <param name="node"> Current subtree to process </param>
+        /// <param name="varMap">Mapped variables</param>
+        /// <returns></returns>
+        internal bool IncludeCustomFunctionOp(Node node, Dictionary<Var, Node> varMap)
+        {
+            if (!m_compilerState.DisableFilterOverProjectionSimplificationForCustomFunctions)
+            {
+                return false;
+            }
+
+            PlanCompiler.Assert(varMap != null, "Null varRef map");
+
+            if (node.Op.OpType == OpType.VarRef)
+            {
+                var varRefOp = (VarRefOp)node.Op;
+                if (varMap.TryGetValue(varRefOp.Var, out var newNode))
+                {
+                    return IncludeCustomFunctionOp(newNode, varMap);
+                }
+            }
+
+            if (node.Op.OpType == OpType.Function)
+            {
+                var functionOp = node.Op as FunctionOp;
+                if (!functionOp.Function.BuiltInAttribute)
+                {
+                    return true;
+                }
+            }
+
+            // Simply process the result of the children.
+            for (var i = 0; i < node.Children.Count; i++)
+            {
+                if (IncludeCustomFunctionOp(node.Children[i], varMap))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         // <summary>
         // Get a mapping from Var->Expression for a VarDefListOp tree. This information
         // will be used by later stages to replace all references to the Vars by the

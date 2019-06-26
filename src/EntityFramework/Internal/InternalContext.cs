@@ -610,6 +610,16 @@ namespace System.Data.Entity.Internal
         // </summary>
         public abstract bool UseDatabaseNullSemantics { get; set; }
 
+        /// <summary>
+        /// By default expression like 
+        /// .Select(x => NewProperty = func(x.Property)).Where(x => x.NewProperty == ...)
+        /// are simplified to avoid nested SELECT
+        /// In some cases, simplifing query with UDFs could caused to suboptimal plans due to calling UDF twice.
+        /// Also some SQL functions aren't allow in WHERE clause.
+        /// Disabling that behavior
+        /// </summary>
+        public abstract bool DisableFilterOverProjectionSimplificationForCustomFunctions { get; set; }
+
         public abstract int? CommandTimeout { get; set; }
 
         // <summary>

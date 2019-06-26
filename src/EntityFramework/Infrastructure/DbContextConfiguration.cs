@@ -138,6 +138,20 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
+        /// By default expression like 
+        /// .Select(x => NewProperty = func(x.Property)).Where(x => x.NewProperty == ...)
+        /// are simplified to avoid nested SELECT
+        /// In some cases, simplifing query with UDFs could caused to suboptimal plans due to calling UDF twice.
+        /// Also some SQL functions aren't allow in WHERE clause.
+        /// Disabling that behavior
+        /// </summary>
+        public bool DisableFilterOverProjectionSimplificationForCustomFunctions
+        {
+            get { return _internalContext.DisableFilterOverProjectionSimplificationForCustomFunctions; }
+            set { _internalContext.DisableFilterOverProjectionSimplificationForCustomFunctions = value; }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the <see cref="DbChangeTracker.DetectChanges()" />
         /// method is called automatically by methods of <see cref="DbContext" /> and related classes.
         /// The default value is true.

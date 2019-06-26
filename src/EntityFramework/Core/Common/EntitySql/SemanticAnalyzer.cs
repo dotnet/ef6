@@ -254,7 +254,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ParseResult(
                 DbQueryCommandTree.FromValidExpression(
                     sr.TypeResolver.Perspective.MetadataWorkspace, sr.TypeResolver.Perspective.TargetDataspace, converted, 
-                    useDatabaseNullSemantics: true),
+                    useDatabaseNullSemantics: true, disableFilterOverProjectionSimplificationForCustomFunctions: false),
                 functionDefs);
         }
 
