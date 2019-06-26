@@ -92,24 +92,29 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public void ShowStatus(string message)
         {
-            if (_statusLabel == null)
+            // dpi/scaling may have changed since the last time we showed a status
+            using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
             {
+                if (_statusLabel != null)
+                {
+                    Controls.Remove(_statusLabel);
+                }
+
                 _statusLabel = new Label
-                    {
-                        BackColor = TreeViewControl.BackColor,
-                        Size = ClientSize,
-                        Location = new Point(
+                {
+                    BackColor = TreeViewControl.BackColor,
+                    Size = ClientSize,
+                    Location = new Point(
                             Left + SystemInformation.Border3DSize.Width,
                             Top + SystemInformation.Border3DSize.Height),
-                        TextAlign = ContentAlignment.MiddleCenter,
-                        Anchor = Anchor
-                    };
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Anchor = Anchor,
+                    Text = message
+                };
+
+                Controls.Add(_statusLabel);
+                Controls.SetChildIndex(_statusLabel, 0);
             }
-
-            _statusLabel.Text = message;
-
-            Controls.Add(_statusLabel);
-            Controls.SetChildIndex(_statusLabel, 0);
         }
 
         // <summary>
@@ -119,7 +124,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             if (_statusLabel != null)
             {
-                Controls.Remove(_statusLabel);
+                using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
+                {
+                    Controls.Remove(_statusLabel);
+                    _statusLabel = null;
+                }
             }
         }
 

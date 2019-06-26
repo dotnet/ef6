@@ -18,6 +18,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Utilities;
     using Microsoft.WizardFramework;
     using Resources = Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources;
 
@@ -769,25 +770,30 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var currentTreeView = CurrentTreeView;
             if (null != currentTreeView)
             {
-                if (_statusLabel == null)
+                // dpi/scaling may have changed since the last time we showed a status
+                using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
                 {
+                    var tabPage = AddUpdateDeleteTabControl.SelectedTab;
+                    if (_statusLabel != null)
+                    {
+                        tabPage.Controls.Remove(_statusLabel);
+                    }
+
                     _statusLabel = new Label
-                        {
-                            BackColor = currentTreeView.TreeViewControl.BackColor,
-                            Size = currentTreeView.ClientSize,
-                            Location = new Point(
-                                currentTreeView.Left + SystemInformation.Border3DSize.Width,
-                                currentTreeView.Top + SystemInformation.Border3DSize.Height),
-                            TextAlign = ContentAlignment.MiddleCenter,
-                            Anchor = currentTreeView.Anchor
-                        };
+                    {
+                        BackColor = currentTreeView.TreeViewControl.BackColor,
+                        Size = currentTreeView.ClientSize,
+                        Location = new Point(
+                            currentTreeView.Left + SystemInformation.Border3DSize.Width,
+                            currentTreeView.Top + SystemInformation.Border3DSize.Height),
+                        TextAlign = ContentAlignment.MiddleCenter,
+                        Anchor = currentTreeView.Anchor,
+                        Text = message
+                    };
+
+                    tabPage.Controls.Add(_statusLabel);
+                    tabPage.Controls.SetChildIndex(_statusLabel, 0);
                 }
-
-                _statusLabel.Text = message;
-
-                var tabPage = AddUpdateDeleteTabControl.SelectedTab;
-                tabPage.Controls.Add(_statusLabel);
-                tabPage.Controls.SetChildIndex(_statusLabel, 0);
             }
         }
 
@@ -798,8 +804,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             if (_statusLabel != null)
             {
-                AddUpdateDeleteTabControl.SelectedTab.Controls.Remove(_statusLabel);
-                _statusLabel = null;
+                using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
+                {
+                    AddUpdateDeleteTabControl.SelectedTab.Controls.Remove(_statusLabel);
+                    _statusLabel = null;
+                }
             }
         }
 
