@@ -1041,9 +1041,13 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalPropertyEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalPropertyEntry>(
+                var internalEntryMock = new Mock<InternalPropertyEntry>(
                     new Mock<InternalEntityEntryForMock<object>>().Object,
                     new PropertyEntryMetadata(typeof(object), typeof(object), "fake property", isMapped: true, isComplex: true));
+
+                internalEntryMock.Setup(e => e.InternalEntityEntry).Throws(new NotImplementedException());
+
+                return internalEntryMock;
             }
         }
 
@@ -1058,9 +1062,13 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalPropertyEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalPropertyEntry>(
+                var internalEntryMock = new Mock<InternalPropertyEntry>(
                     new Mock<InternalEntityEntryForMock<object>>().Object,
                     new PropertyEntryMetadata(typeof(object), typeof(object), "fake property", isMapped: true, isComplex: true));
+                
+                internalEntryMock.Setup(e => e.InternalEntityEntry).Throws(new NotImplementedException());
+                
+                return internalEntryMock;
             }
         }
 

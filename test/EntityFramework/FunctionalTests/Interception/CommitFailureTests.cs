@@ -14,6 +14,7 @@ namespace System.Data.Entity.Interception
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Runtime.CompilerServices;
 #if !NET40
     using System.Threading;
     using System.Threading.Tasks;
@@ -923,14 +924,7 @@ namespace System.Data.Entity.Interception
         [Fact]
         public void TransactionHandler_is_disposed_even_if_the_context_is_not()
         {
-            var context = new BlogContextCommit();
-            context.Database.Delete();
-            Assert.Equal(1, context.Blogs.Count());
-
-            var weakDbContext = new WeakReference(context);
-            var weakObjectContext = new WeakReference(((IObjectContextAdapter)context).ObjectContext);
-            var weakTransactionHandler = new WeakReference(((IObjectContextAdapter)context).ObjectContext.TransactionHandler);
-            context = null;
+            CreateContext(out var weakDbContext, out var weakObjectContext, out var weakTransactionHandler);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -943,6 +937,19 @@ namespace System.Data.Entity.Interception
             GC.Collect();
 
             Assert.False(weakTransactionHandler.IsAlive);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void CreateContext(
+            out WeakReference weakDbContext, out WeakReference weakObjectContext, out WeakReference weakTransactionHandler)
+        {
+            var context = new BlogContextCommit();
+            context.Database.Delete();
+            Assert.Equal(1, context.Blogs.Count());
+
+            weakDbContext = new WeakReference(context);
+            weakObjectContext = new WeakReference(((IObjectContextAdapter)context).ObjectContext);
+            weakTransactionHandler = new WeakReference(((IObjectContextAdapter)context).ObjectContext.TransactionHandler);
         }
 #endif
 
