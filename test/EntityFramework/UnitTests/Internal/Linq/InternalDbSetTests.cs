@@ -108,6 +108,9 @@ namespace System.Data.Entity.Internal.Linq
 
             var internalSetMock = new Mock<IInternalSet<T>>();
             var dbSet = new InternalDbSet<T>(internalSetMock.Object);
+            
+            internalSetMock.Setup(e => e.AsNoTracking()).Returns<IInternalQuery<T>>(e => e);
+            internalSetMock.Setup(e => e.Include(It.IsAny<string>())).Returns<IInternalQuery<T>>(e => e);
 
             try
             {

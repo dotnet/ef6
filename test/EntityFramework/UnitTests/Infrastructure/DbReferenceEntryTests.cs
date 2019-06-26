@@ -335,9 +335,13 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalReferenceEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalReferenceEntry>(
+                var internalEntryMock = new Mock<InternalReferenceEntry>(
                     MockHelper.CreateMockInternalEntityEntry(new object()).Object,
                     new NavigationEntryMetadataForMock());
+                
+                internalEntryMock.Setup(e => e.InternalEntityEntry).Throws(new NotImplementedException());
+
+                return internalEntryMock;
             }
         }
 
@@ -352,9 +356,13 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalReferenceEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalReferenceEntry>(
+                var internalEntryMock = new Mock<InternalReferenceEntry>(
                     MockHelper.CreateMockInternalEntityEntry(new object()).Object,
                     new NavigationEntryMetadataForMock());
+                
+                internalEntryMock.Setup(e => e.InternalEntityEntry).Throws(new NotImplementedException());
+
+                return internalEntryMock;
             }
         }
 

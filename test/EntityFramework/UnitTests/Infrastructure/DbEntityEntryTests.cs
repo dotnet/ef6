@@ -2764,12 +2764,21 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalEntityEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalEntityEntry>(
+                var internalEntryMock = new Mock<InternalEntityEntry>(
                     new Mock<InternalContextForMock>
-                        {
-                            CallBase = true
-                        }.Object,
+                    {
+                        CallBase = true
+                    }.Object,
                     MockHelper.CreateMockStateEntry<object>().Object);
+
+                internalEntryMock.Setup(e => e.Collection(It.IsAny<string>(), It.IsAny<Type>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.Member(It.IsAny<string>(), It.IsAny<Type>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.Reference(It.IsAny<string>(), It.IsAny<Type>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.CurrentValues).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.OriginalValues).Throws(new NotImplementedException());
+
+                return internalEntryMock;
             }
         }
 
@@ -2784,12 +2793,21 @@ namespace System.Data.Entity.Infrastructure
 
             protected override Mock<InternalEntityEntry> CreateInternalEntryMock()
             {
-                return new Mock<InternalEntityEntry>(
+                var internalEntryMock = new Mock<InternalEntityEntry>(
                     new Mock<InternalContextForMock>
-                        {
-                            CallBase = true
-                        }.Object,
+                    {
+                        CallBase = true
+                    }.Object,
                     MockHelper.CreateMockStateEntry<TEntity>().Object);
+                
+                internalEntryMock.Setup(e => e.Collection(It.IsAny<string>(), It.IsAny<Type>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.Member(It.IsAny<string>(), It.IsAny<Type>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.Reference(It.IsAny<string>(), It.IsAny<Type>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.Property(It.IsAny<string>(), It.IsAny<Type>(), It.IsAny<bool>())).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.CurrentValues).Throws(new NotImplementedException());
+                internalEntryMock.Setup(e => e.OriginalValues).Throws(new NotImplementedException());
+
+                return internalEntryMock;
             }
         }
 

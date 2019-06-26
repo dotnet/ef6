@@ -9,6 +9,7 @@ namespace System.Data.Entity.Interception
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using Xunit;
 
     internal static partial class TestHelper
@@ -111,14 +112,7 @@ namespace System.Data.Entity.Interception
         [Fact]
         public void DatabaseLogFormatter_is_disposed_even_if_the_context_is_not()
         {
-            var log = new StringWriter();
-            var context = new BlogContextNoInit();
-
-            context.Database.Log = log.Write;
-            var weakDbContext = new WeakReference(context);
-            var weakStringWriter = new WeakReference(log);
-            log = null;
-            context = null;
+            CreateContext(out var weakDbContext, out var weakStringWriter);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -130,6 +124,17 @@ namespace System.Data.Entity.Interception
             GC.Collect();
 
             Assert.False(weakStringWriter.IsAlive);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void CreateContext(out WeakReference weakDbContext, out WeakReference weakStringWriter)
+        {
+            var log = new StringWriter();
+            var context = new BlogContextNoInit();
+
+            context.Database.Log = log.Write;
+            weakDbContext = new WeakReference(context);
+            weakStringWriter = new WeakReference(log);
         }
 #endif
 
