@@ -27,8 +27,8 @@
     <SystemDataSqlClientVersion>4.7.0-preview7.19320.1</SystemDataSqlClientVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependencies from dotnet/core-setup">
-    <MicrosoftNETCoreAppRefPackageVersion>3.0.0-preview7-27824-03</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.0.0-preview7-27824-03</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>3.0.0-preview7-27825-06</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRuntimewinx64PackageVersion>3.0.0-preview7-27825-06</MicrosoftNETCoreAppRuntimewinx64PackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="Dependency version settings">
     <!--
