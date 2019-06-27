@@ -1420,13 +1420,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var typeKind = e.Arguments[0].ResultType.GetPrimitiveTypeKind();
             var isDateTimeOffset = (typeKind == PrimitiveTypeKind.DateTimeOffset);
 
-            if (!isDateTimeOffset && typeKind != PrimitiveTypeKind.DateTime)
-            {
-                Debug.Assert(true, "Unexpected type to TruncateTime" + typeKind.ToString());
-            }
+            Debug.Assert(isDateTimeOffset || typeKind == PrimitiveTypeKind.DateTime, "Unexpected type to TruncateTime" + typeKind.ToString());
 
 
             var result = new SqlBuilder();
+            var argumentFragment = e.Arguments[0].Accept(sqlgen);
 
             if (sqlgen.IsPreKatmai)
             {
@@ -1436,32 +1434,23 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
 
                 result.Append("dateadd(d, datediff(d, 0, ");
-                result.Append(e.Arguments[0].Accept(sqlgen));
+                result.Append(argumentFragment);
                 result.Append("), 0)");
             }
             else
             {
                 if (!isDateTimeOffset)
                 {
-                    result.Append("cast(");
+                    result.Append("cast(cast(");
+                    result.Append(argumentFragment);
+                    result.Append(" as date) as datetime2)");
                 }
                 else
                 {
-                    result.Append("todatetimeoffset(");
-                }
-
-                result.Append("cast(");
-                result.Append(e.Arguments[0].Accept(sqlgen));
-                result.Append(" as date)");
-
-                if (!isDateTimeOffset)
-                {
-                    result.Append(" as datetime2)");
-                }
-                else
-                {
-                    result.Append(", datepart(tz, ");
-                    result.Append(e.Arguments[0].Accept(sqlgen));
+                    result.Append("todatetimeoffset(cast(");
+                    result.Append(argumentFragment);
+                    result.Append(" as date), datepart(tz, ");
+                    result.Append(argumentFragment);
                     result.Append("))");
                 }
             }
