@@ -26,7 +26,5 @@ $project.Object.References |
     ?{ $_.Identity -eq 'System.Data.Entity' } |
     %{ $_.Remove() }
 
-Add-EFProvider $project 'System.Data.SqlClient' 'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'
-
 Write-Host
 Write-Host "Type 'get-help EntityFramework' to see all available Entity Framework commands."
