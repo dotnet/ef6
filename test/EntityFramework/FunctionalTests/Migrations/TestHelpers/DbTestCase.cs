@@ -28,7 +28,9 @@ namespace System.Data.Entity.Migrations
     public enum DatabaseProvider
     {
         SqlClient,
+#if NET452
         SqlServerCe
+#endif
     }
 
     public enum ProgrammingLanguage
@@ -41,7 +43,7 @@ namespace System.Data.Entity.Migrations
     {
     }
 
-    public abstract class DbTestCase : TestBase, IUseFixture<DatabaseProviderFixture>
+    public abstract class DbTestCase : TestBase, IClassFixture<DatabaseProviderFixture>
     {
         private DatabaseProviderFixture _databaseProviderFixture;
 
@@ -96,12 +98,16 @@ namespace System.Data.Entity.Migrations
 
         public bool IsSqlCe
         {
+#if NET452
             get { return _databaseProvider == DatabaseProvider.SqlServerCe; }
+#else
+            get => false;
+#endif
         }
 
         public void WhenSqlCe(Action action)
         {
-            if (_databaseProvider == DatabaseProvider.SqlServerCe)
+            if (IsSqlCe)
             {
                 action();
             }
@@ -109,7 +115,7 @@ namespace System.Data.Entity.Migrations
 
         public void WhenNotSqlCe(Action action)
         {
-            if (_databaseProvider != DatabaseProvider.SqlServerCe)
+            if (!IsSqlCe)
             {
                 action();
             }
@@ -325,7 +331,7 @@ namespace System.Data.Entity.Migrations
             get { return TestDatabase.Info; }
         }
 
-        public void SetFixture(DatabaseProviderFixture databaseProviderFixture)
+        public DbTestCase(DatabaseProviderFixture databaseProviderFixture)
         {
             _databaseProviderFixture = databaseProviderFixture;
         }

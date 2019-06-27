@@ -387,6 +387,7 @@ namespace System.Data.Entity.Metadata
             </Schema>";
 
 
+#if NET452
         [Fact] // CodePlex 2051
         public void Can_load_model_after_assembly_version_of_types_changes()
         {
@@ -394,6 +395,7 @@ namespace System.Data.Entity.Metadata
 
             Assert.Null(GetClrType(edmItemCollection.GetItems<EntityType>().Single(e => e.Name == "Man")));
         }
+#endif
 
         public class Man
         {

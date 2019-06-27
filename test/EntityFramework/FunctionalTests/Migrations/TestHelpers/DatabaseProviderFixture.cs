@@ -55,9 +55,11 @@ namespace System.Data.Entity.Migrations
                 case DatabaseProvider.SqlClient:
                     testDatabase = new SqlTestDatabase(databaseName);
                     break;
+#if NET452
                 case DatabaseProvider.SqlServerCe:
                     testDatabase = new SqlCeTestDatabase(databaseName);
                     break;
+#endif
                 default:
                     throw new InvalidOperationException("Unsupported provider");
             }

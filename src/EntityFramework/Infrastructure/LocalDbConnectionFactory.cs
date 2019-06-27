@@ -26,6 +26,14 @@ namespace System.Data.Entity.Infrastructure
         private readonly string _localDbVersion;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="LocalDbConnectionFactory"/> class.
+        /// </summary>
+        public LocalDbConnectionFactory()
+            : this("mssqllocaldb")
+        {
+        }
+
+        /// <summary>
         /// Creates a new instance of the connection factory for the given version of LocalDb.
         /// For SQL Server 2012 LocalDb use "v11.0".
         /// For SQL Server 2014 and later LocalDb use "mssqllocaldb".
@@ -87,10 +95,14 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
-            var attachDb = string.IsNullOrEmpty(AppDomain.CurrentDomain.GetData("DataDirectory") as string)
-                               ? " "
-                               : string.Format(
-                                   CultureInfo.InvariantCulture, @" AttachDbFilename=|DataDirectory|{0}.mdf; ", nameOrConnectionString);
+            var attachDb = " ";
+#if !NETSTANDARD2_1
+            if (!string.IsNullOrEmpty(AppDomain.CurrentDomain.GetData("DataDirectory") as string))
+            {
+                attachDb = string.Format(
+                    CultureInfo.InvariantCulture, @" AttachDbFilename=|DataDirectory|{0}.mdf; ", nameOrConnectionString);
+            }
+#endif
 
             return new SqlConnectionFactory(
                 string.Format(

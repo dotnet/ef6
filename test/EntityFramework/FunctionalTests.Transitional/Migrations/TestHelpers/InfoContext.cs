@@ -5,7 +5,6 @@ namespace System.Data.Entity.Migrations
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
-    using System.Data.SqlServerCe;
     using System.Linq;
 
     public class InfoContext : DbContext
@@ -192,7 +191,7 @@ namespace System.Data.Entity.Migrations
                                kcu.ColumnName
                            });
 
-            if (Database.Connection is SqlCeConnection)
+            if (this.IsSqlCe())
             {
                 column.Property(c => c.NumericPrecision).HasColumnType("smallint");
                 column.Property(c => c.DateTimePrecision).HasColumnType("int");

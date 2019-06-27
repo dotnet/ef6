@@ -69,7 +69,7 @@ namespace System.Data.Entity.Objects
         public DbSet<TransactionLogEntry> LogEntries { get; set; }
     }
 
-    public class TransactionsTests : FunctionalTestBase, IUseFixture<TransactionFixture>
+    public class TransactionsTests : FunctionalTestBase, IClassFixture<TransactionFixture>
     {
         private string _entityConnectionString;
         private string _connectionString;
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Objects
         private MetadataWorkspace _workspace;
         private DbCompiledModel _compiledModel;
 
-        public void SetFixture(TransactionFixture data)
+        public TransactionsTests(TransactionFixture data)
         {
             _compiledModel = data.CompiledModel;
             _connectionString = data.ConnectionString;

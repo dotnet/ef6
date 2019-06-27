@@ -155,7 +155,7 @@
     <value>The 'MigrationsDirectory' parameter was set to the absolute path '{0}'. The migrations directory must be set to a relative path for a sub-directory under the Visual Studio project root.</value>
   </data>
   <data name="SaveConnectionFactoryInConfigFailed" xml:space="preserve">
-    <value>Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details.</value>
+    <value>Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default LocalDbConnectionFactory configured for '(localdb)\MSSQLLocalDB' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details.</value>
   </data>
   <data name="RescaffoldingMigration" xml:space="preserve">
     <value>Re-scaffolding migration '{0}'.</value>

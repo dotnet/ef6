@@ -5,7 +5,6 @@
   <assembly name="EntityFramework" />
   <assembly name="EntityFramework.SqlServer" />
   <assembly name="EntityFramework.SqlServerCompact" />
-  <assembly name="EntityFramework.SqlServerCompact.Legacy" />
   <assembly name="EntityFramework.PowerShell" />
   <assembly name="EntityFramework.PowerShell.Utility" />
   <assembly name="Migrate" />

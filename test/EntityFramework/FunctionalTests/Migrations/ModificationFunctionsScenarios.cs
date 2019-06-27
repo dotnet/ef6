@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Design;
@@ -9,6 +11,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class ModificationFunctionsScenarios : DbTestCase
     {
+        public ModificationFunctionsScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         [MigrationsTheory]
         public void Auto_migration_when_functions_and_model_not_current_should_throw()
         {
@@ -31,3 +38,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

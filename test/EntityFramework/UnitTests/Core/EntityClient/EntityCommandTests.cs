@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.EntityClient
             public void Exception_thrown_if_EntityConnection_State_is_Closed()
             {
                 var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
-                var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
+                var dbConnection = new Mock<DbConnection>() { CallBase = true }.Object;
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.EntityClient
             public void Exception_thrown_if_EntityConnection_State_is_Broken()
             {
                 var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
-                var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
+                var dbConnection = new Mock<DbConnection>().Object;
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
@@ -234,7 +234,7 @@ namespace System.Data.Entity.Core.EntityClient
             public void Exception_thrown_if_EntityConnection_State_is_Closed()
             {
                 var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
-                var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
+                var dbConnection = new Mock<DbConnection>().Object;
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
@@ -251,7 +251,7 @@ namespace System.Data.Entity.Core.EntityClient
             public void Exception_thrown_if_EntityConnection_State_is_Broken()
             {
                 var providerFactory = new Mock<DbProviderFactory>(MockBehavior.Strict).Object;
-                var dbConnection = new Mock<DbConnection>(MockBehavior.Strict).Object;
+                var dbConnection = new Mock<DbConnection>().Object;
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactory);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnection);
@@ -491,7 +491,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Assert.ThrowsDelegate testCode)
+        private static void AssertThrowsInAsyncMethod<TException>(string expectedMessage, Action testCode)
             where TException : Exception
         {
             var exception = Assert.Throws<AggregateException>(testCode);

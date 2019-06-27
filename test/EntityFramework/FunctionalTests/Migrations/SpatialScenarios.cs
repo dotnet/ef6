@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Spatial;
@@ -13,6 +15,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class SpatialScenarios : DbTestCase
     {
+        public SpatialScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class AlterSpatialColumnWithDefaultMigration : DbMigration
         {
             public override void Up()
@@ -49,3 +56,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

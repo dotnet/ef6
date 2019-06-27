@@ -248,6 +248,12 @@ namespace System.Data.Entity.Internal
             set { ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior = !value; }
         }
 
+        public override bool DisableFilterOverProjectionSimplificationForCustomFunctions
+        {
+            get { return !ObjectContextInUse.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions; }
+            set { ObjectContextInUse.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions = !value; }
+        }
+
         public override int? CommandTimeout
         {
             get { return ObjectContextInUse.CommandTimeout; }

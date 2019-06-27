@@ -1,9 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
-#if SQLSERVERCOMPACT35
-namespace System.Data.Entity.SqlServerCompact.Legacy
-#else
+
 namespace System.Data.Entity.SqlServerCompact
-#endif
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;

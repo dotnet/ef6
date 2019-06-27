@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // </summary>
         internal QueryParameterExpression EscapeParameterForLike(Expression<Func<string, Tuple<string, bool>>> method)
         {
-            Expression wrappedExpression = Expression.Property(Invoke(Constant(method), _funcletizedExpression), "Item1");
+            Expression wrappedExpression = Expression.Property(Invoke(method, _funcletizedExpression), "Item1");
             return new QueryParameterExpression(_parameterReference, wrappedExpression, _compiledQueryParameters);
         }
 

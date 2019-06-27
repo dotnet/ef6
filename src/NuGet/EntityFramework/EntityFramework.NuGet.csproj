@@ -1,0 +1,43 @@
+﻿<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;net40;netstandard2.1</TargetFrameworks>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <IsPackable>True</IsPackable>
+    <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
+    <Description>Entity Framework 6 (EF6) is a tried and tested object-relational mapper for .NET with many years of feature development and stabilization.</Description>
+    <NuspecPackageId>EntityFramework</NuspecPackageId>
+    <NoPackageAnalysis>True</NoPackageAnalysis>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NuspecProperty Include="Configuration=$(Configuration)" />
+    <NuspecProperty Include="NeutralLanguage=$(NeutralLanguage)" />
+    <NuspecProperty Include="MicrosoftCSharpVersion=$(MicrosoftCSharpVersion)" />
+    <NuspecProperty Include="SystemCodeDomVersion=$(SystemCodeDomVersion)" />
+    <NuspecProperty Include="SystemComponentModelAnnotationsVersion=$(SystemComponentModelAnnotationsVersion)" />
+    <NuspecProperty Include="SystemConfigurationConfigurationManagerVersion=$(SystemConfigurationConfigurationManagerVersion)" />
+    <NuspecProperty Include="SystemDataSqlClientVersion=$(SystemDataSqlClientVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <ProjectReference Include="..\..\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
+    <ProjectReference Include="..\..\Migrate\Migrate.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <ProjectReference Include="..\..\Microsoft.Data.Entity.Build.Tasks\Microsoft.Data.Entity.Build.Tasks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <Target Name="Compile" />
+  <Target Name="CopyFilesToOutputDirectory" />
+</Project>

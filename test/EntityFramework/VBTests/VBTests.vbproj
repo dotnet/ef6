@@ -1,341 +1,229 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>
-    </ProductVersion>
-    <SchemaVersion>
-    </SchemaVersion>
-    <ProjectGuid>{CF1C27F8-D603-4960-BE99-BCF348545368}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace />
     <AssemblyName>EntityFramework.VBTests</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <MyType>Windows</MyType>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
+    <TargetFrameworks>net452;netcoreapp3.0</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>EntityFramework.VBTests.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>EntityFramework.VBTests.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNet40|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\DebugNet40\</OutputPath>
-    <DocumentationFile>EntityFramework.VBTests.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DefineConstants>NET40</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\ReleaseNet40\</OutputPath>
-    <DocumentationFile>EntityFramework.VBTests.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DefineConstants>NET40</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionExplicit>On</OptionExplicit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionCompare>Binary</OptionCompare>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionStrict>Off</OptionStrict>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionInfer>On</OptionInfer>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.extensions, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Linq" />
-    <Import Include="System.Xml.Linq" />
-    <Import Include="Xunit" />
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\content\readme.htm">
+      <Link>SqlServerTypes\readme.htm</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x64\msvcr120.dll</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x64\SqlServerSpatial140.dll</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x86\msvcr120.dll</Link>
+    </Content>
+    <Content Include="$(NuGetPackageRoot)Microsoft.SqlServer.Types\$(MicrosoftSqlServerTypesVersion)\nativeBinaries\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>SqlServerTypes\x86\SqlServerSpatial140.dll</Link>
+    </Content>
   </ItemGroup>
+  
   <ItemGroup>
-    <Compile Include="TemplateTests.vb" />
-    <Compile Include="TranslatorTests.vb" />
-    <Compile Include="VbAdvancedPatterns\AddressMf.vb">
+    <Compile Update="VbAdvancedPatterns\AddressMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\AdvancedPatternsModelFirstInitializer.vb" />
-    <Compile Include="VbAdvancedPatterns\BuildingDetailMf.vb">
+    <Compile Update="VbAdvancedPatterns\BuildingDetailMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\BuildingMf.vb">
+    <Compile Update="VbAdvancedPatterns\BuildingMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\CurrentEmployeeMf.vb">
+    <Compile Update="VbAdvancedPatterns\CurrentEmployeeMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\EmployeeMf.vb">
+    <Compile Update="VbAdvancedPatterns\EmployeeMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\MailRoomMf.vb">
+    <Compile Update="VbAdvancedPatterns\MailRoomMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\OfficeMf.vb">
+    <Compile Update="VbAdvancedPatterns\OfficeMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\Partials\AddressMf.vb" />
-    <Compile Include="VbAdvancedPatterns\Partials\AdvancedPatternsModelFirstContext.vb" />
-    <Compile Include="VbAdvancedPatterns\Partials\BuildingMf.vb" />
-    <Compile Include="VbAdvancedPatterns\Partials\CurrentEmployeeMf.vb" />
-    <Compile Include="VbAdvancedPatterns\Partials\EmployeeMf.vb" />
-    <Compile Include="VbAdvancedPatterns\Partials\OfficeMf.vb" />
-    <Compile Include="VbAdvancedPatterns\Partials\PastEmployeeMf.vb" />
-    <Compile Include="VbAdvancedPatterns\Partials\SiteInfoMf.vb" />
-    <Compile Include="VbAdvancedPatterns\PastEmployeeMf.vb">
+    <Compile Update="VbAdvancedPatterns\PastEmployeeMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\SiteInfoMf.vb">
+    <Compile Update="VbAdvancedPatterns\SiteInfoMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\VbAdvancedPatterns.Context.vb">
+    <Compile Update="VbAdvancedPatterns\VbAdvancedPatterns.Context.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>VbAdvancedPatterns.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\VbAdvancedPatterns.vb">
+    <Compile Update="VbAdvancedPatterns\VbAdvancedPatterns.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\WhiteboardMf.vb">
+    <Compile Update="VbAdvancedPatterns\WhiteboardMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbAdvancedPatterns\WorkOrderMf.vb">
+    <Compile Update="VbAdvancedPatterns\WorkOrderMf.vb">
       <DependentUpon>VbAdvancedPatterns.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\BackOrderLine2Mm.vb">
+    <Compile Update="VbMonsterModel\BackOrderLine2Mm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\BackOrderLineMm.vb">
+    <Compile Update="VbMonsterModel\BackOrderLineMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\BarcodeDetailMm.vb">
+    <Compile Update="VbMonsterModel\BarcodeDetailMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\BarcodeMm.vb">
+    <Compile Update="VbMonsterModel\BarcodeMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ComplaintMm.vb">
+    <Compile Update="VbMonsterModel\ComplaintMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ComputerDetailMm.vb">
+    <Compile Update="VbMonsterModel\ComputerDetailMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ComputerMm.vb">
+    <Compile Update="VbMonsterModel\ComputerMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ConcurrencyInfoMm.vb">
+    <Compile Update="VbMonsterModel\ConcurrencyInfoMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ContactDetailsMm.vb">
+    <Compile Update="VbMonsterModel\ContactDetailsMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\CustomerInfoMm.vb">
+    <Compile Update="VbMonsterModel\CustomerInfoMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\DimensionsMm.vb">
+    <Compile Update="VbMonsterModel\DimensionsMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\DiscontinuedProductMm.vb">
+    <Compile Update="VbMonsterModel\DiscontinuedProductMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\DriverMm.vb">
+    <Compile Update="VbMonsterModel\DriverMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ExternalTypes\AuditInfoMm.vb" />
-    <Compile Include="VbMonsterModel\ExternalTypes\CustomerMm.vb" />
-    <Compile Include="VbMonsterModel\ExternalTypes\LicenseStateMm.vb" />
-    <Compile Include="VbMonsterModel\ExternalTypes\LoginMm.vb" />
-    <Compile Include="VbMonsterModel\ExternalTypes\PhoneMm.vb" />
-    <Compile Include="VbMonsterModel\ExternalTypes\PhoneTypeMm.vb" />
-    <Compile Include="VbMonsterModel\IncorrectScanMm.vb">
+    <Compile Update="VbMonsterModel\IncorrectScanMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\LastLoginMm.vb">
+    <Compile Update="VbMonsterModel\LastLoginMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\LicenseMm.vb">
+    <Compile Update="VbMonsterModel\LicenseMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\MessageMm.vb">
+    <Compile Update="VbMonsterModel\MessageMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\OrderLineMm.vb">
+    <Compile Update="VbMonsterModel\OrderLineMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\OrderMm.vb">
+    <Compile Update="VbMonsterModel\OrderMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\OrderNoteMm.vb">
+    <Compile Update="VbMonsterModel\OrderNoteMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\OrderQualityCheckMm.vb">
+    <Compile Update="VbMonsterModel\OrderQualityCheckMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\PageViewMm.vb">
+    <Compile Update="VbMonsterModel\PageViewMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\PasswordResetMm.vb">
+    <Compile Update="VbMonsterModel\PasswordResetMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ProductDetailMm.vb">
+    <Compile Update="VbMonsterModel\ProductDetailMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ProductMm.vb">
+    <Compile Update="VbMonsterModel\ProductMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ProductPageViewMm.vb">
+    <Compile Update="VbMonsterModel\ProductPageViewMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ProductPhotoMm.vb">
+    <Compile Update="VbMonsterModel\ProductPhotoMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ProductReviewMm.vb">
+    <Compile Update="VbMonsterModel\ProductReviewMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ProductWebFeatureMm.vb">
+    <Compile Update="VbMonsterModel\ProductWebFeatureMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\ResolutionMm.vb">
+    <Compile Update="VbMonsterModel\ResolutionMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\RSATokenMm.vb">
+    <Compile Update="VbMonsterModel\RSATokenMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\SmartCardMm.vb">
+    <Compile Update="VbMonsterModel\SmartCardMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\SupplierInfoMm.vb">
+    <Compile Update="VbMonsterModel\SupplierInfoMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\SupplierLogoMm.vb">
+    <Compile Update="VbMonsterModel\SupplierLogoMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\SupplierMm.vb">
+    <Compile Update="VbMonsterModel\SupplierMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\SuspiciousActivityMm.vb">
+    <Compile Update="VbMonsterModel\SuspiciousActivityMm.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="VbMonsterModel\VbMonsterModel.Context.vb">
+    <Compile Update="VbMonsterModel\VbMonsterModel.Context.vb">
       <DependentUpon>VbMonsterModel.Context.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="VbMonsterModel\VbMonsterModel.vb">
+    <Compile Update="VbMonsterModel\VbMonsterModel.vb">
       <DependentUpon>VbMonsterModel.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
+  
   <ItemGroup>
-    <None Include="App.Config" />
-    <None Include="packages.config" />
-    <None Include="VbAdvancedPatterns\VbAdvancedPatterns.Context.tt">
+    <None Update="VbAdvancedPatterns\VbAdvancedPatterns.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <CustomToolNamespace>AdvancedPatternsVB</CustomToolNamespace>
       <LastGenOutput>VbAdvancedPatterns.Context.vb</LastGenOutput>
     </None>
-    <None Include="VbAdvancedPatterns\VbAdvancedPatterns.tt">
+    <None Update="VbAdvancedPatterns\VbAdvancedPatterns.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <CustomToolNamespace>AdvancedPatternsVB</CustomToolNamespace>
       <LastGenOutput>VbAdvancedPatterns.vb</LastGenOutput>
     </None>
-    <None Include="VbMonsterModel\VbMonsterModel.Context.tt">
+    <None Update="VbMonsterModel\VbMonsterModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VbMonsterModel.Context.vb</LastGenOutput>
     </None>
-    <None Include="VbMonsterModel\VbMonsterModel.tt">
+    <None Update="VbMonsterModel\VbMonsterModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VbMonsterModel.vb</LastGenOutput>
     </None>
   </ItemGroup>
+  
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj">
-      <Project>{6f4bb80b-5f74-44d3-a77f-0025dfa48c1a}</Project>
-      <Name>EntityFramework.SqlServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
-      <Project>{E06D1C12-EFE8-4413-A15C-AE01FC158F2F}</Project>
-      <Name>EntityFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj">
-      <Project>{3d65611f-e8fb-4a33-9196-7836969d6378}</Project>
-      <Name>FunctionalTests.Transitional</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj">
-      <Project>{23330EF8-2593-4B0A-A70F-12E6BE1F46C4}</Project>
-      <Name>FunctionalTests</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="My Project\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

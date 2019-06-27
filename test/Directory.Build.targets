@@ -1,0 +1,10 @@
+<Project>
+  <Import Project="..\Directory.Build.targets" />
+
+  <ItemGroup>
+    <!-- Remove xunit.analyzers due to noise -->
+    <PackageReference Remove="xunit" />
+    <PackageReference Include="xunit.core" Version="$(XUnitVersion)" />
+    <PackageReference Include="xunit.assert" Version="$(XUnitVersion)" />
+  </ItemGroup>
+</Project>

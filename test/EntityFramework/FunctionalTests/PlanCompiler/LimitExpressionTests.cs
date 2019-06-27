@@ -16,11 +16,11 @@ namespace PlanCompilerTests
     /// <summary>
     /// Tests for DbLimitExpression nodes in the CQT tree generation process.
     /// </summary>
-    public class LimitExpressionTests : FunctionalTestBase, IUseFixture<LimitExpressionFixture>
+    public class LimitExpressionTests : FunctionalTestBase, IClassFixture<LimitExpressionFixture>
     {
         #region Infrastructure/setup
 
-        public LimitExpressionTests()
+        public LimitExpressionTests(LimitExpressionFixture data)
         {
             using (var context = new AdvancedPatternsMasterContext())
             {
@@ -30,6 +30,18 @@ namespace PlanCompilerTests
             {
                 context.Database.Initialize(false);
             }
+
+            _limit_SimpleModel_OrderBy_Skip_First_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_First_expectedSql;
+            _limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql;
+            _limit_SimpleModel_OrderBy_Skip_Single_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_Single_expectedSql;
+            _limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql;
+            _limit_SimpleModel_OrderBy_Skip_Take_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_Take_expectedSql;
+
+            _limit_ComplexModel_OrderBy_Skip_First_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_First_expectedSql;
+            _limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql;
+            _limit_ComplexModel_OrderBy_Skip_Single_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_Single_expectedSql;
+            _limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql;
+            _limit_ComplexModel_OrderBy_Skip_Take_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_Take_expectedSql;
         }
 
         #endregion
@@ -48,6 +60,7 @@ namespace PlanCompilerTests
         private string _limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql;
         private string _limit_ComplexModel_OrderBy_Skip_Take_expectedSql;
 
+#if NET452
         [Fact]
         public void Limit_SimpleModel_First()
         {
@@ -680,6 +693,7 @@ namespace PlanCompilerTests
 
             }
         }
+#endif
 
         #endregion
 
@@ -1533,21 +1547,6 @@ namespace PlanCompilerTests
         }
 
         #endregion
-
-        public void SetFixture(LimitExpressionFixture data)
-        {
-            _limit_SimpleModel_OrderBy_Skip_First_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_First_expectedSql;
-            _limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_FirstOrDefault_expectedSql;
-            _limit_SimpleModel_OrderBy_Skip_Single_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_Single_expectedSql;
-            _limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_SingleOrDefault_expectedSql;
-            _limit_SimpleModel_OrderBy_Skip_Take_expectedSql = data.Limit_SimpleModel_OrderBy_Skip_Take_expectedSql;
-
-            _limit_ComplexModel_OrderBy_Skip_First_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_First_expectedSql;
-            _limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_FirstOrDefault_expectedSql;
-            _limit_ComplexModel_OrderBy_Skip_Single_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_Single_expectedSql;
-            _limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_SingleOrDefault_expectedSql;
-            _limit_ComplexModel_OrderBy_Skip_Take_expectedSql = data.Limit_ComplexModel_OrderBy_Skip_Take_expectedSql;
-        }
     }
 
     public class LimitExpressionFixture

@@ -5,10 +5,17 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+#if NET452
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+#endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class CreateIndexScenarios : DbTestCase
     {
+        public CreateIndexScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class CreateSimpleIndexMigration : DbMigration
         {
             public override void Up()
@@ -17,6 +24,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+#if NET452
         [MigrationsTheory]
         public void Can_create_simple_index()
         {
@@ -30,6 +38,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
         }
+#endif
 
         private class CreateCompositeIndexMigration : DbMigration
         {
@@ -77,6 +86,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+#if NET452
         [MigrationsTheory]
         public void Can_create_clustered_index()
         {
@@ -90,5 +100,6 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
         }
+#endif
     }
 }

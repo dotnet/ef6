@@ -215,6 +215,7 @@ namespace ProductivityApiTests
             VerifySetsAreInitialized<SimpleModelContextWithNoData>(DbCompiledModelContents.DontMatch);
         }
 
+#if NET452
         [Fact]
         public void Model_Tweaking_is_ignored_when_using_model_ctor_on_DbContext()
         {
@@ -236,6 +237,7 @@ namespace ProductivityApiTests
                 Assert.Equal(type.KeyMembers.First().Name, "Title");
             }
         }
+#endif
 
         [Fact]
         public void Verify_DbContext_construction_using_connection_string_ctor_when_string_is_database_name()
@@ -581,6 +583,7 @@ namespace ProductivityApiTests
                 "DbContext_ConnectionStringNotFound", "NonexistentConnectionString");
         }
 
+#if NET452
         [Fact]
         public void DbContext_caches_models_for_two_providers()
         {
@@ -602,6 +605,7 @@ namespace ProductivityApiTests
                 }
             }
         }
+#endif
 
         #endregion
 
@@ -895,7 +899,11 @@ namespace ProductivityApiTests
 
 #if !NET40
 
-        [Fact]
+        [Fact(
+#if NETCOREAPP3_0
+            Skip = "Deadlocks on .Result"
+#endif
+            )]
         [UseDefaultExecutionStrategy]
         public void SaveChangesAsync_bubbles_UpdateException()
         {

@@ -12,6 +12,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class DbSetMigrationsExtensionsTests : DbTestCase
     {
+        public DbSetMigrationsExtensionsTests(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         public class FakeDbSet<TEntity>
             where TEntity : class
         {

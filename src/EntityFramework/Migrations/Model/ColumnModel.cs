@@ -22,7 +22,6 @@ namespace System.Data.Entity.Migrations.Model
     public class ColumnModel : PropertyModel
     {
         private readonly Type _clrType;
-        private readonly object _clrDefaultValue;
         private PropertyInfo _apiPropertyInfo;
         private IDictionary<string, AnnotationValues> _annotations = new Dictionary<string, AnnotationValues>();
 
@@ -52,31 +51,6 @@ namespace System.Data.Entity.Migrations.Model
             : base(type, typeUsage)
         {
             _clrType = PrimitiveType.GetEdmPrimitiveType(type).ClrEquivalentType;
-            _clrDefaultValue = CreateDefaultValue();
-        }
-
-        private object CreateDefaultValue()
-        {
-            if (_clrType.IsValueType())
-            {
-                return Activator.CreateInstance(_clrType);
-            }
-
-            if (_clrType == typeof(string))
-            {
-                return string.Empty;
-            }
-
-            if (_clrType == typeof(DbGeography))
-            {
-                return DbGeography.FromText("POINT(0 0)");
-            }
-
-            if (_clrType == typeof(DbGeometry))
-            {
-                return DbGeometry.FromText("POINT(0 0)");
-            }
-            return new byte[0];
         }
 
         /// <summary>
@@ -92,7 +66,29 @@ namespace System.Data.Entity.Migrations.Model
         /// </summary>
         public virtual object ClrDefaultValue
         {
-            get { return _clrDefaultValue; }
+            get
+            {
+                if (_clrType.IsValueType())
+                {
+                    return Activator.CreateInstance(_clrType);
+                }
+
+                if (_clrType == typeof(string))
+                {
+                    return string.Empty;
+                }
+
+                if (_clrType == typeof(DbGeography))
+                {
+                    return DbGeography.FromText("POINT(0 0)");
+                }
+
+                if (_clrType == typeof(DbGeometry))
+                {
+                    return DbGeometry.FromText("POINT(0 0)");
+                }
+                return new byte[0];
+            }
         }
 
         /// <summary>

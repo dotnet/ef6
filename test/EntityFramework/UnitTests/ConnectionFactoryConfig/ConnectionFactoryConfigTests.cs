@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections.Generic;
@@ -667,57 +669,6 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             Assert.Equal(_net40EntityFrameworkSectionName, GetEfSectionName(config));
         }
 
-        [Fact]
-        public void AddOrUpdateConfigSection_on_add_yields_result_that_can_load_in_partial_trust()
-        {
-            AddOrUpdateConfigSection_result_can_load_in_partial_trust(
-                new XDocument(
-                    new XElement(ConfigFileManipulator.ConfigurationElementName)));
-        }
-
-        [Fact]
-        public void AddOrUpdateConfigSection_on_update_yields_result_that_can_load_in_partial_trust()
-        {
-            AddOrUpdateConfigSection_result_can_load_in_partial_trust(
-                CreateConfigSectionDoc(_net40EntityFrameworkSectionName));
-        }
-
-        private void AddOrUpdateConfigSection_result_can_load_in_partial_trust(XDocument config)
-        {
-            new ConfigFileManipulator().AddOrUpdateConfigSection(
-                config, _net45EntityFrameworkVersion);
-
-            config.Element(ConfigFileManipulator.ConfigurationElementName).Add(
-                new XElement(
-                    ConfigFileManipulator.EntityFrameworkElementName,
-                    new XAttribute("codeConfigurationType", typeof(FunctionalTestsConfiguration).AssemblyQualifiedName)));
-
-            var configurationFile = Path.Combine(Environment.CurrentDirectory, "Temp.config");
-            config.Save(configurationFile);
-
-            try
-            {
-                using (var sandbox = new PartialTrustSandbox(configurationFile: configurationFile))
-                {
-                    sandbox.CreateInstance<ConnectionFactoryConfigTests>()
-                           .LoadConfiguration();
-                }
-            }
-            finally
-            {
-                File.Delete(configurationFile);
-            }
-        }
-
-        private void LoadConfiguration()
-        {
-            new PartialTrustContext();
-        }
-
-        private class PartialTrustContext : DbContext
-        {
-        }
-
         private XDocument CreateConfigSectionDoc(string assemblyName, bool addRequirePermission = false)
         {
             var dummyElement = new XElement(
@@ -869,7 +820,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                                 => config.Element("fake").Add(new XElement("modified")))
                             .Returns(shouldSave);
 
-                        Assert.ThrowsDelegate test =
+                        Action test =
                             () => new ConfigFileProcessor()
                                       .ProcessConfigFile(
                                           mockedItem.Object,
@@ -1147,7 +1098,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             Assert.Equal("mssqllocaldb", specification.ConstructorArguments.Single());
         }
 
-        [Fact]
+        [Fact(Skip = "Fails without SQL Server Express")]
         public void SqlServerDetector_detects_SQL_Express_on_dev_machine()
         {
             using (
@@ -1176,7 +1127,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 
 #endif
 
-        [Fact]
+        [Fact(Skip = "Fails without SQL Server Express")]
         public void Base_connection_string_on_dev_box_with_SQL_Express_installed_has_SQL_Express_connection_string()
         {
             using (
@@ -1426,3 +1377,5 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 
     #endregion
 }
+
+#endif

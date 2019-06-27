@@ -29,6 +29,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="validate"> When set to false the validation of the tree is turned off. </param>
         /// <param name="useDatabaseNullSemantics">A boolean that indicates whether database null semantics are exhibited when comparing
         /// two operands, both of which are potentially nullable.</param>
+        /// <param name="disableFilterOverProjectionSimplificationForCustomFunctions">A boolean that indicates whether 
+        /// filter over projection simplification should be used.</param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="metadata" />
         /// or
@@ -39,8 +41,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <paramref name="dataSpace" />
         /// does not represent a valid data space
         /// </exception>
-        public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query, bool validate, bool useDatabaseNullSemantics)
-            : base(metadata, dataSpace, useDatabaseNullSemantics)
+        public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query, bool validate, bool useDatabaseNullSemantics, bool disableFilterOverProjectionSimplificationForCustomFunctions)
+            : base(metadata, dataSpace, useDatabaseNullSemantics, disableFilterOverProjectionSimplificationForCustomFunctions)
         {
             // Ensure the query expression is non-null
             Check.NotNull(query, "query");
@@ -55,6 +57,32 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     validator.Parameters.Select(paramInfo => paramInfo.Value).ToList());
             }
             _query = query;
+        }
+
+        /// <summary>
+        /// Constructs a new DbQueryCommandTree that uses the specified metadata workspace.
+        /// </summary>
+        /// <param name="metadata"> The metadata workspace that the command tree should use. </param>
+        /// <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
+        /// <param name="query">
+        /// A <see cref="DbExpression" /> that defines the logic of the query.
+        /// </param>
+        /// <param name="validate"> When set to false the validation of the tree is turned off. </param>
+        /// <param name="useDatabaseNullSemantics">A boolean that indicates whether database null semantics are exhibited when comparing
+        /// two operands, both of which are potentially nullable.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="metadata" />
+        /// or
+        /// <paramref name="query" />
+        /// is null
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="dataSpace" />
+        /// does not represent a valid data space
+        /// </exception>
+        public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query, bool validate, bool useDatabaseNullSemantics)
+            : this(metadata, dataSpace, query, validate, useDatabaseNullSemantics, false)
+        {
         }
 
         /// <summary>
@@ -77,7 +105,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// does not represent a valid data space
         /// </exception>
         public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query, bool validate)
-            : this(metadata, dataSpace, query, validate, true)
+            : this(metadata, dataSpace, query, validate, true, false)
         {
         }
 
@@ -100,7 +128,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// does not represent a valid data space
         /// </exception>
         public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query)
-            : this(metadata, dataSpace, query, true, true)
+            : this(metadata, dataSpace, query, true, true, false)
         {
         }
 
@@ -147,7 +175,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         internal static DbQueryCommandTree FromValidExpression(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query, 
-            bool useDatabaseNullSemantics)
+            bool useDatabaseNullSemantics, bool disableFilterOverProjectionSimplificationForCustomFunctions)
         {
             return new DbQueryCommandTree(metadata, dataSpace, query, 
 #if DEBUG
@@ -155,7 +183,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 #else
                 false, 
 #endif
-                useDatabaseNullSemantics);
+                useDatabaseNullSemantics,
+                disableFilterOverProjectionSimplificationForCustomFunctions);
         }
     }
 }

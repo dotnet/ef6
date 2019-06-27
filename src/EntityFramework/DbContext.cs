@@ -41,7 +41,7 @@ namespace System.Data.Entity
     /// is used to find a connection string in the app.config or web.config file.  If no connection string is found, then
     /// the name is passed to the DefaultConnectionFactory registered on the <see cref="Entity.Database" /> class.  The connection
     /// factory then uses the context name as the database name in a default connection string.  (This default connection
-    /// string points to .\SQLEXPRESS on the local machine unless a different DefaultConnectionFactory is registered.)
+    /// string points to (localdb)\MSSQLLocalDB unless a different DefaultConnectionFactory is registered.)
     /// Instead of using the derived context name, the connection/database name can also be specified explicitly by
     /// passing the name to one of the DbContext constructors that takes a string.  The name can also be passed in
     /// the form "name=myname", in which case the name must be found in the config file or an exception will be thrown.
@@ -219,7 +219,7 @@ namespace System.Data.Entity
         /// Typically, this method is called only once when the first instance of a derived context
         /// is created.  The model for that context is then cached and is for all further instances of
         /// the context in the app domain.  This caching can be disabled by setting the ModelCaching
-        /// property on the given ModelBuidler, but note that this can seriously degrade performance.
+        /// property on the given ModelBuilder, but note that this can seriously degrade performance.
         /// More control over caching is provided through use of the DbModelBuilder and DbContextFactory
         /// classes directly.
         /// </remarks>

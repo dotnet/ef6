@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Design;
@@ -11,6 +13,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class ScriptingScenarios : DbTestCase
     {
+        public ScriptingScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private string CreateMetadataStatement
         {
             get
@@ -377,3 +384,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

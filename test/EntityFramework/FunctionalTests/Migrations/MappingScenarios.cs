@@ -3,10 +3,17 @@
 namespace System.Data.Entity.Migrations
 {
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+#if NET452
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
+#endif
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class MappingScenarios : DbTestCase
     {
+        public MappingScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class WeirdNamesContext : DbContext
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)

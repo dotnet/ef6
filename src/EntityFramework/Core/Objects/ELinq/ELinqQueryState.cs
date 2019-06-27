@@ -25,6 +25,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private Func<bool> _recompileRequired;
         private IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> _linqParameters;
         private bool _useCSharpNullComparisonBehavior;
+        private bool _disableFilterOverProjectionSimplificationForCustomFunctions;
         private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
 
         #endregion
@@ -53,6 +54,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             _expression = expression;
             _useCSharpNullComparisonBehavior = context.ContextOptions.UseCSharpNullComparisonBehavior;
+            _disableFilterOverProjectionSimplificationForCustomFunctions = context.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions;
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
         }
 
@@ -102,7 +104,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 if ((explicitMergeOption.HasValue &&
                      explicitMergeOption.Value != plan.MergeOption)
                     || _recompileRequired()
-                    || ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior != _useCSharpNullComparisonBehavior)
+                    || ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior != _useCSharpNullComparisonBehavior
+                    || ObjectContext.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions != _disableFilterOverProjectionSimplificationForCustomFunctions)
                 {
                     plan = null;
                 }
@@ -133,6 +136,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     converter.PropagatedMergeOption);
 
                 _useCSharpNullComparisonBehavior = ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior;
+                _disableFilterOverProjectionSimplificationForCustomFunctions = ObjectContext.ContextOptions.DisableFilterOverProjectionSimplificationForCustomFunctions;
 
                 // If parameters were aggregated from referenced (non-LINQ) ObjectQuery instances then add them to the parameters collection
                 _linqParameters = converter.GetParameters();
@@ -186,7 +190,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 if (plan == null)
                 {
                     var tree = DbQueryCommandTree.FromValidExpression(
-                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !_useCSharpNullComparisonBehavior);
+                        ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression, !_useCSharpNullComparisonBehavior, _disableFilterOverProjectionSimplificationForCustomFunctions);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
                         ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehavior, converter.PropagatedSpan, null,
                         converter.AliasGenerator);

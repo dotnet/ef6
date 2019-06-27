@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET45 || NET40
+
 namespace System.Data.Entity.Migrations.Design
 {
     using System.Diagnostics.CodeAnalysis;
@@ -95,3 +97,5 @@ namespace System.Data.Entity.Migrations.Design
         }
     }
 }
+
+#endif

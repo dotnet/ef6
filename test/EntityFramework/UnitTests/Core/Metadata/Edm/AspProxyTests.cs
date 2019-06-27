@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     public class AspProxyTests : TestBase
     {
+#if NET452
         public class TryInitializeWebAssembly
         {
             [Fact]
@@ -38,6 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
         }
+#endif
 
         public class GetReferencedAssembliesMethod
         {

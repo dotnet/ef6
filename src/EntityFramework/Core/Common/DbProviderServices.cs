@@ -39,6 +39,7 @@ namespace System.Data.Entity.Core.Common
 
         private readonly ResolverChain _resolvers = new ResolverChain();
 
+
         /// <summary>
         /// Constructs an EF provider that will use the <see cref="IDbDependencyResolver" /> obtained from
         /// the app domain <see cref="DbConfiguration" /> Singleton for resolving EF dependencies such

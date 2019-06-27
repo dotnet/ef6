@@ -14,11 +14,11 @@ namespace System.Data.Entity.Validation
         #region Helpers
 
         private readonly string RegexAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+            (SystemComponentModelDataAnnotationsAssembly, SystemComponentModelDataAnnotationsResourceTable,
                 "RegexAttribute_ValidationError");
 
         private readonly string StringLengthAttribute_ValidationError = LookupString
-            (SystemComponentModelDataAnnotationsAssembly, "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources",
+            (SystemComponentModelDataAnnotationsAssembly, SystemComponentModelDataAnnotationsResourceTable,
                 "StringLengthAttribute_ValidationError");
 
         public static ValidationResult FailMiserably(object entity, ValidationContext validationContex)

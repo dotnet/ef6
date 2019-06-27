@@ -27,12 +27,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal const string CompareByteArraysFieldName = "_compareByteArrays";
 
         // <summary>
-        // A hook such that test code can change the AssemblyBuilderAccess of the
-        // proxy assembly through reflection into the EntityProxyFactory.
-        // </summary>
-        private static AssemblyBuilderAccess s_ProxyAssemblyBuilderAccess = AssemblyBuilderAccess.Run;
-
-        // <summary>
         // Dictionary of proxy class type information, keyed by the pair of the CLR type and EntityType CSpaceName of the type being proxied.
         // A null value for a particular EntityType name key records the fact that
         // no proxy Type could be created for the specified type.
@@ -67,18 +61,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                     new AssemblyName(String.Format(CultureInfo.InvariantCulture, "EntityFrameworkDynamicProxies-{0}", assembly.FullName));
                 assemblyName.Version = new Version(1, 0, 0, 0);
 
-                var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    assemblyName, s_ProxyAssemblyBuilderAccess);
+                var assemblyBuilder =
+#if NET40
+                    AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#else
+                    AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#endif
 
-                if (s_ProxyAssemblyBuilderAccess == AssemblyBuilderAccess.RunAndSave)
-                {
-                    // Make the module persistable if the AssemblyBuilderAccess is changed to be RunAndSave.
-                    moduleBuilder = assemblyBuilder.DefineDynamicModule("EntityProxyModule", "EntityProxyModule.dll");
-                }
-                else
-                {
-                    moduleBuilder = assemblyBuilder.DefineDynamicModule("EntityProxyModule");
-                }
+                moduleBuilder = assemblyBuilder.DefineDynamicModule("EntityProxyModule");
 
                 _moduleBuilders.Add(assembly, moduleBuilder);
             }

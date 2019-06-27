@@ -10,8 +10,6 @@ using System.Runtime.CompilerServices;
 
 #endif
 
-[assembly: AssemblyTitle("EntityFramework")]
-[assembly: AssemblyDescription("EntityFramework.dll")]
 [assembly: AssemblyDefaultAlias("EntityFramework.dll")]
 
 #if !NET40

@@ -2,23 +2,32 @@
 
 namespace System.Data.Entity.Configuration
 {
-#if !NET40
-    using MySql.Data.MySqlClient;
-#endif
     using System.Configuration;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServer;
+
+#if NET452
     using System.Runtime.Remoting.Messaging;
+    using MySql.Data.MySqlClient;
+#else
+    using System.Threading;
+#endif
 
     public class ProviderAgnosticConfiguration : DbConfiguration
     {
+#if NET452
         private static readonly string _providerInvariantName = ConfigurationManager.AppSettings["ProviderInvariantName"];
         private static readonly string _baseConnectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
+#else
+        private static readonly string _providerInvariantName = "System.Data.SqlClient";
+        private static readonly string _baseConnectionString = @"Data Source=(localdb)\MSSQLLocalDB; Integrated Security=True;";
+        private static readonly AsyncLocal<bool> _suspendExecutionStrategy = new AsyncLocal<bool>();
+#endif
 
         public ProviderAgnosticConfiguration()
         {
-#if !NET40
+#if NET452
             SetHistoryContext(
                 "MySql.Data.MySqlClient",
                 (connection, defaultSchema) => new MySqlHistoryContext(connection, defaultSchema));
@@ -34,7 +43,7 @@ namespace System.Data.Entity.Configuration
                     SetDefaultConnectionFactory(new SqlConnectionFactory(_baseConnectionString));
                     break;
 
-#if !NET40
+#if NET452
                 case "MySql.Data.MySqlClient" :
                     SetDefaultConnectionFactory(new MySqlConnectionFactory());
                     break;
@@ -49,14 +58,13 @@ namespace System.Data.Entity.Configuration
 
         public static bool SuspendExecutionStrategy
         {
-            get
-            {
-                return (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
-            }
-            set
-            {
-                CallContext.LogicalSetData("SuspendExecutionStrategy", value);
-            }
+#if NET452
+            get => (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
+            set => CallContext.LogicalSetData("SuspendExecutionStrategy", value);
+#else
+            get => _suspendExecutionStrategy.Value;
+            set => _suspendExecutionStrategy.Value = value;
+#endif
         }
     }
 }

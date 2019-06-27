@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Check.NotNull(predicate, "predicate");
 
-            return new TypeConventionConfiguration(_conventionsConfiguration, _predicates.Append(predicate));
+            return new TypeConventionConfiguration(_conventionsConfiguration, IEnumerableExtensions.Append(_predicates, predicate));
         }
 
         /// <summary>

@@ -241,6 +241,8 @@ namespace System.Data.Entity.Core.EntityClient
                 _edmType = value;
             }
         }
+        
+#pragma warning disable CS0114
 
         /// <summary>
         /// Gets or sets the number of digits used to represent the
@@ -283,6 +285,8 @@ namespace System.Data.Entity.Core.EntityClient
                 _scale = value;
             }
         }
+        
+#pragma warning restore CS0114
 
         /// <summary>Gets or sets the value of the parameter.</summary>
         /// <returns>The value of the parameter.</returns>

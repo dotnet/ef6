@@ -7,13 +7,13 @@ namespace System.Data.Entity.Metadata
     using System.Data.Entity.Migrations;
     using Xunit;
 
-    public class MetadataCachingTests : FunctionalTestBase, IUseFixture<MetadataCachingTestsFixture>
+    public class MetadataCachingTests : FunctionalTestBase, IClassFixture<MetadataCachingTestsFixture>
     {
         private static readonly string connectionString = string.Format(
             @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
             ModelHelpers.SimpleConnectionString("MetadataCachingTests"));
 
-        public void SetFixture(MetadataCachingTestsFixture data)
+        public MetadataCachingTests(MetadataCachingTestsFixture data)
         {
         }
 

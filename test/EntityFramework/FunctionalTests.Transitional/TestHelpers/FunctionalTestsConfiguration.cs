@@ -6,8 +6,10 @@ namespace System.Data.Entity.TestHelpers
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
-    using System.Data.Entity.SqlServerCompact;
     using System.Linq;
+#if NET452
+    using System.Data.Entity.SqlServerCompact;
+#endif
 
     public class FunctionalTestsConfiguration : DbConfiguration
     {
@@ -60,8 +62,9 @@ namespace System.Data.Entity.TestHelpers
 
         public FunctionalTestsConfiguration()
         {
+#if NET452
             SetProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
-            SetProviderServices(SqlServerCompact.Legacy.SqlCeProviderServices.ProviderInvariantName, SqlServerCompact.Legacy.SqlCeProviderServices.Instance);
+#endif
             SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
 
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());

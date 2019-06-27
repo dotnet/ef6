@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Determines the maximum size of the query in terms of Iqt nodes for which we attempt to do transformation rules.
         // This number is ignored if applyTransformationsRegardlessOfSize is enabled.
         // </summary>
-        private const int MaxNodeCountForTransformations = 100000;
+        private const int MaxNodeCountForTransformations = 10000;
 
         // <summary>
         // The CTree we're compiling a plan for.
@@ -179,6 +179,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
                 return m_constraintManager;
             }
+        }
+
+        internal bool DisableFilterOverProjectionSimplificationForCustomFunctions
+        {
+            get { return m_ctree.DisableFilterOverProjectionSimplificationForCustomFunctions; }
         }
 
 #if DEBUG

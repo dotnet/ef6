@@ -198,6 +198,7 @@ namespace ProductivityApiTests
             { }
         }
 
+#if NET452
         [ExtendedFact(SkipForSqlAzure = true, Justification = "Unable to connect to master database with open connection on sqlAzure")]
         public void Issue1805_EntityConnection_is_not_subscribed_to_its_underlying_store_connection_event_after_it_has_been_disposed()
         {
@@ -239,6 +240,7 @@ namespace ProductivityApiTests
                 }
             }
         }
+#endif
 
         #endregion Transaction scenarios
     }

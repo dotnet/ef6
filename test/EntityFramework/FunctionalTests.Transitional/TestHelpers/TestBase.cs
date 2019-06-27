@@ -26,6 +26,11 @@ namespace System.Data.Entity
     {
         static TestBase()
         {
+#if NET452
+            SqlServerTypes.Utilities.LoadNativeAssemblies(
+                Path.GetDirectoryName(typeof(FunctionalTestBase).Assembly.Location));
+#endif
+
             DbConfiguration.SetConfiguration(new FunctionalTestsConfiguration());
 
             // Uncomment below to log all test generated SQL to the console.
@@ -153,6 +158,13 @@ namespace System.Data.Entity
         {
             get { return typeof(SqlProviderServices).Assembly(); }
         }
+
+        public const string SystemComponentModelDataAnnotationsResourceTable
+#if NET452
+            = "System.ComponentModel.DataAnnotations.Resources.DataAnnotationsResources";
+#else
+            = "FxResources.System.ComponentModel.Annotations.SR";
+#endif
 
         /// <summary>
         /// Gets an embedded resource string from the specified assembly
@@ -569,6 +581,7 @@ namespace System.Data.Entity
 
         #endregion
 
+#if NET452
         public static void RunTestInAppDomain(Type testType)
         {
             var domain = AppDomain.CreateDomain("TestAppDomain", null, AppDomain.CurrentDomain.SetupInformation);
@@ -585,5 +598,6 @@ namespace System.Data.Entity
                 AppDomain.Unload(domain);
             }
         }
+#endif
     }
 }

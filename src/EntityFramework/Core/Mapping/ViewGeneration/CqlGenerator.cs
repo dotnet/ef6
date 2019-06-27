@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
             return DbQueryCommandTree.FromValidExpression(
                 m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, query,
-                useDatabaseNullSemantics: true);
+                useDatabaseNullSemantics: true, disableFilterOverProjectionSimplificationForCustomFunctions: false);
         }
 
         // <summary>

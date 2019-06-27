@@ -48,14 +48,10 @@ namespace System.Data.Entity.CodeFirst
         [Fact]
         public void Can_rename_non_key_column_if_key_column_count_is_greater_than_MetadataCollection_dictionary_threshold()
         {
-            Assert.DoesNotThrow(
-                () =>
-                {
-                    using (var context = new VagueContext())
-                    {
-                        Assert.NotNull(context.VagueItems.ToString());
-                    }
-                });
+            using (var context = new VagueContext())
+            {
+                Assert.NotNull(context.VagueItems.ToString());
+            }
         }
     }
 }

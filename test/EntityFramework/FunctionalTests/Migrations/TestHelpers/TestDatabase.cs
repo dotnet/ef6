@@ -5,12 +5,15 @@ namespace System.Data.Entity.Migrations
     using System.Data.Common;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
-    using System.Data.Entity.SqlServerCompact;
     using System.Data.Entity.TestHelpers;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using System.Data.SqlServerCe;
     using System.IO;
+
+#if NET452
+    using System.Data.Entity.SqlServerCompact;
+    using System.Data.SqlServerCe;
+#endif
 
     public abstract class TestDatabase
     {
@@ -73,7 +76,7 @@ namespace System.Data.Entity.Migrations
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentException("'" + name + "' can not be null or empty.");
+                throw new ArgumentException("'" + nameof(name) + "' can not be null or empty.");
             }
 
             _name = name;
@@ -96,6 +99,9 @@ namespace System.Data.Entity.Migrations
                     {
                         var createDatabaseSql = "CREATE DATABASE [" + _name + "]";
                         ExecuteNonQuery(createDatabaseSql, ModelHelpers.SimpleConnectionString("master"));
+
+                        // Previously invalid connections may now be valid
+                        SqlConnection.ClearPool(new SqlConnection(ConnectionString));
                     }
 
                     ResetDatabase();
@@ -189,6 +195,7 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+#if NET452
     public class SqlCeTestDatabase : TestDatabase
     {
         private readonly string _name;
@@ -381,4 +388,5 @@ FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE");
             return ExecuteScalar<int>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + name + "'") != 0;
         }
     }
+#endif
 }

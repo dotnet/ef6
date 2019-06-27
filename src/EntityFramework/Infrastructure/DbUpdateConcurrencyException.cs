@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core;
     using System.Data.Entity.Internal;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Exception thrown by <see cref="DbContext" /> when it was expected that SaveChanges for an entity would
@@ -14,8 +15,6 @@ namespace System.Data.Entity.Infrastructure
     /// Note that state entries referenced by this exception are not serialized due to security and accesses to
     /// the state entries after serialization will return null.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "SerializeObjectState used instead")]
     [Serializable]
     public class DbUpdateConcurrencyException : DbUpdateException
     {
@@ -58,6 +57,16 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="innerException"> The inner exception. </param>
         public DbUpdateConcurrencyException(string message, Exception innerException)
             : base(message, innerException)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the DbUpdateConcurrencyException class with the specified serialization information and context.
+        /// </summary>
+        /// <param name="info"> The data necessary to serialize or deserialize an object. </param>
+        /// <param name="context"> Description of the source and destination of the specified serialized stream. </param>
+        protected DbUpdateConcurrencyException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
 

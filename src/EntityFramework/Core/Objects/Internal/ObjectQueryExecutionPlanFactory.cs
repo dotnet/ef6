@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (ObjectSpanRewriter.TryRewrite(tree, span, mergeOption, aliasGenerator, out spannedQuery, out spanInfo))
             {
                 tree = DbQueryCommandTree.FromValidExpression(
-                    tree.MetadataWorkspace, tree.DataSpace, spannedQuery, tree.UseDatabaseNullSemantics);
+                    tree.MetadataWorkspace, tree.DataSpace, spannedQuery, tree.UseDatabaseNullSemantics, tree.DisableFilterOverProjectionSimplificationForCustomFunctions);
             }
             else
             {

@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Resources;
+    using System.Data.SqlClient;
     using System.Linq;
 
     internal class DefaultProviderFactoryResolver : IDbDependencyResolver
@@ -31,6 +32,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 }
                 catch (ArgumentException e)
                 {
+                    if (string.Equals(name, "System.Data.SqlClient", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return SqlClientFactory.Instance;
+                    }
+
                     return handleFailedLookup(e, name);
                 }
             }

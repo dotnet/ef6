@@ -424,7 +424,7 @@ FROM ( SELECT DISTINCT
             {
                 var query2 = context.Users.GroupBy(o => o, u => new { u.Image, u.Name }, (k, g) => g.Count());
 
-                Assert.DoesNotThrow(() => query2.ToList());
+                query2.ToList();
             }
         }
 

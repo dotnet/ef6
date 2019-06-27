@@ -435,7 +435,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void EagerInternalConnection_Dispose_uses_interception()
         {
-            var connectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+            var connectionMock = new Mock<DbConnection>();
             connectionMock.Setup(m => m.ConnectionString).Returns("fake");
             connectionMock.Setup(m => m.Database).Returns("fakeDb");
             connectionMock.Setup(m => m.DataSource).Returns("fakeSource");

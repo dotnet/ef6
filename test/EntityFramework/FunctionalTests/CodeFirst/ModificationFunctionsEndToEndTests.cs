@@ -48,7 +48,9 @@ namespace System.Data.Entity.CodeFirst
                         using (var context = new GearsOfWarStoredProceduresContext())
                         {
                             var city = context.Cities.OrderBy(c => c.Name).First();
+#if NET452
                             city.Location = DbGeography.FromText("POINT(12 23)", DbGeography.DefaultCoordinateSystemId);
+#endif
                             context.SaveChanges();
 
                             var tag = context.Tags.OrderBy(t => t.Id).First();
@@ -76,8 +78,10 @@ namespace System.Data.Entity.CodeFirst
                             var squad = context.Squads.OrderBy(s => s.Id).First();
                             var weapon = context.Weapons.OrderBy(w => w.Id).First();
 
+#if NET452
                             Assert.Equal(12, city.Location.Longitude);
                             Assert.Equal(23, city.Location.Latitude);
+#endif
                             Assert.Equal("Modified Note", tag.Note);
                             Assert.Equal(MilitaryRank.General, gear.Rank);
                             Assert.Equal("Modified Name", squad.Name);
@@ -190,7 +194,9 @@ namespace System.Data.Entity.CodeFirst
 
                             city.Name = "Changed City";
                             creature.Details.Attributes.Mana = 123;
+#if NET452
                             province.Shape = DbGeometry.FromText("POINT(23 45)", DbGeometry.DefaultCoordinateSystemId);
+#endif
                             npc.Name = "Changed NPC Name";
                             spell.MagickaCost = 166;
 
@@ -207,8 +213,10 @@ namespace System.Data.Entity.CodeFirst
 
                             Assert.Equal("Changed City", city.Name);
                             Assert.Equal(123, creature.Details.Attributes.Mana);
+#if NET452
                             Assert.Equal(23, province.Shape.XCoordinate);
                             Assert.Equal(45, province.Shape.YCoordinate);
+#endif
                             Assert.Equal("Changed NPC Name", npc.Name);
                             Assert.Equal(166, spell.MagickaCost);
                         }

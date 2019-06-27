@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
@@ -15,6 +17,11 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class AlterTableAnnotationsScenarios : DbTestCase
     {
+        public AlterTableAnnotationsScenarios(DatabaseProviderFixture databaseProviderFixture)
+            : base(databaseProviderFixture)
+        {
+        }
+
         private class CreateTableWithAllAnnotationMigration : DbMigration
         {
             public override void Up()
@@ -124,3 +131,5 @@ namespace System.Data.Entity.Migrations
         }
     }
 }
+
+#endif

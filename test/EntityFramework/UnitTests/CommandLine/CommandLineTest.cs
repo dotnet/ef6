@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace CmdLine.Tests
 {
     extern alias migrate;
@@ -393,3 +395,5 @@ namespace CmdLine.Tests
         public string S2 { get; set; }
     }
 }
+
+#endif

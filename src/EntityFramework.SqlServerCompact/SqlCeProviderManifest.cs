@@ -27,11 +27,7 @@ namespace System.Data.Entity.SqlServerCompact
         // </summary>
         internal static readonly SqlCeProviderManifest Instance = new SqlCeProviderManifest(true);
 
-#if SQLSERVERCOMPACT35
-        internal const string ProviderInvariantName = "System.Data.SqlServerCe.3.5";
-#else
         internal const string ProviderInvariantName = "System.Data.SqlServerCe.4.0";
-#endif
 
         internal const string Token40 = "4.0";
 
@@ -50,13 +46,9 @@ namespace System.Data.Entity.SqlServerCompact
         private const string storeSchemaMappingFile =
             "System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaMapping.msl";
 
-#if SQLSERVERCOMPACT35
-        private const string storeSchemaDescriptionFile =
-            "System.Data.Resources.SqlServerCe.Entity.Legacy.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
-#else
         private const string storeSchemaDescriptionFile =
             "System.Data.Resources.SqlServerCe.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
-#endif
+
         // This SSDL is being used only at design time. And because SqlServerCe 3.5 is not supported after
         // VS2010 we don't need a SqlServerCe 3.5 version of this file.
         private const string storeSchemaDescriptionFileForRDP =

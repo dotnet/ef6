@@ -17,6 +17,7 @@ namespace System.Data.Entity.Objects
 
     public class AttributeBasedOCLoading : FunctionalTestBase
     {
+#if NET452
         [Fact]
         public void O_space_types_are_discovered_when_using_attribute_based_mapping()
         {
@@ -120,6 +121,7 @@ namespace System.Data.Entity.Objects
 
             Assert.True(associations.All(e => e.NamespaceName == "MonsterNamespace"));
         }
+#endif
 
         private static StorageMappingItemCollection LoadMsl(
             EdmItemCollection edmItemCollection, StoreItemCollection storeItemCollection, XDocument msl)

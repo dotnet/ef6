@@ -70,6 +70,10 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
             modelBuilder.ComplexType<WeaponSpecification>()
                 .Property(c => c.AmmoPerClip)
                 .HasColumnAnnotation("Annotation_AmmoPerClip", "Let It Be");
+
+#if NETCOREAPP3_0
+            modelBuilder.Entity<City>().Ignore(x => x.Location);
+#endif
         }
     }
 }

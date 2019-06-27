@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if NET452
+
 namespace System.Data.Entity.Query.StoredProcedures
 {
     using System.Collections.Generic;
@@ -9,13 +11,13 @@ namespace System.Data.Entity.Query.StoredProcedures
     using System.Linq;
     using Xunit;
 
-    public class StoredProceduresTests : FunctionalTestBase, IUseFixture<StoredProceduresTestFixture>
+    public class StoredProceduresTests : FunctionalTestBase, IClassFixture<StoredProceduresTestFixture>
     {
         private readonly string _entityConnectionString;
         private const int GeographySrid = 4326;
         private const int GeometrySrid = 32768;
 
-        public StoredProceduresTests()
+        public StoredProceduresTests(StoredProceduresTestFixture data)
         {
             var esb = new EntityConnectionStringBuilder
                 {
@@ -27,10 +29,6 @@ namespace System.Data.Entity.Query.StoredProcedures
 
             _entityConnectionString = esb.ToString();
             Seed();
-        }
-
-        public void SetFixture(StoredProceduresTestFixture data)
-        {
         }
 
         [Fact]
@@ -406,3 +404,5 @@ SELECT * FROM dbo.Creatures", connection).ExecuteNonQuery();
         }
     }
 }
+
+#endif
