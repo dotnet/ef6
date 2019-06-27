@@ -1422,17 +1422,17 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             Debug.Assert(isDateTimeOffset || typeKind == PrimitiveTypeKind.DateTime, "Unexpected type to TruncateTime" + typeKind.ToString());
 
+            if (sqlgen.IsPreKatmai && isDateTimeOffset)
+            {
+                throw new NotSupportedException(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
+            }
+
 
             var result = new SqlBuilder();
             var argumentFragment = e.Arguments[0].Accept(sqlgen);
 
             if (sqlgen.IsPreKatmai)
             {
-                if (isDateTimeOffset)
-                {
-                    throw new NotSupportedException(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
-                }
-
                 result.Append("dateadd(d, datediff(d, 0, ");
                 result.Append(argumentFragment);
                 result.Append("), 0)");
