@@ -767,18 +767,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private void ShowStatus(string message)
         {
+            HideStatus();
+
             var currentTreeView = CurrentTreeView;
             if (null != currentTreeView)
             {
                 // dpi/scaling may have changed since the last time we showed a status
                 using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
                 {
-                    var tabPage = AddUpdateDeleteTabControl.SelectedTab;
-                    if (_statusLabel != null)
-                    {
-                        tabPage.Controls.Remove(_statusLabel);
-                    }
-
                     _statusLabel = new Label
                     {
                         BackColor = currentTreeView.TreeViewControl.BackColor,
@@ -791,6 +787,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         Text = message
                     };
 
+                    var tabPage = AddUpdateDeleteTabControl.SelectedTab;
                     tabPage.Controls.Add(_statusLabel);
                     tabPage.Controls.SetChildIndex(_statusLabel, 0);
                 }

@@ -92,14 +92,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public void ShowStatus(string message)
         {
+            HideStatus();
+
             // dpi/scaling may have changed since the last time we showed a status
             using (DpiAwareness.EnterDpiScope(DpiAwarenessContext.SystemAware))
             {
-                if (_statusLabel != null)
-                {
-                    Controls.Remove(_statusLabel);
-                }
-
                 _statusLabel = new Label
                 {
                     BackColor = TreeViewControl.BackColor,
