@@ -11,7 +11,7 @@ package name=eftools
 folder "InstallDir:\Common7\IDE"
   file source="$(OutputPath)\MsiRuntimeInputs\packages\EntityFramework.$(EF6NuGetPackageVersion)\lib\net45\EntityFramework.dll" vs.file.ngen=yes
   file source="$(OutputPath)\MsiRuntimeInputs\packages\EntityFramework.$(EF6NuGetPackageVersion)\lib\net45\EntityFramework.SqlServer.dll" vs.file.ngen=yes
-##LAJ  file source="$(SomePath)\EntityFramework.SqlServerCompact.dll" vs.file.ngen=yes
+  file source="$(SomePath)\EntityFramework.SqlServerCompact.dll" vs.file.ngen=yes
   file source="$(OutputPath)\Microsoft.Data.Entity.Design.BootstrapPackage.dll"
   file source="$(OutputPath)\Microsoft.Data.Entity.Design.DatabaseGeneration.dll"
   file source="$(OutputPath)\Microsoft.Data.Entity.Design.dll"
