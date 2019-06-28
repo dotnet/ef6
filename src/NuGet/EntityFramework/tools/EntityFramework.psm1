@@ -57,36 +57,25 @@ function Add-EFProvider
         [string] $TypeName
     )
 
-	if (!(Check-Project $project))
-	{
-	    return
-	}
-
-    $runner = New-EFConfigRunner $Project
-
-    try
+    $configPath = GetConfigPath($Project)
+    if (!$configPath)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.AddProviderCommand @( $InvariantName, $TypeName )
-        $error = Get-RunnerError $runner
-
-        if ($error)
-        {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
-        }
+        return
     }
-    finally
-    {				
-        Remove-Runner $runner
-    }
+
+    [xml] $configXml = Get-Content $configPath
+
+    $providers = $configXml.configuration.entityFramework.providers
+
+    $providers.provider |
+        ?{ $_.invariantName -eq $InvariantName } |
+        %{ $providers.RemoveChild($_) | Out-Null }
+
+    $provider = $providers.AppendChild($configXml.CreateElement('provider'))
+    $provider.SetAttribute('invariantName', $InvariantName)
+    $provider.SetAttribute('type', $TypeName)
+
+    $configXml.Save($configPath)
 }
 
 <#
@@ -133,36 +122,36 @@ function Add-EFDefaultConnectionFactory
         [string[]] $ConstructorArguments
     )
 
-	if (!(Check-Project $project))
-	{
-	    return
-	}
-
-    $runner = New-EFConfigRunner $Project
-
-    try
+    $configPath = GetConfigPath($Project)
+    if (!$configPath)
     {
-        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.AddDefaultConnectionFactoryCommand @( $TypeName, $ConstructorArguments )
-        $error = Get-RunnerError $runner
+        return
+    }
 
-        if ($error)
+    [xml] $configXml = Get-Content $configPath
+
+    $entityFramework = $configXml.configuration.entityFramework
+    $defaultConnectionFactory = $entityFramework.defaultConnectionFactory
+    if ($defaultConnectionFactory)
+    {
+        $entityFramework.RemoveChild($defaultConnectionFactory) | Out-Null
+    }
+    $defaultConnectionFactory = $entityFramework.AppendChild($configXml.CreateElement('defaultConnectionFactory'))
+
+    $defaultConnectionFactory.SetAttribute('type', $TypeName)
+
+    if ($ConstructorArguments)
+    {
+        $parameters = $defaultConnectionFactory.AppendChild($configXml.CreateElement('parameters'))
+
+        foreach ($constructorArgument in $ConstructorArguments)
         {
-            if ($knownExceptions -notcontains $error.TypeName)
-            {
-                Write-Host $error.StackTrace
-            }
-            else
-            {
-                Write-Verbose $error.StackTrace
-            }
-
-            throw $error.Message
+            $parameter = $parameters.AppendChild($configXml.CreateElement('parameter'))
+            $parameter.SetAttribute('value', $constructorArgument)
         }
     }
-    finally
-    {				
-        Remove-Runner $runner
-    }
+
+    $configXml.Save($configPath)
 }
 
 <#
@@ -961,6 +950,49 @@ function Hint-Downgrade ($name) {
     if (Get-Module | Where { $_.Name -eq 'EntityFrameworkCore' }) {
         Write-Warning "Both Entity Framework 6.x and Entity Framework Core commands are installed. The Entity Framework 6 version is executing. You can fully qualify the command to select which one to execute, 'EntityFramework\$name' for EF6.x and 'EntityFrameworkCore\$name' for EF Core."
     }
+}
+
+function GetConfigPath($project)
+{
+    $solution = Get-VSService 'Microsoft.VisualStudio.Shell.Interop.SVsSolution' 'Microsoft.VisualStudio.Shell.Interop.IVsSolution'
+
+    $hierarchy = $null
+    $hr = $solution.GetProjectOfUniqueName($project.UniqueName, [ref] $hierarchy)
+    [Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)    
+
+    $aggregatableProject = Get-Interface $hierarchy 'Microsoft.VisualStudio.Shell.Interop.IVsAggregatableProject'
+    if (!$aggregatableProject)
+    {
+        $projectTypes = $project.Kind
+    }
+    else
+    {
+        $projectTypeGuids = $null
+        $hr = $aggregatableProject.GetAggregateProjectTypeGuids([ref] $projectTypeGuids)
+        [Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)
+
+        $projectTypes = $projectTypeGuids.Split(';')
+    }
+
+    $configFileName = 'app.config'
+    foreach ($projectType in $projectTypes)
+    {
+        if ('{349C5851-65DF-11DA-9384-00065B846F21}', '{E24C65DC-7377-472B-9ABA-BC803B73C61A}' -contains $projectType)
+        {
+            $configFileName = 'web.config'
+            break
+        }
+    }
+
+    try
+    {
+        $configPath = $project.ProjectItems.Item($configFileName).Properties.Item('FullPath').Value
+    }
+    catch
+    {
+    }
+
+    return $configPath
 }
 
 Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory') -Variable InitialDatabase
