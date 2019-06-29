@@ -13,7 +13,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
         private const int ProcRetTypeIndex = 3;
         private const int ProcIsAggregateIndex = 4;
         private const int ProcIsComposableIndex = 5;
-        private const int ProcIsbuiltinIndex = 6;
+        private const int ProcIsBuiltinIndex = 6;
         private const int ProcIsniladicIndex = 7;
         private const int ProcIstvfIndex = 8;
         private const int ParamNameIndex = 9;
@@ -53,7 +53,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb.Schema
 
         public override bool IsBuiltIn
         {
-            get { return ConvertDBNull<bool>(Values[ProcIsbuiltinIndex]); }
+            get { return ConvertDBNull<bool>(Values[ProcIsBuiltinIndex]); }
         }
 
         public override bool IsComposable
