@@ -3878,7 +3878,7 @@ namespace System.Data.Entity.Core.Objects
                         Debug.Assert(objectParameter.MappableType != null, "MappableType must not be null");
                         Debug.Assert(Nullable.GetUnderlyingType(objectParameter.MappableType) == null, "Nullable types not expected here.");
 
-                        // since ObjectParameters do not allow users to especify 'facets', make 
+                        // since ObjectParameters do not allow users to specify 'facets', make 
                         // sure that the parameter typeusage is not populated with the provider
                         // dafault facet values.
                         // Try getting the type from the workspace. This may fail however for one of the following reasons:
