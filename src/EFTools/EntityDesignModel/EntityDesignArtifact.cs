@@ -849,7 +849,7 @@ namespace Microsoft.Data.Entity.Design.Model
         }
 
         /// <summary>
-        ///     Retrives the namespace of the root elemnt of the document.  This should be either an EDMX, CSDL, SSDL or MSL namespace URI.
+        ///     Retrives the namespace of the root element of the document.  This should be either an EDMX, CSDL, SSDL or MSL namespace URI.
         /// </summary>
         /// <returns>The namespace of the Edmx document or NULL if the XDocument for edmx is null.</returns>
         internal XNamespace GetRootNamespace()
