@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Mapping
         private Lazy<List<AssociationSetEnd>> _implicitlyMappedAssociationSetEnds;
 
         /// <summary>
-        /// Initialiazes a new EntitySetMapping instance.
+        /// Initializes a new EntitySetMapping instance.
         /// </summary>
         /// <param name="entitySet">The entity set to be mapped.</param>
         /// <param name="containerMapping">The parent container mapping.</param>
