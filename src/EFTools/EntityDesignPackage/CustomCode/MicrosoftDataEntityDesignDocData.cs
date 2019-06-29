@@ -564,7 +564,7 @@ namespace Microsoft.Data.Entity.Design.Package
 
                                     // Ensure that DSL Diagram and Model Diagram are in sync:
                                     // - Update xref between 2 diagrams
-                                    // - Propagetes model diagram info to DSL Diagram.
+                                    // - Propagates model diagram info to DSL Diagram.
                                     var modelDiagram = artifact.DesignerInfo().Diagrams.FirstDiagram;
                                     Debug.Assert(modelDiagram != null, "modelDiagram should not be null");
                                     if (modelDiagram != null)
