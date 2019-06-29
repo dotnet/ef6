@@ -15,7 +15,7 @@ namespace EFDesignerTestInfrastructure.VS
 
     #endregion
 
-    #region VS IDE related utitilies
+    #region VS IDE related utilities
 
     /// <summary>
     ///     Helper functions relate to winfrom
