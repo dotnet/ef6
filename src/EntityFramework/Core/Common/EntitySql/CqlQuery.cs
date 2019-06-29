@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     //         s
     //     </item>
     // </list>
-    // Queries can be formulated in O-Space, C-Space and S-Space and the services exposed by this class are agnostic of the especific typespace or
+    // Queries can be formulated in O-Space, C-Space and S-Space and the services exposed by this class are agnostic of the specific typespace or
     // metadata instance passed as required parameter in the semantic analysis by the perspective parameter. It is assumed that the perspective and
     // metadata was properly initialized.
     // Provided that the command is syntacticaly correct and meaningful within the given typespace, the result will be a valid
