@@ -10863,7 +10863,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         }
 
         /// <summary>
-        ///     Set the value for the StateImageAcccessibleStates property.
+        ///     Set the value for the StateImageAccessibleStates property.
         /// </summary>
         /// <param name="accessibleStates">The new accessible states</param>
         public void SetStateImageAccessibleStates(IList accessibleStates)
