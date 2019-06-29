@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Mapping
             try
             {
                 var doc = new XPathDocument(reader);
-                // If there were any xsd validation errors, we would have caught these while creatring xpath document.
+                // If there were any xsd validation errors, we would have caught these while creating xpath document.
                 if (m_parsingErrors.Count != 0)
                 {
                     // If the errors were only warnings continue, otherwise return the errors without loading the mapping.
