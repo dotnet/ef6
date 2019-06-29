@@ -2337,7 +2337,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="leftPredicates"> A dictionary of predicates and the minimum location id at which they can be specified </param>
         // <param name="rightPredicates"> A dictionary of predicates and the minimum location id at which they can be specified </param>
         // <param name="outPredicates"> An output dictionary of predicates and the minimum location id at which they can be specified that includes all input predicates with minimum location id greater then targetNodeId </param>
-        // <returns> A single predicate "AND"-ing all input predicates with a minimum location id that is less or equal to the tiven targetNodeId. </returns>
+        // <returns> A single predicate "AND"-ing all input predicates with a minimum location id that is less or equal to the given targetNodeId. </returns>
         private Node CombinePredicateNodes(
             int targetNodeId, Node localPredicateNode, int localPredicateMinLocationId, Dictionary<Node, int> leftPredicates,
             Dictionary<Node, int> rightPredicates, out Dictionary<Node, int> outPredicates)
