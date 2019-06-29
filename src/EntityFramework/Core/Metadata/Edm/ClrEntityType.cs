@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Gets a collision resistent (SHA256) hash of the information used to build
         // a proxy for this type.  This hash is very, very unlikely to be the same for two
         // proxies generated from the same CLR type but with different metadata, and is
-        // guarenteed to be the same for proxies generated from the same metadata.  This
+        // guaranteed to be the same for proxies generated from the same metadata.  This
         // means that when EntityType comparison fails because of metadata eviction,
         // the hash can be used to determine whether or not a proxy is of the correct type.
         // </summary>

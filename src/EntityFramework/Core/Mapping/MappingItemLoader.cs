@@ -2741,7 +2741,7 @@ namespace System.Data.Entity.Core.Mapping
             var partialAttribute = GetAttributeValue(nav.Clone(), MslConstructs.ComplexPropertyIsPartialAttribute);
             if (!String.IsNullOrEmpty(partialAttribute))
             {
-                //XSD validation should have guarenteed that the attribute value can only be true or false
+                //XSD validation should have guaranteed that the attribute value can only be true or false
                 Debug.Assert(partialAttribute == "true" || partialAttribute == "false");
                 isPartial = Convert.ToBoolean(partialAttribute, CultureInfo.InvariantCulture);
             }
@@ -3059,7 +3059,7 @@ namespace System.Data.Entity.Core.Mapping
 
             if (isNullAttribute != null)
             {
-                //XSD validation should have guarenteed that the attribute value can only be true or false
+                //XSD validation should have guaranteed that the attribute value can only be true or false
                 Debug.Assert(isNullAttribute == "true" || isNullAttribute == "false");
                 isNullValue = Convert.ToBoolean(isNullAttribute, CultureInfo.InvariantCulture);
             }
