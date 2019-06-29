@@ -608,7 +608,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Gets extents for which this translator has identified changes to be handled
         // by function mappings.
         // </summary>
-        // <returns> Enumreation of modified C-Space extents. </returns>
+        // <returns> Enumeration of modified C-Space extents. </returns>
         private IEnumerable<EntitySetBase> GetFunctionModifiedExtents()
         {
             return _functionChanges.Keys;
