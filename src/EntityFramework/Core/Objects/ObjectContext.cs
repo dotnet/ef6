@@ -788,7 +788,7 @@ namespace System.Data.Entity.Core.Objects
             // AppendOnly (if adding a new object to a context, set
             // the relationships up to cache by default -- load option
             // is only set to other values when AttachContext is
-            // called by the materializer). Also add all related entitites to
+            // called by the materializer). Also add all related entities to
             // cache.
             //
             // NOTE: AttachContext must be called after adding the object to

@@ -1322,7 +1322,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         // Remove entity from its relationships and do cascade delete if required.
         // All removed relationships are marked for deletion and all cascade deleted 
-        // entitites are also marked for deletion.
+        // entities are also marked for deletion.
         internal void RemoveEntityFromRelationships()
         {
             if (null != _relationships)
