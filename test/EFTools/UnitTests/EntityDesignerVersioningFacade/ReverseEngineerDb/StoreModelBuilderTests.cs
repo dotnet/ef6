@@ -35,7 +35,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             string dataType = null,
             int? maximumLength = null, int? precision = null,
             int? dateTimePrecision = null,
-            int? scale = null, bool? isIdentiy = null,
+            int? scale = null, bool? isIdentity = null,
             bool? isServerGenerated = null, bool isPrimaryKey = false)
         {
             var tableDetailsRow = (TableDetailsRow)new TableDetailsCollection().NewRow();
@@ -60,7 +60,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             setColumnValue(tableDetailsRow, "Precision", precision);
             setColumnValue(tableDetailsRow, "DateTimePrecision", dateTimePrecision);
             setColumnValue(tableDetailsRow, "Scale", scale);
-            setColumnValue(tableDetailsRow, "IsIdentity", isIdentiy);
+            setColumnValue(tableDetailsRow, "IsIdentity", isIdentity);
             setColumnValue(tableDetailsRow, "IsServerGenerated", isServerGenerated);
             setColumnValue(tableDetailsRow, "IsPrimaryKey", isPrimaryKey);
 
@@ -698,7 +698,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var property =
                     CreateStoreModelBuilder()
                         .CreateProperty(
-                            CreateRow(columnName: "IntColumn", dataType: "int", isIdentiy: true),
+                            CreateRow(columnName: "IntColumn", dataType: "int", isIdentity: true),
                             errors);
 
                 Assert.NotNull(property);
@@ -788,8 +788,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         [Fact]
         public void Build_creates_EdmModel_containing_converted_objects()
         {
-            var tableDetails = new[] { CreateRow(null, "dbo", "table", "Id", 0, false, "int", isIdentiy: true) };
-            var viewDetails = new[] { CreateRow(null, "dbo", "view", "Id", 0, false, "int", isIdentiy: true) };
+            var tableDetails = new[] { CreateRow(null, "dbo", "table", "Id", 0, false, "int", isIdentity: true) };
+            var viewDetails = new[] { CreateRow(null, "dbo", "view", "Id", 0, false, "int", isIdentity: true) };
             var relationshipDetails = new[]
                 { CreateRelationshipDetailsRow("id", "name", 0, false, null, "dbo", "table", "Id", null, "dbo", "view", "Id") };
             var functionDetails = new[] { CreateFunctionDetailsRow(functionName: "function", isTvf: true) };
@@ -2361,17 +2361,17 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         CreateRow(
-                            "catalog", "schema", "source1", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true, isPrimaryKey: true)
+                            "catalog", "schema", "source1", "Id", 0, isNullable: false, dataType: "int", isIdentity: true, isPrimaryKey: true)
                         ,
                         CreateRow(
-                            "catalog", "schema", "source1", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false,
+                            "catalog", "schema", "source1", "Other", 1, isNullable: false, dataType: "int", isIdentity: false,
                             isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target1", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true),
-                        CreateRow("catalog", "schema", "target1", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false),
+                        CreateRow("catalog", "schema", "target1", "Id", 0, isNullable: false, dataType: "int", isIdentity: true),
+                        CreateRow("catalog", "schema", "target1", "Other", 1, isNullable: false, dataType: "int", isIdentity: false),
                         CreateRow(
-                            "catalog", "schema", "source2", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true, isPrimaryKey: true)
+                            "catalog", "schema", "source2", "Id", 0, isNullable: false, dataType: "int", isIdentity: true, isPrimaryKey: true)
                         ,
-                        CreateRow("catalog", "schema", "target2", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "target2", "Id", 0, isNullable: false, dataType: "int", isIdentity: true)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2414,9 +2414,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source1", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "source2", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "source1", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "source2", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2466,8 +2466,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2522,8 +2522,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true)
                     };
 
                 var sourceColumn = sourceMissing ? "missing" : "source";
@@ -2576,9 +2576,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "source", "Other", 1, false, "int", isIdentiy: false, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "source", "Other", 1, false, "int", isIdentity: false, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2625,8 +2625,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2674,10 +2674,10 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "source", "Other", 1, false, "int", isIdentiy: false, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Other", 1, false, "int", isIdentiy: false, isPrimaryKey: false)
+                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "source", "Other", 1, false, "int", isIdentity: false, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Other", 1, false, "int", isIdentity: false, isPrimaryKey: false)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2727,9 +2727,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "source", "Other", 1, false, "int", isIdentiy: false, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "source", "Other", 1, false, "int", isIdentity: false, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
@@ -2790,16 +2790,16 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         CreateRow(
-                            "catalog", "schema", "source", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true,
+                            "catalog", "schema", "source", "Id", 0, isNullable: false, dataType: "int", isIdentity: true,
                             isPrimaryKey: true),
                         CreateRow(
-                            "catalog", "schema", "source", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false,
+                            "catalog", "schema", "source", "Other", 1, isNullable: false, dataType: "int", isIdentity: false,
                             isPrimaryKey: true),
                         CreateRow(
-                            "catalog", "schema", "target", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true,
+                            "catalog", "schema", "target", "Id", 0, isNullable: false, dataType: "int", isIdentity: true,
                             isPrimaryKey: true),
                         CreateRow(
-                            "catalog", "schema", "target", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false,
+                            "catalog", "schema", "target", "Other", 1, isNullable: false, dataType: "int", isIdentity: false,
                             isPrimaryKey: true)
                     };
 
@@ -2877,19 +2877,19 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var tableDetails = new[]
                     {
                         CreateRow(
-                            "catalog", "schema", "source", "Id", 0, isNullable: false, dataType: "int", isIdentiy: true,
+                            "catalog", "schema", "source", "Id", 0, isNullable: false, dataType: "int", isIdentity: true,
                             isPrimaryKey: true),
                         CreateRow(
-                            "catalog", "schema", "source", "Other", 1, isNullable: false, dataType: "int", isIdentiy: false,
+                            "catalog", "schema", "source", "Other", 1, isNullable: false, dataType: "int", isIdentity: false,
                             isPrimaryKey: true),
                         CreateRow(
-                            "catalog", "schema", "target", "TargetId", 0, isNullable: false, dataType: "int", isIdentiy: true,
+                            "catalog", "schema", "target", "TargetId", 0, isNullable: false, dataType: "int", isIdentity: true,
                             isPrimaryKey: true),
                         CreateRow(
-                            "catalog", "schema", "target", "Id", 0, isNullable: column1Nullable, dataType: "int", isIdentiy: true,
+                            "catalog", "schema", "target", "Id", 0, isNullable: column1Nullable, dataType: "int", isIdentity: true,
                             isPrimaryKey: false),
                         CreateRow(
-                            "catalog", "schema", "target", "Other", 1, isNullable: column2Nullable, dataType: "int", isIdentiy: false,
+                            "catalog", "schema", "target", "Other", 1, isNullable: column2Nullable, dataType: "int", isIdentity: false,
                             isPrimaryKey: false)
                     };
 
@@ -2939,8 +2939,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             {
                 var tableDetails = new[]
                     {
-                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentiy: true, isPrimaryKey: true),
-                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentiy: true)
+                        CreateRow("catalog", "schema", "source", "Id", 0, false, "int", isIdentity: true, isPrimaryKey: true),
+                        CreateRow("catalog", "schema", "target", "Id", 0, false, "int", isIdentity: true)
                     };
 
                 var relationshipDetails = new List<RelationshipDetailsRow>
