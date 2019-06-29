@@ -423,7 +423,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
             var supported = false;
 
 #if DEBUG
-            // verify that values are what we expexct
+            // verify that values are what we expect
             string[] values =
                 {
                     Resources.PropertyWindow_Value_MultiplicityMany, Resources.PropertyWindow_Value_MultiplicityOne,
