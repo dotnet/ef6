@@ -7010,7 +7010,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                     // Get the branch out of the tracked list altogether. Readding the list of
                     // nodes with the replacement branch is deferred until all the work is done because
                     // it is possible to replace with an existing branch, or expand the existing branch
-                    // in a different locaion while reattaching tree nodes. As a simple example, the top
+                    // in a different location while reattaching tree nodes. As a simple example, the top
                     // level branch can be eliminated by calling ShiftBranchLevels(branch, 2, 1, replacement)
                     // where the replacement a child list of the parent (useful if parent has 1 item in it).
                     myNodeTracker.RemoveBranch(branch);
