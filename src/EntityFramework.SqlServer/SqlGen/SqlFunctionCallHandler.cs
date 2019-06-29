@@ -1068,7 +1068,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // op arg
         // Functions with two arguments are translated into
         // arg0 op arg1
-        // Also, the arguments can be optionaly enclosed in parethesis
+        // Also, the arguments can be optionally enclosed in parethesis
         // </summary>
         // <param name="parenthesiseArguments"> Whether the arguments should be enclosed in parethesis </param>
         private static ISqlFragment HandleSpecialFunctionToOperator(SqlGenerator sqlgen, DbFunctionExpression e, bool parenthesiseArguments)
