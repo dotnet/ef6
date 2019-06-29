@@ -59,7 +59,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         PrimaryKeyCannotBeForeignKey = BaseValue + 8,
 
         /// <summary>
-        ///     Found an usupported one to one association
+        ///     Found an unsupported one to one association
         /// </summary>
         OneToOneAssociationFound = BaseValue + 9,
 
