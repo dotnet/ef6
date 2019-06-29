@@ -2339,7 +2339,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private Node AugmentNodeWithConstant(Node input, Func<ConstantBaseOp> createOp, out Var constantVar)
         {
             // Construct the op for the constant value and 
-            // a VarDef node that that defines it.
+            // a VarDef node that defines it.
             var constantOp = createOp();
             var constantNode = Command.CreateNode(constantOp);
             var varDefListNode = Command.CreateVarDefListNode(constantNode, out constantVar);

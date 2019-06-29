@@ -438,7 +438,7 @@ namespace System.Data.Entity.Internal
                         {
                             // The idea here is that for a given derived context type and provider we will only ever create one DbCompiledModel.
                             // The delegate given to GetOrAdd may be executed more than once even though ultimately only one of the
-                            // values will make it in the dictionary. The RetryLazy ensures that that delegate only gets called
+                            // values will make it in the dictionary. The RetryLazy ensures that delegate only gets called
                             // exactly one time, thereby ensuring that OnModelCreating will only ever be called once.  BUT, sometimes
                             // the delegate will fail (and throw and exception). This may be due to some resource issue--most notably
                             // a problem with the database connection. In such a situation it makes sense to have the model creation
@@ -659,7 +659,7 @@ namespace System.Data.Entity.Internal
 
                     // The idea here is that multiple threads can try to put an entry into InitializedDatabases
                     // at the same time but only one entry will actually make it into the collection, even though
-                    // several may be constructed. The RetryAction ensures that that delegate only gets called
+                    // several may be constructed. The RetryAction ensures that delegate only gets called
                     // exactly one time, thereby ensuring that database initialization will only happen once.  But,
                     // sometimes the delegate will fail (and throw and exception). This may be due to some resource
                     // issue--most notably a problem with the database connection. In such a situation it makes
