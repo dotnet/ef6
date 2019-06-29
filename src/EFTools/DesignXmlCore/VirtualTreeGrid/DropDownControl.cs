@@ -414,7 +414,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         ///     Note that this only applies to cases where the value changes, if the value does not change
         ///     or the user cancels the edit, the edit control will remain active regardless of the value of
         ///     this property.
-        ///     The default value is false, which means that the label edit conrol remains active.
+        ///     The default value is false, which means that the label edit control remains active.
         /// </summary>
         /// <value></value>
         public bool DismissLabelEditOnDropDownClose { get; set; }
