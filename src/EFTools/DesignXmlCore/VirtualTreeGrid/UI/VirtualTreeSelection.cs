@@ -15,7 +15,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
     ///     Selection support for the VirtualTreeControl.  The motivation for implementing this here, rather than allowing the
     ///     underlying listbox to handle it, is that we need to fire the correct WinEvents for selection/focus.  If we let the listbox
     ///     handle it, it will fire WinEvents with it's own child ids that assume a flat list structure.  We need to be able to account for
-    ///     hierarhcy in the tree.  Also, it gets us a step closer to removing the listbox dependency altogether.
+    ///     hierarchy in the tree.  Also, it gets us a step closer to removing the listbox dependency altogether.
     /// </summary>
     internal partial class VirtualTreeControl
     {
