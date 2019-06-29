@@ -345,7 +345,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
         // <summary>
-        // True so long as we haven't been closed either implicity or explicitly
+        // True so long as we haven't been closed either implicitly or explicitly
         // </summary>
         internal bool IsClosed
         {
