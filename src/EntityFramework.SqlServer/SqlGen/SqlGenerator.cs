@@ -1403,7 +1403,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         //         an aggregate or a subquery. (SQLBUDT #504600)
         //     </item>
         //     <item>
-        //         Sql Server requries each GROUP BY expression (key) to contain at least one column
+        //         Sql Server requires each GROUP BY expression (key) to contain at least one column
         //         that is not an outer reference. (SQLBUDT #616523)
         //     </item>
         //     <item>
