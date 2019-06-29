@@ -320,7 +320,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="varDefListNode"> The varDefListOp subtree </param>
         // <param name="varRefMap"> ref counts for each referenced var </param>
-        // <returns> mapping from Var->replacement xpressions </returns>
+        // <returns> mapping from Var->replacement expressions </returns>
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "varDefListOp", Justification = "Ensures will throw exception if varDefListNode.Op is of wrong type.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varDef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
