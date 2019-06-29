@@ -88,7 +88,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void ContextType_should_return_tyoe_of_passed_context_instance()
+        public void ContextType_should_return_type_of_passed_context_instance()
         {
             var contextInfo = new DbContextInfo(new SimpleContext());
 
