@@ -1188,7 +1188,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Handler for canonical funcitons for GetTotalOffsetMinutes.
+        // Handler for canonical functions for GetTotalOffsetMinutes.
         // GetTotalOffsetMinutes(e) --> Datepart(tzoffset, e)
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionGetTotalOffsetMinutes(SqlGenerator sqlgen, DbFunctionExpression e)
@@ -1197,7 +1197,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Handler for canonical funcitons for LocalDateTime.
+        // Handler for canonical functions for LocalDateTime.
         // LocalDateTime(e) --> CAST(e AS DATETIME2)
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionLocalDateTime(SqlGenerator sqlgen, DbFunctionExpression e)
@@ -1215,7 +1215,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // Handler for canonical funcitons for UtcDateTime.
+        // Handler for canonical functions for UtcDateTime.
         // UtcDateTime(e) --> CONVERT(DATETIME2, e, 1)
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionUtcDateTime(SqlGenerator sqlgen, DbFunctionExpression e)

@@ -3043,7 +3043,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         // <summary>
-        // Handler for canonical funcitons for extracting date parts.
+        // Handler for canonical functions for extracting date parts.
         // For example:
         // Year(date) -> DATEPART( year, date)
         // </summary>
