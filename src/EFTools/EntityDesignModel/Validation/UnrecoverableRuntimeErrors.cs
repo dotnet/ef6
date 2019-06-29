@@ -174,7 +174,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     //  Empty DefiningQuery text
                     ErrorCode.EmptyDefiningQuery,
             
-                    //  Schema, Table and DefiningQuery are all specified, and are mutualy exlusive
+                    //  Schema, Table and DefiningQuery are all specified, and are mutually exlusive
                     ErrorCode.TableAndSchemaAreMutuallyExclusiveWithDefiningQuery,
             
                     //  Provider manifest does not allow a type to explicitly promote to itself, this is an implicit assumption.

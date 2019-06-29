@@ -361,7 +361,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         EmptyDefiningQuery = 142,
 
         // <summary>
-        // Schema, Table and DefiningQuery are all specified, and are mutualy exlusive
+        // Schema, Table and DefiningQuery are all specified, and are mutually exlusive
         // </summary>
         TableAndSchemaAreMutuallyExclusiveWithDefiningQuery = 143,
 
