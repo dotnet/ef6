@@ -61,7 +61,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// will always contain the default value for the generic type.
         /// </summary>
         /// <remarks>
-        /// When an operation operation completes without throwing both this property and the <see cref="Result" />
+        /// When an operation completes without throwing both this property and the <see cref="Result" />
         /// property are set. However, the <see cref="Result" /> property can be set or changed by interceptors,
         /// while this property will always represent the actual result returned by the operation, if any.
         /// </remarks>
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// after the operation can change this property to change the result that will be returned.
         /// </summary>
         /// <remarks>
-        /// When an operation operation completes without throwing both this property and the <see cref="OriginalResult" />
+        /// When an operation completes without throwing both this property and the <see cref="OriginalResult" />
         /// property are set. However, this property can be set or changed by interceptors, while the
         /// <see cref="OriginalResult" /> property will always represent the actual result returned by the
         /// operation, if any.
