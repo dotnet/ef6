@@ -53,7 +53,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
         }
 
         /// <summary>
-        ///     The name of the project project of this file if there is a parent project.
+        ///     The name of the project of this file if there is a parent project.
         /// </summary>
         public string ProjectName { get; set; }
 
