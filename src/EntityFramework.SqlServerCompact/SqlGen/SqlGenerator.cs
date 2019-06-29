@@ -559,7 +559,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             if (TypeSemantics.IsCollectionType(targetTree.Query.ResultType))
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
-                Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
+                Debug.Assert(sqlStatement != null, "The outer most sql statement is null");
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;
             }

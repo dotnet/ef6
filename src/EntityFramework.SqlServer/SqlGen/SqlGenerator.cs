@@ -473,7 +473,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
 
-                Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
+                Debug.Assert(sqlStatement != null, "The outer most sql statement is null");
 
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;

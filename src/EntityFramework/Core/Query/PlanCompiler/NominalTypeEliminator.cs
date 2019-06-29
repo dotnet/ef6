@@ -1939,7 +1939,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <returns> new subtree </returns>
         public override Node Visit(CaseOp op, Node n)
         {
-            // Before visiting the children, check whether the case statment can be optimized 
+            // Before visiting the children, check whether the case statement can be optimized 
             bool thenClauseIsNull;
             var canSimplifyPrecheck = PlanCompilerUtil.IsRowTypeCaseOpWithNullability(op, n, out thenClauseIsNull);
 
