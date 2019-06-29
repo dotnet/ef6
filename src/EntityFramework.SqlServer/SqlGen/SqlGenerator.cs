@@ -3452,7 +3452,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // This is case only for SQL 8.0 when the left child has order by in it
                 // If the output columns of the left child got renamed, 
                 // then the output of the union all is renamed
-                // All this currenlty only happens for UNION ALL, because INTERSECT and
+                // All this currently only happens for UNION ALL, because INTERSECT and
                 // EXCEPT get translated for SQL 8.0 before SqlGen.
                 var selectStatement = new SqlSelectStatement();
                 selectStatement.From.Append("( ");

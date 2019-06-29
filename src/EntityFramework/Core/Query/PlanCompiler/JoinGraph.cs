@@ -767,7 +767,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Determines whether each of the given joinEdges can be turned into an inner join
-        // NOTE: Due to how we create join edges, currenlty there can only be one join edge in this group
+        // NOTE: Due to how we create join edges, currently there can only be one join edge in this group
         // See <see cref="CanJoinEdgeBeTurnedIntoInnerJoin" /> for details.
         // </summary>
         private bool CanAllJoinEdgesBeTurnedIntoInnerJoins(AugmentedNode rightNode, IEnumerable<JoinEdge> joinEdges)
