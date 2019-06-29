@@ -19,7 +19,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.Metadata
             // otherwise we could "move" all the types to the namespace defined by the user since in the SsdlWriter we use the namespace
             // alias when writing the type (note that if we used the namespace instead of alias we could create an invalid Ssdl since 
             // the types would be in a different (and undefined) namespace then the one written on the Schema element).
-            // To infer the namespace we use EntitType because you any other type with a namespace (e.g. EntitySet, AssociationType etc.)
+            // To infer the namespace we use EntityType because you any other type with a namespace (e.g. EntitySet, AssociationType etc.)
             // refer to an entity type. If there are no entity types we will use the namespace name provided by the user or - if it is null
             // or empty - we will an arbitrary one (at this point the schema name does not really matter since the collection 
             // does not have any type that would use it)

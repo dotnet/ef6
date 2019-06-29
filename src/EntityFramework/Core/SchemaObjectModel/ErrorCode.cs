@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         InvalidContainerTypeForEnd = 99,
 
         // <summary>
-        // The extent name used in the EntittyContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
+        // The extent name used in the EntityContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
         // </summary>
         InvalidEndEntitySet = 100,
 

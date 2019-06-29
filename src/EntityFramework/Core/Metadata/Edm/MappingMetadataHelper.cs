@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // <summary>
-        // Returns mappings for the given set/type only if the mapping applies also to childEntittyType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.
+        // Returns mappings for the given set/type only if the mapping applies also to childEntityType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.
         // </summary>
         private static IEnumerable<TypeMapping> GetIsTypeOfMappingsForEntitySetAndType(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase entityType,
