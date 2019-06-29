@@ -70,8 +70,8 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.Metadata
             foreach (var schemaVersion in SchemaVersions)
             {
                 var sourceSsdl = string.Format(SsdlTemplate, schemaVersion);
-                var serializdedSsdl = StoreItemCollectionToString(Utils.CreateStoreItemCollection(sourceSsdl), "Model.Store");
-                Assert.True(XNode.DeepEquals(XDocument.Parse(sourceSsdl), XDocument.Parse(serializdedSsdl)));
+                var serializedSsdl = StoreItemCollectionToString(Utils.CreateStoreItemCollection(sourceSsdl), "Model.Store");
+                Assert.True(XNode.DeepEquals(XDocument.Parse(sourceSsdl), XDocument.Parse(serializedSsdl)));
             }
         }
 
