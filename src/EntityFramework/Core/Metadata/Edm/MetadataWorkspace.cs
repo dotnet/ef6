@@ -1266,7 +1266,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Guarantees type match of declaration and generated parameters.
         // Guarantees return type match.
         // Throws internal error for functions without definition.
-        // Passes thru exception occured during definition generation.
+        // Passes thru exception occurred during definition generation.
         // </summary>
         internal virtual DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
         {

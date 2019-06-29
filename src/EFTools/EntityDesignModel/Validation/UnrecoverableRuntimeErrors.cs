@@ -78,7 +78,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     ErrorCode.InvalidMultiplicity, 
                     // The value for the Action attribute is not valid or not allowed in the current context
                     ErrorCode.InvalidAction, 
-                    // An error occured processing the On&lt;Operation&gt; elements
+                    // An error occurred processing the On&lt;Operation&gt; elements
                     // Designer -- ErrorCode.InvalidOperation, 
                     // Ends were given for the Property element of a EntityContainer that is not a RelationshipSet
                     ErrorCode.InvalidContainerTypeForEnd, 

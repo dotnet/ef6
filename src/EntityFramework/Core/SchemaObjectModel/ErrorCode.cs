@@ -157,7 +157,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         InvalidAction = 96,
 
         // <summary>
-        // An error occured processing the On&lt;Operation&gt;  elements
+        // An error occurred processing the On&lt;Operation&gt;  elements
         // </summary>
         InvalidOperation = 97,
 
