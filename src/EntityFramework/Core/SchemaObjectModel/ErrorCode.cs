@@ -368,7 +368,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 144,
 
         // <summary>
-        // Conurency can't change for any sub types of an EntitySet type.
+        // Concurrency can't change for any sub types of an EntitySet type.
         // </summary>
         ConcurrencyRedefinedOnSubTypeOfEntitySetType = 145,
 
