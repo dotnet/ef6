@@ -1409,7 +1409,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Method used to retrieve properties from principal entities.
         // Parameter includeOwnValues means that values from current entity should be also added to "properties"
         // includeOwnValues is false only when this method is called from ObjectStateEntry.AcceptChanges()
-        // Parmeter "visited" is a set containig entities which were already visited during traversing the graph.
+        // Parmeter "visited" is a set containing entities which were already visited during traversing the graph.
         // If _owner already exists in the set, it means that there is a cycle in the graph of relationships with RI Constraints.
         internal void RetrieveReferentialConstraintProperties(
             out Dictionary<string, KeyValuePair<object, IntBox>> properties, HashSet<object> visited, bool includeOwnValues)
