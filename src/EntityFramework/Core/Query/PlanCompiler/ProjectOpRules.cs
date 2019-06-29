@@ -118,7 +118,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var nodeInfo = context.Command.GetNodeInfo(n);
 
             // We cannot eliminate this node because it can break other rules, 
-            // e.g. ProcessApplyOverAnything which relies on existance of external refs to substitute
+            // e.g. ProcessApplyOverAnything which relies on existence of external refs to substitute
             // CrossApply(x, y) => CrossJoin(x, y). See SQLBU #481719.
             if (!nodeInfo.ExternalReferences.IsEmpty)
             {

@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         [MigrationsTheory]
-        public void DatabaseCreator_can_create_delete_and_check_for_existance_of_database()
+        public void DatabaseCreator_can_create_delete_and_check_for_existence_of_database()
         {
             DropDatabase();
 
