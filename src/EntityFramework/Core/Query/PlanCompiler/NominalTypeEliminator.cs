@@ -1166,7 +1166,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             //
-            // Create a flattened table definition, and a table with that definiton;
+            // Create a flattened table definition, and a table with that definition;
             //
             var newTableMD = m_command.CreateFlatTableDefinition(properties, keyProperties, op.Table.TableMetadata.Extent);
             var newTable = m_command.CreateTableInstance(newTableMD);

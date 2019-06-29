@@ -1708,7 +1708,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             }
 
             [Fact]
-            public void CreateTvfReturnTypes_creates_multiple_row_types_for_multiple_valid_definitons()
+            public void CreateTvfReturnTypes_creates_multiple_row_types_for_multiple_valid_definitions()
             {
                 var columns =
                     new List<TableDetailsRow>
