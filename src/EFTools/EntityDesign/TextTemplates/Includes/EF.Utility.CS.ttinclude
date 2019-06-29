@@ -1775,7 +1775,7 @@ public class CodeRegion
     }
 
     /// <summary>
-    /// Starts the begining of a region
+    /// Starts the beginning of a region
     /// </summary>
     public void Begin(string regionName)
     {
@@ -1788,7 +1788,7 @@ public class CodeRegion
     }
 
     /// <summary>
-    /// Start the begining of a region, indented
+    /// Start the beginning of a region, indented
     /// the numbers of levels specified
     /// </summary>
     public void Begin(string regionName, int levelsToIncreaseIndent)
@@ -1807,7 +1807,7 @@ public class CodeRegion
 
     /// <summary>
     /// Ends a region, or totaly removes it if nothing
-    /// was generted since the begining of the region.
+    /// was generted since the beginning of the region.
     /// </summary>
     public void End()
     {
@@ -1816,7 +1816,7 @@ public class CodeRegion
 
     /// <summary>
     /// Ends a region, or totaly removes it if nothing
-    /// was generted since the begining of the region, also outdents
+    /// was generted since the beginning of the region, also outdents
     /// the number of levels specified.
     /// </summary>
     public void End(int levelsToDecrease)
