@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     // Abstract base class representing entity identity. Used by both
     // EntityColumnMap and RefColumnMap.
     // An EntityIdentity captures two pieces of information - the list of keys
-    // that uniquely identify an entity within an entityset, and the the entityset
+    // that uniquely identify an entity within an entityset, and the entityset
     // itself.
     // </summary>
     internal abstract class EntityIdentity

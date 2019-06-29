@@ -1083,7 +1083,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>Returns an integer that represents the specified datepart of the specified date.</summary>
-        /// <returns>The the specified datepart of the specified date.</returns>
+        /// <returns>The specified datepart of the specified date.</returns>
         /// <param name="datePartArg">The part of the date to return the value.</param>
         /// <param name="date">The date.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]

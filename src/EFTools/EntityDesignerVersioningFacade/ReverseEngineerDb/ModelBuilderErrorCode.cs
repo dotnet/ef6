@@ -15,7 +15,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
         /// <summary>
         ///     was unable to find an entity container that
-        ///     the the type should go into
+        ///     the type should go into
         /// </summary>
         RelationshipSpansSchemas = BaseValue + 1,
 

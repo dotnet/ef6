@@ -954,7 +954,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Explorer
         {
             ResetPreviousSearchResults(clearTextSearch);
 
-            // Attempt to make sure the the Search Results items are showing
+            // Attempt to make sure the Search Results items are showing
             var explorerSearchResults = ExpandViewModelAndTreeViewItems(searchResults);
 
             var numResultsFound = explorerSearchResults.Count;

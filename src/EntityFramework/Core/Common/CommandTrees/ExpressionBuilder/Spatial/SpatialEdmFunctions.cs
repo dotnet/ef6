@@ -695,7 +695,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialEnvelope' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that returns the the minimum bounding box for geometryValue.</returns>
+        /// <returns>A new DbFunctionExpression that returns the minimum bounding box for geometryValue.</returns>
         /// <param name="geometryValue">An expression that specifies the value from which the Envelope value should be retrieved.</param>
         public static DbFunctionExpression SpatialEnvelope(this DbExpression geometryValue)
         {
@@ -762,7 +762,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialBoundary' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that returns the the boundary for geometryValue.</returns>
+        /// <returns>A new DbFunctionExpression that returns the boundary for geometryValue.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry value from which the SpatialBoundary value should be retrieved.</param>
         public static DbFunctionExpression SpatialBoundary(this DbExpression geometryValue)
         {
@@ -939,7 +939,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialConvexHull' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that returns the the convex hull for geometryValue.</returns>
+        /// <returns>A new DbFunctionExpression that returns the convex hull for geometryValue.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry value from which the convex hull value should be retrieved.</param>
         public static DbFunctionExpression SpatialConvexHull(this DbExpression geometryValue)
         {

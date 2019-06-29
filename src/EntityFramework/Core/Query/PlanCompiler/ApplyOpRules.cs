@@ -319,7 +319,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // dummy ProjectNode as the right child of the Apply - which
         // simply projects out all the vars of the Y, and adds on a constant (say "1"). This
         // constant is now treated as the sentinel var
-        // Then the existing ProjectOp is pulled up above the the outer-apply, but all the locally defined
+        // Then the existing ProjectOp is pulled up above the outer-apply, but all the locally defined
         // Vars have their defining expressions now expressed as
         // case when sentinelVar is null then null else oldDefiningExpr end
         // where oldDefiningExpr represents the original defining expression

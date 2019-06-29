@@ -395,7 +395,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             {
                 var slot = m_projectedSlots[i] as MemberProjectedSlot;
                 Debug.Assert(slot != null, "All slots during cell normalization must field slots");
-                // Get the the ith slot's variable and then get the
+                // Get the ith slot's variable and then get the
                 // new slot number from the field map
                 var newSlotNum = projectedSlotMap.IndexOf(slot.MemberPath);
                 Debug.Assert(newSlotNum >= 0, "Field projected but not in projectedSlotMap");

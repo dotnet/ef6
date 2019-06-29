@@ -775,7 +775,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.ViewModel
         }
 
         /// <summary>
-        ///     This is called whenever there is a change that originates from the the DSL surface.  The
+        ///     This is called whenever there is a change that originates from the DSL surface.  The
         ///     changes are packaged up and the ModelController is used to make the changes to the model.
         /// </summary>
         /// <param name="e"></param>

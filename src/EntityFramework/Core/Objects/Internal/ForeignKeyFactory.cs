@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // </summary>
         // <param name="dependentEntry"> The EntityEntry for the dependent that contains the FK </param>
         // <param name="constraint"> The constraint that describes this FK relationship </param>
-        // <param name="principalEntitySet"> The entity set at the principal end of the the relationship </param>
+        // <param name="principalEntitySet"> The entity set at the principal end of the relationship </param>
         // <param name="useOriginalValues"> If true then the key will be constructed from the original FK values </param>
         // <returns> The key, or null if any value in the key is null </returns>
         public static EntityKey CreateKeyFromForeignKeyValues(

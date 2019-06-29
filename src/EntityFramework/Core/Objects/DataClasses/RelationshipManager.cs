@@ -1484,7 +1484,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             if (!ownerKey.IsTemporary || includeOwnValues)
             {
                 // NOTE this part is never executed when the method is called from ObjectStateManager.AcceptChanges(),
-                //      so we don't try to "retrieve" properties from the the same (callers) entity.
+                //      so we don't try to "retrieve" properties from the same (callers) entity.
                 var entry = wrappedOwner.Context.ObjectStateManager.FindEntityEntry(ownerKey);
                 Debug.Assert(entry != null, "Owner entry not found in the object state manager");
                 entry.GetOtherKeyProperties(properties);

@@ -1679,7 +1679,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                         // Handling the mouse down is a very delicate operation that
                         // involves letting us, and winforms all having a shot
                         // at the operation. WinForms does some useful things and sets
-                        // internal state indicating the the mouse is down (and gets
+                        // internal state indicating the mouse is down (and gets
                         // the capture, etc), but we don't want them to call DefWndProc
                         // because that will automatically do things like change selection
                         // when we click on an expansion button, or drag select in multiselect

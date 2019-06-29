@@ -1028,7 +1028,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             // Spatial constants are represented by calls to a static constructor function. The attempt is made to extract an
             // appropriate representation from the value (which may not implement the required methods). If an SRID value and
-            // a text, binary or GML representation of the spatial value can be extracted, the the corresponding function call
+            // a text, binary or GML representation of the spatial value can be extracted, the corresponding function call
             // expression is built and processed.
             DbFunctionExpression functionExpression = null;
             var srid = spatialValue.CoordinateSystemId;

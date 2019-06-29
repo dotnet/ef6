@@ -111,7 +111,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// Configures the name of the column(s) for the left foreign key.
         /// The left foreign key points to the parent entity of the navigation property specified in the HasMany call.
         /// </summary>
-        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
+        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the primary key properties were configured for the target entity type. </param>
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration MapLeftKey(params string[] keyColumnNames)
         {
@@ -125,9 +125,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>
         /// Configures the name of the column(s) for the right foreign key.
-        /// The right foreign key points to the parent entity of the the navigation property specified in the WithMany call.
+        /// The right foreign key points to the parent entity of the navigation property specified in the WithMany call.
         /// </summary>
-        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
+        /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the primary key properties were configured for the target entity type. </param>
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
         public ManyToManyAssociationMappingConfiguration MapRightKey(params string[] keyColumnNames)
         {

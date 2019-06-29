@@ -177,7 +177,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Runs the the registered <see cref="IDatabaseInitializer{TContext}" /> on this context.
+        /// Runs the registered <see cref="IDatabaseInitializer{TContext}" /> on this context.
         /// If "force" is set to true, then the initializer is run regardless of whether or not it
         /// has been run before.  This can be useful if a database is deleted while an app is running
         /// and needs to be reinitialized.
@@ -204,7 +204,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Checks whether or not the database is compatible with the the current Code First model.
+        /// Checks whether or not the database is compatible with the current Code First model.
         /// </summary>
         /// <remarks>
         /// Model compatibility currently uses the following rules.
