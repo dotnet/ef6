@@ -216,7 +216,7 @@ namespace System.Data.Entity.Query.LinqToEntities
         </EntitySetMapping>
         <EntitySetMapping Name=""Dependents"">
         <QueryView>
-            SELECT VALUE QueryViewStackOverflowRepro.ContextModel.Dependent(g.Id) FROM QueryViewStackOverflowReproContextModelStoreContainer.Dependents AS g  <!-- WHERE g.PrinicpalId > 100 -->
+            SELECT VALUE QueryViewStackOverflowRepro.ContextModel.Dependent(g.Id) FROM QueryViewStackOverflowReproContextModelStoreContainer.Dependents AS g  <!-- WHERE g.PrincipalId > 100 -->
         </QueryView>
         </EntitySetMapping>
     </EntityContainerMapping>

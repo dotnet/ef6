@@ -1531,11 +1531,11 @@ namespace Microsoft.Data.Entity.Design.Model.Commands
                     isFirst = false;
                 }
 
-                var prinicpalEntityTypeName = principalEntityType.LocalName.Value;
+                var principalEntityTypeName = principalEntityType.LocalName.Value;
                 var dependentEntityTypeName = dependentEntityType.LocalName.Value;
                 var s = String.Format(
                     CultureInfo.CurrentCulture, Resources.UpdateFromDatabaseUnableToBringRefConstraint, associationName,
-                    prinicpalEntityTypeName, dependentEntityTypeName, propertyList);
+                    principalEntityTypeName, dependentEntityTypeName, propertyList);
                 var errorMessageTarget = unfoundPrincipalProperties.Count > 0 ? principalEntityType : dependentEntityType;
                 var errorInfo = new ErrorInfo(
                     ErrorInfo.Severity.WARNING, s, errorMessageTarget, ErrorCodes.UPDATE_MODEL_FROM_DB_CANT_INCLUDE_REF_CONSTRAINT,
