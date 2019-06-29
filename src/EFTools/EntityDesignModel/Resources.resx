@@ -166,7 +166,7 @@
   <data name="EscherValidation_AssociationWithoutAssociationSet" xml:space="preserve">
     <value>Association '{0}' has no association set.</value>
   </data>
-  <data name="EscherValidation_CiricularInheritance" xml:space="preserve">
+  <data name="EscherValidation_CircularInheritance" xml:space="preserve">
     <value>A circular inheritance chain has been found involving entity types {0}.</value>
   </data>
   <data name="EscherValidation_ComplexTypesNotSupported" xml:space="preserve">
@@ -408,7 +408,7 @@
   <data name="Error_CircularComplexTypeDefinitionOnChange" xml:space="preserve">
     <value>Cannot change this property type to {0} – this would cause circular loop for the enclosing type definition.</value>
   </data>
-  <data name="EscherValidation_CiricularComplexTypeDefinition" xml:space="preserve">
+  <data name="EscherValidation_CircularComplexTypeDefinition" xml:space="preserve">
     <value>A circular complex type definition has been found for {0} complex type.</value>
   </data>
   <data name="EscherValidation_UndefinedComplexPropertyType" xml:space="preserve">

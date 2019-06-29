@@ -182,7 +182,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                         if (baseTypes.Contains(t))
                         {
                             var msg = String.Format(
-                                CultureInfo.CurrentCulture, Resources.EscherValidation_CiricularInheritance,
+                                CultureInfo.CurrentCulture, Resources.EscherValidation_CircularInheritance,
                                 NameableItemsToCommaSeparatedString(baseTypes));
                             ArtifactSet.AddError(
                                 new ErrorInfo(
@@ -201,7 +201,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                 if (ModelHelper.ContainsCircularComplexTypeDefinition(complexType))
                 {
                     var msg = String.Format(
-                        CultureInfo.CurrentCulture, Resources.EscherValidation_CiricularComplexTypeDefinition, complexType.LocalName.Value);
+                        CultureInfo.CurrentCulture, Resources.EscherValidation_CircularComplexTypeDefinition, complexType.LocalName.Value);
                     ArtifactSet.AddError(
                         new ErrorInfo(
                             ErrorInfo.Severity.ERROR, msg, complexType, ErrorCodes.ESCHER_VALIDATOR_CIRCULAR_COMPLEX_TYPE_DEFINITION,

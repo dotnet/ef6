@@ -306,18 +306,18 @@ namespace Microsoft.Data.Entity.Design.Model {
         /// <summary>
         ///   Looks up a localized string similar to A circular complex type definition has been found for {0} complex type..
         /// </summary>
-        internal static string EscherValidation_CiricularComplexTypeDefinition {
+        internal static string EscherValidation_CircularComplexTypeDefinition {
             get {
-                return ResourceManager.GetString("EscherValidation_CiricularComplexTypeDefinition", resourceCulture);
+                return ResourceManager.GetString("EscherValidation_CircularComplexTypeDefinition", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to A circular inheritance chain has been found involving entity types {0}..
         /// </summary>
-        internal static string EscherValidation_CiricularInheritance {
+        internal static string EscherValidation_CircularInheritance {
             get {
-                return ResourceManager.GetString("EscherValidation_CiricularInheritance", resourceCulture);
+                return ResourceManager.GetString("EscherValidation_CircularInheritance", resourceCulture);
             }
         }
         
