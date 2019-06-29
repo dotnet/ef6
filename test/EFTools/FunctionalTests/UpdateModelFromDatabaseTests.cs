@@ -20,7 +20,7 @@ namespace EFDesigner.FunctionalTests
         /// <summary>
         ///     Fixture that creates a mock package and sets PackageManager.Package
         /// </summary>
-        /// <param name="packageFixture">Pacakge fixture</param>
+        /// <param name="packageFixture">Package fixture</param>
         /// <remarks>
         ///     The tests need PackageManager.Package to be set but don't need the
         ///     package itself. Since it needs to be disposed IUseFixture seems fine.
