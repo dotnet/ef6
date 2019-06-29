@@ -510,7 +510,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         // <summary>
-        // Maps double quoted string to a literal or an idendifier
+        // Maps double quoted string to a literal or an identifier
         // </summary>
         // <returns> Token </returns>
         internal Token MapDoubleQuotedString(string symbol)
