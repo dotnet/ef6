@@ -174,7 +174,7 @@ Group By a as gkey";
         }
 
         [Fact]
-        public void Inline_aggregate_funtion_MinProductId()
+        public void Inline_aggregate_function_MinProductId()
         {
             var query =
                 @"Function MinProductId(products Collection(ProductModel.Product)) as 

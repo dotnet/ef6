@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.Mapping
 
             var entityContainerMapping = new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace));
 
-            var composableFuntionMapping =
+            var composableFunctionMapping =
                 new FunctionImportMappingComposable(
                     new EdmFunction(
                         "f", "model", DataSpace.CSpace,
@@ -120,8 +120,8 @@ namespace System.Data.Entity.Core.Mapping
                     null);
 
             Assert.Empty(entityContainerMapping.FunctionImportMappings);
-            entityContainerMapping.AddFunctionImportMapping(composableFuntionMapping);
-            Assert.Same(composableFuntionMapping, entityContainerMapping.FunctionImportMappings.Single());
+            entityContainerMapping.AddFunctionImportMapping(composableFunctionMapping);
+            Assert.Same(composableFunctionMapping, entityContainerMapping.FunctionImportMappings.Single());
         }
 
         [Fact]

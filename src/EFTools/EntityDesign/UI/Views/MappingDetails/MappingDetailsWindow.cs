@@ -498,7 +498,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails
                 if (fi != null
                     && fi.FunctionImportMapping != null)
                 {
-                    // only show mappings for FuntionImports that ReturnType is either EntityType or ComplexType
+                    // only show mappings for FunctionImports that ReturnType is either EntityType or ComplexType
                     var isReturnTypeEntityOrComplexType = fi.IsReturnTypeEntityType || fi.IsReturnTypeComplexType;
 
                     if (isReturnTypeEntityOrComplexType && CanEditMappingsForFunctionImport(fi))
