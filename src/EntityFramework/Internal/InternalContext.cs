@@ -1199,7 +1199,7 @@ namespace System.Data.Entity.Internal
 
         // <summary>
         // Gets or sets an object representing a config file used for looking for DefaultConnectionFactory entries,
-        // database intializers and connection strings.
+        // database initializers and connection strings.
         // </summary>
         public virtual AppConfig AppConfig
         {
