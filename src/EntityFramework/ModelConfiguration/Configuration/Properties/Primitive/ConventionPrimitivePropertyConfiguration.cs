@@ -550,7 +550,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </returns>
         /// <remarks>
         /// Calling this will have no effect once it has been configured.
-        /// This method throws if the property is not a <see cref="T:Byte[]" />.
+        /// This method throws if the property is not a <see cref="T:System.Byte[]" />.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsRowVersion()
         {
