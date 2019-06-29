@@ -1371,7 +1371,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
             }
         }
 
-        private ResourceEntry GetResoureEntry(object src)
+        private ResourceEntry GetResourceEntry(object src)
         {
             ResourceEntry rEntry = null;
             if (_resourceTable.ContainsKey(src))
@@ -1389,7 +1389,7 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Model.StandAlone
 
             lock (_resourceTable)
             {
-                lockTarget = GetResoureEntry(resource);
+                lockTarget = GetResourceEntry(resource);
 
                 if (lockTarget == null)
                 {

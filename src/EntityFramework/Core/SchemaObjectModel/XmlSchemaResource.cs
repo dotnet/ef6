@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         // <summary>
-        // Adds Store schema resource entries to the given XmlNamespace to XmlSchemaResoure map
+        // Adds Store schema resource entries to the given XmlNamespace to XmlSchemaResource map
         // </summary>
         // <param name="schemaResourceMap"> The XmlNamespace to XmlSchemaResource map to add entries to. </param>
         internal static void AddStoreSchemaResourceMapEntries(Dictionary<string, XmlSchemaResource> schemaResourceMap, double schemaVersion)
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         // <summary>
-        // Adds Mapping schema resource entries to the given XmlNamespace to XmlSchemaResoure map
+        // Adds Mapping schema resource entries to the given XmlNamespace to XmlSchemaResource map
         // </summary>
         // <param name="schemaResourceMap"> The XmlNamespace to XmlSchemaResource map to add entries to. </param>
         internal static void AddMappingSchemaResourceMapEntries(
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         // <summary>
-        // Adds Edm schema resource entries to the given XmlNamespace to XmlSchemaResoure map,
+        // Adds Edm schema resource entries to the given XmlNamespace to XmlSchemaResource map,
         // when calling from SomSchemaSetHelper.ComputeSchemaSet(), all the imported xsd will be included
         // </summary>
         // <param name="schemaResourceMap"> The XmlNamespace to XmlSchemaResource map to add entries to. </param>
