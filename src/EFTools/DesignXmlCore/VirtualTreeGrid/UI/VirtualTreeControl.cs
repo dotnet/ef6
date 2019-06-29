@@ -8692,7 +8692,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
         {
             // see if branch is expandable, and if so, set the timer
             // check to see if we are already dragging over an item, so no need to set the timer again
-            // Note that a pending bump scroll takes precendence over a drag over expand.  This is so that
+            // Note that a pending bump scroll takes precedence over a drag over expand.  This is so that
             // bump scrolling doesn't get interrupted by expansion.
             if (!GetStateFlag(VTCStateFlags.InBumpScroll)
                 && (myLastDragExpandRow != myDropRow || myLastDragExpandCol != myDropColumn || !myDragTimer.Enabled))
