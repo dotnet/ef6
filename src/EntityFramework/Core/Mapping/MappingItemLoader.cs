@@ -313,7 +313,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             var navLineInfo = (IXmlLineInfo)nav;
 
-            // The element name can only be EntityContainerMapping element name since XSD validation should have guarneteed this.
+            // The element name can only be EntityContainerMapping element name since XSD validation should have guaranteed this.
             Debug.Assert(nav.LocalName == MslConstructs.EntityContainerMappingElement);
             var entityContainerName = GetAttributeValue(nav.Clone(), MslConstructs.CdmEntityContainerAttribute);
             var storageEntityContainerName = GetAttributeValue(nav.Clone(), MslConstructs.StorageEntityContainerAttribute);
