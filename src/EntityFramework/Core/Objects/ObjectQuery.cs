@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Objects
         /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
-        /// The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        /// The task result contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
         /// that contains a collection of entity objects returned by the query.
         /// </returns>
         public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption)
@@ -300,7 +300,7 @@ namespace System.Data.Entity.Core.Objects
         /// </param>
         /// <returns>
         /// A task that represents the asynchronous operation.
-        /// The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        /// The task result contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
         /// that contains a collection of entity objects returned by the query.
         /// </returns>
         public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
