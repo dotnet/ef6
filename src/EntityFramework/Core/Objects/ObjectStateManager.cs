@@ -653,7 +653,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         // <summary>
-        // Upgrades an entity key entry in the cache to a a regular entity
+        // Upgrades an entity key entry in the cache to a regular entity
         // </summary>
         // <param name="keyEntry"> the key entry that exists in the state manager </param>
         // <param name="wrappedEntity"> the object to add </param>
