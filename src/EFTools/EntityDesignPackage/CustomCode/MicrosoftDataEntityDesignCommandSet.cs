@@ -863,7 +863,7 @@ namespace Microsoft.Data.Entity.Design.Package
                         // Make sure what is returned is what the user requested.
                         Debug.Assert(
                             result != null,
-                            "Could not retrieve compartment with isPropertiesComparment property value : " + isPropertiesCompartment);
+                            "Could not retrieve compartment with isPropertiesCompartment property value : " + isPropertiesCompartment);
                     }
                 }
             }
