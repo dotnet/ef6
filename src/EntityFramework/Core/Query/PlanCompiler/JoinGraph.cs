@@ -2371,7 +2371,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         // <summary>
         // Helper method for <see cref="CombinePredicateNodes" />
-        // If the predicateMinimuLocationId is less or equal to the target location id of the current result, it is AND-ed with the
+        // If the predicateMinimumLocationId is less or equal to the target location id of the current result, it is AND-ed with the
         // current result, otherwise it is included in the list of predicates that need to be propagated up (outPredicates)
         // </summary>
         private Node ClassifyPredicate(
