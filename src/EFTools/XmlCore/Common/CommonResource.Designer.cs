@@ -290,9 +290,9 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Common {
         /// <summary>
         ///   Looks up a localized string similar to Starting execution loop of {0} times....
         /// </summary>
-        internal static string EE_ExecutionInfo_InitilizingLoop {
+        internal static string EE_ExecutionInfo_InitializingLoop {
             get {
-                return ResourceManager.GetString("EE_ExecutionInfo_InitilizingLoop", resourceCulture);
+                return ResourceManager.GetString("EE_ExecutionInfo_InitializingLoop", resourceCulture);
             }
         }
         

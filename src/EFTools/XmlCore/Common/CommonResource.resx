@@ -157,7 +157,7 @@
     <value>Execution completed {0} times...</value>
     <comment>uereviewed</comment>
   </data>
-  <data name="EE_ExecutionInfo_InitilizingLoop" xml:space="preserve">
+  <data name="EE_ExecutionInfo_InitializingLoop" xml:space="preserve">
     <value>Starting execution loop of {0} times...</value>
     <comment>updated</comment>
   </data>
