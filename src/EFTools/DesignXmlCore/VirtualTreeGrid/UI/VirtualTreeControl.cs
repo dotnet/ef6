@@ -10094,7 +10094,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                 myEditIndex, selectionColumn, true, sizeToText, sizeToText ? myInPlaceControl.InPlaceControl.Text : null);
             var stringWidth = rcLabel.Width;
 
-            // get exact the text bounds (acount for borders used when drawing)
+            // get exact the text bounds (account for borders used when drawing)
             rcLabel.Inflate(-SystemInformation.Border3DSize.Width, -SystemInformation.BorderSize.Height);
 
             //UNDONE: deal with this when editing is defined 
