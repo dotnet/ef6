@@ -122,7 +122,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
 
         /// <summary>
         ///     Stores sorted list of selected ranges.  Assumption here is that large, contiguous selection ranges will
-        ///     be more common than lange numbers of discontiguous ranges, so this representation is more efficient than storing
+        ///     be more common than large numbers of discontiguous ranges, so this representation is more efficient than storing
         ///     a list of individually selected indices.
         /// </summary>
         private List<SelectionRange> mySelectedRanges;
