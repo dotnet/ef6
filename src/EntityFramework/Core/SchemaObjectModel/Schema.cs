@@ -434,7 +434,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         // <summary>
-        // Vaidate the schema.
+        // Validate the schema.
         // </summary>
         internal override void Validate()
         {
