@@ -57,7 +57,7 @@ namespace Microsoft.Data.Entity.Design.DataSourceWizardExtension
             }
 
             wizardData.EDMProjectItem = VsUtils.GetProjectItemForDocument(edmxFileName, WizardForm.ServiceProvider);
-            // Dismiss Data Source Wizard if a new edmx file is successfuly created.
+            // Dismiss Data Source Wizard if a new edmx file is successfully created.
             return (wizardData.EDMProjectItem != null);
         }
 
