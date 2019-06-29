@@ -1981,7 +1981,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             Symbol fromSymbol;
             var result = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
 
-            // Check compatiblity.
+            // Check compatibility.
             // If the operators are not compatible, a new sql statement must be generated.
             // 
             if (!IsCompatible(result, e.ExpressionKind))
