@@ -8905,7 +8905,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                                         allowedEffects &= dragData.AllowedEffects;
                                         if (allowedEffects == 0)
                                         {
-                                            // The finaly clause will clear out the data sources gracefully
+                                            // The finally clause will clear out the data sources gracefully
                                             // if we don't set the finished signal.
                                             return VirtualTreeStartDragData.Empty;
                                         }

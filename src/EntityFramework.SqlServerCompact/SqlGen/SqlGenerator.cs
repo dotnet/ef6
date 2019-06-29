@@ -3021,7 +3021,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
 
             //
-            // finaly, expand the function name
+            // finally, expand the function name
             //
             WriteFunctionName(result, e.Function);
             result.Append("(");

@@ -1156,7 +1156,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var result = new SqlBuilder();
 
             //
-            // finaly, expand the function name
+            // finally, expand the function name
             //
             WriteFunctionName(result, e.Function);
             result.Append("(");
