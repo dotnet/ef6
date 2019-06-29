@@ -200,7 +200,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
             if (initialErrorLogSize == errorLog.Count)
             {
-                // Check if the order of columns in foreign key correponds to the
+                // Check if the order of columns in foreign key corresponds to the
                 // mappings in m_cellGroup, e.g., if <pid1, pid2> in SAddress is
                 // a foreign key into <pid1, pid2> of the SPerson table, make
                 // sure that this order is preserved through the mappings in m_cellGroup
