@@ -2208,7 +2208,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // IS NULL predicates, one for each property. There are a couple of
             // optimizations that we perform. 
             //
-            // For entity types, we simply perfom the IS NULL operations on the 
+            // For entity types, we simply perform the IS NULL operations on the 
             // key attributes alone. 
             //
             // Complex types must have a typeid property - the isnull is pushed to the
