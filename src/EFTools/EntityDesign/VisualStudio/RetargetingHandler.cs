@@ -93,7 +93,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             return EdmUtils.IsDataServicesEdmx(filePath);
         }
 
-        // protected virtual virtual to allow mocking
+        // protected virtual to allow mocking
         protected virtual XmlDocument RetargetFile(string filePath, Version targetSchemaVersion)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(filePath), "Invalid filePath");
