@@ -2188,7 +2188,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid
                         && HasHorizontalScrollBar
                         && !HasVerticalScrollBar)
                     {
-                        // if there's no vertical scroll bar, mousehweel scrolls horizontally so we need to
+                        // if there's no vertical scroll bar, mousewheel scrolls horizontally so we need to
                         // update the header.
                         myHeaderContainer.UpdateHeaderControlPosition(false);
                     }
