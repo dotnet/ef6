@@ -785,7 +785,7 @@ namespace Microsoft.Data.Entity.Design.Base.Shell
                         return false;
                     }
 
-                    // expand branch first, if necesary
+                    // expand branch first, if necessary
                     if (result.ExpandBranch)
                     {
                         // using column = 0 because TreeGrid designer
