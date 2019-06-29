@@ -203,14 +203,14 @@ namespace Microsoft.Data.Entity.Design.UI.ViewModels.MappingDetails
         }
 
         // <summary>
-        //     This must be implemented by derived clases who have children.
+        //     This must be implemented by derived classes who have children.
         // </summary>
         protected virtual void LoadChildrenCollection()
         {
         }
 
         // <summary>
-        //     This must be implemented by derived clases who have lists of values.
+        //     This must be implemented by derived classes who have lists of values.
         // </summary>
         internal virtual Dictionary<MappingLovEFElement, string> GetListOfValues(ListOfValuesCollection type)
         {
