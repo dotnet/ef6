@@ -114,15 +114,31 @@ steps:
 
 
 
+- task: NuGetCommand@2
+
+  displayName: 'NuGet Restore Setup Inputs Packages'
+
+  inputs:
+
+    command: custom
+
+    feedsToUse: config
+
+    externalFeedCredentials: 'OSSCG Feed - Microsoft approved OSS packages'
+
+    arguments: 'restore $(Build.Repository.LocalPath)\src\EFTools\setup\GenerateMsiInputs\packages.config -SolutionDirectory $(MsiRuntimeInputsPath) -Verbosity Detailed -NonInteractive'
+
+
+
 - task: BatchScript@1
 
-  displayName: 'Generate Setup Inputs'
+  displayName: 'Extract Setup Inputs Nuspecs'
 
   inputs:
 
     filename: '$(comspec)'
 
-    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\src\EFTools\setup\GenerateMsiInputs\GenerateMsiInputs.msbuild /p:Configuration=$(BuildConfiguration) /t:GenerateMSIInputs"'
+    arguments: '/c "call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" & msbuild $(Build.Repository.LocalPath)\src\EFTools\setup\GenerateMsiInputs\GenerateMsiInputs.msbuild /p:Configuration=$(BuildConfiguration) /t:ExtractNuspecs"'
 
 
 
