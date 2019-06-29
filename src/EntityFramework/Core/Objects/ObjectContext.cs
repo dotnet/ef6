@@ -815,7 +815,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -836,7 +836,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -857,7 +857,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
@@ -887,7 +887,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.InvalidOperationException">
         /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
         /// <see
-        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
         /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
         /// <see
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
