@@ -264,7 +264,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         /// Is this tree uses user-defined functions
-        /// Simplifing query with UDFs could caused to suboptimal plans
+        /// Simplifying query with UDFs could caused to suboptimal plans
         /// </summary>
         /// <param name="node"> Current subtree to process </param>
         /// <param name="varMap">Mapped variables</param>
