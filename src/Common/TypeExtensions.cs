@@ -71,7 +71,7 @@ namespace System.Data.Entity.Utilities
         }
 
         // <summary>
-        // Determine if the given type type implements the given generic interface or derives from the given generic type,
+        // Determine if the given type implements the given generic interface or derives from the given generic type,
         // and if so return the element type of the collection. If the type implements the generic interface several times
         // <c>null</c> will be returned.
         // </summary>
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Utilities
         }
 
         // <summary>
-        // Determine if the given type type implements the given generic interface or derives from the given generic type,
+        // Determine if the given type implements the given generic interface or derives from the given generic type,
         // and if so return the concrete types implemented.
         // </summary>
         // <param name="type"> The type to examine. </param>
