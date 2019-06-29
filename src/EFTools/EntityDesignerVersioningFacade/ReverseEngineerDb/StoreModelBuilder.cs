@@ -1384,7 +1384,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                             foreignKeys,
                             primaryKeys,
                             toType.Name),
-                        (int)ModelBuilderErrorCode.UnsupportedForeinKeyPattern,
+                        (int)ModelBuilderErrorCode.UnsupportedForeignKeyPattern,
                         EdmSchemaErrorSeverity.Warning));
 
                 return true;

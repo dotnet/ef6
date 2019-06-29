@@ -2719,7 +2719,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
                 var error = errors[0];
 
                 Assert.Equal(EdmSchemaErrorSeverity.Warning, error.Severity);
-                Assert.Equal((int)ModelBuilderErrorCode.UnsupportedForeinKeyPattern, error.ErrorCode);
+                Assert.Equal((int)ModelBuilderErrorCode.UnsupportedForeignKeyPattern, error.ErrorCode);
             }
 
             [Fact]

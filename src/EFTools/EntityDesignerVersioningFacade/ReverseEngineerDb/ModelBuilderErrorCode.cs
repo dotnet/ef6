@@ -110,7 +110,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
         InvalidGetStatementSuppliedForProperty = BaseValue + 27,
         InvalidSetStatementSuppliedForProperty = BaseValue + 28,
         GeneratedFactoryMethodNameConflict = BaseValue + 29,
-        UnsupportedForeinKeyPattern = BaseValue + 30,
+        UnsupportedForeignKeyPattern = BaseValue + 30,
         ExcludedColumnWasAKeyColumn = BaseValue + 31,
         InvalidKeyTypeFound = BaseValue + 32,
         GeneratedPropertyAccessibilityConflict = BaseValue + 33,
