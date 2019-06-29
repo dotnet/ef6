@@ -173,7 +173,7 @@ namespace Microsoft.Data.Tools.VSXmlDesignerBase.Refactoring
                 ScrollInView(vsTextView, 0, 0, 0, 1);
 
                 // If there is ChangeProposal, make sure that change is visible in the text view.
-                // If ChangeProposal is null, that might be file node, make the first chagne visible.
+                // If ChangeProposal is null, that might be file node, make the first change visible.
                 // Here we will only work with Text based change proposal.
                 var visibleChange = node.ChangeProposal as TextChangeProposal;
                 if (visibleChange == null)
