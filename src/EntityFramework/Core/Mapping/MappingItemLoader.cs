@@ -2942,7 +2942,7 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             EdmProperty member = null;
-            //Get the CDM EdmMember reprsented by the name specified.
+            //Get the CDM EdmMember represented by the name specified.
             if (propertyName != null)
             {
                 EdmMember tempMember;
