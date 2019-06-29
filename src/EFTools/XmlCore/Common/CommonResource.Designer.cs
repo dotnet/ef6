@@ -299,9 +299,9 @@ namespace Microsoft.Data.Tools.XmlDesignerBase.Common {
         /// <summary>
         ///   Looks up a localized string similar to You cancelled the query..
         /// </summary>
-        internal static string EE_ExecutionInfo_QueryCancelledbyUser {
+        internal static string EE_ExecutionInfo_QueryCancelledByUser {
             get {
-                return ResourceManager.GetString("EE_ExecutionInfo_QueryCancelledbyUser", resourceCulture);
+                return ResourceManager.GetString("EE_ExecutionInfo_QueryCancelledByUser", resourceCulture);
             }
         }
         

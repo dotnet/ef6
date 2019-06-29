@@ -161,7 +161,7 @@
     <value>Starting execution loop of {0} times...</value>
     <comment>updated</comment>
   </data>
-  <data name="EE_ExecutionInfo_QueryCancelledbyUser" xml:space="preserve">
+  <data name="EE_ExecutionInfo_QueryCancelledByUser" xml:space="preserve">
     <value>You cancelled the query.</value>
     <comment>updated</comment>
   </data>
