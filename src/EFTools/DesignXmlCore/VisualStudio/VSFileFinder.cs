@@ -61,7 +61,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
             var vsp4 = projectHierarchy as IVsProject4;
             if (vsp4 != null)
             {
-                // use IVsProject4 if available - it is much faster than the other other mechanism, but all projects may not implement it
+                // use IVsProject4 if available - it is much faster than the other mechanism, but all projects may not implement it
                 _foundMatch = ExistInProjectFast(vsp4);
             }
             else
