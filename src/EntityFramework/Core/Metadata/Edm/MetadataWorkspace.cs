@@ -1140,7 +1140,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// . If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="objectSpaceType">
-        /// A <see cref="T:System.Data.Metadata.Edm.EnumlType" /> that supplies the type in the object space.
+        /// A <see cref="T:System.Data.Metadata.Edm.EnumType" /> that supplies the type in the object space.
         /// </param>
         public virtual EnumType GetEdmSpaceType(EnumType objectSpaceType)
         {
