@@ -144,7 +144,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // <summary>
         // Writes the optional columns that are used.
         // If this is the topmost statement or distict is specified as part of the same statement
-        // all optoinal columns are written.
+        // all optional columns are written.
         // </summary>
         // <returns> Whether at least one column got written </returns>
         private bool WriteOptionalColumns(SqlWriter writer, SqlGenerator sqlGenerator)
