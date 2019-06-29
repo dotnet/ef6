@@ -450,7 +450,7 @@ namespace UnitTests
         }
 
         [Fact]
-        public void Schema_accepts_context_with_databaseInitilizer_child_element()
+        public void Schema_accepts_context_with_databaseInitializer_child_element()
         {
             Validate("<context type='MyContext'><databaseInitializer type='MyContext' /></context>");
         }
