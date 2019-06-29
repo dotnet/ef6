@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Common
     using System.Xml;
 
     /// <summary>
-    /// Metadata Interface for all CLR types types
+    /// Metadata Interface for all CLR types
     /// </summary>
     public abstract class DbProviderManifest
     {
