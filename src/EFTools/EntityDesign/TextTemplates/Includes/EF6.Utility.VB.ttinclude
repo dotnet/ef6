@@ -453,9 +453,9 @@ Public Class CodeGenerationTools
         Dim entity As EntityType = TryCast(edmType, EntityType)
         If Not entity Is Nothing Then
             Dim declaredMembers As IEnumerable(Of EdmMember) = entity.Members.Where(Function(m) m.DeclaringType Is entity)
-            Dim decalredNavigationProperties As IEnumerable(Of NavigationProperty) = entity.NavigationProperties.Where(Function(n) n.DeclaringType Is entity)
+            Dim declaredNavigationProperties As IEnumerable(Of NavigationProperty) = entity.NavigationProperties.Where(Function(n) n.DeclaringType Is entity)
 
-            Return declaredMembers.Union(decalredNavigationProperties.Cast(Of EdmMember)()).Select(Function(m) m.Name)
+            Return declaredMembers.Union(declaredNavigationProperties.Cast(Of EdmMember)()).Select(Function(m) m.Name)
         End If
 
         Dim structural As StructuralType = TryCast(edmType, StructuralType)
