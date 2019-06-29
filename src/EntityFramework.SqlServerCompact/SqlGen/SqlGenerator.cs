@@ -2366,7 +2366,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         {
             // Codeplex workitem #287: SqlCeProviderServices.CreateSqlCeParameter does not supply 
             // the parameter type for strings and blobs if the parameter size is not available, 
-            // thus letting the QP to infer the type at execution time. That happpens because the 
+            // thus letting the QP to infer the type at execution time. That happens because the 
             // default types, ntext and image, are not comparable, so a simple predicate like 
             // WHERE table.Column = @parameter would fail. However the inference is not possible
             // when there is an IS NULL comparison, in which case we explicitly cast to ntext 
