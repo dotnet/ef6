@@ -1976,7 +1976,7 @@ public class DynamicTextTransformation
 
 
 /// <summary>
-/// Reponsible for abstracting the use of Host between times
+/// Responsible for abstracting the use of Host between times
 /// when it is available and not
 /// </summary>
 public interface IDynamicHost
@@ -2003,7 +2003,7 @@ public interface IDynamicHost
 }
 
 /// <summary>
-/// Reponsible for implementing the IDynamicHost as a dynamic
+/// Responsible for implementing the IDynamicHost as a dynamic
 /// shape wrapper over the Microsoft.VisualStudio.TextTemplating.ITextTemplatingEngineHost interface
 /// rather than type dependent wrapper.  We don't use the
 /// interface type so that the code can be run in preprocessed mode
@@ -2067,7 +2067,7 @@ public class DynamicHost : IDynamicHost
 }
 
 /// <summary>
-/// Reponsible for implementing the IDynamicHost when the
+/// Responsible for implementing the IDynamicHost when the
 /// Host property is not available on the TextTemplating type. The Host
 /// property only exists when the hostspecific attribute of the template
 /// directive is set to true.
