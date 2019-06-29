@@ -838,7 +838,7 @@ namespace System.Data.Entity.Core.Mapping
                     AddToSchemaErrorsWithMemberInfo(
                         Strings.Mapping_InvalidContent_Entity_Set, entitySetName,
                         MappingErrorCode.InvalidEntitySet, m_sourceLocation, navLineInfo, m_parsingErrors);
-                    //There is no point in continuing the loding of this EntitySetMapping if the EntitySet is not found
+                    //There is no point in continuing the loading of this EntitySetMapping if the EntitySet is not found
                     return;
                 }
                 //Create the EntitySet Mapping which contains the mapping information for EntitySetMap.
