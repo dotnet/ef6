@@ -664,7 +664,7 @@ namespace System.Data.Entity.SqlServer
                 && value.GetType().IsClass())
             {
                 // If the parameter is being created based on an actual value (typically for constants found in DML expressions) then a DbGeography/DbGeometry
-                // value must be replaced by an an appropriate Microsoft.SqlServer.Types.SqlGeography/SqlGeometry instance. Since the DbGeography/DbGeometry
+                // value must be replaced by an appropriate Microsoft.SqlServer.Types.SqlGeography/SqlGeometry instance. Since the DbGeography/DbGeometry
                 // value may not have been originally created by this SqlClient provider services implementation, just using the ProviderValue is not sufficient.
                 var geographyValue = value as DbGeography;
                 if (geographyValue != null)
