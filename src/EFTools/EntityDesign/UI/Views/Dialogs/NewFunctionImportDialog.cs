@@ -766,7 +766,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
 
                 // Update complex type mode
                 // Create a sorted list for both schema columns and complex type properties.
-                var sortedColums = columns.OrderBy(col => col.Name).ToList();
+                var sortedColumns = columns.OrderBy(col => col.Name).ToList();
                 // ad this point, the selected item must not be null.
                 var selectedComplexType = complexTypeReturnComboBox.SelectedItem as ComplexType;
                 Debug.Assert(selectedComplexType != null, "There is no selected complex type.");
@@ -783,9 +783,9 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
                     var propertyName = String.Empty;
 
                     var storageModel = _container.Artifact.StorageModel();
-                    for (var i = 0; i < sortedColums.Count; i++)
+                    for (var i = 0; i < sortedColumns.Count; i++)
                     {
-                        var col = sortedColums[i];
+                        var col = sortedColumns[i];
                         prop = null;
                         // Add delete rows for all properties whose name less than column name.
                         while (propertyIndex < sortedProperties.Count)

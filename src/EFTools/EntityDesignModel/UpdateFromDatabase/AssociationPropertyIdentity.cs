@@ -236,7 +236,7 @@ namespace Microsoft.Data.Entity.Design.Model.UpdateFromDatabase
             var compVal = SortedListAllowDupes<DatabaseColumn>.CompareListContents(x.PrincipalColumns, y.PrincipalColumns);
             if (compVal == 0)
             {
-                // left columns are equal, compare right columsn
+                // left columns are equal, compare right columns
                 compVal = SortedListAllowDupes<DatabaseColumn>.CompareListContents(x.DependentColumns, y.DependentColumns);
             }
             return compVal;
