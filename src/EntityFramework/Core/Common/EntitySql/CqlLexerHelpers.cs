@@ -389,7 +389,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         // <summary>
-        // Returns true when current symbol looks like a caninical function name in a function call.
+        // Returns true when current symbol looks like a canonical function name in a function call.
         // Method only treats canonical functions with names overlapping eSQL keywords.
         // This check allows calling these canonical functions without escaping their names.
         // Check lookAheadChar for a left paren to see if looks like a function call, check symbol against the list of
