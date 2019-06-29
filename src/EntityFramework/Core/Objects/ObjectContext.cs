@@ -163,7 +163,7 @@ namespace System.Data.Entity.Core.Objects
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For ObjectContext method. But the paths are not created in this method.
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overridden by the user.")]
         protected ObjectContext(string connectionString, string defaultContainerName)
             : this(connectionString)
         {
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.ArgumentNullException">The  connection  is null.</exception>
         /// <exception cref="T:System.ArgumentException">The  connection ,  defaultContainerName , or metadata workspace is not valid.</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overridden by the user.")]
         protected ObjectContext(EntityConnection connection, string defaultContainerName)
             : this(connection)
         {
