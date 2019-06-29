@@ -689,7 +689,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var functionParams = functionMapping.Function.Parameters.Select(
                     paramInfo => new KeyValuePair<string, TypeUsage>(paramInfo.Name, paramInfo.TypeUsage));
 
-                // construct DbFunctionCommandTree including implict return type
+                // construct DbFunctionCommandTree including implicit return type
                 var tree = new DbFunctionCommandTree(
                     MetadataWorkspace, DataSpace.SSpace,
                     functionMapping.Function, resultType, functionParams);
