@@ -160,18 +160,18 @@ namespace System.Data.Entity.Core.Mapping
 
                 // If there is a referential constraint, it counts as an implicit mapping of
                 // the association set
-                foreach (var assocationSet in entitySet.AssociationSets)
+                foreach (var associationSet in entitySet.AssociationSets)
                 {
-                    var constraints = assocationSet.ElementType.ReferentialConstraints;
+                    var constraints = associationSet.ElementType.ReferentialConstraints;
                     if (null != constraints)
                     {
                         foreach (var constraint in constraints)
                         {
-                            if ((assocationSet.AssociationSetEnds[constraint.ToRole.Name].EntitySet == entitySet)
+                            if ((associationSet.AssociationSetEnds[constraint.ToRole.Name].EntitySet == entitySet)
                                 &&
                                 (constraint.ToRole.GetEntityType().IsAssignableFrom(entityType)))
                             {
-                                ends.Add(assocationSet.AssociationSetEnds[constraint.FromRole.Name]);
+                                ends.Add(associationSet.AssociationSetEnds[constraint.FromRole.Name]);
                             }
                         }
                     }

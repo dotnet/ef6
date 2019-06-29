@@ -30,7 +30,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
             var associationEnds = association.AssociationEnds();
             Debug.Assert(
                 associationEnds.Count == 2,
-                String.Format(CultureInfo.CurrentCulture, "Invalid AssocationEnd counts for Assocation {0}", association.DisplayName));
+                String.Format(CultureInfo.CurrentCulture, "Invalid AssociationEnd counts for Association {0}", association.DisplayName));
 
             if (associationEnds.Count == 2)
             {

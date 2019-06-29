@@ -8,7 +8,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.MappingDetails.Branches
     using Microsoft.Data.Tools.VSXmlDesignerBase.VirtualTreeGrid;
 
     // <summary>
-    //     This branch shows the scalar property mappings for an assocation set end property.
+    //     This branch shows the scalar property mappings for an association set end property.
     // </summary>
     internal class EndScalarPropertyBranch : TreeGridDesignerBranch
     {

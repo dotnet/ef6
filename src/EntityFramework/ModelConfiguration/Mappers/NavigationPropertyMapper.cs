@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Reflection;
 
     // <summary>
-    // Handles mapping from a CLR property to an EDM assocation and nav. prop.
+    // Handles mapping from a CLR property to an EDM association and nav. prop.
     // </summary>
     internal sealed class NavigationPropertyMapper
     {

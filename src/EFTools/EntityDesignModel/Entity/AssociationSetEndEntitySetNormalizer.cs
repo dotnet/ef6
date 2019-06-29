@@ -6,7 +6,7 @@ namespace Microsoft.Data.Entity.Design.Model.Entity
 
     /// <summary>
     ///     The refName for these ends cannot be already normalized.  The Role attribute points to
-    ///     an End of the Assocation from the AssociationSet, so it already has its scope set in stone.
+    ///     an End of the Association from the AssociationSet, so it already has its scope set in stone.
     ///     The EntitySet attribute points to an EntitySet that must be in the current EntityContainer
     ///     and EntitySet names don't use the schema alias or namespace.
     /// </summary>

@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         // Name of the built in types
         internal const string AssociationEnd = "AssociationEnd";
-        internal const string AssociationSetType = "AssocationSetType";
+        internal const string AssociationSetType = "AssociationSetType";
         internal const string AssociationSetEndType = "AssociationSetEndType";
         internal const string AssociationType = "AssociationType";
         internal const string BaseEntitySetType = "BaseEntitySetType";

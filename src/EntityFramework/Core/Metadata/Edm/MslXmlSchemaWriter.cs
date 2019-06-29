@@ -507,13 +507,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 _xmlWriter.WriteStartElement(MslConstructs.AssociationEndElement);
 
-                var assocationSet = group.Key.ParentAssociationSet;
+                var associationSet = group.Key.ParentAssociationSet;
 
-                _xmlWriter.WriteAttributeString(MslConstructs.AssociationSetAttribute, assocationSet.Name);
+                _xmlWriter.WriteAttributeString(MslConstructs.AssociationSetAttribute, associationSet.Name);
                 _xmlWriter.WriteAttributeString(MslConstructs.FromAttribute, group.Key.Name);
                 _xmlWriter.WriteAttributeString(
                     MslConstructs.ToAttribute,
-                    assocationSet.AssociationSetEnds.Single(ae => ae != group.Key).Name);
+                    associationSet.AssociationSetEnds.Single(ae => ae != group.Key).Name);
 
                 foreach (var functionParameterBinding in group)
                 {

@@ -1189,7 +1189,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                                          : GetEntityType(stateEntry.OriginalValues);
 
                     // figure out relationship set ends that are associated with this entity set
-                    foreach (var associationSet in GetReferencingAssocationSets(entitySet))
+                    foreach (var associationSet in GetReferencingAssociationSets(entitySet))
                     {
                         // describe unidirectional relationships in which the added entity is the "destination"
                         var ends = associationSet.AssociationSetEnds;
@@ -1440,7 +1440,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // </summary>
             // <param name="entitySet"> Entity set for which to identify relationships </param>
             // <returns> Relationship sets referencing the given entity set </returns>
-            private IEnumerable<AssociationSet> GetReferencingAssocationSets(EntitySet entitySet)
+            private IEnumerable<AssociationSet> GetReferencingAssociationSets(EntitySet entitySet)
             {
                 List<AssociationSet> relationshipSets;
 

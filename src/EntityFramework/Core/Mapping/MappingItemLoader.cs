@@ -1253,7 +1253,7 @@ namespace System.Data.Entity.Core.Mapping
                 while (nav.MoveToNext(XPathNodeType.Element));
             }
 
-            // Ensure that assocation set end mappings bind to the same end (e.g., in Person Manages Person
+            // Ensure that association set end mappings bind to the same end (e.g., in Person Manages Person
             // self-association, ensure that the manager end or the report end is mapped but not both)
             IEnumerable<ModificationFunctionParameterBinding> parameterList = new List<ModificationFunctionParameterBinding>();
             if (null != deleteFunctionMapping)

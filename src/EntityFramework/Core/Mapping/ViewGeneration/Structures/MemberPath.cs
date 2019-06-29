@@ -645,7 +645,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 {
                     return false;
                 }
-                result = AreAssocationEndPathsEquivalentViaRefConstraint(path0, path1, assocSet0);
+                result = AreAssociationEndPathsEquivalentViaRefConstraint(path0, path1, assocSet0);
             }
             else if (entitySet0 != null
                      && entitySet1 != null)
@@ -660,7 +660,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     // For Person.pid, get PersonAddress.Person.pid or
                     var assocEndPath0 = path0.GetCorrespondingAssociationPath(assocSet);
                     var assocEndPath1 = path1.GetCorrespondingAssociationPath(assocSet);
-                    if (AreAssocationEndPathsEquivalentViaRefConstraint(assocEndPath0, assocEndPath1, assocSet))
+                    if (AreAssociationEndPathsEquivalentViaRefConstraint(assocEndPath0, assocEndPath1, assocSet))
                     {
                         result = true;
                         break;
@@ -689,7 +689,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 }
                 else
                 {
-                    result = AreAssocationEndPathsEquivalentViaRefConstraint(assocEndPathA, assocEndPathB, assocSet);
+                    result = AreAssociationEndPathsEquivalentViaRefConstraint(assocEndPathA, assocEndPathB, assocSet);
                 }
             }
 
@@ -706,7 +706,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         //     name="assocSet" />
         // .
         // </summary>
-        private static bool AreAssocationEndPathsEquivalentViaRefConstraint(
+        private static bool AreAssociationEndPathsEquivalentViaRefConstraint(
             MemberPath assocPath0,
             MemberPath assocPath1,
             AssociationSet assocSet)
