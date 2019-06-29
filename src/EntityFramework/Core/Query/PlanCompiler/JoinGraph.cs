@@ -2038,7 +2038,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         // <summary>
-        // Rebuilds the predicate for a join node and caculates the minimum location id at which it can be specified.
+        // Rebuilds the predicate for a join node and calculates the minimum location id at which it can be specified.
         // The predicate is an AND of the equijoin conditions and the "otherPredicate".
         // We first remap all columns in the equijoin predicates - if a column pair
         // resolves to the same column, then we skip that pair.
