@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             };
 
         // <summary>
-        // Intializes scanner
+        // Initializes scanner
         // </summary>
         // <param name="query"> input query </param>
         // <param name="parserOptions"> parser options </param>

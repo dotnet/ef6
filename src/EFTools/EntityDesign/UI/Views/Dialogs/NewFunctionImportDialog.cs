@@ -1178,7 +1178,7 @@ namespace Microsoft.Data.Entity.Design.UI.Views.Dialogs
                 functionImportNameTextBox.Text = functionImportName;
             }
 
-            // intialize predefined function
+            // initialize predefined function
             if (baseFunction != null)
             {
                 storedProcComboBox.SelectedItem = baseFunction;
