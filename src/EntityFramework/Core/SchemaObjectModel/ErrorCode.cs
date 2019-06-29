@@ -295,7 +295,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         EntityKeyTypeCurrentlyNotSupported = 129,
 
         // <summary>
-        // The primitive type kind does not have a prefered mapping
+        // The primitive type kind does not have a preferred mapping
         // </summary>
         NoPreferredMappingForPrimitiveTypeKind = 130,
 

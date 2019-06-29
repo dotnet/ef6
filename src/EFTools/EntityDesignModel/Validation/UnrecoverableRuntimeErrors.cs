@@ -134,7 +134,7 @@ namespace Microsoft.Data.Entity.Design.Model.Validation
                     //  Binary type properties which are part of entity key are currently not supported 
                     // Designer -- ErrorCode.BinaryEntityKeyCurrentlyNotSupported, 
             
-                    //  The primitive type kind does not have a prefered mapping
+                    //  The primitive type kind does not have a preferred mapping
                     // Designer -- ErrorCode.NoPreferredMappingForPrimitiveTypeKind,
             
                     //  More than one PreferredMapping for a PrimitiveTypeKind
