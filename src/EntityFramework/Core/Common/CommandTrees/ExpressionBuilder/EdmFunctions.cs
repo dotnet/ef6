@@ -235,7 +235,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Left' function with the specified arguments, which must have a string and integer numeric result type. The result type of the expression is string.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that returns the leftmost substring of length length from stringArgument.</returns>
+        /// <returns>A new DbFunctionExpression that returns the leftmost substring of length from stringArgument.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which to extract the leftmost substring.</param>
         /// <param name="length">An expression that specifies the length of the leftmost substring to extract from stringArgument.</param>
         public static DbFunctionExpression Left(this DbExpression stringArgument, DbExpression length)
@@ -285,7 +285,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Right' function with the specified arguments, which must have a string and integer numeric result type. The result type of the expression is string.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that returns the rightmost substring of length length from stringArgument.</returns>
+        /// <returns>A new DbFunctionExpression that returns the rightmost substring of length from stringArgument.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which to extract the rightmost substring.</param>
         /// <param name="length">An expression that specifies the length of the rightmost substring to extract from stringArgument.</param>
         public static DbFunctionExpression Right(this DbExpression stringArgument, DbExpression length)
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Substring' function with the specified arguments, which must have a string and integer numeric result types. The result type of the expression is string.
         /// </summary>
-        /// <returns>A new DbFunctionExpression that returns the substring of length length from stringArgument starting at start.</returns>
+        /// <returns>A new DbFunctionExpression that returns the substring of length from stringArgument starting at start.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which to extract the substring.</param>
         /// <param name="start">An expression that specifies the starting index from which the substring should be taken.</param>
         /// <param name="length">An expression that specifies the length of the substring.</param>
