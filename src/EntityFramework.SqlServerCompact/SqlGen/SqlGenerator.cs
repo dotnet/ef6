@@ -2927,20 +2927,20 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // arg0 op arg1
         // Also, the arguments can be optionally enclosed in parethesis
         // </summary>
-        // <param name="parenthesiseArguments"> Whether the arguments should be enclosed in parethesis </param>
-        private ISqlFragment HandleSpecialFunctionToOperator(DbFunctionExpression e, bool parenthesiseArguments)
+        // <param name="parenthesizeArguments"> Whether the arguments should be enclosed in parethesis </param>
+        private ISqlFragment HandleSpecialFunctionToOperator(DbFunctionExpression e, bool parenthesizeArguments)
         {
             var result = new SqlBuilder();
             Debug.Assert(e.Arguments.Count > 0 && e.Arguments.Count <= 2, "There should be 1 or 2 arguments for operator");
 
             if (e.Arguments.Count > 1)
             {
-                if (parenthesiseArguments)
+                if (parenthesizeArguments)
                 {
                     result.Append("(");
                 }
                 result.Append(e.Arguments[0].Accept(this));
-                if (parenthesiseArguments)
+                if (parenthesizeArguments)
                 {
                     result.Append(")");
                 }
@@ -2950,12 +2950,12 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             result.Append(_functionNameToOperatorDictionary[e.Function.Name]);
             result.Append(" ");
 
-            if (parenthesiseArguments)
+            if (parenthesizeArguments)
             {
                 result.Append("(");
             }
             result.Append(e.Arguments[e.Arguments.Count - 1].Accept(this));
-            if (parenthesiseArguments)
+            if (parenthesizeArguments)
             {
                 result.Append(")");
             }
